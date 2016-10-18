@@ -1,4 +1,4 @@
-# PayloadsAllTheThings
+# Payloads All The Things
 A list of every usefull payloads and bypass for Web Application Security
 
 TODO:
@@ -6,7 +6,6 @@ TODO:
 * Upload
 * Traversal Directory
 * Tar
-* SSRF
 * PHP Serialization
 * CSV Injection
 
@@ -14,5 +13,6 @@ To improve:
 * RCE
 * SQL injection
 * XXE
+* SSRF
 
 # /!\ Work in Progress : 1%

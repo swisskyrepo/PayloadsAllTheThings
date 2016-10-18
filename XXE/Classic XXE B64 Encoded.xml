@@ -1,0 +1,1 @@
+<!DOCTYPE test [ <!ENTITY % init SYSTEM "data://text/plain;base64,PCFF...Cg=="> %init; ]><foo/>

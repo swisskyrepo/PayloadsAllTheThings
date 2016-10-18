@@ -2,7 +2,7 @@
 Remote code execution is a security vulnerability that allows an attacker to execute codes from a remote server.
 	
 
-## Vuln
+## Exploits
 Normal code execution
 ```
 cat /etc/passwd 

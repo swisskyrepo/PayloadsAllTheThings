@@ -6,7 +6,10 @@ Remote code execution is a security vulnerability that allows an attacker to exe
 Normal code execution
 ```
 cat /etc/passwd 
-root:x:0:0:root:/root:/bin/bash daemon:x:1:1:daemon:/usr/sbin:/bin/sh bin:x:2:2:bin:/bin:/bin/sh sys:x:3:3:sys:/dev:/bin/sh
+root:x:0:0:root:/root:/bin/bash 
+daemon:x:1:1:daemon:/usr/sbin:/bin/sh 
+bin:x:2:2:bin:/bin:/bin/sh 
+sys:x:3:3:sys:/dev:/bin/sh
 ```
 
 

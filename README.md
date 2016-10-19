@@ -2,8 +2,7 @@
 A list of usefull payloads and bypasses for Web Application Security
 
 TODO:
-* XSS
-* Traversal Directory
+* PHP Include
 * PHP Serialization
 * CSV Injection
 
@@ -14,5 +13,10 @@ To improve:
 * SSRF
 * Upload
 * Tar command exec
+* Traversal Directory
+* XSS
 
-# /!\ Work in Progress : 1%
+TODO v2:
+* Remove "_" in dir name
+
+# /!\ Work in Progress : 40%

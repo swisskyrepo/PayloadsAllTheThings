@@ -1,8 +1,6 @@
 # Payloads All The Things
 A list of usefull payloads and bypasses for Web Application Security
-
-TODO:
-* PHP Serialization
+Feel free to improve with your payloads (I <3 pull requests) :)
 
 To improve:
 * RCE
@@ -15,5 +13,4 @@ To improve:
 * XSS
 * PHP Include
 * CSV Injection
-
-# /!\ Work in Progress : 70%
+* PHP Serialization

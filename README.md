@@ -1,4 +1,4 @@
-a# Payloads All The Things
+# Payloads All The Things
 A list of usefull payloads and bypasses for Web Application Security
 
 TODO:

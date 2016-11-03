@@ -5,6 +5,8 @@
 Google Dork to find subdomains
 ```
 site:*.domain.com -www
+site:http://domain.com ext:php
+site:http://domain.com filtype:pdf
 ```
 
 ## Scripts

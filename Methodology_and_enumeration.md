@@ -2,6 +2,7 @@
 
 ## Bug Hunting Methodology
 * Enumerate all subdomains (only if the scope is *.domain.ext)
+
 Using KnockPy with Daniel Miessler’s SecLists for subdomain "/Discover/DNS"
 ```
 git clone https://github.com/guelfoweb/knock
@@ -80,7 +81,8 @@ More subdomain :
 
 * Look for private information in GitHub repos with GitRob
 ```
-gitrob commd
+git clone https://github.com/michenriksen/gitrob.git
+gitrob analyze johndoe --site=https://github.acme.com --endpoint=https://github.acme.com/api/v3 --access-tokens=token1,token2
 ```
 
 * Subscribe to the site and pay for the additional functionality to test

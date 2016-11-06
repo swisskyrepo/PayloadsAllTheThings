@@ -1,7 +1,7 @@
 # Methodology and Enumeration
 
 ## Bug Hunting Methodology
-1. Enumerate all subdomains (only if the scope is *.domain.ext)
+* Enumerate all subdomains (only if the scope is *.domain.ext)
 Using KnockPy with Daniel Miessler’s SecLists for subdomain "/Discover/DNS"
 ```
 git clone https://github.com/guelfoweb/knock
@@ -27,14 +27,14 @@ cd domain
 -i to feed a list of domains (can also type extra domains into the original command)
 ```
 
-2. Subdomain take over using HostileSubBruteForcer 
+* Subdomain take over using HostileSubBruteForcer 
 ```
 git clone https://github.com/nahamsec/HostileSubBruteforcer
 chmox +x sub_brute.rb
 ./sub_brute.rb
 ```
 
-3. EyeWitness and Nmap scans from the KnockPy and enumall scans
+* EyeWitness and Nmap scans from the KnockPy and enumall scans
 ```
 git clone https://github.com/ChrisTruncer/EyeWitness.git
 ./setup/setup.sh
@@ -44,7 +44,7 @@ git clone https://github.com/ChrisTruncer/EyeWitness.git
 ./EyeWitness -f rdp.txt --rdp
 ```
 
-4. Basic NMAP (if allowed ^^')
+* Basic NMAP (if allowed ^^')
 ```
 sudo nmap -sSV -p- 192.168.0.1 -oA OUTPUTFILE -T4 &
 sudo nmap -sSV -oA OUTPUTFILE -T4 -iL IPS.csv
@@ -60,7 +60,7 @@ sudo nmap -sSV -oA OUTPUTFILE -T4 -iL IPS.csv
 • -T4 defines the timing for the task (options are 0-5 and higher is faster)
 ```
 
-5. List all the subdirectories with DirBuster or GoBuster
+* List all the subdirectories with DirBuster or GoBuster
 ```
 ./gobuster -u http://buffered.io/ -w words.txt -t 10
 -u url
@@ -71,21 +71,21 @@ More subdomain :
 ./gobuster -m dns -w subdomains.txt -u google.com -i
 ```
 
-6. Explore the website
+* Explore the website
 ```
  - Start ZAP proxy, visit the main target site and perform a Forced Browse to discover files and directories
  - Map technologies used with Wappalyzer and Burp Suite (or ZAP) proxy
  - Explore and understand available functionality, noting areas that correspond to vulnerability types
 ```
 
-7. Look for private information in GitHub repos with GitRob
+* Look for private information in GitHub repos with GitRob
 ```
 gitrob commd
 ```
 
-8. Subscribe to the site and pay for the additional functionality to test
+* Subscribe to the site and pay for the additional functionality to test
 
-9. Launch a Nikto scan in case you missed something
+* Launch a Nikto scan in case you missed something
 
 
 ## Google Dorks

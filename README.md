@@ -22,6 +22,7 @@ Last modifications :
 * [Eyewitness](https://github.com/ChrisTruncer/EyeWitness)
 * [Nikto](https://cirt.net/nikto2)
 * [Recon-ng](https://bitbucket.org/LaNMaSteR53/recon-ng)
+* [Wappalyzer](https://wappalyzer.com/download)
 
 # More resources
 Book's list:

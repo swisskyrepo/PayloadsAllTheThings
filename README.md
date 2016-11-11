@@ -5,9 +5,8 @@ I <3 pull requests :)
 
 Last modifications :
 * XSS paylods improved
-* CRLF payloads improved
-* SQLi payloads improved
-* Enumeration added (WIP)
+* Methodology added
+* AWS Bucket added
 
 # Tools
 

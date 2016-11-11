@@ -47,17 +47,14 @@ git clone https://github.com/ChrisTruncer/EyeWitness.git
 
 * Basic NMAP (if allowed ^^')
 ```
-sudo nmap -sSV -p- 192.168.0.1 -oA OUTPUTFILE -T4 &
-sudo nmap -sSV -oA OUTPUTFILE -T4 -iL IPS.csv
+sudo nmap -sSV -p- 192.168.0.1 -oA OUTPUTFILE -T4 
+sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
 
 • the flag -sSV defines the type of packet to send to the server and tells Nmap to try and determine any service on open ports
-
 • the -p- tells Nmap to check all 65,535 ports (by default it will only check the most popular 1,000)
-
 • 192.168.0.1 is the IP address to scan
-
 • -oA OUTPUTFILE tells Nmap to output the findings in its three major formats at once using the filename "OUTPUTFILE"
-
+• -iL INPUTFILE tells Nmap to use the provided file as inputs
 • -T4 defines the timing for the task (options are 0-5 and higher is faster)
 ```
 

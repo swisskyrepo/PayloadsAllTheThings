@@ -3,12 +3,25 @@
 ## Bug Hunting Methodology
 * Enumerate all subdomains (only if the scope is *.domain.ext)
 
+Using Subbrute
+```
+python subbrute.py domain.example.com
+```
+
+
 Using KnockPy with Daniel Miessler’s SecLists for subdomain "/Discover/DNS"
 ```
 git clone https://github.com/guelfoweb/knock
 git clone https://github.com/danielmiessler/SecLists.git
 
 knockpy domain.com -w /PATH_TO_SECLISTS/Discover/DNS/subdomains-top1mil-110000.txt
+```
+
+Using Google Dorks
+```
+site:*.domain.com -www
+site:http://domain.com ext:php
+site:http://domain.com filetype:pdf
 ```
 
 Using Jason Haddix's enumall Recon-ng script, 
@@ -58,7 +71,9 @@ sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
 • -T4 defines the timing for the task (options are 0-5 and higher is faster)
 ```
 
-* List all the subdirectories with DirBuster or GoBuster
+* List all the subdirectories and files 
+
+Using DirBuster or GoBuster
 ```
 ./gobuster -u http://buffered.io/ -w words.txt -t 10
 -u url
@@ -67,13 +82,38 @@ sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
 
 More subdomain :
 ./gobuster -m dns -w subdomains.txt -u google.com -i
+
+gobuster -w wordlist -u URL -r -e
 ```
 
-* Explore the website
+Using a script to detect all phpinfo.php files in a range of IPs (CIDR can be found with a whois)
+```
+#!/bin/bash
+for ipa in 98.13{6..9}.{0..255}.{0..255}; do
+wget -t 1 -T 3 http://${ipa}/phpinfo.php; done &
+```
+
+Using a script to detect all .htpasswd files in a range of IPs
+```
+#!/bin/bash
+for ipa in 98.13{6..9}.{0..255}.{0..255}; do
+wget -t 1 -T 3 http://${ipa}/.htpasswd; done &
+```
+
+* Explore the website with a proxy (ZAP/Burp Suite)
 ```
  - Start ZAP proxy, visit the main target site and perform a Forced Browse to discover files and directories
  - Map technologies used with Wappalyzer and Burp Suite (or ZAP) proxy
  - Explore and understand available functionality, noting areas that correspond to vulnerability types
+```
+
+* Look for Web Vulns
+```
+- SQLi
+- XSS
+- RCE
+- LFI/RFI
+etc
 ```
 
 * Look for private information in GitHub repos with GitRob
@@ -85,32 +125,6 @@ gitrob analyze johndoe --site=https://github.acme.com --endpoint=https://github.
 * Subscribe to the site and pay for the additional functionality to test
 
 * Launch a Nikto scan in case you missed something
-
-
-## Google Dorks
-
-Google Dork to find subdomains
-```
-site:*.domain.com -www
-site:http://domain.com ext:php
-site:http://domain.com filetype:pdf
-```
-
-## Scripts
-Script to detect all phpinfo.php files in a range of IPs (CIDR can be found with a whois)
-```
-#!/bin/bash
-for ipa in 98.13{6..9}.{0..255}.{0..255}; do
-wget -t 1 -T 3 http://${ipa}/phpinfo.php; done &
-```
-
-Script to detect all .htpasswd files in a range of IPs
-```
-#!/bin/bash
-for ipa in 98.13{6..9}.{0..255}.{0..255}; do
-wget -t 1 -T 3 http://${ipa}/.htpasswd; done &
-```
-
 
 ## Thanks to
 * http://blog.it-securityguard.com/bugbounty-yahoo-phpinfo-php-disclosure-2/

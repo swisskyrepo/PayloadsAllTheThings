@@ -83,3 +83,4 @@ File stored on http://publicServer.com/parameterEntity_oob.dtd
 
 ## Thanks to
 * https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing
+* http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html

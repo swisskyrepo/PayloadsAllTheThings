@@ -17,12 +17,14 @@ git clone https://github.com/danielmiessler/SecLists.git
 knockpy domain.com -w /PATH_TO_SECLISTS/Discover/DNS/subdomains-top1mil-110000.txt
 ```
 
+
 Using Google Dorks
 ```
 site:*.domain.com -www
 site:http://domain.com ext:php
 site:http://domain.com filetype:pdf
 ```
+
 
 Using Jason Haddix's enumall Recon-ng script, 
 ```
@@ -41,12 +43,14 @@ cd domain
 -i to feed a list of domains (can also type extra domains into the original command)
 ```
 
+
 * Subdomain take over using HostileSubBruteForcer 
 ```
 git clone https://github.com/nahamsec/HostileSubBruteforcer
 chmox +x sub_brute.rb
 ./sub_brute.rb
 ```
+
 
 * EyeWitness and Nmap scans from the KnockPy and enumall scans
 ```
@@ -57,6 +61,13 @@ git clone https://github.com/ChrisTruncer/EyeWitness.git
 ./EyeWitness -x urls.xml -t 8 --headless
 ./EyeWitness -f rdp.txt --rdp
 ```
+
+* Passive recon
+```
+Use shodan to detect similar app
+Use the wayback machine to detect forgotten endpoint
+```
+
 
 * Basic NMAP (if allowed ^^')
 ```
@@ -70,6 +81,7 @@ sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
 • -iL INPUTFILE tells Nmap to use the provided file as inputs
 • -T4 defines the timing for the task (options are 0-5 and higher is faster)
 ```
+
 
 * List all the subdirectories and files 
 
@@ -86,6 +98,7 @@ More subdomain :
 gobuster -w wordlist -u URL -r -e
 ```
 
+
 Using a script to detect all phpinfo.php files in a range of IPs (CIDR can be found with a whois)
 ```
 #!/bin/bash
@@ -100,12 +113,14 @@ for ipa in 98.13{6..9}.{0..255}.{0..255}; do
 wget -t 1 -T 3 http://${ipa}/.htpasswd; done &
 ```
 
+
 * Explore the website with a proxy (ZAP/Burp Suite)
 ```
  - Start ZAP proxy, visit the main target site and perform a Forced Browse to discover files and directories
  - Map technologies used with Wappalyzer and Burp Suite (or ZAP) proxy
  - Explore and understand available functionality, noting areas that correspond to vulnerability types
 ```
+
 
 * Look for Web Vulns
 ```
@@ -115,6 +130,7 @@ wget -t 1 -T 3 http://${ipa}/.htpasswd; done &
 - LFI/RFI
 etc
 ```
+
 
 * Look for private information in GitHub repos with GitRob
 ```

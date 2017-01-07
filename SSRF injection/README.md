@@ -30,5 +30,9 @@ Bypass localhost with a domain redirecting to locahost
 http://n-pn.info
 ```
 
+-> 11211
+localhost:+11211aaa
+localhost:00011211aaaa
+
 ## Thanks to
 * 

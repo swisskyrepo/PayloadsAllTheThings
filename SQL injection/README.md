@@ -232,6 +232,50 @@ OR    -> ||
 WHERE -> HAVING
 ```
 
+Information_schema.tables Alternative
+```
+select * from mysql.innodb_table_stats;
++----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
+| database_name  | table_name            | last_update         | n_rows | clustered_index_size | sum_of_other_index_sizes |
++----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
+| dvwa           | guestbook             | 2017-01-19 21:02:57 |      0 |                    1 |                        0 |
+| dvwa           | users                 | 2017-01-19 21:03:07 |      5 |                    1 |                        0 |
+...
++----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
+
+mysql> show tables in dvwa;
++----------------+
+| Tables_in_dvwa |
++----------------+
+| guestbook      |
+| users          |
++----------------+
+
+```
+
+Version Alternative
+```
+mysql> select @@innodb_version;
++------------------+
+| @@innodb_version |
++------------------+
+| 5.6.31           |
++------------------+
+
+mysql> select @@version;
++-------------------------+
+| @@version               |
++-------------------------+
+| 5.6.31-0ubuntu0.15.10.1 |
++-------------------------+
+
+mysql> mysql> select version();
++-------------------------+
+| version()               |
++-------------------------+
+| 5.6.31-0ubuntu0.15.10.1 |
++-------------------------+
+```
 
 
 
@@ -239,6 +283,7 @@ WHERE -> HAVING
 * MySQL:
   - [PentestMonkey's mySQL injection cheat sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
   - [Reiners mySQL injection Filter Evasion Cheatsheet] (https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/)
+  - [Alternative for Information_Schema.Tables in MySQL](https://osandamalith.com/2017/02/03/alternative-for-information_schema-tables-in-mysql/)
 * MSQQL:
   - [EvilSQL's Error/Union/Blind MSSQL Cheatsheet] (http://evilsql.com/main/page2.php)
   - [PentestMonkey's MSSQL SQLi injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)

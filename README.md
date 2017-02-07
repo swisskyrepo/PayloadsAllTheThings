@@ -26,8 +26,12 @@ Last modifications :
 
 # More resources
 Book's list:
-* Web Hacking 101 - https://leanpub.com/web-hacking-101
-* The Web Application Hacker's Handbook - https://www.amazon.fr/Web-Application-Hackers-Handbook-Exploiting/dp/1118026470  
+* [Web Hacking 101](https://leanpub.com/web-hacking-101)
+* [The Web Application Hacker's Handbook](https://www.amazon.fr/Web-Application-Hackers-Handbook-Exploiting/dp/1118026470)  
+* [OWASP Testing Guide v4](https://www.owasp.org/index.php/OWASP_Testing_Project)
+* [Penetration Testing: A Hands-On Introduction to Hacking](http://amzn.to/2dhHTSn)
+* [The Hacker Playbook 2: Practical Guide to Penetration Testing](http://amzn.to/2d9wYKa)
+* [The Mobile Application Hacker’s Handbook](http://amzn.to/2cVOIrE)
 
 Blogs/Websites
 * http://blog.zsec.uk/101-web-testing-tooling/
@@ -35,3 +39,15 @@ Blogs/Websites
 * https://blog.zsec.uk
 * https://www.exploit-db.com/google-hacking-database
 * https://www.arneswinnen.net
+* https://forum.bugcrowd.com/t/researcher-resources-how-to-become-a-bug-bounty-hunter/1102
+
+Practice
+* [Root-Me](https://www.root-me.org)
+* [Zenk-Security](https://www.zenk-security.com/epreuves.php)
+* [W3Challs](https://w3challs.com/)
+* [NewbieContest](https://www.newbiecontest.org/)
+* [Vulnhub](https://www.vulnhub.com/)
+* [The Cryptopals Crypto Challenges](https://cryptopals.com/)
+* [Penetration Testing Practice Labs](http://www.amanhardikar.com/mindmaps/Practice.html)
+* [alert(1) to win](https://alf.nu/alert1)
+* [Hacksplaining](https://www.hacksplaining.com/exercises)

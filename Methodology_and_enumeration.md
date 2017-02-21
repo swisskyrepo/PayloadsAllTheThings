@@ -5,6 +5,8 @@
 
 Using Subbrute
 ```
+git clone https://github.com/TheRook/subbrute
+
 python subbrute.py domain.example.com
 ```
 

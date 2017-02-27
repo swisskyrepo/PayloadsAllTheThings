@@ -1,13 +1,15 @@
 # Web Cache Deception Attack
 
 ## Exploit
+```
 1.Browser requests http://www.example.com/home.php/non-existent.css.
 2.Server returns the content of http://www.example.com/home.php, most probably with HTTP caching headers that instruct to not cache this page.
 3.The response goes through the proxy.
 4.The proxy identifies that the file has a css extension.
 5.Under the cache directory, the proxy creates a directory named home.php, and caches the imposter "CSS" file (non-existent.css) inside.
+```
 
-Simple example
+## Methodology of the attack - example
 ```
 1. Normal browsing, visit home : https://www.example.com/myaccount/home/
 2. Open the malicious link : https://www.example.com/myaccount/home/malicious.css

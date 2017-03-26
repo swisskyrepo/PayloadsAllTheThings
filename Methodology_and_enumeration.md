@@ -1,17 +1,15 @@
-# Methodology and Enumeration
+# Bug Hunting Methodology and Enumeration
 
-## Bug Hunting Methodology
-* Enumerate all subdomains (only if the scope is *.domain.ext)
+## Enumerate all subdomains (only if the scope is *.domain.ext)
 
-Using Subbrute
+* Using Subbrute
 ```
 git clone https://github.com/TheRook/subbrute
 
 python subbrute.py domain.example.com
 ```
 
-
-Using KnockPy with Daniel Miessler’s SecLists for subdomain "/Discover/DNS"
+* Using KnockPy with Daniel Miessler’s SecLists for subdomain "/Discover/DNS"
 ```
 git clone https://github.com/guelfoweb/knock
 git clone https://github.com/danielmiessler/SecLists.git
@@ -19,16 +17,14 @@ git clone https://github.com/danielmiessler/SecLists.git
 knockpy domain.com -w /PATH_TO_SECLISTS/Discover/DNS/subdomains-top1mil-110000.txt
 ```
 
-
-Using Google Dorks
+* Using Google Dorks
 ```
 site:*.domain.com -www
 site:http://domain.com ext:php
 site:http://domain.com filetype:pdf
 ```
 
-
-Using Jason Haddix's enumall Recon-ng script, 
+* Using Jason Haddix's enumall Recon-ng script, 
 ```
 git clone https://LaNMaSteR53@bitbucket.org/LaNMaSteR53/recon-ng.git
 cd recon-ng
@@ -45,14 +41,12 @@ cd domain
 -i to feed a list of domains (can also type extra domains into the original command)
 ```
 
-
 * Subdomain take over using HostileSubBruteForcer 
 ```
 git clone https://github.com/nahamsec/HostileSubBruteforcer
 chmox +x sub_brute.rb
 ./sub_brute.rb
 ```
-
 
 * EyeWitness and Nmap scans from the KnockPy and enumall scans
 ```
@@ -64,13 +58,14 @@ git clone https://github.com/ChrisTruncer/EyeWitness.git
 ./EyeWitness -f rdp.txt --rdp
 ```
 
-* Passive recon
+## Passive recon
 ```
 Use shodan to detect similar app
 Use the wayback machine to detect forgotten endpoint
 ```
 
 
+## Active recon
 * Basic NMAP (if allowed ^^')
 ```
 sudo nmap -sSV -p- 192.168.0.1 -oA OUTPUTFILE -T4 
@@ -84,10 +79,22 @@ sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
 • -T4 defines the timing for the task (options are 0-5 and higher is faster)
 ```
 
+* NMAP Script
+```
+nmap --script 'http-enum' -v web.xxxx.com -p80 -oN http-enum.nmap
+PORT   STATE SERVICE
+80/tcp open  http
+| http-enum: 
+|   /phpmyadmin/: phpMyAdmin
+|   /.git/HEAD: Git folder
+|   /css/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
+|_  /image/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
 
-* List all the subdirectories and files 
+```
 
-Using DirBuster or GoBuster
+
+## List all the subdirectories and files 
+* Using DirBuster or GoBuster
 ```
 ./gobuster -u http://buffered.io/ -w words.txt -t 10
 -u url
@@ -101,43 +108,33 @@ gobuster -w wordlist -u URL -r -e
 ```
 
 
-Using a script to detect all phpinfo.php files in a range of IPs (CIDR can be found with a whois)
+* Using a script to detect all phpinfo.php files in a range of IPs (CIDR can be found with a whois)
 ```
 #!/bin/bash
 for ipa in 98.13{6..9}.{0..255}.{0..255}; do
 wget -t 1 -T 3 http://${ipa}/phpinfo.php; done &
 ```
 
-Using a script to detect all .htpasswd files in a range of IPs
+* Using a script to detect all .htpasswd files in a range of IPs
 ```
 #!/bin/bash
 for ipa in 98.13{6..9}.{0..255}.{0..255}; do
 wget -t 1 -T 3 http://${ipa}/.htpasswd; done &
 ```
 
+## Looking for Web vulnerabilities
+
+* Look for private information in GitHub repos with GitRob
+```
+git clone https://github.com/michenriksen/gitrob.git
+gitrob analyze johndoe --site=https://github.acme.com --endpoint=https://github.acme.com/api/v3 --access-tokens=token1,token2
+```
 
 * Explore the website with a proxy (ZAP/Burp Suite)
 ```
  - Start ZAP proxy, visit the main target site and perform a Forced Browse to discover files and directories
  - Map technologies used with Wappalyzer and Burp Suite (or ZAP) proxy
  - Explore and understand available functionality, noting areas that correspond to vulnerability types
-```
-
-
-* Look for Web Vulns
-```
-- SQLi
-- XSS
-- RCE
-- LFI/RFI
-etc
-```
-
-
-* Look for private information in GitHub repos with GitRob
-```
-git clone https://github.com/michenriksen/gitrob.git
-gitrob analyze johndoe --site=https://github.acme.com --endpoint=https://github.acme.com/api/v3 --access-tokens=token1,token2
 ```
 
 * Subscribe to the site and pay for the additional functionality to test

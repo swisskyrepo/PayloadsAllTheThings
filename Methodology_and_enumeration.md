@@ -60,8 +60,9 @@ git clone https://github.com/ChrisTruncer/EyeWitness.git
 
 ## Passive recon
 ```
-Use shodan to detect similar app
-Use the wayback machine to detect forgotten endpoint
+Using Shodan (https://www.shodan.io/) to detect similar app
+Using The Wayback Machine (https://archive.org/web/) to detect forgotten endpoint
+Using The Harvester (https://github.com/laramies/theHarvester) 
 ```
 
 
@@ -139,6 +140,26 @@ gitrob analyze johndoe --site=https://github.acme.com --endpoint=https://github.
 Burp Proxy configuration on port 8080 (in .bashrc):
 alias set_proxy_burp='gsettings set org.gnome.system.proxy.http host "http://localhost";gsettings set org.gnome.system.proxy.http port 8080;gsettings set org.gnome.system.proxy mode "manual"'
 then launch Burp with : java -jar burpsuite_free_v*.jar &
+```
+
+* Checklist for Web vulns
+```
+[] AWS Amazon Bucket S3  
+[] Git Svn insecure files   
+[] CVE Shellshock Heartbleed  
+[] Open redirect            
+[] Traversal directory    
+[] XSS injection
+[] CRLF injection  
+[] CSRF injection          
+[] SQL injection            
+[] NoSQL injection                 
+[] PHP include      
+[] Upload insecure files     
+[] SSRF injection         
+[] XXE injections
+[] CSV injection 
+[] PHP serialization   
 ```
 
 * Subscribe to the site and pay for the additional functionality to test

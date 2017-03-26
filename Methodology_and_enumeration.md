@@ -90,8 +90,8 @@ PORT   STATE SERVICE
 |   /css/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
 |_  /image/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
 
+List Nmap scripts : ls /usr/share/nmap/scripts/
 ```
-
 
 ## List all the subdirectories and files 
 * Using DirBuster or GoBuster
@@ -135,11 +135,18 @@ gitrob analyze johndoe --site=https://github.acme.com --endpoint=https://github.
  - Start ZAP proxy, visit the main target site and perform a Forced Browse to discover files and directories
  - Map technologies used with Wappalyzer and Burp Suite (or ZAP) proxy
  - Explore and understand available functionality, noting areas that correspond to vulnerability types
+
+Burp Proxy configuration on port 8080 (in .bashrc):
+alias set_proxy_burp='gsettings set org.gnome.system.proxy.http host "http://localhost";gsettings set org.gnome.system.proxy.http port 8080;gsettings set org.gnome.system.proxy mode "manual"'
+then launch Burp with : java -jar burpsuite_free_v*.jar &
 ```
 
 * Subscribe to the site and pay for the additional functionality to test
 
 * Launch a Nikto scan in case you missed something
+```
+nikto -h 192.168.1.1
+```
 
 ## Thanks to
 * http://blog.it-securityguard.com/bugbounty-yahoo-phpinfo-php-disclosure-2/

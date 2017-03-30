@@ -35,6 +35,11 @@ Blogs/Websites
 * https://www.arneswinnen.net
 * https://forum.bugcrowd.com/t/researcher-resources-how-to-become-a-bug-bounty-hunter/1102
 
+Youtube
+* [Hunting for Top Bounties - Nicolas Grégoire](https://www.youtube.com/watch?v=mQjTgDuLsp4)
+* [BSidesSF 101 The Tales of a Bug Bounty Hunter - Arne Swinnen](https://www.youtube.com/watch?v=dsekKYNLBbc)
+* [Security Fest 2016 The Secret life of a Bug Bounty Hunter - Frans Rosén](https://www.youtube.com/watch?v=KDo68Laayh8)
+
 Practice
 * [Root-Me](https://www.root-me.org)
 * [Zenk-Security](https://www.zenk-security.com/epreuves.php)
@@ -45,3 +50,4 @@ Practice
 * [Penetration Testing Practice Labs](http://www.amanhardikar.com/mindmaps/Practice.html)
 * [alert(1) to win](https://alf.nu/alert1)
 * [Hacksplaining](https://www.hacksplaining.com/exercises)
+* [PentesterLab :Learn Web Penetration Testing: The Right Way](https://pentesterlab.com/)

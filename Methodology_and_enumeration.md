@@ -3,14 +3,14 @@
 ## Enumerate all subdomains (only if the scope is *.domain.ext)
 
 * Using Subbrute
-```
+```bash
 git clone https://github.com/TheRook/subbrute
 
 python subbrute.py domain.example.com
 ```
 
 * Using KnockPy with Daniel Miessler’s SecLists for subdomain "/Discover/DNS"
-```
+```bash
 git clone https://github.com/guelfoweb/knock
 git clone https://github.com/danielmiessler/SecLists.git
 
@@ -18,14 +18,14 @@ knockpy domain.com -w /PATH_TO_SECLISTS/Discover/DNS/subdomains-top1mil-110000.t
 ```
 
 * Using Google Dorks
-```
+```bash
 site:*.domain.com -www
 site:http://domain.com ext:php
 site:http://domain.com filetype:pdf
 ```
 
 * Using Jason Haddix's enumall Recon-ng script, 
-```
+```bash
 git clone https://LaNMaSteR53@bitbucket.org/LaNMaSteR53/recon-ng.git
 cd recon-ng
 pip install -r REQUIREMENTS
@@ -42,14 +42,14 @@ cd domain
 ```
 
 * Subdomain take over using HostileSubBruteForcer 
-```
+```bash
 git clone https://github.com/nahamsec/HostileSubBruteforcer
 chmox +x sub_brute.rb
 ./sub_brute.rb
 ```
 
 * EyeWitness and Nmap scans from the KnockPy and enumall scans
-```
+```bash
 git clone https://github.com/ChrisTruncer/EyeWitness.git
 ./setup/setup.sh
 ./EyeWitness.py -f filename -t optionaltimeout --open (Optional)
@@ -96,7 +96,7 @@ List Nmap scripts : ls /usr/share/nmap/scripts/
 
 ## List all the subdirectories and files 
 * Using DirBuster or GoBuster
-```
+```bash
 ./gobuster -u http://buffered.io/ -w words.txt -t 10
 -u url
 -w wordlist
@@ -110,14 +110,14 @@ gobuster -w wordlist -u URL -r -e
 
 
 * Using a script to detect all phpinfo.php files in a range of IPs (CIDR can be found with a whois)
-```
+```bash
 #!/bin/bash
 for ipa in 98.13{6..9}.{0..255}.{0..255}; do
 wget -t 1 -T 3 http://${ipa}/phpinfo.php; done &
 ```
 
 * Using a script to detect all .htpasswd files in a range of IPs
-```
+```bash
 #!/bin/bash
 for ipa in 98.13{6..9}.{0..255}.{0..255}; do
 wget -t 1 -T 3 http://${ipa}/.htpasswd; done &
@@ -132,11 +132,10 @@ gitrob analyze johndoe --site=https://github.acme.com --endpoint=https://github.
 ```
 
 * Explore the website with a proxy (ZAP/Burp Suite)
+ 1. Start ZAP proxy, visit the main target site and perform a Forced Browse to discover files and directories
+ 2. Map technologies used with Wappalyzer and Burp Suite (or ZAP) proxy
+ 3. Explore and understand available functionality, noting areas that correspond to vulnerability types
 ```
- - Start ZAP proxy, visit the main target site and perform a Forced Browse to discover files and directories
- - Map technologies used with Wappalyzer and Burp Suite (or ZAP) proxy
- - Explore and understand available functionality, noting areas that correspond to vulnerability types
-
 Burp Proxy configuration on port 8080 (in .bashrc):
 alias set_proxy_burp='gsettings set org.gnome.system.proxy.http host "http://localhost";gsettings set org.gnome.system.proxy.http port 8080;gsettings set org.gnome.system.proxy mode "manual"'
 then launch Burp with : java -jar burpsuite_free_v*.jar &

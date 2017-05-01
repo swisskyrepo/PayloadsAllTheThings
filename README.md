@@ -78,7 +78,7 @@ Practice
 * [alert(1) to win](https://alf.nu/alert1)
 * [Hacksplaining](https://www.hacksplaining.com/exercises)
 * [HackThisSite](https://hackthissite.org)
-* [PentesterLab :Learn Web Penetration Testing: The Right Way](https://pentesterlab.com/)
+* [PentesterLab : Learn Web Penetration Testing: The Right Way](https://pentesterlab.com/)
 
 Bug Bounty
 * [HackerOne](https://hackerone.com)

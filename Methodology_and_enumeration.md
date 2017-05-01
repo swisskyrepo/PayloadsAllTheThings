@@ -5,7 +5,6 @@
 * Using Subbrute
 ```bash
 git clone https://github.com/TheRook/subbrute
-
 python subbrute.py domain.example.com
 ```
 
@@ -13,35 +12,19 @@ python subbrute.py domain.example.com
 ```bash
 git clone https://github.com/guelfoweb/knock
 git clone https://github.com/danielmiessler/SecLists.git
-
-knockpy domain.com -w /PATH_TO_SECLISTS/Discover/DNS/subdomains-top1mil-110000.txt
+knockpy domain.com -w subdomains-top1mil-110000.txt
 ```
 
 * Using Google Dorks
 ```bash
 site:*.domain.com -www
-site:http://domain.com ext:php
 site:http://domain.com filetype:pdf
+site:http://domain.com inurl:&
+site:http://domain.com inurl:login,register,upload,logout,redirect,redir,goto,admin
+site:http://domain.com ext:php,asp,aspx,jsp,jspa,txt,swf
 ```
 
-* Using Jason Haddix's enumall Recon-ng script, 
-```bash
-git clone https://LaNMaSteR53@bitbucket.org/LaNMaSteR53/recon-ng.git
-cd recon-ng
-pip install -r REQUIREMENTS
-ln -s /$recon-ng_path /usr/share/recon-ng
-git clone https://github.com/jhaddix/domain.git
-cd domain
-./setup_enumall.sh
-
-./enumall.py domain.com
--w to run a custom wordlist with recon-ng
--a to use alt-dns
--p to feed a custom permutations list to alt-dns (requires -a flag)
--i to feed a list of domains (can also type extra domains into the original command)
-```
-
-* Subdomain take over using HostileSubBruteForcer 
+* Subdomain take over using HostileSubBruteForcer
 ```bash
 git clone https://github.com/nahamsec/HostileSubBruteforcer
 chmox +x sub_brute.rb
@@ -61,15 +44,19 @@ git clone https://github.com/ChrisTruncer/EyeWitness.git
 ## Passive recon
 ```
 Using Shodan (https://www.shodan.io/) to detect similar app
-Using The Wayback Machine (https://archive.org/web/) to detect forgotten endpoint
-Using The Harvester (https://github.com/laramies/theHarvester) 
+
+Using The Wayback Machine (https://archive.org/web/) to detect forgotten endpoints :
+- look for JS files, old links
+
+Using The Harvester (https://github.com/laramies/theHarvester)
+python theHarvester.py -b all -d domain.com
 ```
 
 
 ## Active recon
 * Basic NMAP (if allowed ^^')
-```
-sudo nmap -sSV -p- 192.168.0.1 -oA OUTPUTFILE -T4 
+```bash
+sudo nmap -sSV -p- 192.168.0.1 -oA OUTPUTFILE -T4
 sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
 
 • the flag -sSV defines the type of packet to send to the server and tells Nmap to try and determine any service on open ports
@@ -77,15 +64,26 @@ sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
 • 192.168.0.1 is the IP address to scan
 • -oA OUTPUTFILE tells Nmap to output the findings in its three major formats at once using the filename "OUTPUTFILE"
 • -iL INPUTFILE tells Nmap to use the provided file as inputs
-• -T4 defines the timing for the task (options are 0-5 and higher is faster)
+
+nmap -A -T4 scanme.nmap.org
+• -A: Enable OS detection, version detection, script scanning, and traceroute
+• -T4: Defines the timing for the task (options are 0-5 and higher is faster)
 ```
 
-* NMAP Script
+*
+```bash
+nmap -p- -sV -oX a.xml host.domain.org
+searchsploit --nmap a.xml
 ```
+
+* NMAP Scripts
+```bash
+nmap -sC : equivalent to --script=default
+
 nmap --script 'http-enum' -v web.xxxx.com -p80 -oN http-enum.nmap
 PORT   STATE SERVICE
 80/tcp open  http
-| http-enum: 
+| http-enum:
 |   /phpmyadmin/: phpMyAdmin
 |   /.git/HEAD: Git folder
 |   /css/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
@@ -94,7 +92,19 @@ PORT   STATE SERVICE
 List Nmap scripts : ls /usr/share/nmap/scripts/
 ```
 
-## List all the subdirectories and files 
+## List all the subdirectories and files
+
+* Using BFAC (Backup File Artifacts Checker): An automated tool that checks for backup artifacts that may disclose the web-application's source code.
+```bash
+git clone https://github.com/mazen160/bfac
+
+Check a single URL
+bfac --url http://example.com/test.php --level 4
+
+Check a list of URLs
+bfac --list testing_list.txt
+```
+
 * Using DirBuster or GoBuster
 ```bash
 ./gobuster -u http://buffered.io/ -w words.txt -t 10
@@ -107,7 +117,6 @@ More subdomain :
 
 gobuster -w wordlist -u URL -r -e
 ```
-
 
 * Using a script to detect all phpinfo.php files in a range of IPs (CIDR can be found with a whois)
 ```bash
@@ -132,12 +141,14 @@ gitrob analyze johndoe --site=https://github.acme.com --endpoint=https://github.
 ```
 
 * Explore the website with a proxy (ZAP/Burp Suite)
- 1. Start ZAP proxy, visit the main target site and perform a Forced Browse to discover files and directories
+ 1. Start proxy, visit the main target site and perform a Forced Browse to discover files and directories
  2. Map technologies used with Wappalyzer and Burp Suite (or ZAP) proxy
  3. Explore and understand available functionality, noting areas that correspond to vulnerability types
-```
+```bash
 Burp Proxy configuration on port 8080 (in .bashrc):
 alias set_proxy_burp='gsettings set org.gnome.system.proxy.http host "http://localhost";gsettings set org.gnome.system.proxy.http port 8080;gsettings set org.gnome.system.proxy mode "manual"'
+alias set_proxy_normal='gsettings set org.gnome.system.proxy mode "none"'
+
 then launch Burp with : java -jar burpsuite_free_v*.jar &
 ```
 
@@ -157,15 +168,16 @@ then launch Burp with : java -jar burpsuite_free_v*.jar &
 [] Upload insecure files     
 [] SSRF injection         
 [] XXE injections
-[] CSV injection 
-[] PHP serialization   
+[] CSV injection
+[] PHP serialization
+...   
 ```
 
 * Subscribe to the site and pay for the additional functionality to test
 
 * Launch a Nikto scan in case you missed something
 ```
-nikto -h 192.168.1.1
+nikto -h http://domain.example.com
 ```
 
 ## Thanks to

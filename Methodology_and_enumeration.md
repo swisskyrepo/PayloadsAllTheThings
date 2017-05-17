@@ -42,55 +42,120 @@ git clone https://github.com/ChrisTruncer/EyeWitness.git
 ```
 
 ## Passive recon
-```
-Using Shodan (https://www.shodan.io/) to detect similar app
+* Using Shodan (https://www.shodan.io/) to detect similar app
 
-Using The Wayback Machine (https://archive.org/web/) to detect forgotten endpoints :
-- look for JS files, old links
+* Using The Wayback Machine (https://archive.org/web/) to detect forgotten endpoints,
+  ```
+  look for JS files, old links
+  ```
 
-Using The Harvester (https://github.com/laramies/theHarvester)
-python theHarvester.py -b all -d domain.com
-```
+* Using The Harvester (https://github.com/laramies/theHarvester)
+  ```
+  python theHarvester.py -b all -d domain.com
+  ```
 
 
 ## Active recon
-* Basic NMAP (if allowed ^^')
-```bash
-sudo nmap -sSV -p- 192.168.0.1 -oA OUTPUTFILE -T4
-sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
+* Basic NMAP
+  ```bash
+  sudo nmap -sSV -p- 192.168.0.1 -oA OUTPUTFILE -T4
+  sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
 
-• the flag -sSV defines the type of packet to send to the server and tells Nmap to try and determine any service on open ports
-• the -p- tells Nmap to check all 65,535 ports (by default it will only check the most popular 1,000)
-• 192.168.0.1 is the IP address to scan
-• -oA OUTPUTFILE tells Nmap to output the findings in its three major formats at once using the filename "OUTPUTFILE"
-• -iL INPUTFILE tells Nmap to use the provided file as inputs
+  • the flag -sSV defines the type of packet to send to the server and tells Nmap to try and determine any service on open ports
+  • the -p- tells Nmap to check all 65,535 ports (by default it will only check the most popular 1,000)
+  • 192.168.0.1 is the IP address to scan
+  • -oA OUTPUTFILE tells Nmap to output the findings in its three major formats at once using the filename "OUTPUTFILE"
+  • -iL INPUTFILE tells Nmap to use the provided file as inputs
+  ```
 
-nmap -A -T4 scanme.nmap.org
-• -A: Enable OS detection, version detection, script scanning, and traceroute
-• -T4: Defines the timing for the task (options are 0-5 and higher is faster)
-```
+* Aggressive NMAP
+  ```bash
+  nmap -A -T4 scanme.nmap.org
+  • -A: Enable OS detection, version detection, script scanning, and traceroute
+  • -T4: Defines the timing for the task (options are 0-5 and higher is faster)
+  ```
 
-*
-```bash
-nmap -p- -sV -oX a.xml host.domain.org
-searchsploit --nmap a.xml
-```
+* NMAP and add-ons
+  1. Using searchsploit to detect vulnerable services
+  ```bash
+  nmap -p- -sV -oX a.xml IP_ADDRESS; searchsploit --nmap a.xml
+  ```
+  2. Generating nice scan report
+  ```bash
+  nmap -sV IP_ADDRESS -oX scan.xml && xsltproc scan.xml -o "`date +%m%d%y`_report.html"
+  ```
+
 
 * NMAP Scripts
-```bash
-nmap -sC : equivalent to --script=default
+  ```bash
+  nmap -sC : equivalent to --script=default
 
-nmap --script 'http-enum' -v web.xxxx.com -p80 -oN http-enum.nmap
-PORT   STATE SERVICE
-80/tcp open  http
-| http-enum:
-|   /phpmyadmin/: phpMyAdmin
-|   /.git/HEAD: Git folder
-|   /css/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
-|_  /image/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
+  nmap --script 'http-enum' -v web.xxxx.com -p80 -oN http-enum.nmap
+  PORT   STATE SERVICE
+  80/tcp open  http
+  | http-enum:
+  |   /phpmyadmin/: phpMyAdmin
+  |   /.git/HEAD: Git folder
+  |   /css/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
+  |_  /image/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
 
-List Nmap scripts : ls /usr/share/nmap/scripts/
-```
+  nmap --script smb-enum-users.nse -p 445 [target host]
+  Host script results:
+  | smb-enum-users:
+  |   METASPLOITABLE\backup (RID: 1068)
+  |     Full name:   backup
+  |     Flags:       Account disabled, Normal user account
+  |   METASPLOITABLE\bin (RID: 1004)
+  |     Full name:   bin
+  |     Flags:       Account disabled, Normal user account
+  |   METASPLOITABLE\msfadmin (RID: 3000)
+  |     Full name:   msfadmin,,,
+  |     Flags:       Normal user account
+
+  List Nmap scripts : ls /usr/share/nmap/scripts/
+  ```
+
+* RPCClient
+  ```bash
+  ╰─$ rpcclient -U "" [target host]
+  rpcclient $> querydominfo
+  Domain:		WORKGROUP
+  Server:		METASPLOITABLE
+  Comment:	metasploitable server (Samba 3.0.20-Debian)
+  Total Users:	35
+
+  rpcclient $> enumdomusers
+  user:[games] rid:[0x3f2]
+  user:[nobody] rid:[0x1f5]
+  user:[bind] rid:[0x4ba]
+  ```
+* Enum4all
+  ```
+  Usage: ./enum4linux.pl [options]ip
+  -U        get userlist
+  -M        get machine list*
+  -S        get sharelist
+  -P        get password policy information
+  -G        get group and member list
+  -d        be detailed, applies to -U and -S
+  -u user   specify username to use (default “”)
+  -p pass   specify password to use (default “”
+  -a        Do all simple enumeration (-U -S -G -P -r -o -n -i).
+  -o        Get OS information
+  -i        Get printer information
+  ==============================
+  |   Users on XXX.XXX.XXX.XXX |
+  ==============================
+  index: 0x1 Account: games	Name: games	Desc: (null)
+  index: 0x2 Account: nobody	Name: nobody	Desc: (null)
+  index: 0x3 Account: bind	Name: (null)	Desc: (null)
+  index: 0x4 Account: proxy	Name: proxy	Desc: (null)
+  index: 0x5 Account: syslog	Name: (null)	Desc: (null)
+  index: 0x6 Account: user	Name: just a user,111,,	Desc: (null)
+  index: 0x7 Account: www-data	Name: www-data	Desc: (null)
+  index: 0x8 Account: root	Name: root	Desc: (null)
+
+  ```  
 
 ## List all the subdirectories and files
 
@@ -116,6 +181,20 @@ More subdomain :
 ./gobuster -m dns -w subdomains.txt -u google.com -i
 
 gobuster -w wordlist -u URL -r -e
+```
+
+* Using Sublist3r
+```bash
+To enumerate subdomains of specific domain and show the results in realtime:
+python sublist3r.py -v -d example.com
+
+To enumerate subdomains and enable the bruteforce module:
+python sublist3r.py -b -d example.com
+
+To enumerate subdomains and use specific engines such Google, Yahoo and Virustotal engines
+python sublist3r.py -e google,yahoo,virustotal -d example.com
+
+python sublist3r.py -b -d example.com
 ```
 
 * Using a script to detect all phpinfo.php files in a range of IPs (CIDR can be found with a whois)

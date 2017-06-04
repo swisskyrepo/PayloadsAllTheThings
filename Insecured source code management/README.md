@@ -11,7 +11,7 @@ Github example
 6b4131bb3b84e9446218359414d636bda782d097 a48ee6d6ca840b9130fbaa73bbf55e9e730e4cfd Michael <michael@easyctf.com> 1489390332 +0000        commit: Prevent directory listing.
 ```
 
-3. Access to the commit based on the hash -> a directory name (first two signs from hash) and filename (rest of it).git/objects/26/e35470d38c4d6815bc4426a862d5399f04865c, 
+3. Access to the commit based on the hash -> a directory name (first two signs from hash) and filename (rest of it).git/objects/26/e35470d38c4d6815bc4426a862d5399f04865c,
 ```
 # create a .git directory
 git init test
@@ -94,11 +94,17 @@ INSERT INTO "NODES" VALUES(1,'trunk/test.txt',0,'trunk',1,'trunk/test.txt',2,'no
 ```
 
 2. Download interesting files
-remove $sha1$ prefix
+remove \$sha1\$ prefix
 add .svn-base postfix
 use first two signs from hash as folder name inside pristine/ directory (94 in this case)
 create complete path, which will be: http://server/path_to_vulnerable_site/.svn/pristine/94/945a60e68acc693fcb74abadb588aac1a9135f62.svn-base
 
+
+### Automatic way -
+```
+git clone https://github.com/anantshri/svn-extractor.git
+python svn-extractor.py –url “url with .svn available”
+```
 
 ## Thanks to
 * bl4de, https://github.com/bl4de/research/tree/master/hidden_directories_leaks

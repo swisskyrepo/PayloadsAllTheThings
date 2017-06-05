@@ -17,7 +17,12 @@ aws s3 mv test.txt s3://hackerone.files
 SUCCESS : "move: ./test.txt to s3://hackerone.files/test.txt"
 ```
 
-Bucket Finder
+Basic test
+```
+aws s3 ls s3://targetbucket
+```
+
+### Bucket Finder
 A cool tool that will search for readable buckets and list all the files in them. It can also be used to quickly find buckets that exist but deny access to listing files.
 ```
 wget https://digi.ninja/files/bucket_finder_1.1.tar.bz2 -O bucket_finder_1.1.tar.bz2
@@ -42,3 +47,4 @@ List of the top Alexa 100,000 sites with permutations on the TLD and www. For ex
 ## Thanks to
 * https://community.rapid7.com/community/infosec/blog/2013/03/27/1951-open-s3-buckets
 * https://digi.ninja/projects/bucket_finder.php
+* [Bug Bounty Survey - AWS Basic test](https://twitter.com/bugbsurveys/status/859389553211297792)

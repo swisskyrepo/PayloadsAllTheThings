@@ -48,3 +48,7 @@ List of the top Alexa 100,000 sites with permutations on the TLD and www. For ex
 * https://community.rapid7.com/community/infosec/blog/2013/03/27/1951-open-s3-buckets
 * https://digi.ninja/projects/bucket_finder.php
 * [Bug Bounty Survey - AWS Basic test](https://twitter.com/bugbsurveys/status/859389553211297792)
+
+
+
+This is one of my favorite tricks. More and more companies host part of their infrastructure on Amazon EC2. Amazon exposes an internal service every EC2 instance can query for instance metadata about the host. Here’s the AWS documentation. If you found an SSRF vulnerability that runs on EC2, try requesting http://169.254.169.254/latest/meta-data/. This will return a lot of useful information for you to understand the infrastructure and may reveal Amazon S3 access tokens, API tokens, and more. You may also want to download http://169.254.169.254/latest/user-data/ and unzip the data.

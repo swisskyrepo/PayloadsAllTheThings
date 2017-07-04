@@ -51,4 +51,5 @@ http://example.com/index.php?page=data:application/x-httpd-php;base64,PHN2ZyBvbm
 ```
 
 ## Thanks to
-* https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion
+* [OWASP LFI](https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)
+* [HighOn.coffee LFI Cheat](https://highon.coffee/blog/lfi-cheat-sheet/)

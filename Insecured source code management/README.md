@@ -1,7 +1,7 @@
 # GIT - Source management
 
 Github example
-1. Check 403 error (Forbidden) for .git
+1. Check 403 error (Forbidden) for .git or even better : directory listing 
 
 2. Git saves all informations in log file .git/logs/HEAD (try 'head' too)
 ```

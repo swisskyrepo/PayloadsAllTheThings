@@ -18,10 +18,11 @@ knockpy domain.com -w subdomains-top1mil-110000.txt
 * Using Google Dorks and Google Transparency Report
 ```bash
 site:*.domain.com -www
-site:http://domain.com filetype:pdf
-site:http://domain.com inurl:&
-site:http://domain.com inurl:login,register,upload,logout,redirect,redir,goto,admin
-site:http://domain.com ext:php,asp,aspx,jsp,jspa,txt,swf
+site:domain.com filetype:pdf
+site:domain.com inurl:'&'
+site:domain.com inurl:login,register,upload,logout,redirect,redir,goto,admin
+site:domain.com ext:php,asp,aspx,jsp,jspa,txt,swf
+site:*.*.domain.com
 
 You need to include subdomains ;)
 https://www.google.com/transparencyreport/https/ct/?hl=en-US#domain=[DOMAIN]g&incl_exp=true&incl_sub=true

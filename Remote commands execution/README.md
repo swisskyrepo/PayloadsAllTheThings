@@ -17,6 +17,7 @@ Commands execution by chaining commands
 original_cmd_by_server; ls
 original_cmd_by_server && ls
 original_cmd_by_server | ls
+original_cmd_by_server || ls    Only if the first cmd fail
 ```
 
 Commands execution inside a command

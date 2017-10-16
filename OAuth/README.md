@@ -35,6 +35,12 @@ If an authorization code is used more than once, the authorization server MUST d
 and SHOULD revoke (when possible) all tokens previously issued based on that authorization code.
 ```
 
+## Cross-Site Request Forgery
+Applications that do not check for a valid CSRF token in the OAuth callback are vulnerable. This can be exploited by initializing the OAuth flow and intercepting the callback (https://example.com/callback?code=AUTHORIZATION_CODE). This URL can be used in CSRF attacks. 
+```
+The client MUST implement CSRF protection for its redirection URI. This is typically accomplished by requiring any request sent to the redirection URI endpoint to include a value that binds the request to the user-agent's authenticated state. The client SHOULD utilize the "state" request parameter to deliver this value to the authorization server when making an authorization request.
+```
+
 ## Thanks to
 * http://blog.intothesymmetry.com/2016/11/all-your-paypal-tokens-belong-to-me.html
 * http://homakov.blogspot.ch/2014/02/how-i-hacked-github-again.html

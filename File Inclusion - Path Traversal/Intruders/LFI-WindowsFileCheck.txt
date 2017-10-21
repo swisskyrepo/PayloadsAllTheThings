@@ -1,0 +1,68 @@
+php://input
+C:\boot.ini
+C:\WINDOWS\win.ini
+C:\WINDOWS\php.ini
+C:\WINNT\php.ini
+\xampp\phpMyAdmin\config.inc
+\xampp\phpMyAdmin\phpinfo.php
+\xampp\phpmyadmin\config.inc
+\xampp\phpmyadmin\phpinfo.php
+\xampp\phpmyadmin\config.inc.php
+\xampp\phpMyAdmin\config.inc.php
+\xampp\apache\conf\httpd.conf
+\xampp\FileZillaFTP\FileZilla Server.xml
+\xampp\MercuryMail\mercury.ini
+\mysql\bin\my.ini
+\xampp\php\php.ini
+\xampp\phpMyAdmin\config.inc.php
+\xampp\tomcat\conf\tomcat-users.xml
+\xampp\tomcat\conf\web.xml
+\xampp\sendmail\sendmail.ini
+\xampp\webalizer\webalizer.conf
+\xampp\webdav\webdav.txt
+\xampp\apache\logs\error.log
+\xampp\apache\logs\access.log
+\xampp\FileZillaFTP\Logs
+\xampp\FileZillaFTP\Logs\error.log
+\xampp\FileZillaFTP\Logs\access.log
+\xampp\MercuryMail\LOGS\error.log
+\xampp\MercuryMail\LOGS\access.log
+\xampp\mysql\data\mysql.err
+\xampp\sendmail\sendmail.log
+\apache\log\error.log
+\apache\log\access.log
+\apache\log\error_log
+\apache\log\access_log
+\apache2\log\error.log
+\apache2\log\access.log
+\apache2\log\error_log
+\apache2\log\access_log
+\log\error.log
+\log\access.log
+\log\error_log
+\log\access_log
+\apache\logs\error.log
+\apache\logs\access.log
+\apache\logs\error_log
+\apache\logs\access_log
+\apache2\logs\error.log
+\apache2\logs\access.log
+\apache2\logs\error_log
+\apache2\logs\access_log
+\logs\error.log
+\logs\access.log
+\logs\error_log
+\logs\access_log
+\log\httpd\access_log
+\log\httpd\error_log
+\logs\httpd\access_log
+\logs\httpd\error_log
+\opt\xampp\logs\access_log
+\opt\xampp\logs\error_log
+\opt\xampp\logs\access.log
+\opt\xampp\logs\error.log
+\Program Files\Apache Group\Apache\logs\access.log
+\Program Files\Apache Group\Apache\logs\error.log
+\Program Files\Apache Group\Apache\conf\httpd.conf
+\Program Files\Apache Group\Apache2\conf\httpd.conf
+\Program Files\xampp\apache\conf\httpd.conf

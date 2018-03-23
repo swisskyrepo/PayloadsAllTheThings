@@ -83,6 +83,10 @@ aquatone-gather --domain example.com
 
 ## Passive recon
 * Using Shodan (https://www.shodan.io/) to detect similar app
+  ```
+  can be integrated with nmap (https://github.com/glennzw/shodan-hq-nse)
+  nmap --script shodan-hq.nse --script-args 'apikey=<yourShodanAPIKey>,target=<hackme>'
+  ```
 
 * Using The Wayback Machine (https://archive.org/web/) to detect forgotten endpoints,
   ```
@@ -107,6 +111,19 @@ aquatone-gather --domain example.com
   • -oA OUTPUTFILE tells Nmap to output the findings in its three major formats at once using the filename "OUTPUTFILE"
   • -iL INPUTFILE tells Nmap to use the provided file as inputs
   ```
+
+* CTF NMAP
+  This configuration is enough to do a basic check for a CTF VM
+  ```bash
+  nmap -sV -sC -oA ~/nmap-initial 192.168.1.1
+
+  -sV : Probe open ports to determine service/version info
+  -sC : to enable the script
+  -oA : to save the results
+
+  After this quick command you can add "-p-" to run a full scan while you work with the previous result
+  ```
+
 
 * Aggressive NMAP
   ```bash
@@ -286,4 +303,5 @@ nikto -h http://domain.example.com
 ```
 
 ## Thanks to
-* http://blog.it-securityguard.com/bugbounty-yahoo-phpinfo-php-disclosure-2/
+ * http://blog.it-securityguard.com/bugbounty-yahoo-phpinfo-php-disclosure-2/
+ * [Nmap CheatSheet - HackerTarget](https://hackertarget.com/nmap-cheatsheet-a-quick-reference-guide/)

@@ -9,8 +9,8 @@ All sections contain:
   - Some exploits
 
 You might also like :
- - [Methodology and Resources](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology and Resources/)
- - [CVE Exploits](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CVE Exploits)
+ - [Methodology and Resources](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/)
+ - [CVE Exploits](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CVE%20Exploits)
     - Shellshock
     - HeartBleed
     - Apache Struts 2

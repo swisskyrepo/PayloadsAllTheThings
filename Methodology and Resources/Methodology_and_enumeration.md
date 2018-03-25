@@ -1,4 +1,5 @@
 # Bug Hunting Methodology and Enumeration
+![exploitation](https://img.shields.io/badge/WIP-70%25-green.svg)
 
 ## Enumerate all subdomains (only if the scope is *.domain.ext)
 

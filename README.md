@@ -17,7 +17,7 @@ You might also like :
 
 ## Tools
 * [Kali Linux](https://www.kali.org/)
-* [Web Developper](https://addons.mozilla.org/en-Gb/firefox/addon/web-developer/)
+* [Web Developer](https://addons.mozilla.org/en-Gb/firefox/addon/web-developer/)
 * [Hackbar](https://addons.mozilla.org/en-Gb/firefox/addon/hackbar/?src=search)
 * [Burp Proxy](https://portswigger.net)
 * [Fiddler](https://www.telerik.com/download/fiddler)

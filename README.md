@@ -18,7 +18,7 @@ You might also like :
 ## Tools
 * [Kali Linux](https://www.kali.org/)
 * [Web Developer](https://addons.mozilla.org/en-Gb/firefox/addon/web-developer/)
-* [Hackbar](https://addons.mozilla.org/en-Gb/firefox/addon/hackbar/?src=search)
+* [Hackbar](https://addons.mozilla.org/en-Gb/firefox/addon/hackbar/?src=search) - Not compatible with Firefox Quantum
 * [Burp Proxy](https://portswigger.net)
 * [Fiddler](https://www.telerik.com/download/fiddler)
 * [DirBuster](https://sourceforge.net/projects/dirbuster/)
@@ -30,6 +30,8 @@ You might also like :
 * [Recon-ng](https://bitbucket.org/LaNMaSteR53/recon-ng)
 * [Wappalyzer](https://wappalyzer.com/download)
 * [Metasploit](https://www.metasploit.com/)
+* [OpenVAS](http://www.openvas.org/)
+
 
 ## Online Challenges
 * [Hack The Box](hackthebox.eu/)
@@ -44,6 +46,7 @@ You might also like :
 * [Hacksplaining](https://www.hacksplaining.com/exercises)
 * [HackThisSite](https://hackthissite.org)
 * [PentesterLab : Learn Web Penetration Testing: The Right Way](https://pentesterlab.com/)
+* [Hackers.gg](hackers.gg)
 
 ## Bug Bounty
 * [HackerOne](https://hackerone.com)

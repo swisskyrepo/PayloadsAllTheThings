@@ -4,25 +4,43 @@ A SQL injection attack consists of insertion or "injection" of a SQL query via t
 
 ## Entry point detection
 Detection of an SQL injection entry point
+Simple characters
 ```
 '
-"
 %27
-" / %22
-; / %3B
+"
+%22
+#
+%23
+;
+%3B
+)
+Wildcard (*)
+```
+
+Multiple encoding
+```
 %%2727
 %25%27
+```
+
+Merging characters
+```
 `+HERP
 '||'DERP
 '+'herp
-' ' DERP
+' 'DERP
+'%20'HERP
+'%2B'HERP
+```
+
+Weird characters
+```
 Unicode character U+02BA MODIFIER LETTER DOUBLE PRIME (encoded as %CA%BA) was
 transformed into U+0022 QUOTATION MARK (")
 Unicode character U+02B9 MODIFIER LETTER PRIME (encoded as %CA%B9) was
 transformed into U+0027 APOSTROPHE (')
-Wildcard (*)
 ```
-
 
 
 ## SQL injection using SQLmap
@@ -329,6 +347,8 @@ mysql> mysql> select version();
 
 
 ## Thanks to - Other resources
+* Detect SQLi
+  - [Manual SQL Injection Discovery Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
 * MySQL:
   - [PentestMonkey's mySQL injection cheat sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
   - [Reiners mySQL injection Filter Evasion Cheatsheet] (https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/)

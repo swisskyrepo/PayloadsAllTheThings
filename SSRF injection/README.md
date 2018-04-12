@@ -61,6 +61,11 @@ Bypass localhost with a domain redirecting to locahost
 ```
 http://localtest.me
 http://n-pn.info
+http://customer1.app.localhost.my.company.127.0.0.1.nip.io
+```
+The service nip.io is awesome for that, it will convert any ip address as a dns.
+```
+NIP.IO maps <anything>.<IP Address>.nip.io to the corresponding <IP Address>, even 127.0.0.1.nip.io maps to 127.0.0.1
 ```
 
 Bypass localhost with CIDR : 127.x.x.x

@@ -10,6 +10,10 @@ WHITELISTEDDOMAIN="www.test.com" && sed 's/www.whitelisteddomain.tld/'"$WHITELIS
 ```
 
 ## Exploitation
+Using a whitelisted domain or keyword
+```
+www.whitelisted.com.evil.com redirect to evil.com
+```
 
 Using CRLF to bypass "javascript" blacklisted keyword
 ```

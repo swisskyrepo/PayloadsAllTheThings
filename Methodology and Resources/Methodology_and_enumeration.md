@@ -308,12 +308,23 @@ then launch Burp with : java -jar burpsuite_free_v*.jar &
 
   From https://stripe.com/docs/testing#cards : "Use any of the following test card numbers, a valid expiration date in the future, and any random CVC number, to create a successful payment. Each test card's billing country is set to U.S. "
   e.g :
-  
-| NUMBER           | BRAND          |
-| :-------------   | :------------- |
-| 4242424242424242 | Visa           |
-| 4000056655665556 | Visa (debit)   |
-| 5555555555554444 | Mastercard     |
+
+Test card numbers and tokens
+| NUMBER           | BRAND          | TOKEN          |
+| :-------------   | :------------- | :------------- |
+| 4242424242424242 | Visa           | tok_visa       |
+| 4000056655665556 | Visa (debit)   | tok_visa_debit |
+| 5555555555554444 | Mastercard     | tok_mastercard |
+
+International test card numbers and tokens
+| NUMBER           | TOKEN          | COUNTRY        | BRAND          |
+| :-------------   | :------------- | :------------- | :------------- |
+| 4000000400000008 | tok_at         | Austria (AT)   | Visa           |
+| 4000000560000004 | tok_be         | Belgium (BE)   | Visa           |
+| 4000002080000001 | tok_dk         | Denmark (DK)   | Visa           |
+| 4000002460000001 | tok_fi         | Finland (FI)   | Visa           |
+| 4000002500000003 | tok_fr         | France (FR)    | Visa           |
+
 
 ## Thanks to
  * http://blog.it-securityguard.com/bugbounty-yahoo-phpinfo-php-disclosure-2/

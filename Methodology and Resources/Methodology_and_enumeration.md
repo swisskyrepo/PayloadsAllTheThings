@@ -1,6 +1,34 @@
 # Bug Hunting Methodology and Enumeration
 ![exploitation](https://img.shields.io/badge/WIP-70%25-green.svg)
 
+**Summary**
+1. [Enumerate all subdomains](#enumerate-all-subdomains-only-if-the-scope-is-domainext)
+ * Subbrute
+ * KnockPy
+ * GoogleDorks
+ * EyeWitness
+ * Sublist3r
+ * Aquatone
+2. [Passive Recon](#passive-recon)
+ * Shodan
+ * Wayback Machine
+ * The Harvester
+3. [Active Recon](#active-recon)
+ * Nmap
+ * Nmap Script
+ * RPCClient
+ * Enum4all
+4. [List all the subdirectories and files](#list-all-the-subdirectories-and-files)
+ * Gobuster
+ * Backup File Artifacts Checker
+5. [Web Vulnerabilities](#looking-for-web-vulnerabilities)
+ * Repository Github
+ * Burp
+ * Web Checklist
+ * Nikto
+ * Payment functionality
+
+
 ## Enumerate all subdomains (only if the scope is *.domain.ext)
 
 * Using Subbrute
@@ -310,7 +338,7 @@ then launch Burp with : java -jar burpsuite_free_v*.jar &
   e.g :
 
 Test card numbers and tokens  
-    
+
 | NUMBER           | BRAND          | TOKEN          |
 | :-------------   | :------------- | :------------- |
 | 4242424242424242 | Visa           | tok_visa       |

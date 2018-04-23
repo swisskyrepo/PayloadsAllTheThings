@@ -309,14 +309,16 @@ then launch Burp with : java -jar burpsuite_free_v*.jar &
   From https://stripe.com/docs/testing#cards : "Use any of the following test card numbers, a valid expiration date in the future, and any random CVC number, to create a successful payment. Each test card's billing country is set to U.S. "
   e.g :
 
-Test card numbers and tokens
+Test card numbers and tokens  
+    
 | NUMBER           | BRAND          | TOKEN          |
 | :-------------   | :------------- | :------------- |
 | 4242424242424242 | Visa           | tok_visa       |
 | 4000056655665556 | Visa (debit)   | tok_visa_debit |
 | 5555555555554444 | Mastercard     | tok_mastercard |
 
-International test card numbers and tokens
+International test card numbers and tokens     
+
 | NUMBER           | TOKEN          | COUNTRY        | BRAND          |
 | :-------------   | :------------- | :------------- | :------------- |
 | 4000000400000008 | tok_at         | Austria (AT)   | Visa           |

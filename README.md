@@ -3,7 +3,7 @@ A list of useful payloads and bypasses for Web Application Security.
 Feel free to improve with your payloads and techniques !
 I <3 pull requests :)
 
-All sections contain:
+Every section contains:
   - README.md - vulnerability description and how to exploit it
   - Intruders - a set of files to give to Burp Intruder
   - Some exploits

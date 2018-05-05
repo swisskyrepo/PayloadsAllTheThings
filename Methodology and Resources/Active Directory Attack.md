@@ -1,5 +1,25 @@
 # Active Directory Attacks
 
+## Summary
+* [Tools](#tools)
+* [Most common paths to AD compromise](#most-common-paths-to-ad-compromise)
+  * [MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)](#ms14-068-microsoft-kerberos-checksum-validation-vulnerability)
+  * [GPO - Pivoting with Local Admin & Passwords in SYSVOL](#gpo---pivoting-with-local-admin--passwords-in-sysvol)
+  * [Dumping AD Domain Credentials ](#dumping-ad-domain-credentials-systemrootntdsntdsdit)
+  * [Golden Tickets](#golden-tickets)
+  * [Silver Tickets](#silver-tickets)
+  * [Trust Tickets](#trust-tickets)
+  * [Kerberoast](#kerberoast)
+  * [Pass-the-Hash](#pass-the-hash)
+  * [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
+  * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
+* [Privilege Escalation](#privilege-escalation)
+  * [PrivEsc Local Admin - Token Impersonation (RottenPotato)](#privesc-local-admin---token-impersonation-rottenpotato)
+  * [PrivEsc Local Admin - MS16-032](#privesc-local-admin---ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
+  * [PrivEsc Local Admin - MS17-010 (Eternal Blue)](#privesc-local-admin---ms17-010-eternal-blue)
+  * [From Local Admin to Domain Admin](#from-local-admin-to-domain-admin)
+
+
 ## Tools
 
 * [Impacket](https://github.com/CoreSecurity/impacket)
@@ -87,7 +107,7 @@ PowerSploit module
 Invoke-NinjaCopy --path c:\windows\NTDS\ntds.dit --verbose --localdestination c:\ntds.dit
 ```
 
-### Golden Tickets    
+### Golden Tickets
 Mimikatz version
 ```powershell
 Get info - Mimikatz

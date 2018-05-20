@@ -1,6 +1,6 @@
 # POSTGRESQL
 
-## PostgreSQL Comment
+## PostgreSQL Comments
 ```
 --
 /**/  

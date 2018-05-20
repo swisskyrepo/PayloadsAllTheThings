@@ -1,6 +1,6 @@
 # SQLite Injection
 
-## SQLite comment
+## SQLite comments
 ```sql
 --
 /**/

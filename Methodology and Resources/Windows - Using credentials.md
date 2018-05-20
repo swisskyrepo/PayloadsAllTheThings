@@ -1,8 +1,13 @@
 # Windows - Using credentials
 Little tip, if you don't have credentials yet :D
-```
+```powershell
 net user hacker hacker /add
 net localgroup administrators hacker /add
+```
+Some info about your user
+```powershell
+net user /dom
+net user /domain
 ```
 
 

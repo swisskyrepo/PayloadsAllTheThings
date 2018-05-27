@@ -113,6 +113,34 @@ Read a value of a certain sub key
 REG QUERY "HKLM\Software\Microsoft\FTH" /V RuleList
 ```
 
+Password in unattend.xml
+```powershell
+C:\unattend.xml
+C:\Windows\Panther\Unattend.xml
+C:\Windows\Panther\Unattend\Unattend.xml
+C:\Windows\system32\sysprep.inf
+C:\Windows\system32\sysprep\sysprep.xml
+```
+```powershell
+   <component name="Microsoft-Windows-Shell-Setup" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
+    <AutoLogon>
+     <Password>*SENSITIVE*DATA*DELETED*</Password>
+     <Enabled>true</Enabled> 
+     <Username>Administrateur</Username> 
+    </AutoLogon>
+
+    <UserAccounts>
+     <LocalAccounts>
+      <LocalAccount wcm:action="add">
+       <Password>*SENSITIVE*DATA*DELETED*</Password>
+       <Group>administrators;users</Group>
+       <Name>Administrateur</Name>
+      </LocalAccount>
+     </LocalAccounts>
+    </UserAccounts>
+```
+The Metasploit module `post/windows/gather/enum_unattend` looks for these files.
+
 ## Processes Enum
 What processes are running?
 ```powershell

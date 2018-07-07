@@ -1,7 +1,7 @@
-# Payloads All The Things
+# Payloads All The Things 
 A list of useful payloads and bypasses for Web Application Security.
 Feel free to improve with your payloads and techniques !
-I <3 pull requests :)
+I <3 pull requests :) You can also contribute with a coffee [![Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoff.ee/swissky) or a beer IRL ;)
 
 Every section contains:
   - README.md - vulnerability description and how to exploit it

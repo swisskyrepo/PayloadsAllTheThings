@@ -56,3 +56,4 @@ PS C:\> Register-ScheduledTask Backdoor -InputObject $D
 
 ## Thanks to
  * [A view of persistence - Rastamouse](https://rastamouse.me/2018/03/a-view-of-persistence/)
+ * [Windows Persistence Commands - Pwn Wiki](http://pwnwiki.io/#!persistence/windows/index.md)

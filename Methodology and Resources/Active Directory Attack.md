@@ -278,6 +278,7 @@ TODO
 
 ### Kerberoast
 ```c
+https://www.exploit-db.com/docs/english/45051-abusing-kerberos---kerberoasting.pdf
 https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/
 https://room362.com/post/2016/kerberoast-pt1/
 

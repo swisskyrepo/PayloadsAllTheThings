@@ -29,46 +29,72 @@ You might also like :
     * Tomcat CVE-2017-12617.py
 
 
-## Tools
-* [Kali Linux](https://www.kali.org/)
-* [Web Developer](https://addons.mozilla.org/en-Gb/firefox/addon/web-developer/)
-* [Hackbar](https://addons.mozilla.org/en-Gb/firefox/addon/hackbar/?src=search) - Not compatible with Firefox Quantum
-* [Burp Proxy](https://portswigger.net)
-* [Fiddler](https://www.telerik.com/download/fiddler)
-* [DirBuster](https://sourceforge.net/projects/dirbuster/)
-* [GoBuster](https://github.com/OJ/gobuster)
-* [Knockpy](https://github.com/guelfoweb/knock)
-* [SQLmap](http://sqlmap.org)
-* [Nikto](https://cirt.net/nikto2)
-* [Nessus](http://www.tenable.com/products/nessus-vulnerability-scanner)
-* [Recon-ng](https://bitbucket.org/LaNMaSteR53/recon-ng)
-* [Wappalyzer](https://wappalyzer.com/download)
-* [Metasploit](https://www.metasploit.com/)
-* [OpenVAS](http://www.openvas.org/)
+## Try Harder
+Ever wonder where you can use your knowledge ? The following list will help you find "targets" to improve your skills.
+
+* __Bug Bounty Platforms__
+  * [HackerOne](https://hackerone.com)
+  * [BugCrowd](https://bugcrowd.com)
+  * [Bounty Factory](https://bountyfactory.io)
+  * [Synack](https://www.synack.com/)
+  * [Intigriti](https://www.intigriti.com)
+  * [List of Bounty Program](https://bugcrowd.com/list-of-bug-bounty-programs/)
+* __Online Platforms__
+  * [Hack The Box](hackthebox.eu/)
+  * [Penetration test lab "Test lab" | Pentestit](https://lab.pentestit.ru)
+  * [PentesterLab : Learn Web Penetration Testing: The Right Way](https://pentesterlab.com/)
+  * [Zenk-Security](https://www.zenk-security.com/epreuves.php)
+  * [Root-Me](https://www.root-me.org)
+  * [W3Challs](https://w3challs.com/)
+  * [NewbieContest](https://www.newbiecontest.org/)
+  * [Vulnhub](https://www.vulnhub.com/)
+  * [The Cryptopals Crypto Challenges](https://cryptopals.com/)
+  * [alert(1) to win](https://alf.nu/alert1)
+  * [Hacksplaining](https://www.hacksplaining.com/exercises)
+  * [HackThisSite](https://hackthissite.org)
+  * [Hackers.gg](hackers.gg)
+  * [Mind Map - Penetration Testing Practice Labs - Aman Hardikar](http://www.amanhardikar.com/mindmaps/Practice.html)
+
+## Book's list
+Grab a book and relax, these ones are the best security books (in my opinion).
+* [Web Hacking 101](https://leanpub.com/web-hacking-101)
+* [Breaking into Information Security: Learning the Ropes 101 - Andrew Gill](https://leanpub.com/ltr101-breaking-into-infosec)
+* [OWASP Testing Guide v4](https://www.owasp.org/index.php/OWASP_Testing_Project)
+* [Penetration Testing: A Hands-On Introduction to Hacking](http://amzn.to/2dhHTSn)
+* [The Hacker Playbook 2: Practical Guide to Penetration Testing](http://amzn.to/2d9wYKa)
+* [The Hacker Playbook 3: Practical Guide to Penetration Testing - Red Team Edition](http://a.co/6MqC9bD)
+* [The Mobile Application Hacker’s Handbook](http://amzn.to/2cVOIrE)
+* [Black Hat Python: Python Programming for Hackers and Pentesters](http://www.amazon.com/Black-Hat-Python-Programming-Pentesters/dp/1593275900)
+* [Metasploit: The Penetration Tester's Guide](https://www.nostarch.com/metasploit)
+* [The Database Hacker's Handbook, David Litchfield et al., 2005](http://www.wiley.com/WileyCDA/WileyTitle/productCd-0764578014.html)
+* [The Shellcoders Handbook by Chris Anley et al., 2007](http://www.wiley.com/WileyCDA/WileyTitle/productCd-047008023X.html)
+* [The Mac Hacker's Handbook by Charlie Miller & Dino Dai Zovi, 2009](http://www.wiley.com/WileyCDA/WileyTitle/productCd-0470395362.html)
+* [The Web Application Hackers Handbook by D. Stuttard, M. Pinto, 2011](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118026470.html)
+* [iOS Hackers Handbook by Charlie Miller et al., 2012](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118204123.html)
+* [Android Hackers Handbook by Joshua J. Drake et al., 2014](http://www.wiley.com/WileyCDA/WileyTitle/productCd-111860864X.html)
+* [The Browser Hackers Handbook by Wade Alcorn et al., 2014](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118662091.html)
+* [The Mobile Application Hackers Handbook by Dominic Chell et al., 2015](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118958500.html)
+* [Car Hacker's Handbook by Craig Smith, 2016](https://www.nostarch.com/carhacking)
 
 
-## Online Challenges
-* [Hack The Box](hackthebox.eu/)
-* [Root-Me](https://www.root-me.org)
-* [Zenk-Security](https://www.zenk-security.com/epreuves.php)
-* [W3Challs](https://w3challs.com/)
-* [NewbieContest](https://www.newbiecontest.org/)
-* [Vulnhub](https://www.vulnhub.com/)
-* [The Cryptopals Crypto Challenges](https://cryptopals.com/)
-* [Penetration Testing Practice Labs](http://www.amanhardikar.com/mindmaps/Practice.html)
-* [alert(1) to win](https://alf.nu/alert1)
-* [Hacksplaining](https://www.hacksplaining.com/exercises)
-* [HackThisSite](https://hackthissite.org)
-* [PentesterLab : Learn Web Penetration Testing: The Right Way](https://pentesterlab.com/)
-* [Hackers.gg](hackers.gg)
+## More resources
 
-## Bug Bounty
-* [HackerOne](https://hackerone.com)
-* [BugCrowd](https://bugcrowd.com)
-* [Bounty Factory](https://bountyfactory.io)
-* [List of Bounty Program](https://bugcrowd.com/list-of-bug-bounty-programs/)
+### Blogs/Websites
+* [BUG BOUNTY FIELD MANUAL: THE DEFINITIVE GUIDE FOR PLANNING, LAUNCHING, AND OPERATING A SUCCESSFUL BUG BOUNTY PROGRAM](https://www.hackerone.com/blog/the-bug-bounty-field-manual)
+* [How to become a Bug Bounty Hunter - Sam Houston](https://forum.bugcrowd.com/t/researcher-resources-how-to-become-a-bug-bounty-hunter/1102)
+* [Tips from Top Hackers – Bug Hunting methodology and the importance of writing quality submissions - Sam Houston](https://www.bugcrowd.com/tips-from-top-hackers-bug-hunting-methodology-and-the-importance-of-writing-quality-submissions/)
+* [ARNE SWINNEN'S SECURITY BLOG JUST ANOTHER INFOSEC BLOG](https://www.arneswinnen.net)
+* [XSS Jigsaw - innerht.ml](https://blog.innerht.ml)
+* [ZeroSec Blog: Featuring Write-Ups, Projects & Adventures](https://blog.zsec.uk/tag/ltr101/)
 
-## Docker
+### Youtube
+* [Hunting for Top Bounties - Nicolas Grégoire](https://www.youtube.com/watch?v=mQjTgDuLsp4)
+* [BSidesSF 101 The Tales of a Bug Bounty Hunter - Arne Swinnen](https://www.youtube.com/watch?v=dsekKYNLBbc)
+* [Security Fest 2016 The Secret life of a Bug Bounty Hunter - Frans Rosén](https://www.youtube.com/watch?v=KDo68Laayh8)
+* [IppSec Channel - Hack The Box Writeups](https://www.youtube.com/channel/UCa6eh7gCkpPo5XXUDfygQQA)
+
+
+### Docker
 | Command     | Link |
 | :------------- | :------------- |
 | `docker pull remnux/metasploit` | [docker-metasploit](https://hub.docker.com/r/remnux/metasploit/) |
@@ -83,37 +109,3 @@ You might also like :
 | `docker-compose build && docker-compose up` | [OWASP NodeGoat](https://github.com/owasp/nodegoat#option-3---run-nodegoat-on-docker) |
 | `docker pull citizenstig/nowasp` | [OWASP Mutillidae II Web Pen-Test Practice Application](https://hub.docker.com/r/citizenstig/nowasp/) |
 | `docker pull bkimminich/juice-shop` | [OWASP Juice Shop](https://github.com/bkimminich/juice-shop#docker-container) |
-
-
-## More resources
-### Book's list:
-* [Web Hacking 101](https://leanpub.com/web-hacking-101)
-* [OWASP Testing Guide v4](https://www.owasp.org/index.php/OWASP_Testing_Project)
-* [Penetration Testing: A Hands-On Introduction to Hacking](http://amzn.to/2dhHTSn)
-* [The Hacker Playbook 2: Practical Guide to Penetration Testing](http://amzn.to/2d9wYKa)
-* [The Mobile Application Hacker’s Handbook](http://amzn.to/2cVOIrE)
-* [Black Hat Python: Python Programming for Hackers and Pentesters](http://www.amazon.com/Black-Hat-Python-Programming-Pentesters/dp/1593275900)
-* [Metasploit: The Penetration Tester's Guide](https://www.nostarch.com/metasploit)
-* [The Database Hacker's Handbook, David Litchfield et al., 2005](http://www.wiley.com/WileyCDA/WileyTitle/productCd-0764578014.html)
-* [The Shellcoders Handbook by Chris Anley et al., 2007](http://www.wiley.com/WileyCDA/WileyTitle/productCd-047008023X.html)
-* [The Mac Hacker's Handbook by Charlie Miller & Dino Dai Zovi, 2009](http://www.wiley.com/WileyCDA/WileyTitle/productCd-0470395362.html)
-* [The Web Application Hackers Handbook by D. Stuttard, M. Pinto, 2011](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118026470.html)
-* [iOS Hackers Handbook by Charlie Miller et al., 2012](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118204123.html)
-* [Android Hackers Handbook by Joshua J. Drake et al., 2014](http://www.wiley.com/WileyCDA/WileyTitle/productCd-111860864X.html)
-* [The Browser Hackers Handbook by Wade Alcorn et al., 2014](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118662091.html)
-* [The Mobile Application Hackers Handbook by Dominic Chell et al., 2015](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118958500.html)
-* [Car Hacker's Handbook by Craig Smith, 2016](https://www.nostarch.com/carhacking)
-
-### Blogs/Websites
-* http://blog.zsec.uk/101-web-testing-tooling/
-* https://blog.innerht.ml
-* https://blog.zsec.uk
-* https://www.exploit-db.com/google-hacking-database
-* https://www.arneswinnen.net
-* https://forum.bugcrowd.com/t/researcher-resources-how-to-become-a-bug-bounty-hunter/1102
-
-### Youtube
-* [Hunting for Top Bounties - Nicolas Grégoire](https://www.youtube.com/watch?v=mQjTgDuLsp4)
-* [BSidesSF 101 The Tales of a Bug Bounty Hunter - Arne Swinnen](https://www.youtube.com/watch?v=dsekKYNLBbc)
-* [Security Fest 2016 The Secret life of a Bug Bounty Hunter - Frans Rosén](https://www.youtube.com/watch?v=KDo68Laayh8)
-* [IppSec Channel - Hack The Box Writeups](https://www.youtube.com/channel/UCa6eh7gCkpPo5XXUDfygQQA)

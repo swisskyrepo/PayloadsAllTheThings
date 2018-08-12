@@ -1,4 +1,4 @@
-# PHP Juggling type and magic hashes	
+# PHP Juggling type and magic hashes
 
 ## Exploit
 
@@ -14,13 +14,12 @@ var_dump('0xABCdef'       == '     0xABCdef');
 ?>
 ```
 
-
 | Hash | “Magic” Number / String    | Magic Hash                                    | Found By      |
 | ---- | -------------------------- |:---------------------------------------------:| -------------:|
 | MD5  | 240610708                  | 0e462097431906509019562988736854              | Michal Spacek |
 | SHA1 | 10932435112                | 0e07766915004133176347055865026311692244      | Independently found by Michael A. Cleverly & Michele Spagnuolo & Rogdham |
 
-
 ## Thanks to
-* http://turbochaos.blogspot.com/2013/08/exploiting-exotic-bugs-php-type-juggling.html
-* https://www.whitehatsec.com/blog/magic-hashes/
+
+* [Writing Exploits For Exotic Bug Classes: PHP Type Juggling By Tyler Borland](http://turbochaos.blogspot.com/2013/08/exploiting-exotic-bugs-php-type-juggling.html)
+* [Magic Hashes - WhieHatSec](https://www.whitehatsec.com/blog/magic-hashes/)

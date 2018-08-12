@@ -1,8 +1,10 @@
 # Java Deserialization
 
 ## Exploit
+
 [ysoserial](https://github.com/frohoff/ysoserial) : A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization.
-```
+
+```java
 java -jar ysoserial.jar CommonsCollections1 calc.exe > commonpayload.bin
 java -jar ysoserial.jar Groovy1 calc.exe > groovypayload.bin
 java -jar ysoserial-master-v0.0.4-g35bce8f-67.jar Groovy1 'ping 127.0.0.1' > payload.bin
@@ -42,6 +44,7 @@ URLDNS              |@gebl| | jre only vuln detect
 Wicket1             |@jacob-baines               |wicket-util:6.23.0, slf4j-api:1.6.4
 
 Additional tools (integration ysoserial with Burp Suite):
+
 - [JavaSerialKiller](https://github.com/NetSPI/JavaSerialKiller)
 - [Java Deserialization Scanner](https://github.com/federicodotta/Java-Deserialization-Scanner)
 - [Burp-ysoserial](https://github.com/summitt/burp-ysoserial)
@@ -52,6 +55,7 @@ JRE8u20_RCE_Gadget
 [https://github.com/pwntester/JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget)
 
 ## Thanks to
- * [ysoserial](https://github.com/frohoff/ysoserial)
- * [Java-Deserialization-Cheat-Sheet - GrrrDog](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
- * [Understanding & practicing java deserialization exploits](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)
+
+- [Github - ysoserial](https://github.com/frohoff/ysoserial)
+- [Java-Deserialization-Cheat-Sheet - GrrrDog](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
+- [Understanding & practicing java deserialization exploits](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)

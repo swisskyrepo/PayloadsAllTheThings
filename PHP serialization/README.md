@@ -2,6 +2,8 @@
 
 PHP Object Injection is an application level vulnerability that could allow an attacker to perform different kinds of malicious attacks, such as Code Injection, SQL Injection, Path Traversal and Application Denial of Service, depending on the context. The vulnerability occurs when user-supplied input is not properly sanitized before being passed to the unserialize() PHP function. Since PHP allows object serialization, attackers could pass ad-hoc serialized strings to a vulnerable unserialize() call, resulting in an arbitrary PHP object(s) injection into the application scope.
 
+Also you should check the `Wrapper Phar://` in [File Inclusion - Path Traversal](github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion%20-%20Path%20Traversal#wrapper-phar) which use a PHP object injection.
+
 ## Exploit with the __wakeup in the unserialize function
 
 Vulnerable code:

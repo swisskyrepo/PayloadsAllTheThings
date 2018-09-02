@@ -1,5 +1,6 @@
 import itertools
 import requests
+import string
 import sys
 
 print('[+] Trying to win the race')

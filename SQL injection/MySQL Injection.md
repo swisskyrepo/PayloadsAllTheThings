@@ -1,6 +1,6 @@
 # MYSQL Injection
 
-## MySQL 
+## MySQL
 
 ```sql
 # MYSQL Comment

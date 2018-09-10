@@ -1,6 +1,6 @@
 # SQL injection
 
-A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application
+A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application.
 
 ## Summary
 
@@ -9,6 +9,7 @@ A SQL injection attack consists of insertion or "injection" of a SQL query via t
 * [CheatSheet OracleSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/OracleSQL%20Injection.md)
 * [CheatSheet PostgreSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/PostgreSQL%20Injection.md)
 * [CheatSheet SQLite Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/SQLite%20Injection.md)
+* [CheatSheet Cassandra Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/Cassandra%20Injection.md)
 * [Entry point detection](#entry-point-detection)
 * [DBMS Identification](#dbms-identification)
 * [SQL injection using SQLmap](#sql-injection-using-sqlmap)

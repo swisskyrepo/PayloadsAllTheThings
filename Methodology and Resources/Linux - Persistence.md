@@ -78,6 +78,26 @@ Clear the last line of the history.
 history -d $(history | tail -2 | awk '{print $1}') 2> /dev/null
 ```
 
+Clear history
+
+```bash
+[SPACE] ANY COMMAND
+or
+export HISTSIZE=0
+export HISTFILESIZE=0
+unset HISTFILE; CTRL-D
+or
+kill -9 $$
+or
+echo "" > ~/.bash_history
+or
+rm ~/.bash_history -rf
+or
+history -c
+or
+ln /dev/null ~/.bash_history -sf
+```
+
 The following directories are temporary and usually writeable
 
 ```bash
@@ -85,7 +105,6 @@ The following directories are temporary and usually writeable
 /tmp/
 /dev/shm/
 ```
-
 
 ## Thanks to
 

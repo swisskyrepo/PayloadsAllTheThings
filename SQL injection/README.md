@@ -15,7 +15,7 @@ A SQL injection attack consists of insertion or "injection" of a SQL query via t
 * [SQL injection using SQLmap](#sql-injection-using-sqlmap)
 * [Authentication bypass](#authentication-bypass)
 * [Polyglot injection](#polyglot-injection-multicontext)
-* [Second order injection](#second-order-injection)
+* [Routed injection](#routed-injection)
 * [Insert Statement - ON DUPLICATE KEY UPDATE](#insert-statement---on-duplicate-key-update)
 * [WAF Bypass](#waf-bypass)
 

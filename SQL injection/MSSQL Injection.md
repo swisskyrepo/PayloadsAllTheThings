@@ -1,5 +1,12 @@
 # MSSQL Injection
 
+## MSSQL comments
+
+```sql
+-- comment goes here
+/* comment goes here */
+```
+
 ## MSSQL version
 
 ```sql

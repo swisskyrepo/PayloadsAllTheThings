@@ -1,5 +1,12 @@
 # Java Deserialization
 
+## Detection
+
+- "AC ED 00 05" in Hex
+- "rO0" in Base64
+- Content-type = "application/x-java-serialized-object"
+- "H4sIAAAAAAAAAJ" in gzip(base64)
+
 ## Exploit
 
 [ysoserial](https://github.com/frohoff/ysoserial) : A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization.
@@ -54,8 +61,12 @@ Additional tools (integration ysoserial with Burp Suite):
 JRE8u20_RCE_Gadget
 [https://github.com/pwntester/JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget)
 
+JexBoss - JBoss (and others Java Deserialization Vulnerabilities) verify and EXploitation Tool, [https://github.com/joaomatosf/jexboss](https://github.com/joaomatosf/jexboss)
+
 ## Thanks to
 
 - [Github - ysoserial](https://github.com/frohoff/ysoserial)
 - [Java-Deserialization-Cheat-Sheet - GrrrDog](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
 - [Understanding & practicing java deserialization exploits](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)
+- [How i found a 1500$ worth Deserialization vulnerability - @D0rkerDevil](https://medium.com/@D0rkerDevil/how-i-found-a-1500-worth-deserialization-vulnerability-9ce753416e0a)
+- [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - 14 Aug 2017, Peter Stöckli](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)

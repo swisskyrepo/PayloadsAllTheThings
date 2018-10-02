@@ -2,14 +2,6 @@
 
 ## Summary
 
-* [Enumerate all subdomains](#enumerate-all-subdomains-only-if-the-scope-is-domainext)
-  * Subbrute
-  * KnockPy
-  * GoogleDorks
-  * EyeWitness
-  * Sublist3r
-  * Aquatone
-
 * [Passive Recon](#passive-recon)
   * Shodan
   * Wayback Machine
@@ -31,92 +23,6 @@
   * Web Checklist
   * Nikto
   * Payment functionality
-
-## Enumerate all subdomains (only if the scope is *.domain.ext)
-
-### Using Subbrute
-
-```bash
-git clone https://github.com/TheRook/subbrute
-python subbrute.py domain.example.com
-```
-
-### Using KnockPy with Daniel Miessler’s SecLists for subdomain "/Discover/DNS"
-
-```bash
-git clone https://github.com/guelfoweb/knock
-git clone https://github.com/danielmiessler/SecLists.git
-knockpy domain.com -w subdomains-top1mil-110000.txt
-```
-
-### Using Google Dorks and Google Transparency Report
-
-You need to include subdomains ;)
-https://www.google.com/transparencyreport/https/ct/?hl=en-US#domain=[DOMAIN]g&incl_exp=true&incl_sub=true
-
-```bash
-site:*.domain.com -www
-site:domain.com filetype:pdf
-site:domain.com inurl:'&'
-site:domain.com inurl:login,register,upload,logout,redirect,redir,goto,admin
-site:domain.com ext:php,asp,aspx,jsp,jspa,txt,swf
-site:*.*.domain.com
-```
-
-### Subdomain take over using HostileSubBruteForcer
-
-```bash
-git clone https://github.com/nahamsec/HostileSubBruteforcer
-chmox +x sub_brute.rb
-./sub_brute.rb
-```
-
-### EyeWitness and Nmap scans from the KnockPy and enumall scans
-
-```bash
-git clone https://github.com/ChrisTruncer/EyeWitness.git
-./setup/setup.sh
-./EyeWitness.py -f filename -t optionaltimeout --open (Optional)
-./EyeWitness -f urls.txt --web
-./EyeWitness -x urls.xml -t 8 --headless
-./EyeWitness -f rdp.txt --rdp
-```
-
-### Using Sublist3r
-
-```bash
-To enumerate subdomains of specific domain and show the results in realtime:
-python sublist3r.py -v -d example.com
-
-To enumerate subdomains and enable the bruteforce module:
-python sublist3r.py -b -d example.com
-
-To enumerate subdomains and use specific engines such Google, Yahoo and Virustotal engines
-python sublist3r.py -e google,yahoo,virustotal -d example.com
-
-python sublist3r.py -b -d example.com
-```
-
-### Using Aquatone
-
-```powershell
-gem install aquatone
-
-Discover subdomains : results in ~/aquatone/example.com/hosts.txt
-aquatone-discover --domain example.com
-aquatone-discover --domain example.com --threads 25
-aquatone-discover --domain example.com --sleep 5 --jitter 30
-aquatone-discover --set-key shodan o1hyw8pv59vSVjrZU3Qaz6ZQqgM91ihQ
-
-Active scans : results in ~/aquatone/example.com/urls.txt
-aquatone-scan --domain example.com
-aquatone-scan --domain example.com --ports 80,443,3000,8080
-aquatone-scan --domain example.com --ports large
-aquatone-scan --domain example.com --threads 25
-
-Final results
-aquatone-gather --domain example.com
-```
 
 ## Passive recon
 

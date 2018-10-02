@@ -133,6 +133,8 @@ cat /tmp/results_subfinder.txt | massdns -r $DNS_RESOLVERS -t A -o S -w /tmp/res
 
 ## Subdomain take over
 
+Check [Can I take over xyz](https://github.com/EdOverflow/can-i-take-over-xyz) by EdOverflow for a list of services and how to claim (sub)domains with dangling DNS records.
+
 ### Using HostileSubBruteForcer
 
 ```bash
@@ -147,3 +149,8 @@ chmox +x sub_brute.rb
 go get github.com/Ice3man543/SubOver
 ./SubOver -l subdomains.txt
 ```
+
+## Thanks
+
+* [Subdomain Takeover: Proof Creation for Bug Bounties - Patrik Hudak](https://0xpatrik.com/takeover-proofs/)
+* [Subdomain Takeover: Basics - Patrik Hudak](https://0xpatrik.com/subdomain-takeover-basics/)

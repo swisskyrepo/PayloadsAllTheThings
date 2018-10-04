@@ -117,8 +117,8 @@ Metasploit modules to enumerate shares and credentials
 
 ```c
 scanner/smb/smb_enumshares
-windows/gather/enumshares
-windows/gather/credentials/gpp
+post/windows/gather/enum_shares
+post/windows/gather/credentials/gpp
 ```
 
 Crackmapexec modules

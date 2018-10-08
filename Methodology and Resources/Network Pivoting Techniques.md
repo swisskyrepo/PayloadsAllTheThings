@@ -32,7 +32,6 @@ Cool Tip : Konami SSH Port forwarding
 -D 1090
 ```
 
-
 ### Local Port Forwarding
 
 ```bash
@@ -133,3 +132,4 @@ python client.py --server-ip [server ip] --server-port 9443 --ntlm-proxy-ip [pro
 * [Network Pivoting Techniques - Bit rot](https://bitrot.sh/cheatsheet/14-12-2017-pivoting/)
 * [Port Forwarding in Windows - Windows OS Hub](http://woshub.com/port-forwarding-in-windows/)
 * [Using the SSH "Konami Code" (SSH Control Sequences) - Jeff McJunkin](https://pen-testing.sans.org/blog/2015/11/10/protected-using-the-ssh-konami-code-ssh-control-sequences)
+* [A Red Teamer's guide to pivoting- Mar 23, 2017 - Artem Kondratenko](https://artkond.com/2017/03/23/pivoting-guide/)

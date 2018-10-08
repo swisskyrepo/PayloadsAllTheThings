@@ -436,6 +436,13 @@ bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/containers/json
 bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/images/json
 ```
 
+### SSRF URL for Rancher
+
+```powershell
+curl http://rancher-metadata/<version>/<path>
+```
+
+More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-service/
 
 ## Thanks to
 

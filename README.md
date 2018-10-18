@@ -115,6 +115,7 @@ Grab a book and relax, these ones are the best security books (in my opinion).
 | `docker pull owasp/zap2docker-stable` | [official OWASP ZAP](https://github.com/zaproxy/zaproxy) |
 | `docker pull wpscanteam/wpscan`       | [official WPScan](https://hub.docker.com/r/wpscanteam/wpscan/) |
 | `docker pull infoslack/dvwa`          | [Damn Vulnerable Web Application (DVWA)](https://hub.docker.com/r/infoslack/dvwa/) |
+| `docker run --name dvna -p 9090:9090 -d appsecco/dvna:sqlite` | [Damn Vulnerable NodeJS Application](https://github.com/appsecco/dvna) |
 | `docker pull danmx/docker-owasp-webgoat` | [OWASP WebGoat Project docker image](https://hub.docker.com/r/danmx/docker-owasp-webgoat/) |
 | `docker pull opendns/security-ninjas` | [Security Ninjas](https://hub.docker.com/r/opendns/security-ninjas/) |
 | `docker pull ismisepaul/securityshepherd` | [OWASP Security Shepherd](https://hub.docker.com/r/ismisepaul/securityshepherd/) |

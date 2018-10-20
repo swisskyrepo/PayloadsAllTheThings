@@ -29,6 +29,13 @@ http://[bucket_name].s3.amazonaws.com/
 http://flaws.cloud.s3.amazonaws.com/
 ```
 
+Their names are also listed if the listing is enabled.
+
+```xml
+<ListBucketResult xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+<Name>adobe-REDACTED-REDACTED-REDACTED</Name>
+```
+
 ## Basic test - Listing the files
 
 ```bash
@@ -49,6 +56,11 @@ Non-authoritative answer:
 ```
 
 ## Move a file into the bucket
+
+```bash
+aws s3 cp local.txt s3://some-bucket/remote.txt --acl authenticated-read
+aws s3 cp login.html s3://$bucketName --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
+```
 
 ```bash
 aws s3 mv test.txt s3://hackerone.marketing

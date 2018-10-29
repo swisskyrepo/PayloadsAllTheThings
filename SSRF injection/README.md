@@ -91,6 +91,7 @@ Bypass localhost with a domain redirecting to locahost
 ```powershell
 http://localtest.me
 http://customer1.app.localhost.my.company.127.0.0.1.nip.io
+http://mail.ebc.apple.com redirect to 127.0.0.6 == localhost
 ```
 
 The service nip.io is awesome for that, it will convert any ip address as a dns.

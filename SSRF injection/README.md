@@ -464,3 +464,4 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 * [PHP SSRF @secjuice](https://medium.com/secjuice/php-ssrf-techniques-9d422cb28d51)
 * [How I convert SSRF to xss in a ssrf vulnerable Jira](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
 * [Piercing the Veil: Server Side Request Forgery to NIPRNet access](https://medium.com/bugbountywriteup/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a)
+* [Hacker101 SSRF](https://www.youtube.com/watch?v=66ni2BTIjS8)

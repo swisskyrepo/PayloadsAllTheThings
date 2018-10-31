@@ -1,0 +1,9 @@
+userPassword 
+surname 
+name 
+cn 
+sn 
+objectClass 
+mail 
+givenName 
+commonName

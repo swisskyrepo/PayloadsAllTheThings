@@ -87,10 +87,11 @@ Bypass blacklisted word with double quote
 w"h"o"am"i
 ```
 
-Bypass blacklisted word with backslash
+Bypass blacklisted word with backslash and slash
 
 ```powershell
 w\ho\am\i
+/\b\i\n/////s\h
 ```
 
 Bypass blacklisted word with $@

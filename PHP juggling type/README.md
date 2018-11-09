@@ -1,6 +1,35 @@
 # PHP Juggling type and magic hashes
 
-## Exploit
+## Type Juggling
+
+True statements
+
+```php
+var_dump('0010e2' == '1e3');             # true
+var_dump('0xABCdef' == ' 0xABCdef');     # true PHP 5.0 / false PHP 7.0
+var_dump('0xABCdef' == '     0xABCdef'); # true PHP 5.0 / false PHP 7.0
+var_dump('0x01' == 1)                    # true PHP 5.0 / false PHP 7.0
+var_dump('0x1234Ab'       == '1193131');
+
+'123'  == 123
+'123a' == 123
+'abc'  == 0
+
+'' == 0 == false == NULL
+'' == 0       # true
+0  == false   # true
+false == NULL # true
+NULL == ''    # true
+```
+
+NULL statements
+
+```php
+var_dump(sha1([])); # NULL
+var_dump(md5([]));  # NULL
+```
+
+## Magic Hashes - Exploit
 
 ```php
 <?php
@@ -8,9 +37,6 @@ var_dump(md5('240610708') == md5('QNKCDZO'));
 var_dump(md5('aabg7XSs')  == md5('aabC9RqS'));
 var_dump(sha1('aaroZmOk') == sha1('aaK1STfY'));
 var_dump(sha1('aaO8zKZF') == sha1('aa3OFF9m'));
-var_dump('0010e2'         == '1e3');
-var_dump('0x1234Ab'       == '1193131');
-var_dump('0xABCdef'       == '     0xABCdef');
 ?>
 ```
 

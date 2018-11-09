@@ -29,6 +29,7 @@ x' or name()='username' or 'x'='y
 &
 (
 )
+)(cn=))\x00
 *(|(mail=*))
 *(|(objectclass=*))
 */*

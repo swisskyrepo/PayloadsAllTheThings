@@ -317,6 +317,7 @@ http://169.254.169.254/latest/user-data
 http://169.254.169.254/latest/user-data/iam/security-credentials/[ROLE NAME]
 http://169.254.169.254/latest/meta-data/
 http://169.254.169.254/latest/meta-data/iam/security-credentials/[ROLE NAME]
+http://169.254.169.254/latest/meta-data/iam/security-credentials/PhotonInstance
 http://169.254.169.254/latest/meta-data/ami-id
 http://169.254.169.254/latest/meta-data/reservation-id
 http://169.254.169.254/latest/meta-data/hostname

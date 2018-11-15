@@ -350,6 +350,7 @@ Beta does NOT require a header atm (thanks Mathias Karlsson @avlidienbrunn)
 
 ```powershell
 http://metadata.google.internal/computeMetadata/v1beta1/
+http://metadata.google.internal/computeMetadata/v1beta1/?recursive=true
 ```
 
 ### SSRF URL for Digital Ocean

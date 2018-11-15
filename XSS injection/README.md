@@ -9,7 +9,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
 - [Polyglot XSS](#polyglot-xss)
 - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
-- [CSP Bypas](#csp-bypass)
+- [CSP Bypass](#csp-bypass)
 - [Common WAF Bypas](#common-waf-bypass)
 
 ## Exploit code or POC
@@ -827,3 +827,4 @@ Try here : [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php
 - [XSSING WEB PART - 2 - Rakesh Mane](http://blog.rakeshmane.com/2017/08/xssing-web-part-2.html)
 - [Making an XSS triggered by CSP bypass on Twitter. @tbmnull](https://medium.com/@tbmnull/making-an-xss-triggered-by-csp-bypass-on-twitter-561f107be3e5)
 - [Ways to alert(document.domain) - @tomnomnom](https://gist.github.com/tomnomnom/14a918f707ef0685fdebd90545580309)
+- [D1T1 - Michele Spagnuolo and Lukas Wilschelbaum - So We Broke All CSPs](https://conference.hitb.org/hitbsecconf2017ams/materials/D1T1%20-%20Michele%20Spagnuolo%20and%20Lukas%20Wilschelbaum%20-%20So%20We%20Broke%20All%20CSPS.pdf)

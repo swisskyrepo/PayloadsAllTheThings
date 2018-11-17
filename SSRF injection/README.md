@@ -9,20 +9,23 @@ Tools:
 
 ## Summary
 
-* [Exploit with localhost](#summary)
-* [Bypassing filters](#summary)
-* [SSRF via URL Scheme](#summary)
-* [SSRF to XSS](#summary)
-* [SSRF URL for Cloud Instances](#summary)
-  * [SSRF URL for AWS Bucket](#summary)
-  * [SSRF URL for Google Cloud](#summary)
-  * [SSRF URL for Digital Ocean](#summary)
-  * [SSRF URL for Packetcloud](#summary)
-  * [SSRF URL for Azure](#summary)
-  * [SSRF URL for OpenStack/RackSpace](#summary)
-  * [SSRF URL for HP Helion](#summary)
-  * [SSRF URL for Oracle Cloud](#summary)
-  * [SSRF URL for Alibaba](#summary)
+* [Exploit with localhost](#exploit-with-localhost)
+* [Bypassing filters](#bypassing-filters)
+* [SSRF via URL Scheme](#ssrf-via-url-scheme)
+* [SSRF to XSS](#ssrf-to-xss-by-d0rkerdevil--alyssaoherrera)
+* [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
+  * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
+  * [SSRF URL for Google Cloud](#ssrf-url-for-google-cloud)
+  * [SSRF URL for Digital Ocean](#ssrf-url-for-digital-ocean)
+  * [SSRF URL for Packetcloud](#ssrf-url-for-packetcloud)
+  * [SSRF URL for Azure](#ssrf-url-for-azure)
+  * [SSRF URL for OpenStack/RackSpace](#ssrf-url-for-openstackrackspace)
+  * [SSRF URL for HP Helion](#ssrf-url-for-hp-helion)
+  * [SSRF URL for Oracle Cloud](#ssrf-url-for-oracle-cloud)
+  * [SSRF URL for Kubernetes ETCD](#ssrf-url-for-kubernetes-etcd)
+  * [SSRF URL for Alibaba](#ssrf-url-for-alibaba)
+  * [SSRF URL for Docker](#ssrf-url-for-docker)
+  * [SSRF URL for Rancher](#ssrf-url-for-rancher)
 
 ## Exploit with localhost
 
@@ -451,19 +454,27 @@ curl http://rancher-metadata/<version>/<path>
 
 More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-service/
 
+## Examples
+
+- [SSRF and local file read in video to gif converter](https://hackerone.com/reports/115857)
+- [SSRF in https://imgur.com/vidgif/url](https://hackerone.com/reports/115748)
+- [SSRF in proxy.duckduckgo.com](https://hackerone.com/reports/358119)
+- [Blind SSRF on errors.hackerone.net](https://hackerone.com/reports/374737)
+- [SSRF on *shopifycloud.com](https://hackerone.com/reports/382612)
+
 ## Thanks to
 
-* [Hackerone - How To: Server-Side Request Forgery (SSRF)](https://www.hackerone.com/blog-How-To-Server-Side-Request-Forgery-SSRF)
-* [Awesome URL abuse for SSRF by @orange_8361 #BHUSA](https://twitter.com/albinowax/status/890725759861403648)
-* [How I Chained 4 vulnerabilities on GitHub Enterprise, From SSRF Execution Chain to RCE! Orange Tsai](http://blog.orange.tw/2017/07/how-i-chained-4-vulnerabilities-on.html)
-* [#HITBGSEC 2017 SG Conf D1 - A New Era Of SSRF - Exploiting Url Parsers - Orange Tsai](https://www.youtube.com/watch?v=D1S-G8rJrEk)
-* [SSRF Tips - xl7dev](http://blog.safebuff.com/2016/07/03/SSRF-Tips/)
-* [SSRF in https://imgur.com/vidgif/url](https://hackerone.com/reports/115748)
-* [Les Server Side Request Forgery : Comment contourner un pare-feu - @Geluchat](https://www.dailysecurity.fr/server-side-request-forgery/)
-* [AppSecEU15 Server side browsing considered harmful - @Agarri](http://www.agarri.fr/docs/AppSecEU15-Server_side_browsing_considered_harmful.pdf)
-* [Enclosed alphanumerics - @EdOverflow](https://twitter.com/EdOverflow)
-* [Hacking the Hackers: Leveraging an SSRF in HackerTarget - @sxcurity](http://www.sxcurity.pro/2017/12/17/hackertarget/)
-* [PHP SSRF @secjuice](https://medium.com/secjuice/php-ssrf-techniques-9d422cb28d51)
-* [How I convert SSRF to xss in a ssrf vulnerable Jira](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
-* [Piercing the Veil: Server Side Request Forgery to NIPRNet access](https://medium.com/bugbountywriteup/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a)
-* [Hacker101 SSRF](https://www.youtube.com/watch?v=66ni2BTIjS8)
+- [Hackerone - How To: Server-Side Request Forgery (SSRF)](https://www.hackerone.com/blog-How-To-Server-Side-Request-Forgery-SSRF)
+- [Awesome URL abuse for SSRF by @orange_8361 #BHUSA](https://twitter.com/albinowax/status/890725759861403648)
+- [How I Chained 4 vulnerabilities on GitHub Enterprise, From SSRF Execution Chain to RCE! Orange Tsai](http://blog.orange.tw/2017/07/how-i-chained-4-vulnerabilities-on.html)
+- [#HITBGSEC 2017 SG Conf D1 - A New Era Of SSRF - Exploiting Url Parsers - Orange Tsai](https://www.youtube.com/watch?v=D1S-G8rJrEk)
+- [SSRF Tips - xl7dev](http://blog.safebuff.com/2016/07/03/SSRF-Tips/)
+- [SSRF in https://imgur.com/vidgif/url](https://hackerone.com/reports/115748)
+- [Les Server Side Request Forgery : Comment contourner un pare-feu - @Geluchat](https://www.dailysecurity.fr/server-side-request-forgery/)
+- [AppSecEU15 Server side browsing considered harmful - @Agarri](http://www.agarri.fr/docs/AppSecEU15-Server_side_browsing_considered_harmful.pdf)
+- [Enclosed alphanumerics - @EdOverflow](https://twitter.com/EdOverflow)
+- [Hacking the Hackers: Leveraging an SSRF in HackerTarget - @sxcurity](http://www.sxcurity.pro/2017/12/17/hackertarget/)
+- [PHP SSRF @secjuice](https://medium.com/secjuice/php-ssrf-techniques-9d422cb28d51)
+- [How I convert SSRF to xss in a ssrf vulnerable Jira](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
+- [Piercing the Veil: Server Side Request Forgery to NIPRNet access](https://medium.com/bugbountywriteup/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a)
+- [Hacker101 SSRF](https://www.youtube.com/watch?v=66ni2BTIjS8)

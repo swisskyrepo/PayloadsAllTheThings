@@ -9,3 +9,4 @@ for i in {0..5}; do docker run -it ruby:2.${i} ruby -e 'Marshal.load(["0408553a1
 ## Thanks
 
 - [RUBY 2.X UNIVERSAL RCE DESERIALIZATION GADGET CHAIN - elttam, Luke Jahnke](https://www.elttam.com.au/blog/ruby-deserialization/)
+- [Online access to Ruby 2.x Universal RCE Deserialization Gadget Chain - PentesterLab](https://pentesterlab.com/exercises/ruby_ugadget/online)

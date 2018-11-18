@@ -30,12 +30,22 @@ You might also like :
   - [Windows - Using credentials.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Using%20credentials.md)
 
 - [CVE Exploits](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CVE%20Exploits)
-  - Apache Struts 2 CVE-2017-5638.py
-  - Apache Struts 2 CVE-2017-9805.py
-  - Drupalgeddon2 CVE-2018-7600.rb
-  - Heartbleed CVE-2014-0160.py
-  - Shellshock CVE-2014-6271.py
-  - Tomcat CVE-2017-12617.py
+    - Apache Struts 2 CVE-2013-2251 CVE-2017-5638 CVE-2018-11776_.py
+    - Apache Struts 2 CVE-2017-5638.py
+    - Apache Struts 2 CVE-2017-9805.py
+    - Apache Struts 2 CVE-2018-11776.py
+    - Docker API RCE.py
+    - Drupalgeddon2 CVE-2018-7600.rb
+    - Heartbleed CVE-2014-0160.py
+    - JBoss CVE-2015-7501.py
+    - Jenkins CVE-2015-8103.py
+    - Jenkins CVE-2016-0792.py
+    - Shellshock CVE-2014-6271.py
+    - Tomcat CVE-2017-12617.py
+    - WebLogic CVE-2016-3510.py
+    - WebLogic CVE-2017-10271.py
+    - WebLogic CVE-2018-2894.py
+    - WebSphere CVE-2015-7450.py
 
 ## Try Harder
 

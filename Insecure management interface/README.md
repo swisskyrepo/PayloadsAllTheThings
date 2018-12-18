@@ -2,9 +2,8 @@
 
 ## Springboot-Actuator
 
-Actuator endpoints let you monitor and interact with your application. Spring Boot includes a number of built-in endpoints and lets you add your own. For example, the health endpoint provides basic application health information.
+Actuator endpoints let you monitor and interact with your application. Spring Boot includes a number of built-in endpoints and lets you add your own. For example, the health endpoint provides basic application health information. Some of them contains sensitive info such as `/trace` (by default the last 100 HTTP requests with headers), `/env` (the current environment properties) or `/heapdump` (builds and returns a heap dump from the JVM used by our application). These endpoints are enabled by default in Springboot 1.X. Since Springboot 2.x only `/health` and `/info` are enabled by default.
 
-Each individual endpoint can be enabled or disabled. This controls whether or not the endpoint is created and its bean exists in the application context. To be remotely accessible an endpoint also has to be exposed via JMX or HTTP. Most applications choose HTTP, where the ID of the endpoint along with a prefix of /actuator is mapped to a URL. For example, by default, the health endpoint is mapped to /actuator/health.
-
+the official documentation is located [here](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html)
 
 ## Thanks to

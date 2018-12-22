@@ -40,6 +40,8 @@ bettercap -X --proxy --proxy-https -T <target IP>
 
 ```powershell
 nmap -sn -n --disable-arp-ping 192.168.1.1-254 | grep -v "host down"
+-sn : Disable port scanning. Host discovery only.
+-n : Never do DNS resolution
 ```
 
 * Basic NMAP

@@ -11,3 +11,4 @@ wp-admin.php
 /inc/mysql.php
 /sites/defaults/settings.php
 /phpmyadmin/changelog.php
+web.config

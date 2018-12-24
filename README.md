@@ -8,7 +8,7 @@ You can also contribute with a beer IRL or with `buymeacoffee.com`
 
 [![Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoff.ee/swissky)
 
-Every section contains:
+Every section contains the following files, you can use the `_template_vuln` folder to create a new chapter:
 
 - README.md - vulnerability description and how to exploit it
 - Intruder - a set of files to give to Burp Intruder

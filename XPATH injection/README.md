@@ -33,7 +33,7 @@ substring(//user[userid=5]/username,2,1)=CHAR_HERE
 substring(//user[userid=5]/username,2,1)=codepoints-to-string(INT_ORD_CHAR_HERE)
 ```
 
-## Thanks to
+## References
 
 * [OWASP XPATH Injection](https://www.owasp.org/index.php/Testing_for_XPath_Injection_(OTG-INPVAL-010))
 * [XPATH Blind Explorer](http://code.google.com/p/xpath-blind-explorer/)

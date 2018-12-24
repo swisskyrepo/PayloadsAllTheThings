@@ -223,7 +223,7 @@ stty rows <num> columns <cols>
 !sh
 ```
 
-## Thanks to
+## References
 
 * [Reverse Bash Shell One Liner](https://security.stackexchange.com/questions/166643/reverse-bash-shell-one-liner)
 * [Pentest Monkey - Cheat Sheet Reverse shell](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet)

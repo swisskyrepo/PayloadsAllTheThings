@@ -32,6 +32,6 @@ SELECT * FROM users WHERE user = 'admin'/*' AND pass = '*/and pass>'' ALLOW FILT
 
 Example from EternalNoob : [https://hack2learn.pw/cassandra/login.php](https://hack2learn.pw/cassandra/login.php)
 
-## Thanks to
+## References
 
 * [Injection In Apache Cassandra – Part I - Rodolfo - EternalNoobs](https://eternalnoobs.com/injection-in-apache-cassandra-part-i/)

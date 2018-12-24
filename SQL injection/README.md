@@ -460,7 +460,7 @@ mysql> mysql> select version();
 +-------------------------+
 ```
 
-## Thanks to - Other resources
+## References
 
 * Detect SQLi
   * [Manual SQL Injection Discovery Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)

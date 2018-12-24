@@ -43,6 +43,6 @@ UTF-8 Unicode encoding
 \ = %c0%5c, %c0%80%5c
 ```
 
-## Thanks to
+## References
 
 * [Directory traversal attack - Wikipedia](https://en.wikipedia.org/wiki/Directory_traversal_attack)

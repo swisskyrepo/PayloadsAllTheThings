@@ -9,7 +9,7 @@ Check the following sub-sections, located in other files :
 * [Ruby : universal rce gadget, ...](Ruby.md)
 * [Python : pickle, ...](Python.md)
 
-## Thanks to
+## References
 
 * [Github - ysoserial](https://github.com/frohoff/ysoserial)
 * [Java-Deserialization-Cheat-Sheet - GrrrDog](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)

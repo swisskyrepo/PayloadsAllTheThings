@@ -167,7 +167,7 @@ git clone https://github.com/anantshri/svn-extractor.git
 python svn-extractor.py –url "url with .svn available"
 ```
 
-## Thanks to
+## References
 
 - [bl4de, hidden_directories_leaks](https://github.com/bl4de/research/tree/master/hidden_directories_leaks)
 - [bl4de, diggit](https://github.com/bl4de/security-tools/tree/master/diggit)

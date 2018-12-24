@@ -95,7 +95,7 @@ Remainder:
 * %E5%98%BE = %3E = \u563e (>)
 * %E5%98%BC = %3C = \u563c (<)
 
-## Thanks to
+## References
 
 * https://www.owasp.org/index.php/CRLF_Injection
 * https://vulners.com/hackerone/H1:192749

@@ -44,6 +44,6 @@ SELECT * FROM pentestlab;
 COPY pentestlab(t) TO '/tmp/pentestlab';
 ```
 
-## Thanks to
+## References
 
 * [A Penetration Tester’s Guide to PostgreSQL - David Hayter](https://medium.com/@cryptocracker99/a-penetration-testers-guide-to-postgresql-d78954921ee9)

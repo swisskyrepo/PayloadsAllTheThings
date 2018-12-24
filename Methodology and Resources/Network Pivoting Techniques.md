@@ -165,7 +165,7 @@ plink -R [Port to forward to on your VPS]:localhost:[Port to forward on your loc
 | remote host 1     | `ncat -l -p 8080 < file                                                    |
 | remote host 2     | `ncat -l -p 9090 > newfile`                                                |
 
-## Thanks to
+## References
 
 * [Network Pivoting Techniques - Bit rot](https://bitrot.sh/cheatsheet/14-12-2017-pivoting/)
 * [Port Forwarding in Windows - Windows OS Hub](http://woshub.com/port-forwarding-in-windows/)

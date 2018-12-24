@@ -46,7 +46,7 @@ Applications that do not check for a valid CSRF token in the OAuth callback are 
 
 > The client MUST implement CSRF protection for its redirection URI. This is typically accomplished by requiring any request sent to the redirection URI endpoint to include a value that binds the request to the user-agent's authenticated state. The client SHOULD utilize the "state" request parameter to deliver this value to the authorization server when making an authorization request.
 
-## Thanks to
+## References
 
 * [All your Paypal OAuth tokens belong to me - localhost for the win - INTO THE SYMMETRY](http://blog.intothesymmetry.com/2016/11/all-your-paypal-tokens-belong-to-me.html)
 * [OAuth 2 - How I have hacked Facebook again (..and would have stolen a valid access token) - INTO THE SYMMETRY](http://intothesymmetry.blogspot.ch/2014/04/oauth-2-how-i-have-hacked-facebook.html)

@@ -44,7 +44,7 @@ evil_token = b64encode(cPickle.dumps(e))
 print("Your Evil Token : {}").format(evil_token)
 ```
 
-## Thanks to
+## References
 
 * [Exploiting misuse of Python's "pickle" - Mar 20, 2011](https://blog.nelhage.com/2011/03/exploiting-pickle/)
 * [Python Pickle Injection - Apr 30, 2017](http://xhyumiracle.com/python-pickle-injection/)

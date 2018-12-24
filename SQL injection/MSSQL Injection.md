@@ -119,7 +119,7 @@ RECONFIGURE
 EXEC master.dbo.sp_addsrvrolemember 'user', 'sysadmin;
 ```
 
-## Thanks to
+## References
 
 * [Pentest Monkey - mssql-sql-injection-cheat-sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
 * [Sqlinjectionwiki - MSSQL](http://www.sqlinjectionwiki.com/categories/1/mssql-sql-injection-cheat-sheet/)

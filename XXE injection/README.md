@@ -188,7 +188,7 @@ JPG (experimental)
 GIF (experimental)
 ```
 
-## Thanks to
+## References
 
 * [XML External Entity (XXE) Processing - OWASP](https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing)
 * [Detecting and exploiting XXE in SAML Interfaces - Von Christian Mainka](http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html)

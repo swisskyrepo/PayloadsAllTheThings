@@ -149,7 +149,7 @@ List of Fortune1000 company names with permutations on .com, -backup, -media. Fo
 List of the top Alexa 100,000 sites with permutations on the TLD and www. For example, walmart.com becomes www.walmart.com, www.walmart.net, walmart.com, and walmart.
 ```
 
-## Thanks to
+## References
 
 * https://community.rapid7.com/community/infosec/blog/2013/03/27/1951-open-s3-buckets
 * https://digi.ninja/projects/bucket_finder.php

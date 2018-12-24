@@ -149,6 +149,6 @@ Vue JS
 {{constructor.constructor('alert(1)')()}}
 ```
 
-## Thanks
+## References
 
-- [](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)
+- [XSS without HTML - CSTI with Angular JS - Portswigger](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)

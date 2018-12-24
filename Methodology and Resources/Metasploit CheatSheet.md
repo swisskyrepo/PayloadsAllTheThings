@@ -158,6 +158,6 @@ Add-WebTransport -Url http(s)://<host>:<port>/<luri> -RetryWait 10 -RetryTotal 3
 * MS17-10 Eternal Blue - `exploit/windows/smb/ms17_010_eternalblue`
 * MS08_67 - `exploit/windows/smb/ms08_067_netapi`
 
-## Thanks to
+## References
 
 * [Multiple transports in a meterpreter payload - ionize](https://ionize.com.au/multiple-transports-in-a-meterpreter-payload/)

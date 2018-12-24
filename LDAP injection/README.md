@@ -96,7 +96,7 @@ userPassword:2.5.13.18:=\xx\xx
 userPassword:2.5.13.18:=\xx\xx\xx
 ```
 
-## Thanks to
+## References
 
 * [OWASP LDAP Injection](https://www.owasp.org/index.php/LDAP_injection)
 * [LDAP Blind Explorer](http://code.google.com/p/ldap-blind-explorer/)

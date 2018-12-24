@@ -84,7 +84,7 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 [$ne]=1
 ```
 
-## Thanks to
+## References
 
 * [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat](https://www.dailysecurity.fr/nosql-injections-classique-blind/)
 * [Testing for NoSQL injection - OWASP](https://www.owasp.org/index.php/Testing_for_NoSQL_injection)

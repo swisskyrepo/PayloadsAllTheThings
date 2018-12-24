@@ -470,7 +470,7 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [Blind SSRF on errors.hackerone.net](https://hackerone.com/reports/374737)
 - [SSRF on *shopifycloud.com](https://hackerone.com/reports/382612)
 
-## Thanks to
+## References
 
 - [Hackerone - How To: Server-Side Request Forgery (SSRF)](https://www.hackerone.com/blog-How-To-Server-Side-Request-Forgery-SSRF)
 - [Awesome URL abuse for SSRF by @orange_8361 #BHUSA](https://twitter.com/albinowax/status/890725759861403648)

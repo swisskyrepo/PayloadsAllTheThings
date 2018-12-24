@@ -56,7 +56,7 @@ var_dump(sha1('aaO8zKZF') == sha1('aa3OFF9m'));
 ?>
 ```
 
-## Thanks to
+## References
 
 * [Writing Exploits For Exotic Bug Classes: PHP Type Juggling By Tyler Borland](http://turbochaos.blogspot.com/2013/08/exploiting-exotic-bugs-php-type-juggling.html)
 * [Magic Hashes - WhieHatSec](https://www.whitehatsec.com/blog/magic-hashes/)

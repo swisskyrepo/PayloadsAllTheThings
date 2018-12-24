@@ -121,7 +121,7 @@ The following directories are temporary and usually writeable
 /dev/shm/
 ```
 
-## Thanks to
+## References
 
 * [@RandoriSec - https://twitter.com/RandoriSec/status/1036622487990284289](https://twitter.com/RandoriSec/status/1036622487990284289)
 * [https://blogs.gnome.org/muelli/2009/06/g0t-r00t-pwning-a-machine/](https://blogs.gnome.org/muelli/2009/06/g0t-r00t-pwning-a-machine/)

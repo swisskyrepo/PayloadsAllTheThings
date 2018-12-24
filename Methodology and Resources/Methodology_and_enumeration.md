@@ -268,7 +268,7 @@ International test card numbers and tokens
 | 4000002460000001 | tok_fi         | Finland (FI)   | Visa           |
 | 4000002500000003 | tok_fr         | France (FR)    | Visa           |
 
-## Thanks to
+## References
 
 * [[BugBounty] Yahoo phpinfo.php disclosure - Patrik Fehrenbach](http://blog.it-securityguard.com/bugbounty-yahoo-phpinfo-php-disclosure-2/)
 * [Nmap CheatSheet - HackerTarget](https://hackertarget.com/nmap-cheatsheet-a-quick-reference-guide/)

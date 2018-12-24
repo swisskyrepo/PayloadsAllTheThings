@@ -50,7 +50,7 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
     ```
 
 
-## Thanks to
+## References
 
 * [Web Cache Deception Attack - Omer Gil](http://omergil.blogspot.fr/2017/02/web-cache-deception-attack.html)
 * [Practical Web Cache Poisoning - James Kettle @albinowax](https://portswigger.net/blog/practical-web-cache-poisoning)

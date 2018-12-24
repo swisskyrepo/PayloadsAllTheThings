@@ -11,8 +11,9 @@ You can also contribute with a beer IRL or with `buymeacoffee.com`
 Every section contains:
 
 - README.md - vulnerability description and how to exploit it
-- Intruders - a set of files to give to Burp Intruder
-- Some exploits
+- Intruder - a set of files to give to Burp Intruder
+- Images - pictures for the README.md
+- Files - some files referenced in the README.md
 
 You might also like :
 

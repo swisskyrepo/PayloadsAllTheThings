@@ -21,6 +21,6 @@ Quick explanation
 Exploit
 ```
 
-## Reference
+## References
 
 - [Blog title - Author, Date](https://example.com)

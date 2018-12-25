@@ -410,7 +410,7 @@ kinit -t ~/mykers tgwynn@LAB.ROPNOP.COM
 klist
 ```
 
-## Capturing and cracking NTLMv2 hashes
+### Capturing and cracking NTLMv2 hashes
 
 If any user in the network tries to access a machine and mistype the IP or the name, Responder will answer for it and ask for the NTLMv2 hash to access the resource. Responder will poison `LLMNR`, `MDNS` and `NETBIOS` requests on the network.
 
@@ -424,7 +424,7 @@ Then crack the hash with `hashcat`
 hashcat -m 5600 -a 0 hash.txt crackstation.txt
 ```
 
-## NTLMv2 hashes relaying
+### NTLMv2 hashes relaying
 
 If a machine has `SMB signing`:`disabled`, it is possible to use Responder with Multirelay.py script to perform an `NTLMv2 hashes relay` and get a shell access on the machine.
 

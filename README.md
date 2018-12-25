@@ -19,6 +19,9 @@ You might also like :
 
 - [Methodology and Resources](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/)
   - [Active Directory Attack.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md)
+  - [Linux - Persistence.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Persistence.md)
+  - [Linux - Privilege Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md)
+  - [Metasploit - Cheatsheet.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Metasploit%20-%20Cheatsheet.md)  
   - [Methodology_and_enumeration.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Methodology_and_enumeration.md)
   - [Network Pivoting Techniques.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md)
   - [Network Discovery.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Discovery.md)
@@ -27,6 +30,7 @@ You might also like :
   - [Windows - Download and Execute.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Download%20and%20Execute.md)
   - [Windows - Mimikatz.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Mimikatz.md)
   - [Windows - Persistence.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Persistence.md)
+  - [Windows - Post Exploitation Koadic.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Post%20Exploitation%20Koadic.md)
   - [Windows - Privilege Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
   - [Windows - Using credentials.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Using%20credentials.md)
 
@@ -111,25 +115,7 @@ Grab a book and relax, these ones are the best security books (in my opinion).
 
 ### Youtube
 
+- [IppSec Channel - Hack The Box Writeups](https://www.youtube.com/channel/UCa6eh7gCkpPo5XXUDfygQQA)
 - [Hunting for Top Bounties - Nicolas Grégoire](https://www.youtube.com/watch?v=mQjTgDuLsp4)
 - [BSidesSF 101 The Tales of a Bug Bounty Hunter - Arne Swinnen](https://www.youtube.com/watch?v=dsekKYNLBbc)
 - [Security Fest 2016 The Secret life of a Bug Bounty Hunter - Frans Rosén](https://www.youtube.com/watch?v=KDo68Laayh8)
-- [IppSec Channel - Hack The Box Writeups](https://www.youtube.com/channel/UCa6eh7gCkpPo5XXUDfygQQA)
-
-### Docker
-
-| Command     | Link |
-| :------------- | :------------- |
-| `docker pull remnux/metasploit` | [docker-metasploit](https://hub.docker.com/r/remnux/metasploit/) |
-| `docker pull paoloo/sqlmap`     | [docker-sqlmap](https://hub.docker.com/r/paoloo/sqlmap/)         |
-| `docker pull kalilinux/kali-linux-docker` | [official Kali Linux](https://hub.docker.com/r/kalilinux/kali-linux-docker/) |
-| `docker pull owasp/zap2docker-stable` | [official OWASP ZAP](https://github.com/zaproxy/zaproxy) |
-| `docker pull wpscanteam/wpscan`       | [official WPScan](https://hub.docker.com/r/wpscanteam/wpscan/) |
-| `docker pull infoslack/dvwa`          | [Damn Vulnerable Web Application (DVWA)](https://hub.docker.com/r/infoslack/dvwa/) |
-| `docker run --name dvna -p 9090:9090 -d appsecco/dvna:sqlite` | [Damn Vulnerable NodeJS Application](https://github.com/appsecco/dvna) |
-| `docker pull danmx/docker-owasp-webgoat` | [OWASP WebGoat Project docker image](https://hub.docker.com/r/danmx/docker-owasp-webgoat/) |
-| `docker pull opendns/security-ninjas` | [Security Ninjas](https://hub.docker.com/r/opendns/security-ninjas/) |
-| `docker pull ismisepaul/securityshepherd` | [OWASP Security Shepherd](https://hub.docker.com/r/ismisepaul/securityshepherd/) |
-| `docker-compose build && docker-compose up` | [OWASP NodeGoat](https://github.com/owasp/nodegoat#option-3---run-nodegoat-on-docker) |
-| `docker pull citizenstig/nowasp` | [OWASP Mutillidae II Web Pen-Test Practice Application](https://hub.docker.com/r/citizenstig/nowasp/) |
-| `docker pull bkimminich/juice-shop` | [OWASP Juice Shop](https://github.com/bkimminich/juice-shop#docker-container) |

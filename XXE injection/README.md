@@ -240,3 +240,8 @@ GIF (experimental)
 * [XXE ALL THE THINGS!!! (including Apple iOS's Office Viewer)](http://en.hackdig.com/08/28075.htm)
 * [Understanding Xxe From Basic To Blind - 10/11/2018 - Utkarsh Agrawal](http://agrawalsmart7.com/2018/11/10/Understanding-XXE-from-Basic-to-Blind.html)
 * [From blind XXE to root-level file read access - December 12, 2018 by Pieter Hiele](https://www.honoki.net/2018/12/from-blind-xxe-to-root-level-file-read-access/)
+* [How we got read access on Google’s production servers](https://blog.detectify.com/2014/04/11/how-we-got-read-access-on-googles-production-servers/) by  detectify
+* [Blind OOB XXE At UBER 26+ Domains Hacked](http://nerdint.blogspot.hk/2016/08/blind-oob-xxe-at-uber-26-domains-hacked.html) by Raghav Bisht
+* [XXE through SAML](https://seanmelia.files.wordpress.com/2016/01/out-of-band-xml-external-entity-injection-via-saml-redacted.pdf)
+* [XXE in Uber to read local files](https://httpsonly.blogspot.hk/2017/01/0day-writeup-xxe-in-ubercom.html)
+* [XXE by SVG in community.lithium.com](http://esoln.net/Research/2017/03/30/xxe-in-lithium-community-platform/)

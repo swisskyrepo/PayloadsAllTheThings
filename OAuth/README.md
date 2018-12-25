@@ -52,3 +52,4 @@ Applications that do not check for a valid CSRF token in the OAuth callback are 
 * [OAuth 2 - How I have hacked Facebook again (..and would have stolen a valid access token) - INTO THE SYMMETRY](http://intothesymmetry.blogspot.ch/2014/04/oauth-2-how-i-have-hacked-facebook.html)
 * [How I hacked Github again. - Egor Homakov](http://homakov.blogspot.ch/2014/02/how-i-hacked-github-again.html)
 * [How Microsoft is giving your data to Facebook… and everyone else - Andris Atteka](http://andrisatteka.blogspot.ch/2014/09/how-microsoft-is-giving-your-data-to.html)
+- [Bypassing Google Authentication on Periscope's Administration Panel](https://whitton.io/articles/bypassing-google-authentication-on-periscopes-admin-panel/) By Jack Whitton

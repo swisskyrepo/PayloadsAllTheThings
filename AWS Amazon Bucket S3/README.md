@@ -1,5 +1,12 @@
 # Amazon Bucket S3 AWS
 
+## Tools
+
+- [Pacu - The AWS exploitation framework, designed for testing the security of Amazon Web Services environments](https://github.com/RhinoSecurityLabs/pacu)
+
+
+## AWS Configuration
+
 Prerequisites, at least you need awscli
 
 ```bash
@@ -20,6 +27,8 @@ aws configure --profile nameofprofile
 ```
 
 then you can use *--profile nameofprofile* in the aws command
+
+## Open Bucket
 
 By default the name of Amazon Bucket are like http://s3.amazonaws.com/[bucket_name]/, you can browse open buckets if you know their names
 

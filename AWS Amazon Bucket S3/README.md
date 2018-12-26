@@ -26,7 +26,15 @@ AWSSecretKey=[ENTER HERE YOUR KEY]
 aws configure --profile nameofprofile
 ```
 
-then you can use *--profile nameofprofile* in the aws command
+then you can use *--profile nameofprofile* in the aws command.
+
+Alternatively you can use environment variables instead of creating a profile.
+
+```bash
+export AWS_ACCESS_KEY_ID=ASIAZ[...]PODP56
+export AWS_SECRET_ACCESS_KEY=fPk/Gya[...]4/j5bSuhDQ
+export AWS_SESSION_TOKEN=FQoGZXIvYXdzE[...]8aOK4QU=
+```
 
 ## Open Bucket
 
@@ -163,4 +171,5 @@ List of the top Alexa 100,000 sites with permutations on the TLD and www. For ex
 * https://community.rapid7.com/community/infosec/blog/2013/03/27/1951-open-s3-buckets
 * https://digi.ninja/projects/bucket_finder.php
 * [Bug Bounty Survey - AWS Basic test](https://twitter.com/bugbsurveys/status/859389553211297792)
-* [FlAWS.cloud Challenge based on AWS vulnerabilities](http://flaws.cloud/)
+* [flaws.cloud Challenge based on AWS vulnerabilities - by Scott Piper of Summit Route](http://flaws.cloud/)
+* [flaws2.cloud Challenge based on AWS vulnerabilities - by Scott Piper of Summit Route](http://flaws2.cloud)

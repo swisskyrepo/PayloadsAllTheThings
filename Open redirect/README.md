@@ -48,6 +48,7 @@ Using "\/\/" to bypass "//" blacklisted keyword (Browsers see \/\/ as //)
 Using "%E3%80%82" to bypass "." blacklisted character
 
 ```powershell
+/?redir=google。com
 //google%E3%80%82com
 ```
 

@@ -91,6 +91,14 @@ AND MAKE_SET(YOLO<(SELECT(length(concat(login,password)))),1)
 AND MAKE_SET(YOLO<ascii(substring(concat(login,password),POS,1)),1)
 ```
 
+## MYSQL Blind with wildcard character
+
+['_'](https://www.w3resource.com/sql/wildcards-like-operator/wildcards-underscore.php) acts like the regex character '.', use it to speed up your blind testing
+
+```sql
+SELECT cust_code FROM customer WHERE cust_name LIKE 'k__l';
+```
+
 ## MYSQL Time Based
 
 ```sql

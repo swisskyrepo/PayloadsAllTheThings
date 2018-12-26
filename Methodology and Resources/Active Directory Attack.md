@@ -16,7 +16,7 @@
   * [Pass-the-Hash](#pass-the-hash)
   * [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
   * [Capturing and cracking NTLMv2 hashes](#capturing-and-cracking-ntlmv2-hashes)
-  * [NTLMv2 hashes relaying](#ntlv2-hashes-relaying)
+  * [NTLMv2 hashes relaying](#ntlmv2-hashes-relaying)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
 * [Privilege Escalation](#privilege-escalation)

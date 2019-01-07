@@ -39,6 +39,7 @@
   Go to http://127.0.0.1:7474, use db:bolt://localhost:7687, user:neo4J, pass:neo4j
   ./bloodhound
   SharpHound.exe (from resources/Ingestor)
+  SharpHound.exe -c all -d active.htb --domaincontroller 10.10.10.100
   or 
   Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
   ```

@@ -23,6 +23,17 @@ Username: RetailAdmin
 Password: trs10
 ```
 
+## TIP - Sandbox Credential - WDAGUtilityAccount - [@never_released on Twitter](https://twitter.com/never_released/status/1081569133844676608)
+
+Starting with Windows 10 version 1709 (Fall Creators Update), it is part of Windows Defender Application Guard
+
+```powershell
+\\windowssandbox
+Username: wdagutilityaccount
+Password: pw123
+```
+
+
 ## Metasploit - SMB
 
 ```c

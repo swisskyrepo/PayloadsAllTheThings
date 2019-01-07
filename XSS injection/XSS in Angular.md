@@ -1,5 +1,7 @@
 # XSS in Angular
 
+The following payloads are based on Client Side Template Injection.
+
 ## Stored/Reflected XSS - Simple alert 
 
 > Angular as of version 1.6 have removed the sandbox altogether

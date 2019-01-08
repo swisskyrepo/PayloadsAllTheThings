@@ -110,6 +110,12 @@ cat ${test//hhh\/hm/}
 cat ${test//hh??hm/}
 ```
 
+Bypass blacklisted word with wildcards
+```powershell
+powershell C:\*\*2\n??e*d.*? # notepad
+@^p^o^w^e^r^shell c:\*\*32\c*?c.e?e # calc
+```
+
 Bypass zsh/bash/sh blacklist
 
 ```powershell

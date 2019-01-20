@@ -1,7 +1,6 @@
 # Server-Side Request Forgery
 
 Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on their behalf.
-![SSRF stream](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/Images/SSRF_stream.png)
 
 ## Summary
 
@@ -197,6 +196,8 @@ ssrf.php?url=http://127.0.0.1:22
 ssrf.php?url=http://127.0.0.1:80
 ssrf.php?url=http://127.0.0.1:443
 ```
+
+![SSRF stream](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/Images/SSRF_stream.png)
 
 The following URL scheme can be used to probe the network
 

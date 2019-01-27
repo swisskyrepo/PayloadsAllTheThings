@@ -7,6 +7,7 @@
 - [BeRoot - Privilege Escalation Project - Windows / Linux / Mac](https://github.com/AlessandroZ/BeRoot)
 - [Windows-Exploit-Suggester](https://github.com/GDSSecurity/Windows-Exploit-Suggester)
 - [windows-privesc-check - Standalone Executable to Check for Simple Privilege Escalation Vectors on Windows Systems](https://github.com/pentestmonkey/windows-privesc-check)
+- [Powerless - Windows privilege escalation (enumeration) script designed with OSCP labs (legacy Windows) in mind](https://github.com/M4ximuss/Powerless)
 
 ## Windows Version and Configuration
 

@@ -185,6 +185,12 @@ ifm: quit
 ntdsutil: quit
 ```
 
+or 
+
+```powershell
+ntdsutil "ac i ntds" "ifm" "create full c:\temp" q q
+```
+
 #### Using Vshadow
 
 ```powershell

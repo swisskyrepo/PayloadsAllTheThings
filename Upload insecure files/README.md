@@ -59,6 +59,10 @@ IE8: http://0me.me/demo/xss/xssproject.swf?js=try{alert(document.domain)}catch(e
 IE9: http://0me.me/demo/xss/xssproject.swf?js=w=window.open(‘invalidfileinvalidfileinvalidfile’,’target’);setTimeout(‘alert(w.document.location);w.close();’,1);
 ```
 
+### .htaccess
+
+An .htaccess file is a way to configure the details of your website without needed to alter the server config files. 
+
 ## References
 
 * Bulletproof Jpegs Generator - Damien "virtualabs" Cauquil

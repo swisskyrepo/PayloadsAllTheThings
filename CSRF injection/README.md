@@ -1,6 +1,6 @@
 # Cross-Site Request Forgery
 
-> Cross-Site Request Forgery (CSRF) is an attack that forces an end user to execute unwanted actions on a web application in which they're currently authenticated. CSRF attacks specifically target state-changing requests, not theft of data, since the attacker has no way to see the response to the forged request. - OWASP
+> Cross-Site Request Forgery (CSRF/XSRF) is an attack that forces an end user to execute unwanted actions on a web application in which they're currently authenticated. CSRF attacks specifically target state-changing requests, not theft of data, since the attacker has no way to see the response to the forged request. - OWASP
 
 
 ## Summary
@@ -13,6 +13,8 @@
 ![CSRF_cheatsheet](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CSRF%20injection/Images/CSRF-CheatSheet.png?raw=true)
 
 ## Payloads
+
+When you are logged in to a certain site, you typically have a session. The identifier of that session is stored in a cookie in your browser, and is sent with every request to that site. Even if some other site triggers a request, the cookie is sent along with the request and the request is handled as if the logged in user performed it.
 
 ### HTML GET – Requiring User Interaction for Proof-of-Concept
 
@@ -99,3 +101,4 @@ xhr.send('{"role":admin}');
 - [How i Hacked your Beats account ? Apple Bug Bounty](https://aadityapurani.com/2016/07/20/how-i-hacked-your-beats-account-apple-bug-bounty/) by @aaditya_purani
 - [FORM POST JSON: JSON CSRF on POST Heartbeats API](https://hackerone.com/reports/245346) by Dr.Jones
 - [Hacking Facebook accounts using CSRF in Oculus-Facebook integration](https://www.josipfranjkovic.com/blog/hacking-facebook-oculus-integration-csrf)
+- [Cross site request forgery (CSRF) - Sjoerd Langkemper - Jan 9, 2019](http://www.sjoerdlangkemper.nl/2019/01/09/csrf/)

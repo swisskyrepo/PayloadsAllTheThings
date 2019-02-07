@@ -72,6 +72,28 @@ Check for the following files, if they exist you can extract the .git folder.
     git cat-file -p cb6139863967a752f3402b3975e97a84d152fd8f
     ```
 
+### Recovering the content of .git/index
+
+Use the git index file parser, using python3 https://pypi.python.org/pypi/gin
+
+```powershell
+pip3 install gin
+gin ~/git-repo/.git/index
+```
+
+Recover name and sha1 hash for each files listed in the index, allowing us to re-use the previous method on the file.
+
+```powershell
+$ gin .git/index | egrep -e "name|sha1" 
+name = AWS Amazon Bucket S3/README.md
+sha1 = 862a3e58d138d6809405aa062249487bee074b98
+
+name = CRLF injection/README.md
+sha1 = d7ef4d77741c38b6d3806e0c6a57bf1090eec141
+```
+ 
+
+
 ### Automatic way : diggit.py
 
 ```powershell

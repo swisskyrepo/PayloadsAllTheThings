@@ -40,7 +40,7 @@ When you are logged in to a certain site, you typically have a session. The iden
 ### HTML POST (AutoSubmit – No User Interaction)
 
 ```html
-<form id="autosubmit" action="http://www.example.com/api/setusername" enctype="text/plain" method="POST"&>
+<form id="autosubmit" action="http://www.example.com/api/setusername" enctype="text/plain" method="POST">
  <input name="username" type="hidden" value="CSRFd" />
  <input type="submit" value="Submit Request" />
 </form>

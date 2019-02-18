@@ -64,7 +64,7 @@ Ever wonder where you can use your knowledge ? The following list will help you 
   - [Intigriti](https://www.intigriti.com)
   - [List of Bounty Program](https://bugcrowd.com/list-of-bug-bounty-programs/)
 - __Online Platforms__
-  - [Hack The Box](hackthebox.eu/)
+  - [Hack The Box](https://hackthebox.eu/)
   - [Penetration test lab "Test lab" | Pentestit](https://lab.pentestit.ru)
   - [PentesterLab : Learn Web Penetration Testing: The Right Way](https://pentesterlab.com/)
   - [Zenk-Security](https://www.zenk-security.com/epreuves.php)

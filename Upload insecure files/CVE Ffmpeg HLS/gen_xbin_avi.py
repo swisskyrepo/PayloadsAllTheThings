@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+from builtins import bytes
+from builtins import map
+from builtins import zip
+from builtins import range
 import struct
 import argparse
 import random

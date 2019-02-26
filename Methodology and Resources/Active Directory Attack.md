@@ -493,6 +493,10 @@ You need a shell on a user account with a mailbox.
     python secretsdump.py xxxxxxxxxx -just-dc
     ```
 
+Alternatively you can use the Metasploit module 
+
+[`use auxiliary/scanner/http/exchange_web_server_pushsubscription`](https://github.com/rapid7/metasploit-framework/pull/11420)
+
 ## Privilege Escalation
 
 ### PrivEsc Local Admin - Token Impersonation (RottenPotato)

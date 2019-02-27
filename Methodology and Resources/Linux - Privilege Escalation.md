@@ -188,8 +188,8 @@ permit nopass demo as root cmd vim
 
 The project collects legitimate functions of Unix binaries that can be abused to break out restricted shells, escalate or maintain elevated privileges, transfer files, spawn bind and reverse shells, and facilitate the other post-exploitation tasks.
 
-> gdb -nx -ex '!sh' -ex quit
-> sudo mysql -e '\! /bin/sh'
+> gdb -nx -ex '!sh' -ex quit    
+> sudo mysql -e '\! /bin/sh'    
 > strace -o /dev/null /bin/sh
 
 

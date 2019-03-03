@@ -2,6 +2,9 @@
 
 Uploaded files may pose a significant risk if not handled correctly. A remote attacker could send a multipart/form-data POST request with a specially-crafted filename or mime type and execute arbitrary code.
 
+## Tools
+- [Fuxploider](https://github.com/almandin/fuxploider)
+
 ## Exploits
 
 ### PHP Extension

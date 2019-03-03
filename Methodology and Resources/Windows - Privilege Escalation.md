@@ -3,18 +3,18 @@
 ## Summary
 
 * [Tools](#tools)
-* [Windows Version and Configuration](#)
-* [User Enumeration](#)
-* [Network Enumeration](#)
-* [EoP - Looting for passwords](#)
-* [EoP - Processes Enumeration and Tasks](#)
-* [EoP - Incorrect permissions in services](#)
-* [EoP - Windows Subsystem for Linux (WSL)](#)
-* [EoP - Unquoted Service Paths](#)
-* [EoP - Kernel Exploitation](#)
-* [EOP - AlwaysInstallElevated](#)
-* [EoP - Insecure GUI apps](#)
-* [EoP - Runas](#)
+* [Windows Version and Configuration](#windows-version-and-configuration)
+* [User Enumeration](#user-enumeration)
+* [Network Enumeration](#network-enumeration)
+* [EoP - Looting for passwords](#eop---looting-for-passwords)
+* [EoP - Processes Enumeration and Tasks](#eop---processes-enumeration-and-tasks)
+* [EoP - Incorrect permissions in services](#eop---incorrect-permissions-in-services)
+* [EoP - Windows Subsystem for Linux (WSL)](#eop---windows-subsystem-for-linux-wsl)
+* [EoP - Unquoted Service Paths](#eop---unquoted-service-paths)
+* [EoP - Kernel Exploitation](#eop---kernel-exploitation)
+* [EOP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
+* [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
+* [EoP - Runas](#eop---runas)
 
 ## Tools
 

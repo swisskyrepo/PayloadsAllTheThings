@@ -93,8 +93,9 @@ python wmiexec.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
 
 ```powershell
 python rdpcheck.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
-rdesktop -d CSCOU -u jarrieta -p nastyCutt3r 10.9.122.5 -g 70% 
+rdesktop -d CSCOU -u jarrieta -p nastyCutt3r 10.9.122.5 -g 70 -r disk:share=/home/user/myshare
 # -g : the screen will take up 70% of your actual screen size
+# -r disk:share : sharing a local folder during a remote desktop session 
 ```
 
 Note: you may need to enable it with the following command

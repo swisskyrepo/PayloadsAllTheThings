@@ -12,7 +12,7 @@
 * [EoP - Windows Subsystem for Linux (WSL)](#eop---windows-subsystem-for-linux-wsl)
 * [EoP - Unquoted Service Paths](#eop---unquoted-service-paths)
 * [EoP - Kernel Exploitation](#eop---kernel-exploitation)
-* [EOP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
+* [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
 * [EoP - Runas](#eop---runas)
 
@@ -499,7 +499,7 @@ List of exploits kernel : [https://github.com/SecWiki/windows-kernel-exploits](h
 ...
 - [MS03-026](./MS03-026) 　[KB823980]　　 [Buffer Overrun In RPC Interface]　　(/NT/2000/XP/2003)  
 
-## EOP - AlwaysInstallElevated
+## EoP - AlwaysInstallElevated
 
 Check if these registry values are set to "1".
 

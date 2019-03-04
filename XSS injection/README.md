@@ -11,7 +11,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [Polyglot XSS](#polyglot-xss)
 - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
 - [CSP Bypass](#csp-bypass)
-- [Common WAF Bypas](#common-waf-bypass)
+- [Common WAF Bypass](#common-waf-bypass)
 
 ## Exploit code or POC
 

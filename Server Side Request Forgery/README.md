@@ -96,6 +96,7 @@ Bypass localhost with a domain redirecting to locahost
 http://localtest.me
 http://customer1.app.localhost.my.company.127.0.0.1.nip.io
 http://mail.ebc.apple.com redirect to 127.0.0.6 == localhost
+http://bugbounty.dod.network redirect to 127.0.0.2 == localhost
 ```
 
 The service nip.io is awesome for that, it will convert any ip address as a dns.

@@ -5,9 +5,9 @@ Server Side Request Forgery or SSRF is a vulnerability in which an attacker forc
 ## Summary
 
 * [Tools](#tools)
-* [Payloads with localhost](#exploit-with-localhost)
+* [Payloads with localhost](#payloads-with-localhost)
 * [Bypassing filters](#bypassing-filters)
-* [SSRF exploitation via URL Scheme](#ssrf-via-url-scheme)
+* [SSRF exploitation via URL Scheme](#ssrf-exploitation-via-url-scheme)
 * [SSRF to XSS](#ssrf-to-xss-by-d0rkerdevil--alyssaoherrera)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)

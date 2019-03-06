@@ -31,7 +31,7 @@ Double extensions
 
 ### Upload tricks
 
-- Null byte (eg: shell.php%00.gif, shell.php%00.png)
+- Null byte (eg: shell.php%00.gif, shell.php%00.png), works well against `pathinfo()`
 - Mime type, change `Content-Type : application/x-php` or `Content-Type : application/octet-stream` to `Content-Type : image/gif`
 
 ### Picture upload with LFI

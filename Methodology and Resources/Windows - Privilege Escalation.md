@@ -27,6 +27,7 @@
     ./windows-exploit-suggester.py --database 2014-06-06-mssb.xlsx --systeminfo win7sp1-systeminfo.txt 
     ```
 - [windows-privesc-check - Standalone Executable to Check for Simple Privilege Escalation Vectors on Windows Systems](https://github.com/pentestmonkey/windows-privesc-check)
+- [WindowsExploits - Windows exploits, mostly precompiled. Not being updated. ](https://github.com/abatchy17/WindowsExploits)
 - [Powerless - Windows privilege escalation (enumeration) script designed with OSCP labs (legacy Windows) in mind](https://github.com/M4ximuss/Powerless)
 - [PowerSploit's PowerUp](https://github.com/PowerShellMafia/PowerSploit)
     ```powershell

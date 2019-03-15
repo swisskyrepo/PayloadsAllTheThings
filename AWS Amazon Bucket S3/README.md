@@ -40,7 +40,7 @@
 		result = s3.list_buckets()
 		print(result)
 	except Exception as e:
-		print(e
+		print(e)
 	```
 
 ## AWS Configuration

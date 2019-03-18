@@ -13,7 +13,7 @@
 ## Summary
 
 * [Checklist](#checklist)
-* [Cron job](#cron-job)
+* [Cron jobs](#cron-jobs)
 * [SUID](#suid)
     * [Find SUID binaries](#find-suid-binaries)
     * [Create a SUID binary](#create-a-suid-binary)
@@ -53,7 +53,7 @@
   * Extracts password policies and hash storage method information
   * Checks umask value
   * Checks if password hashes are stored in /etc/passwd
-  * Extract full details for ‘default’ uid’s such as 0, 1000, 1001 etc
+  * Extract full details for 'default' uid's such as 0, 1000, 1001 etc
   * Attempt to read restricted files i.e. /etc/shadow
   * List current users history files (i.e .bash_history, .nano_history etc.)
   * Basic SSH checks
@@ -61,8 +61,8 @@
   * Which users have recently used sudo
   * Determine if /etc/sudoers is accessible
   * Determine if the current user has Sudo access without a password
-  * Are known ‘good’ breakout binaries available via Sudo (i.e. nmap, vim etc.)
-  * Is root’s home directory accessible
+  * Are known 'good' breakout binaries available via Sudo (i.e. nmap, vim etc.)
+  * Is root's home directory accessible
   * List permissions for /home/
 * Environmental:
   * Display current $PATH
@@ -94,7 +94,7 @@
   * Locate all SUID/GUID files
   * Locate all world-writable SUID/GUID files
   * Locate all SUID/GUID files owned by root
-  * Locate ‘interesting’ SUID/GUID files (i.e. nmap, vim etc)
+  * Locate 'interesting' SUID/GUID files (i.e. nmap, vim etc)
   * Locate files with POSIX capabilities
   * List all world-writable files
   * Find/list all accessible *.plan files and display contents
@@ -108,14 +108,18 @@
   * Checks to see if the host has Docker installed
   * Checks to determine if we're in an LXC container
 
-## Cron job
+## Cron jobs
 
 Check if you have access with write permission on these files.   
 Check inside the file, to find other paths with write permissions.   
 
 ```powershell
 /etc/init.d
+/etc/cron*
+/etc/crontab
+/etc/cron.allow
 /etc/cron.d 
+/etc/cron.deny
 /etc/cron.daily
 /etc/cron.hourly
 /etc/cron.monthly
@@ -124,10 +128,8 @@ Check inside the file, to find other paths with write permissions.
 /etc/exports
 /etc/at.allow
 /etc/at.deny
-/etc/crontab
-/etc/cron.allow
-/etc/cron.deny
 /etc/anacrontab
+/var/spool/cron
 /var/spool/cron/crontabs/root
 ```
 
@@ -264,7 +266,7 @@ The project collects legitimate functions of Unix binaries that can be abused to
 
 ## Wildcard
 
-By using tar with –checkpoint-action options, a specified action can be used after a checkpoint. This action could be a malicious shell script that could be used for executing arbitrary commands under the user who starts tar. “Tricking” root to use the specific options is quite easy, and that’s where the wildcard comes in handy.
+By using tar with –checkpoint-action options, a specified action can be used after a checkpoint. This action could be a malicious shell script that could be used for executing arbitrary commands under the user who starts tar. “Tricking” root to use the specific options is quite easy, and that's where the wildcard comes in handy.
 
 ```powershell
 # create file for exploitation
@@ -357,8 +359,6 @@ int __libc_start_main(int (*main) (int, char **, char **), int argc, char ** ubp
  execve(file,argv,0);
 }
 ```
-
-
 
 
 ## Groups

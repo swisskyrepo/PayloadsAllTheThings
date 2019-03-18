@@ -43,7 +43,7 @@ in JSON
 
 Extract data with "in"
 
-````json
+```json
 {"username":{"$in":["Admin", "4dm1n", "admin", "root", "administrator"]},"password":{"$gt":""}}
 ```
 

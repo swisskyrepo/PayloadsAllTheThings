@@ -10,7 +10,7 @@
 
 ## Methodology
 
-![CSRF_cheatsheet](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CSRF%20injection/Images/CSRF-CheatSheet.png?raw=true)
+![CSRF_cheatsheet](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CSRF%20Injection/Images/CSRF-CheatSheet.png?raw=true)
 
 ## Payloads
 

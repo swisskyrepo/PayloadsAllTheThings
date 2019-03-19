@@ -8,7 +8,7 @@ The following magic methods will help you for a PHP Object injection
 * __destruct() when an object is deleted.
 * __toString() when an object is converted to a string.
 
-Also you should check the `Wrapper Phar://` in [File Inclusion - Path Traversal](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion%20-%20Path%20Traversal#wrapper-phar) which use a PHP object injection.
+Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#wrapper-phar) which use a PHP object injection.
 
 ## __wakeup in the unserialize function
 

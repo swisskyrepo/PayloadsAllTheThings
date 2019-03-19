@@ -176,7 +176,7 @@ http://127.1.1.1:80:\@@127.2.2.2:80/
 http://127.1.1.1:80#\@127.2.2.2:80/
 ```
 
-![https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/Images/SSRF_Parser.png](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/Images/WeakParser.jpg)
+![https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/Images/SSRF_Parser.png](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20Injection/Images/WeakParser.jpg)
 
 
 ## SSRF exploitation via URL Scheme
@@ -198,7 +198,7 @@ ssrf.php?url=http://127.0.0.1:80
 ssrf.php?url=http://127.0.0.1:443
 ```
 
-![SSRF stream](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20injection/Images/SSRF_stream.png)
+![SSRF stream](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/SSRF%20Injection/Images/SSRF_stream.png)
 
 The following URL scheme can be used to probe the network
 

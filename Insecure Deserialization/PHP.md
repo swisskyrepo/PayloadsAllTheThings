@@ -162,3 +162,4 @@ phpggc monolog/rce1 'phpinfo();' -s
 * [POC2009 Shocking News in PHP Exploitation](https://www.owasp.org/images/f/f6/POC2009-ShockingNewsInPHPExploitation.pdf)
 * [PHP Internals Book - Serialization](http://www.phpinternalsbook.com/classes_objects/serialization.html)
 * [TSULOTT Web challenge write-up from MeePwn CTF 1st 2017 by Rawsec](https://rawsec.ml/en/MeePwn-2017-write-ups/#tsulott-web)
+* [CTF writeup: PHP object injection in kaspersky CTF](https://medium.com/@jaimin_gohel/ctf-writeup-php-object-injection-in-kaspersky-ctf-28a68805610d)

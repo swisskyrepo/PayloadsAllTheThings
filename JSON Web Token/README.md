@@ -13,6 +13,7 @@
 
 - [jwt_tool](https://github.com/ticarpi/jwt_tool)
 - [c-jwt-cracker](https://github.com/brendan-rius/c-jwt-cracker)
+- [JOSEPH - JavaScript Object Signing and Encryption Pentesting Helper](https://portswigger.net/bappstore/82d6c60490b540369d6d5d01822bdf61)
 
 ## JWT Format
 
@@ -228,3 +229,6 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 - [Critical vulnerabilities in JSON Web Token libraries - March 31, 2015 - Tim McLean](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries//)
 - [Learn how to use JSON Web Tokens (JWT) for Authentication - @dwylhq](https://github.com/dwyl/learn-json-web-tokens)
 - [Simple JWT hacking - @b1ack_h00d](https://medium.com/@blackhood/simple-jwt-hacking-73870a976750)
+- [Attacking JWT authentication - Sep 28, 2016 - Sjoerd Langkemper](https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/)
+- [How to Hack a Weak JWT Implementation with a Timing Attack - Jan 7, 2017 - Tamas Polgar](https://hackernoon.com/can-timing-attack-be-a-practical-security-threat-on-jwt-signature-ba3c8340dea9)
+- [HACKING JSON WEB TOKENS, FROM ZERO TO HERO WITHOUT EFFORT - Thu Feb 09 2017 - @pdp](https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)

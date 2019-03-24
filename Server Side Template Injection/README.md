@@ -186,6 +186,7 @@ ${x}
 ```python
 {{4*4}}[[5*5]]
 {{7*'7'}} would result in 7777777
+{{config.items()}}
 ```
 
 Jinja2 is used by Python Web Frameworks such as Django or Flask.

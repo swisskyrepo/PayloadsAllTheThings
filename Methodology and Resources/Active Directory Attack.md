@@ -70,6 +70,11 @@
   ```
 
 * [Active Directory Assessment and Privilege Escalation Script](https://github.com/hausec/ADAPE-Script)
+
+    ```powershell
+    powershell.exe -ExecutionPolicy Bypass ./ADAPE.ps1 
+    ```
+
 * [Ping Castle](https://github.com/vletoux/pingcastle)
 
     ```powershell

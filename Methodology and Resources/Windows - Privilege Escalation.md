@@ -27,7 +27,8 @@
     ./windows-exploit-suggester.py --database 2014-06-06-mssb.xlsx --systeminfo win7sp1-systeminfo.txt 
     ```
 - [windows-privesc-check - Standalone Executable to Check for Simple Privilege Escalation Vectors on Windows Systems](https://github.com/pentestmonkey/windows-privesc-check)
-- [WindowsExploits - Windows exploits, mostly precompiled. Not being updated. ](https://github.com/abatchy17/WindowsExploits)
+- [WindowsExploits - Windows exploits, mostly precompiled. Not being updated.](https://github.com/abatchy17/WindowsExploits)
+- [WindowsEnumv - A Powershell Privilege Escalation Enumeration Script.](https://github.com/absolomb/WindowsEnum)
 - [Powerless - Windows privilege escalation (enumeration) script designed with OSCP labs (legacy Windows) in mind](https://github.com/M4ximuss/Powerless)
 - [PowerSploit's PowerUp](https://github.com/PowerShellMafia/PowerSploit)
     ```powershell
@@ -500,6 +501,12 @@ List of exploits kernel : [https://github.com/SecWiki/windows-kernel-exploits](h
 ...
 - [MS03-026](./MS03-026) 　[KB823980]　　 [Buffer Overrun In RPC Interface]　　(/NT/2000/XP/2003)  
 
+To cross compile a program from Kali, use the following command.
+
+```powershell
+Kali> i586-mingw32msvc-gcc -o adduser.exe useradd.c
+```
+
 ## EoP - AlwaysInstallElevated
 
 Check if these registry values are set to "1".
@@ -560,6 +567,7 @@ $ computer = "<hostname>"
 
 ## References
 
+* [Windows Internals Book - 02/07/2017](https://docs.microsoft.com/en-us/sysinternals/learn/windows-internals)
 * [icacls - Docs Microsoft](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/icacls)
 * [Privilege Escalation Windows - Philip Linghammar](https://xapax.gitbooks.io/security/content/privilege_escalation_windows.html)
 * [Windows elevation of privileges - Guifre Ruiz](https://guif.re/windowseop)
@@ -569,6 +577,7 @@ $ computer = "<hostname>"
 * [TOP–10 ways to boost your privileges in Windows systems - hackmag](https://hackmag.com/security/elevating-privileges-to-administrative-and-further/)
 * [The SYSTEM Challenge](https://decoder.cloud/2017/02/21/the-system-challenge/)
 * [Windows Privilege Escalation Guide - absolomb's security blog](https://www.absolomb.com/2018-01-26-Windows-Privilege-Escalation-Guide/)
+* [Chapter 4 - Windows Post-Exploitation - 2 Nov 2017 - dostoevskylabs](https://github.com/dostoevskylabs/dostoevsky-pentest-notes/blob/master/chapter-4.md)
 * [Remediation for Microsoft Windows Unquoted Service Path Enumeration Vulnerability - September 18th, 2016 - Robert Russell](https://www.tecklyfe.com/remediation-microsoft-windows-unquoted-service-path-enumeration-vulnerability/)
 * [Pentestlab.blog - WPE-01 - Stored Credentials](https://pentestlab.blog/2017/04/19/stored-credentials/)
 * [Pentestlab.blog - WPE-02 - Windows Kernel](https://pentestlab.blog/2017/04/24/windows-kernel-exploits/)

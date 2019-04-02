@@ -9,7 +9,7 @@
     * [Python](#python)
     * [PHP](#php)
     * [Ruby](#ruby)
-    * [Goland](#golang)
+    * [Golang](#golang)
     * [Netcat Traditional](#netcat-traditional)
     * [Netcat OpenBsd](#netcat-openbsd)
     * [Ncat](#ncat)

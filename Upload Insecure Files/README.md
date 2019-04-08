@@ -22,6 +22,7 @@ Less known extensions
 .phpt
 .pgif
 .phtml
+.phtm
 
 Double extensions
 .jpeg.php

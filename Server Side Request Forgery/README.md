@@ -123,6 +123,12 @@ http://3232235521/ = http://192.168.0.1
 http://3232235777/ = http://192.168.1.1
 ```
 
+Bypass using [IPv6/IPv4 Address Embedding](http://www.tcpipguide.com/free/t_IPv6IPv4AddressEmbedding.htm)
+
+```powershell
+http://[0:0:0:0:0:ffff:127.0.0.1]
+```
+
 Bypass using malformed urls
 
 ```powershell

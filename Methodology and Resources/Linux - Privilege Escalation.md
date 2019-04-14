@@ -17,6 +17,7 @@
     * [Files containing passwords](#files-containing-passwords)
     * [Last edited files](#last-edited-files)
     * [In memory passwords](#in-memory-passwords)
+    * [Find sensitive files](#find-sensitive-files)
 * [Scheduled tasks](#scheduled-tasks)
     * [Cron jobs](#cron-jobs)
     * [Systemd timers](#systemd-timers)
@@ -137,6 +138,18 @@ find / -mmin -10 2>/dev/null | grep -Ev "^/proc"
 
 ```powershell
 strings /dev/mem -n10 | grep -i PASS
+```
+
+### Find sensitive files
+
+```powershell
+$ locate password | more           
+/boot/grub/i386-pc/password.mod
+/etc/pam.d/common-password
+/etc/pam.d/gdm-password
+/etc/pam.d/gdm-password.original
+/lib/live/config/0031-root-password
+...
 ```
 
 ## Scheduled tasks

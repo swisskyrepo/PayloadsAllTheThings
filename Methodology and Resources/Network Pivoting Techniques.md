@@ -130,6 +130,22 @@ plink -l root -pw mypassword 192.168.18.84 -R
 plink -R [Port to forward to on your VPS]:localhost:[Port to forward on your local machine] [VPS IP]
 ```
 
+## ngrok
+
+```powershell
+# get the binary
+wget https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip
+unzip ngrok-stable-linux-amd64.zip 
+
+# log into the service
+./ngrok authtoken 3U[REDACTED_TOKEN]Hm
+
+# deploy a port forwarding for 4433
+./ngrok http 4433
+./ngrok tcp 4433
+```
+
+
 ## Basic Pivoting Types
 
 | Type              | Use Case                                    |

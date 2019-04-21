@@ -1,6 +1,6 @@
 # Server-Side Request Forgery
 
-Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on their behalf.
+> Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on their behalf.
 
 ## Summary
 

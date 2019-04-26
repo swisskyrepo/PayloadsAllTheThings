@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import print_function
 import socket,ssl
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from websocket import create_connection, WebSocket
@@ -9,7 +10,7 @@ import os
 LOOP_BACK_PORT_NUMBER = 8000
 
 def FuzzWebSocket(fuzz_value):
-    print fuzz_value
+    print(fuzz_value)
     ws.send(ws_message.replace("[FUZZ]", str(fuzz_value[0])))
     result =  ws.recv()
     return result
@@ -22,7 +23,7 @@ def LoadMessage(file):
             file_contents = f.read()
             f.close()
     except:
-        print ("Error reading file: %s" % file)
+        print("Error reading file: %s" % file)
         exit()
     return file_contents
 
@@ -52,12 +53,12 @@ try:
     #Create a web server and define the handler to manage the
     #incoming request
     server = HTTPServer(('', LOOP_BACK_PORT_NUMBER), myWebServer)
-    print 'Started httpserver on port ' , LOOP_BACK_PORT_NUMBER
+    print('Started httpserver on port ' , LOOP_BACK_PORT_NUMBER)
     
     #Wait forever for incoming http requests
     server.serve_forever()
 
 except KeyboardInterrupt:
-    print '^C received, shutting down the web server'
+    print('^C received, shutting down the web server')
     server.socket.close()
     ws.close()

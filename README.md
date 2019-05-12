@@ -52,4 +52,4 @@ You might also like the `Methodology and Resources` folder :
     - WebLogic CVE-2018-2894.py
     - WebSphere CVE-2015-7450.py
 
-You want more ? Check the [Books](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Books.md) and [Youtube videos](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Youtube.md) selections.
+You want more ? Check the [Books](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/BOOKS.md) and [Youtube videos](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/YOUTUBE.md) selections.

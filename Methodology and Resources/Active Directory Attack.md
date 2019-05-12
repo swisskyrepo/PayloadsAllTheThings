@@ -152,6 +152,17 @@ cd Folder     # move inside a folder
 ls            # list files
 ```
 
+Download a folder recursively
+
+```powershell
+smbclient //10.0.0.1/Share
+smb: \> mask ""
+smb: \> recurse ON
+smb: \> prompt OFF
+smb: \> lcd '/path/to/go/'
+smb: \> mget *
+```
+
 Mount a share
 
 ```powershell

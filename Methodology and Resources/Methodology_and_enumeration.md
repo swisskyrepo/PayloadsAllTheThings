@@ -8,6 +8,7 @@
   * The Harvester
 
 * [Active Recon](#active-recon)
+  * Masscan
   * Nmap
   * Nmap Script
   * RPCClient
@@ -46,6 +47,13 @@
   ```
 
 ## Active recon
+
+* Masscan
+
+```powershell
+masscan -iL ips-online.txt --rate 10000 -p1-65535 --only-open -oL masscan.out
+masscan -e tun0 -p1-65535,U:1-65535 10.10.10.97 --rate 1000
+```
 
 * Basic NMAP
 

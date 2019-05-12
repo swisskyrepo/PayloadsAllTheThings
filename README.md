@@ -2,7 +2,7 @@
 
 A list of useful payloads and bypasses for Web Application Security.
 Feel free to improve with your payloads and techniques !
-I <3 pull requests :)
+I :heart: pull requests :)
 
 You can also contribute with a beer IRL or with `buymeacoffee.com`
 

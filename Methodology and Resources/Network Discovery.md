@@ -1,38 +1,14 @@
 # Network Discovery
 
-## Netdiscover
+## Summary
 
-```powershell
-netdiscover -i eth0 -r 192.168.1.0/24
-Currently scanning: Finished!   |   Screen View: Unique Hosts
-
-20 Captured ARP Req/Rep packets, from 4 hosts.   Total size: 876
-_____________________________________________________________________________
-IP            At MAC Address     Count     Len  MAC Vendor / Hostname
------------------------------------------------------------------------------
-192.168.1.AA    68:AA:AA:AA:AA:AA     15     630  Sagemcom
-192.168.1.XX    52:XX:XX:XX:XX:XX      1      60  Unknown vendor
-192.168.1.YY    24:YY:YY:YY:YY:YY      1      60  QNAP Systems, Inc.
-192.168.1.ZZ    b8:ZZ:ZZ:ZZ:ZZ:ZZ      3     126  HUAWEI TECHNOLOGIES CO.,LTD  
-```
-
-## Responder
-
-```powershell
-responder -I eth0 -A # see NBT-NS, BROWSER, LLMNR requests without responding.
-responder.py -I eth0 -wrf
-```
-
-Alternatively you can use the [Windows version](https://github.com/lgandx/Responder-Windows)
-
-## Bettercap
-
-```powershell
-bettercap -X --proxy --proxy-https -T <target IP>
-# better cap in spoofing, discovery, sniffer
-# intercepting http and https requests,
-# targetting specific IP only
-```
+- [Nmap](#nmap)
+- [Masscan](#masscan)
+- [Netdiscover](#netdiscover)
+- [Responder](#responder)
+- [Bettercap](#bettercap)
+- [Reconnoitre](#reconnoitre)
+- [References](#references)
 
 ## Nmap
 
@@ -121,6 +97,13 @@ Host script results:
 List Nmap scripts : ls /usr/share/nmap/scripts/
 ```
 
+## Masscan
+
+```powershell
+masscan -iL ips-online.txt --rate 10000 -p1-65535 --only-open -oL masscan.out
+masscan -e tun0 -p1-65535,U:1-65535 10.10.10.97 --rate 1000
+```
+
 ## Reconnoitre
 
 Dependencies:
@@ -134,6 +117,40 @@ python2.7 ./reconnoitre.py -t 192.168.1.2-252 -o ./results/ --pingsweep --hostna
 
 If you have a segfault with nbtscan, read the following quote.
 > Permission is denied on the broadcast address (.0) and it segfaults on the gateway (.1) - all other addresses seem fine here.So to mitigate the problem: nbtscan 192.168.0.2-255
+
+## Netdiscover
+
+```powershell
+netdiscover -i eth0 -r 192.168.1.0/24
+Currently scanning: Finished!   |   Screen View: Unique Hosts
+
+20 Captured ARP Req/Rep packets, from 4 hosts.   Total size: 876
+_____________________________________________________________________________
+IP            At MAC Address     Count     Len  MAC Vendor / Hostname
+-----------------------------------------------------------------------------
+192.168.1.AA    68:AA:AA:AA:AA:AA     15     630  Sagemcom
+192.168.1.XX    52:XX:XX:XX:XX:XX      1      60  Unknown vendor
+192.168.1.YY    24:YY:YY:YY:YY:YY      1      60  QNAP Systems, Inc.
+192.168.1.ZZ    b8:ZZ:ZZ:ZZ:ZZ:ZZ      3     126  HUAWEI TECHNOLOGIES CO.,LTD  
+```
+
+## Responder
+
+```powershell
+responder -I eth0 -A # see NBT-NS, BROWSER, LLMNR requests without responding.
+responder.py -I eth0 -wrf
+```
+
+Alternatively you can use the [Windows version](https://github.com/lgandx/Responder-Windows)
+
+## Bettercap
+
+```powershell
+bettercap -X --proxy --proxy-https -T <target IP>
+# better cap in spoofing, discovery, sniffer
+# intercepting http and https requests,
+# targetting specific IP only
+```
 
 ## References
 

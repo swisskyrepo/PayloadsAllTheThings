@@ -242,6 +242,14 @@ sudo chmod +s /tmp/suid # setuid bit
 
 ### Interesting capabilities
 
+Having the capability =ep means the binary has all the capabilities.
+```powershell
+$ getcap openssl /usr/bin/openssl 
+openssl=ep
+```
+
+Alternatively the following capabilities can be used in order to upgrade your current privileges.
+
 ```powershell
 cap_dac_read_search # read anything
 cap_setuid+ep # setuid

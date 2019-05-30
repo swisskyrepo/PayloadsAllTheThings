@@ -56,3 +56,7 @@
 /var/log/apache/error_log
 /var/log/httpd/error_log
 /var/log/httpd/access_log
+/var/log/nginx/access_log
+/var/log/nginx/access.log
+/var/log/nginx/error_log
+/var/log/nginx/error.log

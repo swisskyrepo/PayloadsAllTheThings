@@ -41,6 +41,10 @@
 /var/log/httpd/error_log%00
 /var/log/httpd/access_log%00
 /var/log/httpd/error_log%00
+/var/log/nginx/access_log%00
+/var/log/nginx/access.log%00
+/var/log/nginx/error_log%00
+/var/log/nginx/error.log%00
 /apache/logs/error.log%00
 /apache/logs/access.log%00
 /apache/logs/error.log%00

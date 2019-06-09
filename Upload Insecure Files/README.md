@@ -2,6 +2,19 @@
 
 Uploaded files may pose a significant risk if not handled correctly. A remote attacker could send a multipart/form-data POST request with a specially-crafted filename or mime type and execute arbitrary code.
 
+## Summary
+
+* [Tools](#tools)
+* [Exploits](#exploits)
+    * [PHP Extension](#php-extension)
+    * [Other extensions](#other-extensions)
+    * [Upload tricks](#upload-tricks)
+    * [Picture upload with LFI](#picture-upload-with-lfi)
+    * [Configuration Files](#configuration-files)
+    * [CVE - Image Tragik](#cve---image-tragik)
+* [References](#references)
+
+
 ## Tools
 - [Fuxploider](https://github.com/almandin/fuxploider)
 
@@ -28,6 +41,15 @@ Double extensions
 .jpeg.php
 .jpg.php
 .png.php
+```
+
+### Other extensions
+
+```powershell
+asp : .asp, .aspx
+perl: .pl, .pm, .cgi, .lib
+jsp : .jsp, .jspx, .jsw, .jsv, .jspf
+Coldfusion: .cfm, .cfml, .cfc, .dbm
 ```
 
 ### Upload tricks

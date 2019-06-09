@@ -6,6 +6,7 @@
 
 ## Summary
 
+* [Tools](#tools)
 * [Basic LFI](#basic-lfi)
     * [Null byte](#null-byte)
     * [Double encoding](#double-encoding)
@@ -26,6 +27,10 @@
 * [LFI to RCE via phpinfo()](#lfi-to-rce-via-phpinfo)
 * [LFI to RCE via controlled log file](#lfi-to-rce-via-controlled-log-file)
 * [LFI to RCE via PHP sessions](#lfi-to-rce-via-php-sessions)
+
+## Tools
+
+* [Kadimus - https://github.com/P0cL4bs/Kadimus](https://github.com/P0cL4bs/Kadimus)
 
 ## Basic LFI
 

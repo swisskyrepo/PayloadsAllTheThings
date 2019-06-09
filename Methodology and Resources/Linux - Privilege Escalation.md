@@ -43,7 +43,7 @@
 * [Groups](#groups)
     * [Docker](#docker)
     * [LXC/LXD](#lxclxd)
-* [Common Exploits](#common-exploits)
+* [Kernel Exploits](#kernel-exploits)
     * [CVE-2016-5195 (DirtyCow)](#CVE-2016-5195-dirtycow)
     * [CVE-2010-3904 (RDS)](#[CVE-2010-3904-rds)
     * [CVE-2010-4258 (Full Nelson)](#CVE-2010-4258-full-nelson)
@@ -542,8 +542,13 @@ lxc exec mycontainer /bin/sh
 
 Alternatively https://github.com/initstring/lxd_root
 
+## Kernel Exploits
 
-## Common Exploits
+Precompiled exploits can be found inside these repositories, run them at your own risk !
+* [bin-sploits - @offensive-security](https://github.com/offensive-security/exploitdb-bin-sploits/tree/master/bin-sploits)
+* [kernel-exploits - @lucyoa](https://github.com/lucyoa/kernel-exploits/)
+
+The following exploits are known to work well.
 
 ### CVE-2016-5195 (DirtyCow)
 

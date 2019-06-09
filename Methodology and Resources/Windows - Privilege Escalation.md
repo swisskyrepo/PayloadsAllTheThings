@@ -94,7 +94,6 @@ List all users
 
 ```powershell
 net user
-net user Swissky
 whoami /all
 Get-LocalUser | ft Name,Enabled,LastLogon
 Get-ChildItem C:\Users -Force | select Name
@@ -250,7 +249,7 @@ REG QUERY "HKLM\Software\Microsoft\FTH" /V RuleList
 
 ### Passwords in unattend.xml
 
-Location of the unattend.xml files
+Location of the unattend.xml files.
 
 ```powershell
 C:\unattend.xml
@@ -265,7 +264,7 @@ Example content
 ```powershell
 <component name="Microsoft-Windows-Shell-Setup" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64">
     <AutoLogon>
-     <Password>*SENSITIVE*DATA*DELETED*</Password>
+     <Password>U2VjcmV0U2VjdXJlUGFzc3dvcmQxMjM0Kgo==</Password>
      <Enabled>true</Enabled>
      <Username>Administrateur</Username>
     </AutoLogon>
@@ -279,6 +278,13 @@ Example content
       </LocalAccount>
      </LocalAccounts>
     </UserAccounts>
+```
+
+Unattend credentials are stored in base64 and can be decoded manually with base64.
+
+```powershell
+$ echo "U2VjcmV0U2VjdXJlUGFzc3dvcmQxMjM0Kgo="  | base64 -d 
+SecretSecurePassword1234*
 ```
 
 The Metasploit module `post/windows/gather/enum_unattend` looks for these files.

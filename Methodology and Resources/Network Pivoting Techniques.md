@@ -85,6 +85,7 @@ optional arguments:
 
 ```c
 portfwd list
+portfwd add -l 88 -p 88 -r 127.0.0.1
 portfwd add -L 0.0.0.0 -l 445 -r 192.168.57.102 -p 445
 
 or

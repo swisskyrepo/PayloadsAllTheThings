@@ -43,6 +43,11 @@
 * [Groups](#groups)
     * [Docker](#docker)
     * [LXC/LXD](#lxclxd)
+* [Common Exploits](#common-exploits)
+    * [CVE-2016-5195 (DirtyCow)](#CVE-2016-5195-dirtycow)
+    * [CVE-2010-3904 (RDS)](#[CVE-2010-3904-rds)
+    * [CVE-2010-4258 (Full Nelson)](#CVE-2010-4258-full-nelson)
+    * [CVE-2012-0056 (Mempodipper)](#CVE-2012-0056-mempodipper)
 
 ## Checklists
 
@@ -536,6 +541,45 @@ lxc exec mycontainer /bin/sh
 ```
 
 Alternatively https://github.com/initstring/lxd_root
+
+
+## Common Exploits
+
+### CVE-2016-5195 (DirtyCow)
+
+Linux Privilege Escalation - Linux Kernel <= 3.19.0-73.8
+
+```powershell
+# make dirtycow stable
+echo 0 > /proc/sys/vm/dirty_writeback_centisecs
+g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow 40847.cpp -lutil
+https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs
+```
+
+### CVE-2010-3904 (RDS)
+
+Linux RDS Exploit - Linux Kernel <= 2.6.36-rc8
+
+```powershell
+https://www.exploit-db.com/exploits/15285/
+```
+
+### CVE-2010-4258 (Full Nelson)
+
+Linux Kernel 2.6.37 (RedHat / Ubuntu 10.04)
+
+```powershell
+https://www.exploit-db.com/exploits/15704/
+```
+
+### CVE-2012-0056 (Mempodipper)
+
+Linux Kernel 2.6.39 < 3.2.2 (Gentoo / Ubuntu x86/x64)
+
+```powershell
+https://www.exploit-db.com/exploits/18411
+```
+
 
 ## References
 

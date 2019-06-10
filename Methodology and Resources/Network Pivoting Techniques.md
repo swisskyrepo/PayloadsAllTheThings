@@ -103,15 +103,36 @@ optional arguments:
 
 ## Metasploit
 
-```c
-portfwd list
+```powershell
+# Meterpreter list active port forwards
+portfwd list 
+
+# Forwards 3389 (RDP) to 3389 on the compromised machine running the Meterpreter shell
+portfwd add –l 3389 –p 3389 –r target-host 
 portfwd add -l 88 -p 88 -r 127.0.0.1
 portfwd add -L 0.0.0.0 -l 445 -r 192.168.57.102 -p 445
 
+# Forwards 3389 (RDP) to 3389 on the compromised machine running the Meterpreter shell
+portfwd delete –l 3389 –p 3389 –r target-host 
+# Meterpreter delete all port forwards
+portfwd flush 
+
 or
 
-run autoroute -s 192.168.57.0/24
+# Use Meterpreters autoroute script to add the route for specified subnet 192.168.15.0
+run autoroute -s 192.168.15.0/24 
 use auxiliary/server/socks4a
+
+# Meterpreter list all active routes
+run autoroute -p 
+
+route #Meterpreter view available networks the compromised host can access
+# Meterpreter add route for 192.168.14.0/24 via Session number.
+route add 192.168.14.0 255.255.255.0 3 
+# Meterpreter delete route for 192.168.14.0/24 via Session number.
+route delete 192.168.14.0 255.255.255.0 3 
+# Meterpreter delete all routes
+route flush 
 ```
 
 ## sshuttle

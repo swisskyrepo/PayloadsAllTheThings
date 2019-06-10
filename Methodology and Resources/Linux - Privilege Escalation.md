@@ -7,7 +7,7 @@
     ./LinEnum.sh -s -k keyword -r report -e /tmp/ -t
     ```
 - [BeRoot - Privilege Escalation Project - Windows / Linux / Mac](https://github.com/AlessandroZ/BeRoot)
-- [linuxprivchecker.py - a Linux Privilege Escalation Check Script](https://gist.github.com/sh1n0b1/e2e1a5f63fbec3706123)
+- [linuxprivchecker.py - a Linux Privilege Escalation Check Script](https://github.com/sleventyeleven/linuxprivchecker)
 - [unix-privesc-check - Automatically exported from code.google.com/p/unix-privesc-check](https://github.com/pentestmonkey/unix-privesc-check)
 
 ## Summary
@@ -35,7 +35,8 @@
     * [sudo_inject](#sudo-inject)
 * [GTFOBins](#gtfobins)
 * [Wildcard](#wildcard)
-* [Writable /etc/passwd](#writable---etc---passwd)
+* [Writable /etc/passwd](#writable-etcpasswd)
+* [Writable /etc/sudoers](#writable-etcsudoers)
 * [NFS Root Squashing](#nfs-root-squashing)
 * [Shared Library](#shared-library)
     * [ldconfig](#ldconfig)
@@ -398,6 +399,16 @@ su - dummy
 ```
 
 NOTE: In BSD platforms `/etc/passwd` is located at `/etc/pwd.db` and `/etc/master.passwd`, also the `/etc/shadow` is renamed to `/etc/spwd.db`. 
+
+## Writable /etc/sudoers
+
+```powershell
+echo "username ALL=(ALL:ALL) ALL">>/etc/sudoers
+
+# use SUDO without password
+echo "username ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers
+```
+
 
 ## NFS Root Squashing
 

@@ -665,7 +665,7 @@ python ms08-067.py 10.0.0.1 6 445
 
 ### MS16-032 - Microsoft Windows 7 < 10 / 2008 < 2012 R2 (x86/x64)
 
-Check if the patch is installed : `wmic qfe list | find "3139914"`
+Check if the patch is installed : `wmic qfe list | findstr "3139914"`
 
 ```powershell
 Powershell:

@@ -32,6 +32,7 @@
 ## Tools
 
 * [Kadimus - https://github.com/P0cL4bs/Kadimus](https://github.com/P0cL4bs/Kadimus)
+* [LFISuite - https://github.com/D35m0nd142/LFISuite](https://github.com/D35m0nd142/LFISuite)
 
 ## Basic LFI
 

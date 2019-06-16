@@ -192,3 +192,5 @@ For example with a proxy : http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws
 * [flaws.cloud Challenge based on AWS vulnerabilities - by Scott Piper of Summit Route](http://flaws.cloud/)
 * [flaws2.cloud Challenge based on AWS vulnerabilities - by Scott Piper of Summit Route](http://flaws2.cloud)
 * [Guardzilla video camera hardcoded AWS credential - 0dayallday.org](https://www.0dayallday.org/guardzilla-video-camera-hard-coded-aws-credentials/)
+* [AWS PENETRATION TESTING PART 1. S3 BUCKETS - VirtueSecurity](https://www.virtuesecurity.com/aws-penetration-testing-part-1-s3-buckets/)
+* [AWS PENETRATION TESTING PART 2. S3, IAM, EC2 - VirtueSecurity](https://www.virtuesecurity.com/aws-penetration-testing-part-2-s3-iam-ec2/)

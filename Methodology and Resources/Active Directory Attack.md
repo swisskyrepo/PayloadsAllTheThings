@@ -318,6 +318,11 @@ UserPassword, UnixUserPassword, unicodePwd and msSFU30Password.
 
 Get-WmiObject -Class Win32_UserAccount -Filter "Domain='COMPANYDOMAIN' AND Disabled='False'" | Select Name, Domain, Status, LocalAccount, AccountType, Lockout, PasswordRequired,PasswordChangeable, Description, SID
 ```
+or dump the Active Directory and `grep` the content.
+
+```powershell
+ldapdomaindump -u 'DOMAIN\john' -p MyP@ssW0rd 10.10.10.10 -o ~/Documents/AD_DUMP/
+```
 
 ### PassTheTicket Golden Tickets
 
@@ -581,6 +586,8 @@ Alternatively you can use the Metasploit module
 
 Password spraying refers to the attack method that takes a large number of usernames and loops them with a single password. 
 
+> The builtin Administrator account (RID:500) cannot be locked out of the system no matter how many failed logon attempts it accumulates. 
+
 Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
 
 ```powershell
@@ -646,3 +653,4 @@ Most of the time the best passwords to spray are :
 * [Red Teaming Made Easy with Exchange Privilege Escalation and PowerPriv - Thursday, January 31, 2019 - Dave](http://blog.redxorblue.com/2019/01/red-teaming-made-easy-with-exchange.html)
 * [Chump2Trump - AD Privesc talk at WAHCKon 2017 - @l0ss](https://github.com/l0ss/Chump2Trump/blob/master/ChumpToTrump.pdf)
 * [Post-OSCP Series Part 2 - Kerberoasting - 16 APRIL 2019 - Jon Hickman](https://0metasecurity.com/post-oscp-part-2/)
+* [WHAT’S SPECIAL ABOUT THE BUILTIN ADMINISTRATOR ACCOUNT? - 21/05/2012 - MORGAN SIMONSEN](https://morgansimonsen.com/2012/05/21/whats-special-about-the-builtin-administrator-account-12/)

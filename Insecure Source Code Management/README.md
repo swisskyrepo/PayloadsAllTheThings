@@ -2,6 +2,7 @@
 
 - [GIT - Source code management](#git---source-code-management)
   - [Github example with a .git](#github-example-with-a-git)
+  - [Recovering the content of .git/index](#recovering-the-content-of-gitindex)
   - [Automatic way : diggit.py](#automatic-way--diggitpy)
   - [Automatic way : GoGitDumper](#automatic-way-gogitdumper)
   - [Automatic way : rip-git](#automatic-way--rip-git)

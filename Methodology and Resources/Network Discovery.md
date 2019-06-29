@@ -102,6 +102,9 @@ List Nmap scripts : ls /usr/share/nmap/scripts/
 ```powershell
 masscan -iL ips-online.txt --rate 10000 -p1-65535 --only-open -oL masscan.out
 masscan -e tun0 -p1-65535,U:1-65535 10.10.10.97 --rate 1000
+
+masscan --rate 500 --interface tap0 --router-ip $ROUTER_IP --top-ports 100 $NETWORK -oL masscan_machines.tmp
+masscan --rate 1000 --interface tap0 --router-ip $ROUTER_IP -p1-65535,U:1-65535 $MACHINE_IP --banners -oL $MACHINE_IP/scans/masscan-ports.lst
 ```
 
 ## Reconnoitre

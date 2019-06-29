@@ -15,6 +15,7 @@
 * [Checklist](#checklist)
 * [Looting for passwords](#looting-for-passwords)
     * [Files containing passwords](#files-containing-passwords)
+    * [Old passwords in /etc/security/opasswd](#old-passwords-in--etc-security-opasswd)
     * [Last edited files](#last-edited-files)
     * [In memory passwords](#in-memory-passwords)
     * [Find sensitive files](#find-sensitive-files)
@@ -132,6 +133,13 @@
 grep --color=auto -rnw '/' -ie "PASSWORD" --color=always 2> /dev/null
 find . -type f -exec grep -i -I "PASSWORD" {} /dev/null \;
 ```
+
+### Old passwords in /etc/security/opasswd
+
+The `/etc/security/opasswd` file is used also by pam_cracklib to keep the history of old passwords so that the user will not reuse them.
+
+:warning: Treat your opasswd file like your /etc/shadow file because it will end up containing user password hashes 
+
 
 ### Last edited files
 
@@ -615,3 +623,4 @@ https://www.exploit-db.com/exploits/18411
 - [Privilege Escalation via lxd - @reboare](https://reboare.github.io/lxd/lxd-escape.html)
 - [Editing /etc/passwd File for Privilege Escalation - Raj Chandel - MAY 12, 2018](https://www.hackingarticles.in/editing-etc-passwd-file-for-privilege-escalation/)
 - [Privilege Escalation by injecting process possessing sudo tokens - @nongiach @chaignc](https://github.com/nongiach/sudo_inject)
+* [Linux Password Security with pam_cracklib - Hal Pomeranz, Deer Run Associates](http://www.deer-run.com/~hal/sysadmin/pam_cracklib.html)

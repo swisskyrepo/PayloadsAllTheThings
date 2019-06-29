@@ -138,7 +138,15 @@ route flush
 
 ## sshuttle
 
+Transparent proxy server that works as a poor man's VPN. Forwards over ssh. 
+
+* Doesn't require admin. 
+* Works with Linux and MacOS.
+* Supports DNS tunneling.
+
 ```powershell
+pacman -Sy sshuttle
+apt-get install sshuttle
 sshuttle -vvr user@10.10.10.10 10.1.1.0/24
 sshuttle -vvr username@pivot_host 10.2.2.0/24 
 ```

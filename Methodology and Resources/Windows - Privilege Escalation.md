@@ -15,9 +15,11 @@
 * [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
 * [EoP - Runas](#eop---runas)
-* [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposures)
+* [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposure)
   * [Token Impersonation (RottenPotato)](#token-impersonation-rottenpotato)
   * [MS08-067 (NetAPI)](#ms08-067-netapi)
+  * [MS10-015 (KiTrap0D)](#ms10-015-kitrap0d---microsoft-windows-nt2000--2003--2008--xp--vista--7)
+  * [MS11-080 (adf.sys)](#ms11-080-afd.sys---microsoft-windows-xp-2003)
   * [MS16-032](#ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
   * [MS17-010 (Eternal Blue)](#ms17-010-eternal-blue)
 
@@ -263,6 +265,8 @@ C:\Windows\Panther\Unattend\Unattend.xml
 C:\Windows\system32\sysprep.inf
 C:\Windows\system32\sysprep\sysprep.xml
 ```
+
+Display the content of these files with `dir /s *sysprep.inf *sysprep.xml *unattended.xml *unattend.xml *unattend.txt 2>nul`.
 
 Example content
 
@@ -667,6 +671,23 @@ Example: MS08_067_2018.py 192.168.1.1 7 445 -- for Windows XP SP3 English (Alway
 python ms08-067.py 10.0.0.1 6 445
 ```
 
+
+### MS10-015 (KiTrap0D) - Microsoft Windows NT/2000/2003/2008/XP/Vista/7 
+
+'KiTrap0D' User Mode to Ring Escalation (MS10-015)
+
+```powershell
+https://www.exploit-db.com/exploits/11199
+
+Metasploit : exploit/windows/local/ms10_015_kitrap0d
+```
+
+### MS11-080 (afd.sys) - Microsoft Windows XP/2003
+
+```powershell
+Python: https://www.exploit-db.com/exploits/18176
+Metasploit: exploit/windows/local/ms11_080_afdjoinleaf
+```
 
 ### MS16-032 - Microsoft Windows 7 < 10 / 2008 < 2012 R2 (x86/x64)
 

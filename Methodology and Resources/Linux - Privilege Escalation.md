@@ -228,6 +228,7 @@ SUID/Setuid stands for "set user ID upon execution", it is enabled by default in
 
 ```bash
 find / -perm -4000 -type f -exec ls -la {} 2>/dev/null \;
+find / -uid 0 -perm -4000 -type f 2>/dev/null
 ```
 
 ### Create a SUID binary
@@ -388,13 +389,17 @@ Tool: [wildpwn](https://github.com/localh0t/wildpwn)
 
 ## Writable files
 
+List world writable files on the system.
+
 ```powershell
 find / -writable ! -user \`whoami\` -type f ! -path "/proc/*" ! -path "/sys/*" -exec ls -al {} \; 2>/dev/null
+find / -perm -2 -type f 2>/dev/null
+find / ! -path "*/proc/*" -perm -2 -type f -print 2>/dev/null
 ```
 
 ### Writable /etc/passwd
 
-First generate a password with one of the following commands
+First generate a password with one of the following commands.
 
 ```powershell
 openssl passwd -1 -salt hacker hacker

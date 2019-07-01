@@ -206,7 +206,10 @@ Get-ChildItem -path HKLM:\SYSTEM\CurrentControlSet\Services\SNMP -Recurse
 
 ### SAM and SYSTEM files
 
+The Security Account Manager (SAM), often Security Accounts Manager, is a database file. The user passwords are stored in a hashed format in a registry hive either as a LM hash or as a NTLM hash. This file can be found in %SystemRoot%/system32/config/SAM and is mounted on HKLM/SAM.
+
 ```powershell
+# Usually %SYSTEMROOT% = C:\Windows
 %SYSTEMROOT%\repair\SAM
 %SYSTEMROOT%\System32\config\RegBack\SAM
 %SYSTEMROOT%\System32\config\SAM
@@ -214,6 +217,15 @@ Get-ChildItem -path HKLM:\SYSTEM\CurrentControlSet\Services\SNMP -Recurse
 %SYSTEMROOT%\System32\config\SYSTEM
 %SYSTEMROOT%\System32\config\RegBack\system
 ```
+
+Generate a hash file for John using `pwdump` or `samdump2`.
+
+```powershell
+pwdump SYSTEM SAM > /root/sam.txt
+samdump2 SYSTEM SAM -o sam.txt
+```
+
+Then crack it with `john -format=NT /root/sam.txt`.
 
 ### Search for file contents
 

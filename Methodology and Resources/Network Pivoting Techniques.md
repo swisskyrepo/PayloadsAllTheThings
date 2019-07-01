@@ -63,6 +63,7 @@ ssh -L [bindaddr]:[port]:[dsthost]:[dstport] [user]@[host]
 
 ```bash
 ssh -R [bindaddr]:[port]:[localhost]:[localport] [user]@[host]
+ssh -R 3389:10.1.1.224:3389 root@10.11.0.32
 ```
 
 ## Proxychains

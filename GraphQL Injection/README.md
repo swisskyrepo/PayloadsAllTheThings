@@ -1,6 +1,6 @@
 # GraphQL injection
 
-> GraphQL is a query language for APIs and a runtime for fulfilling those queries with existing data.
+> GraphQL is a query language for APIs and a runtime for fulfilling those queries with existing data. A GraphQL service is created by defining types and fields on those types, then providing functions for each field on each type
 
 
 ## Summary
@@ -30,6 +30,7 @@ Most of the time the graphql is located on the `/graphql` or `/graphiql` endpoin
 
 ```js
 example.com/graphql?query={__schema{types{name}}}
+example.com/graphiql?query={__schema{types{name}}}
 ```
 
 Check if errors are visible.

@@ -2,13 +2,16 @@
 
 > The WebSocket protocol allows a bidirectional and full-duplex communication between a client and a server
 
-Tools:
 
-- [ws-harness.py](https://gist.githubusercontent.com/mfowl/ae5bc17f986d4fcc2023738127b06138/raw/e8e82467ade45998d46cef355fd9b57182c3e269/ws.harness.py)
 
 ## Summary
 
+* [Tools](#tools)
 * [Using ws-harness.py](#using-ws-harness-py)
+
+## Tools
+
+* [ws-harness.py](https://gist.githubusercontent.com/mfowl/ae5bc17f986d4fcc2023738127b06138/raw/e8e82467ade45998d46cef355fd9b57182c3e269/ws.harness.py)
 
 ## Using ws-harness.py
 

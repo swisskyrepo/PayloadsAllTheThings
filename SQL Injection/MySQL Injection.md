@@ -263,6 +263,12 @@ SELECT '' INTO OUTFILE '/var/www/html/x.php' FIELDS TERMINATED BY '<?php phpinfo
 
 In MYSQL "`admin `" and "`admin`" are the same. If the username column in the database has a character-limit the rest of the characters are truncated. So if the database has a column-limit of 20 characters and we input a string with 21 characters the last 1 character will be removed.
 
+```sql
+`username` varchar(20) not null
+```
+
+Payload: `username = "admin               a"`
+
 ## MYSQL UDF command execution
 
 First you need to check if the UDF are installed on the server.

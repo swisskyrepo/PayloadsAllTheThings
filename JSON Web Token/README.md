@@ -123,9 +123,7 @@ print public
 print jwt.encode({"data":"test"}, key=public, algorithm='HS256')
 ```
 
-:warning: This behavior is fixed in the python library and will return this error `jwt.exceptions.InvalidKeyError: The specified key is an asymmetric key or x509 certificate and should not be used as an HMAC secret.`. You need to install the following version
-
-`pip install pyjwt==0.4.3`.
+:warning: This behavior is fixed in the python library and will return this error `jwt.exceptions.InvalidKeyError: The specified key is an asymmetric key or x509 certificate and should not be used as an HMAC secret.`. You need to install the following version: `pip install pyjwt==0.4.3`.
 
 Here are the steps to edit an RS256 JWT token into an HS256
 

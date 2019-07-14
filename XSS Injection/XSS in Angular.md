@@ -256,3 +256,4 @@ Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsys) and Gareth Heyes (Po
 ## References
 
 - [XSS without HTML - CSTI with Angular JS - Portswigger](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)
+- [Blind XSS AngularJS Payloads](https://ardern.io/2018/12/07/angularjs-bxss)

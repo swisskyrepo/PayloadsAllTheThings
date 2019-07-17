@@ -188,9 +188,9 @@ ${x}
 ## Jinja2
 
 [Official website](http://jinja.pocoo.org/)
-> Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.
+> Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.  
 
-### Basic injection
+### Basic injection
 
 ```python
 {{4*4}}[[5*5]]

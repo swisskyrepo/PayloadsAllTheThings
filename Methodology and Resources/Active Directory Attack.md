@@ -628,6 +628,8 @@ domainA.local      domainB.local                  TreeRoot       Bidirectional
 
 ### Unconstrained delegation
 
+> The user sends a TGS to access the service, along with their TGT, and then the service can use the user’s TGT to request a TGS for the user to any other service and impersonate the user. - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html
+
 #### Find delegation
 
 Check the `TrustedForDelegation` property.
@@ -677,6 +679,10 @@ Extract the base64 TGT from Rubeus output and load it to our current session.
 Then you can use DCsync or another attack : `Mimikatz> lsadump::dcsync /user:HACKER\krbtgt`
 
 ### Resource-Based Constrained Delegation
+
+Resource-based Constrained Delegation was introduced in Windows Server 2012. 
+
+> The user sends a TGS to access the service ("Service A"), and if the service is allowed to delegate to another pre-defined service ("Service B"), then Service A can present to the authentication service the TGS that the user provided and obtain a TGS for the user to Service B.  https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html
 
 1. Import **Powermad** and **Powerview**
 

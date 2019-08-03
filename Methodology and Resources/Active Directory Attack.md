@@ -91,6 +91,10 @@
 
     ```powershell
     pingcastle.exe --healthcheck --server <DOMAIN_CONTROLLER_IP> --user <USERNAME> --password <PASSWORD> --advanced-live --nullsession
+    pingcastle.exe --healthcheck --server domain.local
+    pingcastle.exe --graph --server domain.local
+    pingcastle.exe --scanner scanner_name --server domain.local
+    available scanners are:aclcheck,antivirus,corruptADDatabase,foreignusers,laps_bitlocker,localadmin,ullsession,nullsession-trust,share,smb,spooler,startup
     ```
 
 * [Kerbrute](https://github.com/ropnop/kerbrute)

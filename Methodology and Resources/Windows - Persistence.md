@@ -1,5 +1,18 @@
 # Windows - Persistence
 
+## Summary
+
+* [Userland](#userland)
+    * [Registry](#registry)
+    * [Startup](#startup)
+    * [Scheduled Task](#scheduled-task)
+* [Elevated](#elevated)
+    * [HKLM](#hklm)
+    * [Services](#services)
+    * [Scheduled Task](#scheduled-task)
+* [References](#references)
+
+
 ## Userland
 
 ### Registry

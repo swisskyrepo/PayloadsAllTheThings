@@ -213,6 +213,14 @@ cat /etc/cron.allow
 cat /etc/cron.deny*
 ```
 
+You can use [pspy](https://github.com/DominicBreuker/pspy) to detect a CRON job.
+
+```powershell
+# print both commands and file system events and scan procfs every 1000 ms (=1sec)
+./pspy64 -pf -i 1000 
+```
+
+
 ## Systemd timers
 
 ```powershell

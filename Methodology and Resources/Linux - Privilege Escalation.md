@@ -20,6 +20,7 @@
 - [BeRoot - Privilege Escalation Project - Windows / Linux / Mac](https://github.com/AlessandroZ/BeRoot)
 - [linuxprivchecker.py - a Linux Privilege Escalation Check Script](https://github.com/sleventyeleven/linuxprivchecker)
 - [unix-privesc-check - Automatically exported from code.google.com/p/unix-privesc-check](https://github.com/pentestmonkey/unix-privesc-check)
+- [Privilege Escalation through sudo - Linux](https://github.com/TH3xACE/SUDO_KILLER)
 
 ## Summary
 
@@ -309,6 +310,7 @@ uid=0(root) gid=1000(swissky)
 ```
 
 ## SUDO
+Tool: [Sudo Exploitation](https://github.com/TH3xACE/SUDO_KILLER)
 
 ### NOPASSWD
 

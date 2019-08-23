@@ -20,6 +20,7 @@
 - [BeRoot - Privilege Escalation Project - Windows / Linux / Mac](https://github.com/AlessandroZ/BeRoot)
 - [linuxprivchecker.py - a Linux Privilege Escalation Check Script](https://github.com/sleventyeleven/linuxprivchecker)
 - [unix-privesc-check - Automatically exported from code.google.com/p/unix-privesc-check](https://github.com/pentestmonkey/unix-privesc-check)
+- [Privilege Escalation through sudo - Linux](https://github.com/TH3xACE/SUDO_KILLER)
 
 ## Summary
 
@@ -213,6 +214,14 @@ cat /etc/cron.allow
 cat /etc/cron.deny*
 ```
 
+You can use [pspy](https://github.com/DominicBreuker/pspy) to detect a CRON job.
+
+```powershell
+# print both commands and file system events and scan procfs every 1000 ms (=1sec)
+./pspy64 -pf -i 1000 
+```
+
+
 ## Systemd timers
 
 ```powershell
@@ -301,6 +310,7 @@ uid=0(root) gid=1000(swissky)
 ```
 
 ## SUDO
+Tool: [Sudo Exploitation](https://github.com/TH3xACE/SUDO_KILLER)
 
 ### NOPASSWD
 

@@ -2,8 +2,6 @@
 
 > The WebSocket protocol allows a bidirectional and full-duplex communication between a client and a server
 
-
-
 ## Summary
 
 * [Tools](#tools)

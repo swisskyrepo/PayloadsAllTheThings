@@ -220,3 +220,4 @@ pip install -r requirements.txt
 * [Guardzilla video camera hardcoded AWS credential - 0dayallday.org](https://www.0dayallday.org/guardzilla-video-camera-hard-coded-aws-credentials/)
 * [AWS PENETRATION TESTING PART 1. S3 BUCKETS - VirtueSecurity](https://www.virtuesecurity.com/aws-penetration-testing-part-1-s3-buckets/)
 * [AWS PENETRATION TESTING PART 2. S3, IAM, EC2 - VirtueSecurity](https://www.virtuesecurity.com/aws-penetration-testing-part-2-s3-iam-ec2/)
+* [A Technical Analysis of the Capital One Hack - CloudSploit - Aug 2 2019](https://blog.cloudsploit.com/a-technical-analysis-of-the-capital-one-hack-a9b43d7c8aea?gi=8bb65b77c2cf)

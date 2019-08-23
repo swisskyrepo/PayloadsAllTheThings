@@ -34,7 +34,6 @@ You might also like the `Methodology and Resources` folder :
 
 - [CVE Exploits](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CVE%20Exploits)
     - Apache Struts 2 CVE-2013-2251 CVE-2017-5638 CVE-2018-11776_.py
-    - Apache Struts 2 CVE-2017-5638.py
     - Apache Struts 2 CVE-2017-9805.py
     - Apache Struts 2 CVE-2018-11776.py
     - Docker API RCE.py
@@ -43,6 +42,7 @@ You might also like the `Methodology and Resources` folder :
     - JBoss CVE-2015-7501.py
     - Jenkins CVE-2015-8103.py
     - Jenkins CVE-2016-0792.py
+    - Rails CVE-2019-5420.rb
     - Shellshock CVE-2014-6271.py
     - Tomcat CVE-2017-12617.py
     - WebLogic CVE-2016-3510.py

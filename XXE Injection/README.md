@@ -32,6 +32,11 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   ```
   sudo ./xxeftp -uno 443 ./xxeftp -w -wps 5555
   ```
+ - [230-OOB](https://github.com/lc/230-OOB) and payload generation via [http://xxe.sh/](http://xxe.sh/)
+   ```
+   $ python3 230.py 2121
+   ```
+   
 
 ## Detect the vulnerability
 

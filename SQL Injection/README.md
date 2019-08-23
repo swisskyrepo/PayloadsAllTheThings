@@ -52,6 +52,7 @@ Simple characters
 %3B
 )
 Wildcard (*)
+&apos;  # required for XML content
 ```
 
 Multiple encoding

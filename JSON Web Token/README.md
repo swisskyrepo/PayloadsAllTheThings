@@ -72,6 +72,12 @@ JWT Encoder – Decoder: `http://jsonwebtoken.io`
 
 JWT supports a None algorithm for signature. This was probably introduced to debug applications. However, this can have a severe impact on the security of the application.
 
+None algorithm variants:
+* none 
+* None
+* NONE
+* nOnE
+
 To exploit this vulnerability, you just need to decode the JWT and change the algorithm used for the signature. Then you can submit your new JWT.
 
 However, this won't work unless you **remove** the signature

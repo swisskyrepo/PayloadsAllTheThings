@@ -557,6 +557,9 @@ You can bypass a single quote with &#39; in an on mousedown event handler
 <script>window['alert'](document['domain'])</script>
 ```
 
+Convert IP address into decimal format: IE. `http://192.168.1.1` == `http://3232235777`
+http://www.geektools.com/cgi-bin/ipconv.cgi
+
 ### Bypass parenthesis for string
 
 ```javascript

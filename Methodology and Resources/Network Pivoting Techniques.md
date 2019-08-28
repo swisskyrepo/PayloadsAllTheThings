@@ -195,10 +195,17 @@ python client.py --server-ip [server ip] --server-port 9443 --ntlm-proxy-ip [pro
 ## plink
 
 ```powershell
-plink -l root -pw toor ssh-server-ip -R 3390:127.0.0.1:3389    --> exposes the RDP port of the machine in the port 3390 of the SSH Server
+# exposes the SMB port of the machine in the port 445 of the SSH Server
+plink -l root -pw toor -R 445:127.0.0.1:445 
+# exposes the RDP port of the machine in the port 3390 of the SSH Server
+plink -l root -pw toor ssh-server-ip -R 3390:127.0.0.1:3389  
+
 plink -l root -pw mypassword 192.168.18.84 -R
 plink.exe -v -pw mypassword user@10.10.10.10 -L 6666:127.0.0.1:445
+
 plink -R [Port to forward to on your VPS]:localhost:[Port to forward on your local machine] [VPS IP]
+# redirects the Windows port 445 to Kali on port 22
+plink -P 22 -l root -pw some_password -C -R 445:127.0.0.1:445 192.168.12.185   
 ```
 
 ## ngrok

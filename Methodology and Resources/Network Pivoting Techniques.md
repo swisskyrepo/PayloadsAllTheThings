@@ -256,7 +256,7 @@ unzip ngrok-stable-linux-amd64.zip
 | :-------------    | :------------------------------------------                                |
 | ncat              | `ncat localhost 8080 -c "ncat localhost 9090"`                             |
 | socat             | `socat -v tcp-connect:localhost:8080,reuseaddr tcp-connect:localhost:9090` |
-| remote host 1     | `ncat -l -p 8080 < file                                                    |
+| remote host 1     | `ncat -l -p 8080 < file`                                                   |
 | remote host 2     | `ncat -l -p 9090 > newfile`                                                |
 
 ## References

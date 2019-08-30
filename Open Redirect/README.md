@@ -114,6 +114,12 @@ http://www.yoursite.com/http://www.theirsite.com/
 http://www.yoursite.com/folder/www.folder.com
 ```
 
+Host/Split Unicode Normalization
+```powershell
+https://evil.c℀.example.com . ---> https://evil.ca/c.example.com
+http://a.com／X.b.com
+```
+
 XSS from Open URL - If it's in a JS variable
 
 ```powershell
@@ -170,3 +176,5 @@ http://www.example.com/redirect.php?url=javascript:prompt(1)
 * [Cujanovic - Open-Redirect-Payloads](https://github.com/cujanovic/Open-Redirect-Payloads)
 * [Pentester Land - Open Redirect Cheat Sheet](https://pentester.land/cheatsheets/2018/11/02/open-redirect-cheatsheet.html)
 * [Open Redirect Vulnerability - AUGUST 15, 2018 - s0cket7](https://s0cket7.com/open-redirect-vulnerability/)
+* [Host/Split
+Exploitable Antipatterns in Unicode Normalization - BlackHat US 2019](https://i.blackhat.com/USA-19/Thursday/us-19-Birch-HostSplit-Exploitable-Antipatterns-In-Unicode-Normalization.pdf)

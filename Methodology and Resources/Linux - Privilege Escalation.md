@@ -84,7 +84,7 @@
   * Checks if password hashes are stored in /etc/passwd
   * Extract full details for 'default' uid's such as 0, 1000, 1001 etc
   * Attempt to read restricted files i.e. /etc/shadow
-  * List current users history files (i.e .bash_history, .nano_history etc.)
+  * List current users history files (i.e .bash_history, .nano_history, .mysql_history , etc.)
   * Basic SSH checks
 * Privileged access:
   * Which users have recently used sudo
@@ -455,8 +455,8 @@ echo "username ALL=(ALL:ALL) ALL">>/etc/sudoers
 
 # use SUDO without password
 echo "username ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers
+echo "username ALL=NOPASSWD: /bin/bash" >>/etc/sudoers
 ```
-
 
 ## NFS Root Squashing
 
@@ -620,7 +620,7 @@ Precompiled exploits can be found inside these repositories, run them at your ow
 * [bin-sploits - @offensive-security](https://github.com/offensive-security/exploitdb-bin-sploits/tree/master/bin-sploits)
 * [kernel-exploits - @lucyoa](https://github.com/lucyoa/kernel-exploits/)
 
-The following exploits are known to work well.
+The following exploits are known to work well, search for another exploits using `searchsploit -w linux kernel centos`.
 
 ### CVE-2016-5195 (DirtyCow)
 

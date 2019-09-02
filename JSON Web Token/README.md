@@ -250,7 +250,7 @@ Secret is "Sn1f"
 
 ### Hashcat
 
-> Support added to crack JWT (JSON Web Token) with hashcat at 365MH/s on a single GTX1080 - [src](twitter.com/hashcat/status/955154646494040065)
+> Support added to crack JWT (JSON Web Token) with hashcat at 365MH/s on a single GTX1080 - [src](https://twitter.com/hashcat/status/955154646494040065)
 
 ```bash
 /hashcat -m 16500 hash.txt -a 3 -w 3 ?a?a?a?a?a?a

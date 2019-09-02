@@ -244,3 +244,4 @@ curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%
 * [GraphQL cheatsheet - DEVHINTS.IO](https://devhints.io/graphql)
 * [HIP19 Writeup - Meet Your Doctor 1,2,3 - June 22, 2019 - Swissky](https://swisskyrepo.github.io/HIP19-MeetYourDoctor/)
 * [Introspection query leaks sensitive graphql system information - @Zuriel](https://hackerone.com/reports/291531)
+* [Graphql Bug to Steal Anyone’s Address - Sept 1, 2019 - Pratik Yadav](https://medium.com/@pratiky054/graphql-bug-to-steal-anyones-address-fc34f0374417)

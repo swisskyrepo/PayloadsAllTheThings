@@ -46,6 +46,24 @@ Default algorithm is "HS256" (HMAC SHA256 symmetric encryption).
 }
 ```
 
+| `alg` Param Value  | Digital Signature or MAC Algorithm | Requirements |
+|---|---|---|
+| HS256 | HMAC using SHA-256                             | Required  |
+| HS384 | HMAC using SHA-384                             | Optional  |
+| HS512 | HMAC using SHA-512                             | Optional  |
+| RS256	| RSASSA-PKCS1-v1_5 using SHA-256                | Recommended | 
+| RS384 | RSASSA-PKCS1-v1_5 using SHA-384                |	Optional | 
+| RS512 | RSASSA-PKCS1-v1_5 using SHA-512                |	Optional | 
+| ES256 | ECDSA using P-256 and SHA-256	                 | Recommended  | 
+| ES384 | ECDSA using P-384 and SHA-384                  | Optional     | 
+| ES512 | ECDSA using P-521 and SHA-512	                 | Optional     | 
+| PS256 | RSASSA-PSS using SHA-256 and MGF1 with SHA-256 |	Optional | 
+| PS384 | RSASSA-PSS using SHA-384 and MGF1 with SHA-384 |	Optional |
+| PS512 | RSASSA-PSS using SHA-512 and MGF1 with SHA-512 |	Optional |
+| none	| No digital signature or MAC performed          |	Required |
+ 
+
+
 ### Payload
 
 ```json
@@ -272,3 +290,4 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 - [How to Hack a Weak JWT Implementation with a Timing Attack - Jan 7, 2017 - Tamas Polgar](https://hackernoon.com/can-timing-attack-be-a-practical-security-threat-on-jwt-signature-ba3c8340dea9)
 - [HACKING JSON WEB TOKENS, FROM ZERO TO HERO WITHOUT EFFORT - Thu Feb 09 2017 - @pdp](https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
 - [Write up – JRR Token – LeHack 2019 - 07/07/2019 - LAPHAZE](http://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)
+- [JWT Hacking 101 - TrustFoundry - Tyler Rosonke - December 8th, 2017](https://trustfoundry.net/jwt-hacking-101/)

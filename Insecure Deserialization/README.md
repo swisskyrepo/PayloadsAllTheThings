@@ -25,3 +25,4 @@ Check the following sub-sections, located in other files :
 * [Instagram's Million Dollar Bug](http://www.exfiltrated.com/research-Instagram-RCE.php) by Wesley Wineberg 
 * [(Ruby Cookie Deserialization RCE on facebooksearch.algolia.com](https://hackerone.com/reports/134321) by Michiel Prins (michiel)
 * [Java deserialization](https://seanmelia.wordpress.com/2016/07/22/exploiting-java-deserialization-via-jboss/) by meals
+* [Diving into unserialize() - Sep 19- Vickie Li](https://medium.com/swlh/diving-into-unserialize-3586c1ec97e)

@@ -3,6 +3,7 @@
 ## Summary
 
 - [Nmap](#nmap)
+- [Spyse](#spyse)
 - [Masscan](#masscan)
 - [Netdiscover](#netdiscover)
 - [Responder](#responder)
@@ -95,6 +96,33 @@ Host script results:
 |     Flags:       Normal user account
 
 List Nmap scripts : ls /usr/share/nmap/scripts/
+```
+
+## Spyse
+* Spyse API - for detailed info is better to check [Spyse](https://spyse.com/)
+
+* [Spyse Wrapper](https://github.com/zeropwn/spyse.py)
+
+#### Searching for subdomains
+```bash
+spyse -target xbox.com --subdomains
+```
+
+#### Reverse IP Lookup
+```bash
+spyse -target 52.14.144.171 --domains-on-ip
+```
+
+#### Searching for SSL certificates
+```bash
+spyse -target hotmail.com --ssl-certificates
+```
+```bash
+spyse -target "org: Microsoft" --ssl-certificates
+```
+#### Getting all DNS records
+```bash
+spyse -target xbox.com --dns-all
 ```
 
 ## Masscan

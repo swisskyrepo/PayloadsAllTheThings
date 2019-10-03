@@ -1,8 +1,10 @@
 # XSS in Angular
 
+## Client Side Template Injection
+
 The following payloads are based on Client Side Template Injection.
 
-## Stored/Reflected XSS - Simple alert 
+### Stored/Reflected XSS - Simple alert 
 
 > Angular as of version 1.6 have removed the sandbox altogether
 
@@ -148,7 +150,7 @@ Angular 1.0.1 - 1.1.5 and Vue JS
 ```
 
 
-## Blind XSS
+### Blind XSS
 
 1.0.1 - 1.1.5 && > 1.6.0 by Mario Heiderich (Cure53)
 
@@ -253,7 +255,47 @@ Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsys) and Gareth Heyes (Po
 }}
 ```
 
+## Automatic Sanitization
+
+> To systematically block XSS bugs, Angular treats all values as untrusted by default. When a value is inserted into the DOM from a template, via property, attribute, style, class binding, or interpolation, Angular sanitizes and escapes untrusted values.
+
+However, it is possible to mark a value as trusted and prevent the automatic sanitization with these methods:
+
+- bypassSecurityTrustHtml
+- bypassSecurityTrustScript
+- bypassSecurityTrustStyle
+- bypassSecurityTrustUrl
+- bypassSecurityTrustResourceUrl
+
+Example of a component using the unsecure method `bypassSecurityTrustUrl`:
+
+```
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'my-app',
+  template: `
+    <h4>An untrusted URL:</h4>
+    <p><a class="e2e-dangerous-url" [href]="dangerousUrl">Click me</a></p>
+    <h4>A trusted URL:</h4>
+    <p><a class="e2e-trusted-url" [href]="trustedUrl">Click me</a></p>
+  `,
+})
+export class App {
+  constructor(private sanitizer: DomSanitizer) {
+    this.dangerousUrl = 'javascript:alert("Hi there")';
+    this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.dangerousUrl);
+  }
+}
+```
+
+![XSS](https://angular.io/generated/images/guide/security/bypass-security-component.png)
+
+When doing a code review, you want to make sure that no user input is being trusted since it will introduce a security vulnerability in the application.
+
 ## References
 
 - [XSS without HTML - CSTI with Angular JS - Portswigger](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)
 - [Blind XSS AngularJS Payloads](https://ardern.io/2018/12/07/angularjs-bxss)
+- [Angular Security](https://angular.io/guide/security)
+- [Bypass DomSanitizer](https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b)

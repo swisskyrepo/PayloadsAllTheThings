@@ -7,6 +7,7 @@
 * [PostgreSQL Current User](#postgresql-current-user)
 * [PostgreSQL List Users](#postgresql-list-users)
 * [PostgreSQL List Password Hashes](#postgresql-list-password-hashes)
+* [PostgreSQL List Database Administrator Accounts](#postgresql-list-database-administrator-accounts)
 * [PostgreSQL List Privileges](#postgresql-list-privileges)
 * [PostgreSQL database name](#postgresql-database-name)
 * [PostgreSQL List databases](#postgresql-list-database)
@@ -57,7 +58,10 @@ SELECT usename FROM pg_user
 ```sql
 SELECT usename, passwd FROM pg_shadow 
 ```
-
+## PostgreSQL List Database Administrator Accounts
+```sql
+SELECT usename FROM pg_user WHERE usesuper IS TRUE
+```
 ## PostgreSQL List Privileges
 
 ```sql

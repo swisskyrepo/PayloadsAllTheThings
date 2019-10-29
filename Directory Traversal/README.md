@@ -144,6 +144,8 @@ c:/unattend.txt
 c:/unattend.xml
 c:/unattended.txt
 c:/unattended.xml
+c:/windows/repair/sam
+c:/windows/repair/system
 ```
 
 The following log files are controllable and can be included with an evil payload to achieve a command execution

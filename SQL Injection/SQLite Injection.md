@@ -1,5 +1,18 @@
 # SQLite Injection
 
+## Summary
+
+* [SQLite comments](#sqlite-comments)
+* [SQLite version](#sqlite-version)
+* [Integer/String based - Extract table name](#integerstring-based---extract-table-name)
+* [Integer/String based - Extract column name](#integerstring-based---extract-column-name)
+* [Boolean - Count number of tables](#boolean---count-number-of-tables)
+* [Boolean - Enumerating table name](#boolean---enumerating-table-name)
+* [Boolean - Extract info](#boolean---extract-info)
+* [Time based](#time-based)
+* [Remote Command Execution using SQLite command - Attach Database](#remote-command-execution-using-sqlite-command---attach-database)
+* [Remote Command Execution using SQLite command - Load_extension](#remote-command-execution-using-sqlite-command---load_extension)
+* [References](#references)
 ## SQLite comments
 
 ```sql

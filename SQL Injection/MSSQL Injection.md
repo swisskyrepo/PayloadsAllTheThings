@@ -5,18 +5,18 @@
 * [MSSQL comments](#mssql-comments)
 * [MSSQL version](#mssql-version)
 * [MSSQL database name](#mssql-database-name)
-* [MSSQL List databases](#mssql-list-database)
+* [MSSQL List databases](#mssql-list-databases)
 * [MSSQL List columns](#mssql-list-columns)
 * [MSSQL List tables](#mssql-list-tables)
-* [MSSQL Extract user/password](#mssql-extract-user-password)
+* [MSSQL Extract user/password](#mssql-extract-userpassword)
 * [MSSQL Union Based](#mssql-union-based)
 * [MSSQL Error Based](#mssql-error-based)
 * [MSSQL Blind Based](#mssql-blind-based)
 * [MSSQL Time Based](#mssql-time-based)
-* [MSSQL Stacked query](#mssql-stack-query)
+* [MSSQL Stacked query](#mssql-stacked-query)
 * [MSSQL Command execution](#mssql-command-execution)
 * [MSSQL UNC path](#mssql-unc-path)
-* [MSSQL Make user DBA](#mssql-make-user-dba)
+* [MSSQL Make user DBA](#mssql-make-user-dba-db-admin)
 
 ## MSSQL comments
 

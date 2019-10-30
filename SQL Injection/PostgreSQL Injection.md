@@ -20,8 +20,8 @@
 * [PostgreSQL File Read](#postgresql-file-read)
 * [PostgreSQL File Write](#postgresql-file-write)
 * [PostgreSQL Command execution](#postgresql-command-execution)
-    * [CVE-2019–9193](#cve-2019–9193)
-    * [Using libc.so.6](#using-libc-so-6)
+    * [CVE-2019–9193](#cve-20199193)
+    * [Using libc.so.6](#using-libcso6)
 * [References](#references)
 
 ## PostgreSQL Comments

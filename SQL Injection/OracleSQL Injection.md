@@ -1,5 +1,18 @@
 # Oracle SQL Injection
 
+## Summary
+
+* [Oracle SQL version](#oracle-sql-version)
+* [Oracle SQL database name](#oracle-sql-database-name)
+* [Oracle SQL List databases](#oracle-sql-list-databases)
+* [Oracle SQL List columns](#oracle-sql-list-columns)
+* [Oracle SQL List tables](#oracle-sql-list-tables)
+* [Oracle SQL Error Based](#oracle-sql-error-based)
+* [Oracle SQL Blind](#oracle-sql-blind)
+* [Oracle SQL Time Based](#oracle-sql-time-based)
+* [Oracle SQL Command execution](#oracle-sql-command-execution)
+* [References](#references)
+
 ## Oracle SQL version
 
 ```sql
@@ -21,7 +34,7 @@ SELECT SYS.DATABASE_NAME FROM DUAL;
 SELECT DISTINCT owner FROM all_tables;
 ```
 
-## Oracle SQL List Column
+## Oracle SQL List Columns
 
 ```sql
 SELECT column_name FROM all_tab_columns WHERE table_name = 'blah';

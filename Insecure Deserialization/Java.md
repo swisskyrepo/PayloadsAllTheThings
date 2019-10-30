@@ -63,6 +63,8 @@ JRE8u20_RCE_Gadget
 
 JexBoss - JBoss (and others Java Deserialization Vulnerabilities) verify and EXploitation Tool, [https://github.com/joaomatosf/jexboss](https://github.com/joaomatosf/jexboss)
 
+ysoserial-modified [https://github.com/pimps/ysoserial-modified](https://github.com/pimps/ysoserial-modified)
+
 ## References
 
 - [Github - ysoserial](https://github.com/frohoff/ysoserial)

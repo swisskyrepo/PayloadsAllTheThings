@@ -628,6 +628,11 @@ bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/containers/json
 bash-4.4# curl --unix-socket /var/run/docker.sock http://foo/images/json
 ```
 
+More info:
+
+- Daemon socket option: https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-socket-option
+- Docker Engine API: https://docs.docker.com/engine/api/latest/
+
 ### SSRF URL for Rancher
 
 ```powershell

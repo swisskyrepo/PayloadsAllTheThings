@@ -266,3 +266,4 @@ unzip ngrok-stable-linux-amd64.zip
 * [Using the SSH "Konami Code" (SSH Control Sequences) - Jeff McJunkin](https://pen-testing.sans.org/blog/2015/11/10/protected-using-the-ssh-konami-code-ssh-control-sequences)
 * [A Red Teamer's guide to pivoting- Mar 23, 2017 - Artem Kondratenko](https://artkond.com/2017/03/23/pivoting-guide/)
 * [Pivoting Meterpreter](https://www.information-security.fr/pivoting-meterpreter/)
+* [Etat de l’art du pivoting réseau en 2019 - Oct 28,2019 - Alexandre Zanni](https://cyberdefense.orange.com/fr/blog/etat-de-lart-du-pivoting-reseau-en-2019/)

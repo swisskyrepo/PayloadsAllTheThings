@@ -7,6 +7,14 @@
 * [User Enumeration](#user-enumeration)
 * [Network Enumeration](#network-enumeration)
 * [EoP - Looting for passwords](#eop---looting-for-passwords)
+    * [SAM and SYSTEM files](#sam-and-system-files)
+    * [Search for file contents](#search-for-file-contents)
+    * [Search for a file with a certain filename](#search-for-a-file-with-a-certain-filename)
+    * [Search the registry for key names and passwords](#search-the-registry-for-key-names-and-passwords)
+    * [Passwords in unattend.xml](#passwords-in-unattend.xml)
+    * [Wifi passwords](#wifi-passwords)
+    * [Passwords stored in services](#passwords-stored-in-services)
+    * [Powershell history](#powershell-history)
 * [EoP - Processes Enumeration and Tasks](#eop---processes-enumeration-and-tasks)
 * [EoP - Incorrect permissions in services](#eop---incorrect-permissions-in-services)
 * [EoP - Windows Subsystem for Linux (WSL)](#eop---windows-subsystem-for-linux-wsl)
@@ -381,6 +389,13 @@ Invoke-SessionGopher -AllDomain -o
 Invoke-SessionGopher -AllDomain -u domain.com\adm-arvanaghi -p s3cr3tP@ss
 ```
 
+### Powershell history
+
+```powershell
+type C:\Users\swissky\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
+cat (Get-PSReadlineOption).HistorySavePath
+cat (Get-PSReadlineOption).HistorySavePath | sls passw
+```
 
 ## EoP - Processes Enumeration and Tasks
 

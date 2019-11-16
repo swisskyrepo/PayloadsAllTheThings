@@ -2,44 +2,64 @@
 
 ## Summary
 
-* [Tools](#tools)
-* [Most common paths to AD compromise](#most-common-paths-to-ad-compromise)
-  * [MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)](#ms14-068-microsoft-kerberos-checksum-validation-vulnerability)
-  * [Open Shares](#open-shares)
-  * [SCF file attack against writeable share](#scf-file-attack-against-writeable-share)
-  * [GPO - Pivoting with Local Admin & Passwords in SYSVOL](#gpo---pivoting-with-local-admin--passwords-in-sysvol)
-  * [Dumping AD Domain Credentials](#dumping-ad-domain-credentials-systemrootntdsntdsdit)
-    * Using ndtsutil
-    * Using Vshadow
-    * Using vssadmin
-    * Using DiskShadow
-    * Using Mimikatz DCSync
-    * Using Mimikatz sekurlsa
-  * [Password spraying](#password-spraying)
-  * [Password in AD User comment](#password-in-ad-user-comment)
-  * [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
-  * [Pass-the-Ticket Silver Tickets](#pass-the-ticket-silver-tickets)
-  * [Kerberoasting](#kerberoasting)
-  * [KRB_AS_REP roasting](#krb_as_rep-roasting)
-  * [Pass-the-Hash](#pass-the-hash)
-  * [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
-  * [Capturing and cracking NTLMv2 hashes](#capturing-and-cracking-ntlmv2-hashes)
-  * [NTLMv2 hashes relaying](#ntlmv2-hashes-relaying)
-    * [MS08-068 NTLM reflection](#ms08-068-ntlm-reflection)
-    * [SMB Signing Disabled and IPv4](#smb-signing-disabled-and-ipv4)
-    * [SMB Signing Disabled and IPv6](#smb-signing-disabled-and-ipv6)
-    * [Drop the MIC](#drop-the-mic)
-    * [Ghost Potato](#ghost-potato)
-  * [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
-  * [Trust relationship between domains](#trust-relationship-between-domains)
-  * [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
-  * [Unconstrained delegation](#unconstrained-delegation)
-  * [Resource-Based Constrained Delegation](#resource-based-constrained-delegation)
-  * [Relay delegation with mitm6](#relay-delegation-with-mitm6)
-  * [PrivExchange attack](#privexchange-attack)
-  * [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etc-krb5-keytab)
-  * [PXE Boot image attack](#pxe-boot-image-attack)
-  * [Impersonating Office 365 Users on Azure AD Connect](#impersonating-office-365-users-on-azure-ad-connect)
+- [Active Directory Attacks](#active-directory-attacks)
+  - [Summary](#summary)
+  - [Tools](#tools)
+  - [Most common paths to AD compromise](#most-common-paths-to-ad-compromise)
+    - [MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)](#ms14-068-microsoft-kerberos-checksum-validation-vulnerability)
+    - [Open Shares](#open-shares)
+    - [SCF and URL file attack against writeable share](#scf-and-url-file-attack-against-writeable-share)
+    - [GPO - Pivoting with Local Admin & Passwords in SYSVOL](#gpo---pivoting-with-local-admin--passwords-in-sysvol)
+    - [Dumping AD Domain Credentials (%SystemRoot%\NTDS\Ntds.dit)](#dumping-ad-domain-credentials-systemrootntdsntdsdit)
+      - [Using ndtsutil](#using-ndtsutil)
+      - [Using Vshadow](#using-vshadow)
+      - [Using vssadmin](#using-vssadmin)
+      - [Using DiskShadow (a Windows signed binary)](#using-diskshadow-a-windows-signed-binary)
+      - [Using esentutl.exe](#using-esentutlexe)
+      - [Extract hashes from ntds.dit](#extract-hashes-from-ntdsdit)
+      - [Alternatives - modules](#alternatives---modules)
+      - [Using Mimikatz DCSync](#using-mimikatz-dcsync)
+      - [Using Mimikatz sekurlsa](#using-mimikatz-sekurlsa)
+    - [Password spraying](#password-spraying)
+      - [Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.](#using-kerbrute-a-tool-to-perform-kerberos-pre-auth-bruteforcing)
+      - [Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.](#using-crackmapexec-and-mp64-to-generate-passwords-and-spray-them-against-smb-services-on-the-network)
+      - [Using RDPassSpray to target RDP services.](#using-rdpassspray-to-target-rdp-services)
+      - [Using [hydra]() and [ncrack]() to target RDP services.](#using-hydra-and-ncrack-to-target-rdp-services)
+    - [Password in AD User comment](#password-in-ad-user-comment)
+    - [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
+      - [Using Mimikatz](#using-mimikatz)
+      - [Using Meterpreter](#using-meterpreter)
+      - [Using a ticket on Linux](#using-a-ticket-on-linux)
+    - [Pass-the-Ticket Silver Tickets](#pass-the-ticket-silver-tickets)
+    - [Kerberoasting](#kerberoasting)
+    - [KRB_AS_REP Roasting](#krbasrep-roasting)
+    - [Pass-the-Hash](#pass-the-hash)
+    - [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
+      - [Using impacket](#using-impacket)
+      - [Using Rubeus](#using-rubeus)
+    - [Capturing and cracking NTLMv2 hashes](#capturing-and-cracking-ntlmv2-hashes)
+    - [NTLMv2 hashes relaying](#ntlmv2-hashes-relaying)
+      - [MS08-068 NTLM reflection](#ms08-068-ntlm-reflection)
+      - [SMB Signing Disabled and IPv4](#smb-signing-disabled-and-ipv4)
+      - [SMB Signing Disabled and IPv6](#smb-signing-disabled-and-ipv6)
+      - [Drop the MIC](#drop-the-mic)
+      - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
+    - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
+    - [Trust relationship between domains](#trust-relationship-between-domains)
+    - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
+    - [Unconstrained delegation](#unconstrained-delegation)
+      - [Find delegation](#find-delegation)
+      - [Monitor with Rubeus](#monitor-with-rubeus)
+      - [Force a connect back from the DC](#force-a-connect-back-from-the-dc)
+      - [Load the ticket](#load-the-ticket)
+      - [Mitigation](#mitigation)
+    - [Resource-Based Constrained Delegation](#resource-based-constrained-delegation)
+    - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
+    - [PrivExchange attack](#privexchange-attack)
+    - [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etckrb5keytab)
+    - [PXE Boot image attack](#pxe-boot-image-attack)
+    - [Impersonating Office 365 Users on Azure AD Connect](#impersonating-office-365-users-on-azure-ad-connect)
+  - [References](#references)
 
 ## Tools
 
@@ -824,6 +844,16 @@ If a machine has `SMB signing`:`disabled`, it is possible to use Responder with 
     $ proxychains mssqlclient.py contoso/normaluser1@192.168.48.230 -windows-auth
     ```
 
+Mitigations:
+
+ * Disable LLMNR via group policy
+    ```powershell
+    Open gpedit.msc and navigate to Computer Configuration > Administrative Templates > Network > DNS Client > Turn off multicast name resolution and set to Enabled
+    ```
+ * Disable NBT-NS
+    ```powershell
+    This can be achieved by navigating through the GUI to Network card > Properties > IPv4 > Advanced > WINS and then under "NetBIOS setting" select Disable NetBIOS over TCP/IP
+    ```
 
 #### SMB Signing Disabled and IPv6
 

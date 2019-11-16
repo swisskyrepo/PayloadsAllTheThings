@@ -46,7 +46,7 @@ Double extensions
 ### Other extensions
 
 ```powershell
-asp : .asp, .aspx
+asp : .asp, .aspx, .cer and .asa (IIS <= 7.5), shell.aspx;1.jpg (IIS < 7.0)
 perl: .pl, .pm, .cgi, .lib
 jsp : .jsp, .jspx, .jsw, .jsv, .jspf
 Coldfusion: .cfm, .cfml, .cfc, .dbm

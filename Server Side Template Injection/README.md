@@ -7,7 +7,7 @@
 * [Tools](#tools)
 * [Methodology](#methodology)
 * [Ruby](#ruby)
-  * [Basic injection](#basic-injection)
+  * [Basic injections](#basic-injections)
   * [Retrieve /etc/passwd](#retrieve--etc-passwd)
   * [List files and directories](#list-files-and-directories)
 * [Java](#java)
@@ -59,10 +59,18 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 
 ## Ruby
 
-### Basic injection
+### Basic injections
+
+ERB:
 
 ```ruby
 <%= 7 * 7 %>
+```
+
+Slim:
+
+```ruby
+#{ 7 * 7 }
 ```
 
 ### Retrieve /etc/passwd

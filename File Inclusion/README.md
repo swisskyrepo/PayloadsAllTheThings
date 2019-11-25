@@ -272,8 +272,13 @@ print('[x] Something went wrong, please try again')
 
 ## LFI to RCE via phpinfo()
 
-https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf
+PHPinfo() displays the content of any variables such as **$_GET**, **$_POST** and **$_FILES**.
+
+> By making multiple upload posts to the PHPInfo script, and carefully controlling the reads, it is possible to retrieve the name of the temporary file and make a request to the LFI script specifying the temporary file name.
+
 Use the script phpInfoLFI.py (also available at https://www.insomniasec.com/downloads/publications/phpinfolfi.py)
+
+Research from https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf
 
 ## LFI to RCE via controlled log file
 

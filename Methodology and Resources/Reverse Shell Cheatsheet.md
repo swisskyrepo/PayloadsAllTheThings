@@ -296,6 +296,10 @@ In order to catch a shell, you need to listen on the desired port. `rlwrap` will
 
 ```powershell
 rlwrap nc localhost 80
+
+rlwrap -r -f . nc 127.0.0.1 4242
+-f . will make rlwrap use the current history file as a completion word list.
+-r Put all words seen on in- and output on the completion list.
 ```
 
 Sometimes, you want to access shortcuts, su, nano and autocomplete in a partially tty shell.

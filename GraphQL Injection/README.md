@@ -222,6 +222,18 @@ Use `$regex`, `$ne` from []() inside a `search` parameter.
 
 ### SQL injection
 
+Send a single inside a graphql parameter to trigger the SQL injection
+
+```powershell
+{ 
+    bacon(id: "1'") { 
+        id, 
+        type, 
+        price
+    }
+}
+```
+
 Simple SQL injection inside a graphql field.
 
 ```powershell

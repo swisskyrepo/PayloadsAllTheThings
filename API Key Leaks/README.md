@@ -7,14 +7,14 @@
 - [Tools](#tools)
 - [Exploit](#exploit)
     - [Algolia](#algolia)
-    - [AWS Access Key ID & Secret](#aws-access-key-id-secret)
+    - [AWS Access Key ID & Secret](#aws-access-key-id--secret)
     - [Slack API Token](#slack-api-token)
     - [Facebook Access Token](#facebook-access-token)
     - [Github client id and client secret](#github-client-id-and-client-secret)
     - [Twilio Account_sid and Auth Token](#twilio-account_sid-and-auth-token)
     - [Twitter API Secret](#twitter-api-secret)
     - [Twitter Bearer Token](#twitter-bearer-token)
-    - [Gitlab Personal Access Token](#gitlab-personnal-access-token)
+    - [Gitlab Personal Access Token](#gitlab-personal-access-token)
 
 ## Tools
 

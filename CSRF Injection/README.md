@@ -7,13 +7,14 @@
 
 * [Methodology](#methodology)
 * [Payloads](#payloads)
-    * [HTML GET - Requiring User Interaction](#)
-    * [HTML GET - No User Interaction)](#)
-    * [HTML POST - Requiring User Interaction](#)
-    * [HTML POST - AutoSubmit - No User Interaction](#)
-    * [JSON GET - Simple Request](#)
-    * [JSON POST - Simple Request](#)
-    * [JSON POST - Complex Request](#)
+    * [HTML GET - Requiring User Interaction](#html-get---requiring-user-interaction)
+    * [HTML GET - No User Interaction)](#html-get---no-user-interaction)
+    * [HTML POST - Requiring User Interaction](#html-post---requiring-user-interaction)
+    * [HTML POST - AutoSubmit - No User Interaction](#html-post---autosubmit---no-user-interaction)
+    * [JSON GET - Simple Request](#json-get---simple-request)
+    * [JSON POST - Simple Request](#json-post---simple-request)
+    * [JSON POST - Complex Request](#json-post---complex-request)
+* [References](#references)
 
 ## Tools
 

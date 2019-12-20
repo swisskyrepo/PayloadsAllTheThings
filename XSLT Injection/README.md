@@ -13,6 +13,7 @@
   - [Remote Code Execution with PHP wrapper](#remote-code-execution-with-php-wrapper)
   - [Remote Code Execution with Java](#remote-code-execution-with-java)
   - [Remote Code Execution with Native .NET](#remote-code-execution-with-native-net)
+- [References](#references)
 
 ## Tools
 

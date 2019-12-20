@@ -2,16 +2,17 @@
 
 > Vulnerability description - reference
 
-Tools:
-
-- [Tool name - description](https://example.com)
-
 ## Summary
 
-* [Something](#something)
+- [Tools](#tools)
 * [Something](#something)
   * [Subentry 1](#sub1)
   * [Subentry 2](#sub2)
+
+## Tools
+
+- [Tool 1](https://example.com)
+- [Tool 2](https://example.com)
 
 ## Something
 

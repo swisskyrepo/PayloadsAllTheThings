@@ -44,7 +44,7 @@
       - [Drop the MIC](#drop-the-mic)
       - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
-    - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-acls-aces)
+    - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
     - [Unconstrained delegation](#unconstrained-delegation)

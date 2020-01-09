@@ -350,8 +350,6 @@ ruby: exec "/bin/sh"
 lua: os.execute('/bin/sh')
 ```
 
-### Other Methods to Gain TTY Shell
-
 - vi: `:!bash`
 - vi: `:set shell=/bin/bash:shell`
 - nmap: `!sh`

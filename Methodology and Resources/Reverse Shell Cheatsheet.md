@@ -343,7 +343,7 @@ Spawn a TTY shell from an interpreter
 
 ```powershell
 /bin/sh -i
-python -c 'import pty; pty.spawn("/bin/sh")'
+python3 -c 'import pty; pty.spawn("/bin/sh")'
 perl -e 'exec "/bin/sh";'
 perl: exec "/bin/sh";
 ruby: exec "/bin/sh"

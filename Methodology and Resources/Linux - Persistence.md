@@ -137,8 +137,14 @@ Add an ssh key into the `~/.ssh` folder.
 
 Hide the payload with ANSI chars, the following chars will clear the terminal when using cat to display the content of your payload.
 
-```bash
+```powershell
 #[2J[2J[2J[2H[2A# Do not remove. Generated from /etc/issue.conf by configure.
+```
+
+Hide in plain sight using zero width spaces in filename.
+
+```powershell
+touch $(echo -n 'index\u200D.php') index.php
 ```
 
 Clear the last line of the history.

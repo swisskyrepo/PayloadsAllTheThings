@@ -21,6 +21,12 @@
 
 ## Userland
 
+Set a file as hidden
+
+```powershell
+attrib +h c:\autoexec.bat
+```
+
 ### Registry
 
 Create a REG_SZ value in the Run key within HKCU\Software\Microsoft\Windows.

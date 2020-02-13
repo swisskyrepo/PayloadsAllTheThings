@@ -36,3 +36,4 @@ sqlmap -u http://127.0.0.1:8000/?fuzz=test --tables --tamper=base64encode --dump
 
 - [HACKING WEB SOCKETS: ALL WEB PENTEST TOOLS WELCOMED by Michael Fowl | Mar 5, 2019](https://www.vdalabs.com/2019/03/05/hacking-web-sockets-all-web-pentest-tools-welcomed/)
 - [Hacking with WebSockets - Qualys - Mike Shema, Sergey Shekyan, Vaagn Toukharian](https://media.blackhat.com/bh-us-12/Briefings/Shekyan/BH_US_12_Shekyan_Toukharian_Hacking_Websocket_Slides.pdf)
+- [Mini WebSocket CTF - January 27, 2020 - Snowscan](https://snowscan.io/bbsctf-evilconneck/#)

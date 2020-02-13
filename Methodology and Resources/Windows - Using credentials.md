@@ -11,6 +11,7 @@
     * [Metasploit - Psexec](#metasploit-psexec)
 * [Crackmapexec](#crackmapexec)
 * [Winexe](#winexe)
+* [WMI](#wmi)
 * [Psexec.py / Smbexec.py / Wmiexec.py](#psexec.py---smbexec.py---wmiexec.py)
 * [PsExec - Sysinternal](#psexec-sysinternal)
 * [RDP Remote Desktop Protocol](#rdp-remote-desktop-protocol)
@@ -104,6 +105,12 @@ Integrated to Kali
 
 ```python
 winexe -U DOMAIN/username%password //10.10.10.10 cmd.exe
+```
+
+## WMI
+
+```powershell
+wmic /node:target.domain /user:domain\user /password:password process call create "C:\Windows\System32\calc.exe”
 ```
 
 ## Psexec.py / Smbexec.py / Wmiexec.py 

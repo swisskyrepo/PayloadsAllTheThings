@@ -113,6 +113,7 @@ List user privilege
 
 ```powershell
 whoami /priv
+whoami /groups
 ```
 
 List all users

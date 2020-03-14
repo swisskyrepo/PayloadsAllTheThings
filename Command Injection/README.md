@@ -12,6 +12,7 @@
 * [Filter Bypasses](#filter-bypasses)
   * [Bypass without space](#bypass-without-space)
   * [Bypass with a line return](#bypass-with-a-line-return)
+  * [Bypass characters filter via hex encoding](#bypass-characters-filter-via-hex-encoding)
   * [Bypass blacklisted words](#bypass-blacklisted-words)
    * [Bypass with single quote](#bypass-with-single-quote)
    * [Bypass with double quote](#bypass-with-double-quote)

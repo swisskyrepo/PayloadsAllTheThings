@@ -17,6 +17,9 @@ You might also like the `Methodology and Resources` folder :
 
 - [Methodology and Resources](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/)
   - [Active Directory Attack.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Active%20Directory%20Attack.md)
+  - [Cloud - AWS Pentest.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Cloud%20-%20AWS%20Pentest.md)
+  - [Cloud - Azure Pentest.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Cloud%20-%20Azure%20Pentest.md)
+  - [Cobalt Strike - Cheatsheet.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Cobalt%20Strike%20-%20Cheatsheet.md)
   - [Linux - Persistence.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Persistence.md)
   - [Linux - Privilege Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md)
   - [Metasploit - Cheatsheet.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Metasploit%20-%20Cheatsheet.md)  
@@ -31,23 +34,7 @@ You might also like the `Methodology and Resources` folder :
   - [Windows - Post Exploitation Koadic.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Post%20Exploitation%20Koadic.md)
   - [Windows - Privilege Escalation.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
   - [Windows - Using credentials.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Using%20credentials.md)
-
 - [CVE Exploits](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CVE%20Exploits)
-    - Apache Struts 2 CVE-2013-2251 CVE-2017-5638 CVE-2018-11776_.py
-    - Apache Struts 2 CVE-2017-9805.py
-    - Apache Struts 2 CVE-2018-11776.py
-    - Docker API RCE.py
-    - Drupalgeddon2 CVE-2018-7600.rb
-    - Heartbleed CVE-2014-0160.py
-    - JBoss CVE-2015-7501.py
-    - Jenkins CVE-2015-8103.py
-    - Jenkins CVE-2016-0792.py
-    - Rails CVE-2019-5420.rb
-    - Shellshock CVE-2014-6271.py
-    - Tomcat CVE-2017-12617.py
-    - WebLogic CVE-2016-3510.py
-    - WebLogic CVE-2017-10271.py
-    - WebLogic CVE-2018-2894.py
-    - WebSphere CVE-2015-7450.py
+
 
 You want more ? Check the [Books](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/BOOKS.md) and [Youtube videos](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/YOUTUBE.md) selections.

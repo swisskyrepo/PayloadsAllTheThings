@@ -434,7 +434,7 @@ Tool: [wildpwn](https://github.com/localh0t/wildpwn)
 List world writable files on the system.
 
 ```powershell
-find / -writable ! -user \`whoami\` -type f ! -path "/proc/*" ! -path "/sys/*" -exec ls -al {} \; 2>/dev/null
+find / -writable ! -user `whoami` -type f ! -path "/proc/*" ! -path "/sys/*" -exec ls -al {} \; 2>/dev/null
 find / -perm -2 -type f 2>/dev/null
 find / ! -path "*/proc/*" -perm -2 -type f -print 2>/dev/null
 ```

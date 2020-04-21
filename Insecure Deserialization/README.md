@@ -12,6 +12,7 @@ Check the following sub-sections, located in other files :
 ## References
 
 * [Github - ysoserial](https://github.com/frohoff/ysoserial)
+* [Github - ysoserial.net](https://github.com/pwntester/ysoserial.net)
 * [Java-Deserialization-Cheat-Sheet - GrrrDog](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
 * [Understanding & practicing java deserialization exploits](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)
 * [How i found a 1500$ worth Deserialization vulnerability - @D0rkerDevil](https://medium.com/@D0rkerDevil/how-i-found-a-1500-worth-deserialization-vulnerability-9ce753416e0a)
@@ -25,3 +26,5 @@ Check the following sub-sections, located in other files :
 * [Instagram's Million Dollar Bug](http://www.exfiltrated.com/research-Instagram-RCE.php) by Wesley Wineberg 
 * [(Ruby Cookie Deserialization RCE on facebooksearch.algolia.com](https://hackerone.com/reports/134321) by Michiel Prins (michiel)
 * [Java deserialization](https://seanmelia.wordpress.com/2016/07/22/exploiting-java-deserialization-via-jboss/) by meals
+* [Diving into unserialize() - Sep 19- Vickie Li](https://medium.com/swlh/diving-into-unserialize-3586c1ec97e)
+* [.NET Gadgets](https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-Json-Attacks.pdf) by Alvaro Muñoz (@pwntester) & OleksandrMirosh

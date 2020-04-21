@@ -233,3 +233,8 @@ ja\nva\tscript\r:alert(1)
 \152\141\166\141\163\143\162\151\160\164\072alert(1)
 http://google.com:80#@www.whitelisteddomain.tld/
 http://google.com:80?@www.whitelisteddomain.tld/
+http://google.com\www.whitelisteddomain.tld
+http://google.com&www.whitelisteddomain.tld
+http:///////////google.com
+\\google.com
+http://www.whitelisteddomain.tld.google.com

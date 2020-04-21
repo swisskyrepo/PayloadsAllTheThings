@@ -24,6 +24,7 @@
 * [GraphQLmap - Scripting engine to interact with a graphql endpoint for pentesting purposes](https://github.com/swisskyrepo/GraphQLmap)
 * [GraphQL-voyager - Represent any GraphQL API as an interactive graph](https://apis.guru/graphql-voyager/)
 * [GraphQL Security Toolkit - GraphQL Security Research Material](https://github.com/doyensec/graph-ql/)
+* [Graphql-path-enum - Lists the different ways of reaching a given type in a GraphQL schema](https://gitlab.com/dee-see/graphql-path-enum)
 * [GraphQL IDE - An extensive IDE for exploring GraphQL API's](https://github.com/andev-software/graphql-ide)
 * [InQL - A Burp Extension for GraphQL Security Testing](https://github.com/doyensec/inql)
 * [Insomnia - Cross-platform HTTP and GraphQL Client](https://insomnia.rest/)
@@ -155,6 +156,28 @@ query IntrospectionQuery {
 }
 ```
 
+### List path
+
+```php
+$ git clone https://gitlab.com/dee-see/graphql-path-enum
+$ graphql-path-enum -i ./test_data/h1_introspection.json -t Skill
+Found 27 ways to reach the "Skill" node from the "Query" node:
+- Query (assignable_teams) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (checklist_check) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (checklist_check_response) -> ChecklistCheckResponse (checklist_check) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (checklist_checks) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (clusters) -> Cluster (weaknesses) -> Weakness (critical_reports) -> TeamMemberGroupConnection (edges) -> TeamMemberGroupEdge (node) -> TeamMemberGroup (team_members) -> TeamMember (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (embedded_submission_form) -> EmbeddedSubmissionForm (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (external_program) -> ExternalProgram (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (external_programs) -> ExternalProgram (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (job_listing) -> JobListing (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (job_listings) -> JobListing (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (me) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (pentest) -> Pentest (lead_pentester) -> Pentester (user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (pentests) -> Pentest (lead_pentester) -> Pentester (user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (query) -> Query (assignable_teams) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (query) -> Query (skills) -> Skill
+```
 
 ### Extract data
 

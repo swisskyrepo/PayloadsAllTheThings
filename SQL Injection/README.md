@@ -290,6 +290,7 @@ tamper=name_of_the_tamper
 "*"
 '--'
 "--"
+'--' / "--"
 " or ""-"
 " or "" "
 " or ""&"

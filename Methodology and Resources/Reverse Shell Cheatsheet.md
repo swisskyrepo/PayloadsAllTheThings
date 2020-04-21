@@ -431,6 +431,19 @@ lua: os.execute('/bin/sh')
 - nmap: `!sh`
 - mysql: `! bash`
 
+Alternative TTY method
+
+```
+www-data@debian:/dev/shm$ su - user
+su: must be run from a terminal
+
+www-data@debian:/dev/shm$ /usr/bin/script -qc /bin/bash /dev/null
+www-data@debian:/dev/shm$ su - user
+Password: P4ssW0rD
+
+user@debian:~$ 
+```
+
 ## Fully interactive reverse shell on Windows
 The introduction of the Pseudo Console (ConPty) in Windows has improved so much the way Windows handles terminals.
 

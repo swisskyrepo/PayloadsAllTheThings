@@ -151,7 +151,7 @@ select pg_ls_dir('./');
 select pg_read_file('PG_VERSION', 0, 200);
 ```
 
-NOTE: Earlier versions of Postgres did not accept absolute paths in `pg_read_file` or `pg_ls_dir`. Newer version (as of [this](https://github.com/postgres/postgres/commit/0fdc8495bff02684142a44ab3bc5b18a8ca1863a) commit) will allow reading any file/filepath for super users or user's in the `default_role_read_server_files` group.
+NOTE: Earlier versions of Postgres did not accept absolute paths in `pg_read_file` or `pg_ls_dir`. Newer versions (as of [this](https://github.com/postgres/postgres/commit/0fdc8495bff02684142a44ab3bc5b18a8ca1863a) commit) will allow reading any file/filepath for super users or users in the `default_role_read_server_files` group.
 
 ```sql
 CREATE TABLE temp(t TEXT);

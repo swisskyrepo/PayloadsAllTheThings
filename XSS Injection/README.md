@@ -10,7 +10,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Javascript keylogger](#javascript-keylogger)
   - [Other ways](#other-ways)
 - [Identify an XSS endpoint](#identify-an-xss-endpoint)
-- [XSS in HTML/Applications](#xss-in-llapplications)
+- [XSS in HTML/Applications](#xss-in-htmlapplications)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
 - [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
 - [XSS in PostMessage](#xss-in-postmessage)

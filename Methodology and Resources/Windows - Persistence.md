@@ -16,7 +16,12 @@
     * [HKLM](#hklm)
     * [Services](#services)
     * [Scheduled Task](#scheduled-task)
+    * [Binary Replacement](#binary-replacement)
+        * [Binary Replacement on Windows XP+](#binary-replacement-on-windows-xp)
+        * [Binary Replacement on Windows 10+](#binary-replacement-on-windows-10)
     * [RDP Backdoor](#rdp-backdoor)
+        * [utilman.exe](#utilman.exe)
+        * [sethc.exe](#sethc.exe)
     * [Skeleton Key](#skeleton-key)
 * [References](#references)
 
@@ -157,6 +162,27 @@ PS C:\> $D = New-ScheduledTask -Action $A -Trigger $T -Principal $P -Settings $S
 PS C:\> Register-ScheduledTask Backdoor -InputObject $D
 ```
 
+### Binary Replacement
+
+#### Binary Replacement on Windows XP+
+
+| Feature             | Executable                            |
+|---------------------|---------------------------------------|
+| Sticky Keys         | C:\Windows\System32\sethc.exe         |
+| Accessibility Menu  | C:\Windows\System32\utilman.exe       |
+| On-Screen Keyboard  | C:\Windows\System32\osk.exe           |
+| Magnifier           | C:\Windows\System32\Magnify.exe       |
+| Narrator            | C:\Windows\System32\Narrator.exe      |
+| Display Switcher    | C:\Windows\System32\DisplaySwitch.exe |
+| App Switcher        | C:\Windows\System32\AtBroker.exe      |
+
+#### Binary Replacement on Windows 10+
+
+Exploit a DLL hijacking vulnerability in the On-Screen Keyboard **osk.exe** executable.
+
+Create a malicious **HID.dll** in  `C:\Program Files\Common Files\microsoft shared\ink\HID.dll`.
+
+
 ### RDP Backdoor
 
 #### utilman.exe
@@ -190,4 +216,5 @@ Enter-PSSession -ComputerName <AnyMachineYouLike> -Credential <Domain>\Administr
 * [A view of persistence - Rastamouse](https://rastamouse.me/2018/03/a-view-of-persistence/)
 * [Windows Persistence Commands - Pwn Wiki](http://pwnwiki.io/#!persistence/windows/index.md)
 * [SharPersist Windows Persistence Toolkit in C - Brett Hawkins](http://www.youtube.com/watch?v=K7o9RSVyazo)
-* [](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/)
+* [IIS Raid – Backdooring IIS Using Native Modules - 19/02/2020](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/)
+* [Old Tricks Are Always Useful: Exploiting Arbitrary File Writes with Accessibility Tools - Apr 27, 2020 - @phraaaaaaa](https://iwantmore.pizza/posts/arbitrary-write-accessibility-tools.html)

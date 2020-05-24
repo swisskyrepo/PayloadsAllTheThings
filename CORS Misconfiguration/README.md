@@ -4,9 +4,14 @@
 
 ## Summary
 
+* [Tools](#tools)
 * [Prerequisites](#prerequisites)
 * [Exploitation](#exploitation)
 * [References](#references)
+
+## Tools
+
+* [Corsy - CORS Misconfiguration Scanner](https://github.com/s0md3vCorsy/)
 
 ## Prerequisites
 

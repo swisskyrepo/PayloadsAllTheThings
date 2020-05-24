@@ -154,6 +154,9 @@ sshuttle -vvr username@pivot_host 10.2.2.0/24
 
 # using a private key
 $ sshuttle -vvr root@10.10.10.10 10.1.1.0/24 -e "ssh -i ~/.ssh/id_rsa" 
+
+# -x == exclude some network to not transmit over the tunnel
+# -x x.x.x.x.x/24
 ```
 
 ## chisel

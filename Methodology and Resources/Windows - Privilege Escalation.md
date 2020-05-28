@@ -28,6 +28,7 @@
 * [EoP - Kernel Exploitation](#eop---kernel-exploitation)
 * [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
+* [EoP - Evaluating Vulnerable Drivers](#eop---evaluating-vulnerable-drivers)
 * [EoP - Runas](#eop---runas)
 * [EoP - Abusing Shadow Copies](#eop---abusing-shadow-copies)
 * [EoP - From local administrator to NT SYSTEM](#eop---from-local-administrator-to-nt-system)
@@ -68,6 +69,11 @@
 - [WindowsExploits - Windows exploits, mostly precompiled. Not being updated.](https://github.com/abatchy17/WindowsExploits)
 - [WindowsEnum - A Powershell Privilege Escalation Enumeration Script.](https://github.com/absolomb/WindowsEnum)
 - [Seatbelt - A C# project that performs a number of security oriented host-survey "safety checks" relevant from both offensive and defensive security perspectives.](https://github.com/GhostPack/Seatbelt)
+    ```powershell
+    Seatbelt.exe -group=all -full
+    Seatbelt.exe -group=system -outputfile="C:\Temp\system.txt"
+    Seatbelt.exe -group=remote -computername=dc.theshire.local -computername=192.168.230.209 -username=THESHIRE\sam -password="yum \"po-ta-toes\""
+    ```
 - [Powerless - Windows privilege escalation (enumeration) script designed with OSCP labs (legacy Windows) in mind](https://github.com/M4ximuss/Powerless)
 - [JAWS - Just Another Windows (Enum) Script](https://github.com/411Hall/JAWS)
     ```powershell
@@ -737,6 +743,26 @@ Technique also available in Metasploit : `exploit/windows/local/always_install_e
 Application running as SYSTEM allowing an user to spawn a CMD, or browse directories.
 
 Example: "Windows Help and Support" (Windows + F1), search for "command prompt", click on "Click to open Command Prompt"
+
+## EoP - Evaluating Vulnerable Drivers
+Look for vuln drivers loaded, we often don't spend enough time looking at this:
+
+```powershell
+PS C:\Users\Swissky> driverquery.exe /fo table
+
+Module Name  Display Name           Driver Type   Link Date
+============ ====================== ============= ======================
+1394ohci     1394 OHCI Compliant Ho Kernel        12/10/2006 4:44:38 PM
+3ware        3ware                  Kernel        5/18/2015 6:28:03 PM
+ACPI         Microsoft ACPI Driver  Kernel        12/9/1975 6:17:08 AM
+AcpiDev      ACPI Devices driver    Kernel        12/7/1993 6:22:19 AM
+acpiex       Microsoft ACPIEx Drive Kernel        3/1/2087 8:53:50 AM
+acpipagr     ACPI Processor Aggrega Kernel        1/24/2081 8:36:36 AM
+AcpiPmi      ACPI Power Meter Drive Kernel        11/19/2006 9:20:15 PM
+acpitime     ACPI Wake Alarm Driver Kernel        2/9/1974 7:10:30 AM
+ADP80XX      ADP80XX                Kernel        4/9/2015 4:49:48 PM
+<SNIP>
+```
 
 ## EoP - Runas
 

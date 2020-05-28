@@ -767,8 +767,8 @@ Alternatively on macOS machine you can use [bifrost](https://github.com/its-a-fe
 Then crack the ticket with hashcat or john
 
 ```powershell
-hashcat -m 13100 -a 0 hash.txt crackstation.txt
-./john ~/hash.txt --wordlist=rockyou.lst
+./hashcat -m 13100 -a 0 kerberos_hashes.txt crackstation.txt
+./john --wordlist=/opt/wordlists/rockyou.txt --fork=4 --format=krb5tgs ~/kerberos_hashes.txt
 ```
 
 Mitigations: 

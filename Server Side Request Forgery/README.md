@@ -444,7 +444,6 @@ DNS record
 ```powershell
 http://instance-data
 http://169.254.169.254
-http://metadata.nicob.net/
 http://169.254.169.254.xip.io/
 http://1ynrnhl.xip.io/
 http://www.owasp.org.1ynrnhl.xip.io/

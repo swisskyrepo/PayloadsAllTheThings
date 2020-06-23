@@ -123,6 +123,14 @@ An attacker can inject a Windows UNC share ('\\UNC\share\name') into a software 
 
 ### Interesting Windows files
 
+Always existing file in recent Windows machine. 
+Ideal to test path traversal but nothing much interesting inside...
+
+```powershell
+c:\windows\system32\license.rtf
+c:\windows\system32\eula.txt
+```
+
 Interesting files to check out (Extracted from https://github.com/soffensive/windowsblindread)
 
 ```powershell
@@ -167,5 +175,6 @@ The following log files are controllable and can be included with an evil payloa
 
 ## References
 
+* [Path Traversal Cheat Sheet: Windows](https://gracefulsecurity.com/path-traversal-cheat-sheet-windows/)
 * [Directory traversal attack - Wikipedia](https://en.wikipedia.org/wiki/Directory_traversal_attack)
 * [CWE-40: Path Traversal: '\\UNC\share\name\' (Windows UNC Share) - CWE Mitre - December 27, 2018](https://cwe.mitre.org/data/definitions/40.html)

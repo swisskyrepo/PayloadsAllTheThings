@@ -8,6 +8,7 @@
   * [Local Port Forwarding](#local-port-forwarding)
   * [Remote Port Forwarding](#remote-port-forwarding)
 * [Proxychains](#proxychains)
+* [Graphtcp](#graphtcp)
 * [Web SOCKS - reGeorg](#web-socks---regeorg)
 * [Metasploit](#metasploit)
 * [sshuttle](#sshuttle)
@@ -79,6 +80,17 @@ socks4 localhost 8080
 ```
 
 Set the SOCKS4 proxy then `proxychains nmap -sT 192.168.5.6`
+
+## Graphtcp
+
+Same as proxychains, with another mechanism to "proxify" which allow Go applications.
+
+```powershell
+git clone https://github.com/hmgle/graftcp.git
+cd graftcp && make
+graftcp-local/graftcp-local
+./graftcp chromium-browser
+```
 
 ## Web SOCKS - reGeorg
 

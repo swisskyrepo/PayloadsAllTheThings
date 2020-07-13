@@ -748,8 +748,9 @@ Example: "Windows Help and Support" (Windows + F1), search for "command prompt",
 Look for vuln drivers loaded, we often don't spend enough time looking at this:
 
 ```powershell
-PS C:\Users\Swissky> driverquery.exe /fo table
+# https://github.com/matterpreter/OffensiveCSharp/tree/master/DriverQuery
 
+PS C:\Users\Swissky> driverquery.exe /fo table
 Module Name  Display Name           Driver Type   Link Date
 ============ ====================== ============= ======================
 1394ohci     1394 OHCI Compliant Ho Kernel        12/10/2006 4:44:38 PM
@@ -761,6 +762,18 @@ acpipagr     ACPI Processor Aggrega Kernel        1/24/2081 8:36:36 AM
 AcpiPmi      ACPI Power Meter Drive Kernel        11/19/2006 9:20:15 PM
 acpitime     ACPI Wake Alarm Driver Kernel        2/9/1974 7:10:30 AM
 ADP80XX      ADP80XX                Kernel        4/9/2015 4:49:48 PM
+<SNIP>
+
+PS C:\Users\Swissky> DriverQuery.exe --no-msft
+[+] Enumerating driver services...
+[+] Checking file signatures...
+Citrix USB Filter Driver
+    Service Name: ctxusbm
+    Path: C:\Windows\system32\DRIVERS\ctxusbm.sys
+    Version: 14.11.0.138
+    Creation Time (UTC): 17/05/2018 01:20:50
+    Cert Issuer: CN=Symantec Class 3 SHA256 Code Signing CA, OU=Symantec Trust Network, O=Symantec Corporation, C=US
+    Signer: CN="Citrix Systems, Inc.", OU=XenApp(ClientSHA256), O="Citrix Systems, Inc.", L=Fort Lauderdale, S=Florida, C=US
 <SNIP>
 ```
 

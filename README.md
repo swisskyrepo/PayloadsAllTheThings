@@ -4,7 +4,13 @@ A list of useful payloads and bypasses for Web Application Security.
 Feel free to improve with your payloads and techniques !
 I :heart: pull requests :)
 
-You can also contribute with a :beers: IRL
+You can also contribute with a :beers: IRL, or using the sponsor button.
+
+
+<p align="center">
+  <img src="https://repository-images.githubusercontent.com/71220757/fac34f00-9854-11ea-9d6f-55fe78f233fb">
+</p>
+
 
 Every section contains the following files, you can use the `_template_vuln` folder to create a new chapter:
 

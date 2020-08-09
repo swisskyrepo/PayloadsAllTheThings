@@ -11,6 +11,7 @@
     * [Metasploit - Psexec](#metasploit-psexec)
 * [Remote Code Execution with PS Credentials](#remote-code-execution-with-ps-credentials)
 * [WinRM](#winrm)
+* [Powershell Remoting](#powershell-remoting)
 * [Crackmapexec](#crackmapexec)
 * [Winexe](#winexe)
 * [WMI](#wmi)
@@ -147,6 +148,30 @@ conn.shell(:powershell) do |shell|
 end
 ```
 
+
+## Powershell Remoting
+
+> PSSESSION
+
+```powershell
+PS> Enable-PSRemoting
+
+# one-to-one interactive session
+PS> Enter-PSSession -computerName DC01
+[DC01]: PS>
+
+# one-to-one execute scripts and commands
+PS> $Session = New-PSSession -ComputerName CLIENT1
+PS> Invoke-Command -Session $Session -scriptBlock { $test = 1 }
+PS> Invoke-Command -Session $Session -scriptBlock { $test }
+1
+
+# one-to-many execute scripts and commands
+PS> Invoke-Command -computername DC01,CLIENT1 -scriptBlock { Get-Service }
+PS> Invoke-Command -computername DC01,CLIENT1 -filePath c:\Scripts\Task.ps1
+```
+
+
 ## Winexe 
 
 Integrated to Kali
@@ -261,6 +286,7 @@ PS C:\> net use \\ordws01.cscou.lab /user:DOMAIN\username password C$
 PS C:\> runas /netonly /user:DOMAIN\username "cmd.exe"
 PS C:\> runas /noprofil /netonly /user:DOMAIN\username cmd.exe
 ```
+
 
 ## References
 

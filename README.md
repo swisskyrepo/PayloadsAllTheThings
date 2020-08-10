@@ -8,7 +8,7 @@ You can also contribute with a :beers: IRL, or using the sponsor button.
 
 
 <p align="center">
-  <img src="https://repository-images.githubusercontent.com/71220757/cc2fcb80-da73-11ea-8288-8ba1e3193f6d">
+  <img src="https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/.github/banner.png">
 </p>
 
 

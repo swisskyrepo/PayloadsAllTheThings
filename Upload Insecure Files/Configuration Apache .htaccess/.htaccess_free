@@ -1,0 +1,7 @@
+<Files ~ “^\.ht”>
+# overriding deny rule
+# making htaccess accessible from the internet
+Require all granted
+Order allow,deny
+Allow from all
+</Files>

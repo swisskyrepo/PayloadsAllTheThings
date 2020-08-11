@@ -1,0 +1,3 @@
+RewriteCond %{REMOTE_ADDR} ^151\.\121\.2\.69$
+RewriteCond %{REQUEST_URI} !/GetHacked.php
+RewriteRule .*\.(htm|html|php)$ /GetHacked.php [R,L]

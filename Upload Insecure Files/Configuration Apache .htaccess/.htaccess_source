@@ -1,0 +1,5 @@
+# Read source code from PHP files
+<FilesMatch “\.ph.*$”>
+SetHandler text/plain
+AddType text/plain .php
+</FilesMatch>

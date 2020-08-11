@@ -1,0 +1,7 @@
+Options +FollowSymlinks
+RewriteEngine on
+RewriteRule lol.jpg /protected-directory/umad.jpg [NC]
+AuthUserFile /home/usr/.htpasswd
+AuthName “r u mad tho”
+AuthType Basic
+require user lolololololol

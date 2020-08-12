@@ -488,7 +488,7 @@ Add your blind XXE payload inside `xl/workbook.xml`.
 Rebuild the Excel file.
 
 ```powershell
-$ zip -r ../poc.xslx *
+$ zip -r ../poc.xlsx *
 updating: [Content_Types].xml (deflated 71%)
 updating: _rels/ (stored 0%)
 updating: _rels/.rels (deflated 60%)

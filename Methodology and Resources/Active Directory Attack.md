@@ -1165,7 +1165,7 @@ $UserObject.TerminalServicesWorkDirectory = "C:\"
 $UserObject.SetInfo()
 ```
 
-NOTE: To not alert the users the payload should hide its own process window and spawn the normal graphical enviorment.
+NOTE: To not alert the user the payload should hide its own process window and spawn the normal graphical environment.
 
 #### WriteDACL
 

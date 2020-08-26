@@ -255,7 +255,7 @@ Use `$regex`, `$ne` from []() inside a `search` parameter.
 
 ### SQL injection
 
-Send a single inside a graphql parameter to trigger the SQL injection
+Send a single quote `'` inside a graphql parameter to trigger the SQL injection
 
 ```powershell
 { 

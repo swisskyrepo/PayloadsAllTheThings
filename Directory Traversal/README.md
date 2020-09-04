@@ -40,6 +40,15 @@ We can use the `..` characters to access the parent directory, the following str
 %uff0e%uff0e%u2216
 ```
 
+### Directory traversal based on OS detection
+
+```
+/etc/passwd = usernames in UNIX
+/global.asax = App config on IIS
+\docume-1\user\mydocu~1 = User directory on Windows 8.3
+\windows\system32\cmd.exe = execute commands on Windows
+```
+
 ### 16 bits Unicode encoding
 
 ```powershell

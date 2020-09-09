@@ -190,5 +190,12 @@ Normal use:
 
 * [How To Manage and Use LDAP Servers with OpenLDAP Utilities](https://www.digitalocean.com/community/tutorials/how-to-manage-and-use-ldap-servers-with-openldap-utilities)
 * [How To Configure OpenLDAP and Perform Administrative LDAP Tasks](https://www.digitalocean.com/community/tutorials/how-to-configure-openldap-and-perform-administrative-ldap-tasks)
+* SSH key authentication via LDAP
+    - [How to setup LDAP server for openssh-lpk](https://openssh-ldap-pubkey.readthedocs.io/en/latest/openldap.html)
+    - [openssh-lpk.ldif](https://github.com/Lullabot/openldap-schema/blob/master/openssh-lpk.ldif)
+    - [Setting up OpenLDAP server with OpenSSH-LPK on Ubuntu 14.04](https://blog.shichao.io/2015/04/17/setup_openldap_server_with_openssh_lpk_on_ubuntu.html)
+    - [SSH key authentication using LDAP](https://serverfault.com/questions/653792/ssh-key-authentication-using-ldap)
+    - [FR] [SSH et LDAP](https://wiki.lereset.org/ateliers:serveurmail:ldap-ssh)
+    - [SSH Public Keys in OpenLDAP](http://pig.made-it.com/ldap-openssh.html)
 
 [5]:https://book.hacktricks.xyz/pentesting-web/ldap-injection

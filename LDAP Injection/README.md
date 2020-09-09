@@ -178,10 +178,17 @@ Ref. [5][5]
 
 ## References
 
+Injection:
+
 * [OWASP LDAP Injection](https://www.owasp.org/index.php/LDAP_injection)
 * [LDAP Blind Explorer](http://code.google.com/p/ldap-blind-explorer/)
-* [ECW 2018 : Write Up - AdmYSsion (WEB - 50) - 0xUKN](https://0xukn.fr/posts/WriteUpECW2018AdmYSsion/)
+* [ECW 2018 : Write Up - AdmYSsion (WEB - 50) - 0xUKN](https://0xukn.fr/posts/writeupecw2018admyssion/)
 * [Quals ECW 2018 - Maki](https://maki.bzh/courses/blog/writeups/qualecw2018/)
 * \[5] [LDAP Injection - HackTricks][5]
+
+Normal use:
+
+* [How To Manage and Use LDAP Servers with OpenLDAP Utilities](https://www.digitalocean.com/community/tutorials/how-to-manage-and-use-ldap-servers-with-openldap-utilities)
+* [How To Configure OpenLDAP and Perform Administrative LDAP Tasks](https://www.digitalocean.com/community/tutorials/how-to-configure-openldap-and-perform-administrative-ldap-tasks)
 
 [5]:https://book.hacktricks.xyz/pentesting-web/ldap-injection

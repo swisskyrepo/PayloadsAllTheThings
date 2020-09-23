@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-PayloadAllTheThings's Teal :heart: pull requests :)
+PayloadAllTheThings's Team :heart: pull requests :)
 Feel free to improve with your payloads and techniques !
 
 You can also contribute with a :beers: IRL, or using the sponsor button.

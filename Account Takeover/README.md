@@ -10,6 +10,7 @@
     * [Weak Password Reset Token](#weak-password-reset-token)
 * [Account Takeover Via Cross Site Scripting](#account-takeover-via-cross-site-scripting)
 * [Account Takeover Via HTTP Request Smuggling](#account-takeover-via-http-request-smuggling)
+* [Account Takeover via CSRF](#account-takeover-via-csrf)
 * [References](#references)
 
 ## Password Reset Feature
@@ -117,12 +118,25 @@ Refer to **HTTP Request Smuggling** vulnerability page.
     X: X
     ```
 
+### Account Takeover via CSRF
+
+1. Create a payload for the CSRF, e.g: "HTML form with auto submit for a password change"
+2. Send the payload
+
 Hackerone reports exploiting this bug
 * https://hackerone.com/reports/737140
 * https://hackerone.com/reports/771666
+
+
+## TODO
+
+* Broken cryptography
+* Session hijacking
+* OAuth misconfiguration
 
 
 ## References
 
 - [10 Password Reset Flaws - Anugrah SR](http://anugrahsr.me/posts/10-Password-reset-flaws/)
 - [$6,5k + $5k HTTP Request Smuggling mass account takeover - Slack + Zomato - Bug Bounty Reports Explained](https://www.youtube.com/watch?v=gzM4wWA7RFo&feature=youtu.be)
+- [Broken Cryptography & Account Takeovers - Harsh Bothra - September 20, 2020](https://speakerdeck.com/harshbothra/broken-cryptography-and-account-takeovers?slide=28)

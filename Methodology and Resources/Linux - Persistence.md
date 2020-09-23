@@ -13,7 +13,7 @@
 * [Backdooring the APT](#backdooring-the-apt)
 * [Backdooring the SSH](#backdooring-the-ssh)
 * [Tips](#tips)
-* [Adicional Linux Persistence Options](#Adicional-Persistence-Options)
+* [Additional Linux Persistence Options](#additional-persistence-options)
 * [References](#references)
 
 
@@ -181,7 +181,7 @@ The following directories are temporary and usually writeable
 /tmp/
 /dev/shm/
 ```
-## Adicional Persistence Options
+## Additional Persistence Options
 
 * [SSH Authorized Keys](https://attack.mitre.org/techniques/T1098/004)
 * [Compromise Client Software Binary](https://attack.mitre.org/techniques/T1554)

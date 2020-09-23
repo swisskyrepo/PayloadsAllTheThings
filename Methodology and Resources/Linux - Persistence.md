@@ -13,6 +13,7 @@
 * [Backdooring the APT](#backdooring-the-apt)
 * [Backdooring the SSH](#backdooring-the-ssh)
 * [Tips](#tips)
+* [Additional Linux Persistence Options](#additional-persistence-options)
 * [References](#references)
 
 
@@ -180,6 +181,33 @@ The following directories are temporary and usually writeable
 /tmp/
 /dev/shm/
 ```
+## Additional Persistence Options
+
+* [SSH Authorized Keys](https://attack.mitre.org/techniques/T1098/004)
+* [Compromise Client Software Binary](https://attack.mitre.org/techniques/T1554)
+* [Create Account](https://attack.mitre.org/techniques/T1136/)
+* [Create Account: Local Account](https://attack.mitre.org/techniques/T1136/001/)
+* [Create or Modify System Process](https://attack.mitre.org/techniques/T1543/)
+* [Create or Modify System Process: Systemd Service](https://attack.mitre.org/techniques/T1543/002/)
+* [Event Triggered Execution: Trap](https://attack.mitre.org/techniques/T1546/005/) 
+* [Event Triggered Execution](https://attack.mitre.org/techniques/T1546/)
+* [Event Triggered Execution: .bash_profile and .bashrc](https://attack.mitre.org/techniques/T1546/004/)
+* [External Remote Services](https://attack.mitre.org/techniques/T1133/)
+* [Hijack Execution Flow](https://attack.mitre.org/techniques/T1574/)
+* [Hijack Execution Flow: LD_PRELOAD](https://attack.mitre.org/techniques/T1574/006/)
+* [Pre-OS Boot](https://attack.mitre.org/techniques/T1542/)
+* [Pre-OS Boot: Bootkit](https://attack.mitre.org/techniques/T1542/003/)
+* [Scheduled Task/Job](https://attack.mitre.org/techniques/T1053/) 
+* [Scheduled Task/Job: At (Linux)](https://attack.mitre.org/techniques/T1053/001/)
+* [Scheduled Task/Job: Cron](https://attack.mitre.org/techniques/T1053/003/)
+* [Server Software Component](https://attack.mitre.org/techniques/T1505/)
+* [Server Software Component: SQL Stored Procedures](https://attack.mitre.org/techniques/T1505/001/)
+* [Server Software Component: Transport Agent](https://attack.mitre.org/techniques/T1505/002/) 
+* [Server Software Component: Web Shell](https://attack.mitre.org/techniques/T1505/003/) 
+* [Traffic Signaling](https://attack.mitre.org/techniques/T1205/)
+* [Traffic Signaling: Port Knocking](https://attack.mitre.org/techniques/T1205/001/)
+* [Valid Accounts: Default Accounts](https://attack.mitre.org/techniques/T1078/001/) 
+* [Valid Accounts: Domain Accounts 2](https://attack.mitre.org/techniques/T1078/002/)
 
 ## References
 

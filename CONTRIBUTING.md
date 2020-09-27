@@ -1,6 +1,6 @@
 # CONTRIBUTING
 
-PayloadAllTheThings's Team :heart: pull requests :)
+PayloadsAllTheThings' Team :heart: pull requests :)
 Feel free to improve with your payloads and techniques !
 
 You can also contribute with a :beers: IRL, or using the sponsor button.

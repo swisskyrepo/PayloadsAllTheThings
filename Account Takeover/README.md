@@ -3,7 +3,7 @@
 ## Summary
 
 * [Password Reset Feature](#password-reset-feature)
-    * [Password Reset Token Leak Via Referrer](#password-reset-token-leak-via-referer)
+    * [Password Reset Token Leak Via Referrer](#password-reset-token-leak-via-referrer)
     * [Account Takeover Through Password Reset Poisoning](#account-takeover-through-password-reset-poisoning)
     * [Password Reset Via Email Parameter](#password-reset-via-email-parameter)
     * [IDOR on API Parameters](#idor-on-api-parameters)
@@ -61,7 +61,7 @@ email=victim@mail.com|hacker@mail.com
 
 1. Attacker have to login with their account and go to the **Change password** feature.
 2. Start the Burp Suite and Intercept the request
-3. Send it to the repeater tab and edit the parameters
+3. Send it to the repeater tab and edit the parameters : User ID/email
     ```powershell
     POST /api/changepass
     [...]
@@ -118,7 +118,7 @@ Refer to **HTTP Request Smuggling** vulnerability page.
     X: X
     ```
 
-### Account Takeover via CSRF
+## Account Takeover via CSRF
 
 1. Create a payload for the CSRF, e.g: "HTML form with auto submit for a password change"
 2. Send the payload
@@ -127,6 +127,13 @@ Hackerone reports exploiting this bug
 * https://hackerone.com/reports/737140
 * https://hackerone.com/reports/771666
 
+
+## Account Takeover via JWT
+
+JSON Web Token might be used to authenticate an user. 
+
+* Edit the JWT with another User ID / Email
+* Check for weak JWT signature 
 
 ## TODO
 

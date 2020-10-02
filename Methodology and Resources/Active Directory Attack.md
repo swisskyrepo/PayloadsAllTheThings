@@ -75,7 +75,8 @@
 ## Tools
 
 * [Impacket](https://github.com/CoreSecurity/impacket) or the [Windows version](https://github.com/maaaaz/impacket-examples-windows)
-* [Responder](https://github.com/SpiderLabs/Responder)
+* [Responder](https://github.com/lgandx/Responder)
+* [InveighZero](https://github.com/Kevin-Robertson/InveighZero)
 * [Mimikatz](https://github.com/gentilkiwi/mimikatz)
 * [Ranger](https://github.com/funkandwagnalls/ranger)
 * [BloodHound](https://github.com/BloodHoundAD/BloodHound)

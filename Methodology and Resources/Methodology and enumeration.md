@@ -38,6 +38,7 @@
 
   ```bash
   look for JS files, old links
+  curl -sX GET "http://web.archive.org/cdx/search/cdx?url=<targetDomain.com>&output=text&fl=original&collapse=urlkey&matchType=prefix"
   ```
 
 * Using The Harvester (https://github.com/laramies/theHarvester)

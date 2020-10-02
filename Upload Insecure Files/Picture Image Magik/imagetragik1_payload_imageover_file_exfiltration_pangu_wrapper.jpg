@@ -1,5 +1,0 @@
-push graphic-context
-viewbox 0 0 640 480
-image over 0,0 0,0 'pango:@/etc/passwd'
-pop graphic-context
-

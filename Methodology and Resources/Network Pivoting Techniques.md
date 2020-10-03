@@ -310,7 +310,17 @@ unzip ngrok-stable-linux-amd64.zip
 ./ngrok tcp 4433
 ```
 
+## cloudflared
 
+```bash
+# Get the binary
+wget https://bin.equinox.io/c/VdrWdbjqyF/cloudflared-stable-linux-amd64.tgz
+tar xvzf cloudflared-stable-linux-amd64.tgz
+# Expose accessible internal service to the internet
+./cloudflared tunnel --url <protocol>://<host>:<port>
+```
+  
+  
 ## Basic Pivoting Types
 
 | Type              | Use Case                                    |

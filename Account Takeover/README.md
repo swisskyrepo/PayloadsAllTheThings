@@ -8,6 +8,7 @@
     * [Password Reset Via Email Parameter](#password-reset-via-email-parameter)
     * [IDOR on API Parameters](#idor-on-api-parameters)
     * [Weak Password Reset Token](#weak-password-reset-token)
+    * [Leaking Password Reset Token](#leaking-password-reset-token)
 * [Account Takeover Via Cross Site Scripting](#account-takeover-via-cross-site-scripting)
 * [Account Takeover Via HTTP Request Smuggling](#account-takeover-via-http-request-smuggling)
 * [Account Takeover via CSRF](#account-takeover-via-csrf)
@@ -84,6 +85,13 @@ Try to determine if the token expire or if it's always the same, in some cases t
 * Token reuse
 * Token expiration date
 
+### Leaking Password Reset Token
+
+1. Trigger a password reset request using the API/UI for a specific email e.g: test@mail.com
+2. Inspect the server response and check for `resetToken`
+3. Then use the token in an URL like `https://example.com/v3/user/password/reset?resetToken=[THE_RESET_TOKEN]&email=[THE_MAIL]`
+
+
 ## Account Takeover Via Cross Site Scripting
 
 1. Find an XSS inside the application or a subdomain if the cookies are scoped to the parent domain : `*.domain.com`
@@ -147,3 +155,4 @@ JSON Web Token might be used to authenticate an user.
 - [10 Password Reset Flaws - Anugrah SR](http://anugrahsr.me/posts/10-Password-reset-flaws/)
 - [$6,5k + $5k HTTP Request Smuggling mass account takeover - Slack + Zomato - Bug Bounty Reports Explained](https://www.youtube.com/watch?v=gzM4wWA7RFo&feature=youtu.be)
 - [Broken Cryptography & Account Takeovers - Harsh Bothra - September 20, 2020](https://speakerdeck.com/harshbothra/broken-cryptography-and-account-takeovers?slide=28)
+- [Hacking Grindr Accounts with Copy and Paste - Troy HUNT & Wassime BOUIMADAGHENE - 03 OCTOBER 2020](https://www.troyhunt.com/hacking-grindr-accounts-with-copy-and-paste/)

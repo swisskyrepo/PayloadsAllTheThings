@@ -3,6 +3,7 @@
 ## Summary
 
 * [Tools](#tools)
+* [Defeating Defender](#defeating-defender)
 * [Disable Windows Defender](#disable-windows-defender)
 * [Disable Windows Firewall](#disable-windows-firewall)
 * [Simple User](#simple-user)
@@ -32,6 +33,13 @@
 ## Tools
 
 - [SharPersist - Windows persistence toolkit written in C#. - @h4wkst3r](https://github.com/fireeye/SharPersist)
+
+## Defeating Defender
+
+Reverse shell without being blocked by defender.
+
+[TrustedSec's Unicorn](https://github.com/trustedsec/unicorn)
+
 
 ## Disable Windows Defender
 

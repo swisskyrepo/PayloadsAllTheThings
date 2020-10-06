@@ -136,12 +136,16 @@ https://trusted-origin.example.com/?xss=<script>CORS-ATTACK-PAYLOAD</script>
 
 ### Vulnerable Example: Wildcard Origin `*` without Credentials
 
-If the server responds with a wildcard origin `*`, the browser does never send
-the cookies. However, if the server does not require authentication, it's still
+If the server responds with a wildcard origin `*`, **the browser does never send
+the cookies**. However, if the server does not require authentication, it's still
 possible to access the data on the server. This can happen on internal servers
-that are not accessible from the Internet. The attacker's website can then
-pivot into the internal network and access the server's data withotu
-authentication.
+that are not accessible from the Internet. The attacker's website can then 
+pivot into the internal network and access the server's data without authentication.
+
+```powershell
+* is the only wildcard origin
+https://*.example.com is not valid
+```
 
 #### Vulnerable Implementation
 

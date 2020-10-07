@@ -54,5 +54,8 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
 
 * [Web Cache Deception Attack - Omer Gil](http://omergil.blogspot.fr/2017/02/web-cache-deception-attack.html)
 * [Practical Web Cache Poisoning - James Kettle @albinowax](https://portswigger.net/blog/practical-web-cache-poisoning)
-* [Web Caching - SI9INT](https://si9int.sh/article/6)
+* [Web Cache Entanglement: Novel Pathways to Poisoning - James Kettle @albinowax](https://portswigger.net/research/web-cache-entanglement)
 * [Web Cache Deception Attack leads to user info disclosure - Kunal pandey - Feb 25](https://medium.com/@kunal94/web-cache-deception-attack-leads-to-user-info-disclosure-805318f7bb29)
+* [Web cache poisoning - Web Security Academy learning materials](https://portswigger.net/web-security/web-cache-poisoning)
+  - [Exploiting cache design flaws](https://portswigger.net/web-security/web-cache-poisoning/exploiting-design-flaws)
+  - [Exploiting cache implementation flaws](https://portswigger.net/web-security/web-cache-poisoning/exploiting-implementation-flaws)

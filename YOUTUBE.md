@@ -1,7 +1,7 @@
 # Youtube
 
 ## Channels
-#### English
+
 - [IppSec Channel - Hack The Box Writeups](https://www.youtube.com/channel/UCa6eh7gCkpPo5XXUDfygQQA)
 - [LiveOverflow - Explore weird machines...](https://www.youtube.com/channel/UClcE-kVhqyiHCcjYwcpfj9w)
 - [GynvaelEN - Podcasts about CTFs, computer security, programing and similar things.](https://www.youtube.com/channel/UCCkVMojdBWS-JtH7TliWkVg)
@@ -20,13 +20,6 @@
 - [stacksmashing / Ghidra Ninja](https://www.youtube.com/channel/UC3S8vxwRfqLBdIhgRlDRVzw)
 - [Hak5](https://www.youtube.com/channel/UC3s0BtrBJpwNDaflRSoiieQ)
 
-#### Hindi
-- [Bitten Tech](https://www.youtube.com/channel/UC3PsooDxvFG0aEBe4JVtAbg)
-- [Technical Navigator](https://www.youtube.com/user/Niteshlike123)
-- [Masters in Ethical Hacking](https://www.youtube.com/channel/UCAKbr5-LO1jB5hEtac4DwQA)
-- [Pratik Dabhi](https://www.youtube.com/channel/UCszyA_7DVMz63bI30NW2a_g)
-- [TechChip](https://www.youtube.com/channel/UCYS9sTrPpcIVDxz2yVPbuLw)
-- [Armour Infosec](https://www.youtube.com/channel/UCMDwO_BrPzIv2k_UODxtsAg)
 ## Conferences
 
 - [Hunting for Top Bounties - Nicolas Grégoire](https://www.youtube.com/watch?v=mQjTgDuLsp4)

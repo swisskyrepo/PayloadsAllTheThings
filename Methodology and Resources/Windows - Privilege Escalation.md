@@ -1029,12 +1029,11 @@ If we found a privileged file write vulnerability in Windows or in some third-pa
 
 > Weaponizing for privileged file writes bugs with Windows problem reporting
 
-1. Copy `phoneinfo.dll` to `C:\Windows\System32\`
-2. Place `Report.wer` file and `WerTrigger.exe` in a same directory.
-3. Then, run `WerTrigger.exe`.
-4. Enjoy a shell as **NT AUTHORITY\SYSTEM**
-
-https://github.com/sailay1996/WerTrigger
+1. Clone https://github.com/sailay1996/WerTrigger
+2. Copy `phoneinfo.dll` to `C:\Windows\System32\`
+3. Place `Report.wer` file and `WerTrigger.exe` in a same directory.
+4. Then, run `WerTrigger.exe`.
+5. Enjoy a shell as **NT AUTHORITY\SYSTEM**
 
 
 ## EoP - Common Vulnerabilities and Exposure

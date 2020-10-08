@@ -10,7 +10,7 @@
 - [PwnFunction](https://www.youtube.com/channel/UCW6MNdOsqv2E9AjQkv9we7A)
 - [OJ Reeves](https://www.youtube.com/channel/UCz2aqRQWMhJ4wcJq3XneqRg)
 - [Hacksplained - A Beginner Friendly Guide to Hacking](https://www.youtube.com/c/hacksplained)
-
+- [STÖK](https://www.youtube.com/c/STOKfredrik)
 ## Conferences
 
 - [Hunting for Top Bounties - Nicolas Grégoire](https://www.youtube.com/watch?v=mQjTgDuLsp4)

@@ -40,4 +40,4 @@ SELECT * FROM users WHERE user = 'admin'/*' AND pass = '*/and pass>'' ALLOW FILT
 
 ## References
 
-* [Injection In Apache Cassandra – Part I - Rodolfo - EternalNoobs](https://eternalnoobs.com/injection-in-apache-cassandra-part-i/)
+

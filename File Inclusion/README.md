@@ -411,6 +411,5 @@ Then crack the hashes inside in order to login via SSH on the machine.
 * [Чтение файлов => unserialize !](https://rdot.org/forum/showthread.php?t=4379)
 * [New PHP Exploitation Technique - 14 Aug 2018 by Dr. Johannes Dahse](https://blog.ripstech.com/2018/new-php-exploitation-technique/)
 * [It's-A-PHP-Unserialization-Vulnerability-Jim-But-Not-As-We-Know-It, Sam Thomas](https://github.com/s-n-t/presentations/blob/master/us-18-Thomas-It's-A-PHP-Unserialization-Vulnerability-Jim-But-Not-As-We-Know-It.pdf)
-* [Local file inclusion mini list - Penetrate.io](https://penetrate.io/2014/09/25/local-file-inclusion-mini-list/)
 * [CVV #1: Local File Inclusion - @SI9INT - Jun 20, 2018](https://medium.com/bugbountywriteup/cvv-1-local-file-inclusion-ebc48e0e479a)
 * [Exploiting Remote File Inclusion (RFI) in PHP application and bypassing remote URL inclusion restriction](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html?m=1)

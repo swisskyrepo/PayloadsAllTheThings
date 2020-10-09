@@ -38,8 +38,6 @@ The injection would look like the following SQL query
 SELECT * FROM users WHERE user = 'admin'/*' AND pass = '*/and pass>'' ALLOW FILTERING;
 ```
 
-Example from EternalNoob : [https://hack2learn.pw/cassandra/login.php](https://hack2learn.pw/cassandra/login.php)
-
 ## References
 
 * [Injection In Apache Cassandra – Part I - Rodolfo - EternalNoobs](https://eternalnoobs.com/injection-in-apache-cassandra-part-i/)

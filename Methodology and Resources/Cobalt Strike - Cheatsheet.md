@@ -102,10 +102,23 @@ Configuration:
 3. Interact with a beacon, and `sleep 0`
 
 
-### SMB Beacon
+### SMB Beacon   
 
-Uses Named Pipes.    
-Connect to an SMB Beacon : `link [host] [pipe]`
+```powershell
+link [host] [pipename]
+connect [host] [port]
+unlink [host] [PID]
+jump [exec] [host] [pipe]
+```
+
+SMB Beacon uses Named Pipes. You might encounter these error code while running it.
+
+| Error Code | Meaning              | Description                                        |
+|------------|----------------------|----------------------------------------------------|
+| 2          | File Not Found       | There is no beacon for you to link to              |
+| 5          | Access is denied     | Invalid credentials or you don't have permission   |
+| 53         | Bad Netpath          | You have no trust relationship with the target system. It may or may not be a beacon there. |
+
 
 ### Metasploit compatibility
 
@@ -385,7 +398,8 @@ Beacon Command Elevators
 
 Artifact Kit (Cobalt Strike 4.0) - https://www.youtube.com/watch?v=6mC21kviwG4 :
 
-- `sudo apt-get install mingw-w64`
+- Download the artifact kit : `Go to Help -> Arsenal to download Artifact Kit (requires a licensed version of Cobalt Strike)`
+- Install the dependencies : `sudo apt-get install mingw-w64`
 - Edit the Artifact code
     * Change pipename strings
     * Change `VirtualAlloc` in `patch.c`/`patch.exe`, e.g: HeapAlloc

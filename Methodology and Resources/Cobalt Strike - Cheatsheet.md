@@ -120,6 +120,27 @@ SMB Beacon uses Named Pipes. You might encounter these error code while running 
 | 53         | Bad Netpath          | You have no trust relationship with the target system. It may or may not be a beacon there. |
 
 
+### SSH Beacon
+
+```powershell
+# deploy a beacon
+beacon> help ssh
+Use: ssh [target:port] [user] [pass]
+Spawn an SSH client and attempt to login to the specified target
+
+beacon> help ssh-key
+Use: ssh [target:port] [user] [/path/to/key.pem]
+Spawn an SSH client and attempt to login to the specified target
+
+# beacon's commands
+upload                    Upload a file
+download                  Download a file
+socks                     Start SOCKS4a server to relay traffic
+sudo                      Run a command via sudo
+rportfwd                  Setup a reverse port forward
+shell                     Execute a command via the shell
+```
+
 ### Metasploit compatibility
 
 * Payload: windows/meterpreter/reverse_http or windows/meterpreter/reverse_https

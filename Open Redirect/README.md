@@ -21,7 +21,7 @@ https://famous-website.tld/signup?redirectUrl=https://famous-website.tld/account
 After signing up you get redirected to your account, this redirection is specified by the `redirectUrl` parameter in the URL.   
 What happens if we change the `famous-website.tld/account` to `evil-website.tld`?
 
-```powerhshell
+```powershell
 https://famous-website.tld/signup?redirectUrl=https://evil-website.tld/account
 ```
 

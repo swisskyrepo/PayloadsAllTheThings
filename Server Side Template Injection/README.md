@@ -1,6 +1,6 @@
 # Templates Injections
 
-> Template injection allows an attacker to include template code into an existant (or not) template. A template engine makes designing HTML pages easier by using static template files which at runtime replaces variables/placeholders with actual values in the HTML pages
+> Template injection allows an attacker to include template code into an existing (or not) template. A template engine makes designing HTML pages easier by using static template files which at runtime replaces variables/placeholders with actual values in the HTML pages
 
 ## Summary
 
@@ -387,7 +387,7 @@ Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
 
 ### Jinja2 - Remote Code Execution
 
-Listen for connexion
+Listen for connection
 
 ```bash
 nv -lnvp 8000
@@ -475,7 +475,7 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 {{ request }} would return a request object like com.[...].context.TemplateContextRequest@23548206
 ```
 
-Jinjava is an open source project developped by Hubspot, available at [https://github.com/HubSpot/jinjava/](https://github.com/HubSpot/jinjava/)
+Jinjava is an open source project developed by Hubspot, available at [https://github.com/HubSpot/jinjava/](https://github.com/HubSpot/jinjava/)
 
 ### Jinjava - Command execution 
 

@@ -1,6 +1,6 @@
 # API Key Leaks
 
-> The API key is a unique identifier that is used to authenticate requests associated with your project. Some developpers might hardcode them or leave it on public shares.
+> The API key is a unique identifier that is used to authenticate requests associated with your project. Some developers might hardcode them or leave it on public shares.
 
 ## Summary
 
@@ -27,7 +27,7 @@
 
 ## Exploit
 
-The following commands can be used to takeover accounts or extract personnal informations from the API using the leaked token.
+The following commands can be used to takeover accounts or extract personal information from the API using the leaked token.
 
 ### Google Maps 
 

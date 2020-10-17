@@ -30,7 +30,7 @@ Check for the following files, if they exist you can extract the .git folder.
 ### Github example with a .git
 
 1. Check 403 error (Forbidden) for .git or even better : a directory listing
-2. Git saves all informations in log file .git/logs/HEAD (try 'head' in lowercase too)
+2. Git saves all information in log file .git/logs/HEAD (try 'head' in lowercase too)
     ```powershell
     0000000000000000000000000000000000000000 15ca375e54f056a576905b41a417b413c57df6eb root <root@dfc2eabdf236.(none)> 1455532500 +0000        clone: from https://github.com/fermayo/hello-world-lamp.git
     15ca375e54f056a576905b41a417b413c57df6eb 26e35470d38c4d6815bc4426a862d5399f04865c Michael <michael@easyctf.com> 1489390329 +0000        commit: Initial.

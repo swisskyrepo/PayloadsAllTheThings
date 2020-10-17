@@ -225,7 +225,7 @@ tamper=name_of_the_tamper
 |concat2concatws.py | Replaces instances like 'CONCAT(A, B)' with 'CONCAT_WS(MID(CHAR(0), 0, 0), A, B)'|
 |charencode.py | Url-encodes all characters in a given payload (not processing already encoded)  |
 |charunicodeencode.py | Unicode-url-encodes non-encoded characters in a given payload (not processing already encoded)  |
-|equaltolike.py | Replaces all occurances of operator equal ('=') with operator 'LIKE'  |
+|equaltolike.py | Replaces all occurrences of operator equal ('=') with operator 'LIKE'  |
 |escapequotes.py | Slash escape quotes (' and ") |
 |greatest.py | Replaces greater than operator ('>') with 'GREATEST' counterpart |
 |halfversionedmorekeywords.py | Adds versioned MySQL comment before each keyword  |

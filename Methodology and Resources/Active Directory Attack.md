@@ -1670,7 +1670,7 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
     PS > Get-PXECreds -InterfaceAlias « lab 0 » 
 
     # Wait for the DHCP to get an address
-    >> Get a valid IP adress
+    >> Get a valid IP address
     >>> >>> DHCP proposal IP address: 192.168.22.101
     >>> >>> DHCP Validation: DHCPACK
     >>> >>> IP address configured: 192.168.22.101

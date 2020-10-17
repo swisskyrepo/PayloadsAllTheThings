@@ -14,7 +14,7 @@
     - [Impersonating a Privileged Account](#impersonating-a-privileged-account)
 - [Privileged Service Account Token](#privileged-service-account-token)
 - [Interesting endpoints to reach](#interesting-endpoints-to-reach)
-- [API addresses that you should know](#api-adresses-that-you-should-know)
+- [API addresses that you should know](#api-addresses-that-you-should-know)
 - [References](#references)
 
 ## Tools

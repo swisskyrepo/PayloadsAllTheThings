@@ -206,7 +206,7 @@ Mimikatz in memory (no binary on disk) with :
 - [Invoke-Mimikatz](https://raw.githubusercontent.com/PowerShellEmpire/Empire/master/data/module_source/credentials/Invoke-Mimikatz.ps1) from PowerShellEmpire
 - [Invoke-Mimikatz](https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/master/Exfiltration/Invoke-Mimikatz.ps1) from PowerSploit
 
-More informations can be grabbed from the Memory with :
+More information can be grabbed from the Memory with :
 
 - [Invoke-Mimikittenz](https://raw.githubusercontent.com/putterpanda/mimikittenz/master/Invoke-mimikittenz.ps1)
 

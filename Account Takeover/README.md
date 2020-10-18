@@ -9,6 +9,7 @@
     * [IDOR on API Parameters](#idor-on-api-parameters)
     * [Weak Password Reset Token](#weak-password-reset-token)
     * [Leaking Password Reset Token](#leaking-password-reset-token)
+    * [Password Reset Via Username Collision](#password-reset-via-username-collision)
 * [Account Takeover Via Cross Site Scripting](#account-takeover-via-cross-site-scripting)
 * [Account Takeover Via HTTP Request Smuggling](#account-takeover-via-http-request-smuggling)
 * [Account Takeover via CSRF](#account-takeover-via-csrf)
@@ -91,6 +92,15 @@ Try to determine if the token expire or if it's always the same, in some cases t
 2. Inspect the server response and check for `resetToken`
 3. Then use the token in an URL like `https://example.com/v3/user/password/reset?resetToken=[THE_RESET_TOKEN]&email=[THE_MAIL]`
 
+### Password Reset Via Username Collision
+
+1. Register on the system with a username identical to the victim's username, but with white spaces inserted before and/or after the username. e.g: `"admin "`
+2. Request a password reset with your malicious username.
+3. Use the token sent to your email and reset the victim password.
+4. Connect to the victim account with the new password.
+
+The platform CTFd was vulnerable to this attack. 
+See: [CVE-2020-7245](https://nvd.nist.gov/vuln/detail/CVE-2020-7245)
 
 ## Account Takeover Via Cross Site Scripting
 
@@ -156,3 +166,4 @@ JSON Web Token might be used to authenticate an user.
 - [$6,5k + $5k HTTP Request Smuggling mass account takeover - Slack + Zomato - Bug Bounty Reports Explained](https://www.youtube.com/watch?v=gzM4wWA7RFo&feature=youtu.be)
 - [Broken Cryptography & Account Takeovers - Harsh Bothra - September 20, 2020](https://speakerdeck.com/harshbothra/broken-cryptography-and-account-takeovers?slide=28)
 - [Hacking Grindr Accounts with Copy and Paste - Troy HUNT & Wassime BOUIMADAGHENE - 03 OCTOBER 2020](https://www.troyhunt.com/hacking-grindr-accounts-with-copy-and-paste/)
+- [CTFd Account Takeover](https://nvd.nist.gov/vuln/detail/CVE-2020-7245)

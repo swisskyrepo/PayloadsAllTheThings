@@ -12,7 +12,7 @@
 
 ## Tools
 
-- [Discover Reverse Tabnabbing - Burp Extention](https://example.com)
+- [Discover Reverse Tabnabbing - Burp Extension](https://portswigger.net/bappstore/80eb8fd46bf847b4b17861482c2f2a30)
 
 ## More information about the vulnerability
 

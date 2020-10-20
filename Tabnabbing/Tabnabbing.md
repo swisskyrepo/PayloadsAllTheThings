@@ -5,9 +5,9 @@
 ## Summary
 
 * [Tools](#tools)
-* [More information about the vulnerability](#More information about the vulnerability)
-* [How to exploit](#How to exploit)
-* [How to hunt for it](#How to hunt for it)
+* [More information about the vulnerability](#More-information-about-the-vulnerability)
+* [How to exploit](#How-to-exploit)
+* [How to hunt for it](#How-to-hunt-for-it)
 * [References](#references)
 
 ## Tools

@@ -5,20 +5,20 @@
 ## Summary
 
 * [Tools](#tools)
-* [Something](#something)
-  * [Subentry 1](#sub1)
-  * [Subentry 2](#sub2)
+* [More information about the vulnerability](#More information about the vulnerability)
+* [How to exploit](#How to exploit)
+* [How to hunt for it](#How to hunt for it)
 * [References](#references)
 
 ## Tools
 
 - [Discover Reverse Tabnabbing - Burp Extention](https://example.com)
 
-## More information about the vulnerability:
+## More information about the vulnerability
 
 When tabnabbing, the attacker searches for links that are inserted into the website and are under his control. Such links may be contained in a forum post, for example. Once he has found this kind of functionality, it checks that the link's `rel` attribute does not contain the value `noopener` and the target attribute contains the value `_blank`. If this is the case, the website is vulnerable to tabnabbing.
 
-## How to exploit: 
+## How to exploit 
 ```
 1. Attacker posts a link to a website under his control that contains the following JS code: window.opener.location = "http://evil.com"
 2. He tricks the victim into visiting the link, which is opened in the browser in a new tab.
@@ -27,14 +27,14 @@ When tabnabbing, the attacker searches for links that are inserted into the webs
 5. The victim tries to log on again and the attacker receives the credentials
 ```
 
-## How to hunt for it: 
+## How to hunt for it 
 
 As already mentioned, you have to search for the following link formats: 
 
 ```html
 <a href="..." target="_blank" rel="" />  
 or
-<a href="..." target="_blamk" />
+<a href="..." target="_blank" />
 ```
 
 ## References

@@ -27,6 +27,10 @@
 ```powershell
 curl https://raw.githubusercontent.com/rapid7/metasploit-omnibus/master/config/templates/metasploit-framework-wrappers/msfupdate.erb > msfinstall && chmod 755 msfinstall && ./msfinstall
 ```
+```bash
+sudo apt install armitage # For Ubuntu/Debian
+sudo pacman -S armitage --needed # For Arch Linux
+```
 
 or docker
 

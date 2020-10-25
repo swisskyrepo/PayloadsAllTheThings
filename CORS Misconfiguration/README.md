@@ -14,6 +14,11 @@
 * [Corsy - CORS Misconfiguration Scanner](https://github.com/s0md3v/Corsy/)
 * [PostMessage POC Builder - @honoki](https://tools.honoki.net/postmessage.html)
 
+## Prerequisites
+
+* BURP HEADER> `Origin: https://evil.com`
+* VICTIM HEADER> `Access-Control-Allow-Credential: true`
+* VICTIM HEADER> `Access-Control-Allow-Origin: https://evil.com` OR `Access-Control-Allow-Origin: null`
 
 ## Exploitation
 

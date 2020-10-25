@@ -397,6 +397,9 @@ http://example.com/index.php?page=../../../../../../etc/shadow
 
 Then crack the hashes inside in order to login via SSH on the machine.
 
+Another way to gain SSH access to a Linux machine through LFI is by reading the private key file, id_rsa.
+If SSH is active check which user is being used `/proc/self/status` and `/etc/passwd` and try to access `/<HOME>/.ssh/id_rsa`.
+
 ## References
 
 * [OWASP LFI](https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)

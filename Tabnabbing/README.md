@@ -5,14 +5,14 @@
 ## Summary
 
 * [Tools](#tools)
-* [More information about the vulnerability](#More information about the vulnerability)
-* [How to exploit](#How to exploit)
-* [How to hunt for it](#How to hunt for it)
+* [More information about the vulnerability](#More-information-about-the-vulnerability)
+* [How to exploit](#How-to-exploit)
+* [How to hunt for it](#How-to-hunt-for-it)
 * [References](#references)
 
 ## Tools
 
-- [Discover Reverse Tabnabbing - Burp Extention](https://example.com)
+- [Discover Reverse Tabnabbing - Burp Extension](https://portswigger.net/bappstore/80eb8fd46bf847b4b17861482c2f2a30)
 
 ## More information about the vulnerability
 

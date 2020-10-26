@@ -5,6 +5,8 @@ PHP provides two ways to compare two variables:
 - Loose comparison using `== or !=` : both variables have "the same value".
 - Strict comparison using `=== or !==` : both variables have "the same type and the same value".
 
+PHP type juggling vulnerabilities arise when loose comparison (== or !=) is employed instead of strict comparison (=== or !==) in an area where the attacker can control one of the variables being compared. This vulnerability can result in the application returning an unintended answer to the true or false statement, and can lead to severe authorization and/or authentication bugs.
+
 ## Type Juggling
 
 ### True statements

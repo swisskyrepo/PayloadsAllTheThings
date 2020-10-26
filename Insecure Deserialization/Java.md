@@ -65,6 +65,38 @@ JexBoss - JBoss (and others Java Deserialization Vulnerabilities) verify and EXp
 
 ysoserial-modified [https://github.com/pimps/ysoserial-modified](https://github.com/pimps/ysoserial-modified)
 
+Java Unmarshaller Security: Turning your data into code execution - [https://github.com/mbechler/marshalsec](https://github.com/mbechler/marshalsec)
+
+```java
+java -cp target/marshalsec-0.0.1-SNAPSHOT-all.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]
+
+ where
+  -a - generates/tests all payloads for that marshaller
+  -t - runs in test mode, unmarshalling the generated payloads after generating them.
+  -v - verbose mode, e.g. also shows the generated payload in test mode.
+  gadget_type - Identifier of a specific gadget, if left out will display the available ones for that specific marshaller.
+  arguments - Gadget specific arguments
+```
+
+Payload generators for the following marshallers are included:<br />
+
+| Marshaller                      | Gadget Impact
+| ------------------------------- | ----------------------------------------------
+| BlazeDSAMF(0&#124;3&#124;X)     | JDK only escalation to Java serialization<br/>various third party libraries RCEs
+| Hessian&#124;Burlap             | various third party RCEs
+| Castor                          | dependency library RCE
+| Jackson                         | **possible JDK only RCE**, various third party RCEs
+| Java                            | yet another third party RCE
+| JsonIO                          | **JDK only RCE**
+| JYAML                           | **JDK only RCE**
+| Kryo                            | third party RCEs
+| KryoAltStrategy                 | **JDK only RCE**
+| Red5AMF(0&#124;3)               | **JDK only RCE**
+| SnakeYAML                       | **JDK only RCEs**
+| XStream                         | **JDK only RCEs**
+| YAMLBeans                       | third party RCE
+
+
 ## References
 
 - [Github - ysoserial](https://github.com/frohoff/ysoserial)
@@ -72,3 +104,5 @@ ysoserial-modified [https://github.com/pimps/ysoserial-modified](https://github.
 - [Understanding & practicing java deserialization exploits](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)
 - [How i found a 1500$ worth Deserialization vulnerability - @D0rkerDevil](https://medium.com/@D0rkerDevil/how-i-found-a-1500-worth-deserialization-vulnerability-9ce753416e0a)
 - [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - 14 Aug 2017, Peter Stöckli](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)
+- [Jackson CVE-2019-12384: anatomy of a vulnerability class](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
+- [On Jackson CVEs: Don’t Panic — Here is what you need to know](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062#da96)

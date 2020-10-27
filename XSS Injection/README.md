@@ -63,6 +63,8 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [CSP Bypass](#csp-bypass)
 - [Common WAF Bypass](#common-waf-bypass)
 
+
+
 ## Exploit code or POC
 
 ### Data grabber for XSS
@@ -122,6 +124,16 @@ More exploits at [http://www.xss-payloads.com/payloads-list.html?a#category=all]
 ```javascript
 <script>debugger;</script>
 ```
+
+### Tools 
+
+Most tools are also suitable for blind XSS attacks:
+
+* [XSSStrike](https://github.com/s0md3v/XSStrike): Very popular but unfortunately not very well maintained
+* [xsser](https://github.com/epsylon/xsser): Utilizes a headless browser to detect XSS vulnerabilities
+* [Dalfox](https://github.com/hahwul/dalfox): Extensive functionality and extremely fast thanks to the implementation in Go
+* [XSpear](https://github.com/hahwul/XSpear): Similar to Dalfox but based on Ruby
+* [domdig](https://github.com/fcavallarin/domdig): Headless Chrome XSS Tester
 
 ## XSS in HTML/Applications
 

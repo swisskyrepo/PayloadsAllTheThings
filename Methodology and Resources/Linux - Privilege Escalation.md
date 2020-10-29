@@ -731,7 +731,10 @@ Precompiled exploits can be found inside these repositories, run them at your ow
 * [bin-sploits - @offensive-security](https://github.com/offensive-security/exploitdb-bin-sploits/tree/master/bin-sploits)
 * [kernel-exploits - @lucyoa](https://github.com/lucyoa/kernel-exploits/)
 
-The following exploits are known to work well, search for another exploits using `searchsploit -w linux kernel centos`.
+The following exploits are known to work well, search for more exploits with `searchsploit -w linux kernel centos`.
+
+Another way to find a kernel exploit is to get the specific kernel version and linux distro of the machine by doing `uname -a`
+Copy the kernel version and distribution, and search for it in google or in https://www.exploit-db.com/.
 
 ### CVE-2016-5195 (DirtyCow)
 

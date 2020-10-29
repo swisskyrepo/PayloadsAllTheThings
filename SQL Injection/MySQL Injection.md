@@ -39,6 +39,7 @@
 
 ```sql
 # MYSQL Comment
+-- comment [Note the space after the double dash]
 /* MYSQL Comment */
 /*! MYSQL Special SQL */
 /*!32302 10*/ Comment for MYSQL version 3.23.02

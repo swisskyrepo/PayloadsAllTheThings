@@ -21,6 +21,7 @@
   * [Bypass using enclosed alphanumerics](#bypass-using-enclosed-alphanumerics)
   * [Bypass filter_var() php function](#bypass-filter_var-php-function)
   * [Bypass against a weak parser](#bypass-against-a-weak-parser)
+  * [Bypassing using jar protocol (java only)](#bypassing-using-jar-protocol-java-only)
 * [SSRF exploitation via URL Scheme](#ssrf-exploitation-via-url-scheme)
   * [file://](#file)
   * [http://](#http)
@@ -248,6 +249,8 @@ make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms
 ```
 
 ### Bypassing using jar protocol (java only)
+
+Blind SSRF
 
 ```powershell
 jar:scheme://domain/path!/ 

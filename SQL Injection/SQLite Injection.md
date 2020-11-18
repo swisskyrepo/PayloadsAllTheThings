@@ -37,7 +37,7 @@ Use limit X+1 offset X, to extract all tables.
 ## Integer/String based - Extract column name
 
 ```sql
-SELECT sql FROM sqlite_master WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%' AND name ='table_name'
+SELECT sql FROM sqlite_master WHERE type!='meta' AND sql NOT NULL AND name ='table_name'
 ```
 
 For a clean output

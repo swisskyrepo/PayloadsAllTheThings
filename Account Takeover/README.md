@@ -135,16 +135,15 @@ Refer to **HTTP Request Smuggling** vulnerability page.
     GET http://something.burpcollaborator.net  HTTP/1.1
     X: X
     ```
+    
+Hackerone reports exploiting this bug
+* https://hackerone.com/reports/737140
+* https://hackerone.com/reports/771666
 
 ## Account Takeover via CSRF
 
 1. Create a payload for the CSRF, e.g: "HTML form with auto submit for a password change"
 2. Send the payload
-
-Hackerone reports exploiting this bug
-* https://hackerone.com/reports/737140
-* https://hackerone.com/reports/771666
-
 
 ## Account Takeover via JWT
 

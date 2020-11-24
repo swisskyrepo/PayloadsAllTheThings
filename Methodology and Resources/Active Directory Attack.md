@@ -141,6 +141,17 @@
   ntlmrelayx.py -t ldaps://lab.local -wh attacker-wpad --delegate-access
   ```
 
+* [AzureHound](https://posts.specterops.io/introducing-bloodhound-4-0-the-azure-update-9b2b26c5e350)
+
+  ```powershell
+  # require: Install-Module -name Az -AllowClobber
+  # require: Install-Module -name AzureADPreview -AllowClobber
+  Connect-AzureAD
+  Connect-AzAccount
+  . .\AzureHound.ps1
+  Invoke-AzureHound
+  ```
+
 * [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
 
   ```powershell

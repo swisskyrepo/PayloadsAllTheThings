@@ -42,6 +42,7 @@
 	except Exception as e:
 		print(e)
 	```
+- [s3_objects_check - Whitebox evaluation of effective S3 object permissions, to identify publicly accessible files](https://github.com/nccgroup/s3_objects_check)
 
 ## AWS Configuration
 

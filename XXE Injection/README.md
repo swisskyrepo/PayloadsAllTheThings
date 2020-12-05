@@ -31,6 +31,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   - [XXE inside SOAP](#xxe-inside-soap)
   - [XXE inside DOCX file](#xxe-inside-docx-file)
   - [XXE inside XLSX file](#xxe-inside-xlsx-file)
+- [XXE WAF Bypass via convert character encoding](#xxe-waf-bypass-via-convert-character-encoding)
 
 ## Tools
 
@@ -505,6 +506,17 @@ updating: xl/theme/theme1.xml (deflated 80%)
 updating: xl/_rels/ (stored 0%)
 updating: xl/_rels/workbook.xml.rels (deflated 66%)
 updating: xl/sharedStrings.xml (deflated 17%)
+```
+
+### XXE WAF Bypass via convert character encoding
+
+In XXE WAFs, DTD Prolog are usually blacklisted BUT not all WAFs blacklist the UTF-16 character encoding<br><br>
+`All XML processors must accept the UTF-8 and UTF-16 encodings of Unicode` 
+-- https://www.w3.org/XML/xml-V10-4e-errata#E11
+<br><br>
+we can convert the character encoding to `UTF-16` using [iconv](https://man7.org/linux/man-pages/man1/iconv.1.html) to bypass the XXE WAF:-<br>
+```bash
+cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
 ```
 
 

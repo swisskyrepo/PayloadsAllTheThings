@@ -2,7 +2,7 @@
 
 ## Summary
 
-* [Reverse Shell](#reverse-shell)
+* [Bind Shell](#bind-shell)
     * [Perl](#perl)
     * [Python](#python)
     * [PHP](#php)

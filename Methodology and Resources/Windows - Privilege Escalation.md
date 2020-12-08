@@ -249,6 +249,7 @@ PS C:\> Get-MpComputerStatus
 
 # disable Real Time Monitoring
 PS C:\> Set-MpPreference -DisableRealtimeMonitoring $true; Get-MpComputerStatus
+PS C:\> Set-MpPreference -DisableIOAVProtection $true
 ```
 
 ### AppLocker Enumeration
@@ -426,6 +427,8 @@ C:\inetpub\wwwroot\web.config
 %USERPROFILE%\ntuser.dat
 %USERPROFILE%\LocalS~1\Tempor~1\Content.IE5\index.dat
 %WINDIR%\System32\drivers\etc\hosts
+C:\ProgramData\Configs\*
+C:\Program Files\Windows PowerShell\*
 dir c:*vnc.ini /s /b
 dir c:*ultravnc.ini /s /b
 ```

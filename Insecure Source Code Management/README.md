@@ -140,6 +140,14 @@ git clone https://github.com/lijiejie/GitHack
 GitHack.py http://www.openssl.org/.git/
 ```
 
+### Automatic way: GitTools
+
+```powershell
+git clone https://github.com/internetwache/GitTools
+./gitdumper.sh http://target.tld/.git/ /tmp/destdir
+git checkout -- .
+```
+
 ### Harvesting secrets : trufflehog
 
 > Searches through git repositories for high entropy strings and secrets, digging deep into commit history

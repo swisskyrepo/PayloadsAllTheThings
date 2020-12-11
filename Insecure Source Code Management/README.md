@@ -122,6 +122,7 @@ git checkout
 ### Automatic way : rip-git
 
 ```powershell
+git clone https://github.com/kost/dvcs-ripper
 perl rip-git.pl -v -u "http://edge1.web.*****.com/.git/"
 
 git cat-file -p 07603070376d63d911f608120eb4b5489b507692  

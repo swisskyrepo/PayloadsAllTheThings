@@ -16,6 +16,8 @@
 - [BAZAAR - Source code management](#bazaar---source-code-management)
   - [Automatic way : rip-bzr](#automatic-way--rip-bzr)
   - [Automatic way : bzr_dumper](#automatic-way--bzr_dumper)
+- [MERCURIAL - Source code management](#mercurial---source-code-management)
+  - [Automatic way : rip-hg](#automatic-way--rip-hg)
 
 ## GIT - Source code management
 
@@ -218,7 +220,7 @@ python svn-extractor.py –url "url with .svn available"
 
 ```powershell
 wget https://raw.githubusercontent.com/kost/dvcs-ripper/master/rip-bzr.pl
-docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-git.pl -v -u  
+docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-bzr.pl -v -u
 ```
 
 ### Automatic way : bzr_dumper
@@ -244,6 +246,15 @@ $ bzr revert
  N  application.py
  N  database.py
  N  static/   
+```
+
+## MERCURIAL - Source code management
+
+### Automatic way : rip-hg.pl
+
+```powershell
+wget https://raw.githubusercontent.com/kost/dvcs-ripper/master/rip-hg.pl
+docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-hg.pl -v -u
 ```
 
 ## References

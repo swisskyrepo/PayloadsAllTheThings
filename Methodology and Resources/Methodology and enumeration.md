@@ -8,9 +8,7 @@
   * The Harvester
 
 * [Active Recon](#active-recon)
-  * Masscan
-  * Nmap
-  * Nmap Script
+  * Network discovery
   * RPCClient
   * Enum4all
 
@@ -49,94 +47,12 @@
 
 ## Active recon
 
-* Masscan
+* [Network discovery](Network%20Discovery.md) with masscan, nmap etc.
 
-```powershell
-masscan -iL ips-online.txt --rate 10000 -p1-65535 --only-open -oL masscan.out
-masscan -e tun0 -p1-65535,U:1-65535 10.10.10.97 --rate 1000
-```
-
-* Basic NMAP
+* rpcclient
 
   ```bash
-  sudo nmap -sSV -p- 192.168.0.1 -oA OUTPUTFILE -T4
-  sudo nmap -sSV -oA OUTPUTFILE -T4 -iL INPUTFILE.csv
-
-  • the flag -sSV defines the type of packet to send to the server and tells Nmap to try and determine any service on open ports
-  • the -p- tells Nmap to check all 65,535 ports (by default it will only check the most popular 1,000)
-  • 192.168.0.1 is the IP address to scan
-  • -oA OUTPUTFILE tells Nmap to output the findings in its three major formats at once using the filename "OUTPUTFILE"
-  • -iL INPUTFILE tells Nmap to use the provided file as inputs
-  ```
-
-* CTF NMAP
-  This configuration is enough to do a basic check for a CTF VM
-
-  ```bash
-  nmap -sV -sC -oA ~/nmap-initial 192.168.1.1
-
-  -sV : Probe open ports to determine service/version info
-  -sC : to enable the script
-  -oA : to save the results
-
-  After this quick command you can add "-p-" to run a full scan while you work with the previous result
-  ```
-
-* Aggressive NMAP
-
-  ```bash
-  nmap -A -T4 scanme.nmap.org
-  • -A: Enable OS detection, version detection, script scanning, and traceroute
-  • -T4: Defines the timing for the task (options are 0-5 and higher is faster)
-  ```
-
-* NMAP and add-ons
-  * Using searchsploit to detect vulnerable services
-  
-    ```bash
-    nmap -p- -sV -oX a.xml IP_ADDRESS; searchsploit --nmap a.xml
-    ```
-
-  * Generating nice scan report
-  
-    ```bash
-    nmap -sV IP_ADDRESS -oX scan.xml && xsltproc scan.xml -o "`date +%m%d%y`_report.html"
-    ```
-
-* NMAP Scripts
-
-  ```bash
-  nmap -sC : equivalent to --script=default
-
-  nmap --script 'http-enum' -v web.xxxx.com -p80 -oN http-enum.nmap
-  PORT   STATE SERVICE
-  80/tcp open  http
-  | http-enum:
-  |   /phpmyadmin/: phpMyAdmin
-  |   /.git/HEAD: Git folder
-  |   /css/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
-  |_  /image/: Potentially interesting directory w/ listing on 'apache/2.4.10 (debian)'
-
-  nmap --script smb-enum-users.nse -p 445 [target host]
-  Host script results:
-  | smb-enum-users:
-  |   METASPLOITABLE\backup (RID: 1068)
-  |     Full name:   backup
-  |     Flags:       Account disabled, Normal user account
-  |   METASPLOITABLE\bin (RID: 1004)
-  |     Full name:   bin
-  |     Flags:       Account disabled, Normal user account
-  |   METASPLOITABLE\msfadmin (RID: 3000)
-  |     Full name:   msfadmin,,,
-  |     Flags:       Normal user account
-
-  List Nmap scripts : ls /usr/share/nmap/scripts/
-  ```
-
-* RPCClient
-
-  ```bash
-  ╰─$ rpcclient -U "" [target host]
+  $ rpcclient -U '%' [target host]
   rpcclient $> querydominfo
   Domain: WORKGROUP
   Server: METASPLOITABLE
@@ -149,10 +65,11 @@ masscan -e tun0 -p1-65535,U:1-65535 10.10.10.97 --rate 1000
   user:[bind] rid:[0x4ba]
   ```
 
-* Enum4all
+* enum4linux
 
   ```bash
-  Usage: ./enum4linux.pl [options]ip
+  enum4linux v0.8.9 (http://labs.portcullis.co.uk/application/enum4linux/)
+  Usage: ./enum4linux.pl [options] ip
   -U        get userlist
   -M        get machine list*
   -S        get sharelist
@@ -255,7 +172,7 @@ masscan -e tun0 -p1-65535,U:1-65535 10.10.10.97 --rate 1000
     then launch Burp with : java -jar burpsuite_free_v*.jar &
     ```
 
-* [Checklist for Web vulns](http://mdsec.net/wahh/tasks.html)
+* [WAHH Task Checklist](https://gist.github.com/gbedoya/10935137) copied from http://mdsec.net/wahh/tasks.html
 
 * Subscribe to the site and pay for the additional functionality to test
 

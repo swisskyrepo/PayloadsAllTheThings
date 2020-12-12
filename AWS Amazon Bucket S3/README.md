@@ -75,7 +75,7 @@ eg: http://redacted/avatar/123%C0
 
 ```bash
 aws s3 ls s3://targetbucket --no-sign-request --region insert-region-here
-aws s3 ls  s3://flaws.cloud/ --no-sign-request --region us-west-2
+aws s3 ls s3://flaws.cloud/ --no-sign-request --region us-west-2
 ```
 
 You can get the region with a dig and nslookup
@@ -127,7 +127,7 @@ $ aws --profile flaws sts get-caller-identity
 
 
 $ aws --profile profile_name ec2 describe-snapshots
-$ aws --profile flaws  ec2 describe-snapshots --owner-id XXXX26262029 --region us-west-2    
+$ aws --profile flaws ec2 describe-snapshots --owner-id XXXX26262029 --region us-west-2
 "SnapshotId": "snap-XXXX342abd1bdcb89",
 
 Create a volume using snapshot

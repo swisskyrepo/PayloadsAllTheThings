@@ -48,14 +48,6 @@ curl --request PUT \
   --data '{"highlightPreTag": "<script>alert(1);</script>"}'
 ```
 
-### AWS Access Key ID & Secret
-
-```powershell
-git clone https://github.com/andresriancho/enumerate-iam
-cd enumerate-iam
-./enumerate-iam.py --access-key AKIA... --secret-key XXX..
-```
-
 ### Slack API Token
 
 ```powershell

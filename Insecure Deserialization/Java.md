@@ -50,7 +50,7 @@ Spring2             |@mbechler                   |spring-core:4.1.4.RELEASE, spr
 URLDNS              |@gebl| | jre only vuln detect
 Wicket1             |@jacob-baines               |wicket-util:6.23.0, slf4j-api:1.6.4
 
-Additional tools (integration ysoserial with Burp Suite):
+## Burp extensions using ysoserial
 
 - [JavaSerialKiller](https://github.com/NetSPI/JavaSerialKiller)
 - [Java Deserialization Scanner](https://github.com/federicodotta/Java-Deserialization-Scanner)
@@ -58,14 +58,13 @@ Additional tools (integration ysoserial with Burp Suite):
 - [SuperSerial](https://github.com/DirectDefense/SuperSerial)
 - [SuperSerial-Active](https://github.com/DirectDefense/SuperSerial-Active)
 
-JRE8u20_RCE_Gadget
-[https://github.com/pwntester/JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget)
+## Other tools
 
-JexBoss - JBoss (and others Java Deserialization Vulnerabilities) verify and EXploitation Tool, [https://github.com/joaomatosf/jexboss](https://github.com/joaomatosf/jexboss)
-
-ysoserial-modified [https://github.com/pimps/ysoserial-modified](https://github.com/pimps/ysoserial-modified)
-
-Java Unmarshaller Security: Turning your data into code execution - [https://github.com/mbechler/marshalsec](https://github.com/mbechler/marshalsec)
+- [JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget)
+- [JexBoss](https://github.com/joaomatosf/jexboss) - JBoss (and others Java Deserialization Vulnerabilities) verify and EXploitation Tool
+- [ysoserial-modified](https://github.com/pimps/ysoserial-modified)
+- [gadgetprobe](https://labs.bishopfox.com/gadgetprobe)
+- [marshalsec](https://github.com/mbechler/marshalsec) - Turning your data into code execution
 
 ```java
 java -cp target/marshalsec-0.0.1-SNAPSHOT-all.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]

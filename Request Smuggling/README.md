@@ -11,6 +11,7 @@
 ## Tools
 
 * [HTTP Request Smuggler / BApp Store](https://portswigger.net/bappstore/aaaa60ef945341e8a450217a54a11646)
+* [Smuggler](https://github.com/defparam/smuggler)
 
 ## CL.TE vulnerabilities
 

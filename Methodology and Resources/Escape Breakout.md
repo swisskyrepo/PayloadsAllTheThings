@@ -20,10 +20,11 @@
 * **Shortcut**
     * [Window] + [R] -> cmd 
     * [CTRL] + [ALT] + [SHIFT] -> Task Manager
+    * [CTRL] + [ALT] + [DELETE] -> Task Manager 
 * **Access through file browser**: Browsing to the folder containing the binary (i.e. `C:\windows\system32\`), we can simply right click and `open` it
 * **Drag-and-drop**: dragging and dropping any file onto the cmd.exe 
 * **Hyperlink**: `file:///c:/Windows/System32/cmd.exe`
-* **Task Manager**: `File` > `New Task (Run...)`
+* **Task Manager**: `File` > `New Task (Run...)` > `cmd`
 * **MSPAINT.exe**
     * Open MSPaint.exe and set the canvas size to: Width=6 and Height=1 pixels
     * Zoom in to make the following tasks easier

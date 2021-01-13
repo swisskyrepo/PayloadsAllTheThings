@@ -21,6 +21,7 @@
     * [Sticky Notes passwords](#sticky-notes-passwords)
     * [Passwords stored in services](#passwords-stored-in-services)
     * [Powershell history](#powershell-history)
+    * [Password in Alternate Data Stream](#password-in-alternate-data-stream)
 * [EoP - Processes Enumeration and Tasks](#eop---processes-enumeration-and-tasks)
 * [EoP - Incorrect permissions in services](#eop---incorrect-permissions-in-services)
 * [EoP - Windows Subsystem for Linux (WSL)](#eop---windows-subsystem-for-linux-wsl)
@@ -475,6 +476,13 @@ type C:\Users\swissky\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\Co
 type $env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
 cat (Get-PSReadlineOption).HistorySavePath
 cat (Get-PSReadlineOption).HistorySavePath | sls passw
+```
+
+### Password in Alternate Data Stream
+
+```ps1
+PS > Get-Item -path flag.txt -Stream *
+PS > Get-Content -path flag.txt -Stream Flag
 ```
 
 ## EoP - Processes Enumeration and Tasks

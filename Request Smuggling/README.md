@@ -105,5 +105,5 @@ Challenge: https://portswigger.net/web-security/request-smuggling/lab-ofuscating
 
 ## References
 
-* [PortSwigger - Request Smuggling](https://portswigger.net/web-security/request-smuggling)
+* [PortSwigger - Request Smuggling Tutorial](https://portswigger.net/web-security/request-smuggling) and [PortSwigger - Request Smuggling Reborn](https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn)
 * [A Pentester's Guide to HTTP Request Smuggling - Busra Demir - 2020, October 16](https://blog.cobalt.io/a-pentesters-guide-to-http-request-smuggling-8b7bf0db1f0)

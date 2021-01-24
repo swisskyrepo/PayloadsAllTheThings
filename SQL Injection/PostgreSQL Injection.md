@@ -71,7 +71,7 @@ SELECT usename FROM pg_user WHERE usesuper IS TRUE
 SELECT usename, usecreatedb, usesuper, usecatupd FROM pg_user
 ```
 
-## PostgreSQL Check if Current User is Supperuser
+## PostgreSQL Check if Current User is Superuser
 
 ```sql
 SHOW is_superuser; 

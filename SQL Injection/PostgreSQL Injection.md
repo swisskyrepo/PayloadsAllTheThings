@@ -9,7 +9,7 @@
 * [PostgreSQL List Password Hashes](#postgresql-list-password-hashes)
 * [PostgreSQL List Database Administrator Accounts](#postgresql-list-database-administrator-accounts)
 * [PostgreSQL List Privileges](#postgresql-list-privileges)
-* [PostgreSQL Check if Current User is Supperuser](#postgresql-check-if-current-user-is-supperuser)
+* [PostgreSQL Check if Current User is Superuser](#postgresql-check-if-current-user-is-superuser)
 * [PostgreSQL database name](#postgresql-database-name)
 * [PostgreSQL List databases](#postgresql-list-database)
 * [PostgreSQL List tables](#postgresql-list-tables)

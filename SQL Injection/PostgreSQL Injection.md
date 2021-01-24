@@ -9,6 +9,7 @@
 * [PostgreSQL List Password Hashes](#postgresql-list-password-hashes)
 * [PostgreSQL List Database Administrator Accounts](#postgresql-list-database-administrator-accounts)
 * [PostgreSQL List Privileges](#postgresql-list-privileges)
+* [PostgreSQL Check if Current User is Superuser](#postgresql-check-if-current-user-is-superuser)
 * [PostgreSQL database name](#postgresql-database-name)
 * [PostgreSQL List databases](#postgresql-list-database)
 * [PostgreSQL List tables](#postgresql-list-tables)
@@ -68,6 +69,14 @@ SELECT usename FROM pg_user WHERE usesuper IS TRUE
 
 ```sql
 SELECT usename, usecreatedb, usesuper, usecatupd FROM pg_user
+```
+
+## PostgreSQL Check if Current User is Superuser
+
+```sql
+SHOW is_superuser; 
+SELECT current_setting('is_superuser');
+SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER;
 ```
 
 ## PostgreSQL Database Name

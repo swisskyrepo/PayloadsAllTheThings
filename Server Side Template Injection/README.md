@@ -396,7 +396,7 @@ Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
 Listen for connection
 
 ```bash
-nv -lnvp 8000
+nc -lnvp 8000
 ```
 
 #### Exploit the SSTI by calling subprocess.Popen.

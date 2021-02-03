@@ -6,6 +6,7 @@
     - [Recovering file contents from .git/index](#recovering-file-contents-from-gitindex)
   + [Tools](#tools)
     - [Automatic recovery](#automatic-recovery)
+      * [git-dumper.py](#git-dumperpy)
       * [diggit.py](#diggitpy)
       * [GoGitDumper](#gogitdumper)
       * [rip-git](#rip-git)
@@ -165,7 +166,7 @@ git cat-file -p 5dae937a49acc7c2668f5bcde2a9fd07fc382fe2
 
 ```powershell
 git clone https://github.com/lijiejie/GitHack
-GitHack.py http://www.openssl.org/.git/
+GitHack.py http://web.site/.git/
 ```
 
 ##### GitTools

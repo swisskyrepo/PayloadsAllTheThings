@@ -227,7 +227,7 @@ ssh-dss AAAA487rt384ufrgh432087fhy02nv84u7fg839247fg8743gf087b3849yb98304yb9v834
 
 ```
 echo "PubkeyAcceptedKeyTypes=+ssh-dss" >> /etc/ssh/ssh_config
-echo "PubkeyAcceptedKeyTypes=+ssh-dss" >> /etc/ssh/sshs_config
+echo "PubkeyAcceptedKeyTypes=+ssh-dss" >> /etc/ssh/sshd_config
 /etc/init.d/ssh restart
 ```
 

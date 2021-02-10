@@ -87,6 +87,16 @@
     powershell.exe -ExecutionPolicy Bypass -File .\jaws-enum.ps1 -OutputFilename JAWS-Enum.txt
     ```
 - [winPEAS - Windows Privilege Escalation Awesome Script](https://github.com/carlospolop/privilege-escalation-awesome-scripts-suite/tree/master/winPEAS/winPEASexe)
+- [Windows Exploit Suggester - Next Generation (WES-NG)](https://github.com/bitsadmin/wesng)
+    ```powershell
+    # First obtain systeminfo
+    systeminfo
+    systeminfo > systeminfo.txt
+    # Then feed it to wesng
+    python3 wes.py --update-wes
+    python3 wes.py --update
+    python3 wes.py systeminfo.txt
+    ```
 
 ## Windows Version and Configuration
 

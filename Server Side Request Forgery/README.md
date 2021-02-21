@@ -33,6 +33,8 @@
   * [netdoc://](#netdoc)
 * [SSRF exploiting WSGI](#ssrf-exploiting-wsgi)
 * [SSRF exploiting Redis](#ssrf-exploiting-redis)
+* [SSRF exploiting PDF file](#ssrf-exploiting-pdf-file)
+* [Blind SSRF](#blind-ssrf)
 * [SSRF to XSS](#ssrf-to-xss)
 * [SSRF from XSS](#ssrf-from-xss)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
@@ -436,6 +438,40 @@ Example with [WeasyPrint by @nahamsec](https://www.youtube.com/watch?v=t5fB6OZsR
 ```powershell
 <link rel=attachment href="file:///root/secret.txt">
 ```
+
+## Blind SSRF
+
+> When exploiting server-side request forgery, we can often find ourselves in a position where the response cannot be read. 
+
+Use an SSRF chain to gain an Out-of-Band output.
+
+From https://blog.assetnote.io/2021/01/13/blind-ssrf-chains/ / https://github.com/assetnote/blind-ssrf-chains
+
+**Possible via HTTP(s)**
+- [Elasticsearch](https://github.com/assetnote/blind-ssrf-chains#elasticsearch)
+- [Weblogic](https://github.com/assetnote/blind-ssrf-chains#weblogic)
+- [Hashicorp Consul](https://github.com/assetnote/blind-ssrf-chains#consul)
+- [Shellshock](https://github.com/assetnote/blind-ssrf-chains#shellshock)
+- [Apache Druid](https://github.com/assetnote/blind-ssrf-chains#druid)
+- [Apache Solr](https://github.com/assetnote/blind-ssrf-chains#solr)
+- [PeopleSoft](https://github.com/assetnote/blind-ssrf-chains#peoplesoft)
+- [Apache Struts](https://github.com/assetnote/blind-ssrf-chains#struts)
+- [JBoss](https://github.com/assetnote/blind-ssrf-chains#jboss)
+- [Confluence](https://github.com/assetnote/blind-ssrf-chains#confluence)
+- [Jira](https://github.com/assetnote/blind-ssrf-chains#jira)
+- [Other Atlassian Products](https://github.com/assetnote/blind-ssrf-chains#atlassian-products)
+- [OpenTSDB](https://github.com/assetnote/blind-ssrf-chains#opentsdb)
+- [Jenkins](https://github.com/assetnote/blind-ssrf-chains#jenkins)
+- [Hystrix Dashboard](https://github.com/assetnote/blind-ssrf-chains#hystrix)
+- [W3 Total Cache](https://github.com/assetnote/blind-ssrf-chains#w3)
+- [Docker](https://github.com/assetnote/blind-ssrf-chains#docker)
+- [Gitlab Prometheus Redis Exporter](https://github.com/assetnote/blind-ssrf-chains#redisexporter)
+
+**Possible via Gopher**
+- [Redis](https://github.com/assetnote/blind-ssrf-chains#redis)
+- [Memcache](https://github.com/assetnote/blind-ssrf-chains#memcache)
+- [Apache Tomcat](https://github.com/assetnote/blind-ssrf-chains#tomcat)
+
 
 ## SSRF to XSS 
 

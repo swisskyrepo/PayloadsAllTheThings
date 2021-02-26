@@ -194,6 +194,7 @@ use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 ```powershell
 # run the collector on the machine using SharpHound.exe
 # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe
+# /usr/lib/bloodhound/resources/app/Collectors/SharpHound.exe
 .\SharpHound.exe (from resources/Ingestor)
 .\SharpHound.exe -c all -d active.htb --domaincontroller 10.10.10.100
 .\SharpHound.exe -c all -d active.htb --LdapUser myuser --LdapPass mypass --domaincontroller 10.10.10.100
@@ -203,6 +204,7 @@ use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 
 # or run the collector on the machine using Powershell
 # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1
+# /usr/lib/bloodhound/resources/app/Collectors/SharpHound.ps1
 Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
 Invoke-BloodHound -CollectionMethod All  -LDAPUser <UserName> -LDAPPass <Password> -OutputDirectory <PathToFile>
 

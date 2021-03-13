@@ -1,0 +1,7 @@
+- site:*.example.com inurl:redirect | inurl:redirect_to | inurl:redirect_uri
+
+- inurl:url=https | inurl:url=http | inurl:redirect?https | inurl:redirect?http | inurl:redirect=https | inurl:redirect=http | inurl:link=http | inurl:link=https
+
+- inurl:u= | inurl:r= | inurl:=http | inurl=next | inurl=?imageurl= | inurl=link=  ------>>> Dork related with redirection (related report https://medium.com/@nandwanajatin25/story-of-a-uri-based-xss-with-some-simple-google-dorking-e1999254aa55)
+
+{ Don't underestimate open redirection vulnerability you may chain this with xss,ssrf,Oauth flow,csrf ect}

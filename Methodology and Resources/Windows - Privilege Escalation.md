@@ -242,6 +242,7 @@ List all network shares
 
 ```powershell
 net share
+powershell Find-DomainShare -ComputerDomain domain.local
 ```
 
 SNMP Configuration
@@ -272,8 +273,7 @@ PS C:\> Set-MpPreference -DisableIOAVProtection $true
 List AppLocker rules
 
 ```powershell
-PS C:\> $a = Get-ApplockerPolicy -effective
-PS C:\> $a.rulecollections
+PowerView PS C:\> Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
 ```
 
 ### Powershell

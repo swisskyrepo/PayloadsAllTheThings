@@ -48,7 +48,3 @@ Cybrary.it: [https://cybrary.it](https://cybrary.it)
 * Windows Priv Esc: [https://www.fuzzysecurity.com/tutorials/16.html](https://www.fuzzysecurity.com/tutorials/16.html)
 * Example Hashes: [https://hashcat.net/wiki/doku.php?id=example\_hashes](https://hashcat.net/wiki/doku.php?id=example_hashes)
 
-
-
-
-

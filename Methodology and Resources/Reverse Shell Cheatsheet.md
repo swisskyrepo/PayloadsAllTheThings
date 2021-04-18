@@ -4,6 +4,7 @@
 
 * [Reverse Shell](#reverse-shell)
     * [Awk](#awk)
+    * [Automatic Reverse Shell Generator](#revshells)
     * [Bash TCP](#bash-tcp)
     * [Bash UDP](#bash-udp)
     * [C](#c)
@@ -376,6 +377,12 @@ main() {
   });
 }
 ```
+
+## RevShells
+
+https://www.revshells.com/
+![image](https://user-images.githubusercontent.com/44453666/115149832-d6a75980-a033-11eb-9c50-56d4ea8ca57c.png)
+
 
 ## Meterpreter Shell
 

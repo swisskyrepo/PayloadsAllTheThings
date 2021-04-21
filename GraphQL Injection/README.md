@@ -28,6 +28,7 @@
 * [GraphQL IDE - An extensive IDE for exploring GraphQL API's](https://github.com/andev-software/graphql-ide)
 * [InQL - A Burp Extension for GraphQL Security Testing](https://github.com/doyensec/inql)
 * [Insomnia - Cross-platform HTTP and GraphQL Client](https://insomnia.rest/)
+* [AutoGraphql + introspection](https://graphql-dashboard.herokuapp.com/)
 
 ## Exploit
 

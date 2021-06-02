@@ -58,7 +58,7 @@ If you get any LaTex error, consider using base64 to get the result without bad 
 
 ```bash
 \immediate\write18{env | base64 > test.tex}
-\input{text.tex}
+\input{text.tex
 ```
 
 ```bash

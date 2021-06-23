@@ -14,6 +14,11 @@
     * [JSON GET - Simple Request](#json-get---simple-request)
     * [JSON POST - Simple Request](#json-post---simple-request)
     * [JSON POST - Complex Request](#json-post---complex-request)
+* [Bypass referer header validation check](#bypass-referer-header-validation)
+    * [Basic payload](#basic-payload)
+    * [With question mark payload](#with-question-mark-payload)
+    * [With semicolon payload](#with-semicolon-payload)
+    * [With subdomain payload](#with-subdomain-payload)
 * [References](#references)
 
 ## Tools
@@ -100,6 +105,38 @@ xhr.send('{"role":admin}');
 </script>
 ```
 
+## Bypass referer header validation
+
+### Basic payload
+```
+1) Open https://attacker.com/csrf.html
+2) Referer header is ..
+
+Referer: https://attacker.com/csrf.html
+```
+### With question mark(`?`) payload
+```
+1) Open https://attacker.com/csrf.html?trusted.domain.com
+2) Referer header is ..
+
+Referer: https://attacker.com/csrf.html?trusted.domain.com
+```
+
+### With semicolon(`;`) payload
+```
+1) Open https://attacker.com/csrf.html;trusted.domain.com
+2) Referer header is ..
+
+Referer: https://attacker.com/csrf.html;trusted.domain.com
+```
+
+### With subdomain payload
+```
+1) Open https://trusted.domain.com.attacker.com/csrf.html
+2) Referer headers is ..
+
+Referer: https://trusted.domain.com.attacker.com/csrf.html
+```
 
 ## References
 
@@ -115,4 +152,5 @@ xhr.send('{"role":admin}');
 - [Hacking Facebook accounts using CSRF in Oculus-Facebook integration](https://www.josipfranjkovic.com/blog/hacking-facebook-oculus-integration-csrf)
 - [Cross site request forgery (CSRF) - Sjoerd Langkemper - Jan 9, 2019](http://www.sjoerdlangkemper.nl/2019/01/09/csrf/)
 - [Cross-Site Request Forgery Attack - PwnFunction](https://www.youtube.com/watch?v=eWEgUcHPle0)
-- [Wiping Out CSRF - Joe Rozner - Oct 17, 2017](#https://medium.com/@jrozner/wiping-out-csrf-ded97ae7e83f)
+- [Wiping Out CSRF - Joe Rozner - Oct 17, 2017](https://medium.com/@jrozner/wiping-out-csrf-ded97ae7e83f)
+- [Bypass referer check logic for CSRF](https://www.hahwul.com/2019/10/11/bypass-referer-check-logic-for-csrf/)

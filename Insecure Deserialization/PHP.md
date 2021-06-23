@@ -189,7 +189,6 @@ $poc->stopBuffering();
 ## References
 
 * [PHP Object Injection - OWASP](https://www.owasp.org/index.php/PHP_Object_Injection)
-* [PHP Object Injection - Thin Ba Shane](http://location-href.com/php-object-injection/)
 * [PHP unserialize](http://php.net/manual/en/function.unserialize.php)
 * [PHP Generic Gadget - ambionics security](https://www.ambionics.io/blog/php-generic-gadget-chains)
 * [POC2009 Shocking News in PHP Exploitation](https://www.owasp.org/images/f/f6/POC2009-ShockingNewsInPHPExploitation.pdf)

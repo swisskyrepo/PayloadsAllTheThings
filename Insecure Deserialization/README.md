@@ -24,7 +24,8 @@ Check the following sub-sections, located in other files :
 * [RUBY 2.X UNIVERSAL RCE DESERIALIZATION GADGET CHAIN - elttam, Luke Jahnke](https://www.elttam.com.au/blog/ruby-deserialization/)
 * [Java Deserialization in manager.paypal.com](http://artsploit.blogspot.hk/2016/01/paypal-rce.html) by Michael Stepankin
 * [Instagram's Million Dollar Bug](http://www.exfiltrated.com/research-Instagram-RCE.php) by Wesley Wineberg 
-* [(Ruby Cookie Deserialization RCE on facebooksearch.algolia.com](https://hackerone.com/reports/134321) by Michiel Prins (michiel)
+* [Ruby Cookie Deserialization RCE on facebooksearch.algolia.com](https://hackerone.com/reports/134321) by Michiel Prins (michiel)
 * [Java deserialization](https://seanmelia.wordpress.com/2016/07/22/exploiting-java-deserialization-via-jboss/) by meals
 * [Diving into unserialize() - Sep 19- Vickie Li](https://medium.com/swlh/diving-into-unserialize-3586c1ec97e)
 * [.NET Gadgets](https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-Json-Attacks.pdf) by Alvaro Muñoz (@pwntester) & OleksandrMirosh
+* [ExploitDB Introduction](https://www.exploit-db.com/docs/english/44756-deserialization-vulnerability.pdf)

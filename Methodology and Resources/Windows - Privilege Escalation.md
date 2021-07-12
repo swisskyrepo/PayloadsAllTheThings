@@ -541,6 +541,8 @@ Invoke-SessionGopher -AllDomain -u domain.com\adm-arvanaghi -p s3cr3tP@ss
 
 ### Powershell History
 
+Disable Powershell history: `Set-PSReadlineOption -HistorySaveStyle SaveNothing`.
+
 ```powershell
 type %userprofile%\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt
 type C:\Users\swissky\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt

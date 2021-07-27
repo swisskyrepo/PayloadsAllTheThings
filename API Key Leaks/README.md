@@ -1,7 +1,7 @@
 # API Key Leaks
 
 > The API key is a unique identifier that is used to authenticate requests associated with your project. Some developers might hardcode them or leave it on public shares.
-
+> Since API is provided by third-party and is not controlled by this software, the vulnerability might not be known and it might affect the operation of this software.
 ## Summary
 
 - [Tools](#tools)

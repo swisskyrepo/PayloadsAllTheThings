@@ -5,11 +5,11 @@ Airgeddon is written in bash and multi-use for Linux system to audit wireless ne
 
 ## Summary
 * [Attacking Procedures](#attacking-procedures)
-* [1. Reconnaissance and Scanning](#reconnaissance-and-scanning)
-* [2. Gaining Access](#gaining-access)
-     * [1st STEP : Password cracking by using Airgeddon](#1st-step:-password-cracking-by-using-airgeddon )
-     * [2nd STEP : Create a reverse shell trojan using Metasploit](#2nd-step:-create-a-reverse-shell-trojan-using-metasploit)
-     * [3rd STEP : create a notepadplus module and spoof notepad++ website using Evilgrade](#3rd-step:-create-a-notepadplus-module-and-spoof-notepad++-website-using-Evilgrade)
+* [1. Reconnaissance and Scanning](#1.-reconnaissance-and-scanning)
+* [2. Gaining Access](#2.-gaining-access)
+     * [1st STEP : Password cracking by using Airgeddon](#1st-step-:-password-cracking-by-using-airgeddon )
+     * [2nd STEP : Create a reverse shell trojan using Metasploit](#2nd-step-:-create-a-reverse-shell-trojan-using-metasploit)
+     * [3rd STEP : create a notepadplus module and spoof notepad++ website using Evilgrade](#3rd-step-:-create-a-notepadplus-module-and-spoof-notepad++-website-using-Evilgrade)
      * [4th STEP : build a meterpreter shell in the kali linux using Metasploit](#4th STEP : build a meterpreter shell in the kali linux using Metasploit)
 
 ## Attacking Procedures

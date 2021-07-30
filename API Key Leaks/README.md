@@ -1,6 +1,6 @@
 # API Key Leaks
 
-> The API key is a unique identifier that is used to authenticate requests associated with your project. Some developers might hardcode them or leave it on public shares.
+> The API key is a unique identifier that is used to authenticate requests associated with your project. There are two kind of services provided by API key, which are project identification that will identify call made by application/project to the API and project authorization that will check whether the calling of API is granted access and enable the API in application/project. Some developers might hardcode them or leave it on public shares.
 
 ## Summary
 

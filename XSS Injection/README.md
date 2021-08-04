@@ -910,15 +910,6 @@ transformed into U+0022 QUOTATION MARK (")
 Unicode character U+02B9 MODIFIER LETTER PRIME (encoded as %CA%B9) was
 transformed into U+0027 APOSTROPHE (')
 
-Unicode character U+FF1C FULLWIDTH LESS­THAN SIGN (encoded as %EF%BC%9C) was
-transformed into U+003C LESS­THAN SIGN (<)
-
-Unicode character U+02BA MODIFIER LETTER DOUBLE PRIME (encoded as %CA%BA) was
-transformed into U+0022 QUOTATION MARK (")
-
-Unicode character U+02B9 MODIFIER LETTER PRIME (encoded as %CA%B9) was
-transformed into U+0027 APOSTROPHE (')
-
 E.g : http://www.example.net/something%CA%BA%EF%BC%9E%EF%BC%9Csvg%20onload=alert%28/XSS/%29%EF%BC%9E/
 %EF%BC%9E becomes >
 %EF%BC%9C becomes <

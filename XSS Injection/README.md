@@ -1004,7 +1004,9 @@ Check the CSP on [https://csp-evaluator.withgoogle.com](https://csp-evaluator.wi
 <script/src=//google.com/complete/search?client=chrome%26jsonp=alert(1);>"
 ```
 
-More JSONP endpoints available in [/Intruders/jsonp_endpoint.txt](Intruders/jsonp_endpoint.txt)
+More JSONP endpoints:
+* [/Intruders/jsonp_endpoint.txt](Intruders/jsonp_endpoint.txt)
+* [JSONBee/jsonp.txt](https://github.com/zigoo0/JSONBee/blob/master/jsonp.txt)
 
 ### Bypass CSP by [lab.wallarm.com](https://lab.wallarm.com/how-to-trick-csp-in-letting-you-run-whatever-you-want-73cb5ff428aa)
 

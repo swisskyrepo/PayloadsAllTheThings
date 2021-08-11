@@ -64,6 +64,7 @@ SELECT DB_NAME()
 ```sql
 SELECT name FROM master..sysdatabases;
 SELECT DB_NAME(N); — for N = 0, 1, 2, …
+SELECT STRING_AGG(name, ', ') FROM master..sysdatabases; -- Change delimeter value such as ', ' to anything else you want => master, tempdb, model, msdb   (Only works in MSSQL 2017+)
 ```
 
 ## MSSQL List columns
@@ -83,6 +84,7 @@ SELECT name FROM someotherdb..sysobjects WHERE xtype = ‘U’;
 SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name=’sometable’; — list colum names and types for master..sometable
 
 SELECT table_catalog, table_name FROM information_schema.columns
+SELECT STRING_AGG(name, ', ') FROM master..sysobjects WHERE xtype = 'U'; -- Change delimeter value such as ', ' to anything else you want => trace_xe_action_map, trace_xe_event_map, spt_fallback_db, spt_fallback_dev, spt_fallback_usg, spt_monitor, MSreplication_options  (Only works in MSSQL 2017+)
 ```
 
 ## MSSQL Extract user/password

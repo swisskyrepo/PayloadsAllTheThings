@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf
+# The following line is not required but supposedly optimizes code.  
+# However, this breaks on some Python 2 installations, where the future module version installed is > 0.16.  This can be a pain to revert.
+# from builtins import range
 from __future__ import print_function
-from builtins import range
 import sys
 import threading
 import socket

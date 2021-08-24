@@ -134,9 +134,39 @@ More exploits at [http://www.xss-payloads.com/payloads-list.html?a#category=all]
 
 ## Identify an XSS endpoint
 
+This payload opens the debugger in the developper console rather than triggering a popup alert box.
+
 ```javascript
 <script>debugger;</script>
 ```
+
+Modern applications with content hosting can use [sandbox domains][sandbox-domains]
+
+> to safely host various types of user-generated content. Many of these sandboxes are specifically meant to isolate user-uploaded HTML, JavaScript, or Flash applets and make sure that they can't access any user data.
+
+[sandbox-domains]:https://security.googleblog.com/2012/08/content-hosting-for-modern-web.html
+
+For this reason, it's better to use `alert(document.domain)` or `alert(window.origin)` rather than `alert(1)` as default XSS payload in order to know in which scope the XSS is actually executing.
+
+Better payload replacing `<script>alert(1)</script>`:
+
+```html
+<script>alert(document.domain.concat("\n").concat(window.origin))</script>
+```
+
+While `alert()` is nice for reflected XSS it can quickly become a burden for stored XSS because it requires to close the popup for each execution, so `console.log()` can be used instead to display a message in the console of the developper console (doesn't require any interaction).
+
+Example:
+
+```html
+<script>console.log("Test XSS from the search bar of page XYZ\n".concat(document.domain).concat("\n").concat(window.origin))</script>
+```
+
+References:
+
+- [Google Bughunter University - XSS in sandbox domains](https://sites.google.com/site/bughunteruniversity/nonvuln/xss-in-sandbox-domain)
+- [LiveOverflow Video - DO NOT USE alert(1) for XSS](https://www.youtube.com/watch?v=KHwVjzWei1c)
+- [LiveOverflow blog post - DO NOT USE alert(1) for XSS](https://liveoverflow.com/do-not-use-alert-1-in-xss/)
 
 ### Tools 
 

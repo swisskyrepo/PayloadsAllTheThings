@@ -179,8 +179,8 @@ ${dwf.newInstance(ec,null)("id")}
 
 ## Handlebars
 
-[Official website](https://github.com/HubSpot/jinjava)
-> 
+[Official website](https://handlebarsjs.com/)
+> Handlebars compiles templates into JavaScript functions.
 
 ### Handlebars - Command Execution
 
@@ -210,7 +210,7 @@ ${dwf.newInstance(ec,null)("id")}
 
 ## Jade / Codepen
 
-[Official website](https://github.com/HubSpot/jinjava)
+[Official website](https://codepen.io/)
 > 
 
 ```python

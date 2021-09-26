@@ -71,9 +71,10 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 
 ## ASP.NET Razor
 
-### ASP.NET Razor - Basic injection
+[Official website](https://docs.microsoft.com/en-us/aspnet/web-pages/overview/getting-started/introducing-razor-syntax-c)
+> Razor is a markup syntax that lets you embed server-based code (Visual Basic and C#) into web pages.
 
-https://docs.microsoft.com/en-us/aspnet/web-pages/overview/getting-started/introducing-razor-syntax-c
+### ASP.NET Razor - Basic injection
 
 ```powershell
 @(1+2)
@@ -90,6 +91,9 @@ https://docs.microsoft.com/en-us/aspnet/web-pages/overview/getting-started/intro
 ---
 
 ## Expression Language EL
+
+[Official website](https://docs.oracle.com/javaee/6/tutorial/doc/gjddd.html)
+> Expression Language (EL) is mechanism that simplifies the accessibility of the data stored in Java bean component and other object like request, session and application, etc. There are many operators in JSP that are used in EL like arithmetic and logical operators to perform an expression. It was introduced in JSP 2.0
 
 ### Expression Language EL - Basic injection
 
@@ -142,11 +146,14 @@ ${facesContext.getExternalContext().setResponseHeader("output","".getClass().for
 
 ## Freemarker
 
+[Official website](https://freemarker.apache.org/)
+> Apache FreeMarker™ is a template engine: a Java library to generate text output (HTML web pages, e-mails, configuration files, source code, etc.) based on templates and changing data. 
+
 You can try your payloads at [https://try.freemarker.apache.org](https://try.freemarker.apache.org)
 
 ### Freemarker - Basic injection
 
-The template can be `${3*3}` or the legacy `#{3*3}`
+The template can be `${3*3}` or the legacy `#{3*3}`.
 
 ### Freemarker - Code execution
 
@@ -171,6 +178,9 @@ ${dwf.newInstance(ec,null)("id")}
 ---
 
 ## Handlebars
+
+[Official website](https://github.com/HubSpot/jinjava)
+> 
 
 ### Handlebars - Command Execution
 
@@ -199,6 +209,9 @@ ${dwf.newInstance(ec,null)("id")}
 ---
 
 ## Jade / Codepen
+
+[Official website](https://github.com/HubSpot/jinjava)
+> 
 
 ```python
 - var x = root.process

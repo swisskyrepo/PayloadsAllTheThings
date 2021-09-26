@@ -653,6 +653,8 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 
 ### ASP.NET Razor - Basic injection
 
+https://docs.microsoft.com/en-us/aspnet/web-pages/overview/getting-started/introducing-razor-syntax-c
+
 ```powershell
 @(1+2)
 ```
@@ -664,6 +666,8 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
   // C# code
 }
 ```
+
+---
 
 ## Lessjs
 
@@ -716,6 +720,8 @@ registerPlugin({
     }
 })
 ```
+
+---
 
 ## References
 

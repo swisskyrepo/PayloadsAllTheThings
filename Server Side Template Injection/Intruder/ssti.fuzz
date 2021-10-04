@@ -94,3 +94,4 @@ ${self.attr._NSAttr__parent.module.filters.compat.inspect.os.system("id")}
 ${self.attr._NSAttr__parent.module.runtime.compat.inspect.os.system("id")}
 ${self.context._with_template.module.cache.compat.inspect.os.system("id")}
 ${self.module.runtime.exceptions.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.exceptions.util.os.system("id")}

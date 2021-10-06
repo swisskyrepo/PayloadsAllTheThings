@@ -261,7 +261,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
 - **Enum Other Domains:** `Get-NetDomain -Domain <DomainName>`
 - **Get Domain SID:** `Get-DomainSID`
 - **Get Domain Policy:** 
-  ```
+  ```powershell
   Get-DomainPolicy
 
   #Will show us the policy configurations of the Domain about system access or kerberos
@@ -269,12 +269,12 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   (Get-DomainPolicy)."kerberos policy"
   ```
 - **Get Domain Controlers:** 
-  ```
+  ```powershell
   Get-NetDomainController
   Get-NetDomainController -Domain <DomainName>
   ```
 - **Enumerate Domain Users:** 
-  ```
+  ```powershell
   Get-NetUser
   Get-NetUser -SamAccountName <user> 
   Get-NetUser | select cn
@@ -296,7 +296,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Find-DomainUserLocation -Domain <DomainName> | Select-Object UserName, SessionFromName
   ```
 - **Enum Domain Computers:** 
-  ```
+  ```powershell
   Get-NetComputer -FullData
   Get-DomainGroup
 
@@ -304,7 +304,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Get-NetComputer -Ping
   ```
 - **Enum Groups and Group Members:**
-  ```
+  ```powershell
   Get-NetGroupMember -GroupName "<GroupName>" -Domain <DomainName>
   
   #Enumerate the members of a specified group of the domain
@@ -314,7 +314,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Get-DomainGPOLocalGroup | Select-Object GPODisplayName, GroupName
   ```
 - **Enumerate Shares**
-  ```
+  ```powershell
   #Enumerate Domain Shares
   Find-DomainShare
   
@@ -333,12 +333,12 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Find-GPOComputerAdmin -ComputerName <ComputerName>
   ```
 - **Enum OUs:** 
-  ```
+  ```powershell
   Get-NetOU -FullData 
   Get-NetGPO -GPOname <The GUID of the GPO>
   ```
 - **Enum ACLs:** 
-  ```
+  ```powershell
   # Returns the ACLs associated with the specified account
   Get-ObjectAcl -SamAccountName <AccountName> -ResolveGUIDs
   Get-ObjectAcl -ADSprefix 'CN=Administrator, CN=Users' -Verbose
@@ -350,12 +350,12 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Get-PathAcl -Path "\\Path\Of\A\Share"
   ```
 - **Enum Domain Trust:** 
-  ```
+  ```powershell
   Get-NetDomainTrust
   Get-NetDomainTrust -Domain <DomainName>
   ```
 - **Enum Forest Trust:** 
-  ```
+  ```powershell
   Get-NetForestDomain
   Get-NetForestDomain Forest <ForestName>
 
@@ -368,7 +368,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Get-NetDomainTrust -Forest <ForestName>
   ```
 - **User Hunting:** 
-  ```
+  ```powershell
   #Finds all machines on the current domain where the current user has local admin access
   Find-LocalAdminAccess -Verbose
 
@@ -395,29 +395,31 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
 - **Enum Other Domains:** `Get-ADDomain -Identity <Domain>`
 - **Get Domain SID:** `Get-DomainSID`
 - **Get Domain Controlers:** 
-  ```
+
+  ```powershell
   Get-ADDomainController
   Get-ADDomainController -Identity <DomainName>
   ```
+  
 - **Enumerate Domain Users:** 
-  ```
+  ```powershell
   Get-ADUser -Filter * -Identity <user> -Properties *
 
   #Get a spesific "string" on a user's attribute
   Get-ADUser -Filter 'Description -like "*wtver*"' -Properties Description | select Name, Description
   ```
 - **Enum Domain Computers:** 
-  ```
+  ```powershell
   Get-ADComputer -Filter * -Properties *
   Get-ADGroup -Filter * 
   ```
 - **Enum Domain Trust:** 
-  ```
+  ```powershell
   Get-ADTrust -Filter *
   Get-ADTrust -Identity <DomainName>
   ```
 - **Enum Forest Trust:** 
-  ```
+  ```powershell
   Get-ADForest
   Get-ADForest -Identity <ForestName>
 
@@ -425,7 +427,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   (Get-ADForest).Domains
   ```
  - **Enum Local AppLocker Effective Policy:**
- ```
+ ```powershell
  Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
  ```
 

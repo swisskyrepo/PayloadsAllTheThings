@@ -534,7 +534,7 @@ Exploit steps from the white paper
 5. From password change to domain admin
 6. :warning: reset the computer's AD password in a proper way to avoid any Deny of Service
 
-* `cve-2020-1472-exploit.py` - Python script from dirkjanm
+* `cve-2020-1472-exploit.py` - Python script from [dirkjanm](https://github.com/dirkjanm)
   ```powershell
 	# Check (https://github.com/SecuraBV/CVE-2020-1472)
 	proxychains python3 zerologon_tester.py DC01 172.16.1.5
@@ -605,7 +605,7 @@ The exploit will execute the DLL either from the local filesystem or a remote sh
 
 Requirements:
 * **Spooler Service** enabled (Mandatory)
-* Server with patches < June 21
+* Server with patches < June 2021
 * DC with `Pre Windows 2000 Compatibility` group
 * Server with registry key `HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint\NoWarningNoElevationOnInstall` = (DWORD) 1
 * Server with registry key `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA` = (DWORD) 0

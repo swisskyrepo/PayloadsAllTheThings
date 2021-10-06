@@ -322,7 +322,7 @@ You can add some custom queries like [Bloodhound-Custom-Queries](https://github.
   Find-DomainShare -CheckShareAccess
   ```
 - **Enum Group Policies:** 
-  ```
+  ```powershell
   Get-NetGPO
 
   # Shows active Policy on specified machine

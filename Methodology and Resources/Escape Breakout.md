@@ -3,7 +3,7 @@
 ## Summary
 
 * [Gaining a command shell](#gaining-a-command-shell)
-* [Sticky Keys](#explorer---sticky-keys)
+* [Sticky Keys](#sticky-keys)
 * [Dialog Boxes](#dialog-boxes)
     * [Creating new files](#creating-new-files)
     * [Open a new Windows Explorer instance](#open-a-new-windows-explorer-instance)
@@ -19,7 +19,7 @@
 
 * **Shortcut**
     * [Window] + [R] -> cmd 
-    * [CTRL] + [ALT] + [SHIFT] -> Task Manager
+    * [CTRL] + [SHIFT] + [ESC] -> Task Manager
     * [CTRL] + [ALT] + [DELETE] -> Task Manager 
 * **Access through file browser**: Browsing to the folder containing the binary (i.e. `C:\windows\system32\`), we can simply right click and `open` it
 * **Drag-and-drop**: dragging and dropping any file onto the cmd.exe 
@@ -94,6 +94,41 @@ Enter *.* or *.exe or similar in `File name` box
 * Print menus
 * All other menus that provide dialog boxes
 
+### Accessing filesystem
+
+Enter these paths in the address bar:
+
+* file://C:/windows
+* C:/windows/
+* %HOMEDRIVE%
+* \\127.0.0.1\c$\Windows\System32
+
+### Unassociated Protocols
+
+It is possible to escape a browser based kiosk with other protocols than usual `http` or `https`. 
+If you have access to the address bar, you can use any known protocol (`irc`, `ftp`, `telnet`, `mailto`, etc.) 
+to trigger the *open with* prompt and select a program installed on the host.
+The program will than be launched with the uri as a parameter, you need to select a program that will not crash when recieving it.
+It is possible to send multiple parameters to the program by adding spaces in your uri.
+
+Note: This technique required that the protocol used is not already associated with a program.
+
+Example - Launching Firefox with a custom profile:
+
+This is a nice trick since Firefox launched with the custom profile may not be as much hardened as the default profile.
+
+0. Firefox need to be installed.
+1. Enter the following uri in the address bar: `irc://127.0.0.1 -P "Test"`
+2. Press enter to navigate to the uri.
+3. Select the firefox program.
+4. Firefox will be launched with the profile `Test`. 
+
+In this example, it's the equivalent of running the following command:
+```
+firefox irc://127.0.0.1 -P "Test"
+```
+
+
 ## Shell URI Handlers
 
 * shell:DocumentsLibrary
@@ -110,3 +145,4 @@ Enter *.* or *.exe or similar in `File name` box
 
 * [PentestPartners - Breaking out of Citrix and other restricted desktop environments](https://www.pentestpartners.com/security-blog/breaking-out-of-citrix-and-other-restricted-desktop-environments/)
 * [Breaking Out! of Applications Deployed via Terminal Services, Citrix, and Kiosks - Scott Sutherland - May 22nd, 2013](https://blog.netspi.com/breaking-out-of-applications-deployed-via-terminal-services-citrix-and-kiosks/)
+* [Escaping from KIOSKs - HackTricks](https://book.hacktricks.xyz/physical-attacks/escaping-from-gui-applications)

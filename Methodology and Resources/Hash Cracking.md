@@ -2,15 +2,22 @@
 
 ## Summary
 
-* [Hashcat Example Hashes](https://hashcat.net/wiki/doku.php?id=example_hashes)
-* [Hashcat Install](#hashcat-install)
-* [Brute-Force](#brute-force)
-* [Dictionnary](#dictionnary)
+* [Hashcat](https://hashcat.net/hashcat/)
+   * [Hashcat Example Hashes](https://hashcat.net/wiki/doku.php?id=example_hashes)
+   * [Hashcat Install](#hashcat-install)
+   * [Brute-Force](#brute-force)
+   * [Dictionary](#dictionary)
+* [John](https://github.com/openwall/john)
+   * [Usage](#john-usage)
 * [Rainbow tables](#rainbow-tables)
 * [Tips and Tricks](#tips-and-tricks)
+* [Online Cracking Resources](#online-cracking-resources)
 * [References](#references)
 
-## Hashcat Install
+
+## Hashcat
+
+### Hashcat Install
 
 ```powershell
 apt install cmake build-essential -y
@@ -19,7 +26,7 @@ git clone https://github.com/hashcat/hashcat.git && cd hashcat && make -j 8 && m
 ```
 
 
-## Brute-Force
+### Brute-Force
 
 > Every possibility for a given character set and a given length (i.e. aaa, aab, aac, ...) is hashed and compared against the target hash.
 
@@ -64,7 +71,7 @@ hashcat --attack-mode 3 --custom-charset1 "?u" --custom-charset2 "?l?u?d" --cust
 | ?a | ?l?u?d?s |
 | ?b | 0x00 - 0xff |
 
-## Dictionnary
+### Dictionary
 
 > Every word of a given list (a.k.a. dictionary) is hashed and compared against the target hash.
 
@@ -84,6 +91,26 @@ hashcat --attack-mode 0 --hash-type $number $hashes_file $wordlist_file
     * [hob064](https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/master/hob064.rule)
     * [d3adhob0](https://raw.githubusercontent.com/praetorian-inc/Hob0Rules/master/d3adhob0.rule)
 
+## John
+
+
+### John Usage
+
+```bash
+# Run on password file containing hashes to be cracked
+john passwd
+
+# Use a specific wordlist
+john --wordlist=<wordlist> passwd
+
+# Show cracked passwords
+john --show passwd
+
+# Restore interrupted sessions
+john --restore
+```
+
+
 ## Rainbow tables
 
 > The hash is looked for in a pre-computed table. It is a time-memory trade-off that allows cracking hashes faster, but costing a greater amount of memory than traditional brute-force of dictionary attacks. This attack cannot work if the hashed value is salted (i.e. hashed with an additional random value as prefix/suffix, making the pre-computed table irrelevant)
@@ -100,7 +127,14 @@ hashcat --attack-mode 0 --hash-type $number $hashes_file $wordlist_file
     * [How To Build A Password Cracking Rig - 5000$](https://www.netmux.com/blog/how-to-build-a-password-cracking-rig)
 * Online cracking
     * [Hashes.com](https://hashes.com/en/decrypt/hash)
-* Use the `loopback` in combination with rules and dictionnary to keep cracking until you don't find new passsword: `hashcat --loopback --attack-mode 0 --rules-file $rules_file --hash-type $number $hashes_file $wordlist_file`
+* Use the `loopback` in combination with rules and dictionary to keep cracking until you don't find new passsword: `hashcat --loopback --attack-mode 0 --rules-file $rules_file --hash-type $number $hashes_file $wordlist_file`
+
+
+## Online Cracking Resources
+
+* [hashes.com](https://hashes.com)
+* [crackstation](https://crackstation.net)
+
 
 ## References
 

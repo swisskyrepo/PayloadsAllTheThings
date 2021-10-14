@@ -51,6 +51,10 @@ sc config WinDefend start= disabled
 sc stop WinDefend
 Set-MpPreference -DisableRealtimeMonitoring $true
 
+# Wipe currently stored definitions
+# Location of MpCmdRun.exe: C:\ProgramData\Microsoft\Windows Defender\Platform\<antimalware platform version>
+MpCmdRun.exe -RemoveDefinitions -All
+
 ## Exclude a process / location
 Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"
 Add-MpPreference -ExclusionProcess 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'

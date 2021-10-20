@@ -178,7 +178,7 @@ go get github.com/anshumanbh/tko-subs
 
 ```bash
 git clone https://github.com/nahamsec/HostileSubBruteforcer
-chmox +x sub_brute.rb
+chmod +x sub_brute.rb
 ./sub_brute.rb
 ```
 

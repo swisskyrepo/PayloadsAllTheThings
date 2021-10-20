@@ -26,6 +26,7 @@
 * [GraphQL Security Toolkit - GraphQL Security Research Material](https://github.com/doyensec/graph-ql/)
 * [Graphql-path-enum - Lists the different ways of reaching a given type in a GraphQL schema](https://gitlab.com/dee-see/graphql-path-enum)
 * [GraphQL IDE - An extensive IDE for exploring GraphQL API's](https://github.com/andev-software/graphql-ide)
+* [ClairvoyanceX - Obtain GraphQL API schema despite disabled introspection](https://github.com/mchoji/clairvoyancex)
 * [InQL - A Burp Extension for GraphQL Security Testing](https://github.com/doyensec/inql)
 * [Insomnia - Cross-platform HTTP and GraphQL Client](https://insomnia.rest/)
 * [AutoGraphql + introspection](https://graphql-dashboard.herokuapp.com/)

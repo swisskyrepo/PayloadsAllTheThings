@@ -30,3 +30,4 @@ Twitter is very common in the InfoSec area. Many advices and tips on bug hunting
 - [@filedescriptor - security researcher, bug hunter and content creator at 0xReconless](https://twitter.com/filedescriptor)
 - [@0xReconless - Security research, blogs, and videos by filedescriptor, ngalongc & EdOverflow](https://twitter.com/0xReconless)
 - [@pentest_swissky - Author of PayloadsAllTheThings & SSRFmap](https://twitter.com/pentest_swissky)
+- [@GentilKiwi - Author of Mimikatz & Kekeo](https://twitter.com/gentilkiwi)

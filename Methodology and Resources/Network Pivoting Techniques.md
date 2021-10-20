@@ -10,6 +10,7 @@
 * [Proxychains](#proxychains)
 * [Graphtcp](#graphtcp)
 * [Web SOCKS - reGeorg](#web-socks---regeorg)
+* [Web SOCKS - pivotnacci](#web-socks---pivotnacci)
 * [Metasploit](#metasploit)
 * [sshuttle](#sshuttle)
 * [chisel](#chisel)
@@ -117,6 +118,17 @@ optional arguments:
   -u , --url           The url containing the tunnel script
   -v , --verbose       Verbose output[INFO|DEBUG]
 ```
+
+## Web SOCKS - pivotnacci
+
+[pivotnacci](https://github.com/blackarrowsec/pivotnacci), a tool to make socks connections through HTTP agents.
+
+```powershell
+pip3 install pivotnacci
+pivotnacci  https://domain.com/agent.php --password "s3cr3t"
+pivotnacci  https://domain.com/agent.php --polling-interval 2000
+```
+
 
 ## Metasploit
 

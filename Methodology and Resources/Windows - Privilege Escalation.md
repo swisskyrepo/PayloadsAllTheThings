@@ -274,7 +274,8 @@ PS C:\> Add-MpPreference -ExclusionPath "C:\Windows\Tasks"
 PS C:\> Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"
 
 # remove signatures (if Internet connection is present, they will be downloaded again):
-PS > "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
+PS > & "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
+PS > & "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
 ```
 
 ### Firewall

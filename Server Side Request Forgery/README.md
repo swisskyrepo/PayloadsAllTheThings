@@ -553,8 +553,6 @@ DNS record
 http://instance-data
 http://169.254.169.254
 http://169.254.169.254.nip.io/
-http://1ynrnhl.nip.io/
-http://www.owasp.org.1ynrnhl.nip.io/
 ```
 
 HTTP redirect

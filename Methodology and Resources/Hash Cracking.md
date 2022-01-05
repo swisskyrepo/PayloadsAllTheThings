@@ -160,5 +160,4 @@ john --restore
 * [Cracking - The Hacker Recipes](https://www.thehacker.recipes/ad-ds/movement/credentials/cracking)
 * [Using Hashcat to Crack Hashes on Azure](https://durdle.com/2017/04/23/using-hashcat-to-crack-hashes-on-azure/)
 * [miloserdov.org hashcat](https://miloserdov.org/?p=5426&PageSpeed=noscript)
-* [digtvbg.com](https://digtvbg.com/files/books-for-hacking/Hash%20Crack%20-%20Password%20Cracking%20Manual%20%28v2.0%29%20by%20Joshua%20Picolet.pdf)
 * [miloserdov.org john](https://miloserdov.org/?p=4961&PageSpeed=noscript)

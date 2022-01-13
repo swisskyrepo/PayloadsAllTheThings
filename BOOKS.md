@@ -32,6 +32,7 @@
 - [The Hacker Playbook 2: Practical Guide to Penetration Testing by Peter Kim (2015)](https://www.goodreads.com/book/show/25791488-the-hacker-playbook-2)
 - [The Hacker Playbook 3: Practical Guide to Penetration Testing (Red Team Edition) by Peter Kim (2018)](https://www.goodreads.com/book/show/40028366-the-hacker-playbook-3)
 - [The Mac Hacker's Handbook by Charlie Miller & Dino Dai Zovi (2009)](http://www.wiley.com/WileyCDA/WileyTitle/productCd-0470395362.html)
+- [The Hardware Hacking Handbook by Jasper van Woudenberg & Colin O'Flynn (2022)](https://nostarch.com/hardwarehacking)
 - [The Mobile Application Hacker's Handbook by Dominic Chell et al. (2015)](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118958500.html)
 - [The Shellcoders Handbook by Chris Anley et al. (2007)](http://www.wiley.com/WileyCDA/WileyTitle/productCd-047008023X.html)
 - [The Web Application Hackers Handbook by D. Stuttard, M. Pinto (2011)](http://www.wiley.com/WileyCDA/WileyTitle/productCd-1118026470.html)

@@ -23,7 +23,7 @@
 - [Pratical Binary Analysis: Build Your Own Linux Tools for Binary instrumentation, Analysis, and Disassembly by Dennis Andriesse (2019)](https://nostarch.com/binaryanalysis)
 - [Pratical Forensic Imaging: Securing Digital Evidence with Linux Tools by Bruce Nikkel (2016)](https://nostarch.com/forensicimaging)
 - [Pratical IoT Hacking: The Definitive Guide to Attacking the Internet of Things by Fotios Chantzis, Ioannis Stais, Paulino Calderon, Evangelos Deirmentzoglou and Beau Woods (2021)](https://nostarch.com/practical-iot-hacking)
--[Practical Doomsday: A User's Guide to the End of the World by Michal Zalewski (2022)](https://nostarch.com/practical-doomsday)
+- [Practical Doomsday: A User's Guide to the End of the World by Michal Zalewski (2022)](https://nostarch.com/practical-doomsday)
 - [Practical Social Engineering: A Primer for the Ethical Hacker by Joe Gray (2022)](https://nostarch.com/practical-social-engineering)
 - [Real-World Bug Hunting: A Field Guide to Web Hacking by Peter Yaworski (2019)](https://nostarch.com/bughunting)
 - [Rootkits and Bootkits: Reversing Modern Malware and Next Generation Threats by Alex Matrosov, Eugene Rodionov, and Sergey Bratus (2019)](https://nostarch.com/rootkits)

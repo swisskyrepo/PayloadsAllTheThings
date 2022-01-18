@@ -1254,14 +1254,15 @@ Useful when you want to have the clear text password or when you need to make st
 
 Recommended wordlists:
 - rockyou (available in Kali Linux)
-- Have I Been Powned (https://hashes.org/download.php?hashlistId=7290&type=hfound)
-- Collection #1 (passwords from Data Breaches, might be illegal to possess)
+- Have I Been Pwned founds (https://hashmob.net/hashlists/info/4169-Have%20I%20been%20Pwned%20V8%20(NTLM))
+- Weakpass.com
+- Read More at [Methodology and Resources/Hash Cracking.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Hash%20Cracking.md)
 
 ```powershell
 # Basic wordlist
 # (-O) will Optimize for 32 characters or less passwords
 # (-w 4) will set the workload to "Insane" 
-$ hashcat64.exe -m 1000 -w 4 -O -a 0 -o pathtopotfile pathtohashes pathtodico -r ./rules/best64.rule --opencl-device-types 1,2
+$ hashcat64.exe -m 1000 -w 4 -O -a 0 -o pathtopotfile pathtohashes pathtodico -r myrules.rule --opencl-device-types 1,2
 
 # Generate a custom mask based on a wordlist
 $ git clone https://github.com/iphelix/pack/blob/master/README
@@ -1270,7 +1271,9 @@ $ python2 maskgen.py hashcat.mask --targettime 3600 --optindex -q -o hashcat_1H.
 ```
 
 :warning: If the password is not a confidential data (challenges/ctf), you can use online "cracker" like :
-- [hashes.org](https://hashes.org/check.php)
+- ~~[hashes.org](https://hashes.org/check.php)~~
+- [hashmob.net](https://hashmob.net)
+- [crackstation.net](https://crackstation.net)
 - [hashes.com](https://hashes.com/en/decrypt/hash)
 
 ### Password spraying

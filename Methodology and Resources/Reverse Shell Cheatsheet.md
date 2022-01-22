@@ -2,6 +2,7 @@
 
 ## Summary
 
+* [Tools](#tools)
 * [Reverse Shell](#reverse-shell)
     * [Awk](#awk)
     * [Automatic Reverse Shell Generator](#revshells)
@@ -38,6 +39,10 @@
     * [Other platforms](#other-platforms)
 * [Spawn TTY Shell](#spawn-tty-shell)
 * [References](#references)
+
+## Tools
+
+- [reverse-shell-generator](https://www.revshells.com/) - Hosted Reverse Shell generator ([source](https://github.com/0dayCTF/reverse-shell-generator))
 
 ## Reverse Shell
 

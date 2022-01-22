@@ -42,7 +42,8 @@
 
 ## Tools
 
-- [reverse-shell-generator](https://www.revshells.com/) - Hosted Reverse Shell generator ([source](https://github.com/0dayCTF/reverse-shell-generator))
+- [reverse-shell-generator](https://www.revshells.com/) - Hosted Reverse Shell generator ([source](https://github.com/0dayCTF/reverse-shell-generator)) ![image](https://user-images.githubusercontent.com/44453666/115149832-d6a75980-a033-11eb-9c50-56d4ea8ca57c.png)
+- [revshellgen](https://github.com/t0thkr1s/revshellgen) -  CLI Reverse Shell generator
 
 ## Reverse Shell
 
@@ -438,12 +439,6 @@ main() {
   });
 }
 ```
-
-## RevShells
-
-https://www.revshells.com/
-![image](https://user-images.githubusercontent.com/44453666/115149832-d6a75980-a033-11eb-9c50-56d4ea8ca57c.png)
-
 
 ## Meterpreter Shell
 

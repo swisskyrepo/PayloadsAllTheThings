@@ -175,7 +175,7 @@
     pingcastle.exe --healthcheck --server domain.local
     pingcastle.exe --graph --server domain.local
     pingcastle.exe --scanner scanner_name --server domain.local
-    available scanners are:aclcheck,antivirus,corruptADDatabase,foreignusers,laps_bitlocker,localadmin,ullsession,nullsession-trust,share,smb,spooler,startup
+    available scanners are:aclcheck,antivirus,computerversion,foreignusers,laps_bitlocker,localadmin,nullsession,nullsession-trust,oxidbindings,remote,share,smb,smb3querynetwork,spooler,startup,zerologon,computers,users
     ```
 
 * [Kerbrute](https://github.com/ropnop/kerbrute)

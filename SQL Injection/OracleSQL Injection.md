@@ -79,6 +79,8 @@ AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])                
 
 ## Oracle SQL Command execution
 
+* [ODAT (Oracle Database Attacking Tool)](https://github.com/quentinhardy/odat)
+
 ```sql
 /* create Java class */
 BEGIN

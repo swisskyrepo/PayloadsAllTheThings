@@ -4,8 +4,10 @@
 
 * [Tools](#tools)
 * [Hide Your Binary](#hide-your-binary)
-* [Disable Windows Defender](#disable-windows-defender)
-* [Disable Windows Firewall](#disable-windows-firewall)
+* [Disable Antivirus and Security](#disable-antivirus-and-security)
+    * [Antivirus Removal](#antivirus-removal)
+    * [Disable Windows Defender](#disable-windows-defender)
+    * [Disable Windows Firewall](#disable-windows-firewall)
 * [Simple User](#simple-user)
     * [Registry HKCU](#registry-hkcu)
     * [Startup](#startup)
@@ -47,7 +49,14 @@
 PS> attrib +h mimikatz.exe
 ```
 
-## Disable Windows Defender
+## Disable Antivirus and Security
+
+### Antivirus Removal
+
+* [Sophos Removal Tool.ps1](https://github.com/ayeskatalas/Sophos-Removal-Tool/)
+* [Symantec CleanWipe](https://knowledge.broadcom.com/external/article/178870/download-the-cleanwipe-removal-tool-to-u.html)
+
+### Disable Windows Defender
 
 ```powershell
 # Disable Defender
@@ -68,7 +77,7 @@ Add-MpPreference -ExclusionPath C:\Video, C:\install
 reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f
 ```
 
-## Disable Windows Firewall
+### Disable Windows Firewall
 
 ```powershell
 Netsh Advfirewall show allprofiles

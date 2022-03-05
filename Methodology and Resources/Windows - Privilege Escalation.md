@@ -14,6 +14,7 @@
     * [Default Writeable Folders](#default-writeable-folders)
 * [EoP - Looting for passwords](#eop---looting-for-passwords)
     * [SAM and SYSTEM files](#sam-and-system-files)
+    * [LAPS Settings](#laps-settings)
     * [HiveNightmare](#hivenightmare)
     * [Search for file contents](#search-for-file-contents)
     * [Search for a file with a certain filename](#search-for-a-file-with-a-certain-filename)
@@ -394,6 +395,15 @@ samdump2 SYSTEM SAM -o sam.txt
 
 Either crack it with `john -format=NT /root/sam.txt` or use Pass-The-Hash.
 
+### LAPS Settings
+
+Extract `HKLM\Software\Policies\Microsoft Services\AdmPwd` from Windows Registry.
+
+* LAPS Enabled: AdmPwdEnabled
+* LAPS Admin Account Name: AdminAccountName
+* LAPS Password Complexity: PasswordComplexity
+* LAPS Password Length: PasswordLength
+* LAPS Expiration Protection Enabled: PwdExpirationProtectionEnabled
 
 ### HiveNightmare
 

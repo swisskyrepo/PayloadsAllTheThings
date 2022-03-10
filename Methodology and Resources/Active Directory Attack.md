@@ -1264,9 +1264,9 @@ lsadump::lsa /inject /name:krbtgt
 Useful when you want to have the clear text password or when you need to make stats about weak passwords.
 
 Recommended wordlists:
-- rockyou (available in Kali Linux)
-- Have I Been Pwned founds (https://hashmob.net/hashlists/info/4169-Have%20I%20been%20Pwned%20V8%20(NTLM))
-- Weakpass.com
+- [Rockyou.txt](https://weakpass.com/wordlist/90)
+- [Have I Been Pwned founds](https://hashmob.net/hashlists/info/4169-Have%20I%20been%20Pwned%20V8%20(NTLM))
+- [Weakpass.com](https://weakpass.com/)
 - Read More at [Methodology and Resources/Hash Cracking.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Hash%20Cracking.md)
 
 ```powershell
@@ -1282,7 +1282,6 @@ $ python2 maskgen.py hashcat.mask --targettime 3600 --optindex -q -o hashcat_1H.
 ```
 
 :warning: If the password is not a confidential data (challenges/ctf), you can use online "cracker" like :
-- ~~[hashes.org](https://hashes.org/check.php)~~
 - [hashmob.net](https://hashmob.net)
 - [crackstation.net](https://crackstation.net)
 - [hashes.com](https://hashes.com/en/decrypt/hash)

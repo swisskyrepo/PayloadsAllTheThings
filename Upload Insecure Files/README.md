@@ -1,13 +1,12 @@
 # Upload
 
-Uploaded files may pose a significant risk if not handled correctly. A remote attacker could send a multipart/form-data POST request with a specially-crafted filename or mime type and execute arbitrary code.
+> Uploaded files may pose a significant risk if not handled correctly. A remote attacker could send a multipart/form-data POST request with a specially-crafted filename or mime type and execute arbitrary code.
 
 ## Summary
 
 * [Tools](#tools)
 * [Exploits](#exploits)
-    * [Defaults extensions](#defaults-extension)
-    * [Other extensions](#other-extensions)
+    * [Defaults extensions](#defaults-extensions)
     * [Upload tricks](#upload-tricks)
     * [Filename vulnerabilities](#filename-vulnerabilities)
     * [Picture upload with LFI](#picture-upload-with-lfi)
@@ -53,18 +52,19 @@ Uploaded files may pose a significant risk if not handled correctly. A remote at
 
 - Use double extensions : `.jpg.php`
 - Use reverse double extension (useful to exploit Apache misconfigurations where anything with extension .php, but not necessarily ending in .php will execute code): `.php.jpg`
-- Mix uppercase and lowercase : `.pHp, .pHP5, .PhAr`
+- Random uppercase and lowercase : `.pHp, .pHP5, .PhAr`
 - Null byte (works well against `pathinfo()`)
-    * .php%00.gif
-    * .php\x00.gif
-    * .php%00.png
-    * .php\x00.png
-    * .php%00.jpg
-    * .php\x00.jpg
+    * `.php%00.gif`
+    * `.php\x00.gif`
+    * `.php%00.png`
+    * `.php\x00.png`
+    * `.php%00.jpg`
+    * `.php\x00.jpg`
 - Special characters
     * Multiple dots : `file.php......` , in Windows when a file is created with dots at the end those will be removed.
-    * Whitespace characters: `file.php%20`
+    * Whitespace characters: `file.php%20`, `file.php%0d%0a.jpg`
     * Right to Left Override (RTLO): `name.%E2%80%AEphp.jpg` will became `name.gpj.php`.
+    * Slash: `file.php/`, `file.php.\`
 - Mime type, change `Content-Type : application/x-php` or `Content-Type : application/octet-stream` to `Content-Type : image/gif`
     * `Content-Type : image/gif`
     * `Content-Type : image/png`

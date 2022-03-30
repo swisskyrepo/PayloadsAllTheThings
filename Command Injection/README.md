@@ -18,7 +18,7 @@
    * [Bypass with double quote](#bypass-with-double-quote)
    * [Bypass with backslash and slash](#bypass-with-backslash-and-slash)
    * [Bypass with $@](#bypass-with-)
-   * [Bypass with $()](#bypass-with-$())
+   * [Bypass with $()](#bypass-with--1)
    * [Bypass with variable expansion](#bypass-with-variable-expansion)
    * [Bypass with wildcards](#bypass-with-wildcards)
 * [Challenge](#challenge)

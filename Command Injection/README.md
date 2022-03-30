@@ -214,6 +214,7 @@ echo whoami|$0
 ```powershell
 who$()ami
 who$(echo am)i
+who`echo am`i
 ```
 
 #### Bypass with variable expansion

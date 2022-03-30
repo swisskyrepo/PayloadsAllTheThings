@@ -18,6 +18,7 @@
    * [Bypass with double quote](#bypass-with-double-quote)
    * [Bypass with backslash and slash](#bypass-with-backslash-and-slash)
    * [Bypass with $@](#bypass-with-)
+   * [Bypass with $()](#bypass-with--1)
    * [Bypass with variable expansion](#bypass-with-variable-expansion)
    * [Bypass with wildcards](#bypass-with-wildcards)
 * [Challenge](#challenge)
@@ -207,6 +208,13 @@ who$@ami
 echo $0
 -> /usr/bin/zsh
 echo whoami|$0
+```
+
+### Bypass with $()
+```powershell
+who$()ami
+who$(echo am)i
+who`echo am`i
 ```
 
 #### Bypass with variable expansion

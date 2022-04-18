@@ -3,6 +3,7 @@
 ## Pickle
 
 The following code is a simple example of using `cPickle` in order to generate an auth_token which is a serialized User object.
+:warning: `import cPickle` will only work on Python 2
 
 ```python
 import cPickle

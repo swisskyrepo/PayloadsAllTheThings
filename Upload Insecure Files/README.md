@@ -43,7 +43,7 @@
     .phtm
     .inc
     ```
-* ASP Server : `.asp, .aspx, .cer and .asa (IIS <= 7.5), shell.aspx;1.jpg (IIS < 7.0)`
+* ASP Server : `.asp, .aspx, .cer and .asa (IIS <= 7.5), shell.aspx;1.jpg (IIS < 7.0), shell.soap`
 * JSP : `.jsp, .jspx, .jsw, .jsv, .jspf`
 * Perl: `.pl, .pm, .cgi, .lib`
 * Coldfusion: `.cfm, .cfml, .cfc, .dbm`
@@ -144,3 +144,4 @@ When a ZIP/archive file is automatically decompressed after the upload
 * [La PNG qui se prenait pour du PHP, 23 février 2014](https://phil242.wordpress.com/2014/02/23/la-png-qui-se-prenait-pour-du-php/)
 * [File Upload restrictions bypass - Haboob Team](https://www.exploit-db.com/docs/english/45074-file-upload-restrictions-bypass.pdf)
 * [File Upload - Mahmoud M. Awali / @0xAwali](https://docs.google.com/presentation/d/1-YwXl9rhzSvvqVvE_bMZo2ab-0O5wRNTnzoihB9x6jI/edit#slide=id.ga2ef157b83_1_0)
+* [IIS - SOAP](https://red.0xbad53c.com/red-team-operations/initial-access/webshells/iis-soap)

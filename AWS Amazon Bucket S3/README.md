@@ -52,6 +52,7 @@ By default the name of Amazon Bucket are like http://s3.amazonaws.com/[bucket_na
 http://s3.amazonaws.com/[bucket_name]/
 http://[bucket_name].s3.amazonaws.com/
 http://flaws.cloud.s3.amazonaws.com/
+https://buckets.grayhatwarfare.com/
 ```
 
 Their names are also listed if the listing is enabled.

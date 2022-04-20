@@ -10,6 +10,7 @@
     * [Weak Password Reset Token](#weak-password-reset-token)
     * [Leaking Password Reset Token](#leaking-password-reset-token)
     * [Password Reset Via Username Collision](#password-reset-via-username-collision)
+    * [Account takeover due to unicode normalization issue](#account-takeover-due-to-unicode-normalization-issue)
 * [Account Takeover Via Cross Site Scripting](#account-takeover-via-cross-site-scripting)
 * [Account Takeover Via HTTP Request Smuggling](#account-takeover-via-http-request-smuggling)
 * [Account Takeover via CSRF](#account-takeover-via-csrf)
@@ -115,6 +116,13 @@ Try to determine if the token expire or if it's always the same, in some cases t
 
 The platform CTFd was vulnerable to this attack. 
 See: [CVE-2020-7245](https://nvd.nist.gov/vuln/detail/CVE-2020-7245)
+
+
+### Account takeover due to unicode normalization issue
+
+- Victim account: `demo@gmail.com`
+- Attacker account: `demⓞ@gmail.com`
+
 
 ## Account Takeover Via Cross Site Scripting
 

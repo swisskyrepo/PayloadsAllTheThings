@@ -16,7 +16,7 @@
 ## Tools
 
 - [SAML Raider - Burp Extension](https://github.com/SAMLRaider/SAMLRaider)
-
+- [SAML Support - ZAP Addon](https://www.zaproxy.org/docs/desktop/addons/saml-support/)
 
 ## Authentication Bypass
 

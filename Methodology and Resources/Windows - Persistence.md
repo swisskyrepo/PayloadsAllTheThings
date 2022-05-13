@@ -115,6 +115,14 @@ MpCmdRun.exe -RemoveDefinitions -All
 # Remove signatures (if Internet connection is present, they will be downloaded again):
 PS > & "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
 PS > & "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
+
+# Disable Windows Defender Security Center
+reg add "HKLM\System\CurrentControlSet\Services\SecurityHealthService" /v "Start" /t REG_DWORD /d "4" /f
+
+# Disable Real Time Protection
+reg delete "HKLM\Software\Policies\Microsoft\Windows Defender" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /t REG_DWORD /d "1" /f
+reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiVirus" /t REG_DWORD /d "1" /f
 ```
 
 

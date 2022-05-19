@@ -255,6 +255,7 @@ http://127.1.1.1:80#\@127.2.2.2:80/
 1. Create a page on a whitelisted host that redirects requests to the SSRF the target URL (e.g. 192.168.0.1)
 2. Launch the SSRF pointing to  vulnerable.com/index.php?url=http://YOUR_SERVER_IP
 vulnerable.com will fetch YOUR_SERVER_IP which will redirect to 192.168.0.1
+3. You can use response codes [307](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/307) and [308](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308) in order to retain HTTP method and body after the redirection.
 ```
 
 ### Bypassing using type=url

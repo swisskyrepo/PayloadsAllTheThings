@@ -328,7 +328,7 @@ klist
 
 ## SSH
 
-:warning: You cannot pass the hash to SSH, but you can connect with a Kerberos ticket (Which you can get by passing the hash!
+:warning: You cannot pass the hash to SSH, but you can connect with a Kerberos ticket (Which you can get by passing the hash!)
 
 ```ps1
 cp user.ccache /tmp/krb5cc_1045

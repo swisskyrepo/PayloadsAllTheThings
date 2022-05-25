@@ -394,7 +394,7 @@ pwdump SYSTEM SAM > /root/sam.txt
 samdump2 SYSTEM SAM -o sam.txt
 ```
 
-Either crack it with `john -format=NT /root/sam.txt` or use Pass-The-Hash.
+Either crack it with `john -format=NT /root/sam.txt`, [hashcat](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Hash%20Cracking.md#hashcat) or use Pass-The-Hash.
 
 ### LAPS Settings
 

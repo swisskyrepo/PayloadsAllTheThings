@@ -146,3 +146,4 @@ firefox irc://127.0.0.1 -P "Test"
 * [PentestPartners - Breaking out of Citrix and other restricted desktop environments](https://www.pentestpartners.com/security-blog/breaking-out-of-citrix-and-other-restricted-desktop-environments/)
 * [Breaking Out! of Applications Deployed via Terminal Services, Citrix, and Kiosks - Scott Sutherland - May 22nd, 2013](https://blog.netspi.com/breaking-out-of-applications-deployed-via-terminal-services-citrix-and-kiosks/)
 * [Escaping from KIOSKs - HackTricks](https://book.hacktricks.xyz/physical-attacks/escaping-from-gui-applications)
+* [Breaking out of Windows Kiosks using only Microsoft Edge - Firat Acar - May 24, 2022](https://blog.nviso.eu/2022/05/24/breaking-out-of-windows-kiosks-using-only-microsoft-edge/)

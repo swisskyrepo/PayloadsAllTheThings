@@ -30,8 +30,17 @@
 
 ```powershell
 netsh interface portproxy add v4tov4 listenaddress=localaddress listenport=localport connectaddress=destaddress connectport=destport
-
 netsh interface portproxy add v4tov4 listenport=3340 listenaddress=10.1.1.110 connectport=3389 connectaddress=10.1.1.110
+
+# Forward the port 4545 for the reverse shell, and the 80 for the http server for example
+netsh interface portproxy add v4tov4 listenport=4545 connectaddress=192.168.50.44 connectport=4545
+netsh interface portproxy add v4tov4 listenport=80 connectaddress=192.168.50.44 connectport=80
+# Correctly open the port on the machine
+netsh advfirewall firewall add rule name="PortForwarding 80" dir=in action=allow protocol=TCP localport=80
+netsh advfirewall firewall add rule name="PortForwarding 80" dir=out action=allow protocol=TCP localport=80
+netsh advfirewall firewall add rule name="PortForwarding 4545" dir=in action=allow protocol=TCP localport=4545
+netsh advfirewall firewall add rule name="PortForwarding 4545" dir=out action=allow protocol=TCP localport=4545
+
 ```
 
 1. listenaddress – is a local IP address waiting for a connection.
@@ -446,3 +455,4 @@ tar xvzf cloudflared-stable-linux-amd64.tgz
 * [Pivoting Meterpreter](https://www.information-security.fr/pivoting-meterpreter/)
 * [Etat de l’art du pivoting réseau en 2019 - Oct 28,2019 - Alexandre Zanni](https://cyberdefense.orange.com/fr/blog/etat-de-lart-du-pivoting-reseau-en-2019/)
 * [Red Team: Using SharpChisel to exfil internal network - Shantanu Khandelwal - Jun 8](https://medium.com/@shantanukhande/red-team-using-sharpchisel-to-exfil-internal-network-e1b07ed9b49)
+* [Active Directory - hideandsec](https://hideandsec.sh/books/cheatsheets-82c/page/active-directory)

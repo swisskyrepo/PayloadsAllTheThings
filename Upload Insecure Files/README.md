@@ -65,7 +65,8 @@
     * Multiple dots : `file.php......` , in Windows when a file is created with dots at the end those will be removed.
     * Whitespace characters: `file.php%20`, `file.php%0d%0a.jpg`
     * Right to Left Override (RTLO): `name.%E2%80%AEphp.jpg` will became `name.gpj.php`.
-    * Slash: `file.php/`, `file.php.\`
+    * Slash: `file.php/`, `file.php.\`, `file.j\sp`, `file.j/sp`
+    * Multiple special characters: `file.jsp/././././.`
 - Mime type, change `Content-Type : application/x-php` or `Content-Type : application/octet-stream` to `Content-Type : image/gif`
     * `Content-Type : image/gif`
     * `Content-Type : image/png`
@@ -162,3 +163,4 @@ When a ZIP/archive file is automatically decompressed after the upload
 * [File Upload restrictions bypass - Haboob Team](https://www.exploit-db.com/docs/english/45074-file-upload-restrictions-bypass.pdf)
 * [File Upload - Mahmoud M. Awali / @0xAwali](https://docs.google.com/presentation/d/1-YwXl9rhzSvvqVvE_bMZo2ab-0O5wRNTnzoihB9x6jI/edit#slide=id.ga2ef157b83_1_0)
 * [IIS - SOAP](https://red.0xbad53c.com/red-team-operations/initial-access/webshells/iis-soap)
+* [Arbitrary File Upload Tricks In Java - pyn3rd](https://pyn3rd.github.io/2022/05/07/Arbitrary-File-Upload-Tricks-In-Java/)

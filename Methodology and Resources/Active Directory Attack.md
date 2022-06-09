@@ -102,6 +102,7 @@
     - [Trust relationship between domains](#trust-relationship-between-domains)
     - [Child Domain to Forest Compromise - SID Hijacking](#child-domain-to-forest-compromise---sid-hijacking)
     - [Forest to Forest Compromise - Trust Ticket](#forest-to-forest-compromise---trust-ticket)
+    - [Privileged Access Management (PAM) Trust](#privileged-access-management-pam-trust)
     - [Kerberos Unconstrained Delegation](#kerberos-unconstrained-delegation)
       - [SpoolService Abuse with Unconstrained Delegation](#spoolservice-abuse-with-unconstrained-delegation)
       - [MS-EFSRPC Abuse with Unconstrained Delegation](#ms---efsrpc-abuse-with-unconstrained-delegation)
@@ -3030,6 +3031,34 @@ kirbikator lsa .\ticket.kirbi
 ls \\machine.domain.local\c$
 ```
 
+### Privileged Access Management (PAM) Trust
+
+Require: Windows Server 2016 or earlier   
+If we compromise the bastion we get `Domain Admins` privileges on the other domain
+
+* Default configuration for PAM Trust
+    ```ps1
+    # execute on our forest
+    netdom trust lab.local /domain:bastion.local /ForestTransitive:Yes 
+    netdom trust lab.local /domain:bastion.local /EnableSIDHistory:Yes 
+    netdom trust lab.local /domain:bastion.local /EnablePIMTrust:Yes 
+    netdom trust lab.local /domain:bastion.local /Quarantine:No
+    # execute on our bastion
+    netdom trust bastion.local /domain:lab.local /ForestTransitive:Yes
+    ```
+* Enumerate
+    ```ps1
+    # Using ADModule
+    Get-ADTrust -Filter {(ForestTransitive -eq $True) -and (SIDFilteringQuarantined -eq $False)}
+
+    # Enumerate shadow security principals 
+    Get-ADObject -SearchBase ("CN=Shadow Principal Configuration,CN=Services," + (Get-ADRootDSE).configurationNamingContext) -Filter * -Properties * | select Name,member,msDS-ShadowPrincipalSid | fl
+    ```
+* Compromise
+    * Using SID History
+    * Using the previously found Shadow Security Principal
+
+
 ### Kerberos Unconstrained Delegation
 
 > The user sends a TGS to access the service, along with their TGT, and then the service can use the user's TGT to request a TGS for the user to any other service and impersonate the user. - https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html 
@@ -3799,3 +3828,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Certifried: Active Directory Domain Privilege Escalation (CVE-2022–26923) - Oliver Lyak](https://research.ifcr.dk/certifried-active-directory-domain-privilege-escalation-cve-2022-26923-9e098fe298f4)
 * [bloodyAD and CVE-2022-26923 - soka - 11 May 2022](https://cravaterouge.github.io/ad/privesc/2022/05/11/bloodyad-and-CVE-2022-26923.html)
 * [DIVING INTO PRE-CREATED COMPUTER ACCOUNTS - May 10, 2022 - By Oddvar Moe](https://www.trustedsec.com/blog/diving-into-pre-created-computer-accounts/)
+* [How NOT to use the PAM trust - Leveraging Shadow Principals for Cross Forest Attacks - Thursday, April 18, 2019 - Nikhil SamratAshok Mittal](http://www.labofapenetrationtester.com/2019/04/abusing-PAM.html)

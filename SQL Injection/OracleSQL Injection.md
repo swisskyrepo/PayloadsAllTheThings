@@ -110,4 +110,5 @@ SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
 
 ## References
 
-* [Heavily taken inspired by - NetSpi SQL Wiki](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
+* [NetSpi - SQL Wiki](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
+* [ASDC12 - New and Improved Hacking Oracle From Web](https://owasp.org/www-pdf-archive/ASDC12-New_and_Improved_Hacking_Oracle_From_Web.pdf)

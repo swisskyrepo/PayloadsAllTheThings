@@ -25,6 +25,7 @@
 * [LFI to RCE via /proc/self/environ](#lfi-to-rce-via-procselfenviron)
 * [LFI to RCE via upload](#lfi-to-rce-via-upload)
 * [LFI to RCE via upload (race)](#lfi-to-rce-via-upload-race)
+* [LFI to RCE via upload (FindFirstFile)](#lfi-to-rce-via-upload-findfirstfile)
 * [LFI to RCE via phpinfo()](#lfi-to-rce-via-phpinfo)
 * [LFI to RCE via controlled log file](#lfi-to-rce-via-controlled-log-file)
 * [LFI to RCE via PHP sessions](#lfi-to-rce-via-php-sessions)
@@ -272,6 +273,15 @@ for fname in itertools.combinations(string.ascii_letters + string.digits, 6):
 print('[x] Something went wrong, please try again')
 ```
 
+## LFI to RCE via upload (FindFirstFile)
+
+:warning: Only works on Windows
+
+`FindFirstFile` allows using masks (`<<` as `*` and `>` as `?`) in LFI paths on Windows. 
+
+* Upload a file, it should be stored in the temp folder `C:\Windows\Temp\`.
+* Include it using `http://site/vuln.php?inc=c:\windows\temp\php<<`
+
 
 ## LFI to RCE via phpinfo()
 
@@ -434,3 +444,4 @@ If SSH is active check which user is being used `/proc/self/status` and `/etc/pa
 * [CVV #1: Local File Inclusion - @SI9INT - Jun 20, 2018](https://medium.com/bugbountywriteup/cvv-1-local-file-inclusion-ebc48e0e479a)
 * [Exploiting Remote File Inclusion (RFI) in PHP application and bypassing remote URL inclusion restriction](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html?m=1)
 * [PHP LFI with Nginx Assistance](https://bierbaumer.net/security/php-lfi-with-nginx-assistance/)
+* [PHP LFI to arbitratry code execution via rfc1867 file upload temporary files (EN) - gynvael.coldwind - 2011-03-18](https://gynvael.coldwind.pl/?id=376)

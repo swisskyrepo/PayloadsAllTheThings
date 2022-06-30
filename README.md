@@ -50,7 +50,7 @@ You want more ? Check the [Books](https://github.com/swisskyrepo/PayloadsAllTheT
 
 👨‍💻 Contributions
 -----
-
+Be sure to read [CONTRIBUTING.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CONTRIBUTING.md)
 
 <p align="center">
 <a href="https://github.com/swisskyrepo/PayloadsAllTheThings/graphs/contributors">

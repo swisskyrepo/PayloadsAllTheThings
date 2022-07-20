@@ -68,8 +68,8 @@ SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
 | Version is 12.2	       | SELECT COUNT(*) FROM v$version WHERE banner LIKE 'Oracle%12.2%'; |
 | Subselect is enabled	 | SELECT 1 FROM dual WHERE 1=(SELECT 1 FROM dual) |
 | Table log_table exists | SELECT 1 FROM dual WHERE 1=(SELECT 1 from log_table); |
-| Column message exists in table log_table | SELEC COUNT(*) FROM user_tab_cols WHERE column_name = 'MESSAGE' AND table_name = 'LOG_TABLE'; |
-| First letter of first message is t | SELEC message FROM log_table WHERE rownum=1 AND message LIKE 't%'; |
+| Column message exists in table log_table | SELECT COUNT(*) FROM user_tab_cols WHERE column_name = 'MESSAGE' AND table_name = 'LOG_TABLE'; |
+| First letter of first message is t | SELECT message FROM log_table WHERE rownum=1 AND message LIKE 't%'; |
 
 ## Oracle SQL Time based
 

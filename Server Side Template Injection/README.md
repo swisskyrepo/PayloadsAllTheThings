@@ -74,6 +74,13 @@ python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment
 ![SSTI cheatsheet workflow](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Images/serverside.png?raw=true)
 
 ---
+## Detection
+
+In most cases, this polyglot payload will trigger an error in presence of a SSTI vulnerability :
+
+```
+${{<%[%'"}}%\.
+```
 
 ## ASP.NET Razor
 
@@ -866,3 +873,4 @@ $str.valueOf($chr.toChars($out.read()))
 * [Handlebars template injection and RCE in a Shopify app ](https://mahmoudsec.blogspot.com/2019/04/handlebars-template-injection-and-rce.html)
 * [Lab: Server-side template injection in an unknown language with a documented exploit](https://portswigger.net/web-security/server-side-template-injection/exploiting/lab-server-side-template-injection-in-an-unknown-language-with-a-documented-exploit)
 * [Exploiting Less.js to Achieve RCE](https://www.softwaresecured.com/exploiting-less-js/)
+* [A Pentester's Guide to Server Side Template Injection (SSTI)](https://www.cobalt.io/blog/a-pentesters-guide-to-server-side-template-injection-ssti)

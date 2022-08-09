@@ -1,19 +1,21 @@
 # XSLT Injection
 
-> Processing an unvalidated XSL stylesheet can allow an attacker to change the structure and contents of the resultant XML, include arbitrary files from the file system, or execute arbitrary code
+> Processing an un-validated XSL stylesheet can allow an attacker to change the structure and contents of the resultant XML, include arbitrary files from the file system, or execute arbitrary code
 
 ## Summary
 
-- [Tools](#tools)
-- [Exploit](#exploit)
-  - [Determine the vendor and version](#determine-the-vendor-and-version)
-  - [External Entity](#external-entity)
-  - [Read files and SSRF using document](#read-files-and-ssrf-using-document)
-  - [Remote Code Execution with Embedded Script Blocks](#remote-code-execution-with-embedded-script-blocks)
-  - [Remote Code Execution with PHP wrapper](#remote-code-execution-with-php-wrapper)
-  - [Remote Code Execution with Java](#remote-code-execution-with-java)
-  - [Remote Code Execution with Native .NET](#remote-code-execution-with-native-net)
-- [References](#references)
+- [XSLT Injection](#xslt-injection)
+  - [Summary](#summary)
+  - [Tools](#tools)
+  - [Exploit](#exploit)
+    - [Determine the vendor and version](#determine-the-vendor-and-version)
+    - [External Entity](#external-entity)
+    - [Read files and SSRF using document](#read-files-and-ssrf-using-document)
+    - [Remote Code Execution with Embedded Script Blocks](#remote-code-execution-with-embedded-script-blocks)
+    - [Remote Code Execution with PHP wrapper](#remote-code-execution-with-php-wrapper)
+    - [Remote Code Execution with Java](#remote-code-execution-with-java)
+    - [Remote Code Execution with Native .NET](#remote-code-execution-with-native-net)
+  - [References](#references)
 
 ## Tools
 

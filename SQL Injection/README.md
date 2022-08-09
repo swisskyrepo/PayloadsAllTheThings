@@ -6,7 +6,7 @@ Attempting to manipulate SQL queries may have goals including:
 - Information Leakage
 - Disclosure of stored data
 - Manipulation of stored data
-- Bypassing authorisation controls
+- Bypassing authorization controls
 
 ## Summary
 

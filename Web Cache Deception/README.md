@@ -26,7 +26,7 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
 
 ## Methodology 2
 
-1. Find an unkeyed input for a Cache Poisoning
+1. Find an un-keyed input for a Cache Poisoning
     ```js
     Values: User-Agent
     Values: Cookie
@@ -37,7 +37,7 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
     Header: X-Original-URL (Symfony)
     Header: X-Rewrite-URL (Symfony)
     ```
-2. Cache poisoning attack - Example for `X-Forwarded-Host` unkeyed input (remember to use a buster to only cache this webpage instead of the main page of the website)
+2. Cache poisoning attack - Example for `X-Forwarded-Host` un-keyed input (remember to use a buster to only cache this webpage instead of the main page of the website)
     ```js
     GET /test?buster=123 HTTP/1.1
     Host: target.com

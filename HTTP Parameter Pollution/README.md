@@ -3,7 +3,7 @@
 
 ## Summary
 
-HTTP Parameter Pollution (HPP) is a Web attack evasion technique that allows an attacker to craft a HTTP request in order to manipulate web logics or retrieve hidden information. This evasion technique is based on splitting an attack vector between multiple instances of a parameter with the same name (?param1=value&param1=value). As there is no formal way of parsing HTTP parameters, individual web technologies have their own unique way of parsing and reading URL parameters with the same name. Some taking the first occurance, some taking the last occurance, and some reading it as an array. This behavior is abused by the attacker in order to bypass pattern-based security mechanisms. 
+HTTP Parameter Pollution (HPP) is a Web attack evasion technique that allows an attacker to craft a HTTP request in order to manipulate web logics or retrieve hidden information. This evasion technique is based on splitting an attack vector between multiple instances of a parameter with the same name (?param1=value&param1=value). As there is no formal way of parsing HTTP parameters, individual web technologies have their own unique way of parsing and reading URL parameters with the same name. Some taking the first occurrence, some taking the last occurrence, and some reading it as an array. This behavior is abused by the attacker in order to bypass pattern-based security mechanisms. 
 
 
 ## Tools
@@ -22,7 +22,7 @@ Origin Service - Reads second param. In this scenario, developer trusted WAF and
 Attacker -- http://example.com?search=Beth&search=' OR 1=1;## --> WAF (reads first 'search' param, looks innocent. passes on) --> Origin Service (reads second 'search' param, injection happens if no checks are done here.)
 ```
 
-### Table of refence for which technology reads which parameter
+### Table of reference for which technology reads which parameter
 When ?par1=a&par1=b
 | Technology                                      | Parsing Result          |outcome (par1=)|
 | ------------------                              |---------------          |:-------------:|
@@ -41,7 +41,7 @@ When ?par1=a&par1=b
 | IBM HTTP Server                                 |First occurrence         |a              |
 | Perl CGI/Apache                                 |First occurrence         |a              |
 | mod_wsgi (Python)/Apache                        |First occurrence         |a              |
-| Python/Zope                                     |All occurences in array  |['a','b']      |
+| Python/Zope                                     |All occurrences in array  |['a','b']      |
 
 ## References
 - [HTTP Parameter Pollution - Imperva](https://www.imperva.com/learn/application-security/http-parameter-pollution/)

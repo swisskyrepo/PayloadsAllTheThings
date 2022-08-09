@@ -5,19 +5,22 @@
 
 ## Summary
 
-* [Tools](#tools)
-* [Exploit](#exploit)
-  * [Identify an injection point](#identify-an-injection-point)
-  * [Enumerate Database Schema via Instropection](#enumerate-database-schema-via-introspection)
-  * [Extract data](#extract-data)
-  * [Extract data using edges/nodes](#extract-data-using-edges-nodes)
-  * [Extract data using projections](#extract-data-using-projections)
-  * [Enumerate the types' definition](#enumerate-the-type-definition)
-  * [Use mutations](#use-mutations)
-  * [NOSQL injection](#nosql-injection)
-  * [SQL injection](#sql-injection)
-  * [GraphQL Batching Attacks](#graphql-batching-attacks)
-* [References](#references)
+- [GraphQL injection](#graphql-injection)
+  - [Summary](#summary)
+  - [Tools](#tools)
+  - [Exploit](#exploit)
+    - [Identify an injection point](#identify-an-injection-point)
+    - [Enumerate Database Schema via Introspection](#enumerate-database-schema-via-introspection)
+    - [List path](#list-path)
+    - [Extract data](#extract-data)
+    - [Extract data using edges/nodes](#extract-data-using-edgesnodes)
+    - [Extract data using projections](#extract-data-using-projections)
+    - [Enumerate the types' definition](#enumerate-the-types-definition)
+    - [Use mutations](#use-mutations)
+    - [NOSQL injection](#nosql-injection)
+    - [SQL injection](#sql-injection)
+    - [GraphQL Batching Attacks](#graphql-batching-attacks)
+  - [References](#references)
 
 ## Tools
 

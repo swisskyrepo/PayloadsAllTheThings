@@ -102,6 +102,11 @@ Using parameter pollution
 ?next=whitelisted.com&next=google.com
 ```
 
+Using directory traversal
+```powershell
+?next=whitelisted.com/RequiredPath/../DesiredPath
+```
+
 Using "@" character, browser will redirect to anything after the "@"
 
 ```powershell

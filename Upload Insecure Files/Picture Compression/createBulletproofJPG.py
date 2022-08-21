@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 """
-
     Bulletproof Jpegs Generator
     Copyright (C) 2012  Damien "virtualabs" Cauquil
 
@@ -18,7 +17,11 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-    
+
+	-------------
+	# How to use
+	b.php?c=ls
+	Source: http://www.virtualabs.fr/Nasty-bulletproof-Jpegs-l
 """
 from __future__ import print_function
 

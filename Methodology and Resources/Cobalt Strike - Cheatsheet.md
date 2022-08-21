@@ -337,6 +337,11 @@ Opsec safe Pass-the-Hash:
 ```powershell
 # Start a SOCKS server on the given port on your teamserver, tunneling traffic through the specified Beacon. Set the teamserver/port configuration in /etc/proxychains.conf for easy usage.
 beacon > socks [PORT]
+beacon > socks [port]
+beacon > socks [port] [socks4]
+beacon > socks [port] [socks5]
+beacon > socks [port] [socks5] [enableNoAuth|disableNoAuth] [user] [password]
+beacon > socks [port] [socks5] [enableNoAuth|disableNoAuth] [user] [password] [enableLogging|disableLogging]
 
 # Proxy browser traffic through a specified Internet Explorer process.
 beacon > browserpivot [pid] [x86|x64]

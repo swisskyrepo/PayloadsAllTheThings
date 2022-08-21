@@ -9,7 +9,7 @@
     * [Defaults extensions](#defaults-extensions)
     * [Upload tricks](#upload-tricks)
     * [Filename vulnerabilities](#filename-vulnerabilities)
-    * [Picture upload with LFI](#picture-upload-with-lfi)
+    * [Picture compression](#picture-compression-)
     * [Configuration Files](#configuration-files)
     * [CVE - Image Tragik](#cve---image-tragik)
     * [CVE - FFMpeg](#cve---ffmpeg)
@@ -107,12 +107,16 @@ Also you upload:
 - HTML/SVG files to trigger an XSS
 - EICAR file to check the presence of an antivirus
 
-### Picture upload with LFI
+### Picture Compression
 
-Valid pictures hosting PHP code. Upload the picture and use a **Local File Inclusion** to execute the code. The shell can be called with the following command : `curl 'http://localhost/test.php?0=system' --data "1='ls'"`.
+Create valid pictures hosting PHP code. Upload the picture and use a **Local File Inclusion** to execute the code. The shell can be called with the following command : `curl 'http://localhost/test.php?0=system' --data "1='ls'"`.
 
 - Picture Metadata, hide the payload inside a comment tag in the metadata.
 - Picture Resize, hide the payload within the compression algorithm in order to bypass a resize. Also defeating `getimagesize()` and `imagecreatefromgif()`.
+    - [JPG](https://virtualabs.fr/Nasty-bulletproof-Jpegs-l): use createBulletproofJPG.py
+    - [PNG](https://blog.isec.pl/injection-points-in-popular-image-formats/): use createPNGwithPLTE.php
+    - [GIF](https://blog.isec.pl/injection-points-in-popular-image-formats/): use createGIFwithGlobalColorTable.php
+
 
 ### Picture with custom metadata
 
@@ -199,3 +203,4 @@ Upload the XML file to `$JETTY_BASE/webapps/`
 * [IIS - SOAP](https://red.0xbad53c.com/red-team-operations/initial-access/webshells/iis-soap)
 * [Arbitrary File Upload Tricks In Java - pyn3rd](https://pyn3rd.github.io/2022/05/07/Arbitrary-File-Upload-Tricks-In-Java/)
 * [File Upload - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-upload)
+* [Injection points in popular image formats - Daniel Kalinowski‌‌ - Nov 8, 2019](https://blog.isec.pl/injection-points-in-popular-image-formats/)

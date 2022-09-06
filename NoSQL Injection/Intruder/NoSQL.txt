@@ -20,3 +20,6 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 ';sleep(5000);'
 ';sleep(5000);+'
 ';it=new%20Date();do{pt=new%20Date();}while(pt-it<5000);
+';return 'a'=='a' && ''=='
+";return(true);var xyz='a
+0;return true

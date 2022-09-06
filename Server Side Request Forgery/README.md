@@ -573,7 +573,7 @@ http://0xA9FEA9FE/ Dotless hexadecimal
 http://0x41414141A9FEA9FE/ Dotless hexadecimal with overflow
 http://0251.0376.0251.0376/ Dotted octal
 http://0251.00376.000251.0000376/ Dotted octal with padding
-http://0251.254.169.254 Encode 1 octet of the IP address or 2 or 3 (Just don't encode all)
+http://0251.254.169.254 Mixed encoding (dotted octal + dotted decimal)
 ```
 
 More urls to include

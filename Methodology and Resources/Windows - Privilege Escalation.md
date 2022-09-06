@@ -956,9 +956,8 @@ Example: "Windows Help and Support" (Windows + F1), search for "command prompt",
 Look for vuln drivers loaded, we often don't spend enough time looking at this:
 
 ```powershell
-# https://github.com/matterpreter/OffensiveCSharp/tree/master/DriverQuery
-
-PS C:\Users\Swissky> driverquery.exe /fo table
+# Native binary
+PS C:\Users\Swissky> driverquery.exe /fo table /si
 Module Name  Display Name           Driver Type   Link Date
 ============ ====================== ============= ======================
 1394ohci     1394 OHCI Compliant Ho Kernel        12/10/2006 4:44:38 PM
@@ -972,6 +971,7 @@ acpitime     ACPI Wake Alarm Driver Kernel        2/9/1974 7:10:30 AM
 ADP80XX      ADP80XX                Kernel        4/9/2015 4:49:48 PM
 <SNIP>
 
+# https://github.com/matterpreter/OffensiveCSharp/tree/master/DriverQuery
 PS C:\Users\Swissky> DriverQuery.exe --no-msft
 [+] Enumerating driver services...
 [+] Checking file signatures...

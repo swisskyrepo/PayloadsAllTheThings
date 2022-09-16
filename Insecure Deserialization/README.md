@@ -8,6 +8,7 @@ Check the following sub-sections, located in other files :
 * [PHP (Object injection) : phpggc, ...](PHP.md)
 * [Ruby : universal rce gadget, ...](Ruby.md)
 * [Python : pickle, ...](Python.md)
+* [YAML : PyYAML, ...](YAML.md)
 
 ## References
 

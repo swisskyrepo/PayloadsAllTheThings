@@ -60,3 +60,4 @@ Universal gadget for ruby 2.x - 3.x.
 - [Universal RCE with Ruby YAML.load - @_staaldraad ](https://staaldraad.github.io/post/2019-03-02-universal-rce-ruby-yaml-load/)
 - [Online access to Ruby 2.x Universal RCE Deserialization Gadget Chain - PentesterLab](https://pentesterlab.com/exercises/ruby_ugadget/online)
 - [Universal RCE with Ruby YAML.load (versions > 2.7) - @_staaldraad](https://staaldraad.github.io/post/2021-01-09-universal-rce-ruby-yaml-load-updated/)
+* [Blind Remote Code Execution through YAML Deserialization - 09 JUNE 2021](https://blog.stratumsecurity.com/2021/06/09/blind-remote-code-execution-through-yaml-deserialization/)

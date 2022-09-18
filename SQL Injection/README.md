@@ -327,6 +327,7 @@ admin' --
 admin' -- -
 admin' #
 admin'/*
+admin' || ' '==='
 admin' or '2' LIKE '1
 admin' or 2 LIKE 2--
 admin' or 2 LIKE 2#

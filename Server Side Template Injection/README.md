@@ -15,7 +15,7 @@
     - [Expression Language EL - Basic injection](#expression-language-el---basic-injection)
     - [Expression Language EL - One-Liner injections not including code execution](#expression-language-el---one-liner-injections-not-including-code-execution)
     - [Expression Language EL - Code Execution](#expression-language-el---code-execution)
-  - [Freemarker](#freemarker)
+  - [Java - Freemarker](#freemarker)
     - [Freemarker - Basic injection](#freemarker---basic-injection)
     - [Freemarker - Read File](#freemarker---read-file)
     - [Freemarker - Code execution](#freemarker---code-execution)
@@ -26,7 +26,7 @@
     - [Groovy - HTTP request:](#groovy---http-request)
     - [Groovy - Command Execution](#groovy---command-execution)
     - [Groovy - Sandbox Bypass](#groovy---sandbox-bypass)
-  - [Handlebars](#handlebars)
+  - [JavaScript - Handlebars](#handlebars)
     - [Handlebars - Command Execution](#handlebars---command-execution)
   - [Jade / Codepen](#jade--codepen)
   - [Java](#java)
@@ -34,7 +34,7 @@
     - [Java - Retrieve the system’s environment variables](#java---retrieve-the-systems-environment-variables)
     - [Java - Retrieve /etc/passwd](#java---retrieve-etcpasswd)
   - [Django Template](#django-template)
-  - [Jinja2](#jinja2)
+  - [Python - Jinja2](#jinja2)
     - [Jinja2 - Basic injection](#jinja2---basic-injection)
     - [Jinja2 - Template format](#jinja2---template-format)
     - [Jinja2 - Debug Statement](#jinja2---debug-statement)
@@ -48,16 +48,16 @@
       - [Exploit the SSTI by calling Popen without guessing the offset](#exploit-the-ssti-by-calling-popen-without-guessing-the-offset)
       - [Exploit the SSTI by writing an evil config file.](#exploit-the-ssti-by-writing-an-evil-config-file)
     - [Jinja2 - Filter bypass](#jinja2---filter-bypass)
-  - [Jinjava](#jinjava)
+  - [Java - Jinjava](#jinjava)
     - [Jinjava - Basic injection](#jinjava---basic-injection)
     - [Jinjava - Command execution](#jinjava---command-execution)
-  - [Lessjs](#lessjs)
+  - [JavaScript - Lessjs](#lessjs)
     - [Lessjs - SSRF / LFI](#lessjs---ssrf--lfi)
     - [Lessjs < v3 - Command Execution](#lessjs--v3---command-execution)
     - [Plugins](#plugins)
-  - [Mako](#mako)
+  - [Python - Mako](#mako)
     - [Direct access to os from TemplateNamespace:](#direct-access-to-os-from-templatenamespace)
-  - [Pebble](#pebble)
+  - [Java - Pebble](#pebble)
     - [Pebble - Basic injection](#pebble---basic-injection)
     - [Pebble - Code execution](#pebble---code-execution)
   - [Ruby](#ruby)
@@ -65,13 +65,16 @@
     - [Ruby - Retrieve /etc/passwd](#ruby---retrieve-etcpasswd)
     - [Ruby - List files and directories](#ruby---list-files-and-directories)
     - [Ruby - Code execution](#ruby---code-execution)
-  - [Smarty](#smarty)
-  - [Twig](#twig)
+  - [PHP - Smarty](#smarty)
+  - [PHP - Twig](#twig)
     - [Twig - Basic injection](#twig---basic-injection)
     - [Twig - Template format](#twig---template-format)
     - [Twig - Arbitrary File Reading](#twig---arbitrary-file-reading)
     - [Twig - Code execution](#twig---code-execution)
-  - [Velocity](#velocity)
+  - [Java - Velocity](#velocity)
+  - [PHP - patTemplate](#pattemplate)
+  - [PHP - PHPlib](#phplib-and-html_template_phplib)
+  - [PHP - Plates](#plates)
   - [References](#references)
 
 ## Tools
@@ -941,6 +944,126 @@ $ex.waitFor()
 #foreach($i in [1..$out.available()])
 $str.valueOf($chr.toChars($out.read()))
 #end
+```
+
+---
+
+## patTemplate
+
+> [patTemplate](https://github.com/wernerwa/pat-template) non-compiling PHP templating engine, that uses XML tags to divide a document into different parts
+
+```xml
+<patTemplate:tmpl name="page">
+  This is the main page.
+  <patTemplate:tmpl name="foo">
+    It contains another template.
+  </patTemplate:tmpl>
+  <patTemplate:tmpl name="hello">
+    Hello {NAME}.<br/>
+  </patTemplate:tmpl>
+</patTemplate:tmpl>
+```
+
+---
+
+## PHPlib and HTML_Template_PHPLIB
+
+[HTML_Template_PHPLIB](https://github.com/pear/HTML_Template_PHPLIB) is the same as PHPlib but ported to Pear.
+
+`authors.tpl`
+
+```html
+<html>
+ <head><title>{PAGE_TITLE}</title></head>
+ <body>
+  <table>
+   <caption>Authors</caption>
+   <thead>
+    <tr><th>Name</th><th>Email</th></tr>
+   </thead>
+   <tfoot>
+    <tr><td colspan="2">{NUM_AUTHORS}</td></tr>
+   </tfoot>
+   <tbody>
+<!-- BEGIN authorline -->
+    <tr><td>{AUTHOR_NAME}</td><td>{AUTHOR_EMAIL}</td></tr>
+<!-- END authorline -->
+   </tbody>
+  </table>
+ </body>
+</html>
+```
+
+`authors.php`
+
+```php
+<?php
+//we want to display this author list
+$authors = array(
+    'Christian Weiske'  => 'cweiske@php.net',
+    'Bjoern Schotte'     => 'schotte@mayflower.de'
+);
+
+require_once 'HTML/Template/PHPLIB.php';
+//create template object
+$t =& new HTML_Template_PHPLIB(dirname(__FILE__), 'keep');
+//load file
+$t->setFile('authors', 'authors.tpl');
+//set block
+$t->setBlock('authors', 'authorline', 'authorline_ref');
+
+//set some variables
+$t->setVar('NUM_AUTHORS', count($authors));
+$t->setVar('PAGE_TITLE', 'Code authors as of ' . date('Y-m-d'));
+
+//display the authors
+foreach ($authors as $name => $email) {
+    $t->setVar('AUTHOR_NAME', $name);
+    $t->setVar('AUTHOR_EMAIL', $email);
+    $t->parse('authorline_ref', 'authorline', true);
+}
+
+//finish and echo
+echo $t->finish($t->parse('OUT', 'authors'));
+?>
+```
+
+---
+
+## Plates
+
+Plates is inspired by Twig but a native PHP template engine instead of a compiled template engine.
+
+controller:
+
+```php
+// Create new Plates instance
+$templates = new League\Plates\Engine('/path/to/templates');
+
+// Render a template
+echo $templates->render('profile', ['name' => 'Jonathan']);
+```
+
+page template:
+
+```php
+<?php $this->layout('template', ['title' => 'User Profile']) ?>
+
+<h1>User Profile</h1>
+<p>Hello, <?=$this->e($name)?></p>
+```
+
+layout template:
+
+```php
+<html>
+  <head>
+    <title><?=$this->e($title)?></title>
+  </head>
+  <body>
+    <?=$this->section('content')?>
+  </body>
+</html>
 ```
 
 ---

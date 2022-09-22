@@ -205,3 +205,4 @@ Upload the XML file to `$JETTY_BASE/webapps/`
 * [File Upload - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-upload)
 * [Injection points in popular image formats - Daniel Kalinowski‌‌ - Nov 8, 2019](https://blog.isec.pl/injection-points-in-popular-image-formats/)
 * [A tip for getting RCE in Jetty apps with just one XML file! - Aug 4, 2022 - PT SWARM / @ptswarm](https://twitter.com/ptswarm/status/1555184661751648256/)
+* [Jetty Features for Hacking Web Apps - September 15, 2022 - Mikhail Klyuchnikov](https://swarm.ptsecurity.com/jetty-features-for-hacking-web-apps/)

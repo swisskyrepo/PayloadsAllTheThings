@@ -33,6 +33,7 @@
 * [InQL - A Burp Extension for GraphQL Security Testing](https://github.com/doyensec/inql)
 * [Insomnia - Cross-platform HTTP and GraphQL Client](https://insomnia.rest/)
 * [AutoGraphql + introspection](https://graphql-dashboard.herokuapp.com/)
+* [CrackQL - A GraphQL password brute-force and fuzzing utility.](https://github.com/nicholasaleks/CrackQL)
 
 ## Exploit
 

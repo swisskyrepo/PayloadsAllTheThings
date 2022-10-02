@@ -592,6 +592,9 @@ we can convert the character encoding to `UTF-16` using [iconv](https://man7.org
 cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
 ```
 
+## Labs
+
+* [PortSwigger Labs for XXE](https://portswigger.net/web-security/all-labs#xml-external-entity-xxe-injection)
 
 ## References
 

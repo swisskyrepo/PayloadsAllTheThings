@@ -160,6 +160,18 @@ Referer: https://attacker.com/csrf.html;trusted.domain.com
 Referer: https://trusted.domain.com.attacker.com/csrf.html
 ```
 
+## Labs
+
+* [CSRF vulnerability with no defenses](https://portswigger.net/web-security/csrf/lab-no-defenses)
+* [CSRF where token validation depends on request method](https://portswigger.net/web-security/csrf/lab-token-validation-depends-on-request-method)
+* [CSRF where token validation depends on token being present](https://portswigger.net/web-security/csrf/lab-token-validation-depends-on-token-being-present)
+* [CSRF where token is not tied to user session](https://portswigger.net/web-security/csrf/lab-token-not-tied-to-user-session)
+* [CSRF where token is tied to non-session cookie](https://portswigger.net/web-security/csrf/lab-token-tied-to-non-session-cookie)
+* [CSRF where token is duplicated in cookie](https://portswigger.net/web-security/csrf/lab-token-duplicated-in-cookie)
+* [CSRF where Referer validation depends on header being present](https://portswigger.net/web-security/csrf/lab-referer-validation-depends-on-header-being-present)
+* [CSRF with broken Referer validation](https://portswigger.net/web-security/csrf/lab-referer-validation-broken)
+
+
 ## References
 
 - [Cross-Site Request Forgery Cheat Sheet - Alex Lauerman - April 3rd, 2016](https://trustfoundry.net/cross-site-request-forgery-cheat-sheet/)

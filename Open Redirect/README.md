@@ -178,6 +178,10 @@ http://www.example.com/redirect.php?url=javascript:prompt(1)
 ?continue={payload}
 ?return_path={payload}
 ```
+## Labs
+
+* [DOM-based open redirection](https://portswigger.net/web-security/dom-based/open-redirection/lab-dom-open-redirection)
+
 
 ## References
 

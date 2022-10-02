@@ -10,6 +10,10 @@ Check the following sub-sections, located in other files :
 * [Python : pickle, ...](Python.md)
 * [YAML : PyYAML, ...](YAML.md)
 
+## LABS
+
+* [Insecure Deserialization 10 labs](https://portswigger.net/web-security/all-labs#insecure-deserialization)
+
 ## References
 
 * [Github - ysoserial](https://github.com/frohoff/ysoserial)

@@ -191,6 +191,10 @@ When a ZIP/archive file is automatically decompressed after the upload
 Upload the XML file to `$JETTY_BASE/webapps/`
 * [JettyShell.xml - From Mikhail Klyuchnikov](https://raw.githubusercontent.com/Mike-n1/tips/main/JettyShell.xml)
 
+## Labs 
+
+* [Portswigger Labs on File Uploads](https://portswigger.net/web-security/all-labs#file-upload-vulnerabilities)
+
 
 ## References
 

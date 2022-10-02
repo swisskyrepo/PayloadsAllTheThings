@@ -59,6 +59,10 @@ application uses a `Sec-WebSocket-Protocol` header in the handshake request,
 you have to add this value as a 2nd parameter to the `WebSocket` function call
 in order to add this header.
 
+## Labs
+
+* [PortSwigger Labs for Web Sockets](https://portswigger.net/web-security/all-labs#http-request-smuggling)
+
 ## References
 
 - [HACKING WEB SOCKETS: ALL WEB PENTEST TOOLS WELCOMED by Michael Fowl | Mar 5, 2019](https://www.vdalabs.com/2019/03/05/hacking-web-sockets-all-web-pentest-tools-welcomed/)

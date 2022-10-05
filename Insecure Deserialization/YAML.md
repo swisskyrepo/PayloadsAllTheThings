@@ -43,6 +43,16 @@ state: !!python/tuple
     update: !!python/name:exec
 ```
 
+Since PyYaml version 6.0, the default loader for ```load``` has been switched to SafeLoader mitigating the risks against Remote Code Execution.
+[PR fixing the vulnerabily](https://github.com/yaml/pyyaml/issues/420)
+
+The vulnerable sinks are now ```yaml.unsafe_load``` and ```yaml.load(input, Loader=yaml.UnsafeLoader)```
+
+```
+with open('exploit_unsafeloader.yml') as file:
+        data = yaml.load(file,Loader=yaml.UnsafeLoader)
+```
+
 ## Ruamel.yaml
 
 ## Ruby

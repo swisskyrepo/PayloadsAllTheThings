@@ -400,8 +400,6 @@ Assuming payloads such as the previous return a verbose error. You can start poi
 <!ENTITY % Body '>Your DTD code<!ENTITY test "test"'>
 %local_dtd;
 ```
-[Payloads for Cisco and Citrix](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
-
 [Other payloads using different DTDs](https://github.com/GoSecure/dtd-finder/blob/master/list/xxe_payloads.md)
 
 
@@ -651,3 +649,5 @@ UTF-7 encoding can be used as well to bypass UTF-8/UTF-16 rules.
 * [SynAck - A Deep Dive into XXE Injection](https://www.synack.com/blog/a-deep-dive-into-xxe-injection/) - 22 July 2019 - Trenton Gordon
 * [Synacktiv - CVE-2019-8986: SOAP XXE in TIBCO JasperReports Server](https://www.synacktiv.com/ressources/advisories/TIBCO_JasperReports_Server_XXE.pdf) - 11-03-2019 - Julien SZLAMOWICZ, Sebastien DUDEK
 * [XXE: How to become a Jedi](https://2017.zeronights.org/wp-content/uploads/materials/ZN17_yarbabin_XXE_Jedi_Babin.pdf) - Zeronights 2017 - Yaroslav Babin
+* [Payloads for Cisco and Citrix - Arseniy Sharoglazov](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
+

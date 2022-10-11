@@ -12,6 +12,15 @@
 
 * [HTTP Request Smuggler / BApp Store](https://portswigger.net/bappstore/aaaa60ef945341e8a450217a54a11646)
 * [Smuggler](https://github.com/defparam/smuggler)
+* [Simple HTTP Smuggler Generator CL.TE TE.CL](https://github.com/dhmosfunk/simple-http-smuggler-generator) > this tool does not offer automated exploitation. You have to identify the injection point and exploit it manually!
+
+
+## About CL.TE | TE.CL Vulnerabilities
+If you want to exploit HTTP Requests Smuggling manually you will face some problems especially in TE.CL vulnerability you have to calculate the chunk size for the second request(malicious request) as portswigger suggests `Manually fixing the length fields in request smuggling attacks can be tricky.`. For that reason you can use the [Simple HTTP Smuggler Generator CL.TE TE.CL](https://github.com/dhmosfunk/simple-http-smuggler-generator) and exploit the CL.TE TE.CL vulnerabilities manually and learn how this vulnerability works and how you can exploit it. This tool offers you only the second request with a valid chunk size(TE.CL) auto-generated but does not offer automated exploitation. You have to identify the injection point and exploit it manually!
+
+
+
+
 
 ## CL.TE vulnerabilities
 

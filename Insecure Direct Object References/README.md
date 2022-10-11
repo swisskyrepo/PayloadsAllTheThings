@@ -48,6 +48,10 @@ http://foo.bar/accessPage?menuitem=12
 * [HackerOne - IDOR to view User Order Information - meals](https://hackerone.com/reports/287789)
 * [HackerOne - IDOR on HackerOne Feedback Review - japz](https://hackerone.com/reports/262661)
 
+## Labs
+
+* [Insecure direct object references](https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references)
+
 ## References
 
 * [OWASP - Testing for Insecure Direct Object References (OTG-AUTHZ-004)](https://www.owasp.org/index.php/Testing_for_Insecure_Direct_Object_References_(OTG-AUTHZ-004))

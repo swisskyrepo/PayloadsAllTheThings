@@ -235,7 +235,6 @@ Attributes : 0
 vault::cred /in:C:\Users\demo\AppData\Local\Microsoft\Vault\"
 ```
 
-
 ## Mimikatz - Commands list
 
 | Command |Definition|

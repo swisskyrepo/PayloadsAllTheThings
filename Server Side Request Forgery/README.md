@@ -580,6 +580,7 @@ http://0xA9FEA9FE/ Dotless hexadecimal
 http://0x41414141A9FEA9FE/ Dotless hexadecimal with overflow
 http://0251.0376.0251.0376/ Dotted octal
 http://0251.00376.000251.0000376/ Dotted octal with padding
+http://0251.254.169.254 Mixed encoding (dotted octal + dotted decimal)
 ```
 
 More urls to include
@@ -828,6 +829,14 @@ curl http://rancher-metadata/<version>/<path>
 
 More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-service/
 
+## Labs
+
+* [Basic SSRF against the local server](https://portswigger.net/web-security/ssrf/lab-basic-ssrf-against-localhost)
+* [Basic SSRF against another back-end system](https://portswigger.net/web-security/ssrf/lab-basic-ssrf-against-backend-system)
+* [SSRF with blacklist-based input filter](https://portswigger.net/web-security/ssrf/lab-ssrf-with-blacklist-filter)
+* [SSRF with whitelist-based input filter](https://portswigger.net/web-security/ssrf/lab-ssrf-with-whitelist-filter)
+* [SSRF with filter bypass via open redirection vulnerability](https://portswigger.net/web-security/ssrf/lab-ssrf-filter-bypass-via-open-redirection)
+
 
 ## References
 
@@ -863,3 +872,4 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [SSRF’s up! Real World Server-Side Request Forgery (SSRF) - shorebreaksecurity - 2019](https://www.shorebreaksecurity.com/blog/ssrfs-up-real-world-server-side-request-forgery-ssrf/)
 - [challenge 1: COME OUT, COME OUT, WHEREVER YOU ARE!](https://www.kieranclaessens.be/cscbe-web-2018.html)
 - [Attacking Url's in JAVA](https://blog.pwnl0rd.me/post/lfi-netdoc-file-java/)
+- [SSRF: Don't encode entire IP](https://twitter.com/thedawgyg/status/1224547692967342080)

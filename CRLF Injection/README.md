@@ -103,6 +103,9 @@ Remainder:
 * %E5%98%BE = %3E = \u563e (>)
 * %E5%98%BC = %3C = \u563c (<)
 
+## Labs
+
+* [https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection](https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection)
 
 ## Exploitation Tricks
 * Try to search for parameters that lead to redirects and fuzz them

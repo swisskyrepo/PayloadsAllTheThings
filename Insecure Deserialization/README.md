@@ -8,6 +8,11 @@ Check the following sub-sections, located in other files :
 * [PHP (Object injection) : phpggc, ...](PHP.md)
 * [Ruby : universal rce gadget, ...](Ruby.md)
 * [Python : pickle, ...](Python.md)
+* [YAML : PyYAML, ...](YAML.md)
+
+## LABS
+
+* [Insecure Deserialization 10 labs](https://portswigger.net/web-security/all-labs#insecure-deserialization)
 
 ## References
 

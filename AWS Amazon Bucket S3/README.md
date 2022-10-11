@@ -159,10 +159,10 @@ For example with a proxy : http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws
 ## References
 
 * [There's a Hole in 1,951 Amazon S3 Buckets - Mar 27, 2013 - Rapid7 willis](https://community.rapid7.com/community/infosec/blog/2013/03/27/1951-open-s3-buckets)
-* [Bug Bounty Survey - AWS Basic test](https://twitter.com/bugbsurveys/status/859389553211297792)
+* [Bug Bounty Survey - AWS Basic test](https://web.archive.org/web/20180808181450/https://twitter.com/bugbsurveys/status/860102244171227136)
 * [flaws.cloud Challenge based on AWS vulnerabilities - by Scott Piper of Summit Route](http://flaws.cloud/)
 * [flaws2.cloud Challenge based on AWS vulnerabilities - by Scott Piper of Summit Route](http://flaws2.cloud)
-* [Guardzilla video camera hardcoded AWS credential - 0dayallday.org](https://www.0dayallday.org/guardzilla-video-camera-hard-coded-aws-credentials/)
+* [Guardzilla video camera hardcoded AWS credential ~~- 0dayallday.org~~ - blackmarble.sh](https://blackmarble.sh/guardzilla-video-camera-hard-coded-aws-credentials/)
 * [AWS PENETRATION TESTING PART 1. S3 BUCKETS - VirtueSecurity](https://www.virtuesecurity.com/aws-penetration-testing-part-1-s3-buckets/)
 * [AWS PENETRATION TESTING PART 2. S3, IAM, EC2 - VirtueSecurity](https://www.virtuesecurity.com/aws-penetration-testing-part-2-s3-iam-ec2/)
 * [A Technical Analysis of the Capital One Hack - CloudSploit - Aug 2 2019](https://blog.cloudsploit.com/a-technical-analysis-of-the-capital-one-hack-a9b43d7c8aea?gi=8bb65b77c2cf)

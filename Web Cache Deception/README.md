@@ -49,6 +49,9 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
     <meta property="og:image" content="https://test"><script>alert(1)</script>">
     ```
 
+## Labs 
+
+* [PortSwigger Labs for Web cache deception](https://portswigger.net/web-security/all-labs#web-cache-poisoning)
 
 ## References
 

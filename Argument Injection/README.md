@@ -32,7 +32,7 @@ We can see by printing the command that all the parameters are splited allowing 
 * [List of exposed commands](#list-of-exposed-commands)
   * [CURL](#CURL)
   * [TAR](#TAR)
-  * [FIND] (#FIND)
+  * [FIND](#FIND)
   * [WGET](#WGET)
 * [References](#references)
 

@@ -19,6 +19,14 @@
 - [stacksmashing / Ghidra Ninja](https://www.youtube.com/channel/UC3S8vxwRfqLBdIhgRlDRVzw)
 - [Hak5](https://www.youtube.com/channel/UC3s0BtrBJpwNDaflRSoiieQ)
 
+- [HACKING GOOGLE Series](https://www.youtube.com/watch?v=aOGFY1R4QQ4)
+    - [EP000: Operation Aurora | HACKING GOOGLE](https://youtu.be/przDcQe6n5o)
+    - [EP001: Threat Analysis Group | HACKING GOOGLE](https://youtu.be/N7N4EC20-cM)
+    - [EP002: Detection and Response | HACKING GOOGLE](https://youtu.be/QZ0cpBocl3c)
+    - [EP003: Red Team | HACKING GOOGLE](https://youtu.be/TusQWn2TQxQ)
+    - [EP004: Bug Hunters | HACKING GOOGLE](https://youtu.be/IoXiXlCNoXg)
+    - [EP005: Project Zero | HACKING GOOGLE](https://youtu.be/My_13FXODdU)
+
 ## Conferences
 
 - [Hunting for Top Bounties - Nicolas Grégoire](https://www.youtube.com/watch?v=mQjTgDuLsp4)

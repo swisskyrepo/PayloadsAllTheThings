@@ -1,4 +1,4 @@
-# GraphQL injection
+# GraphQL Injection
 
 > GraphQL is a query language for APIs and a runtime for fulfilling those queries with existing data. A GraphQL service is created by defining types and fields on those types, then providing functions for each field on each type
 

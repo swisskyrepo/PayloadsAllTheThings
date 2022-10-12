@@ -1,4 +1,4 @@
-# CSV Injection (Formula Injection)
+# CSV Injection
 
 Many web applications allow the user to download content such as templates for invoices or user settings to a CSV file. Many users choose to open the CSV file in either Excel, Libre Office or Open Office. When a web application does not properly validate the contents of the CSV file, it could lead to contents of a cell or many cells being executed.
 

@@ -1,17 +1,23 @@
-# Web Sockets Attacks
+# Web Sockets
 
 > The WebSocket protocol allows a bidirectional and full-duplex communication between a client and a server
 
 ## Summary
 
 * [Tools](#tools)
-* [Using ws-harness.py](#using-ws-harness-py)
+* [Exploit](#exploit)
+  * [Using ws-harness.py](#using-ws-harness-py)
+* [Cross-Site WebSocket Hijacking (CSWSH)](#cross-site-websocket-hijacking-cswsh)
+* [Labs](#labs)
+* [References](#references)
 
 ## Tools
 
 * [ws-harness.py](https://gist.githubusercontent.com/mfowl/ae5bc17f986d4fcc2023738127b06138/raw/e8e82467ade45998d46cef355fd9b57182c3e269/ws.harness.py)
 
-## Using ws-harness.py
+## Exploit
+
+### Using ws-harness.py
 
 Start ws-harness to listen on a web-socket, and specify a message template to send to the endpoint.
 

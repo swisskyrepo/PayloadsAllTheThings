@@ -1,4 +1,4 @@
-# Web Cache Deception Attack
+# Web Cache Deception
 
 ## Tools
 

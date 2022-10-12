@@ -146,7 +146,9 @@ john --restore
     * [Hashes.com](https://hashes.com/en/decrypt/hash)
     * [hashmob.net](https://hashmob.net/): great community with Discord
 * Use the `loopback` in combination with rules and dictionary to keep cracking until you don't find new passsword: `hashcat --loopback --attack-mode 0 --rules-file $rules_file --hash-type $number $hashes_file $wordlist_file`
-
+* PACK (Password Analysis and Cracking Kit)
+    * https://github.com/iphelix/pack/blob/master/README
+    * Can produce custom hcmask files to use with hashcat, based on statistics and rules applied on an input dataset
 
 ## Online Cracking Resources
 

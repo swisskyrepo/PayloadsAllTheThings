@@ -255,6 +255,11 @@ Use the correct collector
   # https://github.com/fox-it/BloodHound.py
   pip install bloodhound
   bloodhound-python -d lab.local -u rsmith -p Winter2017 -gc LAB2008DC01.lab.local -c all
+  
+  # or locally/remotely from an ADExplorer snapshot from SysInternals (ADExplorer remains a legitimate binary signed by Microsoft, avoiding detection with security solutions)
+  # https://github.com/c3c/ADExplorerSnapshot.py
+  pip3 install --user .
+  ADExplorerSnapshot.py <snapshot path> -o <*.json output folder path>
   ```
 * Collect more data for certificates exploitation using Certipy
   ```ps1

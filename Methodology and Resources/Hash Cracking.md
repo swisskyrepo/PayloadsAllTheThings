@@ -44,7 +44,7 @@ hashcat --attack-mode 0 --hash-type $number $hashes_file $wordlist_file -r $my_r
     * [packetstorm](https://packetstormsecurity.com/Crackers/wordlists/)
     * [weakpass_3a](https://download.weakpass.com/wordlists/1948/weakpass_3a.7z)
     * [weakpass_3](https://download.weakpass.com/wordlists/1947/weakpass_3.7z)
-    * [Hashes.org](https://download.weakpass.com/wordlists/1931/Hashes.org.7z)
+    * ~~[Hashes.org](https://download.weakpass.com/wordlists/1931/Hashes.org.7z)~~
     * [kerberoast_pws](https://gist.github.com/edermi/f8b143b11dc020b854178d3809cf91b5/raw/b7d83af6a8bbb43013e04f78328687d19d0cf9a7/kerberoast_pws.xz)
     * [hashmob.net](https://hashmob.net/research/wordlists)
     * [clem9669/wordlists](https://github.com/clem9669/wordlists)
@@ -146,7 +146,9 @@ john --restore
     * [Hashes.com](https://hashes.com/en/decrypt/hash)
     * [hashmob.net](https://hashmob.net/): great community with Discord
 * Use the `loopback` in combination with rules and dictionary to keep cracking until you don't find new passsword: `hashcat --loopback --attack-mode 0 --rules-file $rules_file --hash-type $number $hashes_file $wordlist_file`
-
+* PACK (Password Analysis and Cracking Kit)
+    * https://github.com/iphelix/pack/blob/master/README
+    * Can produce custom hcmask files to use with hashcat, based on statistics and rules applied on an input dataset
 
 ## Online Cracking Resources
 

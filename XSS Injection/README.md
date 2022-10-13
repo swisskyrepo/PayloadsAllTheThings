@@ -54,7 +54,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
     - [Bypass space filter](#bypass-space-filter)
     - [Bypass email filter](#bypass-email-filter)
     - [Bypass document blacklist](#bypass-document-blacklist)
-    - [Bypass document.cookie blacklist](#bypass-document.cookie-blacklist)
+    - [Bypass document.cookie blacklist](#bypass-document-cookie-blacklist)
     - [Bypass using javascript inside a string](#bypass-using-javascript-inside-a-string)
     - [Bypass using an alternate way to redirect](#bypass-using-an-alternate-way-to-redirect)
     - [Bypass using an alternate way to execute an alert](#bypass-using-an-alternate-way-to-execute-an-alert)

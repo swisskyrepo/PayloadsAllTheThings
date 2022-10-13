@@ -780,7 +780,7 @@ window["doc"+"ument"]
 This is another way to access cookies on Chrome, Edge, and Opera. Replace COOKIE NAME with the cookie you are after. You may also investigate the getAll() method if that suits your requirements.
 
 ```
-const cookiePromise=Promise.resolve(window.cookieStore.get('COOKIE NAME')).then((cookieValue)=>{console.log(cookieValue.value);});
+Promise.resolve(window.cookieStore.get('COOKIE NAME')).then((cookieValue)=>{console.log(cookieValue.value);});
 ```
 
 ### Bypass using javascript inside a string

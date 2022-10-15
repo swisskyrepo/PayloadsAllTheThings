@@ -161,6 +161,7 @@ Add an ssh key into the `~/.ssh` folder.
 * [Traffic Signaling: Port Knocking](https://attack.mitre.org/techniques/T1205/001/)
 * [Valid Accounts: Default Accounts](https://attack.mitre.org/techniques/T1078/001/) 
 * [Valid Accounts: Domain Accounts 2](https://attack.mitre.org/techniques/T1078/002/)
+* [Persistence Via Linux Package Managers](https://pwnshift.github.io/2020/10/01/persistence.html)
 
 ## References
 

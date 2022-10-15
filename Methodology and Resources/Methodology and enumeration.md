@@ -47,11 +47,16 @@
 ### Network discovery
 
 * Subdomains enumeration
-  * [projectdiscovery/subfinder](https://github.com/projectdiscovery/subfinder): `subfinder -d hackerone.com`
+  * Enumerate already found subdomains: [projectdiscovery/subfinder](https://github.com/projectdiscovery/subfinder): `subfinder -d hackerone.com`
+  * Permutate subdomains: [infosec-au/altdns](https://github.com/infosec-au/altdns)
+  * Bruteforce subdomains: [Josue87/gotator](https://github.com/Josue87/gotator)
+  * Subdomain takeovers: [EdOverflow/can-i-take-over-xyz](https://github.com/EdOverflow/can-i-take-over-xyz)
 
 * Network discovery
   * Scan IP ranges with `nmap`, [robertdavidgraham/masscan](https://github.com/robertdavidgraham/masscan) and [projectdiscovery/naabu](https://github.com/projectdiscovery/naabu)
   * Discover services, version and banners
+
+* Review latest acquisitions
 
 * ASN enumeration
   * [projectdiscovery/asnmap](https://github.com/projectdiscovery/asnmap): `asnmap -a AS45596 -silent`
@@ -68,6 +73,11 @@
   ```
 
 ### Web discovery
+
+* Locate `robots.txt` file
+* Retrieve comments in source code
+* Discover URL: [tomnomnom/waybackurls](github.com/tomnomnom/waybackurls)
+* Search for `hidden` parameters: [PortSwigger/param-miner](https://github.com/PortSwigger/param-miner)
 
 * List all the subdirectories and files with `gobuster` or `ffuf`
   ```ps1

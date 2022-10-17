@@ -149,10 +149,13 @@ john --restore
 * PACK (Password Analysis and Cracking Kit)
     * https://github.com/iphelix/pack/blob/master/README
     * Can produce custom hcmask files to use with hashcat, based on statistics and rules applied on an input dataset
+* Use Deep Learning
+    * [brannondorsey/PassGAN](https://github.com/brannondorsey/PassGAN)
+
 
 ## Online Cracking Resources
 
-* ~~[hashes.com](https://hashes.com)~~ 
+* [hashes.com](https://hashes.com)
 * [crackstation](https://crackstation.net)
 * [Hashmob](https://hashmob.net/)
 
@@ -163,3 +166,4 @@ john --restore
 * [Using Hashcat to Crack Hashes on Azure](https://durdle.com/2017/04/23/using-hashcat-to-crack-hashes-on-azure/)
 * [miloserdov.org hashcat](https://miloserdov.org/?p=5426&PageSpeed=noscript)
 * [miloserdov.org john](https://miloserdov.org/?p=4961&PageSpeed=noscript)
+* [DeepPass — Finding Passwords With Deep Learning - Will Schroeder - Jun 1](https://posts.specterops.io/deeppass-finding-passwords-with-deep-learning-4d31c534cd00)

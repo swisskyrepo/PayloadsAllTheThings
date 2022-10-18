@@ -33,7 +33,7 @@
     - [Java - Basic injection](#java---basic-injection)
     - [Java - Retrieve the system’s environment variables](#java---retrieve-the-systems-environment-variables)
     - [Java - Retrieve /etc/passwd](#java---retrieve-etcpasswd)
-  - [Django Template](#django-template)
+  - [Django Templates](#django-templates)
   - [Python - Jinja2](#jinja2)
     - [Jinja2 - Basic injection](#jinja2---basic-injection)
     - [Jinja2 - Template format](#jinja2---template-format)

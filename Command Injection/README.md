@@ -297,6 +297,16 @@ echo "YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(
 echo 'YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/'
 ```
 
+## Backgrounding long running commands
+
+In some instances, you might have a long running command that gets killed by the process injecting it timing out.
+
+Using nohup, you can keep the process running after the parent process exits.
+
+```bash
+nohup sleep 120 > /dev/null &
+```
+
 ## Labs
 
 * [OS command injection, simple case](https://portswigger.net/web-security/os-command-injection/lab-simple)

@@ -55,6 +55,13 @@ original_cmd_by_server | ls
 original_cmd_by_server || ls   # Only if the first cmd fail
 ```
 
+Commands can also be run in sequence with newlines
+
+```bash
+original_cmd_by_server
+ls
+```
+
 ### Inside a command
 
 ```bash

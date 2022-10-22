@@ -25,6 +25,7 @@
 * [Time based data exfiltration](#time-based-data-exfiltration)
 * [DNS based data exfiltration](#dns-based-data-exfiltration)
 * [Polyglot command injection](#polyglot-command-injection)
+* [Backgrounding long running commands](#backgrounding-long-running-commands)
 * [References](#references)
     
 

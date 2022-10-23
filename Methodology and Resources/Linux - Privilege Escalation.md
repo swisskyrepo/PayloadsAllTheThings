@@ -52,7 +52,7 @@
 
 ## Tools
 
-There are many scripts that you can execute on a linux machine which automatically enumerate sytem information, processes, and files to locate privilege escelation vectors.
+There are many scripts that you can execute on a linux machine which automatically enumerate sytem information, processes, and files to locate privilege escalation vectors.
 Here are a few:
 
 - [LinPEAS - Linux Privilege Escalation Awesome Script](https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS)
@@ -313,7 +313,7 @@ Mon 2019-04-01 07:36:10 CEST  20h left Sat 2019-03-09 14:28:25 CET   3 weeks 0 d
 
 ## SUID
 
-SUID/Setuid stands for "set user ID upon execution", it is enabled by default in every Linux distributions. If a file with this bit is ran, the uid will be changed by the owner one. If the file owner is `root`, the uid will be changed to `root` even if it was executed from user `bob`. SUID bit is represented by an `s`.
+SUID/Setuid stands for "set user ID upon execution", it is enabled by default in every Linux distributions. If a file with this bit is run, the uid will be changed by the owner one. If the file owner is `root`, the uid will be changed to `root` even if it was executed from user `bob`. SUID bit is represented by an `s`.
 
 ```powershell
 ╭─swissky@lab ~  
@@ -400,8 +400,8 @@ uid=0(root) gid=1000(swissky)
 | CAP_BLOCK_SUSPEND  | This feature can block system suspends   |
 | CAP_CHOWN  | Allow user to make arbitrary change to files UIDs and GIDs |
 | CAP_DAC_OVERRIDE  | This helps to bypass file read, write and execute permission checks |
-| CAP_DAC_READ_SEARCH  | This only bypass file and directory read/execute permission checks  |
-| CAP_FOWNER  | This enables to bypass permission checks on operations that normally require the filesystem UID of the process to match the UID of the file  |
+| CAP_DAC_READ_SEARCH  | This only bypasses file and directory read/execute permission checks  |
+| CAP_FOWNER  | This enables bypass of permission checks on operations that normally require the filesystem UID of the process to match the UID of the file  |
 | CAP_KILL  | Allow the sending of signals to processes belonging to others  |
 | CAP_SETGID  | Allow changing of the GID  |
 | CAP_SETUID  | Allow changing of the UID  |
@@ -417,7 +417,7 @@ Tool: [Sudo Exploitation](https://github.com/TH3xACE/SUDO_KILLER)
 
 ### NOPASSWD
 
-Sudo configuration might allow a user to execute some command with another user privileges without knowing the password.
+Sudo configuration might allow a user to execute some command with another user's privileges without knowing the password.
 
 ```bash
 $ sudo -l

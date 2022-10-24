@@ -312,3 +312,4 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 - [Write up – JRR Token – LeHack 2019 - 07/07/2019 - LAPHAZE](https://web.archive.org/web/20210512205928/https://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)
 - [JWT Hacking 101 - TrustFoundry - Tyler Rosonke - December 8th, 2017](https://trustfoundry.net/jwt-hacking-101/)
 - [JSON Web Token Validation Bypass in Auth0 Authentication API - Ben Knight Senior Security Consultant - April 16, 2020](https://insomniasec.com/blog/auth0-jwt-validation-bypass)
+- [Hacking JSON Web Tokens - medium.com Oct 2019](https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a)

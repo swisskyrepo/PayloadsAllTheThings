@@ -1476,7 +1476,6 @@ Detailed information about the vulnerability : https://www.zerodayinitiative.com
 
 ## References
 
-* [Windows Internals Book - 02/07/2017](https://docs.microsoft.com/en-us/sysinternals/learn/windows-internals)
 * [icacls - Docs Microsoft](https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/icacls)
 * [Privilege Escalation Windows - Philip Linghammar](https://web.archive.org/web/20191231011305/https://xapax.gitbooks.io/security/content/privilege_escalation_windows.html)
 * [Windows elevation of privileges - Guifre Ruiz](https://guif.re/windowseop)

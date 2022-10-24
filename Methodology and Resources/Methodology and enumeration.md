@@ -41,6 +41,8 @@
   gitrob analyze johndoe --site=https://github.acme.com --endpoint=https://github.acme.com/api/v3 --access-tokens=token1,token2
   ```
 
+* Perform Google Dorks search
+
 
 ## Active recon
 
@@ -74,7 +76,7 @@
 
 ### Web discovery
 
-* Locate `robots.txt` file
+* Locate `robots.txt`, `security.txt`, `sitemap.xml` files
 * Retrieve comments in source code
 * Discover URL: [tomnomnom/waybackurls](github.com/tomnomnom/waybackurls)
 * Search for `hidden` parameters: [PortSwigger/param-miner](https://github.com/PortSwigger/param-miner)
@@ -109,7 +111,10 @@
 
 ## Looking for Web vulnerabilities
 
-* Explore the website and look for vulnerabilities listed in this repository: SQL injection, XSS, CRLF, ....
+* Explore the website and look for vulnerabilities listed in this repository: SQL injection, XSS, CRLF, Cookies, ....
+* Test for Business Logic weaknesses
+  * High or negative numerical values
+  * Try all the features and click all the buttons
 * [The Web Application Hacker's Handbook Checklist](https://gist.github.com/gbedoya/10935137) copied from http://mdsec.net/wahh/tasks.html
 
 * Subscribe to the site and pay for the additional functionality to test

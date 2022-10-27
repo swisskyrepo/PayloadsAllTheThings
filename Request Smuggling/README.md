@@ -176,6 +176,6 @@ Challenge: https://portswigger.net/web-security/request-smuggling/browser/client
 ## References
 
 * [PortSwigger - Request Smuggling Tutorial](https://portswigger.net/web-security/request-smuggling) and [PortSwigger - Request Smuggling Reborn](https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn)
-* [A Pentester's Guide to HTTP Request Smuggling - Busra Demir - 2020, October 16](https://blog.cobalt.io/a-pentesters-guide-to-http-request-smuggling-8b7bf0db1f0)
+* [A Pentester's Guide to HTTP Request Smuggling - Busra Demir - 2020, October 16](https://www.cobalt.io/blog/a-pentesters-guide-to-http-request-smuggling)
 * [Advanced Request Smuggling - PortSwigger](https://portswigger.net/web-security/request-smuggling/advanced#http-2-request-smuggling)
 * [Browser-Powered Desync Attacks: A New Frontier in HTTP Request Smuggling - James Kettle - 10 August 2022](https://portswigger.net/research/browser-powered-desync-attacks)

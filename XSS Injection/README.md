@@ -1246,16 +1246,16 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - tbm
 - [(Relative Path Overwrite) RPO XSS - Infinite Security](http://infinite8security.blogspot.com/2016/02/welcome-readers-as-i-promised-this-post.html)
 - [RPO TheSpanner](http://www.thespanner.co.uk/2014/03/21/rpo/)
-- [RPO Gadget - innerthmtl](http://blog.innerht.ml/rpo-gadgets/)
-- [Relative Path Overwrite - Detectify](http://support.detectify.com/customer/portal/articles/2088351-relative-path-overwrite)
+- [RPO Gadget - innerthmtl](https://web.archive.org/web/20220521125028/https://blog.innerht.ml/rpo-gadgets/)
+- [Relative Path Overwrite - Detectify](https://support.detectify.com/support/solutions/articles/48001048955-relative-path-overwrite)
 - [XSS ghettoBypass - d3adend](http://d3adend.org/xss/ghettoBypass)
 - [XSS without HTML: Client-Side Template Injection with AngularJS](http://blog.portswigger.net/2016/01/xss-without-html-client-side-template.html)
 - [XSSING WEB PART - 2 - Rakesh Mane](http://blog.rakeshmane.com/2017/08/xssing-web-part-2.html)
-- [Making an XSS triggered by CSP bypass on Twitter. @tbmnull](https://medium.com/@tbmnull/making-an-xss-triggered-by-csp-bypass-on-twitter-561f107be3e5)
+- [Making an XSS triggered by CSP bypass on Twitter. @tbmnull](https://www.buaq.net/go-25883.html)
 - [Ways to alert(document.domain) - @tomnomnom](https://gist.github.com/tomnomnom/14a918f707ef0685fdebd90545580309)
 - [D1T1 - Michele Spagnuolo and Lukas Wilschelbaum - So We Broke All CSPs](https://conference.hitb.org/hitbsecconf2017ams/materials/D1T1%20-%20Michele%20Spagnuolo%20and%20Lukas%20Wilschelbaum%20-%20So%20We%20Broke%20All%20CSPS.pdf)
 - [Sleeping stored Google XSS Awakens a $5000 Bounty](https://blog.it-securityguard.com/bugbounty-sleeping-stored-google-xss-awakens-a-5000-bounty/) by Patrik Fehrenbach
-- [RPO that lead to information leakage in Google](http://blog.innerht.ml/rpo-gadgets/) by filedescriptor
+- [RPO that lead to information leakage in Google](https://web.archive.org/web/20220521125028/https://blog.innerht.ml/rpo-gadgets/) by filedescriptor
 - [God-like XSS, Log-in, Log-out, Log-in](https://whitton.io/articles/uber-turning-self-xss-into-good-xss/) in Uber by Jack Whitton
 - [Three Stored XSS in Facebook](http://www.breaksec.com/?p=6129) by Nirgoldshlager
 - [Using a Braun Shaver to Bypass XSS Audit and WAF](https://blog.bugcrowd.com/guest-blog-using-a-braun-shaver-to-bypass-xss-audit-and-waf-by-frans-rosen-detectify) by Frans Rosen

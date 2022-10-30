@@ -12,7 +12,7 @@
 * [Backdooring a driver](#backdooring-a-driver)
 * [Backdooring the APT](#backdooring-the-apt)
 * [Backdooring the SSH](#backdooring-the-ssh)
-* [Tips](#tips)
+* [Backdooring Git](#backdooring-git)
 * [Additional Linux Persistence Options](#additional-persistence-options)
 * [References](#references)
 
@@ -133,6 +133,61 @@ Add an ssh key into the `~/.ssh` folder.
 1. `ssh-keygen`
 2. write the content of `~/.ssh/id_rsa.pub` into `~/.ssh/authorized_keys`
 3. set the right permission, 700 for ~/.ssh and 600 for authorized_keys
+
+## Backdooring Git
+
+Backdooring git can be a useful way to obtain persistence without the need for root access.  
+Special care must be taken to ensure that the backdoor commands create no output, otherwise the persistence is trivial to notice.
+
+### Git Configs
+
+There are multiple [git config variables](https://git-scm.com/docs/git-config) that execute arbitrary commands when certain actions are taken.  
+As an added bonus, git configs can be specified multiple ways leading to additional backdoor opportunities.  
+Configs can be set at the user level (`~/.gitconfig`), at the repository level (`path/to/repo/.git/config`), and sometimes via environment variables.
+
+`core.editor` is executed whenever git needs to provide the user with an editor (e.g. `git rebase -i`, `git commit --amend`).  
+The equivalent environment variable is `GIT_EDITOR`.
+
+```properties
+[core]
+editor = nohup BACKDOOR >/dev/null 2>&1 & ${VISUAL:-${EDITOR:-emacs}}
+```
+
+`core.pager` is executed whenever git needs to potentially large amounts of data (e.g. `git diff`, `git log`, `git show`).  
+The equivalent environment variable is `GIT_PAGER`.
+
+```properties
+[core]
+pager = nohup BACKDOOR >/dev/null 2>&1 & ${PAGER:-less}
+```
+
+`core.sshCommand` is executed whenever git needs to interact with a remote *ssh* repository (e.g. `git fetch`, `git pull`, `git push`).  
+The equivalent environment variable is `GIT_SSH` or `GIT_SSH_COMMAND`.
+
+```properties
+[core]
+sshCommand = nohup BACKDOOR >/dev/null 2>&1 & ssh
+[ssh]
+variant = ssh
+```
+
+Note that `ssh.variant` (`GIT_SSH_VARIANT`) is technically optional, but without it git will run `sshCommand` _twice_ in rapid succession.  (The first run is to determine the SSH variant and the second to pass it the correct parameters.)
+
+### Git Hooks
+
+[Git hooks](https://git-scm.com/docs/githooks) are programs you can place in a hooks directory to trigger actions at certain points during git's execution.  
+By default, hooks are stored in a repository's `.git/hooks` directory and are run when their name matches the current git action and the hook is marked as executable (i.e. `chmod +x`).  
+Potentially useful hook scripts to backdoor:
+
+- `pre-commit` is run just before `git commit` is executed.
+- `pre-push` is run just before `git push` is executed.
+- `post-checkout` is run just after `git checkout` is executed.
+- `post-merge` is run after `git merge` or after `git pull` applies new changes.
+
+In addition to spawning a backdoor, some of the above hooks can be used to sneak malicious changes into a repo without the user noticing.
+
+Lastly, it is possible to globally backdoor _all_ of a user's git hooks by setting the `core.hooksPath` git config variable to a common directory in the user-level git config file (`~/.gitconfig`).  Note that this approach will break any existing repository-specific git hooks.
+
 
 ## Additional Persistence Options
 

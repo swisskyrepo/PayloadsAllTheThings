@@ -18,10 +18,20 @@ Check the following sub-sections, located in other files :
 | Python Pickle   | 80 04 95     | gASV            |
 | PHP Serialized  | 4F 3A        | Tz              |
 
+## POP Gadgets
 
-## LABS
+> A POP (Property Oriented Programming) gadget is a piece of code implemented by an application's class, that can be called during the deserialization process.
 
-* [Insecure Deserialization 10 labs](https://portswigger.net/web-security/all-labs#insecure-deserialization)
+POP gadgets characteristics:
+* Can be serialized
+* Has public/accessible properties
+* Implements specific vulnerable methods
+* Has access to other "callable" classes
+
+## Labs
+
+* [Portswigger - Insecure Deserialization](https://portswigger.net/web-security/all-labs#insecure-deserialization)
+* [NickstaDB/DeserLab - Java deserialization exploitation lab](https://github.com/NickstaDB/DeserLab)
 
 ## References
 

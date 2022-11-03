@@ -497,7 +497,7 @@ document.getElementById('btn').onclick = function(e){
 
 ### XSS Hunter
 
-Available at [https://xsshunter.com/app](https://xsshunter.com/app)
+XSS Hunter is deprecated, it was available at [https://xsshunter.com/app](https://xsshunter.com/app). You can set up an alternative version from [mandatoryprogrammer/xsshunter-express](https://github.com/mandatoryprogrammer/xsshunter-express)
 
 > XSS Hunter allows you to find all kinds of cross-site scripting vulnerabilities, including the often-missed blind XSS. The service works by hosting specialized XSS probes which, upon firing, scan the page and send information about the vulnerable page to the XSS Hunter service.
 

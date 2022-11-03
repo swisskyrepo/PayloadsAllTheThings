@@ -164,9 +164,9 @@ cat /tmp/results_subfinder.txt | massdns -r $DNS_RESOLVERS -t A -o S -w /tmp/res
 nmap -sn --script hostmap-crtsh host_to_scan.tld
 ```
 
-###
-```
-using dnsdumpster
+### Using dnsdumpster
+
+```ps1
 git clone https://github.com/nmmapper/dnsdumpster
 python dnsdumpster.py -d domainname.com
 ```

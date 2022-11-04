@@ -453,8 +453,27 @@ findstr /si password *.xml *.ini *.txt *.config
 findstr /spin "password" *.*
 ```
 
-Also search in remote places such as SMB Shares and SharePoint.
-* Search passwords in SharePoint: [nheiniger/SnaffPoint](https://github.com/nheiniger/SnaffPoint)
+Also search in remote places such as SMB Shares and SharePoint:
+
+* Search passwords in SharePoint: [nheiniger/SnaffPoint](https://github.com/nheiniger/SnaffPoint) (must be compiled first, for referencing issue see: https://github.com/nheiniger/SnaffPoint/pull/6)
+
+```powershell
+# First, retrieve a token
+## Method 1: using SnaffPoint binary
+$token = (.\GetBearerToken.exe https://your.sharepoint.com)
+## Method 2: using AADInternals
+Install-Module AADInternals -Scope CurrentUser
+Import-Module AADInternals
+$token = (Get-AADIntAccessToken -ClientId "9bc3ab49-b65d-410a-85ad-de819febfddc" -Tenant "your.onmicrosoft.com" -Resource "https://your.sharepoint.com")
+
+# Second, search on Sharepoint
+## Method 1: using search strings in ./presets dir
+.\SnaffPoint.exe -u "https://your.sharepoint.com" -t $token
+## Method 2: using search string in command line
+### -l uses FQL search, see: https://learn.microsoft.com/en-us/sharepoint/dev/general-development/fast-query-language-fql-syntax-reference
+.\SnaffPoint.exe -u "https://your.sharepoint.com" -t $token -l -q "filename:.config"
+```
+
 * Search passwords in SMB Shares: [SnaffCon/Snaffler](https://github.com/SnaffCon/Snaffler)
 
 ### Search for a file with a certain filename

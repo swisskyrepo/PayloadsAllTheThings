@@ -233,7 +233,7 @@ A valid PHAR includes four elements:
 * [TSULOTT Web challenge write-up from MeePwn CTF 1st 2017 by Rawsec](https://rawsec.ml/en/meepwn-2017-write-ups/#TSULOTT-Web)
 * [CTF writeup: PHP object injection in kaspersky CTF](https://medium.com/@jaimin_gohel/ctf-writeup-php-object-injection-in-kaspersky-ctf-28a68805610d)
 * [Jack The Ripper Web challeneg Write-up from ECSC 2019 Quals Team France by Rawsec](https://rawsec.ml/en/ecsc-2019-quals-write-ups/#164-Jack-The-Ripper-Web)
-* [Rusty Joomla RCE Unserialize overflow](https://blog.hacktivesecurity.com/index.php?controller=post&action=view&id_post=41)
+* [Rusty Joomla RCE Unserialize overflow - Alessandro Groppo - October 3, 2019](https://blog.hacktivesecurity.com/index.php/2019/10/03/rusty-joomla-rce/)
 * [PHP Pop Chains - Achieving RCE with POP chain exploits. - Vickie Li - September 3, 2020](https://vkili.github.io/blog/insecure%20deserialization/pop-chains/)
 * [How to exploit the PHAR Deserialization Vulnerability - Alexandru Postolache - May 29, 2020](https://pentest-tools.com/blog/exploit-phar-deserialization-vulnerability/)
 * [phar:// deserialization - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-inclusion/phar-deserialization)

@@ -224,15 +224,7 @@ Use the correct collector
 * AzureHound for Azure Active Directory
 * SharpHound for local Active Directory
 
-* use [AzureHound](https://posts.specterops.io/introducing-bloodhound-4-0-the-azure-update-9b2b26c5e350)
-  ```powershell
-  # require: Install-Module -name Az -AllowClobber
-  # require: Install-Module -name AzureADPreview -AllowClobber
-  Connect-AzureAD
-  Connect-AzAccount
-  . .\AzureHound.ps1
-  Invoke-AzureHound
-  ```
+* use [AzureHound](https://github.com/BloodHoundAD/AzureHound) (more info: [Cloud - Azure Pentest](Cloud%20-%20Azure%20Pentest.md/#azure-recon-tools))
 
 * use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
   ```powershell

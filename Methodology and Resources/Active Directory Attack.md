@@ -224,7 +224,7 @@ Use the correct collector
 * AzureHound for Azure Active Directory
 * SharpHound for local Active Directory
 
-* use [AzureHound](https://github.com/BloodHoundAD/AzureHound) (more info: [Cloud - Azure Pentest](Cloud%20-%20Azure%20Pentest.md/#azure-recon-tools))
+* use [AzureHound](https://github.com/BloodHoundAD/AzureHound) (more info: [Cloud - Azure Pentest](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Cloud%20-%20Azure%20Pentest.md#azure-recon-tools))
 
 * use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
   ```powershell

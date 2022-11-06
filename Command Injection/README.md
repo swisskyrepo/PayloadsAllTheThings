@@ -12,7 +12,7 @@
 * [Filter Bypasses](#filter-bypasses)
   * [Bypass without space](#bypass-without-space)
   * [Bypass with a line return](#bypass-with-a-line-return)
-  * [Bypass with Backslash Newline](#bypass-with-backslash-newline)
+  * [Bypass with backslash newline](#bypass-with-backslash-newline)
   * [Bypass characters filter via hex encoding](#bypass-characters-filter-via-hex-encoding)
   * [Bypass blacklisted words](#bypass-blacklisted-words)
    * [Bypass with single quote](#bypass-with-single-quote)
@@ -137,7 +137,7 @@ You can also write files.
 hello
 ```
 
-### Bypass with Backslash Newline
+### Bypass with backslash newline
 
 Commands can be broken into parts by using backslash followed by a newline
 ```powershell

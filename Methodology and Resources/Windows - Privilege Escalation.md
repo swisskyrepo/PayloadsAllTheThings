@@ -449,7 +449,7 @@ Extract `HKLM\Software\Policies\Microsoft Services\AdmPwd` from Windows Registry
 
 ```powershell
 cd C:\ & findstr /SI /M "password" *.xml *.ini *.txt
-findstr /si password *.xml *.ini *.txt *.config
+findstr /si password *.xml *.ini *.txt *.config 2>nul >> results.txt
 findstr /spin "password" *.*
 ```
 

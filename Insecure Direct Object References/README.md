@@ -6,14 +6,15 @@
 
 * [Tools](#tools)
 * [Exploit](#exploit)
+    * [IDOR Tips](#idor-tips)
 * [Examples](#examples)
 * [References](#references)
 
 ## Tools
 
-- Burp Suite plugin Authz
-- Burp Suite plugin AuthMatrix
-- Burp Suite plugin Authorize
+- [BApp Store > Authz](https://portswigger.net/bappstore/4316cc18ac5f434884b2089831c7d19e)
+- [BApp Store > AuthMatrix](https://portswigger.net/bappstore/30d8ee9f40c041b0bfec67441aad158e)
+- [BApp Store > Autorize](https://portswigger.net/bappstore/f9bbac8c4acf4aefa4d7dc92a991af2f)
 
 ## Exploit
 
@@ -42,6 +43,15 @@ The value of a parameter is used directly to access application functionality
 ```powershell
 http://foo.bar/accessPage?menuitem=12
 ```
+
+### IDOR Tips
+
+* Change the HTTP request: POST → PUT
+* Change the content type: XML → JSON
+* Increment/decrement numerical values (1,2,3,..)
+* GUID/UUID might be weak
+* Transform numerical values to arrays: `{"id":19} → {"id":[19]}`
+
 
 ## Examples
 

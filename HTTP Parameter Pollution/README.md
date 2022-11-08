@@ -42,6 +42,7 @@ When ?par1=a&par1=b
 | Perl CGI/Apache                                 |First occurrence         |a              |
 | mod_wsgi (Python)/Apache                        |First occurrence         |a              |
 | Python/Zope                                     |All occurrences in array  |['a','b']      |
+| Ruby on Rails                                   |Last occurrence          |b              |
 
 ## References
 - [HTTP Parameter Pollution - Imperva](https://www.imperva.com/learn/application-security/http-parameter-pollution/)

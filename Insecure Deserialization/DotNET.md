@@ -83,6 +83,7 @@ $ ./ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" -t
 
 ### JSON.NET
 
+* In C# source code, look for `JsonConvert.DeserializeObject<Expected>(json, new JsonSerializerSettings`.
 * Payload output: **JSON**
 
 ```ps1

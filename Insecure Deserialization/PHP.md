@@ -14,8 +14,9 @@ Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.c
 
 * [General concept](#general-concept)
 * [Authentication bypass](#authentication-bypass)
+* [Object Injection](#object-injection)
 * [Finding and using gadgets](#finding-and-using-gadgets)
-* [PHP Phar Deserialization](#php-phar-deserialization)
+* [Phar Deserialization](#phar-deserialization)
 * [Real world examples](#real-world-examples)
 * [References](#references)
 
@@ -82,7 +83,7 @@ a:2:{s:8:"username";b:1;s:8:"password";b:1;}
 
 Because `true == "str"` is true.
 
-### Object reference
+## Object Injection
 
 Vulnerable code:
 
@@ -145,7 +146,7 @@ phpggc swiftmailer/fw1 /var/www/html/shell.php /tmp/data
 phpggc Monolog/RCE2 system 'id' -p phar -o /tmp/testinfo.ini
 ```
 
-## PHP Phar Deserialization
+## Phar Deserialization
 
 Using `phar://` wrapper, one can trigger a deserialization on the specified file like in `file_get_contents("phar://./archives/app.phar")`.
 
@@ -237,3 +238,4 @@ A valid PHAR includes four elements:
 * [PHP Pop Chains - Achieving RCE with POP chain exploits. - Vickie Li - September 3, 2020](https://vkili.github.io/blog/insecure%20deserialization/pop-chains/)
 * [How to exploit the PHAR Deserialization Vulnerability - Alexandru Postolache - May 29, 2020](https://pentest-tools.com/blog/exploit-phar-deserialization-vulnerability/)
 * [phar:// deserialization - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-inclusion/phar-deserialization)
+* [Finding PHP Serialization Gadget Chain - DG'hAck Unserial killer - Aug 11, 2022 - xanhacks](https://www.xanhacks.xyz/p/php-gadget-chain/#introduction)

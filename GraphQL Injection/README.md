@@ -34,6 +34,7 @@
 * [Insomnia - Cross-platform HTTP and GraphQL Client](https://insomnia.rest/)
 * [AutoGraphql + introspection](https://graphql-dashboard.herokuapp.com/)
 * [CrackQL - A GraphQL password brute-force and fuzzing utility.](https://github.com/nicholasaleks/CrackQL)
+* [GraphQL Threat Matrix - GraphQL threat framework used by security professionals to research security gaps in GraphQL implementations ](https://github.com/nicholasaleks/graphql-threat-matrix)
 
 ## Exploit
 

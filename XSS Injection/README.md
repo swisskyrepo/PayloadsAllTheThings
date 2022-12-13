@@ -1,11 +1,11 @@
 # Cross Site Scripting
 
-Cross-site scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS enables attackers to inject client-side scripts into web pages viewed by other users.
+> Cross-site scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS enables attackers to inject client-side scripts into web pages viewed by other users.
 
 ## Summary
 
 - [Cross Site Scripting](#cross-site-scripting)
-  - [Summary](#summary)
+  - [Vulnerability Details](#vulnerability-details)
   - [Exploit code or POC](#exploit-code-or-poc)
     - [Data grabber for XSS](#data-grabber-for-xss)
     - [CORS](#cors)
@@ -100,6 +100,19 @@ Cross-site scripting (XSS) is a type of computer security vulnerability typicall
     - [Fortiweb WAF Bypass by @rezaduty - 9th July 2019](#fortiweb-waf-bypass-by-rezaduty---9th-july-2019)
   - [References](#references)
 
+## Vulnerability Details
+
+Cross-Site Scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS allows attackers to inject malicious code into a website, which is then executed in the browser of anyone who visits the site. This can allow attackers to steal sensitive information, such as user login credentials, or to perform other malicious actions.
+
+There are 3 main types of XSS attacks:
+
+* **Reflected XSS**: In a reflected XSS attack, the malicious code is embedded in a link that is sent to the victim. When the victim clicks on the link, the code is executed in their browser. For example, an attacker could create a link that contains malicious JavaScript, and send it to the victim in an email. When the victim clicks on the link, the JavaScript code is executed in their browser, allowing the attacker to perform various actions, such as stealing their login credentials.
+
+* **Stored XSS**: In a stored XSS attack, the malicious code is stored on the server, and is executed every time the vulnerable page is accessed. For example, an attacker could inject malicious code into a comment on a blog post. When other users view the blog post, the malicious code is executed in their browsers, allowing the attacker to perform various actions.
+
+* **DOM-based XSS**: is a type of XSS attack that occurs when a vulnerable web application modifies the DOM (Document Object Model) in the user's browser. This can happen, for example, when a user input is used to update the page's HTML or JavaScript code in some way. In a DOM-based XSS attack, the malicious code is not sent to the server, but is instead executed directly in the user's browser. This can make it difficult to detect and prevent these types of attacks, because the server does not have any record of the malicious code.
+
+To prevent XSS attacks, it is important to properly validate and sanitize user input. This means ensuring that all input meets the necessary criteria, and removing any potentially dangerous characters or code. It is also important to escape special characters in user input before rendering it in the browser, to prevent the browser from interpreting it as code.
 
 
 ## Exploit code or POC

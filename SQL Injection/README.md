@@ -1,4 +1,4 @@
-# SQL injection
+# SQL Injection
 
 > A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application.
 
@@ -6,7 +6,7 @@ Attempting to manipulate SQL queries may have goals including:
 - Information Leakage
 - Disclosure of stored data
 - Manipulation of stored data
-- Bypassing authorisation controls
+- Bypassing authorization controls
 
 ## Summary
 
@@ -611,6 +611,13 @@ Obfuscated query
 ```sql
 1.e(ascii 1.e(substring(1.e(select password from users limit 1 1.e,1 1.e) 1.e,1 1.e,1 1.e)1.e)1.e) = 70 or'1'='2
 ```
+
+## Labs 
+
+* [SQL injection vulnerability in WHERE clause allowing retrieval of hidden data](https://portswigger.net/web-security/sql-injection/lab-retrieve-hidden-data)
+* [SQL injection vulnerability allowing login bypass](https://portswigger.net/web-security/sql-injection/lab-login-bypass)
+* [SQL injection with filter bypass via XML encoding](https://portswigger.net/web-security/sql-injection/lab-sql-injection-with-filter-bypass-via-xml-encoding)
+* [SQL Labs](https://portswigger.net/web-security/all-labs#sql-injection)
 
 ## References
 

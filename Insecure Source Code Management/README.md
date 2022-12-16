@@ -1,4 +1,4 @@
-# Insecure source code management
+# Insecure Source Code Management
 
 * [Git](#git)
   + [Example](#example)

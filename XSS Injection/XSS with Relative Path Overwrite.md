@@ -25,7 +25,7 @@ Stored XSS with CSS injection - Hello {}*{xss:expression(open(alert(1)))}
 
 Explanation of the vulnerability
 
-> The Meta element forces IE’s document mode into IE7 compat which is required to execute expressions. Our persistent text {}*{xss:expression(open(alert(1)))is included on the page and in a realistic scenario it would be a profile page or maybe a shared status update which is viewable by other users. We use “open” to prevent client side DoS with repeated executions of alert.
+> The Meta element forces IE’s document mode into IE7 compatible which is required to execute expressions. Our persistent text {}*{xss:expression(open(alert(1)))is included on the page and in a realistic scenario it would be a profile page or maybe a shared status update which is viewable by other users. We use “open” to prevent client side DoS with repeated executions of alert.
 > A simple request of “rpo.php/” makes the relative style load the page itself as a style sheet. The actual request is “/labs/xss_horror_show/chapter7/rpo.php/styles.css” the browser thinks there’s another directory but the actual request is being sent to the document and that in essence is how an RPO attack works.
 
 Demo 1 at `http://challenge.hackvertor.co.uk/xss_horror_show/chapter7/rpo.php`

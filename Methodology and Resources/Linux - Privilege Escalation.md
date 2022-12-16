@@ -6,7 +6,7 @@
 * [Checklist](#checklists)
 * [Looting for passwords](#looting-for-passwords)
     * [Files containing passwords](#files-containing-passwords)
-    * [Old passwords in /etc/security/opasswd](#old-passwords-in--etc-security-opasswd)
+    * [Old passwords in /etc/security/opasswd](#old-passwords-in-etcsecurityopasswd)
     * [Last edited files](#last-edited-files)
     * [In memory passwords](#in-memory-passwords)
     * [Find sensitive files](#find-sensitive-files)
@@ -27,7 +27,7 @@
     * [NOPASSWD](#nopasswd)
     * [LD_PRELOAD and NOPASSWD](#ld_preload-and-nopasswd)
     * [Doas](#doas)
-    * [sudo_inject](#sudo-inject)
+    * [sudo_inject](#sudo_inject)
     * [CVE-2019-14287](#cve-2019-14287)
 * [GTFOBins](#gtfobins)
 * [Wildcard](#wildcard)
@@ -43,15 +43,16 @@
     * [LXC/LXD](#lxclxd)
 * [Hijack TMUX session](#hijack-tmux-session)
 * [Kernel Exploits](#kernel-exploits)
-    * [CVE-2016-5195 (DirtyCow)](#CVE-2016-5195-dirtycow)
-    * [CVE-2010-3904 (RDS)](#[CVE-2010-3904-rds)
-    * [CVE-2010-4258 (Full Nelson)](#CVE-2010-4258-full-nelson)
-    * [CVE-2012-0056 (Mempodipper)](#CVE-2012-0056-mempodipper)
+    * [CVE-2022-0847 (DirtyPipe)](#cve-2022-0847-dirtypipe)	
+    * [CVE-2016-5195 (DirtyCow)](#cve-2016-5195-dirtycow)
+    * [CVE-2010-3904 (RDS)](#cve-2010-3904-rds)
+    * [CVE-2010-4258 (Full Nelson)](#cve-2010-4258-full-nelson)
+    * [CVE-2012-0056 (Mempodipper)](#cve-2012-0056-mempodipper)
 
 
 ## Tools
 
-There are many scripts that you can execute on a linux machine which automatically enumerate sytem information, processes, and files to locate privilege escelation vectors.
+There are many scripts that you can execute on a linux machine which automatically enumerate sytem information, processes, and files to locate privilege escalation vectors.
 Here are a few:
 
 - [LinPEAS - Linux Privilege Escalation Awesome Script](https://github.com/carlospolop/PEASS-ng/tree/master/linPEAS)
@@ -312,7 +313,7 @@ Mon 2019-04-01 07:36:10 CEST  20h left Sat 2019-03-09 14:28:25 CET   3 weeks 0 d
 
 ## SUID
 
-SUID/Setuid stands for "set user ID upon execution", it is enabled by default in every Linux distributions. If a file with this bit is ran, the uid will be changed by the owner one. If the file owner is `root`, the uid will be changed to `root` even if it was executed from user `bob`. SUID bit is represented by an `s`.
+SUID/Setuid stands for "set user ID upon execution", it is enabled by default in every Linux distributions. If a file with this bit is run, the uid will be changed by the owner one. If the file owner is `root`, the uid will be changed to `root` even if it was executed from user `bob`. SUID bit is represented by an `s`.
 
 ```powershell
 ╭─swissky@lab ~  
@@ -399,8 +400,8 @@ uid=0(root) gid=1000(swissky)
 | CAP_BLOCK_SUSPEND  | This feature can block system suspends   |
 | CAP_CHOWN  | Allow user to make arbitrary change to files UIDs and GIDs |
 | CAP_DAC_OVERRIDE  | This helps to bypass file read, write and execute permission checks |
-| CAP_DAC_READ_SEARCH  | This only bypass file and directory read/execute permission checks  |
-| CAP_FOWNER  | This enables to bypass permission checks on operations that normally require the filesystem UID of the process to match the UID of the file  |
+| CAP_DAC_READ_SEARCH  | This only bypasses file and directory read/execute permission checks  |
+| CAP_FOWNER  | This enables bypass of permission checks on operations that normally require the filesystem UID of the process to match the UID of the file  |
 | CAP_KILL  | Allow the sending of signals to processes belonging to others  |
 | CAP_SETGID  | Allow changing of the GID  |
 | CAP_SETUID  | Allow changing of the UID  |
@@ -416,7 +417,7 @@ Tool: [Sudo Exploitation](https://github.com/TH3xACE/SUDO_KILLER)
 
 ### NOPASSWD
 
-Sudo configuration might allow a user to execute some command with another user privileges without knowing the password.
+Sudo configuration might allow a user to execute some command with another user's privileges without knowing the password.
 
 ```bash
 $ sudo -l
@@ -768,6 +769,14 @@ The following exploits are known to work well, search for more exploits with `se
 Another way to find a kernel exploit is to get the specific kernel version and linux distro of the machine by doing `uname -a`
 Copy the kernel version and distribution, and search for it in google or in https://www.exploit-db.com/.
 
+### CVE-2022-0847 (DirtyPipe)
+
+Linux Privilege Escalation - Linux Kernel 5.8 < 5.16.11
+
+```
+https://www.exploit-db.com/exploits/50808
+```
+
 ### CVE-2016-5195 (DirtyCow)
 
 Linux Privilege Escalation - Linux Kernel <= 3.19.0-73.8
@@ -820,3 +829,4 @@ https://www.exploit-db.com/exploits/18411
 * [Linux Password Security with pam_cracklib - Hal Pomeranz, Deer Run Associates](http://www.deer-run.com/~hal/sysadmin/pam_cracklib.html)
 * [Local Privilege Escalation Workshop - Slides.pdf - @sagishahar](https://github.com/sagishahar/lpeworkshop/blob/master/Local%20Privilege%20Escalation%20Workshop%20-%20Slides.pdf)
 * [SSH Key Predictable PRNG (Authorized_Keys) Process - @weaknetlabs](https://github.com/weaknetlabs/Penetration-Testing-Grimoire/blob/master/Vulnerabilities/SSH/key-exploit.md)
+* [The Dirty Pipe Vulnerability](https://dirtypipe.cm4all.com/)

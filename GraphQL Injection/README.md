@@ -1,23 +1,26 @@
-# GraphQL injection
+# GraphQL Injection
 
 > GraphQL is a query language for APIs and a runtime for fulfilling those queries with existing data. A GraphQL service is created by defining types and fields on those types, then providing functions for each field on each type
 
 
 ## Summary
 
-* [Tools](#tools)
-* [Exploit](#exploit)
-  * [Identify an injection point](#identify-an-injection-point)
-  * [Enumerate Database Schema via Instropection](#enumerate-database-schema-via-introspection)
-  * [Extract data](#extract-data)
-  * [Extract data using edges/nodes](#extract-data-using-edges-nodes)
-  * [Extract data using projections](#extract-data-using-projections)
-  * [Enumerate the types' definition](#enumerate-the-type-definition)
-  * [Use mutations](#use-mutations)
-  * [NOSQL injection](#nosql-injection)
-  * [SQL injection](#sql-injection)
-  * [GraphQL Batching Attacks](#graphql-batching-attacks)
-* [References](#references)
+- [GraphQL injection](#graphql-injection)
+  - [Summary](#summary)
+  - [Tools](#tools)
+  - [Exploit](#exploit)
+    - [Identify an injection point](#identify-an-injection-point)
+    - [Enumerate Database Schema via Introspection](#enumerate-database-schema-via-introspection)
+    - [List path](#list-path)
+    - [Extract data](#extract-data)
+    - [Extract data using edges/nodes](#extract-data-using-edgesnodes)
+    - [Extract data using projections](#extract-data-using-projections)
+    - [Enumerate the types' definition](#enumerate-the-types-definition)
+    - [Use mutations](#use-mutations)
+    - [NOSQL injection](#nosql-injection)
+    - [SQL injection](#sql-injection)
+    - [GraphQL Batching Attacks](#graphql-batching-attacks)
+  - [References](#references)
 
 ## Tools
 
@@ -30,6 +33,8 @@
 * [InQL - A Burp Extension for GraphQL Security Testing](https://github.com/doyensec/inql)
 * [Insomnia - Cross-platform HTTP and GraphQL Client](https://insomnia.rest/)
 * [AutoGraphql + introspection](https://graphql-dashboard.herokuapp.com/)
+* [CrackQL - A GraphQL password brute-force and fuzzing utility.](https://github.com/nicholasaleks/CrackQL)
+* [GraphQL Threat Matrix - GraphQL threat framework used by security professionals to research security gaps in GraphQL implementations ](https://github.com/nicholasaleks/graphql-threat-matrix)
 
 ## Exploit
 

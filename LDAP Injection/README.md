@@ -1,4 +1,4 @@
-# LDAP injection
+# LDAP Injection
 
 > LDAP Injection is an attack used to exploit web based applications that construct LDAP statements based on user input. When an application fails to properly sanitize user input, it's possible to modify LDAP statements using a local proxy.
 

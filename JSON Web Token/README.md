@@ -4,17 +4,20 @@
 
 ## Summary 
 
-- [Tools](#tools)
-- [JWT Format](#jwt-format)
+- [JWT - JSON Web Token](#jwt---json-web-token)
+  - [Summary](#summary)
+  - [Tools](#tools)
+  - [JWT Format](#jwt-format)
     - [Header](#header)
     - [Payload](#payload)
-- [JWT Signature - None algorithm](#jwt-signature---none-algorithm)
-- [JWT Signature - RS256 to HS256](#jwt-signature---rs256-to-hs256)
-- [Breaking JWT's secret](#breaking-jwts-secret)
-    - [JWT Tool](#jwt-tool)
+  - [JWT Signature - None algorithm](#jwt-signature---none-algorithm)
+  - [JWT Signature - RS256 to HS256](#jwt-signature---rs256-to-hs256)
+  - [Breaking JWT's secret](#breaking-jwts-secret)
+    - [JWT tool](#jwt-tool)
     - [JWT cracker](#jwt-cracker)
     - [Hashcat](#hashcat)
-- [References](#references)
+  - [CVE](#cve)
+  - [References](#references)
 
 ## Tools
 
@@ -241,7 +244,7 @@ Please select an option from above (1-4):
 Please enter the known key:
 > secret
 
-Please enter the keylength:
+Please enter the key length:
 [1] HMAC-SHA256
 [2] HMAC-SHA384
 [3] HMAC-SHA512
@@ -284,20 +287,29 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 * CVE-2019-20933/CVE-2020-28637 - Blank password vulnerability
 * CVE-2020-28042 - Null signature vulnerability
 
+## Labs 
+
+* [JWT authentication bypass via unverified signature](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-unverified-signature)
+* [JWT authentication bypass via flawed signature verification](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-flawed-signature-verification)
+* [JWT authentication bypass via weak signing key](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-weak-signing-key)
+* [JWT authentication bypass via jwk header injection](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jwk-header-injection)
+* [JWT authentication bypass via jku header injection](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jku-header-injection)
+* [JWT authentication bypass via kid header path traversal](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-kid-header-path-traversal)
+
 ## References
 
 - [Hacking JSON Web Token (JWT) - Hate_401](https://medium.com/101-writeups/hacking-json-web-token-jwt-233fe6c862e6)
 - [WebSec CTF - Authorization Token - JWT Challenge](https://ctf.rip/websec-ctf-authorization-token-jwt-challenge/)
 - [Privilege Escalation like a Boss - October 27, 2018 - janijay007](https://blog.securitybreached.org/2018/10/27/privilege-escalation-like-a-boss/)
-- [5 Easy Steps to Understanding JSON Web Token](https://medium.com/vandium-software/5-easy-steps-to-understanding-json-web-tokens-jwt-1164c0adfcec)
-- [Hacking JSON Web Tokens - From Zero To Hero Without Effort - Websecurify Blog](https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
+- [5 Easy Steps to Understanding JSON Web Token](https://medium.com/cyberverse/five-easy-steps-to-understand-json-web-tokens-jwt-7665d2ddf4d5)
+- [Hacking JSON Web Tokens - From Zero To Hero Without Effort - Websecurify Blog](https://web.archive.org/web/20220305042224/https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
 - [HITBGSEC CTF 2017 - Pasty (Web) - amon (j.heng)](https://nandynarwhals.org/hitbgsec2017-pasty/)
 - [Critical vulnerabilities in JSON Web Token libraries - March 31, 2015 - Tim McLean](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries//)
 - [Learn how to use JSON Web Tokens (JWT) for Authentication - @dwylhq](https://github.com/dwyl/learn-json-web-tokens)
 - [Simple JWT hacking - @b1ack_h00d](https://medium.com/@blackhood/simple-jwt-hacking-73870a976750)
 - [Attacking JWT authentication - Sep 28, 2016 - Sjoerd Langkemper](https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/)
 - [How to Hack a Weak JWT Implementation with a Timing Attack - Jan 7, 2017 - Tamas Polgar](https://hackernoon.com/can-timing-attack-be-a-practical-security-threat-on-jwt-signature-ba3c8340dea9)
-- [HACKING JSON WEB TOKENS, FROM ZERO TO HERO WITHOUT EFFORT - Thu Feb 09 2017 - @pdp](https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
-- [Write up – JRR Token – LeHack 2019 - 07/07/2019 - LAPHAZE](http://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)
+- [Write up – JRR Token – LeHack 2019 - 07/07/2019 - LAPHAZE](https://web.archive.org/web/20210512205928/https://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)
 - [JWT Hacking 101 - TrustFoundry - Tyler Rosonke - December 8th, 2017](https://trustfoundry.net/jwt-hacking-101/)
 - [JSON Web Token Validation Bypass in Auth0 Authentication API - Ben Knight Senior Security Consultant - April 16, 2020](https://insomniasec.com/blog/auth0-jwt-validation-bypass)
+- [Hacking JSON Web Tokens - medium.com Oct 2019](https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a)

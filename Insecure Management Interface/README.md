@@ -1,4 +1,4 @@
-# Insecure management interface
+# Insecure Management Interface
 
 ## Springboot-Actuator
 

@@ -12,7 +12,7 @@
 * [Backdooring a driver](#backdooring-a-driver)
 * [Backdooring the APT](#backdooring-the-apt)
 * [Backdooring the SSH](#backdooring-the-ssh)
-* [Tips](#tips)
+* [Backdooring Git](#backdooring-git)
 * [Additional Linux Persistence Options](#additional-persistence-options)
 * [References](#references)
 
@@ -134,53 +134,61 @@ Add an ssh key into the `~/.ssh` folder.
 2. write the content of `~/.ssh/id_rsa.pub` into `~/.ssh/authorized_keys`
 3. set the right permission, 700 for ~/.ssh and 600 for authorized_keys
 
-## Tips
+## Backdooring Git
 
-Hide the payload with ANSI chars, the following chars will clear the terminal when using cat to display the content of your payload.
+Backdooring git can be a useful way to obtain persistence without the need for root access.  
+Special care must be taken to ensure that the backdoor commands create no output, otherwise the persistence is trivial to notice.
 
-```powershell
-#[2J[2J[2J[2H[2A# Do not remove. Generated from /etc/issue.conf by configure.
+### Git Configs
+
+There are multiple [git config variables](https://git-scm.com/docs/git-config) that execute arbitrary commands when certain actions are taken.  
+As an added bonus, git configs can be specified multiple ways leading to additional backdoor opportunities.  
+Configs can be set at the user level (`~/.gitconfig`), at the repository level (`path/to/repo/.git/config`), and sometimes via environment variables.
+
+`core.editor` is executed whenever git needs to provide the user with an editor (e.g. `git rebase -i`, `git commit --amend`).  
+The equivalent environment variable is `GIT_EDITOR`.
+
+```properties
+[core]
+editor = nohup BACKDOOR >/dev/null 2>&1 & ${VISUAL:-${EDITOR:-emacs}}
 ```
 
-Hide in plain sight using zero width spaces in filename.
+`core.pager` is executed whenever git needs to potentially large amounts of data (e.g. `git diff`, `git log`, `git show`).  
+The equivalent environment variable is `GIT_PAGER`.
 
-```powershell
-touch $(echo -n 'index\u200D.php') index.php
+```properties
+[core]
+pager = nohup BACKDOOR >/dev/null 2>&1 & ${PAGER:-less}
 ```
 
-Clear the last line of the history.
+`core.sshCommand` is executed whenever git needs to interact with a remote *ssh* repository (e.g. `git fetch`, `git pull`, `git push`).  
+The equivalent environment variable is `GIT_SSH` or `GIT_SSH_COMMAND`.
 
-```bash
-history -d $(history | tail -2 | awk '{print $1}') 2> /dev/null
+```properties
+[core]
+sshCommand = nohup BACKDOOR >/dev/null 2>&1 & ssh
+[ssh]
+variant = ssh
 ```
 
-Clear history
+Note that `ssh.variant` (`GIT_SSH_VARIANT`) is technically optional, but without it git will run `sshCommand` _twice_ in rapid succession.  (The first run is to determine the SSH variant and the second to pass it the correct parameters.)
 
-```bash
-[SPACE] ANY COMMAND
-or
-export HISTSIZE=0
-export HISTFILESIZE=0
-unset HISTFILE; CTRL-D
-or
-kill -9 $$
-or
-echo "" > ~/.bash_history
-or
-rm ~/.bash_history -rf
-or
-history -c
-or
-ln /dev/null ~/.bash_history -sf
-```
+### Git Hooks
 
-The following directories are temporary and usually writeable
+[Git hooks](https://git-scm.com/docs/githooks) are programs you can place in a hooks directory to trigger actions at certain points during git's execution.  
+By default, hooks are stored in a repository's `.git/hooks` directory and are run when their name matches the current git action and the hook is marked as executable (i.e. `chmod +x`).  
+Potentially useful hook scripts to backdoor:
 
-```bash
-/var/tmp/
-/tmp/
-/dev/shm/
-```
+- `pre-commit` is run just before `git commit` is executed.
+- `pre-push` is run just before `git push` is executed.
+- `post-checkout` is run just after `git checkout` is executed.
+- `post-merge` is run after `git merge` or after `git pull` applies new changes.
+
+In addition to spawning a backdoor, some of the above hooks can be used to sneak malicious changes into a repo without the user noticing.
+
+Lastly, it is possible to globally backdoor _all_ of a user's git hooks by setting the `core.hooksPath` git config variable to a common directory in the user-level git config file (`~/.gitconfig`).  Note that this approach will break any existing repository-specific git hooks.
+
+
 ## Additional Persistence Options
 
 * [SSH Authorized Keys](https://attack.mitre.org/techniques/T1098/004)

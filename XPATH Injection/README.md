@@ -1,4 +1,4 @@
-# XPATH injection
+# XPATH Injection
 
 > XPath Injection is an attack technique used to exploit applications that construct XPath (XML Path Language) queries from user-supplied input to query or navigate XML documents.
 

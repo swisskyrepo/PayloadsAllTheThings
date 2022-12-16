@@ -14,6 +14,7 @@
   * AltDNS
   * MassDNS
   * Nmap
+  * Dnsdumpster
 * Subdomain take over
   * tko-subs
   * HostileSubBruteForcer
@@ -161,6 +162,13 @@ cat /tmp/results_subfinder.txt | massdns -r $DNS_RESOLVERS -t A -o S -w /tmp/res
 
 ```powershell
 nmap -sn --script hostmap-crtsh host_to_scan.tld
+```
+
+### Using dnsdumpster
+
+```ps1
+git clone https://github.com/nmmapper/dnsdumpster
+python dnsdumpster.py -d domainname.com
 ```
 
 ## Subdomain take over

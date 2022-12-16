@@ -24,15 +24,16 @@
 ## Tools
 
 - [KeyFinder - is a tool that let you find keys while surfing the web!](https://github.com/momenbasel/KeyFinder)
-- [Keyhacks - is a repository which shows quick ways in which API keys leaked by a bug bounty program can be checked to see if they're valid.](https://github.com/streaak/keyhacks)
-- [truffleHog - Find credentials all over the place](https://github.com/trufflesecurity/truffleHog)
+- [KeyHacks - is a repository which shows quick ways in which API keys leaked by a bug bounty program can be checked to see if they're valid.](https://github.com/streaak/keyhacks)
+- [TruffleHog - Find credentials all over the place](https://github.com/trufflesecurity/truffleHog)
     ```ps1
     docker run -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/trufflesecurity/test_keys
     docker run -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --org=trufflesecurity
     trufflehog git https://github.com/trufflesecurity/trufflehog.git
     trufflehog github --endpoint https://api.github.com --org trufflesecurity --token GITHUB_TOKEN --debug --concurrency 2
     ```
-
+- [Trivy - General purpose vulnerability and misconfiguration scanner which also searches for API keys/secrets](https://github.com/aquasecurity/trivy)
+    
 ## Exploit
 
 The following commands can be used to takeover accounts or extract personal information from the API using the leaked token.

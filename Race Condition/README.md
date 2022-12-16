@@ -4,9 +4,12 @@
 
 ## Summary
 
-* [Tools](#tools)
-* [Turbo Intruder Examples](#turbo-intruder-examples)
-* [References](#references)
+- [Race Condition](#race-condition)
+  - [Summary](#summary)
+  - [Tools](#tools)
+  - [Turbo Intruder Examples](#turbo-intruder-examples)
+  - [Turbo Intruder 2 Requests Examples](#turbo-intruder-2-requests-examples)
+  - [References](#references)
 
 ## Tools
 
@@ -42,7 +45,7 @@
 4. Click "Attack"
 
 ## Turbo Intruder 2 Requests Examples
-This follwoing template can use when use have to send race condition of request2 immediately after send a request1 when the window may only be a few milliseconds.
+This following template can use when use have to send race condition of request2 immediately after send a request1 when the window may only be a few milliseconds.
 ```python
 def queueRequests(target, wordlists): 
     engine = RequestEngine(endpoint=target.endpoint, 

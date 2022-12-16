@@ -1,15 +1,17 @@
 # Open URL Redirection
 
-> Unvalidated redirects and forwards are possible when a web application accepts untrusted input that could cause the web application to redirect the request to a URL contained within untrusted input. By modifying untrusted URL input to a malicious site, an attacker may successfully launch a phishing scam and steal user credentials. Because the server name in the modified link is identical to the original site, phishing attempts may have a more trustworthy appearance. Unvalidated redirect and forward attacks can also be used to maliciously craft a URL that would pass the application’s access control check and then forward the attacker to privileged functions that they would normally not be able to access.
+> Un-validated redirects and forwards are possible when a web application accepts untrusted input that could cause the web application to redirect the request to a URL contained within untrusted input. By modifying untrusted URL input to a malicious site, an attacker may successfully launch a phishing scam and steal user credentials. Because the server name in the modified link is identical to the original site, phishing attempts may have a more trustworthy appearance. Un-validated redirect and forward attacks can also be used to maliciously craft a URL that would pass the application’s access control check and then forward the attacker to privileged functions that they would normally not be able to access.
 
 ## Summary
 
-- [Exploitation](#exploitation)
-- [HTTP Redirection Status Code - 3xx](#http-redirection-status-code---3xx)
-- [Fuzzing](#fuzzing)
-- [Filter Bypass](#filter-bypass)
-- [Common injection parameters](#common-injection-parameters)
-- [References](#references)
+- [Open URL Redirection](#open-url-redirection)
+  - [Summary](#summary)
+  - [Exploitation](#exploitation)
+  - [HTTP Redirection Status Code - 3xx](#http-redirection-status-code---3xx)
+  - [Fuzzing](#fuzzing)
+  - [Filter Bypass](#filter-bypass)
+  - [Common injection parameters](#common-injection-parameters)
+  - [References](#references)
 
 ## Exploitation
 
@@ -25,7 +27,7 @@ What happens if we change the `famous-website.tld/account` to `evil-website.tld`
 https://famous-website.tld/signup?redirectUrl=https://evil-website.tld/account
 ```
 
-By visiting this url, if we get redirected to `evil-website.tld` after the signup, we have an Open Redirect vulnerability. This can be abused by an attacker to display a phishing page asking you to enter your credentials.
+By visiting this url, if we get redirected to `evil-website.tld` after the sign-up, we have an Open Redirect vulnerability. This can be abused by an attacker to display a phishing page asking you to enter your credentials.
 
 
 ## HTTP Redirection Status Code - 3xx
@@ -176,6 +178,10 @@ http://www.example.com/redirect.php?url=javascript:prompt(1)
 ?continue={payload}
 ?return_path={payload}
 ```
+## Labs
+
+* [DOM-based open redirection](https://portswigger.net/web-security/dom-based/open-redirection/lab-dom-open-redirection)
+
 
 ## References
 
@@ -185,5 +191,4 @@ http://www.example.com/redirect.php?url=javascript:prompt(1)
 * [Cujanovic - Open-Redirect-Payloads](https://github.com/cujanovic/Open-Redirect-Payloads)
 * [Pentester Land - Open Redirect Cheat Sheet](https://pentester.land/cheatsheets/2018/11/02/open-redirect-cheatsheet.html)
 * [Open Redirect Vulnerability - AUGUST 15, 2018 - s0cket7](https://s0cket7.com/open-redirect-vulnerability/)
-* [Host/Split
-Exploitable Antipatterns in Unicode Normalization - BlackHat US 2019](https://i.blackhat.com/USA-19/Thursday/us-19-Birch-HostSplit-Exploitable-Antipatterns-In-Unicode-Normalization.pdf)
+* [Host/Split Exploitable Antipatterns in Unicode Normalization - BlackHat US 2019](https://i.blackhat.com/USA-19/Thursday/us-19-Birch-HostSplit-Exploitable-Antipatterns-In-Unicode-Normalization.pdf)

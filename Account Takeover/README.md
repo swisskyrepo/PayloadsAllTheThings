@@ -127,8 +127,9 @@ When processing user input involving unicode for case mapping or normalisation, 
 - Victim account: `demo@gmail.com`
 - Attacker account: `demⓞ@gmail.com`
 
-- [Unisub - is a tool that can suggest potential unicode characters that may be converted to a given character!](https://github.com/tomnomnom/hacks/tree/master/unisub)
-- [Unicode pentester cheatsheet!](https://gosecure.github.io/unicode-pentester-cheatsheet/) can be used to find list of suitable unicode characters based on platform
+[Unisub - is a tool that can suggest potential unicode characters that may be converted to a given character](https://github.com/tomnomnom/hacks/tree/master/unisub).
+
+[Unicode pentester cheatsheet](https://gosecure.github.io/unicode-pentester-cheatsheet/) can be used to find list of suitable unicode characters based on platform.
 
 ## Account Takeover Via Cross Site Scripting
 

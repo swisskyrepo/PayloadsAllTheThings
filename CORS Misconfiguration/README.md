@@ -14,6 +14,7 @@
 * [s0md3v/Corsy - CORS Misconfiguration Scanner](https://github.com/s0md3v/Corsy/)
 * [chenjj/CORScanner - Fast CORS misconfiguration vulnerabilities scanner](https://github.com/chenjj/CORScanner)
 * [PostMessage POC Builder - @honoki](https://tools.honoki.net/postmessage.html)
+* [trufflesecurity/of-cors - Exploit CORS misconfigurations on the internal networks](https://github.com/trufflesecurity/of-cors) 
 
 
 ## Prerequisites

@@ -2,6 +2,7 @@
 
 ## Summary
 
+* [SOCKS Compatibility Table](#socks-compatibility-table)
 * [Windows netsh Port Forwarding](#windows-netsh-port-forwarding)
 * [SSH](#ssh)
   * [SOCKS Proxy](#socks-proxy)
@@ -26,6 +27,16 @@
   * [Listen - Connect](#listen---connect)
   * [Connect - Connect](#connect---connect)
 * [References](#references)
+
+
+## SOCKS Compatibility Table
+
+| SOCKS Version | TCP   | UDP   | IPv4  | IPv6  | Hostname |
+| ------------- | :---: | :---: | :---: | :---: | :---:    |
+| SOCKS v4      | ✅    | ❌    | ✅    | ❌    | ❌       |
+| SOCKS v4a     | ✅    | ❌    | ✅    | ❌    | ✅       |
+| SOCKS v5      | ✅    | ✅    | ✅    | ✅    | ✅       |
+
 
 ## Windows netsh Port Forwarding
 

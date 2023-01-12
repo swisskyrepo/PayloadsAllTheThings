@@ -215,7 +215,6 @@ A valid PHAR includes four elements:
     $phar->stopBuffering();
     ```
 
-
 ## Real world examples
 
 * [Vanilla Forums ImportController index file_exists Unserialize Remote Code Execution Vulnerability - Steven Seeley](https://hackerone.com/reports/410237)
@@ -231,9 +230,9 @@ A valid PHAR includes four elements:
 * [PHP Generic Gadget - ambionics security](https://www.ambionics.io/blog/php-generic-gadget-chains)
 * [POC2009 Shocking News in PHP Exploitation](https://www.owasp.org/images/f/f6/POC2009-ShockingNewsInPHPExploitation.pdf)
 * [PHP Internals Book - Serialization](http://www.phpinternalsbook.com/classes_objects/serialization.html)
-* [TSULOTT Web challenge write-up from MeePwn CTF 1st 2017 by Rawsec](https://rawsec.ml/en/meepwn-2017-write-ups/#TSULOTT-Web)
+* [TSULOTT Web challenge write-up from MeePwn CTF 1st 2017 by Rawsec](https://blog.raw.pm/en/meepwn-2017-write-ups/#TSULOTT-Web)
 * [CTF writeup: PHP object injection in kaspersky CTF](https://medium.com/@jaimin_gohel/ctf-writeup-php-object-injection-in-kaspersky-ctf-28a68805610d)
-* [Jack The Ripper Web challeneg Write-up from ECSC 2019 Quals Team France by Rawsec](https://rawsec.ml/en/ecsc-2019-quals-write-ups/#164-Jack-The-Ripper-Web)
+* [Jack The Ripper Web challeneg Write-up from ECSC 2019 Quals Team France by Rawsec](https://blog.raw.pm/en/ecsc-2019-quals-write-ups/#164-Jack-The-Ripper-Web)
 * [Rusty Joomla RCE Unserialize overflow - Alessandro Groppo - October 3, 2019](https://blog.hacktivesecurity.com/index.php/2019/10/03/rusty-joomla-rce/)
 * [PHP Pop Chains - Achieving RCE with POP chain exploits. - Vickie Li - September 3, 2020](https://vkili.github.io/blog/insecure%20deserialization/pop-chains/)
 * [How to exploit the PHAR Deserialization Vulnerability - Alexandru Postolache - May 29, 2020](https://pentest-tools.com/blog/exploit-phar-deserialization-vulnerability/)

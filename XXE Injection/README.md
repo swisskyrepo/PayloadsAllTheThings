@@ -31,6 +31,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   - [XXE OOB with Apache Karaf](#xxe-oob-with-apache-karaf)
 - [WAF Bypasses](#waf-bypasses)
   - [Bypass via character encoding](#bypass-via-character-encoding)
+- [XXE in Java](#xxe-in-java)
 - [XXE in exotic files](#xxe-in-exotic-files)
   - [XXE inside SVG](#xxe-inside-svg)
   - [XXE inside SOAP](#xxe-inside-soap)
@@ -283,8 +284,6 @@ A variant of the Billion Laughs attack, using delayed interpretation of paramete
 %error;
 ```
 
-
-
 ## Exploiting blind XXE to exfiltrate data out-of-band
 
 Sometimes you won't have a result outputted in the page but you can still extract the data with an out of band attack.
@@ -300,7 +299,6 @@ The easiest way to test for a blind XXE is to try to load a remote resource such
 ]>
 <r></r>
 ```
-
 
 Send the content of `/etc/passwd` to "www.malicious.com", you may receive only the first line.
 
@@ -443,6 +441,26 @@ XML parsers uses 4 methods to detect encoding:
 cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
 ```
 
+## XXE in Java
+
+Unsecure configuration in 10 different Java classes from three XML processing interfaces (DOM, SAX, StAX) that can lead to XXE:
+
+![XXE Java security features overview infographics](https://semgrep.dev/docs/assets/images/cheat-sheets-xxe-java-infographics-1d1d5016802e3ab8f0886b62b8c81f21.png)
+
+- [DocumentBuilderFactory (javax.xml.parsers.DocumentBuilderFactory)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3a-documentbuilderfactory)
+- [SAXBuilder (org.jdom2.input.SAXBuilder)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3b-saxbuilder)
+- [SAXParserFactory (javax.xml.parsers.SAXParserFactory)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3c-saxparserfactory)
+- [SAXParser (javax.xml.parsers.SAXParser )](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3d-saxparser)
+- [SAXReader (org.dom4j.io.SAXReader)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3e-saxreader)
+- [TransformerFactory (javax.xml.transform.TransformerFactory) & SAXTransformerFactory (javax.xml.transform.sax.SAXTransformerFactory)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3f-transformerfactory--saxtransformerfactory)
+- [SchemaFactory (javax.xml.validation.SchemaFactory)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3g-schemafactory)
+- [Validator (javax.xml.validation.Validator)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3h-validator)
+- [XMLReader (org.xml.sax.XMLReader)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3i-xmlreader)
+
+Ref.
+
+- [Semgrep - XML Security in Java](https://semgrep.dev/blog/2022/xml-security-in-java)
+- [Semgrep - XML External entity prevention for Java](https://semgrep.dev/docs/cheat-sheets/java-xxe/)
 
 ## XXE in exotic files
 

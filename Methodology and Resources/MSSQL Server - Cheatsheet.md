@@ -2,6 +2,7 @@
 
 ## Summary
 
+* [Tools](#tools)
 * [Identify Instances and Databases](#identifiy-instaces-and-databases)
 	* [Discover Local SQL Server Instances](#discover-local-sql-server-instances)
 	* [Discover Domain SQL Server Instances](#discover-domain-sql-server-instances)
@@ -58,6 +59,11 @@
 	* [Exploiting Nested Impersonation](#exploiting-nested-impersonation)
 	* [MSSQL Accounts and Hashes](#mssql-accounts-and-hashes)
 * [References](#references)
+
+## Tools
+
+* [NetSPI/PowerUpSQL](https://github.com/NetSPI/PowerUpSQL) - A PowerShell Toolkit for Attacking SQL Server
+* [skahwah/SQLRecon](https://github.com/skahwah/SQLRecon/) - A C# MS SQL toolkit designed for offensive reconnaissance and post-exploitation.
 
 ## Identify Instances and Databases
 

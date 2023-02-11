@@ -1,0 +1,60 @@
+site_name: Payloads All The Things
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  features:
+    - navigation.tracking
+    - toc.integrate
+    - navigation.top
+
+markdown_extensions:
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - tables
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+
+repo_url: https://github.com/swisskyrepo/PayloadsAllTheThings/
+edit_uri: edit/master/
+plugins:
+  - search
+  - git-revision-date-localized
+
+# - git-committers:
+#     repository: swisskyrepo/PayloadsAllTheThings
+#     branch: main
+#     token: !ENV GH_TOKEN
+#     docs_path: docs/
+# insiders-2.12.0 ·  Plugin ·  Experimental
+# - social
+# - tags
+# - toc.integrate
+# - navigation.instant
+# logo: 'images/site_logo.png'
+# favicon: 'images/favicon.png'

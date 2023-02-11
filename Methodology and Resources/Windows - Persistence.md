@@ -33,6 +33,7 @@
     * [Remote Desktop Services Shadowing](#remote-desktop-services-shadowing)
     * [Skeleton Key](#skeleton-key)
     * [Virtual Machines](#virtual-machines)
+    * [Windows Subsystem for Linux](#windows-subsystem-for-linux)
 * [Domain](#domain)
     * [Golden Certificate](#golden-certificate)
     * [Golden Ticket](#golden-ticket)
@@ -537,6 +538,22 @@ $vmname = "IT Recovery"
 # then mount the folder in the VM
 sudo mkdir /mnt/c
 sudo mount -t vboxsf shadow_c /mnt/c
+```
+
+### Windows Subsystem for Linux
+
+```ps1
+# List and install online packages
+wsl --list --online
+wsl --install -d kali-linux
+
+# Use a local package
+wsl --set-default-version 2
+curl.exe --insecure -L -o debian.appx https://aka.ms/wsl-debian-gnulinux
+Add-AppxPackage .\debian.appx
+
+# Run the machine as root
+wsl kali-linux --user root
 ```
 
 

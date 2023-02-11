@@ -2,11 +2,8 @@ name: ci
 on:
   push:
     branches:
-      - master 
-      - main
-  # At minute 0 past every 6th hour
-  schedule:
-  - cron: "0 */6 * * *"
+      - master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -20,14 +17,10 @@ jobs:
       - name: Checkout submodules
         shell: bash
         run: |
-          git config --global user.email "you@example.com"
+          git config --global user.email "no-reply@github.com"
           git config --global user.name "Swk"
           git config --global pull.rebase false
           git submodule add https://github.com/swisskyrepo/PayloadsAllTheThings/ docs
-        # git submodule sync --recursive
-        # git submodule foreach git pull origin master --allow-unrelated-histories
-        # git submodule update --init --force --recursive
-        # git submodule update --remote --merge
 
       - uses: actions/setup-python@v2
         with:

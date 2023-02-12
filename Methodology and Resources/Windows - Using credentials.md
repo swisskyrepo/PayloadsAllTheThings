@@ -222,26 +222,35 @@ PS> $cred = New-Object System.Management.Automation.PSCredential ('DOMAIN\Userna
 
 ### Powershell PSSESSION
 
-```powershell
-PS> Enable-PSRemoting
+* Enable PSRemoting on the host
+    ```ps1
+    Enable-PSRemoting -Force
+    net start winrm  
 
-# Invoke command
-PS> Invoke-Command -ComputerName DC -Credential $cred -ScriptBlock { whoami }
+    # Add the machine to the trusted hosts
+    Set-Item wsman:\localhost\client\trustedhosts *
+    Set-Item WSMan:\localhost\Client\TrustedHosts -Value "10.10.10.10"
+    ```
 
-# one-to-one interactive session
-PS> Enter-PSSession -computerName DC01
-[DC01]: PS>
+* Execute a single command
+    ```powershell
+    PS> Invoke-Command -ComputerName DC -Credential $cred -ScriptBlock { whoami }
+    PS> Invoke-Command -computername DC01,CLIENT1 -scriptBlock { Get-Service }
+    PS> Invoke-Command -computername DC01,CLIENT1 -filePath c:\Scripts\Task.ps1
+    ```
 
-# one-to-one execute scripts and commands
-PS> $Session = New-PSSession -ComputerName CLIENT1
-PS> Invoke-Command -Session $Session -scriptBlock { $test = 1 }
-PS> Invoke-Command -Session $Session -scriptBlock { $test }
-1
+* Interact with a PS Session
+    ```powershell
+    PS> Enter-PSSession -computerName DC01
+    [DC01]: PS>
 
-# one-to-many execute scripts and commands
-PS> Invoke-Command -computername DC01,CLIENT1 -scriptBlock { Get-Service }
-PS> Invoke-Command -computername DC01,CLIENT1 -filePath c:\Scripts\Task.ps1
-```
+    # one-to-one execute scripts and commands
+    PS> $Session = New-PSSession -ComputerName CLIENT1
+    PS> Invoke-Command -Session $Session -scriptBlock { $test = 1 }
+    PS> Invoke-Command -Session $Session -scriptBlock { $test }
+    1
+    ```
+
 
 ### Powershell Secure String
 

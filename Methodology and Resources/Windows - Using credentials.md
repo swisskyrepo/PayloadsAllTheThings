@@ -10,6 +10,7 @@
 * [Crackmapexec](#crackmapexec)
 * [Impacket](#impacket)
     * [PSExec](#psexec)
+    * [WMIExec](#wmiexec)
 
 * [RDP Remote Desktop Protocol](#rdp-remote-desktop-protocol)
 * [Powershell Remoting Protocol](#powershell-remoting-protocol)
@@ -161,6 +162,11 @@ Use a custom binary and service name with : `psexec.py Administrator:Password123
 Also a custom file can be specified with the parameter : `-file /tmp/RemComSvcCustom.exe`.    
 You need to update the pipe name to match "Custom_communication" in the line 163     
 `fid_main = self.openPipe(s,tid,r'\RemCom_communicaton',0x12019f)` 
+
+### WMIExec
+
+Use a non default share `-share SHARE` to write the output to reduce the detection.   
+By default this command is executed : `cmd.exe /Q /c cd 1> \\127.0.0.1\ADMIN$\__RANDOM 2>&1`
 
 
 ## RDP Remote Desktop Protocol 

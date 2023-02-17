@@ -169,7 +169,13 @@ Use a custom binary and service name with : `psexec.py Administrator:Password123
 
 Also a custom file can be specified with the parameter : `-file /tmp/RemComSvcCustom.exe`.    
 You need to update the pipe name to match "Custom_communication" in the line 163     
-`fid_main = self.openPipe(s,tid,r'\RemCom_communicaton',0x12019f)`. Alternatively you can use the fork [ThePorgs/impacket](https://github.com/ThePorgs/impacket/pull/3/files).
+
+```py
+162    tid = s.connectTree('IPC$')
+163    fid_main = self.openPipe(s,tid,r'\RemCom_communicaton',0x12019f)
+```
+
+Alternatively you can use the fork [ThePorgs/impacket](https://github.com/ThePorgs/impacket/pull/3/files).
 
 
 ### WMIExec
@@ -182,9 +188,33 @@ By default this command is executed : `cmd.exe /Q /c cd 1> \\127.0.0.1\ADMIN$\__
 
 It creates a service with the name `BTOBTO` ([smbexec.py#L59](https://github.com/fortra/impacket/blob/master/examples/smbexec.py#L59)) and transfers commands from the attacker in a bat file in `%TEMP/execute.bat` ([smbexec.py#L56](https://github.com/fortra/impacket/blob/master/examples/smbexec.py#L56)).
 
+```py
+OUTPUT_FILENAME = '__output'
+BATCH_FILENAME  = 'execute.bat'
+SMBSERVER_DIR   = '__tmp'
+DUMMY_SHARE     = 'TMP'
+SERVICE_NAME    = 'BTOBTO'
+```
+
 It will create a new service every time we execute a command. It will also generate an Event 7045.
 
-By default this command is execute: `%COMSPEC% /Q /c echo dir > \\127.0.0.1\C$\__output 2>&1 > %TEMP%\execute.bat & %COMSPEC% /Q /c %TEMP%\execute.bat & del %TEMP%\execute.bat`, where `%COMSPEC%` points to `C:\WINDOWS\system32\cmd.exe`.
+By default this command is executed: `%COMSPEC% /Q /c echo dir > \\127.0.0.1\C$\__output 2>&1 > %TEMP%\execute.bat & %COMSPEC% /Q /c %TEMP%\execute.bat & del %TEMP%\execute.bat`, where `%COMSPEC%` points to `C:\WINDOWS\system32\cmd.exe`.
+
+```py
+class RemoteShell(cmd.Cmd):
+    def __init__(self, share, rpc, mode, serviceName, shell_type):
+        cmd.Cmd.__init__(self)
+        self.__share = share
+        self.__mode = mode
+        self.__output = '\\\\127.0.0.1\\' + self.__share + '\\' + OUTPUT_FILENAME
+        self.__batchFile = '%TEMP%\\' + BATCH_FILENAME
+        self.__outputBuffer = b''
+        self.__command = ''
+        self.__shell = '%COMSPEC% /Q /c '
+        self.__shell_type = shell_type
+        self.__pwsh = 'powershell.exe -NoP -NoL -sta -NonI -W Hidden -Exec Bypass -Enc '
+        self.__serviceName = serviceName
+```
 
 
 ## RDP Remote Desktop Protocol 
@@ -361,3 +391,4 @@ PS C:\> runas /noprofil /netonly /user:DOMAIN\username cmd.exe
 - [SMB protocol cheatsheet - aas-s3curity](https://aas-s3curity.gitbook.io/cheatsheet/internalpentest/active-directory/post-exploitation/lateral-movement/smb-protocol)
 - [Windows Lateral Movement with smb, psexec and alternatives - nv2lt](https://nv2lt.github.io/windows/smb-psexec-smbexec-winexe-how-to/)
 - [PsExec.exe IOCs and Detection - Threatexpress](https://threatexpress.com/redteaming/tool_ioc/psexec/)
+- [A Dive on SMBEXEC - dmcxblue - 8th Feb 2021](https://0x00sec.org/t/a-dive-on-smbexec/24961)

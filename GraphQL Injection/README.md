@@ -329,3 +329,4 @@ mutation finishChannelVerificationMutation(
 * [Introspection query leaks sensitive graphql system information - @Zuriel](https://hackerone.com/reports/291531)
 * [Graphql Bug to Steal Anyone’s Address - Sept 1, 2019 - Pratik Yadav](https://medium.com/@pratiky054/graphql-bug-to-steal-anyones-address-fc34f0374417)
 * [GraphQL Batching Attack - RENATAWALLARM - DECEMBER 13, 2019](https://lab.wallarm.com/graphql-batching-attack/)
+* [GraphQL for Pentesters presentation by ACCEIS - 01/12/2022](https://acceis.github.io/prez-graphql/) - [source](https://github.com/Acceis/prez-graphql)

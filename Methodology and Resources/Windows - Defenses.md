@@ -9,6 +9,8 @@
     * [Just Enough Administration](#just-enough-administration)
     * [Contrained Language Mode](#constrained-language-mode)
     * [Script Block Logging](#script-block-logging)
+* [Protected Process Light](#protected-process-light)
+* [Credential Guard](#credential-guard)
 * [Windows Defender Antivirus](#windows-defender-antivirus)
 * [Windows Defender Application Control](#windows-defender-application-control)
 * [Windows Defender Firewall](#windows-defender-firewall)
@@ -135,6 +137,47 @@ function Enable-PSScriptBlockLogging
 ```
 
 
+## Protected Process Light
+
+Protected Process Light (PPL) is implemented as a Windows security mechanism that enables processes to be marked as "protected" and run in a secure, isolated environment, where they are shielded from attacks by malware or other unauthorized processes. PPL is used to protect processes that are critical to the operation of the operating system, such as anti-virus software, firewalls, and other security-related processes.
+
+When a process is marked as "protected" using PPL, it is assigned a security level that determines the level of protection it will receive. This security level can be set to one of several levels, ranging from low to high. Processes that are assigned a higher security level are given more protection than those that are assigned a lower security level.
+
+A process's protection is defined by a combination of the "level" and the "signer". The following table represent commonly used combinations, from [itm4n.github.io](https://itm4n.github.io/lsass-runasppl/).
+
+| Protection level                | Value | Signer          | Type                | 		
+|---------------------------------|------|------------------|---------------------|
+| PS_PROTECTED_SYSTEM             | 0x72 | WinSystem (7)    | Protected (2)       |
+| PS_PROTECTED_WINTCB             | 0x62 | WinTcb (6)       | Protected (2)       |
+| PS_PROTECTED_WINDOWS            | 0x52 | Windows (5)      | Protected (2)       |
+| PS_PROTECTED_AUTHENTICODE       | 0x12 | Authenticode (1) | Protected (2)       |
+| PS_PROTECTED_WINTCB_LIGHT       | 0x61 | WinTcb (6)       | Protected Light (1) |
+| PS_PROTECTED_WINDOWS_LIGHT      | 0x51 | Windows (5)      | Protected Light (1) |
+| PS_PROTECTED_LSA_LIGHT          | 0x41 | Lsa (4)          | Protected Light (1) |
+| PS_PROTECTED_ANTIMALWARE_LIGHT  | 0x31 | Antimalware (3)  | Protected Light (1) |
+| PS_PROTECTED_AUTHENTICODE_LIGHT | 0x11 | Authenticode (1) | Protected Light (1) |
+
+PPL works by restricting access to the protected process's memory and system resources, and by preventing the process from being modified or terminated by other processes or users. The process is also isolated from other processes running on the system, which helps prevent attacks that attempt to exploit shared resources or dependencies.
+
+* Check if LSASS is running in PPL
+    ```ps1
+    reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa /v RunAsPPL
+    ```
+* Protected process example: you can't kill Microsoft Defender even with Administrator privilege.
+    ```ps1
+    taskkill /f /im MsMpEng.exe
+    ERROR: The process "MsMpEng.exe" with PID 5784 could not be terminated.
+    Reason: Access is denied.
+    ```
+* Can be disabled using vulnerable drivers (Bring Your Own Vulnerable Driver / BYOVD)
+
+
+## Credential Guard
+
+When Credential Guard is enabled, it uses hardware-based virtualization to create a secure environment that is separate from the operating system. This secure environment is used to store sensitive credential information, which is encrypted and protected from unauthorized access. 
+
+Credential Guard uses a combination of hardware-based virtualization and the Trusted Platform Module (TPM) to ensure that the secure kernel is trusted and secure. It can be enabled on devices that have a compatible processor and TPM version, and require a UEFI firmware that supports the necessary features.
+
 
 ## Windows Defender Antivirus
 
@@ -178,8 +221,9 @@ Also known as `WDAC/UMCI/Device Guard`.
 
 * Device Guard policy location: `C:\Windows\System32\CodeIntegrity\CiPolicies\Active\{PolicyId GUID}.cip`
 * Device Guard example policies: `C:\Windows\System32\CodeIntegrity\ExamplePolicies\`
-* WDAC bypass techniques: [bohops/UltimateWDACBypassList](https://github.com/bohops/UltimateWDACBypassList)
 * WDAC utilities: [mattifestation/WDACTools](https://github.com/mattifestation/WDACTools), a PowerShell module to facilitate building, configuring, deploying, and auditing Windows Defender Application Control (WDAC) policies
+* WDAC bypass techniques: [bohops/UltimateWDACBypassList](https://github.com/bohops/UltimateWDACBypassList)
+    * [nettitude/Aladdin](https://github.com/nettitude/Aladdin) - WDAC Bypass using AddInProcess.exe
 
 
 ## Windows Defender Firewall
@@ -214,3 +258,4 @@ Also known as `WDAC/UMCI/Device Guard`.
 
 * [SNEAKING PAST DEVICE GUARD - Cybereason - Philip Tsukerman](https://troopers.de/downloads/troopers19/TROOPERS19_AR_Sneaking_Past_Device_Guard.pdf)
 * [PowerShell about_Logging_Windows - Microsoft Documentation](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows?view=powershell-7.3)
+* [Do You Really Know About LSA Protection (RunAsPPL)? - itm4n - Apr 7, 2021](https://itm4n.github.io/lsass-runasppl/)

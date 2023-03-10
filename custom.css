@@ -11,8 +11,3 @@
         width: auto;
     } 
 }
-
-span.md-nav__icon.md-icon{
-    position: absolute;
-    right: 5px;
-}

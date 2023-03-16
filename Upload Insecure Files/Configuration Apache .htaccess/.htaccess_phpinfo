@@ -1,5 +1,0 @@
-AddType application/x-httpd-php .htaccess
-# <?php phpinfo(); ?>
-SetHandler server-status
-SetHandler server-info
-

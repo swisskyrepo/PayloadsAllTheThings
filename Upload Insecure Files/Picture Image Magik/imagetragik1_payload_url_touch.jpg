@@ -1,4 +1,0 @@
-push graphic-context
-viewbox 0 0 640 480
-fill 'url(https://127.0.0.0/oops.jpg"|touch "rce1)'
-pop graphic-context

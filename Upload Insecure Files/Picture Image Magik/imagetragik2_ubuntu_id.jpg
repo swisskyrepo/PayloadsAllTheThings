@@ -1,8 +1,0 @@
-%!PS
-userdict /setpagedevice undef
-save
-legal
-{ null restore } stopped { pop } if
-{ legal } stopped { pop } if
-restore
-mark /OutputFile (%pipe%id) currentdevice putdeviceprops

@@ -14,6 +14,7 @@
 * [Windows Defender Antivirus](#windows-defender-antivirus)
 * [Windows Defender Application Control](#windows-defender-application-control)
 * [Windows Defender Firewall](#windows-defender-firewall)
+* [Windows Information Protection](#windows-information-protection)
 
 
 ## AppLocker
@@ -254,8 +255,32 @@ Also known as `WDAC/UMCI/Device Guard`.
     netsh Advfirewall set allprofiles state off
     ```
 
+
+## Windows Information Protection
+
+Windows Information Protection (WIP), formerly known as Enterprise Data Protection (EDP), is a security feature in Windows 10 that helps protect sensitive data on enterprise devices. WIP helps to prevent accidental data leakage by allowing administrators to define policies that control how enterprise data can be accessed, shared, and protected. WIP works by identifying and separating enterprise data from personal data on the device. 
+
+Protection of file (data) locally marked as corporate is facilitated via Encrypting File System (EFS) encryption of Windows (a feature of NTFS file system)
+
+* Enumerate files attributes, `Encrypted` attribute is used for files protected by WIP
+    ```ps1
+    PS C:\> (Get-Item -Path 'C:\...').attributes
+    Archive, Encrypted
+    ```
+* Encrypt files: `cipher /c encryptedfile.extension`
+* Decrypt files: `cipher /d encryptedfile.extension`
+
+The **Enterprise Context** column shows you what each app can do with your enterprise data:
+
+* **Domain**. Shows the employee's work domain (such as, corp.contoso.com). This app is considered work-related and can freely touch and open work data and resources.
+* **Personal**. Shows the text, Personal. This app is considered non-work-related and can't touch any work data or resources.
+* **Exempt**. Shows the text, Exempt. Windows Information Protection policies don't apply to these apps (such as, system components).
+
+
 ## References
 
 * [SNEAKING PAST DEVICE GUARD - Cybereason - Philip Tsukerman](https://troopers.de/downloads/troopers19/TROOPERS19_AR_Sneaking_Past_Device_Guard.pdf)
 * [PowerShell about_Logging_Windows - Microsoft Documentation](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_logging_windows?view=powershell-7.3)
 * [Do You Really Know About LSA Protection (RunAsPPL)? - itm4n - Apr 7, 2021](https://itm4n.github.io/lsass-runasppl/)
+* [Determine the Enterprise Context of an app running in Windows Information Protection (WIP) - 03/10/2023 - Microsoft](https://learn.microsoft.com/en-us/windows/security/information-protection/windows-information-protection/wip-app-enterprise-context)
+* [Create and verify an Encrypting File System (EFS) Data Recovery Agent (DRA) certificate - 12/09/2022 - Microsoft](https://learn.microsoft.com/en-us/windows/security/information-protection/windows-information-protection/create-and-verify-an-efs-dra-certificate)

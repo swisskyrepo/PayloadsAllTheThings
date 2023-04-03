@@ -192,9 +192,80 @@ ETW (Event Tracing for Windows) is a Windows-based logging mechanism that provid
 | Microsoft-Antimalware-Protection      | {E4B70372-261F-4C54-8FA6-A5A7914D73DA} |
 | Microsoft-Windows-Threat-Intelligence | {F4E1897C-BB5D-5668-F1D8-040F4D8DD344} |
 
+You can see all the providers registered to Windows using: `logman query providers`
+
+```ps1
+PS C:\Users\User\Documents> logman query providers
+
+Provider                                 GUID
+-------------------------------------------------------------------------------
+.NET Common Language Runtime             {E13C0D23-CCBC-4E12-931B-D9CC2EEE27E4}
+ACPI Driver Trace Provider               {DAB01D4D-2D48-477D-B1C3-DAAD0CE6F06B}
+Active Directory Domain Services: SAM    {8E598056-8993-11D2-819E-0000F875A064}
+Active Directory: Kerberos Client        {BBA3ADD2-C229-4CDB-AE2B-57EB6966B0C4}
+Active Directory: NetLogon               {F33959B4-DBEC-11D2-895B-00C04F79AB69}
+ADODB.1                                  {04C8A86F-3369-12F8-4769-24E484A9E725}
+ADOMD.1                                  {7EA56435-3F2F-3F63-A829-F0B35B5CAD41}
+...
+```
+
+We can get more information about the provider using:  `logman query providers {ProviderID}/Provider-Name`
+
+```ps1
+PS C:\Users\User\Documents> logman query providers Microsoft-Antimalware-Scan-Interface
+
+Provider                                 GUID
+-------------------------------------------------------------------------------
+Microsoft-Antimalware-Scan-Interface     {2A576B87-09A7-520E-C21A-4942F0271D67}
+
+Value               Keyword              Description
+-------------------------------------------------------------------------------
+0x0000000000000001  Event1
+0x8000000000000000  AMSI/Debug
+
+Value               Level                Description
+-------------------------------------------------------------------------------
+0x04                win:Informational    Information
+
+PID                 Image
+-------------------------------------------------------------------------------
+0x00002084          C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+0x00002084          C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+0x00001bd4
+0x00000ad0
+0x00000b98
+```
+
 The `Microsoft-Windows-Threat-Intelligence` provider corresponds to ETWTI, an additional security feature that an EDR can subscribe to and identify malicious uses of APIs (e.g. process injection).
 
-The most common bypassing technique is patching the function `EtwEventWrite` which is called to write/log ETW events. 
+```ps1
+0x0000000000000001  KERNEL_THREATINT_KEYWORD_ALLOCVM_LOCAL
+0x0000000000000002  KERNEL_THREATINT_KEYWORD_ALLOCVM_LOCAL_KERNEL_CALLER
+0x0000000000000004  KERNEL_THREATINT_KEYWORD_ALLOCVM_REMOTE
+0x0000000000000008  KERNEL_THREATINT_KEYWORD_ALLOCVM_REMOTE_KERNEL_CALLER
+0x0000000000000010  KERNEL_THREATINT_KEYWORD_PROTECTVM_LOCAL
+0x0000000000000020  KERNEL_THREATINT_KEYWORD_PROTECTVM_LOCAL_KERNEL_CALLER
+0x0000000000000040  KERNEL_THREATINT_KEYWORD_PROTECTVM_REMOTE
+0x0000000000000080  KERNEL_THREATINT_KEYWORD_PROTECTVM_REMOTE_KERNEL_CALLER
+0x0000000000000100  KERNEL_THREATINT_KEYWORD_MAPVIEW_LOCAL
+0x0000000000000200  KERNEL_THREATINT_KEYWORD_MAPVIEW_LOCAL_KERNEL_CALLER
+0x0000000000000400  KERNEL_THREATINT_KEYWORD_MAPVIEW_REMOTE
+0x0000000000000800  KERNEL_THREATINT_KEYWORD_MAPVIEW_REMOTE_KERNEL_CALLER
+0x0000000000001000  KERNEL_THREATINT_KEYWORD_QUEUEUSERAPC_REMOTE
+0x0000000000002000  KERNEL_THREATINT_KEYWORD_QUEUEUSERAPC_REMOTE_KERNEL_CALLER
+0x0000000000004000  KERNEL_THREATINT_KEYWORD_SETTHREADCONTEXT_REMOTE
+0x0000000000008000  KERNEL_THREATINT_KEYWORD_SETTHREADCONTEXT_REMOTE_KERNEL_CALLER
+0x0000000000010000  KERNEL_THREATINT_KEYWORD_READVM_LOCAL
+0x0000000000020000  KERNEL_THREATINT_KEYWORD_READVM_REMOTE
+0x0000000000040000  KERNEL_THREATINT_KEYWORD_WRITEVM_LOCAL
+0x0000000000080000  KERNEL_THREATINT_KEYWORD_WRITEVM_REMOTE
+0x0000000000100000  KERNEL_THREATINT_KEYWORD_SUSPEND_THREAD
+0x0000000000200000  KERNEL_THREATINT_KEYWORD_RESUME_THREAD
+0x0000000000400000  KERNEL_THREATINT_KEYWORD_SUSPEND_PROCESS
+0x0000000000800000  KERNEL_THREATINT_KEYWORD_RESUME_PROCESS
+```
+
+The most common bypassing technique is patching the function `EtwEventWrite` which is called to write/log ETW events. You can list the providers registered for a process with `logman query providers -pid <PID>`
 
 
 ## Windows Defender Antivirus
@@ -303,3 +374,4 @@ The **Enterprise Context** column shows you what each app can do with your enter
 * [Create and verify an Encrypting File System (EFS) Data Recovery Agent (DRA) certificate - 12/09/2022 - Microsoft](https://learn.microsoft.com/en-us/windows/security/information-protection/windows-information-protection/create-and-verify-an-efs-dra-certificate)
 * [DISABLING AV WITH PROCESS SUSPENSION - March 24, 2023 - By Christopher Paschen ](https://www.trustedsec.com/blog/disabling-av-with-process-suspension/)
 * [Disabling Event Tracing For Windows - UNPROTECT PROJECT - Tuesday 19 April 2022](https://unprotect.it/technique/disabling-event-tracing-for-windows-etw/)
+* [ETW: Event Tracing for Windows 101 - ired.team](https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/etw-event-tracing-for-windows-101)

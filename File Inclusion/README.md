@@ -26,7 +26,7 @@
     - [Wrapper input://](#wrapper-input)
     - [Wrapper zip://](#wrapper-zip)
     - [Wrapper phar://](#wrapper-phar)
-    - [Wrapper iconv:// and dechunk://](#wrapper-iconv-and-dechunk)
+    - [Wrapper convert.iconv:// and dechunk://](#wrapper-converticonv-and-dechunk)
   - [LFI to RCE via /proc/*/fd](#lfi-to-rce-via-procfd)
   - [LFI to RCE via /proc/self/environ](#lfi-to-rce-via-procselfenviron)
   - [LFI to RCE via upload](#lfi-to-rce-via-upload)
@@ -252,9 +252,13 @@ include('phar://test.phar');
 NOTE: The unserialize is triggered for the phar:// wrapper in any file operation, `file_exists` and many more.
 
 
-### Wrapper iconv:// and dechunk://
+### Wrapper convert.iconv:// and dechunk://
 
-The goal is to leak the content of a file, one character at a time. 
+- `convert.iconv://`: convert input into another folder (`convert.iconv.utf-16le.utf-8`)
+- `dechunk://`: if the string contains no newlines, it will wipe the entire string if and only if
+the string starts with A-Fa-f0-9
+
+The goal of this exploitation is to leak the content of a file, one character at a time, based on the [DownUnderCTF](https://github.com/DownUnderCTF/Challenges_2022_Public/blob/main/web/minimal-php/solve/solution.py) writeup.
  
 **Requirements**:
 - Backend must not use `file_exists` or `is_file`.

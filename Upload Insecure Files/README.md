@@ -57,9 +57,10 @@
     shell.aspx;1.jpg # (IIS < 7.0)
     shell.soap
     ```
-* JSP : `.jsp, .jspx, .jsw, .jsv, .jspf, .wss, .do, .action`s
+* JSP : `.jsp, .jspx, .jsw, .jsv, .jspf, .wss, .do, .actions`
 * Perl: `.pl, .pm, .cgi, .lib`
 * Coldfusion: `.cfm, .cfml, .cfc, .dbm`
+* Node.js: `.js, .json, .node`
 
 ### Upload tricks
 

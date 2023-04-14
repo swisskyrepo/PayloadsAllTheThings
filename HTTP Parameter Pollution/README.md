@@ -36,12 +36,12 @@ When ?par1=a&par1=b
 | Python Django                                   |Last occurrence          |b              |
 | Nodejs                                          |All occurrences          |a,b            |
 | Golang net/http - `r.URL.Query().Get("param")`  |First occurrence         |a              |
-| Golang net/http - `r.URL.Query()["param"]`      |All occurrences          |a,b            |
+| Golang net/http - `r.URL.Query()["param"]`      |All occurrences in array |['a','b']      |
 | IBM Lotus Domino                                |First occurrence         |a              |
 | IBM HTTP Server                                 |First occurrence         |a              |
 | Perl CGI/Apache                                 |First occurrence         |a              |
 | mod_wsgi (Python)/Apache                        |First occurrence         |a              |
-| Python/Zope                                     |All occurrences in array  |['a','b']      |
+| Python/Zope                                     |All occurrences in array |['a','b']      |
 | Ruby on Rails                                   |Last occurrence          |b              |
 
 ## References

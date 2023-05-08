@@ -365,6 +365,15 @@ The **Enterprise Context** column shows you what each app can do with your enter
 * **Exempt**. Shows the text, Exempt. Windows Information Protection policies don't apply to these apps (such as, system components).
 
 
+## BitLocker Drive Encryption
+
+BitLocker is a full-disk encryption feature included in Microsoft Windows operating systems starting with Windows Vista. It is designed to protect data by providing encryption for entire volumes. BitLocker uses AES encryption algorithm to encrypt data on the disk. When enabled, BitLocker requires a user to enter a password or insert a USB flash drive to unlock the encrypted volume before the operating system is loaded, ensuring that data on the disk is protected from unauthorized access. BitLocker is commonly used on laptops, portable storage devices, and other mobile devices to protect sensitive data in case of theft or loss.
+
+When BitLocker is in `Suspended` state, boot the system using a Windows Setup USB, and then decrypt the drive using this command: `manage-bde -off c:`
+
+You can check if it is done decrypting using this command: `manage-bde -status`
+
+
 ## References
 
 * [SNEAKING PAST DEVICE GUARD - Cybereason - Philip Tsukerman](https://troopers.de/downloads/troopers19/TROOPERS19_AR_Sneaking_Past_Device_Guard.pdf)

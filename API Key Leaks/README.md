@@ -45,7 +45,7 @@
     python ./badsecrets/examples/telerik_knownkey.py --url http://vulnerablesite/Telerik.Web.UI.DialogHandler.aspx
     python ./badsecrets/examples/symfony_knownkey.py --url https://localhost/
     ```
-
+- [mazen160/secrets-patterns-db](https://github.com/mazen160/secrets-patterns-db) - Secrets Patterns DB: The largest open-source Database for detecting secrets, API keys, passwords, tokens, and more.
     
 ## Exploit
 

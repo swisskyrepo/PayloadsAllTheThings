@@ -3481,8 +3481,7 @@ ls \\machine.domain.local\c$
 
 ## Privileged Access Management (PAM) Trust
 
-> PAM (Privileged access managment) introduces bastion forest for management, Shadow Security Principals (groups mapped to high priv groups of managed forests). These allow management of other forests without making changes to groups or ACLs and without interactive logon. Temporary Group Membership also introduced so perms only given for set time.
-Enumeration
+> PAM (Privileged access managment) introduces bastion forest for management, Shadow Security Principals (groups mapped to high priv groups of managed forests). These allow management of other forests without making changes to groups or ACLs and without interactive logon.
 
 Requirements: 
 * Windows Server 2016 or earlier   

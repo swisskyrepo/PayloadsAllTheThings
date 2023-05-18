@@ -364,7 +364,7 @@ Replace the customqueries.json file located at `/home/username/.config/bloodhoun
   #Check last password change
   Get-UserProperty -Properties pwdlastset
 
-  #Get a spesific "string" on a user's attribute
+  #Get a specific "string" on a user's attribute
   Find-UserField -SearchField Description -SearchTerm "wtver"
   
   #Enumerate user logged on a machine
@@ -486,7 +486,7 @@ Replace the customqueries.json file located at `/home/username/.config/bloodhoun
   ```powershell
   Get-ADUser -Filter * -Identity <user> -Properties *
 
-  #Get a spesific "string" on a user's attribute
+  #Get a specific "string" on a user's attribute
   Get-ADUser -Filter 'Description -like "*wtver*"' -Properties Description | select Name, Description
   ```
 - **Enum Domain Computers:** 

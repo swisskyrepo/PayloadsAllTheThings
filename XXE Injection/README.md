@@ -104,6 +104,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   * [Exploiting XInclude to retrieve files](https://portswigger.net/web-security/xxe/lab-xinclude-attack)
   * [Exploiting XXE via image file upload](https://portswigger.net/web-security/xxe/lab-xxe-via-file-upload)
   * [Exploiting XXE to retrieve data by repurposing a local DTD](https://portswigger.net/web-security/xxe/blind/lab-xxe-trigger-error-message-by-repurposing-local-dtd)
+* [GoSecure workshop - Advanced XXE Exploitation](https://gosecure.github.io/xxe-workshop) 
 
 
 ## Detect the vulnerability

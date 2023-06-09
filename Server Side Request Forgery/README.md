@@ -166,6 +166,7 @@ Ref:
 
 ```powershell
 http://[0:0:0:0:0:ffff:127.0.0.1]
+http://[::ffff:127.0.0.1]
 ```
 
 ### Bypass using malformed urls

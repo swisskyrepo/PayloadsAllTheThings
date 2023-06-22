@@ -42,6 +42,16 @@
 
 ![LooseTypeComparison](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Type%20Juggling/Images/table_representing_behavior_of_PHP_with_loose_type_comparisons.png?raw=true)
 
+Loose Type Comparisons occurs in many languages:
+* [MariaDB](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Mariadb)
+* [MySQL](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Mysql)
+* [NodeJS](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/NodeJS)
+* [PHP](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/PHP)
+* [Perl](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Perl)
+* [Postgres](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Postgres)
+* [Python](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Python)
+* [SQLite](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/SQLite/2.6.0)
+
 
 ### NULL statements
 

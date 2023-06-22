@@ -288,6 +288,9 @@ PS C:\> Add-MpPreference -ExclusionPath "C:\Temp"
 PS C:\> Add-MpPreference -ExclusionPath "C:\Windows\Tasks"
 PS C:\> Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"
 
+# exclude using wmi
+PS C:\> WMIC /Namespace:\\root\Microsoft\Windows\Defender class MSFT_MpPreference call Add ExclusionPath="C:\Users\Public\wmic"
+
 # remove signatures (if Internet connection is present, they will be downloaded again):
 PS > & "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
 PS > & "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All

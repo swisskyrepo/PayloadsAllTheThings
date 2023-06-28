@@ -62,7 +62,7 @@
     - [Bypass "<" and ">" using ＜ and ＞](#bypass--and--using--and-)
     - [Bypass ";" using another character](#bypass--using-another-character)
     - [Bypass using HTML encoding](#bypass-using-html-encoding)
-    - [Bypass using Katana](#bypass-using-katana)
+    - [Bypass using Katakana](#bypass-using-katakana)
     - [Bypass using Cuneiform](#bypass-using-cuneiform)
     - [Bypass using Lontara](#bypass-using-lontara)
     - [Bypass using ECMAScript6](#bypass-using-ecmascript6)
@@ -967,7 +967,7 @@ Unicode Character U+FF1C and U+FF1E
 ></script><svg onload=%26%2397%3B%26%23108%3B%26%23101%3B%26%23114%3B%26%23116%3B(document.domain)>
 ```
 
-### Bypass using Katana
+### Bypass using Katakana
 
 Using the [Katakana](https://github.com/aemkei/katakana.js) library.
 

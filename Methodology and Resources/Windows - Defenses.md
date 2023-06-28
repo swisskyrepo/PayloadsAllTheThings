@@ -288,6 +288,9 @@ PS C:\> Add-MpPreference -ExclusionPath "C:\Temp"
 PS C:\> Add-MpPreference -ExclusionPath "C:\Windows\Tasks"
 PS C:\> Set-MpPreference -ExclusionProcess "word.exe", "vmwp.exe"
 
+# exclude using wmi
+PS C:\> WMIC /Namespace:\\root\Microsoft\Windows\Defender class MSFT_MpPreference call Add ExclusionPath="C:\Users\Public\wmic"
+
 # remove signatures (if Internet connection is present, they will be downloaded again):
 PS > & "C:\ProgramData\Microsoft\Windows Defender\Platform\4.18.2008.9-0\MpCmdRun.exe" -RemoveDefinitions -All
 PS > & "C:\Program Files\Windows Defender\MpCmdRun.exe" -RemoveDefinitions -All
@@ -307,7 +310,10 @@ Also known as `WDAC/UMCI/Device Guard`.
     DeviceGuardCodeIntegrityPolicyEnforcementStatus         : EnforcementMode
     DeviceGuardUserModeCodeIntegrityPolicyEnforcementStatus : EnforcementMode
     ```
-
+* Remove WDAC policies using CiTool.exe (Windows 11 2022 Update)
+    ```ps1
+    $ CiTool.exe -rp "{PolicyId GUID}" -json
+    ```
 * Device Guard policy location: `C:\Windows\System32\CodeIntegrity\CiPolicies\Active\{PolicyId GUID}.cip`
 * Device Guard example policies: `C:\Windows\System32\CodeIntegrity\ExamplePolicies\`
 * WDAC utilities: [mattifestation/WDACTools](https://github.com/mattifestation/WDACTools), a PowerShell module to facilitate building, configuring, deploying, and auditing Windows Defender Application Control (WDAC) policies
@@ -384,3 +390,4 @@ You can check if it is done decrypting using this command: `manage-bde -status`
 * [DISABLING AV WITH PROCESS SUSPENSION - March 24, 2023 - By Christopher Paschen ](https://www.trustedsec.com/blog/disabling-av-with-process-suspension/)
 * [Disabling Event Tracing For Windows - UNPROTECT PROJECT - Tuesday 19 April 2022](https://unprotect.it/technique/disabling-event-tracing-for-windows-etw/)
 * [ETW: Event Tracing for Windows 101 - ired.team](https://www.ired.team/miscellaneous-reversing-forensics/windows-kernel-internals/etw-event-tracing-for-windows-101)
+* [Remove Windows Defender Application Control (WDAC) policies - Microsoft - 12/09/2022](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-defender-application-control/disable-windows-defender-application-control-policies)

@@ -8,7 +8,6 @@
 - [Exploit](#exploit)
     - [Google Maps](#google-maps)
     - [Algolia](#algolia)
-    - [AWS Access Key ID & Secret](#aws-access-key-id--secret)
     - [Slack API Token](#slack-api-token)
     - [Facebook Access Token](#facebook-access-token)
     - [Github client id and client secret](#github-client-id-and-client-secret)

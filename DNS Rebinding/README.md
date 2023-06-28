@@ -7,6 +7,7 @@
 * [Tools](#tools)
 * [Exploitation](#exploitation)
 * [Protection Bypasses](#protection-bypasses)
+* [References](#references)
 
 ## Tools
 

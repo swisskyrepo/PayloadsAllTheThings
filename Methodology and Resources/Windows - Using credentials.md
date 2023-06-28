@@ -96,7 +96,7 @@ Password: pw123
 
 ## Crackmapexec
 
-Using [Porchetta-Industries/CrackMapExec](https://github.com/Porchetta-Industries/CrackMapExec)
+Using [mpgn/CrackMapExec](https://github.com/mpgn/CrackMapExec)
 
 * CrackMapExec supports many protocols
     ```powershell

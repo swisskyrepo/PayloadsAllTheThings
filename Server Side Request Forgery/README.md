@@ -557,6 +557,8 @@ The AWS Instance Metadata Service is a service available within Amazon EC2 insta
   curl -H "X-aws-ec2-metadata-token:$TOKEN" -v "http://169.254.169.254/latest/meta-data"
   ```
 
+* IPv6 endpoint: `http://[fd00:ec2::254]/latest/meta-data/` 
+
 In case of a WAF, you might want to try different ways to connect to the API.
 * DNS record pointing to the AWS API IP
   ```powershell
@@ -583,6 +585,7 @@ In case of a WAF, you might want to try different ways to connect to the API.
   http://[::ffff:a9fe:a9fe] IPV6 Compressed
   http://[0:0:0:0:0:ffff:a9fe:a9fe] IPV6 Expanded
   http://[0:0:0:0:0:ffff:169.254.169.254] IPV6/IPV4
+  http://[fd00:ec2::254] IPV6
   ```
 
 

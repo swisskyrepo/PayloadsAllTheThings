@@ -550,8 +550,8 @@ Example of a PDF attachment using HTML
 The AWS Instance Metadata Service is a service available within Amazon EC2 instances that allows those instances to access metadata about themselves. - [Docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
 
 
-* Old endpoint: `http://169.254.169.254/latest/meta-data/`
-* New endpoint requires the header `X-aws-ec2-metadata-token`
+* IPv4 endpoint (old): `http://169.254.169.254/latest/meta-data/`
+* IPv4 endpoint (new) requires the header `X-aws-ec2-metadata-token`
   ```powershell
   export TOKEN=`curl -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" "http://169.254.169.254/latest/api/token"`
   curl -H "X-aws-ec2-metadata-token:$TOKEN" -v "http://169.254.169.254/latest/meta-data"

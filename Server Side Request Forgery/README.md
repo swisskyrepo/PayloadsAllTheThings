@@ -550,12 +550,14 @@ Example of a PDF attachment using HTML
 The AWS Instance Metadata Service is a service available within Amazon EC2 instances that allows those instances to access metadata about themselves. - [Docs](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html#instancedata-data-categories)
 
 
-* Old endpoint: `http://169.254.169.254/latest/meta-data/`
-* New endpoint requires the header `X-aws-ec2-metadata-token`
+* IPv4 endpoint (old): `http://169.254.169.254/latest/meta-data/`
+* IPv4 endpoint (new) requires the header `X-aws-ec2-metadata-token`
   ```powershell
   export TOKEN=`curl -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" "http://169.254.169.254/latest/api/token"`
   curl -H "X-aws-ec2-metadata-token:$TOKEN" -v "http://169.254.169.254/latest/meta-data"
   ```
+
+* IPv6 endpoint: `http://[fd00:ec2::254]/latest/meta-data/` 
 
 In case of a WAF, you might want to try different ways to connect to the API.
 * DNS record pointing to the AWS API IP
@@ -583,6 +585,7 @@ In case of a WAF, you might want to try different ways to connect to the API.
   http://[::ffff:a9fe:a9fe] IPV6 Compressed
   http://[0:0:0:0:0:ffff:a9fe:a9fe] IPV6 Expanded
   http://[0:0:0:0:0:ffff:169.254.169.254] IPV6/IPV4
+  http://[fd00:ec2::254] IPV6
   ```
 
 

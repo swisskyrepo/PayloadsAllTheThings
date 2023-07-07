@@ -106,3 +106,4 @@ CloudFlare has a list of default extensions that gets cached behind their Load B
   - [Exploiting cache design flaws](https://portswigger.net/web-security/web-cache-poisoning/exploiting-design-flaws)
   - [Exploiting cache implementation flaws](https://portswigger.net/web-security/web-cache-poisoning/exploiting-implementation-flaws)
 * [OpenAI Account Takeover - @naglinagli - Mar 24, 2023](https://twitter.com/naglinagli/status/1639343866313601024)
+* [Shockwave Identifies Web Cache Deception and Account Takeover Vulnerability affecting OpenAI's ChatGPT - Gal Nagli](https://www.shockwave.cloud/blog/shockwave-works-with-openai-to-fix-critical-chatgpt-vulnerability)

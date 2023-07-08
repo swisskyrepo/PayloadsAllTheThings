@@ -4,8 +4,8 @@
 
 * [Tools](#tools)
 * [Exploit](#exploit)
-* [Methodology - Caching Sensitive Data](#methodology---caching-sensitive-data)
-* [Methodology - Caching Custom JavaScript](#methodology---caching-custom-javascript)
+    * [Methodology - Caching Sensitive Data](#methodology---caching-sensitive-data)
+    * [Methodology - Caching Custom JavaScript](#methodology---caching-custom-javascript)
 * [CloudFlare Caching](#cloudflare-caching)
 * [Labs](#labs)
 * [References](#references)
@@ -25,7 +25,7 @@
 5. Under the cache directory, the proxy creates a directory named home.php, and caches the imposter "CSS" file (non-existent.css) inside.
 
 
-## Methodology - Caching Sensitive Data
+### Methodology - Caching Sensitive Data
 
 **Example 1** - Web Cache Deception on PayPal Home Page
 1. Normal browsing, visit home : `https://www.example.com/myaccount/home/`
@@ -45,7 +45,7 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
 5. Attacker harvests JWT Credentials.
 
 
-## Methodology - Caching Custom JavaScript
+### Methodology - Caching Custom JavaScript
 
 1. Find an un-keyed input for a Cache Poisoning
     ```js

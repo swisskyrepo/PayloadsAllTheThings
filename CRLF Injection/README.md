@@ -10,6 +10,7 @@
 - [CRLF - Add a cookie - XSS Bypass](#crlf---add-a-cookie---xss-bypass)
 - [CRLF - Write HTML](#crlf---write-html)
 - [CRLF - Filter Bypass](#crlf---filter-bypass)
+- [Labs](#labs)
 - [References](#references)
 
 ## CRLF - Add a cookie
@@ -103,13 +104,11 @@ Remainder:
 * %E5%98%BE = %3E = \u563e (>)
 * %E5%98%BC = %3C = \u563c (<)
 
+
 ## Labs
 
 * [https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection](https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection)
 
-## Exploitation Tricks
-* Try to search for parameters that lead to redirects and fuzz them
-* Also test the mobile version of the website, sometimes it is different or uses a different backend 
 
 ## References
 

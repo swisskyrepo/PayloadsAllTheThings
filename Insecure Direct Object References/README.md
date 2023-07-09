@@ -1,6 +1,7 @@
 # Insecure Direct Object References
 
-> Insecure Direct Object References occur when an application provides direct access to objects based on user-supplied input. As a result of this vulnerability attackers can bypass authorization and access resources in the system directly, for example database records or files.  - OWASP
+> Insecure Direct Object References occur when an application provides direct access to objects based on user-supplied input. As a result of this vulnerability attackers can bypass authorization and access resources in the system directly, for example database records or files. - OWASP
+
 
 ## Summary
 
@@ -8,7 +9,9 @@
 * [Exploit](#exploit)
     * [IDOR Tips](#idor-tips)
 * [Examples](#examples)
+* [Labs](#labs)
 * [References](#references)
+
 
 ## Tools
 
@@ -16,7 +19,10 @@
 - [BApp Store > AuthMatrix](https://portswigger.net/bappstore/30d8ee9f40c041b0bfec67441aad158e)
 - [BApp Store > Autorize](https://portswigger.net/bappstore/f9bbac8c4acf4aefa4d7dc92a991af2f)
 
+
 ## Exploit
+
+For instance, consider a URL like `https://example.com/account?userid=123`. In this case, `123` is a direct object reference to a specific user's account. If the application doesn't properly check that the logged-in user has the right to access the account related to `userid=123`, then any user could potentially change the userid in the URL to access other users' accounts.
 
 ![https://lh5.googleusercontent.com/VmLyyGH7dGxUOl60h97Lr57F7dcnDD8DmUMCZTD28BKivVI51BLPIqL0RmcxMPsmgXgvAqY8WcQ-Jyv5FhRiCBueX9Wj0HSCBhE-_SvrDdA6_wvDmtMSizlRsHNvTJHuy36LG47lstLpTqLK](https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/Insecure%20Direct%20Object%20References/Images/idor.png)
 
@@ -44,6 +50,7 @@ The value of a parameter is used directly to access application functionality
 http://foo.bar/accessPage?menuitem=12
 ```
 
+
 ### IDOR Tips
 
 * Change the HTTP request: POST → PUT
@@ -58,9 +65,11 @@ http://foo.bar/accessPage?menuitem=12
 * [HackerOne - IDOR to view User Order Information - meals](https://hackerone.com/reports/287789)
 * [HackerOne - IDOR on HackerOne Feedback Review - japz](https://hackerone.com/reports/262661)
 
+
 ## Labs
 
-* [Insecure direct object references](https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references)
+* [PortSwigger - Insecure direct object references](https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references)
+
 
 ## References
 

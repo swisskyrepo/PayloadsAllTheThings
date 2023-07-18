@@ -8,6 +8,7 @@
 - [Attacking Network Protocols: A Hacker's Guide to Capture, Analysis, and Exploitation by James Forshaw (2018)](https://nostarch.com/networkprotocols)
 - [Black Hat Go: Go Programming for Hackers and Pentesters by Tom Steele, Chris Patten, and Dan Kottmann (2020)](https://nostarch.com/blackhatgo)
 - [Black Hat Python: Python Programming for Hackers and Pentesters by Justin Seitz (2014)](https://www.goodreads.com/book/show/22299369-black-hat-python)
+- [Black Hat Rust: Applied offensive security with the Rust programming language by Sylvain Kerkour](https://kerkour.com/black-hat-rust)
 - [Breaking into Information Security: Learning the Ropes 101 - Andrew Gill](https://leanpub.com/ltr101-breaking-into-infosec)
 - [Car Hacker's Handbook by Craig Smith (2016)](https://www.nostarch.com/carhacking)
 - [Cyberjutsu: Cybersecurity for the Modern Ninja by Ben McCarty (2021)](https://nostarch.com/cyberjutsu)

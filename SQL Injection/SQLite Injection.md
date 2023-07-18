@@ -37,10 +37,8 @@ SELECT sql FROM sqlite_schema
 ## Integer/String based - Extract table name
 
 ```sql
-SELECT tbl_name FROM sqlite_master WHERE type='table' and tbl_name NOT like 'sqlite_%'
+SELECT group_concat(tbl_name) FROM sqlite_master WHERE type='table' and tbl_name NOT like 'sqlite_%'
 ```
-
-Use limit X+1 offset X, to extract all tables.
 
 ## Integer/String based - Extract column name
 

@@ -132,4 +132,4 @@ in order to add this header.
 - [Hacking with WebSockets - Qualys - Mike Shema, Sergey Shekyan, Vaagn Toukharian](https://media.blackhat.com/bh-us-12/Briefings/Shekyan/BH_US_12_Shekyan_Toukharian_Hacking_Websocket_Slides.pdf)
 - [Mini WebSocket CTF - January 27, 2020 - Snowscan](https://snowscan.io/bbsctf-evilconneck/#)
 - [Hacktricks - CSWSH](https://book.hacktricks.xyz/pentesting-web/cross-site-websocket-hijacking-cswsh)
-- [Streamlining Websocket Pentesting with wsrepl - Andrez Konstqntinov - 18 Jul 2023](https://blog.doyensec.com/2023/07/18/streamlining-websocket-pentesting-with-wsrepl.html)
+- [Streamlining Websocket Pentesting with wsrepl - Andrez Konstantinov - 18 Jul 2023](https://blog.doyensec.com/2023/07/18/streamlining-websocket-pentesting-with-wsrepl.html)

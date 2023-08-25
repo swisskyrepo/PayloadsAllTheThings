@@ -52,6 +52,12 @@ For a clean output
 SELECT replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(substr((substr(sql,instr(sql,'(')%2b1)),instr((substr(sql,instr(sql,'(')%2b1)),'')),"TEXT",''),"INTEGER",''),"AUTOINCREMENT",''),"PRIMARY KEY",''),"UNIQUE",''),"NUMERIC",''),"REAL",''),"BLOB",''),"NOT NULL",''),",",'~~') FROM sqlite_master WHERE type!='meta' AND sql NOT NULL AND name NOT LIKE 'sqlite_%' AND name ='table_name'
 ```
 
+Cleaner output
+
+```sql
+SELECT GROUP_CONCAT(name) AS column_names FROM pragma_table_info('table_name');
+```
+
 ## Boolean - Count number of tables
 
 ```sql

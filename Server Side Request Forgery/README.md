@@ -62,6 +62,7 @@
 - [In3tinct/See-SURF](https://github.com/In3tinct/See-SURF) - Python based scanner to find potential SSRF parameters
 - [teknogeek/SSRF Sheriff](https://github.com/teknogeek/ssrf-sheriff) - Simple SSRF-testing sheriff written in Go
 * [assetnote/surf](https://github.com/assetnote/surf) - Returns a list of viable SSRF candidates
+* [dwisiswant0/ipfuscator](https://github.com/dwisiswant0/ipfuscator) - A blazing-fast, thread-safe, straightforward and zero memory allocations tool to swiftly generate alternative IP(v4) address representations in Go.
 
 ## Payloads with localhost
 

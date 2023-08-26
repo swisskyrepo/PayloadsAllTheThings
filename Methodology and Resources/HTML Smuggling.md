@@ -1,10 +1,9 @@
 # HTML Smuggling
 
 ## Summary
-- [HTML Smuggling](#html-smuggling)
-  - [Summary](#summary)
-  - [Description](#description)
-  - [Executable Storage](#executable-storage)
+
+- [Description](#description)
+- [Executable Storage](#executable-storage)
 
 
 ## Description

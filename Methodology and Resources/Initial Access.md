@@ -5,7 +5,8 @@
 ## Summary
 
 * [Complex Chains](#complex-chains)
-* [Payloads](#payloads)
+* [Container](#container)
+* [Payload](#payload)
     * [Binary Files](#binary-files)
     * [Code Execution Files](#code-execution-files)
     * [Embedded Files](#embedded-files)
@@ -29,8 +30,31 @@
 * **DECOY**: used to continue pretext narration after detonating malware
     * Typically open PDF files
 
+Examples:
+* HTML SMUGGLING(PASSWORD PROTECTED ZIP + ISO(LNK + IcedID  + PNG)) used by [TA551/Storm-0303](https://thedfirreport.com/2023/08/28/html-smuggling-leads-to-domain-wide-ransomware/)
 
-## Payloads
+
+## Container
+
+* **ISO/IMG** - can contain hidden files, gets **automounted** giving easy access to contained files (`powershell –c .\malware.exe`)
+* **ZIP** - can contain hidden files (locate ZIP + unpack it + change dir + run Malware)
+* **WIM** - Windows Image, builtin format used to deploy system features
+    ```ps1
+    # Mount/Unmount .WIM
+    PS> Mount-WindowsImage -ImagePath myarchive.wim -Path "C:\output\path\to\extract" -Index 1
+    PS> Dismount-WindowsImage -Path "C:\output\path\to\extract" -Discard
+    ```
+* **7-zip, RAR, GZ** - should get a native support on Windows 11
+
+
+## Trigger
+
+* **LNK**
+* **CHM**
+* **ClickOnce**
+
+
+## Payload
 
 ### Binary Files
 
@@ -106,10 +130,23 @@ These files can be executed directly on the system without any third party.
 * Word with Macro (.doc, .docm)
 * Excel library (.xll)
 * Excel macro-enabled add-in file (.xlam)
+    ```ps1
+    xcopy /Q/R/S/Y/H/G/I evil.ini %APPDATA%\Microsoft\Excel\XLSTART
+    ```
 * WSF files (.wsf)
 * MSI installers (.msi)
+    ```ps1
+    powershell Unblock-File evil.msi; msiexec /q /i .\evil.msi 
+    ```
 * MSIX/APPX app package (.msix, .appx)
-* ClickOnce (.application, .vsto)
+* ClickOnce (.application, .vsto, .appref-ms)
+* Powershell scripts (.ps1)
+* Windows Script Host scripts (.wsh, .vbs)
+    ```ps1
+    cscript.exe payload.vbs
+    wscript payload.vbs
+    wscript /e:VBScript payload.txt
+    ```
 
 
 ### Embedded Files
@@ -148,5 +185,6 @@ In 2022, LAPSUS$ claimed responsibility for a cyberattack on NVIDIA, a major gra
 
 * [Top 10 Payloads: Highlighting Notable and Trending Techniques - delivr.to](https://blog.delivr.to/delivr-tos-top-10-payloads-highlighting-notable-and-trending-techniques-fb5e9fdd9356)
 * [Executing Code as a Control Panel Item through an Exported Cplapplet Function - @spotheplanet](https://www.ired.team/offensive-security/code-execution/executing-code-in-control-panel-item-through-an-exported-cplapplet-function)
-* [02. Desperate Infection Chains - Multi-Step Initial Access Strategies by Mariusz Banach](https://youtu.be/CwNPP_Xfrts)
+* [Desperate Infection Chains - Multi-Step Initial Access Strategies by Mariusz Banach - x33fcon Youtube](https://youtu.be/CwNPP_Xfrts)
+* [Desperate Infection Chains - Multi-Step Initial Access Strategies by Mariusz Banach - x33fcon PDF](https://binary-offensive.com/files/x33fcon%20-%20Desperate%20Infection%20Chains.pdf)
 * [Red Macros Factory - https://binary-offensive.com/](https://binary-offensive.com/initial-access-framework)

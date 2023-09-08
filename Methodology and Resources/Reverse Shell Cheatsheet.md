@@ -553,9 +553,10 @@ socat file:`tty`,raw,echo=0 tcp-listen:12345
 Alternatively, `rustcat` binary can automatically inject the TTY shell command.
 
 The shell will be automatically upgraded and the TTY size will be provided for manual adjustment.
+Not only that, upon exiting the shell, the terminal will be reset and thus usable.
 
 ```bash
-stty raw -echo; stty size && rcat l -ie "/usr/bin/script -qc /bin/bash /dev/null" 6969
+stty raw -echo; stty size && rcat l -ie "/usr/bin/script -qc /bin/bash /dev/null" 6969 && reset
 ```
 
 

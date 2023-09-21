@@ -224,7 +224,7 @@ A Mapbox API Token is a JSON Web Token (JWT). If the header of the JWT is `sk`, 
 #Check token validity
 curl "https://api.mapbox.com/tokens/v2?access_token=YOUR_MAPBOX_ACCESS_TOKEN"
 
-#Get list of all tokens associated with an account. (only works if the token is a Secret Token (sk), and has the appropiate scope)
+#Get list of all tokens associated with an account. (only works if the token is a Secret Token (sk), and has the appropriate scope)
 curl "https://api.mapbox.com/tokens/v2/MAPBOX_USERNAME_HERE?access_token=YOUR_MAPBOX_ACCESS_TOKEN"
 ```
 

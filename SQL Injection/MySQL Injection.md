@@ -1,4 +1,4 @@
-# MYSQL Injection
+# MySQL Injection
 
 ## Summary
 

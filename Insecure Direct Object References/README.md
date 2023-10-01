@@ -61,7 +61,8 @@ Increment and decrement these values to access sensitive informations.
 * Hexadecimal: `0x4642d`, `0x4642e`, `0x4642f`, ...
 * Unix epoch timestamp: `1695574808`, `1695575098`, ...
 
-**Examples**
+**Examples** 
+
 * [HackerOne - IDOR to view User Order Information - meals](https://hackerone.com/reports/287789)
 * [HackerOne - Delete messages via IDOR - naaash](https://hackerone.com/reports/697412)
 
@@ -73,7 +74,8 @@ Some identifiers can be guessed like names and emails, they might grant you acce
 * Email: `john.doe@mail.com`
 * Base64 encoded value: `am9obi5kb2VAbWFpbC5jb20=`
 
-**Examples**
+**Examples** 
+
 * [HackerOne - Insecure Direct Object Reference (IDOR) - Delete Campaigns - datph4m](https://hackerone.com/reports/1969141)
 
 
@@ -86,7 +88,8 @@ Some identifiers can be guessed like names and emails, they might grant you acce
     * a 2-byte process id
     * a 3-byte counter, starting with a random value
 
-**Examples**
+**Examples** 
+
 * [HackerOne - IDOR allowing to read another user's token on the Social Media Ads service - a_d_a_m](https://hackerone.com/reports/1464168)
 * [IDOR through MongoDB Object IDs Prediction](https://techkranti.com/idor-through-mongodb-object-ids-prediction/)
 
@@ -99,7 +102,8 @@ Sometimes we see websites using hashed values to generate a random user id or to
 * SHA1: `a94a8fe5ccb19ba61c4c0873d391e987982fbbd3`
 * SHA2: `9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08`
 
-**Examples**
+**Examples** 
+
 * [IDOR with Predictable HMAC Generation - DiceCTF 2022 - CryptoCat](https://youtu.be/Og5_5tEg6M0)
 
 
@@ -113,7 +117,8 @@ Send a wilcard instead of an ID, some backend might respond with the data of all
 * `GET /api/users/. HTTP/1.1`
 
 
-**Examples**
+**Examples** 
+
 * [TODO]()
 
 

@@ -515,3 +515,4 @@ If SSH is active check which user is being used `/proc/self/status` and `/etc/pa
 * [Solving "includer's revenge" from hxp ctf 2021 without controlling any files - @loknop](https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d)
 * [PHP FILTERS CHAIN: WHAT IS IT AND HOW TO USE IT - Rémi Matasse - 18/10/2022](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)
 * [PHP FILTER CHAINS: FILE READ FROM ERROR-BASED ORACLE - Rémi Matasse - 21/03/2023](https://www.synacktiv.com/en/publications/php-filter-chains-file-read-from-error-based-oracle.html)
+* [One Line PHP: From Genesis to Ragnarök - Ginoah, Bookgin](https://hackmd.io/@ginoah/phpInclude#/)

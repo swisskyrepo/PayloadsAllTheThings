@@ -71,6 +71,7 @@ Object.constructor["prototype"]["evilProperty"]="evilPayload"
 ## References
 
 * [Server side prototype pollution, how to detect and exploit - YesWeHack](https://blog.yeswehack.com/talent-development/server-side-prototype-pollution-how-to-detect-and-exploit/)
+* [Prototype Pollution and Where to Find Them - BitK & SakiiR - AUGUST 14, 2023](https://youtu.be/mwpH9DF_RDA)
 * [Prototype Pollution - PortSwigger](https://portswigger.net/web-security/prototype-pollution)
 * [A Pentester’s Guide to Prototype Pollution Attacks - HARSH BOTHRA - JAN 2, 2023](https://www.cobalt.io/blog/a-pentesters-guide-to-prototype-pollution-attacks)
 * [Prototype pollution - Snyk](https://learn.snyk.io/lessons/prototype-pollution/javascript/)

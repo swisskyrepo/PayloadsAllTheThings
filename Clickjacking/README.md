@@ -2,7 +2,7 @@
 
 > Clickjacking is a type of web security vulnerability where a malicious website tricks a user into clicking on something different from what the user perceives,
 > potentially causing the user to perform unintended actions without their knowledge or consent. Users are tricked into performing all sorts of unintended actions
-> are such as typing in the password, clicking on ‘Delete my account’ button, liking a post, deleting a post, commenting on a blog. In other words all the actions
+> as such as typing in the password, clicking on ‘Delete my account’ button, liking a post, deleting a post, commenting on a blog. In other words all the actions
 > that a normal user can do on a legitimate website can be done using clickjacking.
 
 ## Summary
@@ -175,6 +175,7 @@ _Attacker's Page_
 ```
 
 ## XSS Filter
+
 ### IE8 XSS filter 
 This filter has visibility into all parameters of each request and response flowing through the web browser and it compares them to a set of regular expressions in order to look for reflected XSS attempts. When the filter identifies a possible XSS attacks; it disables all inline scripts within the page, including frame busting scripts (the same thing could be done with external scripts). For this reason an attacker could induce a false positive by inserting the beginning of the frame busting script into a request’s parameters.
   ```html
@@ -189,6 +190,7 @@ This filter has visibility into all parameters of each request and response flow
   ```html
   <iframe src=”http://target site/?param=<script>if”>
   ```
+
 ### Chrome 4.0 XSSAuditor filter
 It has a little different behaviour compared to IE8 XSS filter, in fact with this filter an attacker could deactivate a “script” by passing its code in a request parameter. This enables the framing page to specifically target a single snippet containing the frame busting code, leaving all the other codes intact.
   Attacker View:

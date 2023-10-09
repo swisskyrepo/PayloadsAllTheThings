@@ -20,6 +20,7 @@
 * [XSS Filter](#xss-filter)
   * [IE8 XSS filter](#ie8-xss-filter)
   * [Chrome 4.0 XSSAuditor filter](#chrome-40-xssauditor-filter)
+* [Challenge]
 * [Practice Environments](#practice-environments)
 * [Reference](#references)
 
@@ -200,8 +201,8 @@ It has a little different behaviour compared to IE8 XSS filter, in fact with thi
 * [Client Side Clickjacking Test](https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/11-Client_Side_Testing/09-Testing_for_Clickjacking)
 
 ## References
-* [Clickjacker.io](https://clickjacker.io)
-* [Portswigger](https://portswigger.net/web-security/clickjacking)
-* [Synopsys](https://www.synopsys.com/glossary/what-is-clickjacking.html#B)
-* [OWASP](https://owasp.org/www-community/attacks/Clickjacking)
+* [Clickjacker.io - Saurabh Banawar](https://clickjacker.io)
+* [Web-Security Clickjacking - PortSwigger](https://portswigger.net/web-security/clickjacking)
+* [Synopsys Clickjacking](https://www.synopsys.com/glossary/what-is-clickjacking.html#B)
+* [OWASP - Gustav Rydstedt](https://owasp.org/www-community/attacks/Clickjacking)
 * [SecTheory](http://www.sectheory.com/clickjacking.htm)

@@ -10,7 +10,7 @@
 * [Methodology](#methodology)
   * [UI Redressing](#ui-redressing)
   * [Invisible Frames](#invisible-frames)
-  * [Button/Form Hijacking](#button-form-hijacking)
+  * [Button/Form Hijacking](#buttonform-hijacking)
   * [Execution Methods](#execution-methods)
 * [Preventive Measures](#preventive-measures)
   * [Implement X-Frame-Options Header](#implement-x-frame-options-header)

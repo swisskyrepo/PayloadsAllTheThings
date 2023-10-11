@@ -898,7 +898,7 @@ Common mistakes in MSI installers:
 
 * Missing quiet parameters: it will spawn `conhost.exe` as `NT SYSTEM`. Use `[CTRL]+[A]` to select some text in it, it will pause the execution.
     * conhost -> properties -> "legacy console mode" Link -> Internet Explorer -> CTRL+O –> cmd.exe
-* GUI with direct actions: Ooa URL and start the browser then use the same scenario.
+* GUI with direct actions: open a URL and start the browser then use the same scenario.
 * Binaries/Scripts loaded from user writable paths: you might need to win the race condition.
 * DLL hijacking/search order abusing
 * PowerShell `-NoProfile` missing: Add custom commands into your profile

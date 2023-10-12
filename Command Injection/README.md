@@ -113,9 +113,10 @@ command1 | command2  # Pipe the output of command1 into command2
 
 ### Bypass without space
 
-* `$IFS` is a special shell variable called the Internal Field Separator. By default, in many shells, it contains whitespace characters (space, tab, newline). When used in a command, the shell will interpret `$IFS` as a space.
+* `$IFS` is a special shell variable called the Internal Field Separator. By default, in many shells, it contains whitespace characters (space, tab, newline). When used in a command, the shell will interpret `$IFS` as a space. `$IFS` does not directly work as a seperator in commands like `ls`, `wget`; use `${IFS}` instead. 
   ```powershell
-  cat$IFS/etc/passwd
+  cat${IFS}/etc/passwd
+  ls${IFS}-la
   ```
 * In some shells, brace expansion generates arbitrary strings. When executed, the shell will treat the items inside the braces as separate commands or arguments.
   ```powershell

@@ -40,7 +40,7 @@
 * [nicholasaleks/CrackQL](https://github.com/nicholasaleks/CrackQL) - A GraphQL password brute-force and fuzzing utility
 * [nicholasaleks/graphql-threat-matrix](https://github.com/nicholasaleks/graphql-threat-matrix) - GraphQL threat framework used by security professionals to research security gaps in GraphQL implementations
 * [dolevf/graphql-cop](https://github.com/dolevf/graphql-cop) - Security Auditor Utility for GraphQL APIs
-* [IvanGoncharov/graphql-voyager)](https://github.com/IvanGoncharov/graphql-voyager) - Represent any GraphQL API as an interactive graph
+* [IvanGoncharov/graphql-voyager](https://github.com/IvanGoncharov/graphql-voyager) - Represent any GraphQL API as an interactive graph
 * [Insomnia](https://insomnia.rest/) - Cross-platform HTTP and GraphQL Client
 
 ## Enumeration

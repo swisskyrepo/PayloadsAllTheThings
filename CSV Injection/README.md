@@ -51,6 +51,15 @@ Any formula can be started with
 @
 ```
 
+## Prevention and Best Practices
+
+- **Input Validation:** Validate and sanitize user input before allowing it to be included in CSV files. Proper input validation can prevent malicious data from being injected into the files.
+- **Output Encoding:** Implement output encoding to ensure that special characters are properly escaped before being included in CSV files. This prevents the execution of malicious commands.
+- **Content Disposition Headers:** Set Content-Disposition headers with a safe filename when serving CSV files. This helps in preventing browsers from interpreting the CSV files as executable content.
+
+
+
+
 ## References
 
 * [OWASP - CSV Excel Macro Injection](https://owasp.org/www-community/attacks/CSV_Injection)

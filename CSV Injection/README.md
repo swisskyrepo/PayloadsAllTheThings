@@ -90,6 +90,13 @@ Any formula can be started with
 - **Whitelisting:** Maintain a whitelist of allowed characters and patterns for CSV files. Block any input that does not adhere to these rules.
 - **Use Libraries:** Instead of manually generating CSV files, consider using established libraries specific to your programming language/framework. These libraries often handle special characters and encoding issues more effectively.
 
+## Challenge Task
+Identify and fix the CSV Injection vulnerability in the following code snippet
+```php
+$user_input = $_GET['data'];
+$csv_content = $user_input . ',other_data';
+file_put_contents('data.csv', $csv_content);
+```
 
 ## References
 

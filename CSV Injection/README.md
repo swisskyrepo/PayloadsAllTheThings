@@ -54,7 +54,35 @@ Any formula can be started with
 ## Prevention and Best Practices
 
 - **Input Validation:** Validate and sanitize user input before allowing it to be included in CSV files. Proper input validation can prevent malicious data from being injected into the files.
+  ```python
+    import csv
+
+  def sanitize_input(user_input):
+      # Implement your sanitization logic here
+      sanitized_input = user_input.replace(',', '').replace('=', '')
+      return sanitized_input
+
+  user_data = sanitize_input(user_input)
+  with open('data.csv', 'w', newline='') as csvfile:
+      csvwriter = csv.writer(csvfile)
+      csvwriter.writerow([user_data, 'other_data'])
+  ```
 - **Output Encoding:** Implement output encoding to ensure that special characters are properly escaped before being included in CSV files. This prevents the execution of malicious commands.
+  ```php
+    function encode_for_csv($data) {
+      return '"' . htmlspecialchars($data, ENT_QUOTES, 'UTF-8') . '"';
+  }
+  
+  $user_data = encode_for_csv($user_input);
+  $csv_content = $user_data . ',' . $other_data;
+  file_put_contents('data.csv', $csv_content);
+  ```
+- **Use Prepared Statements:** If interacting with a database, use prepared statements to prevent SQL Injection, which could lead to CSV Injection vulnerabilities.
+  ```php
+  $stmt = $mysqli->prepare("INSERT INTO table_name (user_data, other_data) VALUES (?, ?)");
+  $stmt->bind_param("ss", $user_input, $other_data);
+  $stmt->execute();
+  ```
 - **Content Disposition Headers:** Set Content-Disposition headers with a safe filename when serving CSV files. This helps in preventing browsers from interpreting the CSV files as executable content.
   ```php
   header('Content-Disposition: attachment; filename="safe-file.csv"');

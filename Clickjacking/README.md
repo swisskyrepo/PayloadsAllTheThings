@@ -134,7 +134,7 @@ Example in HTML meta tag:
   ```
 
 ## OnBeforeUnload Event
-* The `onBeforeUnload` event could be used to evade frame busting code. This event is called when the frame busting code wants to destroy the iframe by loading the URL in the whole web page and not only in the iframe. The handler function returns a string that is prompted to the user asking confirm if he wants to leave the page. When this string is displayed to the user is likely to cancel the navigation, defeating target’s frame busting attempt.
+* The `onBeforeUnload` event could be used to evade frame busting code. This event is called when the frame busting code wants to destroy the iframe by loading the URL in the whole web page and not only in the iframe. The handler function returns a string that is prompted to the user asking to confirm if they want to leave the page. When this string is displayed to the user it is likely to cancel the navigation, defeating target’s frame busting attempt.
 
 * The attacker can use this attack by registering an unload event on the top page using the following example code:
  ```html

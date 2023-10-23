@@ -467,7 +467,7 @@ Replace the customqueries.json file located at `/home/username/.config/bloodhoun
   Invoke-UserHunter -CheckAccess
   ```
   :heavy_exclamation_mark: **Priv Esc to Domain Admin with User Hunting:** \
-  I have local admin access on a machine -> A Domain Admin has a session on that machine -> I steal his token and impersonate him ->   
+  I have local admin access on a machine -> A Domain Admin has a session on that machine -> I steal their token and impersonate them ->   
   Profit!
 
   [PowerView 3.0 Tricks](https://gist.github.com/HarmJ0y/184f9822b195c52dd50c379ed3117993)

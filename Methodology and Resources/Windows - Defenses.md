@@ -3,6 +3,7 @@
 ## Summary
 
 * [AppLocker](#applocker)
+* [User Account Control](#user-account-control)
 * [DPAPI](#dpapi)
 * [Powershell](#powershell)
     * [Anti Malware Scan Interface](#anti-malware-scan-interface)
@@ -34,6 +35,33 @@
     * [api0cradle/UltimateAppLockerByPassList/Generic-AppLockerbypasses.md](https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/Generic-AppLockerbypasses.md)
     * [api0cradle/UltimateAppLockerByPassList/VerifiedAppLockerBypasses.md](https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/VerifiedAppLockerBypasses.md)
     * [api0cradle/UltimateAppLockerByPassList/DLL-Execution.md](https://github.com/api0cradle/UltimateAppLockerByPassList/blob/master/DLL-Execution.md)
+
+
+## User Account Control
+
+UAC stands for User Account Control. It is a security feature introduced by Microsoft in Windows Vista and is present in all subsequent versions of the Windows operating system. UAC helps mitigate the impact of malware and helps protect users by asking for permission or an administrator's password before allowing changes to be made to the system that could potentially affect all users of the computer.
+
+* Check if UAC is enabled
+    ```ps1
+    REG QUERY HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v EnableLUA
+    ```
+* Check UAC level
+    ```
+    REG QUERY HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v ConsentPromptBehaviorAdmin
+    REG QUERY HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ /v FilterAdministratorToken
+    ```
+
+| EnableLUA  | LocalAccountTokenFilterPolicy | FilterAdministratorToken | Description  |
+|---|---|---|---|
+| 0 | / | / | No UAC |
+| 1 | 1 | / | No UAC |
+| 1 | 0 | 0 | No UAC for RID 500 |
+| 1 | 0 | 1 | UAC for Everyone |
+
+
+* UAC Bypass
+    * [AutoElevated binary signed by Microsoft](https://www.elastic.co/guide/en/security/current/bypass-uac-via-sdclt.html) - `msconfig`, `sdclt.exe`, `eventvwr.exe`, etc
+    * [hfiref0x/UACME](https://github.com/hfiref0x/UACME) - Defeating Windows User Account Control
 
 
 ## DPAPI

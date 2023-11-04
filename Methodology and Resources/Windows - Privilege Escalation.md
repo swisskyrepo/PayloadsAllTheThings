@@ -54,6 +54,7 @@
     * [UsoDLLLoader](#usodllloader)
     * [WerTrigger](#wertrigger)
     * [WerMgr](#wermgr)
+* [EoP - Privileged File Delete](#eop---privileged-file-delete)
 * [EoP - Common Vulnerabilities and Exposures](#eop---common-vulnerabilities-and-exposure)
     * [MS08-067 (NetAPI)](#ms08-067-netapi)
     * [MS10-015 (KiTrap0D)](#ms10-015-kitrap0d---microsoft-windows-nt2000--2003--2008--xp--vista--7)
@@ -1325,6 +1326,27 @@ If we found a privileged file write vulnerability in Windows or in some third-pa
 5. Enjoy a shell as **NT AUTHORITY\SYSTEM**
 
 
+## EoP - Privileged File Delete
+
+During an MSI installation, the Windows Installer service maintains a record of every changes in case it needs to be rolled back, to do that it will create:
+
+* a folder at `C:\Config.Msi` containing 
+    * a rollback script (`.rbs`) 
+    * a rollback file (`.rbf`)
+
+To convert a privileged file delete to a local privilege escalation, you need to abuse the Windows Installer service.
+* delete the protected `C:\Config.Msi` folder immediately after it's created by the Windows Installer
+* recreate the `C:\Config.Msi` folder with weak DACL permissions since ordinary users are allowed to create folders at the root of `C:\`.
+* drop malicious `.rbs` and `.rbf` files into it to be executed by the MSI rollback
+* then upon rollback, Windows Installer will make arbitrary changes to the system
+
+The easiest way to trigger this chain is using [thezdi/FilesystemEoPs/FolderOrFileDeleteToSystem](https://github.com/thezdi/PoC/tree/master/FilesystemEoPs/FolderOrFileDeleteToSystem).
+The exploit contains a .msi file with 2 actions, the first one produces a delay and the second throws an error to make it rollback. This rollback will "restore" a malicious HID.dll in `C:\Program Files\Common Files\microsoft shared\ink\HID.dll`.
+
+Then switch to the secure desktop using `[CTRL]+[ALT]+[DELETE]` and open the On-Screen Keyboard (`osk.exe`).
+The `osk.exe` process first looks for the `C:\Program Files\Common Files\microsoft shared\ink\HID.dll` library instead of `C:\Windows\System32\HID.dll`
+
+
 ## EoP - Common Vulnerabilities and Exposure
 
 ### MS08-067 (NetAPI)
@@ -1494,3 +1516,5 @@ Detailed information about the vulnerability : https://www.zerodayinitiative.com
 * [MSIFortune - LPE with MSI Installers - Oct 3, 2023 - PfiatDe](https://badoption.eu/blog/2023/10/03/MSIFortune.html)
 * [MSI Shenanigans. Part 1 – Offensive Capabilities Overview - DECEMBER 8, 2022 - Mariusz Banach](https://mgeeky.tech/msi-shenanigans-part-1/)
 * [Escalating Privileges via Third-Party Windows Installers - ANDREW OLIVEAU - JUL 19, 2023](https://www.mandiant.com/resources/blog/privileges-third-party-windows-installers)
+* [Deleting Your Way Into SYSTEM: Why Arbitrary File Deletion Vulnerabilities Matter - ANDREW OLIVEAU - SEP 11, 2023](https://www.mandiant.com/resources/blog/arbitrary-file-deletion-vulnerabilities)
+* [ABUSING ARBITRARY FILE DELETES TO ESCALATE PRIVILEGE AND OTHER GREAT TRICKS - Simon Zuckerbraun - March 17, 2022 ](https://www.zerodayinitiative.com/blog/2022/3/16/abusing-arbitrary-file-deletes-to-escalate-privilege-and-other-great-tricks)

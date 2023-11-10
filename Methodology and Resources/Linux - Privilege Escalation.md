@@ -769,6 +769,15 @@ The following exploits are known to work well, search for more exploits with `se
 Another way to find a kernel exploit is to get the specific kernel version and linux distro of the machine by doing `uname -a`
 Copy the kernel version and distribution, and search for it in google or in https://www.exploit-db.com/.
 
+### CVE-2023-4911 (LooneyTunables)
+Exploiting a bug in glibc dynamic loader's `GLIBC_TUNABLES` environment variable parsing function `parse_tunables()`.
+
+Linux Privilage Escalation - glibc 2.35-0ubuntu3 (aarch64) and glibc 2.36-9+deb12u2 (amd64)
+
+```
+https://haxx.in/files/gnu-acme.py
+```
+
 ### CVE-2022-0847 (DirtyPipe)
 
 Linux Privilege Escalation - Linux Kernel 5.8 < 5.16.11

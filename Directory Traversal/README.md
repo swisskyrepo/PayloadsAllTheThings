@@ -160,6 +160,7 @@ url:http://127.0.0.1:8080
 /run/secrets/kubernetes.io/serviceaccount/certificate
 /var/run/secrets/kubernetes.io/serviceaccount
 /var/lib/mlocate/mlocate.db
+/var/lib/plocate/plocate.db
 /var/lib/mlocate.db
 ```
 
@@ -214,6 +215,8 @@ The following log files are controllable and can be included with an evil payloa
 /var/log/sshd.log
 /var/log/mail
 ```
+
+
 ## Labs
 
 * [File path traversal, simple case](https://portswigger.net/web-security/file-path-traversal/lab-simple)
@@ -223,6 +226,7 @@ The following log files are controllable and can be included with an evil payloa
 * [File path traversal, validation of start of path](https://portswigger.net/web-security/file-path-traversal/lab-validate-start-of-path)
 * [File path traversal, validation of file extension with null byte bypass](https://portswigger.net/web-security/file-path-traversal/lab-validate-file-extension-null-byte-bypass)
 
+
 ## References
 
 * [Path Traversal Cheat Sheet: Windows](https://gracefulsecurity.com/path-traversal-cheat-sheet-windows/)
@@ -231,3 +235,4 @@ The following log files are controllable and can be included with an evil payloa
 * [NGINX may be protecting your applications from traversal attacks without you even knowing](https://medium.com/appsflyer/nginx-may-be-protecting-your-applications-from-traversal-attacks-without-you-even-knowing-b08f882fd43d?source=friends_link&sk=e9ddbadd61576f941be97e111e953381)
 * [Directory traversal - Portswigger](https://portswigger.net/web-security/file-path-traversal)
 * [Cookieless ASPNET - Soroush Dalili](https://twitter.com/irsdl/status/1640390106312835072)
+* [EP 057 | Proc filesystem tricks & locatedb abuse with @_remsio_ & @_bluesheet - TheLaluka - 30 nov. 2023](https://youtu.be/YlZGJ28By8U)

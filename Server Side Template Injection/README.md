@@ -86,6 +86,15 @@
 
 Recommended tools: 
 
+[TInjA](https://github.com/Hackmanit/TInjA) - An effiecient SSTI + CSTI scanner which utilizes novel polyglots
+
+e.g:
+
+```bash
+tinja url -u "http://example.com/?name=Kirlia" -H "Authentication: Bearer ey..."
+tinja url -u "http://example.com/" -d "username=Kirlia"  -c "PHPSESSID=ABC123..."
+```
+
 [Tplmap](https://github.com/epinna/tplmap) - Server-Side Template Injection and Code Injection Detection and Exploitation Tool
 
 e.g:
@@ -118,6 +127,8 @@ In most cases, this polyglot payload will trigger an error in presence of a SSTI
 ```
 ${{<%[%'"}}%\.
 ```
+
+The [Template Injection Table](https://github.com/Hackmanit/template-injection-table) is an interactive table containing the most efficient template injection polyglots along with the expected responses of the 44 most important template engines.
 
 ## ASP.NET Razor
 

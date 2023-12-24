@@ -2,6 +2,7 @@
 /humans.txt
 /style.css
 /configuration.php
+/index.php~
 wp-login.php
 wp-admin.php
 /wp-content/plugins

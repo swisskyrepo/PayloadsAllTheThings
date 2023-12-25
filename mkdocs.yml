@@ -1,5 +1,7 @@
 site_name: Payloads All The Things
 site_description: 'Payloads All The Things, a list of useful payloads and bypasses for Web Application Security'
+site_url: https://swisskyrepo.github.io/PayloadsAllTheThings
+
 # copyright: © 2016 PATT
 # logo: 'images/site_logo.png'
 # favicon: 'images/favicon.png'

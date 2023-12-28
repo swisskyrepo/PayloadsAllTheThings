@@ -6,6 +6,8 @@ The following payloads are based on Client Side Template Injection.
 
 ### Stored/Reflected XSS - Simple alert in AngularJS
 
+`ng-app` directive must be present in a root element to allow the client-side injection (cf. [AngularJS: API: ngApp](https://docs.angularjs.org/api/ng/directive/ngApp)).
+
 > AngularJS as of version 1.6 have removed the sandbox altogether
 
 AngularJS 1.6+ by [Mario Heiderich](https://twitter.com/cure53berlin)

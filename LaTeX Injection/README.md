@@ -86,7 +86,7 @@ The output of the command will be redirected to stdout, therefore you need to us
 If you get any LaTex error, consider using base64 to get the result without bad characters (or use `\verbatiminput`):
 
 ```tex
-\immediate\write18{env | base64 > test.tex}
+\immediate\write18{env | base64 > text.tex}
 \input{text.tex}
 ```
 

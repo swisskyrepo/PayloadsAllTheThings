@@ -1,5 +1,7 @@
 # Web Cache Deception
+
 > Web Cache Deception (WCD) is a security vulnerability that occurs when a web server or caching proxy misinterprets a client's request for a web resource and subsequently serves a different resource, which may often be more sensitive or private, after caching it.
+
 
 ## Summary
 
@@ -16,6 +18,7 @@
 
 * [PortSwigger/param-miner](https://github.com/PortSwigger/param-miner)
     > This extension identifies hidden, unlinked parameters. It's particularly useful for finding web cache poisoning vulnerabilities.
+
 
 ## Exploit
 
@@ -80,12 +83,26 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
     ```
 
 
+## Tricks
+
+The following URL format are a good starting point to check for "cache" feature.
+
+* https://example.com/app/conversation/.js?test
+* https://example.com/app/conversation/;.js
+* https://example.com/home.php/non-existent.css
+
+
+
 ## CloudFlare Caching
 
 CloudFlare caches the resource when the `Cache-Control` header is set to `public` and `max-age` is greater than 0. 
 
 - The Cloudflare CDN does not cache HTML by default
 - Cloudflare only caches based on file extension and not by MIME type: [cloudflare/default-cache-behavior](https://developers.cloudflare.com/cache/about/default-cache-behavior/)
+
+
+In Cloudflare CDN, one can implement a `Cache Deception Armor`, it is not enabled by default.
+When the `Cache Deception Armor` is enabled, the rule will verify a URL's extension matches the returned `Content-Type`.
 
 CloudFlare has a list of default extensions that gets cached behind their Load Balancers.
 
@@ -101,10 +118,17 @@ CloudFlare has a list of default extensions that gets cached behind their Load B
 | CLASS | EXE  | JS   | PICT | SWF  | XLS   | XLSX |
 
 
+Exceptions and bypasses:
+
+* If the returned Content-Type is application/octet-stream, the extension does not matter because that is typically a signal to instruct the browser to save the asset instead of to display it.
+* Cloudflare allows .jpg to be served as image/webp or .gif as video/webm and other cases that we think are unlikely to be attacks.
+* [Bypassing Cache Deception Armor using .avif extension file - fixed](https://hackerone.com/reports/1391635)
+
 
 ## Labs 
 
 * [PortSwigger Labs for Web cache deception](https://portswigger.net/web-security/all-labs#web-cache-poisoning)
+
 
 ## References
 
@@ -117,3 +141,5 @@ CloudFlare has a list of default extensions that gets cached behind their Load B
   - [Exploiting cache implementation flaws](https://portswigger.net/web-security/web-cache-poisoning/exploiting-implementation-flaws)
 * [OpenAI Account Takeover - @naglinagli - Mar 24, 2023](https://twitter.com/naglinagli/status/1639343866313601024)
 * [Shockwave Identifies Web Cache Deception and Account Takeover Vulnerability affecting OpenAI's ChatGPT - Gal Nagli](https://www.shockwave.cloud/blog/shockwave-works-with-openai-to-fix-critical-chatgpt-vulnerability)
+* [Cache Deception Armor - Cloudflare](https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/)
+* [How I Test For Web Cache Vulnerabilities + Tips And Tricks - bombon - Jul 21, 2022](https://bxmbn.medium.com/how-i-test-for-web-cache-vulnerabilities-tips-and-tricks-9b138da08ff9)

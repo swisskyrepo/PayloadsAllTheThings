@@ -46,6 +46,12 @@ Attempting to manipulate SQL queries may have goals including:
   * [Case modification](#case-modification)
 
 
+## Tools
+
+* [sqlmapproject/sqlmap](https://github.com/sqlmapproject/sqlmap) - Automatic SQL injection and database takeover tool
+* [r0oth3x49/ghauri](https://github.com/r0oth3x49/ghauri) - An advanced cross-platform tool that automates the process of detecting and exploiting SQL injection security flaws
+
+
 ## Entry point detection
 
 Detection of an SQL injection entry point

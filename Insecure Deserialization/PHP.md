@@ -4,11 +4,12 @@ PHP Object Injection is an application level vulnerability that could allow an a
 
 The following magic methods will help you for a PHP Object injection
 
-* __wakeup() when an object is unserialized.
-* __destruct() when an object is deleted.
-* __toString() when an object is converted to a string.
+* `__wakeup()` when an object is unserialized.
+* `__destruct()` when an object is deleted.
+* `__toString()` when an object is converted to a string.
 
 Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#wrapper-phar) which use a PHP object injection.
+
 
 ## Summary
 
@@ -19,6 +20,7 @@ Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.c
 * [Phar Deserialization](#phar-deserialization)
 * [Real world examples](#real-world-examples)
 * [References](#references)
+
 
 ## General concept
 
@@ -118,16 +120,32 @@ We can do an array like this:
 a:2:{s:10:"admin_hash";N;s:4:"hmac";R:2;}
 ```
 
+
 ## Finding and using gadgets
 
 Also called `"PHP POP Chains"`, they can be used to gain RCE on the system.
 
 * In PHP source code, look for `unserialize()` function.
 * Interesting [Magic Methods](https://www.php.net/manual/en/language.oop5.magic.php) such as `__construct()`, `__destruct()`, `__call()`, `__callStatic()`, `__get()`, `__set()`, `__isset()`, `__unset()`, `__sleep()`, `__wakeup()`, `__serialize()`, `__unserialize()`, `__toString()`, `__invoke()`, `__set_state()`, `__clone()`, and `__debugInfo()`:
-    * `__construct()`: PHP class constructor, is automatically called upon object creation
-    * `__destruct()`: PHP class destructor, is automatically called when references to the object are removed from memory
-    * `__toString()`: PHP call-back that gets executed if the object is treated like a string
-    * `__wakeup()` PHP call-back that gets executed upon deserialization
+
+    * `__construct()`: PHP allows developers to declare constructor methods for classes. Classes which have a constructor method call this method on each newly-created object, so it is suitable for any initialization that the object may need before it is used. [php.net](https://www.php.net/manual/en/language.oop5.decon.php#object.construct)
+    * `__destruct()`: The destructor method will be called as soon as there are no other references to a particular object, or in any order during the shutdown sequence. [php.net](https://www.php.net/manual/en/language.oop5.decon.php#object.destruct)
+    * `__call(string $name, array $arguments)`: The `$name` argument is the name of the method being called. The `$arguments` argument is an enumerated array containing the parameters passed to the `$name`'ed method. [php.net](https://www.php.net/manual/en/language.oop5.overloading.php#object.call)
+    * `__callStatic(string $name, array $arguments)`: The `$name` argument is the name of the method being called. The `$arguments` argument is an enumerated array containing the parameters passed to the `$name`'ed method. [php.net](https://www.php.net/manual/en/language.oop5.overloading.php#object.callstatic)
+    * `__get(string $name)`: `__get()` is utilized for reading data from inaccessible (protected or private) or non-existing properties. [php.net](https://www.php.net/manual/en/language.oop5.overloading.php#object.get)
+    * `__set(string $name, mixed $value)`: `__set()` is run when writing data to inaccessible (protected or private) or non-existing properties. [php.net](https://www.php.net/manual/en/language.oop5.overloading.php#object.set)
+    * `__isset(string $name)`: `__isset()` is triggered by calling `isset()` or `empty()` on inaccessible (protected or private) or non-existing properties. [php.net](https://www.php.net/manual/en/language.oop5.overloading.php#object.isset)
+    * `__unset(string $name)`: `__unset()` is invoked when `unset()` is used on inaccessible (protected or private) or non-existing properties. [php.net](https://www.php.net/manual/en/language.oop5.overloading.php#object.unset)
+    * `__sleep()`: `serialize()` checks if the class has a function with the magic name `__sleep()`. If so, that function is executed prior to any serialization. It can clean up the object and is supposed to return an array with the names of all variables of that object that should be serialized. If the method doesn't return anything then **null** is serialized and **E_NOTICE** is issued.[php.net](https://www.php.net/manual/en/language.oop5.magic.php#object.sleep)
+    * `__wakeup()`: `unserialize()` checks for the presence of a function with the magic name `__wakeup()`. If present, this function can reconstruct any resources that the object may have. The intended use of `__wakeup()` is to reestablish any database connections that may have been lost during serialization and perform other reinitialization tasks. [php.net](https://www.php.net/manual/en/language.oop5.magic.php#object.wakeup)
+    * `__serialize()`: `serialize()` checks if the class has a function with the magic name `__serialize()`. If so, that function is executed prior to any serialization. It must construct and return an associative array of key/value pairs that represent the serialized form of the object. If no array is returned a TypeError will be thrown. [php.net](https://www.php.net/manual/en/language.oop5.magic.php#object.serialize)
+    * `__unserialize(array $data)`: this function will be passed the restored array that was returned from __serialize().  [php.net](https://www.php.net/manual/en/language.oop5.magic.php#object.unserialize)
+    * `__toString()`: The __toString() method allows a class to decide how it will react when it is treated like a string [php.net](https://www.php.net/manual/en/language.oop5.magic.php#object.tostring)
+    * `__invoke()`: The `__invoke()` method is called when a script tries to call an object as a function. [php.net](https://www.php.net/manual/en/language.oop5.magic.php#object.invoke)
+    * `__set_state(array $properties)`: This static method is called for classes exported by `var_export()`. [php.net](https://www.php.net/manual/en/language.oop5.magic.php#object.set-state)
+    * `__clone()`: Once the cloning is complete, if a `__clone()` method is defined, then the newly created object's `__clone()` method will be called, to allow any necessary properties that need to be changed. [php.net](https://www.php.net/manual/en/language.oop5.cloning.php#object.clone)
+    * `__debugInfo()`: This method is called by `var_dump()` when dumping an object to get the properties that should be shown. If the method isn't defined on an object, then all public, protected and private properties will be shown. [php.net](https://www.php.net/manual/en/language.oop5.magic.php#object.debuginfo)
+
 
 [ambionics/phpggc](https://github.com/ambionics/phpggc) is a tool built to generate the payload based on several frameworks:
 
@@ -215,12 +233,14 @@ A valid PHAR includes four elements:
     $phar->stopBuffering();
     ```
 
+
 ## Real world examples
 
 * [Vanilla Forums ImportController index file_exists Unserialize Remote Code Execution Vulnerability - Steven Seeley](https://hackerone.com/reports/410237)
 * [Vanilla Forums Xenforo password splitHash Unserialize Remote Code Execution Vulnerability - Steven Seeley](https://hackerone.com/reports/410212)
 * [Vanilla Forums domGetImages getimagesize Unserialize Remote Code Execution Vulnerability (critical) - Steven Seeley](https://hackerone.com/reports/410882)
 * [Vanilla Forums Gdn_Format unserialize() Remote Code Execution Vulnerability - Steven Seeley](https://hackerone.com/reports/407552)
+
 
 ## References
 
@@ -240,3 +260,4 @@ A valid PHAR includes four elements:
 * [Finding PHP Serialization Gadget Chain - DG'hAck Unserial killer - Aug 11, 2022 - xanhacks](https://www.xanhacks.xyz/p/php-gadget-chain/#introduction)
 * [FINDING A POP CHAIN ON A COMMON SYMFONY BUNDLE: PART 1 - Rémi Matasse - 12/09/2023](https://www.synacktiv.com/publications/finding-a-pop-chain-on-a-common-symfony-bundle-part-1)
 * [FINDING A POP CHAIN ON A COMMON SYMFONY BUNDLE: PART 2 - Rémi Matasse - 11/10/2023](https://www.synacktiv.com/publications/finding-a-pop-chain-on-a-common-symfony-bundle-part-2)
+* [PHP deserialization attacks and a new gadget chain in Laravel - Mathieu Farrell - Tue 13 February 2024](https://blog.quarkslab.com/php-deserialization-attacks-and-a-new-gadget-chain-in-laravel.html)

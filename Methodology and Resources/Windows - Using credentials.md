@@ -7,7 +7,7 @@
     * [Guest Credential](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/windows-using-credentials/#guest-credential)
     * [Retail Credential](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/windows-using-credentials/#retail-credential)
     * [Sandbox Credential](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/windows-using-credentials/#sandbox-credential)
-* [Crackmapexec](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/windows-using-credentials/#crackmapexec)
+* [NetExec](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/windows-using-credentials/#netexec)
 * [Impacket](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/windows-using-credentials/#impacket)
     * [PSExec](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/windows-using-credentials/#psexec)
     * [WMIExec](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/windows-using-credentials/#wmiexec)

@@ -57,4 +57,4 @@ edit_uri: edit/master/
 plugins:
   - search
   - git-revision-date-localized
-  - social
+  # - social

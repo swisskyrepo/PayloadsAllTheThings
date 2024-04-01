@@ -33,7 +33,10 @@ select sqlite_version();
 ```sql
 SELECT sql FROM sqlite_schema
 ```
-
+if sqlite_version > 3.33.0 
+```sql
+SELECT sql FROM sqlite_master
+```
 ## Integer/String based - Extract table name
 
 ```sql

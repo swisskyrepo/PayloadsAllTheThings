@@ -2,12 +2,17 @@ site_name: Payloads All The Things
 site_description: 'Payloads All The Things, a list of useful payloads and bypasses for Web Application Security'
 site_url: https://swisskyrepo.github.io/PayloadsAllTheThings
 
+repo_url: https://github.com/swisskyrepo/PayloadsAllTheThings/
+edit_uri: blob/master/
+
 # copyright: © 2016 PATT
 # logo: 'images/site_logo.png'
 # favicon: 'images/favicon.png'
 
 theme:
   name: material
+  color_mode: auto
+  user_color_mode_toggle: true
   icon:
     repo: fontawesome/brands/github
   palette:
@@ -27,8 +32,13 @@ theme:
 
   features:
     - content.code.copy
+    - content.action.edit
+    - content.action.view
+    - content.tooltips
     - navigation.tracking
     - navigation.top
+    - search.share
+    - search.suggest
     # - toc.integrate
     # - navigation.path
 
@@ -52,8 +62,6 @@ markdown_extensions:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
 
-repo_url: https://github.com/swisskyrepo/PayloadsAllTheThings/
-edit_uri: edit/master/
 plugins:
   - search
   - git-revision-date-localized

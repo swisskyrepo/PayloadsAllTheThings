@@ -382,6 +382,11 @@ nohup sleep 120 > /dev/null &
 
 In Unix-like command-line interfaces, the `--` symbol is used to signify the end of command options. After `--`, all arguments are treated as filenames and arguments, and not as options.
 
+### Using `awk` command
+
+```shell
+awk -v iface="id" ' BEGIN{system(iface);}'
+```
 
 ## Labs
 

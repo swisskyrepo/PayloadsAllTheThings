@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+	{{ super() }}
+  <div class="social-container">
+    <b>Share this content</b>
+    <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
+      <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
+      <a class="a2a_button_x"></a>
+      <a class="a2a_button_telegram"></a>
+      <a class="a2a_button_linkedin"></a>
+      <a class="a2a_button_email"></a>
+      <a class="a2a_button_microsoft_teams"></a>
+    </div>
+    <br>
+    <script async src="https://static.addtoany.com/menu/page.js"></script>
+  </div>
+{% endblock %}
+
+{% block styles %}
+	{{ super() }}
+  <style>
+  .social-container {
+    float: right;
+  }
+  </style>
+{% endblock %}

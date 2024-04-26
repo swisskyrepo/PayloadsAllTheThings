@@ -75,6 +75,7 @@ Use : https://github.com/ozguralp/gmapsapiscanner/
 
 
 Impact:
+
 * Consuming the company's monthly quota or can over-bill with unauthorized usage of this service and do financial damage to the company
 * Conduct a denial of service attack specific to the service if any limitation of maximum bill control settings exist in the Google account
 

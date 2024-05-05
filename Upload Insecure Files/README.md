@@ -87,7 +87,7 @@
     * `Content-Type : image/gif`
     * `Content-Type : image/png`
     * `Content-Type : image/jpeg`
-    * Content-Type wordlist: [SecLists/content-type.txt](https://github.com/danielmiessler/SecLists/blob/master/Miscellaneous/web/content-type.txt)
+    * Content-Type wordlist: [SecLists/content-type.txt](https://github.com/danielmiessler/SecLists/blob/master/Miscellaneous/Web/content-type.txt)
     * Set the Content-Type twice: once for unallowed type and once for allowed.
 - [Magic Bytes](https://en.wikipedia.org/wiki/List_of_file_signatures)
     * Sometimes applications identify file types based on their first signature bytes. Adding/replacing them in a file might trick the application.

@@ -1,6 +1,6 @@
 # Reverse Shell Cheat Sheet
 
-:warning: Content of this page has been moved to [InternalAllTheThings/cheatsheet/shell-reverse](https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/)
+:warning: Content of this page has been moved to [InternalAllTheThings/cheatsheet/shell-reverse](https://github.com/swisskyrepo/InternalAllTheThings/blob/main/docs/cheatsheets/shell-reverse-cheatsheet.md)
 
 * [Tools](https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/#tools)
 * [Reverse Shell](https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/#reverse-shell)

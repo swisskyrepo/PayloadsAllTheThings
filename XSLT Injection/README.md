@@ -222,6 +222,7 @@ Execute a remote php file using `file_put_contents`
 
 ## References
 
-* [From XSLT code execution to Meterpreter shells - 02 July 2012 - @agarri](https://www.agarri.fr/blog/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html)
+* [From XSLT code execution to Meterpreter shells - @agarri - 02 July 2012](https://www.agarri.fr/blog/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html)
 * [XSLT Injection - Fortify](https://vulncat.fortify.com/en/detail?id=desc.dataflow.java.xslt_injection)
 * [XSLT Injection Basics - Saxon](https://blog.hunniccyber.com/ektron-cms-remote-code-execution-xslt-transform-injection-java/)
+* [Getting XXE in Web Browsers using ChatGPT - Igor Sak-Sakovskiy - May 22, 2024](https://swarm.ptsecurity.com/xxe-chrome-safari-chatgpt/)

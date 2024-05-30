@@ -624,3 +624,4 @@ If SSH is active check which user is being used `/proc/self/status` and `/etc/pa
 * [PHP FILTER CHAINS: FILE READ FROM ERROR-BASED ORACLE - Rémi Matasse - 21/03/2023](https://www.synacktiv.com/en/publications/php-filter-chains-file-read-from-error-based-oracle.html)
 * [One Line PHP: From Genesis to Ragnarök - Ginoah, Bookgin](https://hackmd.io/@ginoah/phpInclude#/)
 * [Introducing wrapwrap: using PHP filters to wrap a file with a prefix and suffix - Charles Fol - 11 December, 2023](https://www.ambionics.io/blog/wrapwrap-php-filters-suffix)
+* [Iconv, set the charset to RCE: exploiting the libc to hack the php engine (part 1) - Charles Fol - 27 May, 2024](https://www.ambionics.io/blog/iconv-cve-2024-2961-p1)

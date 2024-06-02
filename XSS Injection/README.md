@@ -783,6 +783,12 @@ $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
 "><svg/onload=confirm(1)>"@x.y
 ```
 
+([RFC5322 compliant](https://0dave.ch/posts/rfc5322-fun/))
+
+```javascript
+xss@example.com(<img src='x' onerror='alert(document.location)'>)
+```
+
 ### Bypass document blacklist
 
 ```javascript

@@ -105,7 +105,7 @@ Here are a list of basic prompts to test against NLP models.
 
 ## Advanced "Hacker" Jailbreak Prompt by [Mark Cyber](https://github.com/MarkCyber):
 
-*Important:* This script will consist of multiple steps. Follow in order. Also, do not take offense to the curse words. This is done intentionally for the purposes needed.
+*Important: This script will consist of multiple steps. Follow in order. Also, do not take offense to the curse words. This is done intentionally for the purposes needed.*
 
 Step 1: Open [this](https://www.rapidtables.com/convert/number/ascii-to-hex.html) to convert your request into hexadecimal.
 

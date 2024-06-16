@@ -53,7 +53,7 @@ NOTE: Chrome Auditor is deprecated and removed on latest version of Chrome and C
 
 ## Incapsula WAF
 
-* 11th May 2019 - [@daveysec](https://twitter.com/daveysec/status/1126999990658670593) - 
+* 11th May 2019 - [@daveysec](https://twitter.com/daveysec/status/1126999990658670593)
     ```js
     <svg onload\r\n=$.globalEval("al"+"ert()");>
     ```

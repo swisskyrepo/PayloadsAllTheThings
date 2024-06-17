@@ -326,3 +326,4 @@ steps:
 * [Poisoned Pipeline Execution](https://www.cidersecurity.io/top-10-cicd-security-risks/poisoned-pipeline-execution-ppe/)
 * [DEF CON 25 - spaceB0x - Exploiting Continuous Integration (CI) and Automated Build systems](https://youtu.be/mpUDqo7tIk8)
 * [Azure-Devops-Command-Injection](https://pulsesecurity.co.nz/advisories/Azure-Devops-Command-Injection)
+* [Awesome CI/CD Attacks](https://github.com/TupleType/awesome-cicd-attacks)

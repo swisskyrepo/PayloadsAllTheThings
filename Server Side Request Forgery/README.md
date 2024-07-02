@@ -464,6 +464,9 @@ gopher://127.0.0.1:6379/_save
 
 ![https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/Server%20Side%20Request%20Forgery/Images/SSRF_PDF.png](https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/Server%20Side%20Request%20Forgery/Images/SSRF_PDF.png)
 
+Credits to: [barbixxxa](https://allmylinks.com/barbixxxa)
+Reference: https://www.sidechannel.blog/en/html-to-pdf-converters-can-i-hack-them/
+
 Example with [WeasyPrint by @nahamsec](https://www.youtube.com/watch?v=t5fB6OZsR6c&feature=emb_title)
 
 ```powershell

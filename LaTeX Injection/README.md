@@ -104,7 +104,12 @@ From [@EdOverflow](https://twitter.com/intigriti/status/1101509684614320130)
 \href{javascript:alert(1)}{placeholder}
 ```
 
-Live example at `http://payontriage.com/xss.php?xss=$\href{javascript:alert(1)}{Frogs%20find%20bugs}$`
+in [mathjax](https://docs.mathjax.org/en/latest/input/tex/extensions/unicode.html)
+
+```tex
+\unicode{<img src=1 onerror="<ARBITRARY_JS_CODE>">}
+```
+
 
 ## References
 

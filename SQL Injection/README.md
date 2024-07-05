@@ -134,6 +134,21 @@ Detection of an SQL injection entry point
 ["'i'='i'",     "MSACCESS,SQLITE,POSTGRESQL,ORACLE,MSSQL,MYSQL"],
 ```
 
+## DBMS Identification VIA Error
+
+DBMS                  | Example Error Message                                                                    | Example Payload |
+|---------------------|------------------------------------------------------------------------------------------|-----------------|
+| MySQL               | `You have an error in your SQL syntax; ... near '' at line 1`                            | `'`             |
+| PostgreSQL          | `ERROR: unterminated quoted string at or near "'"`                                       | `'`             |
+| PostgreSQL          | `ERROR: syntax error at or near "1"`                                                     | `1'`            |
+| Microsoft SQL Server| `Unclosed quotation mark after the character string ''.`                                 | `'`             |
+| Microsoft SQL Server| `Incorrect syntax near ''.`                                                              | `'`             |
+| Microsoft SQL Server| `The conversion of the varchar value to data type int resulted in an out-of-range value.`| `1'`            |
+| Oracle              | `ORA-00933: SQL command not properly ended`                                              | `'`             |
+| Oracle              | `ORA-01756: quoted string not properly terminated`                                       | `'`             |
+| Oracle              | `ORA-00923: FROM keyword not found where expected`                                       | `1'`            |
+------------------------------------------------------------------------------------------------------------------------------------
+
 
 ## SQL injection using SQLmap
 

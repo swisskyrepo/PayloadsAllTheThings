@@ -49,7 +49,9 @@
     python ./badsecrets/examples/symfony_knownkey.py --url https://localhost/
     ```
 - [mazen160/secrets-patterns-db](https://github.com/mazen160/secrets-patterns-db) - Secrets Patterns DB: The largest open-source Database for detecting secrets, API keys, passwords, tokens, and more.
-    
+- [d0ge/sign-saboteur](https://github.com/d0ge/sign-saboteur) - SignSaboteur is a Burp Suite extension for editing, signing, verifying various signed web tokens
+
+
 ## Exploit
 
 The following commands can be used to takeover accounts or extract personal information from the API using the leaked token.
@@ -223,14 +225,12 @@ $ AspDotNetWrapper.exe --decryptDataFilePath C:\DecryptedText.txt
 ```
 
 ### Mapbox API Token
-A Mapbox API Token is a JSON Web Token (JWT). If the header of the JWT is `sk`, jackpot. If it's `pk` or `tk`, it's not worth your time.
-```
-#Check token validity
-curl "https://api.mapbox.com/tokens/v2?access_token=YOUR_MAPBOX_ACCESS_TOKEN"
 
-#Get list of all tokens associated with an account. (only works if the token is a Secret Token (sk), and has the appropriate scope)
-curl "https://api.mapbox.com/tokens/v2/MAPBOX_USERNAME_HERE?access_token=YOUR_MAPBOX_ACCESS_TOKEN"
-```
+A Mapbox API Token is a JSON Web Token (JWT). If the header of the JWT is `sk`, jackpot. If it's `pk` or `tk`, it's not worth your time.
+
+* Check token validity: `curl "https://api.mapbox.com/tokens/v2?access_token=YOUR_MAPBOX_ACCESS_TOKEN"`
+* Get list of all tokens associated with an account (only works if the token is a Secret Token (sk), and has the appropriate scope): `curl "https://api.mapbox.com/tokens/v2/MAPBOX_USERNAME_HERE?access_token=YOUR_MAPBOX_ACCESS_TOKEN"`
+
 
 ## References
 
@@ -239,3 +239,4 @@ curl "https://api.mapbox.com/tokens/v2/MAPBOX_USERNAME_HERE?access_token=YOUR_MA
 * [Project Blacklist3r - November 23, 2018 - @notsosecure](https://www.notsosecure.com/project-blacklist3r/)
 * [Saying Goodbye to my Favorite 5 Minute P1 - Allyson O'Malley - January 6, 2020](https://www.allysonomalley.com/2020/01/06/saying-goodbye-to-my-favorite-5-minute-p1/)
 * [Mapbox API Token Documentation](https://docs.mapbox.com/help/troubleshooting/how-to-use-mapbox-securely/)
+* [Introducing SignSaboteur: forge signed web tokens with ease - Zakhar Fedotkin - 22 May 2024](https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease)

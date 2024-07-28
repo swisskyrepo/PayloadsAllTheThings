@@ -28,7 +28,7 @@
 | `'0xABCdef' == ' 0xABCdef'`       | true (PHP 5.0) / false (PHP 7.0) |
 | `'0xABCdef' == '     0xABCdef'`   | true (PHP 5.0) / false (PHP 7.0) |
 | `'0x01'     == 1`       		    | true (PHP 5.0) / false (PHP 7.0) |
-| `'0x1234Ab' == '1193131'`         | true |
+| `'0x1234Ab' == '1193131'`         | true (PHP 5.0) / false (PHP 7.0) |
 | `'123'  == 123`                   | true |
 | `'123a' == 123`                   | true |
 | `'abc'  == 0`                     | true |

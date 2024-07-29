@@ -19,6 +19,7 @@
 
 
 ## Tools
+- [Upload Bypass](https://github.com/sAjibuu/Upload_Bypass)
 - [Fuxploider](https://github.com/almandin/fuxploider)
 - [Burp > Upload Scanner](https://portswigger.net/bappstore/b2244cbb6953442cb3c82fa0a0d908fa)
 - [ZAP > FileUpload AddOn](https://www.zaproxy.org/blog/2021-08-20-zap-fileupload-addon/)

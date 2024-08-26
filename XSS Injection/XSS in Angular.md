@@ -332,3 +332,4 @@ When doing a code review, you want to make sure that no user input is being trus
 - [Blind XSS AngularJS Payloads](https://ardern.io/2018/12/07/angularjs-bxss)
 - [Angular Security](https://angular.io/guide/security)
 - [Bypass DomSanitizer](https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b)
+- [Bidding Like a Billionaire - Stealing NFTs With 4-Char CSTIs - Matan Berson - 2024-07-11](https://matanber.com/blog/4-char-csti)

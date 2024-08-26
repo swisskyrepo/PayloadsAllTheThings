@@ -22,6 +22,7 @@
 
 * [PortSwigger/turbo-intruder](https://github.com/PortSwigger/turbo-intruder) - a Burp Suite extension for sending large numbers of HTTP requests and analyzing the results.
 * [JavanXD/Raceocat](https://github.com/JavanXD/Raceocat) - Make exploiting race conditions in web applications highly efficient and ease-of-use.
+* [nxenon/h2spacex](https://github.com/nxenon/h2spacex) - HTTP/2 Single Packet Attack low Level Library / Tool based on Scapy‌ + Exploit Timing Attacks
 
 
 ## Labs
@@ -167,3 +168,4 @@ def handleResponse(req, interesting):
 * [Race conditions on the web - Josip Franjkovic - July 12th, 2016](https://www.josipfranjkovic.com/blog/race-conditions-on-web)
 * [New techniques and tools for web race conditions - Emma Stocks - 10 August 2023](https://portswigger.net/blog/new-techniques-and-tools-for-web-race-conditions)
 * [Exploiting Race Condition Vulnerabilities in Web Applications - Javan Rasokat](https://conference.hitb.org/hitbsecconf2022sin/materials/D2%20COMMSEC%20-%20Exploiting%20Race%20Condition%20Vulnerabilities%20in%20Web%20Applications%20-%20Javan%20Rasokat.pdf)
+* [Beyond the Limit: Expanding single-packet race condition with a first sequence sync for breaking the 65,535 byte limit- @ryotkak  - August 2, 2024 ](https://flatt.tech/research/posts/beyond-the-limit-expanding-single-packet-race-condition-with-first-sequence-sync/)

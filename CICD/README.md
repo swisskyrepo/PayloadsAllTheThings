@@ -32,6 +32,8 @@
 ## Tools
 
 * [praetorian-inc/gato](https://github.com/praetorian-inc/gato) - GitHub Self-Hosted Runner Enumeration and Attack Tool
+* [messypoutine/gravy-overflow](https://github.com/messypoutine/gravy-overflow) - A GitHub Actions Supply Chain CTF / Goat
+
 
 ## Package managers & Build Files
 
@@ -120,29 +122,29 @@ NOTE: remember that your payload is inserted in an XML document - XML special ch
 ```xml
 <build>
     <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
-                <executions>
-                    <execution>
-                        <id>run-script</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <executable>bash</executable>
-                    <arguments>
-                        <argument>
-                            -c
-                        </argument>
-                        <argument>{XML-Escaped-Payload}</   argument>
-                    </arguments>
-                </configuration>
-            </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.6.0</version>
+          <executions>
+              <execution>
+                  <id>run-script</id>
+                  <phase>validate</phase>
+                  <goals>
+                      <goal>exec</goal>
+                  </goals>
+              </execution>
+          </executions>
+          <configuration>
+              <executable>bash</executable>
+              <arguments>
+                  <argument>
+                      -c
+                  </argument>
+                  <argument>{XML-Escaped-Payload}</   argument>
+              </arguments>
+          </configuration>
+        </plugin>
     </plugins>
 </build>
 ```
@@ -231,94 +233,6 @@ NOTE: Since this is an XML file - XML special characters must be escaped.
 ```
 
 
-## CI/CD products
-
-### GitHub Actions
-
-The configuration files for GH actions are located in the directory `.github/workflows/`\
-You can tell if the action builds pull requests based on its trigger (`on`) instructions:
-
-```yaml
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-```
-
-In order to run an OS command in an action that builds pull requests - simply add a `run` instruction to it.\
-An action may also be vulnerable to command injection if it dynamically evaluates untrusted input as part of its `run` instruction:
-
-```yaml
-jobs:
-  print_issue_title:
-    runs-on: ubuntu-latest
-    name: Print issue title
-    steps:
-    - run: echo "${{github.event.issue.title}}"
-```
-
-
-### Azure Pipelines (Azure DevOps)
-
-The configuration files for azure pipelines are normally located in the root directory of the repository and called - `azure-pipelines.yml`\
-You can tell if the pipeline builds pull requests based on its trigger instructions. Look for `pr:` instruction:
-
-```yaml
-trigger:
-  branches:
-      include:
-      - master
-      - refs/tags/*
-pr:
-- master
-```
-
-
-### CircleCI
-
-The configuration files for CircleCI builds are located in `.circleci/config.yml`\
-By default - CircleCI pipelines don't build forked pull requests. It's an opt-in feature that should be enabled by the pipeline owners.
-
-In order to run an OS command in a workflow that builds pull requests - simply add a `run` instruction to the step.
-
-```yaml
-jobs:
-  build:
-    docker:
-     - image: cimg/base:2022.05
-    steps:
-        - run: echo "Say hello to YAML!"
-```
-
-### Drone CI
-
-The configuration files for Drone builds are located in `.drone.yml`\
-Drone build are often self-hosted, this means that you may gain excessive privileges to the kubernetes cluster that runs the runners, or to the hosting cloud environment. 
-
-In order to run an OS command in a workflow that builds pull requests - simply add a `commands` instruction to the step.
-
-```yaml
-steps:
-  - name: do-something
-    image: some-image:3.9
-    commands:
-      - {Payload}
-```
-
-
-### BuildKite
-
-The configuration files for BuildKite builds are located in `.buildkite/*.yml`\
-BuildKite build are often self-hosted, this means that you may gain excessive privileges to the kubernetes cluster that runs the runners, or to the hosting cloud environment. 
-
-In order to run an OS command in a workflow that builds pull requests - simply add a `command` instruction to the step.
-
-```yaml
-steps:
-  - label: "Example Test"
-    command: echo "Hello!"
-```
 
 
 ## References
@@ -326,3 +240,4 @@ steps:
 * [Poisoned Pipeline Execution](https://www.cidersecurity.io/top-10-cicd-security-risks/poisoned-pipeline-execution-ppe/)
 * [DEF CON 25 - spaceB0x - Exploiting Continuous Integration (CI) and Automated Build systems](https://youtu.be/mpUDqo7tIk8)
 * [Azure-Devops-Command-Injection](https://pulsesecurity.co.nz/advisories/Azure-Devops-Command-Injection)
+* [x33fcon lighting talk - Hacking Java serialization from python - Tomasz Bukowski](https://youtu.be/14tNFwfety4)

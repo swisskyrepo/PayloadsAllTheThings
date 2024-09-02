@@ -61,6 +61,7 @@
     - [Bypass ">" using nothing](#bypass--using-nothing)
     - [Bypass "<" and ">" using ＜ and ＞](#bypass--and--using--and-)
     - [Bypass ";" using another character](#bypass--using-another-character)
+    - [Bypass using missing charset header](#bypass-using-missing-charset-header)
     - [Bypass using HTML encoding](#bypass-using-html-encoding)
     - [Bypass using Katakana](#bypass-using-katakana)
     - [Bypass using Cuneiform](#bypass-using-cuneiform)
@@ -962,6 +963,40 @@ Unicode Character U+FF1C and U+FF1E
 'te' instanceof alert('instanceof') instanceof 'xt';
 ```
 
+
+### Bypass using missing charset header
+
+**Requirements**:
+
+* Server header missing `charset`: `Content-Type: text/html`
+
+#### ISO-2022-JP
+
+ISO-2022-JP uses escape characters to switch between several character sets.
+
+| Escape    | Encoding        |
+|-----------|-----------------|
+| `\x1B (B` | ASCII           |
+| `\x1B (J` | JIS X 0201 1976 |
+| `\x1B $@` | JIS X 0208 1978 |
+| `\x1B $B` | JIS X 0208 1983 |
+
+
+Using the [code table](https://en.wikipedia.org/wiki/JIS_X_0201#Codepage_layout), we can find multiple characters that will be transformed when switching from **ASCII** to **JIS X 0201 1976**.
+
+| Hex  | ASCII | JIS X 0201 1976 |
+| ---- | --- | --- |
+| 0x5c | `\` | `¥` | 
+| 0x7e | `~` | `‾` |
+
+
+**Example**
+
+Use `%1b(J` to force convert a `\'` (ascii) in to `¥'` (JIS X 0201 1976), unescaping the quote.
+
+Payload: `search=%1b(J&lang=en";alert(1)//`
+
+
 ### Bypass using HTML encoding
 
 ```javascript
@@ -1307,3 +1342,4 @@ Source: [@pilvar222](https://twitter.com/pilvar222/status/1784618120902005070)
 - [Bypass < with ＜](https://hackerone.com/reports/639684)
 - [Bypassing Signature-Based XSS Filters: Modifying Script Code](https://portswigger.net/support/bypassing-signature-based-xss-filters-modifying-script-code)
 - [Secret Web Hacking Knowledge: CTF Authors Hate These Simple Tricks - Philippe Dourassov - 13 may 2024](https://youtu.be/Sm4G6cAHjWM)
+- [Encoding Differentials: Why Charset Matters - Stefan Schiller - July 15, 2024](https://www.sonarsource.com/blog/encoding-differentials-why-charset-matters/)

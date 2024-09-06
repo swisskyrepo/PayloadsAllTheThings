@@ -6,6 +6,7 @@
     * [GUID Versions](#guid-versions)
 * [Mongo ObjectId](#mongo-objectid)
 * [Uniqid](#uniqid)
+* [mt_rand](#mt_rand)
 * [Other](#other)
 * [References](#references)
 
@@ -133,6 +134,20 @@ for token in tokens:
 ```
 
 
+## mt_rand
+
+Breaking mt_rand() with two output values and no bruteforce.
+
+* [ambionics/mt_rand-reverse](https://github.com/ambionics/mt_rand-reverse) - Script to recover mt_rand()'s seed with only two outputs and without any bruteforce.
+
+```ps1
+./display_mt_rand.php 12345678 123
+712530069 674417379
+
+./reverse_mt_rand.py 712530069 674417379 123 1
+```
+
+
 ## Other
 
 Other bad ideas that are sometimes shipped into production.
@@ -149,7 +164,7 @@ Generic identification and sandwitch attack:
     ``` 
 
 
-### References
+## References
 
 * [In GUID We Trust - Daniel Thatcher - October 11, 2022](https://www.intruder.io/research/in-guid-we-trust)
 * [IDOR through MongoDB Object IDs Prediction - Amey Anekar - August 25, 2020](https://techkranti.com/idor-through-mongodb-object-ids-prediction/)
@@ -157,3 +172,4 @@ Generic identification and sandwitch attack:
 * [[EN] Unsecure time-based secret and Sandwich Attack - Analysis of my research and release of the “Reset Tolkien” tool - Tom CHAMBARETAUD / @AethliosIK - 2 apr 2024](https://www.aeth.cc/public/Article-Reset-Tolkien/secret-time-based-article-en.html)
 * [Secret non sécurisé basé sur le temps et attaques par sandwich - Tom CHAMBARETAUD aka Aethlios](#)
 * [Exploiting Weak Pseudo-Random Number Generation in PHP’s rand and srand Functions - Jacob Moore - Oct 18, 2023](https://medium.com/@moorejacob2017/exploiting-weak-pseudo-random-number-generation-in-phps-rand-and-srand-functions-445229b83e01)
+* [Breaking PHP's mt_rand() with 2 values and no bruteforce - Charles Fol - 06 January, 2020](https://www.ambionics.io/blog/php-mt-rand-prediction)

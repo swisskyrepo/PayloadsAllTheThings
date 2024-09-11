@@ -1,4 +1,4 @@
-# API Key Leaks
+# API Key and Token Leaks
 
 > The API key is a unique identifier that is used to authenticate requests associated with your project. Some developers might hardcode them or leave it on public shares.
 

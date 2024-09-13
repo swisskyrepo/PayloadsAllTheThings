@@ -104,6 +104,7 @@ A self-hosted runner for GitHub Actions is a machine that you manage and maintai
 
 Scan a public GitHub Organization for Self-Hosted Runners
 
+* [AdnaneKhan/Gato-X](https://github.com/AdnaneKhan/Gato-X) - Fork of Gato - Gato (Github Attack TOolkit) - Extreme Edition
 * [praetorian-inc/gato](https://github.com/praetorian-inc/gato) - GitHub Actions Pipeline Enumeration and Attack Tool
     ```ps1
     gato -s enumerate -t targetOrg -oJ target_org_gato.json

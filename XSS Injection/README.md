@@ -363,7 +363,7 @@ vbscript:msgbox("XSS")
 
 ## XSS in files
 
-** NOTE:** The XML CDATA section is used here so that the JavaScript payload will not be treated as XML markup.
+**NOTE:** The XML CDATA section is used here so that the JavaScript payload will not be treated as XML markup.
 
 ```xml
 <name>

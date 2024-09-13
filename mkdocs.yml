@@ -44,8 +44,8 @@ theme:
     # - navigation.path
 
 extra_css:
-    - custom.css
-    
+  - custom.css
+
 markdown_extensions:
   - tables
   - attr_list

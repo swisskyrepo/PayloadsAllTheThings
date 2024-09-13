@@ -51,7 +51,7 @@ Real-World Scenarios:
 
 * [Exploiting Client-Side Path Traversal to Perform Cross-Site Request Forgery - Introducing CSPT2CSRF - Maxence Schmitt - 02 Jul 2024](https://blog.doyensec.com/2024/07/02/cspt2csrf.html)
 * [Exploiting Client-Side Path Traversal - CSRF is dead, long live CSRF - Whitepaper- Maxence Schmitt](https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_Whitepaper.pdf)
-* [Exploiting Client-Side Path Traversal - CSRF is Dead, Long Live CSRF - OWASP Global AppSec 2024 - Maxence Schmitt - June 24 2024][https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_OWASP_Appsec_Lisbon.pdf]
+* [Exploiting Client-Side Path Traversal - CSRF is Dead, Long Live CSRF - OWASP Global AppSec 2024 - Maxence Schmitt - June 24 2024](https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_OWASP_Appsec_Lisbon.pdf)
 * [Leaking Jupyter instance auth token chaining CVE-2023-39968, CVE-2024-22421 and a chromium bug - Davwwwx -  30-08-2023](https://blog.xss.am/2023/08/cve-2023-39968-jupyter-token-leak/)
 * [Tweet - @HusseiN98D - 5 july 2024](https://twitter.com/HusseiN98D/status/1809164551822172616)
 * [On-site request forgery - Dafydd Stuttard - 03 May 2007](https://portswigger.net/blog/on-site-request-forgery)

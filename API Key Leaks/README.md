@@ -16,7 +16,7 @@
     - [Twitter Bearer Token](#twitter-bearer-token)
     - [Gitlab Personal Access Token](#gitlab-personal-access-token)
     - [HockeyApp API Token](#hockeyapp-api-token)
-    - [Mapbox API Token](#Mapbox-API-Token)
+    - [Mapbox API Token](#mapbox-api-token)
 
 
 ## Tools
@@ -162,6 +162,7 @@ A Mapbox API Token is a JSON Web Token (JWT). If the header of the JWT is `sk`, 
     ```ps1
     curl "https://api.mapbox.com/tokens/v2/MAPBOX_USERNAME_HERE?access_token=YOUR_MAPBOX_ACCESS_TOKEN"
     ```
+
 
 ## References
 

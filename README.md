@@ -16,7 +16,7 @@ An alternative display version is available at [PayloadsAllTheThingsWeb](https:/
 </p>
 
 
-📖 Documentation
+:book: Documentation
 -----
 Every section contains the following files, you can use the `_template_vuln` folder to create a new chapter:
 
@@ -53,7 +53,7 @@ You might also like the `Methodology and Resources` folder :
 You want more ? Check the [Books](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/_LEARNING_AND_SOCIALS/BOOKS.md) and [Youtube videos](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/_LEARNING_AND_SOCIALS/YOUTUBE.md) selections.
 
 
-👨‍💻 Contributions
+:technologist: Contributions
 -----
 Be sure to read [CONTRIBUTING.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CONTRIBUTING.md)
 
@@ -66,7 +66,7 @@ Be sure to read [CONTRIBUTING.md](https://github.com/swisskyrepo/PayloadsAllTheT
 Thanks again for your contribution! :heart:
 
 
-🧙‍♂️ Sponsors
+:beers: Sponsors
 -----
 
 This project is proudly sponsored by these companies: 

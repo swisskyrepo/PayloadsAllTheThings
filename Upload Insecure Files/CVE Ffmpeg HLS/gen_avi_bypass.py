@@ -26,7 +26,7 @@ def prepare_txt_packet(txt, filename):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser('HLS AVI TXT exploit generator')
-    parser.add_argument('filename', help='file that should be read from convertion instance')
+    parser.add_argument('filename', help='file that should be read from conversion instance')
     parser.add_argument('output_avi', help='where to save the avi')
     parser.add_argument('--txt', help='any .txt file that exist on target system', default='GOD.txt')
     args = parser.parse_args()

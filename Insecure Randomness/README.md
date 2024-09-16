@@ -25,7 +25,7 @@ The four-bit M and the 1- to 3-bit N fields code the format of the UUID itself.
 |----------|--------|
 | 0 | Only `00000000-0000-0000-0000-000000000000` |
 | 1 | based on time, or clock sequence |
-| 2 | reserved in the RFC 4122, but ommitted in many implementations |
+| 2 | reserved in the RFC 4122, but omitted in many implementations |
 | 3 | based on a MD5 hash |
 | 4 | randomly generated |
 | 5 | based on a SHA1 hash |
@@ -157,7 +157,7 @@ Other bad ideas that are sometimes shipped into production.
 
 Generic identification and sandwitch attack: 
 
-* [AethliosIK/reset-tolkien](https://github.com/AethliosIK/reset-tolkien) - Unsecure time-based secret exploitation and Sandwich attack implementation Resources
+* [AethliosIK/reset-tolkien](https://github.com/AethliosIK/reset-tolkien) - Insecure time-based secret exploitation and Sandwich attack implementation Resources
     ```ps1
     reset-tolkien detect 660430516ffcf -d "Wed, 27 Mar 2024 14:42:25 GMT" --prefixes "attacker@example.com" --suffixes "attacker@example.com" --timezone "-7"
     reset-tolkien sandwich 660430516ffcf -bt 1711550546.485597 -et 1711550546.505134 -o output.txt --token-format="uniqid"

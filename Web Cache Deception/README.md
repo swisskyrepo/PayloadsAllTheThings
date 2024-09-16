@@ -43,7 +43,7 @@ Imagine an attacker lures a logged-in victim into accessing `http://www.example.
 1. Normal browsing, visit home : `https://www.example.com/myaccount/home/`
 2. Open the malicious link : `https://www.example.com/myaccount/home/malicious.css`
 3. The page is displayed as /home and the cache is saving the page
-4. Open a private tab with the previous URL : `https://www.example.com/myaccount/home/malicous.css`
+4. Open a private tab with the previous URL : `https://www.example.com/myaccount/home/malicious.css`
 5. The content of the cache is displayed
 
 Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page

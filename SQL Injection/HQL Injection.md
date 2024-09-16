@@ -1,4 +1,4 @@
-# Hibernate Query Language Injection 
+# Hibernate Query Language Injection
 
 > Hibernate ORM (Hibernate in short) is an object-relational mapping tool for the Java programming language. It provides a framework for mapping an object-oriented domain model to a relational database. - Wikipedia
 
@@ -28,7 +28,7 @@ HQL does not support comments
 ```sql
 from BlogPosts
 where title like '%'
-  and DOESNT_EXIST=1 and ''='%' -- 
+  and DOESNT_EXIST=1 and ''='%' --
   and published = true
 ```
 
@@ -120,7 +120,7 @@ Hibernate resolves Java public static fields (Java constants) in HQL queries:
 - Ex. `java.lang.Character.SIZE` is resolved to 16
 - String or char constants are additionally surrounded by single quotes
 
-To use JAVA CONSTANTS method we need special char or  string fields declared in classes or interfaces on classpath.
+To use JAVA CONSTANTS method we need special char or string fields declared in classes or interfaces on classpath.
 
 ```java
 public class Constants {

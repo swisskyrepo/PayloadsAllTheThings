@@ -16,7 +16,7 @@ Allow from all
 </Files>
 
 # Make .htaccess file be interpreted as php file. This occur after apache has interpreted
-# the apache directoves from the .htaccess file
+# the apache directives from the .htaccess file
 AddType application/x-httpd-php .htaccess
 ```
 

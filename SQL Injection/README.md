@@ -128,7 +128,7 @@ Detection of an SQL injection entry point
 ["last_insert_rowid()>1"                           ,"SQLITE"],
 ["last_insert_rowid()=last_insert_rowid()"         ,"SQLITE"],
 ["val(cvar(1))=1"                                  ,"MSACCESS"],
-["IIF(ATN(2)>0,1,0) BETWEEN 2 AND 0"               ,"MSACCESS"],
+["IF(ATN(2)>0,1,0) BETWEEN 2 AND 0"               ,"MSACCESS"],
 ["cdbl(1)=cdbl(1)"                                 ,"MSACCESS"],
 ["1337=1337",   "MSACCESS,SQLITE,POSTGRESQL,ORACLE,MSSQL,MYSQL"],
 ["'i'='i'",     "MSACCESS,SQLITE,POSTGRESQL,ORACLE,MSSQL,MYSQL"],
@@ -264,7 +264,7 @@ tamper=name_of_the_tamper
 |nonrecursivereplacement.py | Replaces predefined SQL keywords with representations suitable for replacement (e.g. .replace("SELECT", "")) filters|
 |overlongutf8.py | Converts all characters in a given payload (not processing already encoded) |
 |overlongutf8more.py | Converts all characters in a given payload to overlong UTF8 (not processing already encoded) (e.g. SELECT -> %C1%93%C1%85%C1%8C%C1%85%C1%83%C1%94) |
-|percentage.py | Adds a percentage sign ('%') infront of each character  |
+|percentage.py | Adds a percentage sign ('%') in front of each character  |
 |plus2concat.py | Replaces plus operator (‘+’) with (MsSQL) function CONCAT() counterpart |
 |plus2fnconcat.py | Replaces plus operator (‘+’) with (MsSQL) ODBC function {fn CONCAT()} counterpart |
 |randomcase.py | Replaces each keyword character with random case value |

@@ -209,9 +209,9 @@ d:\System32\Inetsrv\metabase.xml
 /etc/httpd/conf/httpd.conf
 /etc/httpd/httpd.conf
 /etc/httpd/logs/acces_log
-/etc/httpd/logs/acces.log
+/etc/httpd/logs/access.log
 ../../../../../../../etc/httpd/logs/acces_log
-../../../../../../../etc/httpd/logs/acces.log
+../../../../../../../etc/httpd/logs/access.log
 /etc/httpd/logs/access_log
 /etc/httpd/logs/access.log
 ../../../../../etc/httpd/logs/access_log

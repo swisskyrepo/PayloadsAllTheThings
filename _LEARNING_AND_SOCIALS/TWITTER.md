@@ -20,7 +20,7 @@ Twitter is very common in the InfoSec area. Many advices and tips on bug hunting
 - [@hakluke - Bug bounty hunter, content creator, creator of some great pentesting tools like hakrawler](https://twitter.com/hakluke)
 - [@spaceraccoon - Security researcher and white hat hacker. Has worked on several bug bounty programs](https://twitter.com/spaceraccoonsec)
 - [@samwcyo - Full time bug bounty hunter](https://twitter.com/samwcyo)
-- [@Th3G3nt3lman - Security Reasearch & Bug bounty hunter](https://twitter.com/Th3G3nt3lman)
+- [@Th3G3nt3lman - Security Research & Bug bounty hunter](https://twitter.com/Th3G3nt3lman)
 - [@securinti - Dutch bug bounty hunter & head of hackers and bord member @ intigriti](https://twitter.com/securinti)
 - [@jobertabma - Co-founder of HackerOne, security researcher](https://twitter.com/jobertabma)
 - [@codingo_ - Global Head of Security Ops and Researcher Enablement bugcrowd, Maintainer of some great pentesting tools like NoSQLMap or VHostScan](https://twitter.com/codingo_)

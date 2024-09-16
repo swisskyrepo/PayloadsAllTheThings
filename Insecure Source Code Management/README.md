@@ -7,7 +7,7 @@
   + [Tools](#tools)
     - [Automatic recovery](#automatic-recovery)
       * [git-dumper.py](#git-dumperpy)
-      * [diggit.py](#diggitpy)
+      * [digit.py](#diggitpy)
       * [GoGitDumper](#gogitdumper)
       * [rip-git](#rip-git)
       * [GitHack](#githack)
@@ -126,12 +126,12 @@ pip install -r requirements.txt
 ./git-dumper.py http://web.site/.git ~/website
 ```
 
-##### diggit.py
+##### digit.py
 
 ```powershell
-git clone https://github.com/bl4de/security-tools/ && cd security-tools/diggit
-./diggit.py -u remote_git_repo -t temp_folder -o object_hash [-r=True]
-./diggit.py -u http://web.site -t /path/to/temp/folder/ -o d60fbeed6db32865a1f01bb9e485755f085f51c1
+git clone https://github.com/bl4de/security-tools/ && cd security-tools/digit
+./digit.py -u remote_git_repo -t temp_folder -o object_hash [-r=True]
+./digit.py -u http://web.site -t /path/to/temp/folder/ -o d60fbeed6db32865a1f01bb9e485755f085f51c1
 
 -u is remote path, where .git folder exists
 -t is path to local folder with dummy Git repository and where blob content (files) are saved with their real names (cd /path/to/temp/folder && git init)
@@ -303,5 +303,5 @@ docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-h
 ## References
 
 - [bl4de, hidden_directories_leaks](https://github.com/bl4de/research/tree/master/hidden_directories_leaks)
-- [bl4de, diggit](https://github.com/bl4de/security-tools/tree/master/diggit)
+- [bl4de, digit](https://github.com/bl4de/security-tools/tree/master/digit)
 - [Gitrob: Now in Go - Michael Henriksen](https://michenriksen.com/blog/gitrob-now-in-go/)

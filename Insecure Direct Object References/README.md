@@ -21,7 +21,7 @@
 
 - [PortSwigger/BApp Store > Authz](https://portswigger.net/bappstore/4316cc18ac5f434884b2089831c7d19e)
 - [PortSwigger/BApp Store > AuthMatrix](https://portswigger.net/bappstore/30d8ee9f40c041b0bfec67441aad158e)
-- [PortSwigger/BApp Store > Autorize](https://portswigger.net/bappstore/f9bbac8c4acf4aefa4d7dc92a991af2f)
+- [PortSwigger/BApp Store > Authorize](https://portswigger.net/bappstore/f9bbac8c4acf4aefa4d7dc92a991af2f)
 
 
 ## Labs
@@ -55,7 +55,7 @@ https://example.com/profile?user_id=124
 
 ### Numeric Value Parameter
 
-Increment and decrement these values to access sensitive informations.
+Increment and decrement these values to access sensitive information.
 
 * Decimal value: `287789`, `287790`, `287791`, ...
 * Hexadecimal: `0x4642d`, `0x4642e`, `0x4642f`, ...
@@ -109,7 +109,7 @@ Sometimes we see websites using hashed values to generate a random user id or to
 
 ### Wildcard Parameter
 
-Send a wilcard instead of an ID, some backend might respond with the data of all the users.
+Send a wildcard instead of an ID, some backend might respond with the data of all the users.
 
 * `GET /api/users/* HTTP/1.1`
 * `GET /api/users/% HTTP/1.1`

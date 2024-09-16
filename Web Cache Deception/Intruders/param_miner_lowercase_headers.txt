@@ -583,7 +583,7 @@ referer
 referer~http://%s.%h/
 referrer
 referrer-policy
-refferer
+referrer
 refresh
 remix-hash
 remote-addr

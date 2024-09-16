@@ -68,7 +68,7 @@ Loose Type Comparisons occurs in many languages:
 | Hash | "Magic" Number / String    | Magic Hash                                    | Found By / Description      |
 | ---- | -------------------------- |:---------------------------------------------:| -------------:|
 | MD4  | gH0nAdHk                   | 0e096229559581069251163783434175              | [@spaze](https://github.com/spaze/hashes/blob/master/md4.md) |
-| MD4  | IiF+hTai                   | 00e90130237707355082822449868597              | [@spaze](https://github.com/spaze/hashes/blob/master/md4.md) |
+| MD4  | if+hTai                   | 00e90130237707355082822449868597              | [@spaze](https://github.com/spaze/hashes/blob/master/md4.md) |
 | MD5  | 240610708                  | 0e462097431906509019562988736854              | [@spazef0rze](https://twitter.com/spazef0rze/status/439352552443084800) |
 | MD5  | QNKCDZO                    | 0e830400451993494058024219903391              | [@spazef0rze](https://twitter.com/spazef0rze/status/439352552443084800) |
 | MD5  | 0e1137126905               | 0e291659922323405260514745084877              | [@spazef0rze](https://twitter.com/spazef0rze/status/439352552443084800) |

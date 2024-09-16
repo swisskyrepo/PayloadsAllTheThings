@@ -503,7 +503,7 @@ cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
 
 ## XXE in Java
 
-Unsecure configuration in 10 different Java classes from three XML processing interfaces (DOM, SAX, StAX) that can lead to XXE:
+Insecure configuration in 10 different Java classes from three XML processing interfaces (DOM, SAX, StAX) that can lead to XXE:
 
 ![XXE Java security features overview infographics](https://semgrep.dev/docs/assets/images/cheat-sheets-xxe-java-infographics-1d1d5016802e3ab8f0886b62b8c81f21.png)
 
@@ -650,7 +650,7 @@ Add your blind XXE payload inside `xl/workbook.xml`.
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
 ```
 
-Alternativly, add your payload in `xl/sharedStrings.xml`:
+Alternatively, add your payload in `xl/sharedStrings.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -750,7 +750,7 @@ From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
 * [excel-reader-xlsx #10](https://github.com/jmcnamara/excel-reader-xlsx/issues/10)
 * [Midnight Sun CTF 2019 Quals - Rubenscube](https://jbz.team/midnightsunctfquals2019/Rubenscube)
 * [SynAck - A Deep Dive into XXE Injection](https://www.synack.com/blog/a-deep-dive-into-xxe-injection/) - 22 July 2019 - Trenton Gordon
-* [Synacktiv - CVE-2019-8986: SOAP XXE in TIBCO JasperReports Server](https://www.synacktiv.com/ressources/advisories/TIBCO_JasperReports_Server_XXE.pdf) - 11-03-2019 - Julien SZLAMOWICZ, Sebastien DUDEK
+* [Synacktiv - CVE-2019-8986: SOAP XXE in TIBCO JasperReports Server](https://www.synacktiv.com/resources/advisories/TIBCO_JasperReports_Server_XXE.pdf) - 11-03-2019 - Julien SZLAMOWICZ, Sebastien DUDEK
 * [XXE: How to become a Jedi](https://2017.zeronights.org/wp-content/uploads/materials/ZN17_yarbabin_XXE_Jedi_Babin.pdf) - Zeronights 2017 - Yaroslav Babin
 * [Payloads for Cisco and Citrix - Arseniy Sharoglazov](https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
 * [Data exfiltration using XXE on a hardened server - Ritik Singh - Jan 29, 2022](https://infosecwriteups.com/data-exfiltration-using-xxe-on-a-hardened-server-ef3a3e5893ac)

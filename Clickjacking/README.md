@@ -216,6 +216,6 @@ Determine the Clickjacking vulnerability within this code snippet. Identify how 
 ## References
 * [Clickjacker.io - Saurabh Banawar](https://clickjacker.io)
 * [Web-Security Clickjacking - PortSwigger](https://portswigger.net/web-security/clickjacking)
-* [Synopsys Clickjacking](https://www.synopsys.com/glossary/what-is-clickjacking.html#B)
+* [Synopsis Clickjacking](https://www.synopsis.com/glossary/what-is-clickjacking.html#B)
 * [OWASP - Gustav Rydstedt](https://owasp.org/www-community/attacks/Clickjacking)
 * [SecTheory](http://www.sectheory.com/clickjacking.htm)

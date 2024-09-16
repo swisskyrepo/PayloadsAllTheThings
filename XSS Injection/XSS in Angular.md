@@ -196,7 +196,7 @@ AngularJS bypass Waf [Imperva]
 ```
 
 
-Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsys) and Gareth Heyes (PortSwigger)
+Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsis) and Gareth Heyes (PortSwigger)
 
 ```javascript
 {{
@@ -300,7 +300,7 @@ However, it is possible to mark a value as trusted and prevent the automatic san
 - bypassSecurityTrustUrl
 - bypassSecurityTrustResourceUrl
 
-Example of a component using the unsecure method `bypassSecurityTrustUrl`:
+Example of a component using the insecure method `bypassSecurityTrustUrl`:
 
 ```
 import { Component, OnInit } from '@angular/core';

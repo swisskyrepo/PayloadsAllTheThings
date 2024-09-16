@@ -1,19 +1,19 @@
-# Hibernate Query Language Injection 
+# Hibernate Query Language Injection
 
 > Hibernate ORM (Hibernate in short) is an object-relational mapping tool for the Java programming language. It provides a framework for mapping an object-oriented domain model to a relational database. - Wikipedia
 
 ## Summary
 
-* [HQL Comments](#hql-comments)
-* [HQL List Columns](#hql-list-columns)
-* [HQL Error Based](#hql-error-based)
-* [Single Quote Escaping](#single-quote-escaping)
-* [$-quoted strings](#--quoted-strings)
-* [DBMS Magic functions](#dbms-magic-functions)
-* [Unicode](#unicode)
-* [Java constants](#java-constants)
-* [Methods by DBMS](#methods-by-dbms)
-* [References](#references)
+- [HQL Comments](#hql-comments)
+- [HQL List Columns](#hql-list-columns)
+- [HQL Error Based](#hql-error-based)
+- [Single Quote Escaping](#single-quote-escaping)
+- [$-quoted strings](#--quoted-strings)
+- [DBMS Magic functions](#dbms-magic-functions)
+- [Unicode](#unicode)
+- [Java constants](#java-constants)
+- [Methods by DBMS](#methods-by-dbms)
+- [References](#references)
 
 :warning: Your input will always be between the percentage symbols: `%INJECT_HERE%`
 
@@ -28,7 +28,7 @@ HQL does not support comments
 ```sql
 from BlogPosts
 where title like '%'
-  and DOESNT_EXIST=1 and ''='%' -- 
+  and DOESNT_EXIST=1 and ''='%' --
   and published = true
 ```
 
@@ -120,7 +120,7 @@ Hibernate resolves Java public static fields (Java constants) in HQL queries:
 - Ex. `java.lang.Character.SIZE` is resolved to 16
 - String or char constants are additionally surrounded by single quotes
 
-To use JAVA CONSTANTS method we need special char or  string fields declared in classes or interfaces on classpath.
+To use JAVA CONSTANTS method we need special char or string fields declared in classes or interfaces on classpath.
 
 ```java
 public class Constants {
@@ -156,9 +156,9 @@ dummy' and hqli.persistent.Constants.C_QUOTE_1*X('<>CHAR(41) and (select count(1
 
 ## References
 
-* [HQL for pentesters - February 12, 2014 - Philippe Arteau](https://blog.h3xstream.com/2014/02/hql-for-pentesters.html)
-* [How to put a comment into HQL (Hibernate Query Language)? - Thomas Bratt](https://stackoverflow.com/questions/3196975/how-to-put-a-comment-into-hql-hibernate-query-language)
-* [HQL : Hyperinsane Query Language - 04/06/2015 - Renaud Dubourguais](https://www.synacktiv.com/resources/hql2sql_sstic_2015_en.pdf)
-* [ORM2Pwn: Exploiting injections in Hibernate ORM - Nov 26, 2015 - Mikhail Egorov](https://www.slideshare.net/0ang3el/orm2pwn-exploiting-injections-in-hibernate-orm)
-* [New Methods for Exploiting ORM Injections in Java Applications - HITBSecConf2016 - Mikhail Egorov - Sergey Soldatov](https://conference.hitb.org/hitbsecconf2016ams/materials/D2T2%20-%20Mikhail%20Egorov%20and%20Sergey%20Soldatov%20-%20New%20Methods%20for%20Exploiting%20ORM%20Injections%20in%20Java%20Applications.pdf)
-* [HQL Injection Exploitation in MySQL - July 18, 2019 - Olga Barinova](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/hql-injection-exploitation-in-mysql/)
+- [HQL for pentesters - February 12, 2014 - Philippe Arteau](https://blog.h3xstream.com/2014/02/hql-for-pentesters.html)
+- [How to put a comment into HQL (Hibernate Query Language)? - Thomas Bratt](https://stackoverflow.com/questions/3196975/how-to-put-a-comment-into-hql-hibernate-query-language)
+- [HQL : Hyperinsane Query Language - 04/06/2015 - Renaud Dubourguais](https://www.synacktiv.com/ressources/hql2sql_sstic_2015_en.pdf)
+- [ORM2Pwn: Exploiting injections in Hibernate ORM - Nov 26, 2015 - Mikhail Egorov](https://www.slideshare.net/0ang3el/orm2pwn-exploiting-injections-in-hibernate-orm)
+- [New Methods for Exploiting ORM Injections in Java Applications - HITBSecConf2016 - Mikhail Egorov - Sergey Soldatov](https://conference.hitb.org/hitbsecconf2016ams/materials/D2T2%20-%20Mikhail%20Egorov%20and%20Sergey%20Soldatov%20-%20New%20Methods%20for%20Exploiting%20ORM%20Injections%20in%20Java%20Applications.pdf)
+- [HQL Injection Exploitation in MySQL - July 18, 2019 - Olga Barinova](https://www.trustwave.com/en-us/resources/blogs/spiderlabs-blog/hql-injection-exploitation-in-mysql/)

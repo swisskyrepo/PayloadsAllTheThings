@@ -14,7 +14,7 @@
 /apache/logs/error.log%00
 /apache/logs/access.log%00
 /etc/httpd/logs/acces_log%00
-/etc/httpd/logs/access.log%00
+/etc/httpd/logs/acces.log%00
 /etc/httpd/logs/error_log%00
 /etc/httpd/logs/error.log%00
 /var/www/logs/access_log%00
@@ -76,7 +76,7 @@
 /logs/error.log%00
 /logs/access.log%00
 /etc/httpd/logs/acces_log%00
-/etc/httpd/logs/access.log%00
+/etc/httpd/logs/acces.log%00
 /etc/httpd/logs/error_log%00
 /etc/httpd/logs/error.log%00
 /usr/local/apache/logs/access_log%00
@@ -142,7 +142,7 @@
 /logs/error.log%00
 /logs/access.log%00
 /etc/httpd/logs/acces_log%00
-/etc/httpd/logs/access.log%00
+/etc/httpd/logs/acces.log%00
 /etc/httpd/logs/error_log%00
 /etc/httpd/logs/error.log%00
 /var/www/logs/access_log%00

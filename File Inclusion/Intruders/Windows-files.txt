@@ -146,7 +146,7 @@ C:/windows/repair/security
 C:/windows/repair/software
 C:/windows/repair/system
 C:/windows/system32/config/appevent.evt
-C:/windows/system32/config/default.save
+C:/windows/system32/config/default.sav
 C:/windows/system32/config/regback/default
 C:/windows/system32/config/regback/sam
 C:/windows/system32/config/regback/security
@@ -154,11 +154,11 @@ C:/windows/system32/config/regback/software
 C:/windows/system32/config/regback/system
 C:/windows/system32/config/sam
 C:/windows/system32/config/secevent.evt
-C:/windows/system32/config/security.save
-C:/windows/system32/config/software.save
+C:/windows/system32/config/security.sav
+C:/windows/system32/config/software.sav
 C:/windows/system32/config/system
 C:/windows/system32/config/system.sa
-C:/windows/system32/config/system.save
+C:/windows/system32/config/system.sav
 C:/windows/system32/drivers/etc/hosts
 C:/windows/system32/eula.txt
 C:/windows/system32/inetsrv/config/applicationhost.config

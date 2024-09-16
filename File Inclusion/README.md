@@ -2,7 +2,7 @@
 
 > A File Inclusion Vulnerability refers to a type of security vulnerability in web applications, particularly prevalent in applications developed in PHP, where an attacker can include a file, usually exploiting a lack of proper input/output sanitization. This vulnerability can lead to a range of malicious activities, including code execution, data theft, and website defacement.
 
-**File Inclusion Vulnerability** should be differenciated from **Path Traversal**. The Path Traversal vulnerability allows an attacker to access a file, usually exploiting a "reading" mechanism implemented in the target application, when the File Inclusion will lead to the execution of arbitrary code.
+**File Inclusion Vulnerability** should be differentiated from **Path Traversal**. The Path Traversal vulnerability allows an attacker to access a file, usually exploiting a "reading" mechanism implemented in the target application, when the File Inclusion will lead to the execution of arbitrary code.
 
 ## Summary
 

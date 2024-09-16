@@ -47,7 +47,7 @@
 | Name               | Description              |
 |--------------------|--------------------------|
 | mysql              | Requires root privileges |
-| information_schema | Availalble from version 5 and higher |
+| information_schema | Available from version 5 and higher |
 	
 
 ## MYSQL comments
@@ -108,7 +108,7 @@ First you need to know the number of columns
 ##### Using `order by` or `group by`
 
 Keep incrementing the number until you get a False response.
-Even though GROUP BY and ORDER BY have different funcionality in SQL, they both can be used in the exact same fashion to determine the number of columns in the query.
+Even though GROUP BY and ORDER BY have different functionality in SQL, they both can be used in the exact same fashion to determine the number of columns in the query.
 
 ```sql
 1' ORDER BY 1--+	#True

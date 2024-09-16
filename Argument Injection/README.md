@@ -23,7 +23,7 @@ It is possible for an attacker to pass several words to abuse options from ```cu
 ```ps1
 python python_rce.py "https://www.google.fr -o test.py" 
 ```
-We can see by printing the command that all the parameters are splited allowing to inject an argument that will save the response in an arbitrary file.
+We can see by printing the command that all the parameters are split allowing to inject an argument that will save the response in an arbitrary file.
 ```ps1
 ['curl', 'https://www.google.fr', '-o', 'test.py']
 ```

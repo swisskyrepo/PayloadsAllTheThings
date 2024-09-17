@@ -234,6 +234,9 @@ echo ~-
 {,ifconfig}
 {,ifconfig,eth0}
 {l,-lh}s
+{,echo,#test}
+{,$"whoami",}
+{,/?s?/?i?/c?t,/e??/p??s??,}
 ```
 
 

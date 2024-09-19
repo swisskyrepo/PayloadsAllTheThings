@@ -126,7 +126,7 @@ http://www.yoursite.com/http://www.theirsite.com/
 http://www.yoursite.com/folder/www.folder.com
 ```
 
-Using "?" characted, browser will translate it to "/?"
+Using "`?`" character, browser will translate it to "`/?`"
 
 ```powershell
 http://www.yoursite.com?http://www.theirsite.com/
@@ -135,6 +135,7 @@ http://www.yoursite.com?folder/www.folder.com
 
 
 Host/Split Unicode Normalization
+
 ```powershell
 https://evil.c℀.example.com . ---> https://evil.ca/c.example.com
 http://a.com／X.b.com

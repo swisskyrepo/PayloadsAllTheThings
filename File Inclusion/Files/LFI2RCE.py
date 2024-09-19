@@ -38,7 +38,7 @@ filters += "convert.iconv.UTF8.UTF7|"
 
 for c in base64_payload[::-1]:
         filters += conversions[c] + "|"
-        # decode and reencode to get rid of everything that isn't valid base64
+        # decode and re-encode to get rid of everything that isn't valid base64
         filters += "convert.base64-decode|"
         filters += "convert.base64-encode|"
         # get rid of equal signs

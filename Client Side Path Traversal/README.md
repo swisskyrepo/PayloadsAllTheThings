@@ -14,7 +14,7 @@ Since every request is initiated from within the frontend of the application, th
 
 ![](https://matanber.com/images/blog/cspt-query-param.png)
 
-A post-serving page calls the fetch function, sending a request to a URL with attacker-controlled input which is not properly encoded in its path, allowing the attacker to inject `../` sequences to the path and make the request get sent to an arbitrary endpoint. This behavior is refered to as a CSPT vulnerability.
+A post-serving page calls the fetch function, sending a request to a URL with attacker-controlled input which is not properly encoded in its path, allowing the attacker to inject `../` sequences to the path and make the request get sent to an arbitrary endpoint. This behavior is referred to as a CSPT vulnerability.
 
 **Example**:
 

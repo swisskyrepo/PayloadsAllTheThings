@@ -62,7 +62,7 @@ Bypassing anti-bruteforce mechanism and 2FA.
 
 ### HTTP/1.1 last-byte synchronization
 
-Send every requests execpt the last byte, then "release" each request by sending the last byte.
+Send every requests except the last byte, then "release" each request by sending the last byte.
 
 Execute a last-byte synchronization using Turbo Intruder
 

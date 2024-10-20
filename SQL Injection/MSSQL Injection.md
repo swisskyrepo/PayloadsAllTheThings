@@ -147,6 +147,12 @@ $ SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name =
 
 -- Finally extract the data
 $ SELECT  UserId, UserName from Users
+
+-- This will display the table names
+$ UNION select table_name, NULL, NULL from information_schema.tables where table_catalog = DB_NAME();
+
+-- This will show the column names
+$ UNION select NULL, column_name, NULL from information_schema.columns where table_catalog = DB_NAME();
 ```
 
 

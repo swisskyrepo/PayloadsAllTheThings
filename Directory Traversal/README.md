@@ -18,7 +18,7 @@
 * [Path Traversal](#path-traversal)
     * [Interesting Linux files](#interesting-linux-files)
     * [Interesting Windows files](#interesting-windows-files)
-* [htaccess](#file-.htaccess)
+* [htaccess](#file-htaccess)
 * [References](#references)
 
 ## Tools

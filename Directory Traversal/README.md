@@ -18,6 +18,7 @@
 * [Path Traversal](#path-traversal)
     * [Interesting Linux files](#interesting-linux-files)
     * [Interesting Windows files](#interesting-windows-files)
+* [htaccess](#file-.htaccess)
 * [References](#references)
 
 ## Tools
@@ -254,6 +255,11 @@ The following log files are controllable and can be included with an evil payloa
 /var/log/mail
 ```
 
+## File .htaccess
+
+```
+AddType application/x-httpd-php .ngductung
+```
 
 ## Labs
 

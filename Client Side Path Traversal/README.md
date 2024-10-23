@@ -10,6 +10,11 @@ Since every request is initiated from within the frontend of the application, th
 * [doyensec/CSPTBurpExtension](https://github.com/doyensec/CSPTBurpExtension) - CSPT is an open-source Burp Suite extension to find and exploit Client-Side Path Traversal.
 
 
+## Lab
+
+* [doyensec/CSPTPlayground](https://github.com/doyensec/CSPTPlayground) - CSPTPlayground is an open-source playground to find and exploit Client-Side Path Traversal (CSPT).
+
+
 ## CSPT to XSS
 
 ![](https://matanber.com/images/blog/cspt-query-param.png)
@@ -56,3 +61,4 @@ Real-World Scenarios:
 * [Tweet - @HusseiN98D - 5 july 2024](https://twitter.com/HusseiN98D/status/1809164551822172616)
 * [On-site request forgery - Dafydd Stuttard - 03 May 2007](https://portswigger.net/blog/on-site-request-forgery)
 * [Bypassing WAFs to Exploit CSPT Using Encoding Levels - Matan Berson - 2024-05-10](https://matanber.com/blog/cspt-levels)
+* [Automating Client-Side Path Traversals Discovery - Vitor Falcao - October 3, 2024](https://vitorfalcao.com/posts/automating-cspt-discovery/)

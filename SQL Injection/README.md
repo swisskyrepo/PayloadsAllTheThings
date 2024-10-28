@@ -33,6 +33,7 @@ Attempting to manipulate SQL queries may have goals including:
   * [Using Chrome cookie and a Proxy](#using-chrome-cookie-and-a-proxy)
   * [Using suffix to tamper the injection](#using-suffix-to-tamper-the-injection)
   * [General tamper option and tamper's list](#general-tamper-option-and-tampers-list)
+  * [Reduce Requests Number](#reduce-requests-number)
   * [SQLmap without SQL injection](#sqlmap-without-sql-injection)
 * [Authentication bypass](#authentication-bypass)
   * [Authentication Bypass (Raw MD5 SHA1)](#authentication-bypass-raw-md5-sha1)
@@ -288,7 +289,17 @@ tamper=name_of_the_tamper
 |varnish.py | Append a HTTP header 'X-originating-IP' |
 |versionedkeywords.py | Encloses each non-function keyword with versioned MySQL comment |
 |versionedmorekeywords.py | Encloses each keyword with versioned MySQL comment |
-|xforwardedfor.py | Append a fake HTTP header 'X-Forwarded-For'|
+|xforwardedfor.py | Append a fake HTTP header 'X-Forwarded-For' |
+
+
+### Reduce Requests Number
+
+`--test-filter` is helpful when you want to focus on specific types of SQL injection techniques or payloads. Instead of testing the full range of payloads that SQLMap has, you can limit it to those that match a certain pattern, making the process more efficient, especially on large or slow web applications.
+
+```ps1
+sqlmap -u "https://lab_host/filter?category=demo" -p category --test-filter="Generic UNION query (NULL)"
+```
+
 
 ### SQLmap without SQL injection
 

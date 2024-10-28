@@ -62,6 +62,7 @@ Prompt injections can be used in various applications of NLP models.
 
 For instance, if you're using a language model to generate a story and you want the story to be about a dragon, you might inject a prompt like "Once upon a time, there was a dragon..." This prompt guides the model to generate a story that includes a dragon.
 
+
 ### Potential Misuse
 
 In the context of security, "prompt injection" could refer to a type of attack where an attacker manipulates the input to a system (the "prompt") in order to cause the system to behave in a way that benefits the attacker. This could involve, for example, injecting malicious code or commands into user input fields on a website.
@@ -122,3 +123,4 @@ Indirect Prompt Injection use the memory features of an LLM.
 - [Brex's Prompt Engineering Guide](https://github.com/brexhq/prompt-engineering)
 - [Demystifying RCE Vulnerabilities in LLM-Integrated Apps - Tong Liu, Zizhuang Deng, Guozhu Meng, Yuekang Li, Kai Chen](https://browse.arxiv.org/pdf/2309.02926.pdf)
 - [ChatGPT: Hacking Memories with Prompt Injection - wunderwuzzi - May 22, 2024](https://embracethered.com/blog/posts/2024/chatgpt-hacking-memories/)
+- [LLM Hacker's Handbook - Forces Unseen](https://doublespeak.chat/#/handbook)

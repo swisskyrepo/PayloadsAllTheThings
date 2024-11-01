@@ -36,6 +36,7 @@ Challenges
 - [Gandalf - Lakera](https://gandalf.lakera.ai/)
 - [GPT Prompt Attack - h43z](https://gpa.43z.one/)
 - [GPT Game - h43z](https://gpt.43z.one/)
+- [Prompt Airlines - Wiz](https://promptairlines.com)
 
 
 ## Applications

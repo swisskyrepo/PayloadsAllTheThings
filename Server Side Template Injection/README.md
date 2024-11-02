@@ -73,7 +73,8 @@ Based on the successful response, the attacker determines which template engine 
 * **Java**: Freemarker, Jinjava, Velocity, ...
 * **Ruby**: ERB, Slim, ...
 
-[This post](https://medium.com/@0xAwali/template-engines-injection-101-4f2fe59e5756) summurize the syntax and detection method for most of the template engines for JavaScript, Python, Ruby, Java and PHP and how to differentiate between engines that use the same syntax.
+[The post "template-engines-injection-101" from @0xAwali](https://medium.com/@0xAwali/template-engines-injection-101-4f2fe59e5756) summarize the syntax and detection method for most of the template engines for JavaScript, Python, Ruby, Java and PHP and how to differentiate between engines that use the same syntax.
+
 
 ### Escalate to Code Execution
 
@@ -106,3 +107,4 @@ Once the template engine is identified, the attacker injects more complex expres
 * [Bug Writeup: RCE via SSTI on Spring Boot Error Page with Akamai WAF Bypass - Dec 4, 2022](https://h1pmnh.github.io/post/writeup_spring_el_waf_bypass/)
 * [Leveraging the Spring Expression Language (SpEL) injection vulnerability ( a.k.a The Magic SpEL) to get RCE - Xenofon Vassilakopoulos - November 18, 2021](https://xen0vas.github.io/Leveraging-the-SpEL-Injection-Vulnerability-to-get-RCE/)
 * [Expression Language Injection - OWASP](https://owasp.org/www-community/vulnerabilities/Expression_Language_Injection)
+* [Template Engines Injection 101 - Mahmoud M. Awali - Nov 1, 2024](https://medium.com/@0xAwali/template-engines-injection-101-4f2fe59e5756)

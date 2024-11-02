@@ -2,6 +2,7 @@
 
 ## Summary
 
+- [Templating Libraries](#templating-libraries)
 - [Java](#java)
     - [Java - Basic injection](#java---basic-injection)
     - [Java - Retrieve the system’s environment variables](#java---retrieve-the-systems-environment-variables)
@@ -28,9 +29,24 @@
     - [Groovy - Sandbox Bypass](#groovy---sandbox-bypass)
 
 
+## Templating Libraries
+
+| Template Name | Payload Format |
+| ------------ | --------- |
+| Codepen    | `#{}`     |
+| Freemarker | `${3*3}`, `#{3*3}`, `[=3*3]` |
+| Groovy     | `${9*9}`  |
+| Jinjava    | `{{ }}`   |
+| Pebble     | `{{ }}`   |
+| Spring     | `*{7*7}`  |
+| Thymeleaf  | `[[ ]]`   |
+| Velocity   | `#set($X="") $X`             |
+
+
 ## Java
 
 ### Java - Basic injection
+
 > Multiple variable expressions can be used, if `${...}` doesn't work try `#{...}`, `*{...}`, `@{...}` or `~{...}`.
 
 ```java
@@ -154,6 +170,7 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 ## Pebble
 
 [Official website](https://pebbletemplates.io/)
+
 > Pebble is a Java templating engine inspired by [Twig](./#twig) and similar to the Python [Jinja](./#jinja2) Template Engine syntax. It features templates inheritance and easy-to-read syntax, ships with built-in autoescaping for security, and includes integrated support for internationalization.
 
 ### Pebble - Basic injection
@@ -188,6 +205,7 @@ New version of Pebble :
 ## Velocity
 
 [Official website](https://velocity.apache.org/engine/1.7/user-guide.html)
+
 > Velocity is a Java-based template engine. It permits web page designers to reference methods defined in Java code.
 
 ```python

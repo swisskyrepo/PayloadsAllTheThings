@@ -51,6 +51,7 @@
 * [LFISuite - https://github.com/D35m0nd142/LFISuite](https://github.com/D35m0nd142/LFISuite)
 * [fimap - https://github.com/kurobeats/fimap](https://github.com/kurobeats/fimap)
 * [panoptic - https://github.com/lightos/Panoptic](https://github.com/lightos/Panoptic)
+* [LFImap - https://github.com/hansmach1ne/LFImap](https://github.com/hansmach1ne/LFImap)
 
 
 ## Local File Inclusion

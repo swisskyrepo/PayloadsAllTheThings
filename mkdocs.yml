@@ -62,8 +62,10 @@ markdown_extensions:
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  - mdx_truly_sane_lists
-
+  - mdx_truly_sane_lists:
+      nested_indent: 2
+      # truly_sane: True
+ 
 plugins:
   - search
   - git-revision-date-localized

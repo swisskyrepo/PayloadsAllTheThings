@@ -15,6 +15,7 @@
 - [patTemplate](#pattemplate)
 - [PHPlib](#phplib-and-html_template_phplib)
 - [Plates](#plates)
+- [References](#references)
 
 
 ## Templating Libraries
@@ -247,4 +248,7 @@ layout template:
 </html>
 ```
 
----
+
+## References
+
+* [TODO](#todo)

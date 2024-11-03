@@ -8,6 +8,7 @@
     - [Ruby - Retrieve /etc/passwd](#ruby---retrieve-etcpasswd)
     - [Ruby - List files and directories](#ruby---list-files-and-directories)
     - [Ruby - Remote Command execution](#ruby---remote-Command-execution)
+- [References](#referenecs)
 
 
 ## Templating Libraries
@@ -70,4 +71,7 @@ Execute code using SSTI for **Slim** engine.
 #{ %x|env| }
 ```
 
----
+
+## References
+
+* [Ruby ERB Template Injection - Scott White & Geoff Walton - September 13, 2017](https://web.archive.org/web/20181119170413/https://www.trustedsec.com/2017/09/rubyerb-template-injection/)

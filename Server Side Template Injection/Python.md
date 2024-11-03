@@ -413,4 +413,7 @@ PoC :
 
 ## References
 
-* [Python context free payloads in Mako templates - podalirius - August 26, 2021](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
+- [Cheatsheet - Flask & Jinja2 SSTI - phosphore - September 3, 2018](https://pequalsnp-team.github.io/cheatsheet/flask-jinja2-ssti)
+- [Exploring SSTI in Flask/Jinja2, Part II - Tim Tomes - March 11, 2016](https://web.archive.org/web/20170710015954/https://nvisium.com/blog/2016/03/11/exploring-ssti-in-flask-jinja2-part-ii/)
+- [Jinja2 template injection filter bypasses - Sebastian Neef - August 28, 2017](https://0day.work/jinja2-template-injection-filter-bypasses/)
+- [Python context free payloads in Mako templates - podalirius - August 26, 2021](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)

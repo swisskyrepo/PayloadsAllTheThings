@@ -30,5 +30,6 @@ jobs:
       - run: pip install mkdocs-git-revision-date-localized-plugin
       - run: pip install mkdocs-git-committers-plugin
       - run: pip install mkdocs-material[imaging]
+      - run: pip install mdx_truly_sane_lists
       - run: mkdocs gh-deploy --force
 

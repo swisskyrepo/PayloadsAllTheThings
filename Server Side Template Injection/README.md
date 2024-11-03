@@ -6,6 +6,10 @@
 
 - [Tools](#tools)
 - [Methodology](#methodology)
+    - [Identify the Vulnerable Input Field](#identify-the-vulnerable-input-field)
+    - [Inject Template Syntax](#inject-template-syntax)
+    - [Enumerate the Template Engine](#enumerate-the-template-engine)
+    - [Escalate to Code Execution](#escalate-to-code-execution)
 - [References](#references)
 
 

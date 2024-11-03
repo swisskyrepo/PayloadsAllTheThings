@@ -1,5 +1,8 @@
 # Account Takeover
 
+> Account Takeover (ATO) is a significant threat in the cybersecurity landscape, involving unauthorized access to users' accounts through various attack vectors.
+
+
 ## Summary
 
 * [Password Reset Feature](#password-reset-feature)
@@ -32,6 +35,7 @@
     * [Bypass 2FA with array](#bypass-2fa-with-array)
 * [References](#references)
 
+
 ## Password Reset Feature
 
 ### Password Reset Token Leak Via Referrer
@@ -42,6 +46,7 @@
 4. Click any 3rd party websites(eg: Facebook, twitter)
 5. Intercept the request in Burp Suite proxy
 6. Check if the referer header is leaking password reset token.
+
 
 ### Account Takeover Through Password Reset Poisoning
 
@@ -131,11 +136,13 @@ When processing user input involving unicode for case mapping or normalisation, 
 
 [Unicode pentester cheatsheet](https://gosecure.github.io/unicode-pentester-cheatsheet/) can be used to find list of suitable unicode characters based on platform.
 
+
 ## Account Takeover Via Cross Site Scripting
 
 1. Find an XSS inside the application or a subdomain if the cookies are scoped to the parent domain : `*.domain.com`
 2. Leak the current **sessions cookie**
 3. Authenticate as the user using the cookie
+
 
 ## Account Takeover Via HTTP Request Smuggling
 
@@ -169,10 +176,12 @@ Hackerone reports exploiting this bug
 * https://hackerone.com/reports/737140
 * https://hackerone.com/reports/771666
 
+
 ## Account Takeover via CSRF
 
 1. Create a payload for the CSRF, e.g: "HTML form with auto submit for a password change"
 2. Send the payload
+
 
 ## Account Takeover via JWT
 
@@ -181,6 +190,7 @@ JSON Web Token might be used to authenticate an user.
 * Edit the JWT with another User ID / Email
 * Check for weak JWT signature 
 
+
 ## 2FA Bypasses
 
 ### Response Manipulation
@@ -188,58 +198,72 @@ JSON Web Token might be used to authenticate an user.
 In response if `"success":false`
 Change it to `"success":true`
 
+
 ### Status Code Manipulation
 
 If Status Code is **4xx**
 Try to change it to **200 OK** and see if it bypass restrictions
 
+
 ### 2FA Code Leakage in Response
 
 Check the response of the 2FA Code Triggering Request to see if the code is leaked.
+
 
 ### JS File Analysis
 
 Rare but some JS Files may contain info about the 2FA Code, worth giving a shot
 
+
 ### 2FA Code Reusability
 
 Same code can be reused
+
 
 ### Lack of Brute-Force Protection
 
 Possible to brute-force any length 2FA Code
 
+
 ### Missing 2FA Code Integrity Validation
 
 Code for any user acc can be used to bypass the 2FA
+
 
 ### CSRF on 2FA Disabling
 
 No CSRF Protection on disabling 2FA, also there is no auth confirmation
 
+
 ### Password Reset Disable 2FA
 
 2FA gets disabled on password change/email change
+
 
 ### Backup Code Abuse
 
 Bypassing 2FA by abusing the Backup code feature
 Use the above mentioned techniques to bypass Backup Code to remove/reset 2FA restrictions
 
+
 ### Clickjacking on 2FA Disabling Page
 
 Iframing the 2FA Disabling page and social engineering victim to disable the 2FA
+
 
 ### Enabling 2FA doesn't expire Previously active Sessions
 
 If the session is already hijacked and there is a session timeout vuln
 
+
 ### Bypass 2FA by Force Browsing
 
 If the application redirects to `/my-account` url upon login while 2Fa is disabled, try replacing `/2fa/verify` with `/my-account` while 2FA is enabled to bypass verification.
 
+
 ### Bypass 2FA with null or 000000
 Enter the code **000000** or **null** to bypass 2FA protection.
+
 
 ### Bypass 2FA with array
 
@@ -267,9 +291,8 @@ Enter the code **000000** or **null** to bypass 2FA protection.
 
 ## References
 
-- [10 Password Reset Flaws - Anugrah SR](https://anugrahsr.github.io/posts/10-Password-reset-flaws/)
-- [$6,5k + $5k HTTP Request Smuggling mass account takeover - Slack + Zomato - Bug Bounty Reports Explained](https://www.youtube.com/watch?v=gzM4wWA7RFo&feature=youtu.be)
+- [$6,5k + $5k HTTP Request Smuggling mass account takeover - Slack + Zomato - Bug Bounty Reports Explained - August 30, 2020](https://www.youtube.com/watch?v=gzM4wWA7RFo)
+- [10 Password Reset Flaws - Anugrah SR - September 16, 2020](https://anugrahsr.github.io/posts/10-Password-reset-flaws/)
 - [Broken Cryptography & Account Takeovers - Harsh Bothra - September 20, 2020](https://speakerdeck.com/harshbothra/broken-cryptography-and-account-takeovers?slide=28)
-- [Hacking Grindr Accounts with Copy and Paste - Troy HUNT & Wassime BOUIMADAGHENE - 03 OCTOBER 2020](https://www.troyhunt.com/hacking-grindr-accounts-with-copy-and-paste/)
-- [CTFd Account Takeover](https://nvd.nist.gov/vuln/detail/CVE-2020-7245)
-- [2FA simple bypass](https://portswigger.net/web-security/authentication/multi-factor/lab-2fa-simple-bypass)
+- [CTFd Account Takeover - NIST National Vulnerability Database - March 29, 2020](https://nvd.nist.gov/vuln/detail/CVE-2020-7245)
+- [Hacking Grindr Accounts with Copy and Paste - Troy Hunt - October 3, 2020](https://www.troyhunt.com/hacking-grindr-accounts-with-copy-and-paste/)

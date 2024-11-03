@@ -64,7 +64,7 @@ dataset_name.column_name` union all select CAST(@@project_id AS INT64) ORDER BY 
 
 ## References
 
-* [BigQuery SQL Injection Cheat Sheet - Ozgur Alp - Feb 14](https://ozguralp.medium.com/bigquery-sql-injection-cheat-sheet-65ad70e11eac)
-* [BigQuery Documentation - Query Syntax](https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax)
-* [BigQuery Documentation - Functions and Operators](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators)
-* [Akamai Web Application Firewall Bypass Journey: Exploiting “Google BigQuery” SQL Injection Vulnerability - By Duc Nguyen The, March 31, 2020](https://hackemall.live/index.php/2020/03/31/akamai-web-application-firewall-bypass-journey-exploiting-google-bigquery-sql-injection-vulnerability/)
+* [BigQuery SQL Injection Cheat Sheet - Ozgur Alp - February 14, 2022](https://ozguralp.medium.com/bigquery-sql-injection-cheat-sheet-65ad70e11eac)
+* [BigQuery Documentation - Query Syntax - October 30, 2024](https://cloud.google.com/bigquery/docs/reference/standard-sql/query-syntax)
+* [BigQuery Documentation - Functions and Operators - October 30, 2024](https://cloud.google.com/bigquery/docs/reference/standard-sql/functions-and-operators)
+* [Akamai Web Application Firewall Bypass Journey: Exploiting “Google BigQuery” SQL Injection Vulnerability - Duc Nguyen - March 31, 2020](https://hackemall.live/index.php/2020/03/31/akamai-web-application-firewall-bypass-journey-exploiting-google-bigquery-sql-injection-vulnerability/)

@@ -691,13 +691,13 @@ Therefore, by using the payload `?id=1%df' and 1=1 --+`, after PHP adds the back
 
 ## References
 
-- [MySQL Out of Band Hacking - @OsandaMalith](https://www.exploit-db.com/docs/english/41273-mysql-out-of-band-hacking.pdf)
-- [[Sqli] Extracting data without knowing columns names - Ahmed Sultan @0x4148](https://blog.redforce.io/sqli-extracting-data-without-knowing-columns-names/)
-- [Help по MySql инъекциям - rdot.org](https://rdot.org/forum/showpost.php?p=114&postcount=1)
-- [SQL Truncation Attack - Warlock](https://resources.infosecinstitute.com/sql-truncation-attack/)
-- [HackerOne @ajxchapman 50m-ctf writeup - Alex Chapman @ajxchapman](https://hackerone.com/reports/508123)
-- [SQL Wiki - netspi](https://sqlwiki.netspi.com/injectionTypes/errorBased)
-- [ekoparty web_100 - 2016/10/26 - p4-team](https://github.com/p4-team/ctf/tree/master/2016-10-26-ekoparty/web_100)
-- [Websec - MySQL - Roberto Salgado - May 29, 2013.](https://websec.ca/kb/sql_injection#MySQL_Default_Databases)
-- [A Scientific Notation Bug in MySQL left AWS WAF Clients Vulnerable to SQL Injection - Marc Olivier Bergeron - Oct 19, 2021](https://www.gosecure.net/blog/2021/10/19/a-scientific-notation-bug-in-mysql-left-aws-waf-clients-vulnerable-to-sql-injection/)
-- [How to Use SQL Calls to Secure Your Web Site - IT SECURITY CENTER (ISEC) INFORMATION-TECHNOLOGY PROMOTION AGENCY](https://www.ipa.go.jp/security/vuln/ps6vr70000011hc4-att/000017321.pdf)
+- [[SQLi] Extracting data without knowing columns names - Ahmed Sultan - February 9, 2019](https://blog.redforce.io/sqli-extracting-data-without-knowing-columns-names/)
+- [A Scientific Notation Bug in MySQL left AWS WAF Clients Vulnerable to SQL Injection - Marc Olivier Bergeron - October 19, 2021](https://www.gosecure.net/blog/2021/10/19/a-scientific-notation-bug-in-mysql-left-aws-waf-clients-vulnerable-to-sql-injection/)
+- [Alternative for Information_Schema.Tables in MySQL - Osanda Malith Jayathissa - February 3, 2017](https://osandamalith.com/2017/02/03/alternative-for-information_schema-tables-in-mysql/)
+- [Ekoparty CTF 2016 (Web 100) - p4-team - October 26, 2016](https://github.com/p4-team/ctf/tree/master/2016-10-26-ekoparty/web_100)
+- [Error Based Injection | NetSPI SQL Injection Wiki - NetSPI - 2024](https://sqlwiki.netspi.com/injectionTypes/errorBased)
+- [How to Use SQL Calls to Secure Your Web Site - IPA ISEC - March 2010](https://www.ipa.go.jp/security/vuln/ps6vr70000011hc4-att/000017321.pdf)
+- [MySQL Out of Band Hacking - Osanda Malith Jayathissa - February 23, 2018](https://www.exploit-db.com/docs/english/41273-mysql-out-of-band-hacking.pdf)
+- [SQL Truncation Attack - Rohit Shaw - June 29, 2014](https://resources.infosecinstitute.com/sql-truncation-attack/)
+- [SQLi filter evasion cheat sheet (MySQL) - Johannes Dahse - December 4, 2010](https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/)
+- [The SQL Injection Knowledge Base - Roberto Salgado - May 29, 2013](https://websec.ca/kb/sql_injection#MySQL_Default_Databases)

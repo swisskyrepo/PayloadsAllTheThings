@@ -190,9 +190,9 @@ SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
 
 ## References
 
-* [NetSpi - SQL Wiki](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
-* [ASDC12 - New and Improved Hacking Oracle From Web - OWASP](https://owasp.org/www-pdf-archive/ASDC12-New_and_Improved_Hacking_Oracle_From_Web.pdf)
-* [Pentesting Oracle TNS Listener - HackTricks](https://book.hacktricks.xyz/network-services-pentesting/1521-1522-1529-pentesting-oracle-listener)
-* [ODAT: Oracle Database Attacking Tool - quentinhardy](https://github.com/quentinhardy/odat/wiki/privesc)
-* [WebSec CheatSheet - Oracle](https://www.websec.ca/kb/sql_injection#Oracle_Default_Databases)
-* [New payload to exploit Error-based SQL injection - Oracle database - Mannu Linux - 12/09/2023](https://www.mannulinux.org/2023/12/New-payload-to-exploit-Error-based-SQL-injection-Oracle-database.html)
+- [ASDC12 - New and Improved Hacking Oracle From Web - Sumit “sid” Siddharth - November 8, 2021](https://web.archive.org/web/20211108150011/https://owasp.org/www-pdf-archive/ASDC12-New_and_Improved_Hacking_Oracle_From_Web.pdf)
+- [Error Based Injection | NetSPI SQL Injection Wiki - NetSPI - February 15, 2021](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
+- [ODAT: Oracle Database Attacking Tool - quentinhardy - March 24, 2016](https://github.com/quentinhardy/odat/wiki/privesc)
+- [Oracle SQL Injection Cheat Sheet - @pentestmonkey - August 30, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/oracle-sql-injection-cheat-sheet)
+- [Pentesting Oracle TNS Listener - HackTricks - July 19, 2024](https://book.hacktricks.xyz/network-services-pentesting/1521-1522-1529-pentesting-oracle-listener)
+- [The SQL Injection Knowledge Base - Roberto Salgado - May 29, 2013](https://www.websec.ca/kb/sql_injection#Oracle_Default_Databases)

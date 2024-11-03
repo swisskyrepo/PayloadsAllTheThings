@@ -1,11 +1,12 @@
 # DB2 Injection
 
-> IBM FB2 is a family of relational database management products developed by IBM, designed to efficiently store, analyze, and retrieve large amounts of data. Originally created for IBM mainframes, FB2 has evolved to support various platforms, including Windows, Linux, and UNIX systems.
+> IBM DB2 is a family of relational database management systems (RDBMS) developed by IBM. Originally created in the 1980s for mainframes, DB2 has evolved to support various platforms and workloads, including distributed systems, cloud environments, and hybrid deployments. 
 
 ## Summary
 
 * [DB2 Cheatsheet](#db2-cheatsheet)
 * [References](#references) 
+
 
 ## DB2 Cheatsheet
 
@@ -204,5 +205,5 @@ select name, deferred_value, dbpartitionnum from sysibmadm.dbcfg -- Requires pri
 
 ## References
 
-* [DB2 SQL injection cheat sheet - Adrián - 20/05/2012](https://securityetalii.es/2012/05/20/db2-sql-injection-cheat-sheet/)
-* [DB2 SQL Injection Cheat Sheet - pentestmonkey](http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
+- [DB2 SQL injection cheat sheet - Adrián - May 20, 2012](https://securityetalii.es/2012/05/20/db2-sql-injection-cheat-sheet/)
+- [Pentestmonkey's DB2 SQL Injection Cheat Sheet - @pentestmonkey - September 17, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)

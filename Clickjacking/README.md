@@ -83,17 +83,18 @@ Button/Form Hijacking is a Clickjacking technique where attackers trick users in
     </form>
     ```
  * Deceptive Interaction: When the user clicks the visible button, they are unknowingly interacting with the hidden form due to the invisible overlay. The form is submitted, potentially causing unauthorized actions or data leakage.
-   ```html
-   <button onclick="submitForm()">Click me</button>
-   <form action="legitimate-site" method="POST" id="hidden-form">
-     <!-- Hidden form fields -->
-   </form>
-   <script>
-     function submitForm() {
-       document.getElementById('hidden-form').submit();
-     }
-   </script>
-    ```
+
+```html
+<button onclick="submitForm()">Click me</button>
+<form action="legitimate-site" method="POST" id="hidden-form">
+  <!-- Hidden form fields -->
+</form>
+<script>
+  function submitForm() {
+    document.getElementById('hidden-form').submit();
+  }
+</script>
+```
 
 ### Execution Methods
 

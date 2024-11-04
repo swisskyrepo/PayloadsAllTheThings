@@ -5,12 +5,16 @@
 
 ## Summary
 
-* [DoS - Locking Customer Accounts](#dos---locking-customer-accounts)
-* [DoS - File Limits on FileSystem](#dos---file-limits-on-filesystem)
-* [DoS - Memory Exhaustion - Technology Related](#dos---memory-exhaustion---technology-related)
+* [Examples](#examples)
+    * [Locking Customer Accounts](#locking-customer-accounts)
+    * [File Limits on FileSystem](#file-limits-on-filesystem)
+    * [Memory Exhaustion - Technology Related](#memory-exhaustion---technology-related)
+* [References](#references)
 
 
-## DoS - Locking Customer Accounts
+## Examples
+
+### Locking Customer Accounts
 
 Example of Denial of Service that can occur when testing customer accounts. 
 Be very careful as this is most likely **out-of-scope** and can have a high impact on the business.
@@ -21,7 +25,7 @@ Be very careful as this is most likely **out-of-scope** and can have a high impa
     ```
 
 
-## DoS - File Limits on FileSystem
+### File Limits on FileSystem
 
 When a process is writing a file on the server, try to reach the maximum number of files allowed by the filesystem format. The system should output a message: `No space left on device` when the limit is reached.
  
@@ -41,9 +45,9 @@ FAT32 has a significant limitation of **4 GB**, which is why it's often replaced
 Modern filesystems like BTRFS, ZFS, and XFS support exabyte-scale files, well beyond current storage capacities, making them future-proof for large datasets.
 
 
-## DoS - Memory Exhaustion - Technology Related
+### Memory Exhaustion - Technology Related
 
-Depending on the technology used by the website, an attacker may have the ability to trigger specific functions or paradigm that will consume a huge chunk of memory
+Depending on the technology used by the website, an attacker may have the ability to trigger specific functions or paradigm that will consume a huge chunk of memory.
 
 * **XML External Entity**: Billion laughs attack/XML bomb
     ```xml
@@ -63,7 +67,22 @@ Depending on the technology used by the website, an attacker may have the abilit
     ]>
     <lolz>&lol9;</lolz>
     ```
-* **GraphQL**: Deep Query
+* **GraphQL**: Deeply-nested GraphQL queries.
+    ```ps1
+    query { 
+        repository(owner:"rails", name:"rails") {
+            assignableUsers (first: 100) {
+                nodes {
+                    repositories (first: 100) {
+                        nodes {
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ```
 * **Image Resizing**: try to send invalid pictures with modified headers, e.g: abnormal size, big number of pixels.
 * **SVG handling**: SVG file format is based on XML, try the billion laughs attack.
 * **Regular Expression**: ReDoS
@@ -71,5 +90,5 @@ Depending on the technology used by the website, an attacker may have the abilit
 
 ## References
 
-* [DEF CON 32 - Practical Exploitation of DoS in Bug Bounty - Roni Lupin Carta - 16 oct. 2024](https://youtu.be/b7WlUofPJpU)
-* [Denial of Service Cheat Sheet - OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html)
+- [DEF CON 32 - Practical Exploitation of DoS in Bug Bounty - Roni Lupin Carta - October 16, 2024](https://youtu.be/b7WlUofPJpU)
+- [Denial of Service Cheat Sheet - OWASP Cheat Sheet Series - July 16, 2019](https://cheatsheetseries.owasp.org/cheatsheets/Denial_of_Service_Cheat_Sheet.html)

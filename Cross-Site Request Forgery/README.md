@@ -16,11 +16,6 @@
     * [JSON GET - Simple Request](#json-get---simple-request)
     * [JSON POST - Simple Request](#json-post---simple-request)
     * [JSON POST - Complex Request](#json-post---complex-request)
-* [Bypass referer header validation check](#bypass-referer-header-validation)
-    * [Basic payload](#basic-payload)
-    * [With question mark payload](#with-question-mark-payload)
-    * [With semicolon payload](#with-semicolon-payload)
-    * [With subdomain payload](#with-subdomain-payload)
 * [Labs](#labs)
 * [References](#references)
 
@@ -151,65 +146,32 @@ xhr.send('{"role":admin}');
 </script>
 ```
 
-## Bypass referer header validation
-
-### Basic payload
-```
-1) Open https://attacker.com/csrf.html
-2) Referer header is ..
-
-Referer: https://attacker.com/csrf.html
-```
-### With question mark(`?`) payload
-```
-1) Open https://attacker.com/csrf.html?trusted.domain.com
-2) Referer header is ..
-
-Referer: https://attacker.com/csrf.html?trusted.domain.com
-```
-
-### With semicolon(`;`) payload
-```
-1) Open https://attacker.com/csrf.html;trusted.domain.com
-2) Referer header is ..
-
-Referer: https://attacker.com/csrf.html;trusted.domain.com
-```
-
-### With subdomain payload
-```
-1) Open https://trusted.domain.com.attacker.com/csrf.html
-2) Referer headers is ..
-
-Referer: https://trusted.domain.com.attacker.com/csrf.html
-```
-
 
 ## Labs
 
-* [CSRF vulnerability with no defenses](https://portswigger.net/web-security/csrf/lab-no-defenses)
-* [CSRF where token validation depends on request method](https://portswigger.net/web-security/csrf/lab-token-validation-depends-on-request-method)
-* [CSRF where token validation depends on token being present](https://portswigger.net/web-security/csrf/lab-token-validation-depends-on-token-being-present)
-* [CSRF where token is not tied to user session](https://portswigger.net/web-security/csrf/lab-token-not-tied-to-user-session)
-* [CSRF where token is tied to non-session cookie](https://portswigger.net/web-security/csrf/lab-token-tied-to-non-session-cookie)
-* [CSRF where token is duplicated in cookie](https://portswigger.net/web-security/csrf/lab-token-duplicated-in-cookie)
-* [CSRF where Referer validation depends on header being present](https://portswigger.net/web-security/csrf/lab-referer-validation-depends-on-header-being-present)
-* [CSRF with broken Referer validation](https://portswigger.net/web-security/csrf/lab-referer-validation-broken)
+* [PortSwigger - CSRF vulnerability with no defenses](https://portswigger.net/web-security/csrf/lab-no-defenses)
+* [PortSwigger - CSRF where token validation depends on request method](https://portswigger.net/web-security/csrf/lab-token-validation-depends-on-request-method)
+* [PortSwigger - CSRF where token validation depends on token being present](https://portswigger.net/web-security/csrf/lab-token-validation-depends-on-token-being-present)
+* [PortSwigger - CSRF where token is not tied to user session](https://portswigger.net/web-security/csrf/lab-token-not-tied-to-user-session)
+* [PortSwigger - CSRF where token is tied to non-session cookie](https://portswigger.net/web-security/csrf/lab-token-tied-to-non-session-cookie)
+* [PortSwigger - CSRF where token is duplicated in cookie](https://portswigger.net/web-security/csrf/lab-token-duplicated-in-cookie)
+* [PortSwigger - CSRF where Referer validation depends on header being present](https://portswigger.net/web-security/csrf/lab-referer-validation-depends-on-header-being-present)
+* [PortSwigger - CSRF with broken Referer validation](https://portswigger.net/web-security/csrf/lab-referer-validation-broken)
 
 
 ## References
 
 - [Cross-Site Request Forgery Cheat Sheet - Alex Lauerman - April 3rd, 2016](https://trustfoundry.net/cross-site-request-forgery-cheat-sheet/)
-- [Cross-Site Request Forgery (CSRF) - OWASP](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF))
-- [Messenger.com CSRF that show you the steps when you check for CSRF - Jack Whitton](https://whitton.io/articles/messenger-site-wide-csrf/) 
-- [Paypal bug bounty: Updating the Paypal.me profile picture without consent (CSRF attack) - Florian Courtial](https://hethical.io/paypal-bug-bounty-updating-the-paypal-me-profile-picture-without-consent-csrf-attack/)
-- [Hacking PayPal Accounts with one click (Patched) - Yasser Ali](http://yasserali.com/hacking-paypal-accounts-with-one-click/)
-- [Add tweet to collection CSRF - vijay kumar](https://hackerone.com/reports/100820)
-- [Facebookmarketingdevelopers.com: Proxies, CSRF Quandry and API Fun - phwd](http://philippeharewood.com/facebookmarketingdevelopers-com-proxies-csrf-quandry-and-api-fun/)
-- [How i Hacked your Beats account ? Apple Bug Bounty - @aaditya_purani](https://aadityapurani.com/2016/07/20/how-i-hacked-your-beats-account-apple-bug-bounty/)
-- [FORM POST JSON: JSON CSRF on POST Heartbeats API - Dr.Jones](https://hackerone.com/reports/245346)
-- [Hacking Facebook accounts using CSRF in Oculus-Facebook integration](https://www.josipfranjkovic.com/blog/hacking-facebook-oculus-integration-csrf)
-- [Cross site request forgery (CSRF) - Sjoerd Langkemper - Jan 9, 2019](http://www.sjoerdlangkemper.nl/2019/01/09/csrf/)
-- [Cross-Site Request Forgery Attack - PwnFunction](https://www.youtube.com/watch?v=eWEgUcHPle0)
+- [Cross-Site Request Forgery (CSRF) - OWASP - Apr 19, 2024](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF))
+- [Messenger.com CSRF that show you the steps when you check for CSRF - Jack Whitton - July 26, 2015](https://whitton.io/articles/messenger-site-wide-csrf/)
+- [Paypal bug bounty: Updating the Paypal.me profile picture without consent (CSRF attack) - Florian Courtial - 19 July 2016](https://web.archive.org/web/20170607102958/https://hethical.io/paypal-bug-bounty-updating-the-paypal-me-profile-picture-without-consent-csrf-attack/)
+- [Hacking PayPal Accounts with one click (Patched) - Yasser Ali - 2014/10/09](https://web.archive.org/web/20141203184956/http://yasserali.com/hacking-paypal-accounts-with-one-click/)
+- [Add tweet to collection CSRF - Vijay Kumar (indoappsec) - November 21, 2015](https://hackerone.com/reports/100820)
+- [Facebookmarketingdevelopers.com: Proxies, CSRF Quandry and API Fun - phwd - October 16, 2015](http://philippeharewood.com/facebookmarketingdevelopers-com-proxies-csrf-quandry-and-api-fun/)
+- [How I Hacked Your Beats Account? Apple Bug Bounty - @aaditya_purani - 2016/07/20](https://aadityapurani.com/2016/07/20/how-i-hacked-your-beats-account-apple-bug-bounty/)
+- [FORM POST JSON: JSON CSRF on POST Heartbeats API - Eugene Yakovchuk - July 2, 2017](https://hackerone.com/reports/245346)
+- [Hacking Facebook accounts using CSRF in Oculus-Facebook integration - Josip Franjkovic - January 15th, 2018](https://www.josipfranjkovic.com/blog/hacking-facebook-oculus-integration-csrf)
+- [Cross Site Request Forgery (CSRF) - Sjoerd Langkemper - Jan 9, 2019](http://www.sjoerdlangkemper.nl/2019/01/09/csrf/)
+- [Cross-Site Request Forgery Attack - PwnFunction - 5 Apr. 2019](https://www.youtube.com/watch?v=eWEgUcHPle0)
 - [Wiping Out CSRF - Joe Rozner - Oct 17, 2017](https://medium.com/@jrozner/wiping-out-csrf-ded97ae7e83f)
-- [Bypass referer check logic for CSRF](https://www.hahwul.com/2019/10/11/bypass-referer-check-logic-for-csrf/)
+- [Bypass Referer Check Logic for CSRF - hahwul - Oct 11, 2019](https://www.hahwul.com/2019/10/11/bypass-referer-check-logic-for-csrf/)

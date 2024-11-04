@@ -4,16 +4,18 @@
 
 > A CRLF Injection attack occurs when a user manages to submit a CRLF into an application. This is most commonly done by modifying an HTTP parameter or URL.
 
+
 ## Summary
 
-- [CRLF - Add a cookie](#crlf---add-a-cookie)
-- [CRLF - Add a cookie - XSS Bypass](#crlf---add-a-cookie---xss-bypass)
-- [CRLF - Write HTML](#crlf---write-html)
-- [CRLF - Filter Bypass](#crlf---filter-bypass)
+- [Add a cookie](#add-a-cookie)
+- [Add a cookie - XSS Bypass](#add-a-cookie---xss-bypass)
+- [Write HTML](#write-html)
+- [Filter Bypass](#filter-bypass)
 - [Labs](#labs)
 - [References](#references)
 
-## CRLF - Add a cookie
+
+## Add a cookie
 
 Requested page
 
@@ -36,7 +38,8 @@ x-content-type-options: nosniff
 x-xss-protection: 1; mode=block
 ```
 
-## CRLF - Add a cookie - XSS Bypass
+
+## Add a cookie - XSS Bypass
 
 Requested page
 
@@ -67,7 +70,8 @@ X-XSS-Protection:0
 0
 ```
 
-## CRLF - Write HTML
+
+## Write HTML
 
 Requested page
 
@@ -89,7 +93,8 @@ Content-Length: 34
 <html>You have been Phished</html>
 ```
 
-## CRLF - Filter Bypass
+
+## Filter Bypass
 
 Using UTF-8 encoding
 
@@ -99,18 +104,18 @@ Using UTF-8 encoding
 
 Remainder:
 
-* %E5%98%8A = %0A = \u560a
-* %E5%98%8D = %0D = \u560d
-* %E5%98%BE = %3E = \u563e (>)
-* %E5%98%BC = %3C = \u563c (<)
+* `%E5%98%8A` = `%0A` = \u560a
+* `%E5%98%8D` = `%0D` = \u560d
+* `%E5%98%BE` = `%3E` = \u563e (>)
+* `%E5%98%BC` = `%3C` = \u563c (<)
 
 
 ## Labs
 
-* [https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection](https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection)
+* [Lab: HTTP/2 request splitting via CRLF injection - PortSwigger](https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection)
 
 
 ## References
 
-* https://www.owasp.org/index.php/CRLF_Injection
-* https://vulners.com/hackerone/H1:192749
+- [CRLF Injection - CWE-93 - OWASP - May 20, 2022](https://www.owasp.org/index.php/CRLF_Injection)
+- [Starbucks: [newscdn.starbucks.com] CRLF Injection, XSS - Bobrov - 2016-12-20](https://vulners.com/hackerone/H1:192749)

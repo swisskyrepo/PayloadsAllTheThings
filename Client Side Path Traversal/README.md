@@ -4,6 +4,14 @@ Client-Side Path Traversal (CSPT), sometimes also referred to as "On-site Reques
 It takes advantage of the client side's ability to make requests using fetch to a URL, where multiple "../" characters can be injected. After normalization, these characters redirect the request to a different URL, potentially leading to security breaches.  
 Since every request is initiated from within the frontend of the application, the browser automatically includes cookies and other authentication mechanisms, making them available for exploitation in these attacks.
 
+## Summary
+
+* [Tools](#tools)
+* [Lab](#lab)
+* [CSPT to XSS](#cspt-to-xss)
+* [CSPT to CSRF](#cspt-to-xss)
+* [References](#references)
+
 
 ## Tools
 
@@ -54,11 +62,10 @@ Real-World Scenarios:
 
 ## References
 
-* [Exploiting Client-Side Path Traversal to Perform Cross-Site Request Forgery - Introducing CSPT2CSRF - Maxence Schmitt - 02 Jul 2024](https://blog.doyensec.com/2024/07/02/cspt2csrf.html)
-* [Exploiting Client-Side Path Traversal - CSRF is dead, long live CSRF - Whitepaper- Maxence Schmitt](https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_Whitepaper.pdf)
-* [Exploiting Client-Side Path Traversal - CSRF is Dead, Long Live CSRF - OWASP Global AppSec 2024 - Maxence Schmitt - June 24 2024](https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_OWASP_Appsec_Lisbon.pdf)
-* [Leaking Jupyter instance auth token chaining CVE-2023-39968, CVE-2024-22421 and a chromium bug - Davwwwx -  30-08-2023](https://blog.xss.am/2023/08/cve-2023-39968-jupyter-token-leak/)
-* [Tweet - @HusseiN98D - 5 july 2024](https://twitter.com/HusseiN98D/status/1809164551822172616)
-* [On-site request forgery - Dafydd Stuttard - 03 May 2007](https://portswigger.net/blog/on-site-request-forgery)
-* [Bypassing WAFs to Exploit CSPT Using Encoding Levels - Matan Berson - 2024-05-10](https://matanber.com/blog/cspt-levels)
-* [Automating Client-Side Path Traversals Discovery - Vitor Falcao - October 3, 2024](https://vitorfalcao.com/posts/automating-cspt-discovery/)
+- [Exploiting Client-Side Path Traversal to Perform Cross-Site Request Forgery - Introducing CSPT2CSRF - Maxence Schmitt - 02 Jul 2024](https://blog.doyensec.com/2024/07/02/cspt2csrf.html)
+- [Exploiting Client-Side Path Traversal - CSRF is dead, long live CSRF - Whitepaper - Maxence Schmitt - 02 Jul 2024](https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_Whitepaper.pdf)
+- [Exploiting Client-Side Path Traversal - CSRF is Dead, Long Live CSRF - OWASP Global AppSec 2024 - Maxence Schmitt - June 24 2024](https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_OWASP_Appsec_Lisbon.pdf)
+- [Leaking Jupyter instance auth token chaining CVE-2023-39968, CVE-2024-22421 and a chromium bug - Davwwwx - 30-08-2023](https://blog.xss.am/2023/08/cve-2023-39968-jupyter-token-leak/)
+- [On-site request forgery - Dafydd Stuttard - 03 May 2007](https://portswigger.net/blog/on-site-request-forgery)
+- [Bypassing WAFs to Exploit CSPT Using Encoding Levels - Matan Berson - 2024-05-10](https://matanber.com/blog/cspt-levels)
+- [Automating Client-Side Path Traversals Discovery - Vitor Falcao - October 3, 2024](https://vitorfalcao.com/posts/automating-cspt-discovery/)

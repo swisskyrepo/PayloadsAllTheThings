@@ -15,6 +15,7 @@
 * [Lab: Clobbering DOM attributes to bypass HTML filters](https://portswigger.net/web-security/dom-based/dom-clobbering/lab-dom-clobbering-attributes-to-bypass-html-filters)
 * [Lab: DOM clobbering test case protected by CSP](https://portswigger-labs.net/dom-invader/testcases/augmented-dom-script-dom-clobbering-csp/)
 
+
 ## Exploit
 
 Exploitation requires any kind of `HTML injection` in the page.
@@ -125,8 +126,8 @@ Exploitation requires any kind of `HTML injection` in the page.
 
 ## References
 
-* [Dom Clobbering - PortSwigger](https://portswigger.net/web-security/dom-based/dom-clobbering)
-* [Dom Clobbering - HackTricks](https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting/dom-clobbering)
-* [DOM Clobbering strikes back - @garethheyes - 06 February 2020](https://portswigger.net/research/dom-clobbering-strikes-back)
-* [Hijacking service workers via DOM Clobbering - @garethheyes - 29 November 2022](https://portswigger.net/research/hijacking-service-workers-via-dom-clobbering)
-* [Bypassing CSP via DOM clobbering - @garethheyes - 05 June 2023](https://portswigger.net/research/bypassing-csp-via-dom-clobbering)
+- [Bypassing CSP via DOM clobbering - Gareth Heyes - 05 June 2023](https://portswigger.net/research/bypassing-csp-via-dom-clobbering)
+- [DOM Clobbering - HackTricks - January 27, 2023](https://book.hacktricks.xyz/pentesting-web/xss-cross-site-scripting/dom-clobbering)
+- [DOM Clobbering - PortSwigger - September 25, 2020](https://portswigger.net/web-security/dom-based/dom-clobbering)
+- [DOM Clobbering strikes back - Gareth Heyes - 06 February 2020](https://portswigger.net/research/dom-clobbering-strikes-back)
+- [Hijacking service workers via DOM Clobbering - Gareth Heyes - 29 November 2022](https://portswigger.net/research/hijacking-service-workers-via-dom-clobbering)

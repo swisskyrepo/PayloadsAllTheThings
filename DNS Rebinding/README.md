@@ -7,12 +7,17 @@
 * [Tools](#tools)
 * [Exploitation](#exploitation)
 * [Protection Bypasses](#protection-bypasses)
+    * [0.0.0.0](#0000)
+    * [CNAME](#CNAME)
+    * [localhost](#localhost)
 * [References](#references)
+
 
 ## Tools
 
 - [Singularity of Origin](https://github.com/nccgroup/singularity) - is a tool to perform DNS rebinding attacks.
 - [Singularity of Origin Web Client](http://rebind.it/) (manager interface, port scanner and autoattack)
+
 
 ## Exploitation
 
@@ -33,6 +38,7 @@ Then, if the service is vulnerable, we can abuse DNS rebinding by following thes
 3. Edit the [autoattack HTML page](https://github.com/nccgroup/singularity/blob/master/html/autoattack.html) for your needs.
 4. Browse to "http://rebinder.your.domain:8080/autoattack.html".
 5. Wait for the attack to finish (it can take few seconds/minutes).
+
 
 ## Protection Bypasses
 
@@ -71,6 +77,4 @@ localhost.example.com.            381     IN      CNAME   localhost.
 
 ## References
 
-- [How Do DNS Rebinding Attacks Work? - nccgroup, 2019](https://github.com/nccgroup/singularity/wiki/How-Do-DNS-Rebinding-Attacks-Work%3F)
-
-
+- [How Do DNS Rebinding Attacks Work? - nccgroup - Apr 9, 2019](https://github.com/nccgroup/singularity/wiki/How-Do-DNS-Rebinding-Attacks-Work%3F)

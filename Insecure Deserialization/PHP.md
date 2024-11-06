@@ -2,14 +2,6 @@
 
 PHP Object Injection is an application level vulnerability that could allow an attacker to perform different kinds of malicious attacks, such as Code Injection, SQL Injection, Path Traversal and Application Denial of Service, depending on the context. The vulnerability occurs when user-supplied input is not properly sanitized before being passed to the unserialize() PHP function. Since PHP allows object serialization, attackers could pass ad-hoc serialized strings to a vulnerable unserialize() call, resulting in an arbitrary PHP object(s) injection into the application scope.
 
-The following magic methods will help you for a PHP Object injection
-
-* `__wakeup()` when an object is unserialized.
-* `__destruct()` when an object is deleted.
-* `__toString()` when an object is converted to a string.
-
-Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#wrapper-phar) which use a PHP object injection.
-
 
 ## Summary
 
@@ -23,6 +15,16 @@ Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.c
 
 
 ## General concept
+
+The following magic methods will help you for a PHP Object injection
+
+* `__wakeup()` when an object is unserialized.
+* `__destruct()` when an object is deleted.
+* `__toString()` when an object is converted to a string.
+
+Also you should check the `Wrapper Phar://` in [File Inclusion](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/File%20Inclusion#wrapper-phar) which use a PHP object injection.
+
+
 
 Vulnerable code:
 
@@ -244,20 +246,20 @@ A valid PHAR includes four elements:
 
 ## References
 
-* [PHP Object Injection - OWASP](https://www.owasp.org/index.php/PHP_Object_Injection)
-* [Utilizing Code Reuse/ROP in PHP](https://owasp.org/www-pdf-archive/Utilizing-Code-Reuse-Or-Return-Oriented-Programming-In-PHP-Application-Exploits.pdf)
-* [PHP unserialize](http://php.net/manual/en/function.unserialize.php)
-* [PHP Generic Gadget - ambionics security](https://www.ambionics.io/blog/php-generic-gadget-chains)
-* [POC2009 Shocking News in PHP Exploitation](https://www.owasp.org/images/f/f6/POC2009-ShockingNewsInPHPExploitation.pdf)
-* [PHP Internals Book - Serialization](http://www.phpinternalsbook.com/classes_objects/serialization.html)
-* [TSULOTT Web challenge write-up from MeePwn CTF 1st 2017 by Rawsec](https://blog.raw.pm/en/meepwn-2017-write-ups/#TSULOTT-Web)
-* [CTF writeup: PHP object injection in kaspersky CTF](https://medium.com/@jaimin_gohel/ctf-writeup-php-object-injection-in-kaspersky-ctf-28a68805610d)
-* [Jack The Ripper Web challeneg Write-up from ECSC 2019 Quals Team France by Rawsec](https://blog.raw.pm/en/ecsc-2019-quals-write-ups/#164-Jack-The-Ripper-Web)
-* [Rusty Joomla RCE Unserialize overflow - Alessandro Groppo - October 3, 2019](https://blog.hacktivesecurity.com/index.php/2019/10/03/rusty-joomla-rce/)
-* [PHP Pop Chains - Achieving RCE with POP chain exploits. - Vickie Li - September 3, 2020](https://vkili.github.io/blog/insecure%20deserialization/pop-chains/)
-* [How to exploit the PHAR Deserialization Vulnerability - Alexandru Postolache - May 29, 2020](https://pentest-tools.com/blog/exploit-phar-deserialization-vulnerability/)
-* [phar:// deserialization - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-inclusion/phar-deserialization)
-* [Finding PHP Serialization Gadget Chain - DG'hAck Unserial killer - Aug 11, 2022 - xanhacks](https://www.xanhacks.xyz/p/php-gadget-chain/#introduction)
-* [FINDING A POP CHAIN ON A COMMON SYMFONY BUNDLE: PART 1 - Rémi Matasse - 12/09/2023](https://www.synacktiv.com/publications/finding-a-pop-chain-on-a-common-symfony-bundle-part-1)
-* [FINDING A POP CHAIN ON A COMMON SYMFONY BUNDLE: PART 2 - Rémi Matasse - 11/10/2023](https://www.synacktiv.com/publications/finding-a-pop-chain-on-a-common-symfony-bundle-part-2)
-* [PHP deserialization attacks and a new gadget chain in Laravel - Mathieu Farrell - Tue 13 February 2024](https://blog.quarkslab.com/php-deserialization-attacks-and-a-new-gadget-chain-in-laravel.html)
+- [CTF writeup: PHP object injection in kaspersky CTF - Jaimin Gohel - November 24, 2018](https://medium.com/@jaimin_gohel/ctf-writeup-php-object-injection-in-kaspersky-ctf-28a68805610d)
+- [ECSC 2019 Quals Team France - Jack The Ripper Web - noraj - May 22, 2019](https://web.archive.org/web/20211022161400/https://blog.raw.pm/en/ecsc-2019-quals-write-ups/#164-Jack-The-Ripper-Web)
+- [FINDING A POP CHAIN ON A COMMON SYMFONY BUNDLE: PART 1 - Rémi Matasse - September 12, 2023](https://www.synacktiv.com/publications/finding-a-pop-chain-on-a-common-symfony-bundle-part-1)
+- [FINDING A POP CHAIN ON A COMMON SYMFONY BUNDLE: PART 2 - Rémi Matasse - October 11, 2023](https://www.synacktiv.com/publications/finding-a-pop-chain-on-a-common-symfony-bundle-part-2)
+- [Finding PHP Serialization Gadget Chain - DG'hAck Unserial killer - xanhacks - August 11, 2022](https://www.xanhacks.xyz/p/php-gadget-chain/#introduction)
+- [How to exploit the PHAR Deserialization Vulnerability - Alexandru Postolache - May 29, 2020](https://pentest-tools.com/blog/exploit-phar-deserialization-vulnerability/)
+- [phar:// deserialization - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/file-inclusion/phar-deserialization)
+- [PHP deserialization attacks and a new gadget chain in Laravel - Mathieu Farrell - February 13, 2024](https://blog.quarkslab.com/php-deserialization-attacks-and-a-new-gadget-chain-in-laravel.html)
+- [PHP Generic Gadget - Charles Fol - July 4, 2017](https://www.ambionics.io/blog/php-generic-gadget-chains)
+- [PHP Internals Book - Serialization - jpauli - June 15, 2013](http://www.phpinternalsbook.com/classes_objects/serialization.html)
+- [PHP Object Injection - Egidio Romano - April 24, 2020](https://www.owasp.org/index.php/PHP_Object_Injection)
+- [PHP Pop Chains - Achieving RCE with POP chain exploits. - Vickie Li - September 3, 2020](https://vkili.github.io/blog/insecure%20deserialization/pop-chains/)
+- [PHP unserialize - php.net - March 29, 2001](http://php.net/manual/en/function.unserialize.php)
+- [POC2009 Shocking News in PHP Exploitation - Stefan Esser - May 23, 2015](https://web.archive.org/web/20150523205411/https://www.owasp.org/images/f/f6/POC2009-ShockingNewsInPHPExploitation.pdf)
+- [Rusty Joomla RCE Unserialize overflow - Alessandro Groppo - October 3, 2019](https://blog.hacktivesecurity.com/index.php/2019/10/03/rusty-joomla-rce/)
+- [TSULOTT Web challenge write-up - MeePwn CTF - Rawsec - July 15, 2017](https://web.archive.org/web/20211022151328/https://blog.raw.pm/en/meepwn-2017-write-ups/#TSULOTT-Web)
+- [Utilizing Code Reuse/ROP in PHP - Stefan Esser - June 15, 2020](http://web.archive.org/web/20200615044621/https://owasp.org/www-pdf-archive/Utilizing-Code-Reuse-Or-Return-Oriented-Programming-In-PHP-Application-Exploits.pdf)

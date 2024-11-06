@@ -1,5 +1,12 @@
 # Ruby Deserialization
 
+## Summary
+
+* [Marshal.load](#marshalload)
+* [Yaml.load](#yamlload)
+* [References](#references)
+
+
 ## Marshal.load
 
 Script to generate and verify the deserialization gadget chain against Ruby 2.0 through to 2.5
@@ -56,8 +63,8 @@ Universal gadget for ruby 2.x - 3.x.
 
 ## References
 
-- [RUBY 2.X UNIVERSAL RCE DESERIALIZATION GADGET CHAIN - elttam, Luke Jahnke](https://www.elttam.com.au/blog/ruby-deserialization/)
-- [Universal RCE with Ruby YAML.load - @_staaldraad ](https://staaldraad.github.io/post/2019-03-02-universal-rce-ruby-yaml-load/)
-- [Online access to Ruby 2.x Universal RCE Deserialization Gadget Chain - PentesterLab](https://pentesterlab.com/exercises/ruby_ugadget/course)
-- [Universal RCE with Ruby YAML.load (versions > 2.7) - @_staaldraad](https://staaldraad.github.io/post/2021-01-09-universal-rce-ruby-yaml-load-updated/)
-* [Blind Remote Code Execution through YAML Deserialization - 09 JUNE 2021](https://blog.stratumsecurity.com/2021/06/09/blind-remote-code-execution-through-yaml-deserialization/)
+- [Ruby 2.X Universal RCE Deserialization Gadget Chain - Luke Jahnke - November 8, 2018](https://www.elttam.com.au/blog/ruby-deserialization/)
+- [Universal RCE with Ruby YAML.load - Etienne Stalmans (@_staaldraad) - March 2, 2019](https://staaldraad.github.io/post/2019-03-02-universal-rce-ruby-yaml-load/)
+- [Ruby 2.x Universal RCE Deserialization Gadget Chain - PentesterLab - 2024](https://pentesterlab.com/exercises/ruby_ugadget/course)
+- [Universal RCE with Ruby YAML.load (versions > 2.7) - Etienne Stalmans (@_staaldraad) - January 9, 2021](https://staaldraad.github.io/post/2021-01-09-universal-rce-ruby-yaml-load-updated/)
+- [Blind Remote Code Execution through YAML Deserialization - Colin McQueen - June 9, 2021](https://blog.stratumsecurity.com/2021/06/09/blind-remote-code-execution-through-yaml-deserialization/)

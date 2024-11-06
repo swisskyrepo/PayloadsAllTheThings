@@ -1,5 +1,15 @@
 # Java Deserialization
 
+## Summary
+
+* [Detection](#detection)
+* [Tools](#tools)
+  * [Ysoserial](#ysoserial)
+  * [Burp extensions using ysoserial](#burp-extensionsl)
+  * [Alternative Tooling](#alternative-tooling)
+* [References](#references)
+
+
 ## Detection
 
 - `"AC ED 00 05"` in Hex
@@ -62,23 +72,24 @@ Vaadin1             @kai_ullrich                           vaadin-server:7.7.14,
 Wicket1             @jacob-baines                          wicket-util:6.23.0, slf4j-api:1.6.4   
 ```
 
-### Burp extensions using ysoserial
+### Burp extensions
 
-- [JavaSerialKiller](https://github.com/NetSPI/JavaSerialKiller)
-- [Java Deserialization Scanner](https://github.com/federicodotta/Java-Deserialization-Scanner)
-- [Burp-ysoserial](https://github.com/summitt/burp-ysoserial)
-- [SuperSerial](https://github.com/DirectDefense/SuperSerial)
-- [SuperSerial-Active](https://github.com/DirectDefense/SuperSerial-Active)
+- [NetSPI/JavaSerialKiller](https://github.com/NetSPI/JavaSerialKiller) -  Burp extension to perform Java Deserialization Attacks 
+- [federicodotta/Java Deserialization Scanner](https://github.com/federicodotta/Java-Deserialization-Scanner) -  All-in-one plugin for Burp Suite for the detection and the exploitation of Java deserialization vulnerabilities 
+- [summitt/burp-ysoserial](https://github.com/summitt/burp-ysoserial) -  YSOSERIAL Integration with Burp Suite 
+- [DirectDefense/SuperSerial](https://github.com/DirectDefense/SuperSerial) - Burp Java Deserialization Vulnerability Identification
+- [DirectDefense/SuperSerial-Active](https://github.com/DirectDefense/SuperSerial-Active) - Java Deserialization Vulnerability Active Identification Burp Extender
+
 
 ### Alternative Tooling
 
-- [pwntester/JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget)
+- [pwntester/JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget) - Pure JRE 8 RCE Deserialization gadget
 - [joaomatosf/JexBoss](https://github.com/joaomatosf/jexboss) - JBoss (and others Java Deserialization Vulnerabilities) verify and EXploitation Tool
-- [pimps/ysoserial-modified](https://github.com/pimps/ysoserial-modified)
+- [pimps/ysoserial-modified](https://github.com/pimps/ysoserial-modified) - A fork of the original ysoserial application 
 - [NickstaDB/SerialBrute](https://github.com/NickstaDB/SerialBrute) - Java serialization brute force attack tool
 - [NickstaDB/SerializationDumper](https://github.com/NickstaDB/SerializationDumper) - A tool to dump Java serialization streams in a more human readable form
-- [bishopfox/gadgetprobe](https://labs.bishopfox.com/gadgetprobe)
-- [k3idii/Deserek](https://github.com/k3idii/Deserek)
+- [bishopfox/gadgetprobe](https://labs.bishopfox.com/gadgetprobe) - Exploiting Deserialization to Brute-Force the Remote Classpath
+- [k3idii/Deserek](https://github.com/k3idii/Deserek) - Python code to Serialize and Unserialize java binary serialization format. 
   ```java
   java -jar ysoserial.jar URLDNS http://xx.yy > yss_base.bin
   python deserek.py yss_base.bin --format python > yss_url.py
@@ -115,23 +126,15 @@ Payload generators for the following marshallers are included:<br />
 | XStream                         | **JDK only RCEs**
 | YAMLBeans                       | third party RCE
 
-## Gadgets
-
-Require:
-* `java.io.Serializable`
-
-
-
 
 ## References
 
-- [Github - ysoserial](https://github.com/frohoff/ysoserial)
-- [Triggering a DNS lookup using Java Deserialization - paranoidsoftware.com](https://blog.paranoidsoftware.com/triggering-a-dns-lookup-using-java-deserialization/)
-- [Detecting deserialization bugs with DNS exfiltration - Philippe Arteau | Mar 22, 2017](https://www.gosecure.net/blog/2017/03/22/detecting-deserialization-bugs-with-dns-exfiltration/)
-- [Java-Deserialization-Cheat-Sheet - GrrrDog](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
-- [Understanding & practicing java deserialization exploits](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)
-- [How i found a 1500$ worth Deserialization vulnerability - @D0rkerDevil](https://medium.com/@D0rkerDevil/how-i-found-a-1500-worth-deserialization-vulnerability-9ce753416e0a)
-- [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - 14 Aug 2017, Peter Stöckli](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)
-- [Jackson CVE-2019-12384: anatomy of a vulnerability class](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
-- [On Jackson CVEs: Don’t Panic — Here is what you need to know](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062#da96)
-- [Pre-auth RCE in ForgeRock OpenAM (CVE-2021-35464) - Michael Stepankin / @artsploit - 29 June 2021](https://portswigger.net/research/pre-auth-rce-in-forgerock-openam-cve-2021-35464)
+- [Detecting deserialization bugs with DNS exfiltration - Philippe Arteau - March 22, 2017](https://www.gosecure.net/blog/2017/03/22/detecting-deserialization-bugs-with-dns-exfiltration/)
+- [How I found a $1500 worth Deserialization vulnerability - Ashish Kunwar - August 28, 2018](https://medium.com/@D0rkerDevil/how-i-found-a-1500-worth-deserialization-vulnerability-9ce753416e0a)
+- [Jackson CVE-2019-12384: anatomy of a vulnerability class - Andrea Brancaleoni - July 22, 2019](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
+- [Java-Deserialization-Cheat-Sheet - Aleksei Tiurin - May 23, 2023](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
+- [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - Peter Stöckli - August 14, 2017](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)
+- [On Jackson CVEs: Don’t Panic — Here is what you need to know - cowtowncoder - December 22, 2017](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062#da96)
+- [Pre-auth RCE in ForgeRock OpenAM (CVE-2021-35464) - Michael Stepankin (@artsploit) - June 29, 2021](https://portswigger.net/research/pre-auth-rce-in-forgerock-openam-cve-2021-35464)
+- [Triggering a DNS lookup using Java Deserialization - paranoidsoftware.com - July 5, 2020](https://blog.paranoidsoftware.com/triggering-a-dns-lookup-using-java-deserialization/)
+- [Understanding & practicing java deserialization exploits - Diablohorn - September 9, 2017](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)

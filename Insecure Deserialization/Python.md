@@ -1,10 +1,21 @@
 # Python Deserialization
 
-* In Python source code, look for:
-    * `cPickle.loads`
-    * `pickle.loads`
-    * `_pickle.loads`
-    * `jsonpickle.decode`
+## Summary
+
+* [Detection](#detection)
+* [Pickle](#pickle)
+* [References](#references)
+
+
+## Detection
+
+In Python source code, look for these sinks:
+
+* `cPickle.loads`
+* `pickle.loads`
+* `_pickle.loads`
+* `jsonpickle.decode`
+
 
 ## Pickle
 
@@ -51,7 +62,7 @@ evil_token = b64encode(cPickle.dumps(e))
 print("Your Evil Token : {}").format(evil_token)
 ```
 
+
 ## References
 
-* [Exploiting misuse of Python's "pickle" - Mar 20, 2011](https://blog.nelhage.com/2011/03/exploiting-pickle/)
-* [Python Pickle Injection - Apr 30, 2017](http://xhyumiracle.com/python-pickle-injection/)
+- [Exploiting misuse of Python's "pickle" - Nelson Elhage - March 20, 2011](https://blog.nelhage.com/2011/03/exploiting-pickle/)

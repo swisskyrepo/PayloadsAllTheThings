@@ -31,21 +31,23 @@
     ```
 
 Wordlist examples: 
+
 - [Arjun/large.txt](https://github.com/s0md3v/Arjun/blob/master/arjun/db/large.txt)
 - [Arjun/medium.txt](https://github.com/s0md3v/Arjun/blob/master/arjun/db/medium.txt)
 - [Arjun/small.txt](https://github.com/s0md3v/Arjun/blob/master/arjun/db/small.txt)
 - [samlists/sam-cc-parameters-lowercase-all.txt](https://github.com/the-xentropy/samlists/blob/main/sam-cc-parameters-lowercase-all.txt)
 - [samlists/sam-cc-parameters-mixedcase-all.txt](https://github.com/the-xentropy/samlists/blob/main/sam-cc-parameters-mixedcase-all.txt)
 
+
 ### Old parameters
 
 Explore all the URL from your targets to find old parameters.
+
 * Browse the [Wayback Machine](http://web.archive.org/)
 * Look through the JS files to discover unused parameters
 
 
 ## References
 
-* [Hacker tools: Arjun – The parameter discovery tool - 17TH MAY 2021 - Intigriti](https://blog.intigriti.com/2021/05/17/hacker-tools-arjun-the-parameter-discovery-tool/)
-* [Parameter Discovery: A quick guide to start - 20/04/2022 - YesWeHack](https://blog.yeswehack.com/yeswerhackers/parameter-discovery-quick-guide-to-start/)
-
+- [Hacker tools: Arjun – The parameter discovery tool - Intigriti - May 17, 2021](https://blog.intigriti.com/2021/05/17/hacker-tools-arjun-the-parameter-discovery-tool/)
+- [Parameter Discovery: A quick guide to start - YesWeHack - April 20, 2022](http://web.archive.org/web/20220420123306/https://blog.yeswehack.com/yeswerhackers/parameter-discovery-quick-guide-to-start)

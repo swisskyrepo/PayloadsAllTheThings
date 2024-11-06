@@ -14,7 +14,8 @@
 
 * [j0lt-github/python-deserialization-attack-payload-generator](https://github.com/j0lt-github/python-deserialization-attack-payload-generator)
 * [artsploit/yaml-payload](https://github.com/artsploit/yaml-payload) - A tiny project for generating SnakeYAML deserialization payloads
-* [mbechler/marshalsec](https://github.com/mbechler/marshalsec)
+* [mbechler/marshalsec](https://github.com/mbechler/marshalsec) - Java Unmarshaller Security - Turning your data into code execution
+
 
 ## Exploit
 
@@ -92,8 +93,8 @@ with open('exploit_unsafeloader.yml') as file:
 
 ## References
 
-* [Python Yaml Deserialization - hacktricks.xyz][https://book.hacktricks.xyz/pentesting-web/deserialization/python-yaml-deserialization]
-* [YAML Deserialization Attack in Python - Manmeet Singh & Ashish Kukret - November 13][https://www.exploit-db.com/docs/english/47655-yaml-deserialization-attack-in-python.pdf]
-* [PyYAML Documentation](https://pyyaml.org/wiki/PyYAMLDocumentation)
-* [Blind Remote Code Execution through YAML Deserialization - 09 JUNE 2021](https://blog.stratumsecurity.com/2021/06/09/blind-remote-code-execution-through-yaml-deserialization/)
-* [[CVE-2019-20477]- 0Day YAML Deserialization Attack on PyYAML version <= 5.1.2 - @_j0lt](https://thej0lt.com/2020/06/21/cve-2019-20477-0day-yaml-deserialization-attack-on-pyyaml-version/)
+- [Python Yaml Deserialization - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/deserialization/python-yaml-deserialization)
+- [YAML Deserialization Attack in Python - Manmeet Singh & Ashish Kukret - November 13, 2021](https://www.exploit-db.com/docs/english/47655-yaml-deserialization-attack-in-python.pdf)
+- [PyYAML Documentation - PyYAML - April 29, 2006](https://pyyaml.org/wiki/PyYAMLDocumentation)
+- [Blind Remote Code Execution through YAML Deserialization - Colin McQueen - June 9, 2021](https://blog.stratumsecurity.com/2021/06/09/blind-remote-code-execution-through-yaml-deserialization/)
+- [CVE-2019-20477 - 0Day YAML Deserialization Attack on PyYAML version <= 5.1.2 - Manmeet Singh (@_j0lt) - June 21, 2020](https://thej0lt.com/2020/06/21/cve-2019-20477-0day-yaml-deserialization-attack-on-pyyaml-version/)

@@ -106,11 +106,11 @@ Port Scanning: Timing attack
 
 ## References
 
-* [Attacking Headless Browsers - truff - 22/05/2024](#bb-discord-replay-not-available)
-* [Browser based Port Scanning with JavaScript - Nikolai Tschacher - January 10, 2021](https://incolumitas.com/2021/01/10/browser-based-port-scanning/)
-* [Post-Exploitation: Abusing Chrome's debugging feature to observe and control browsing sessions remotely - wunderwuzzi - Apr 28, 2020](https://embracethered.com/blog/posts/2020/chrome-spy-remote-control/)
-* [Node inspector/CEF debug abuse - HackTricks](https://book.hacktricks.xyz/linux-hardening/privilege-escalation/electron-cef-chromium-debugger-abuse)
-* [Chrome DevTools Protocol - Documentation](https://chromedevtools.github.io/devtools-protocol/)
-* [Cookies with Chromium’s Remote Debugger Port - Justin Bui - Dec 17, 2020](https://posts.specterops.io/hands-in-the-cookie-jar-dumping-cookies-with-chromiums-remote-debugger-port-34c4f468844e)
-* [Debugging Cookie Dumping Failures with Chromium’s Remote Debugger - Justin Bui - Jul 16, 2023](https://slyd0g.medium.com/debugging-cookie-dumping-failures-with-chromiums-remote-debugger-8a4c4d19429f)
-* [Tricks for Reliable Split-Second DNS Rebinding in Chrome and Safari - Daniel Thatcher - December 6, 2023](https://www.intruder.io/research/split-second-dns-rebinding-in-chrome-and-safari)
+- [Attacking Headless Browsers - truff - May 22, 2024](#bb-discord-replay-not-available)
+- [Browser based Port Scanning with JavaScript - Nikolai Tschacher - January 10, 2021](https://incolumitas.com/2021/01/10/browser-based-port-scanning/)
+- [Chrome DevTools Protocol - Documentation - July 3, 2017](https://chromedevtools.github.io/devtools-protocol/)
+- [Cookies with Chromium’s Remote Debugger Port - Justin Bui - December 17, 2020](https://posts.specterops.io/hands-in-the-cookie-jar-dumping-cookies-with-chromiums-remote-debugger-port-34c4f468844e)
+- [Debugging Cookie Dumping Failures with Chromium’s Remote Debugger - Justin Bui - July 16, 2023](https://slyd0g.medium.com/debugging-cookie-dumping-failures-with-chromiums-remote-debugger-8a4c4d19429f)
+- [Node inspector/CEF debug abuse - HackTricks - July 18, 2024](https://book.hacktricks.xyz/linux-hardening/privilege-escalation/electron-cef-chromium-debugger-abuse)
+- [Post-Exploitation: Abusing Chrome's debugging feature to observe and control browsing sessions remotely - wunderwuzzi - April 28, 2020](https://embracethered.com/blog/posts/2020/chrome-spy-remote-control/)
+- [Tricks for Reliable Split-Second DNS Rebinding in Chrome and Safari - Daniel Thatcher - December 6, 2023](https://www.intruder.io/research/split-second-dns-rebinding-in-chrome-and-safari)

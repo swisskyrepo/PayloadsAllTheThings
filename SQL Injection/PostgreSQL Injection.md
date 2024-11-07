@@ -76,9 +76,14 @@ SELECT usename, passwd FROM pg_shadow
 SELECT usename FROM pg_user WHERE usesuper IS TRUE
 ```
 ## PostgreSQL List Privileges
-
+Gather information from the [`pg_user`](https://www.postgresql.org/docs/current/view-pg-user.html) table:
 ```sql
-SELECT usename, usecreatedb, usesuper, usecatupd FROM pg_user
+SELECT * FROM pg_user
+```
+
+Retrieve all table-level privileges for the current user, excluding tables in system schemas like `pg_catalog` and `information_schema`:
+```sql
+SELECT * FROM information_schema.role_table_grants WHERE grantee = current_user AND table_schema NOT IN ('pg_catalog', 'information_schema');
 ```
 
 ## PostgreSQL Check if Current User is Superuser

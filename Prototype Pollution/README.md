@@ -24,7 +24,8 @@
 * [yuske/server-side-prototype-pollution](https://github.com/yuske/server-side-prototype-pollution) - Server-Side Prototype Pollution gadgets in Node.js core code and 3rd party NPM packages
 * [BlackFan/client-side-prototype-pollution](https://github.com/BlackFan/client-side-prototype-pollution) - Prototype Pollution and useful Script Gadgets
 * [portswigger/server-side-prototype-pollution](https://github.com/portswigger/server-side-prototype-pollution) - Burp Suite Extension detectiong Prototype Pollution vulnerabilities
-* [msrkp/PPScan](https://github.com/msrkp/PPScan)
+* [msrkp/PPScan](https://github.com/msrkp/PPScan) - Client Side Prototype Pollution Scanner 
+
 
 ## Labs
 
@@ -175,18 +176,18 @@ Either create your own gadget using part of the source with [yeswehack/pp-finder
 
 ## References
 
-* [A Pentester’s Guide to Prototype Pollution Attacks - HARSH BOTHRA - JAN 2, 2023](https://www.cobalt.io/blog/a-pentesters-guide-to-prototype-pollution-attacks)
-* [A tale of making internet pollution free - Exploiting Client-Side Prototype Pollution in the wild - s1r1us](https://blog.s1r1us.ninja/research/PP)
-* [Detecting Server-Side Prototype Pollution - Daniel Thatcher - February 15, 2023](https://www.intruder.io/research/server-side-prototype-pollution)
-* [Exploiting prototype pollution – RCE in Kibana (CVE-2019-7609) - MICHAŁ BENTKOWSKI - October 30, 2019](https://research.securitum.com/prototype-pollution-rce-kibana-cve-2019-7609/)
-* [NodeJS - __proto__ & prototype Pollution - HackTricks](https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution)
-* [Prototype Pollution - PortSwigger](https://portswigger.net/web-security/prototype-pollution)
-* [Prototype pollution - Snyk](https://learn.snyk.io/lessons/prototype-pollution/javascript/)
-* [Prototype pollution and bypassing client-side HTML sanitizers - MICHAŁ BENTKOWSKI - August 18, 2020](https://research.securitum.com/prototype-pollution-and-bypassing-client-side-html-sanitizers/)
-* [Prototype Pollution and Where to Find Them - BitK & SakiiR - AUGUST 14, 2023](https://youtu.be/mwpH9DF_RDA)
-* [Prototype Pollution Attack in NodeJS - Olivier Arteau](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)
-* [Prototype pollution attacks in NodeJS applications - Olivier Arteau - Youtube](https://youtu.be/LUsiFV3dsK8)
-* [Prototype Pollution Leads to RCE: Gadgets Everywhere - Mikhail Shcherbakov](https://youtu.be/v5dq80S1WF4)
-* [Server side prototype pollution, how to detect and exploit - YesWeHack](https://blog.yeswehack.com/talent-development/server-side-prototype-pollution-how-to-detect-and-exploit/)
-* [Server-side prototype pollution: Black-box detection without the DoS - Gareth Heyes - 15 February 2023](https://portswigger.net/research/server-side-prototype-pollution)
-* [Keynote | Server Side Prototype Pollution: Blackbox Detection Without The DoS - Gareth Heyes](https://youtu.be/LD-KcuKM_0M)
+- [A Pentester's Guide to Prototype Pollution Attacks - Harsh Bothra - January 2, 2023](https://www.cobalt.io/blog/a-pentesters-guide-to-prototype-pollution-attacks)
+- [A tale of making internet pollution free - Exploiting Client-Side Prototype Pollution in the wild - s1r1us - September 28, 2021](https://blog.s1r1us.ninja/research/PP)
+- [Detecting Server-Side Prototype Pollution - Daniel Thatcher - February 15, 2023](https://www.intruder.io/research/server-side-prototype-pollution)
+- [Exploiting prototype pollution – RCE in Kibana (CVE-2019-7609) - Michał Bentkowski - October 30, 2019](https://research.securitum.com/prototype-pollution-rce-kibana-cve-2019-7609/)
+- [Keynote | Server Side Prototype Pollution: Blackbox Detection Without The DoS - Gareth Heyes - March 27, 2023](https://youtu.be/LD-KcuKM_0M)
+- [NodeJS - __proto__ & prototype Pollution - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution)
+- [Prototype Pollution - PortSwigger - November 10, 2022](https://portswigger.net/web-security/prototype-pollution)
+- [Prototype pollution - Snyk - August 19, 2023](https://learn.snyk.io/lessons/prototype-pollution/javascript/)
+- [Prototype pollution and bypassing client-side HTML sanitizers - Michał Bentkowski - August 18, 2020](https://research.securitum.com/prototype-pollution-and-bypassing-client-side-html-sanitizers/)
+- [Prototype Pollution and Where to Find Them - BitK & SakiiR - August 14, 2023](https://youtu.be/mwpH9DF_RDA)
+- [Prototype Pollution Attacks in NodeJS - Olivier Arteau - May 16, 2018](https://github.com/HoLyVieR/prototype-pollution-nsec18/blob/master/paper/JavaScript_prototype_pollution_attack_in_NodeJS.pdf)
+- [Prototype Pollution Attacks in NodeJS applications - Olivier Arteau - October 3, 2018](https://youtu.be/LUsiFV3dsK8)
+- [Prototype Pollution Leads to RCE: Gadgets Everywhere - Mikhail Shcherbakov - September 29, 2023](https://youtu.be/v5dq80S1WF4)
+- [Server side prototype pollution, how to detect and exploit - BitK - February 18, 2023](http://web.archive.org/web/20230218081534/https://blog.yeswehack.com/talent-development/server-side-prototype-pollution-how-to-detect-and-exploit/)
+- [Server-side prototype pollution: Black-box detection without the DoS - Gareth Heyes - February 15, 2023](https://portswigger.net/research/server-side-prototype-pollution)

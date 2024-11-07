@@ -6,21 +6,21 @@
 
 * [Tools](#tools)
 * [Exploit](#exploits)
-  * [Authentication Bypass](#authentication-bypass)
-  * [Extract length information](#extract-length-information)
-  * [Extract data information](#extract-data-information)
+    * [Authentication Bypass](#authentication-bypass)
+    * [Extract length information](#extract-length-information)
+    * [Extract data information](#extract-data-information)
 * [Blind NoSQL](#blind-nosql)
-  * [POST with JSON body](#post-with-json-body)
-  * [POST with urlencoded body](#post-with-urlencoded-body)
-  * [GET](#get)
+    * [POST with JSON body](#post-with-json-body)
+    * [POST with urlencoded body](#post-with-urlencoded-body)
+    * [GET](#get)
 * [MongoDB Payloads](#mongodb-payloads)
 * [References](#references)
 
 ## Tools
 
-* [NoSQLmap - Automated NoSQL database enumeration and web application exploitation tool](https://github.com/codingo/NoSQLMap)
-* [nosqlilab - A lab for playing with NoSQL Injection](https://github.com/digininja/nosqlilab)
-* [Burp-NoSQLiScanner - Plugin available in burpsuite](https://github.com/matrix/Burp-NoSQLiScanner)  
+* [codingo/NoSQLmap](https://github.com/codingo/NoSQLMap) - Automated NoSQL database enumeration and web application exploitation tool
+* [digininja/nosqlilab](https://github.com/digininja/nosqlilab) - A lab for playing with NoSQL Injection
+* [matrix/Burp-NoSQLiScanner](https://github.com/matrix/Burp-NoSQLiScanner) - This extension provides a way to discover NoSQL injection vulnerabilities. 
 
 
 ## Exploit
@@ -216,9 +216,9 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 
 ## References
 
-* [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat](https://www.dailysecurity.fr/nosql-injections-classique-blind/)
-* [Testing for NoSQL injection - OWASP/WSTG](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection)
-* [NoSQL injection wordlists - cr0hn](https://github.com/cr0hn/nosqlinjection_wordlists)
-* [NoSQL Injection in MongoDB - JUL 17, 2016 - Zanon](https://zanon.io/posts/nosql-injection-in-mongodb)
-* [Burp-NoSQLiScanner](https://github.com/matrix/Burp-NoSQLiScanner/blob/main/src/burp/BurpExtender.java)
-* [MongoDB NoSQL Injection with Aggregation Pipelines - Soroush Dalili - June 23, 2024](https://soroush.me/blog/2024/06/mongodb-nosql-injection-with-aggregation-pipelines/)
+- [Burp-NoSQLiScanner - matrix - January 30, 2021](https://github.com/matrix/Burp-NoSQLiScanner/blob/main/src/burp/BurpExtender.java)
+- [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat - February 22, 2015](https://www.dailysecurity.fr/nosql-injections-classique-blind/)
+- [MongoDB NoSQL Injection with Aggregation Pipelines - Soroush Dalili (@irsdl) - June 23, 2024](https://soroush.me/blog/2024/06/mongodb-nosql-injection-with-aggregation-pipelines/)
+- [NoSQL Injection in MongoDB - Zanon - July 17, 2016](https://zanon.io/posts/nosql-injection-in-mongodb)
+- [NoSQL injection wordlists - cr0hn - May 5, 2021](https://github.com/cr0hn/nosqlinjection_wordlists)
+- [Testing for NoSQL injection - OWASP - May 2, 2023](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection)

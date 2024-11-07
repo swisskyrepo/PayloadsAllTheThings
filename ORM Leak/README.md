@@ -3,6 +3,23 @@
 An ORM leak vulnerability occurs when sensitive information, such as database structure or user data, is unintentionally exposed due to improper handling of ORM queries. This can happen if the application returns raw error messages, debug information, or allows attackers to manipulate queries in ways that reveal underlying data.
 
 
+## Summary
+
+* [CVE](#cve)
+* [Django (Python)](#django-python)
+    * [Query filter](#query-filter)
+    * [Relational Filtering](#relational-filtering)
+        * [One-to-One](#one-to-one)
+        * [Many-to-Many](#many-to-many)
+    * [Error-based leaking - ReDOS](#error-based-leaking---redos)
+* [Prisma (Node.JS)](#prisma-nodejs)
+    * [Relational Filtering](#relational-filtering-1)
+        * [One-to-One](#one-to-one-1)
+        * [Many-to-Many](#many-to-many-1)
+* [Ransack (Ruby)](#ransack-ruby)
+* [Resources](#resources)
+
+
 ## CVE
 
 * [CVE-2023-47117: Label Studio ORM Leak](https://github.com/HumanSignal/label-studio/security/advisories/GHSA-6hjj-gq77-j4qw)
@@ -218,9 +235,9 @@ Only in Ransack < `4.0.0`.
 
 ## Resources
 
-* [PLORMBING YOUR DJANGO ORM - Alex Brown - June 24, 2024](https://www.elttam.com/blog/plormbing-your-django-orm/)
-* [PLORMBING YOUR PRISMA ORM WITH TIME-BASED ATTACKS - Alex Brown - July 09, 2024](https://www.elttam.com/blog/plorming-your-primsa-orm/)
-* [QuerySet API reference - Django](https://docs.djangoproject.com/en/5.1/ref/models/querysets/)
-* [Ransacking your password reset tokens - LUKAS EULER - JANUARY 26, 2023](https://positive.security/blog/ransack-data-exfiltration)
-* [ORM Injection - HackTricks](https://book.hacktricks.xyz/pentesting-web/orm-injection)
-* [ORM Leak Exploitation Against SQLite - Louis Nyffenegger - PentesterLab](https://pentesterlab.com/blog/orm-leak-with-sqlite3)
+- [ORM Injection - HackTricks - July 30, 2024](https://book.hacktricks.xyz/pentesting-web/orm-injection)
+- [ORM Leak Exploitation Against SQLite - Louis Nyffenegger - July 30, 2024](https://pentesterlab.com/blog/orm-leak-with-sqlite3)
+- [plORMbing your Django ORM - Alex Brown - June 24, 2024](https://www.elttam.com/blog/plormbing-your-django-orm/)
+- [plORMbing your Prisma ORM with Time-based Attacks - Alex Brown - July 9, 2024](https://www.elttam.com/blog/plorming-your-primsa-orm/)
+- [QuerySet API reference - Django - August 8, 2024](https://docs.djangoproject.com/en/5.1/ref/models/querysets/)
+- [Ransacking your password reset tokens - Lukas Euler - January 26, 2023](https://positive.security/blog/ransack-data-exfiltration)

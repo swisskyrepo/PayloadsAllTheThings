@@ -2,6 +2,13 @@
 
 > Regular Expression Denial of Service (ReDoS) is a type of attack that exploits the fact that certain regular expressions can take an extremely long time to process, causing applications or services to become unresponsive or crash. 
 
+## Summary
+
+* [Denial of Service - ReDoS](#denial-of-service---redos)
+    * [Evil Regex](#evil-regex)
+    * [Backtrack Limit](#backtrack-limit)
+* [References](#references)
+
 
 ## Denial of Service - ReDoS
 
@@ -59,8 +66,8 @@ if (preg_match($pattern, $subject)) {
 
 ## References
 
-* [Regular expression Denial of Service - ReDoS - OWASP - Adar Weidman](https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS)
-* [OWASP Validation Regex Repository - OWASP](https://wiki.owasp.org/index.php/OWASP_Validation_Regex_Repository)
-* [PHP Manual > Function Reference > Text Processing > PCRE > Installing/Configuring > Runtime Configuration](https://www.php.net/manual/en/pcre.configuration.php#ini.pcre.recursion-limit)
-* [Intigriti Challenge 1223 - HACKBOOK OF A HACKER](https://simones-organization-4.gitbook.io/hackbook-of-a-hacker/ctf-writeups/intigriti-challenges/1223)
-* [MyBB Admin Panel RCE CVE-2023-41362 - SorceryIE - 2023-09-11](https://blog.sorcery.ie/posts/mybb_acp_rce/)
+- [Intigriti Challenge 1223 - Hackbook Of A Hacker - December 21, 2023](https://simones-organization-4.gitbook.io/hackbook-of-a-hacker/ctf-writeups/intigriti-challenges/1223)
+- [MyBB Admin Panel RCE CVE-2023-41362 - SorceryIE - September 11, 2023](https://blog.sorcery.ie/posts/mybb_acp_rce/)
+- [OWASP Validation Regex Repository - OWASP - March 14, 2018](https://wiki.owasp.org/index.php/OWASP_Validation_Regex_Repository)
+- [PCRE > Installing/Configuring - PHP Manual - May 3, 2008](https://www.php.net/manual/en/pcre.configuration.php#ini.pcre.recursion-limit)
+- [Regular expression Denial of Service - ReDoS - Adar Weidman - December 4, 2019](https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS)

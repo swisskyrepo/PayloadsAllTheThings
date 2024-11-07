@@ -7,8 +7,8 @@
 
 * [Tools](#tools)
 * [Applications](#applications)
-  * [Story Generation](#story-generation)
-  * [Potential Misuse](#potential-misuse)
+    * [Story Generation](#story-generation)
+    * [Potential Misuse](#potential-misuse)
 * [Prompt Examples](#prompt-examples)
 * [References](#references)
 
@@ -114,14 +114,14 @@ Indirect Prompt Injection use the memory features of an LLM.
 
 ## References
 
-- [Language Models are Few-Shot Learners - Tom B Brown](https://arxiv.org/abs/2005.14165)
-- [The AI Attack Surface Map v1.0 - 15 May 2023 - Daniel Miessler](https://danielmiessler.com/blog/the-ai-attack-surface-map-v1-0/)
-- [From Theory to Reality: Explaining the Best Prompt Injection Proof of Concept - 19 May 2023 - rez0](https://rez0.blog/hacking/2023/05/19/prompt-injection-poc.html)
-- [Large Language Model Prompts(RTC0006) - RedTeamRecipe](https://redteamrecipe.com/Large-Language-Model-Prompts/)
-- [ChatGPT Plugin Exploit Explained: From Prompt Injection to Accessing Private Data - May 28, 2023 - wunderwuzzi23](https://embracethered.com/blog/posts/2023/chatgpt-cross-plugin-request-forgery-and-prompt-injection./)
-- [ChatGPT Plugins: Data Exfiltration via Images & Cross Plugin Request Forgery - May 16, 2023 - wunderwuzzi23](https://embracethered.com/blog/posts/2023/chatgpt-webpilot-data-exfil-via-markdown-injection/)
-- [You shall not pass: the spells behind Gandalf - Max Mathys and Václav Volhejn - 2 Jun, 2023](https://www.lakera.ai/insights/who-is-gandalf)
-- [Brex's Prompt Engineering Guide](https://github.com/brexhq/prompt-engineering)
-- [Demystifying RCE Vulnerabilities in LLM-Integrated Apps - Tong Liu, Zizhuang Deng, Guozhu Meng, Yuekang Li, Kai Chen](https://browse.arxiv.org/pdf/2309.02926.pdf)
+- [Brex's Prompt Engineering Guide - Brex - April 21, 2023](https://github.com/brexhq/prompt-engineering)
+- [ChatGPT Plugin Exploit Explained: From Prompt Injection to Accessing Private Data - wunderwuzzi23 - May 28, 2023](https://embracethered.com/blog/posts/2023/chatgpt-cross-plugin-request-forgery-and-prompt-injection./)
+- [ChatGPT Plugins: Data Exfiltration via Images & Cross Plugin Request Forgery - wunderwuzzi23 - May 16, 2023](https://embracethered.com/blog/posts/2023/chatgpt-webpilot-data-exfil-via-markdown-injection/)
 - [ChatGPT: Hacking Memories with Prompt Injection - wunderwuzzi - May 22, 2024](https://embracethered.com/blog/posts/2024/chatgpt-hacking-memories/)
-- [LLM Hacker's Handbook - Forces Unseen](https://doublespeak.chat/#/handbook)
+- [Demystifying RCE Vulnerabilities in LLM-Integrated Apps - Tong Liu, Zizhuang Deng, Guozhu Meng, Yuekang Li, Kai Chen - October 8, 2023](https://arxiv.org/pdf/2309.02926)
+- [From Theory to Reality: Explaining the Best Prompt Injection Proof of Concept - Joseph Thacker (rez0) - May 19, 2023](https://rez0.blog/hacking/2023/05/19/prompt-injection-poc.html)
+- [Language Models are Few-Shot Learners - Tom B Brown - May 28, 2020](https://arxiv.org/abs/2005.14165)
+- [Large Language Model Prompts (RTC0006) - HADESS/RedTeamRecipe - March 26, 2023](http://web.archive.org/web/20230529085349/https://redteamrecipe.com/Large-Language-Model-Prompts/)
+- [LLM Hacker's Handbook - Forces Unseen - March 7, 2023](https://doublespeak.chat/#/handbook)
+- [The AI Attack Surface Map v1.0 - Daniel Miessler - May 15, 2023](https://danielmiessler.com/blog/the-ai-attack-surface-map-v1-0/)
+- [You shall not pass: the spells behind Gandalf - Max Mathys and Václav Volhejn - June 2, 2023](https://www.lakera.ai/insights/who-is-gandalf)

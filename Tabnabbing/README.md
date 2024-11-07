@@ -14,7 +14,7 @@
 
 ## Tools
 
-- [PortSwigger/discovering-reversetabnabbing](https://portswigger.net/bappstore/80eb8fd46bf847b4b17861482c2f2a30)
+- [PortSwigger/discovering-reversetabnabbing](https://portswigger.net/bappstore/80eb8fd46bf847b4b17861482c2f2a30) - Discovering Reverse Tabnabbing
 
 
 ## Description
@@ -43,5 +43,5 @@ Search for the following link formats:
 
 ## References
 
-* [Reverse Tabnabbing - OWASP, 20.10.20](https://owasp.org/www-community/attacks/Reverse_Tabnabbing)
-* [Tabnabbing - Wikipedia, 20.10.20](https://en.wikipedia.org/wiki/Tabnabbing)
+- [Reverse Tabnabbing - OWASP - October 20, 2020](https://owasp.org/www-community/attacks/Reverse_Tabnabbing)
+- [Tabnabbing - Wikipedia - May 25, 2010](https://en.wikipedia.org/wiki/Tabnabbing)

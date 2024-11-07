@@ -43,6 +43,7 @@
 ![LooseTypeComparison](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Type%20Juggling/Images/table_representing_behavior_of_PHP_with_loose_type_comparisons.png?raw=true)
 
 Loose Type Comparisons occurs in many languages:
+
 * [MariaDB](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Mariadb)
 * [MySQL](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Mysql)
 * [NodeJS](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/NodeJS)
@@ -141,8 +142,8 @@ The exploitation phase is the following:
 
 ## References
 
-* [Writing Exploits For Exotic Bug Classes: PHP Type Juggling By Tyler Borland](http://turbochaos.blogspot.com/2013/08/exploiting-exotic-bugs-php-type-juggling.html)
-* [Magic Hashes - WhiteHatSec](https://www.whitehatsec.com/blog/magic-hashes/)
-* [PHP Magic Tricks: Type Juggling](https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf)
-* [spaze/hashes - Magic hashes – PHP hash "collisions"](https://github.com/spaze/hashes)
-* [(Super) Magic Hashes - Mon 07 October 2019 - myst404 (@myst404_)](https://offsec.almond.consulting/super-magic-hash.html)
+- [(Super) Magic Hashes - myst404 (@myst404_) - October 7, 2019](https://offsec.almond.consulting/super-magic-hash.html)
+- [Magic Hashes - Robert Hansen - May 11, 2015](http://web.archive.org/web/20160722013412/https://www.whitehatsec.com/blog/magic-hashes/)
+- [Magic hashes – PHP hash "collisions" - Michal Špaček (@spaze) - May 6, 2015](https://github.com/spaze/hashes)
+- [PHP Magic Tricks: Type Juggling - Chris Smith (@chrismsnz) - August 18, 2020](http://web.archive.org/web/20200818131633/https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf)
+- [Writing Exploits For Exotic Bug Classes: PHP Type Juggling - Tyler Borland (TurboBorland) - August 17, 2013](http://turbochaos.blogspot.com/2013/08/exploiting-exotic-bugs-php-type-juggling.html)

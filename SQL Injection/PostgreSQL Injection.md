@@ -71,11 +71,15 @@ SELECT usename FROM pg_user
 ```sql
 SELECT usename, passwd FROM pg_shadow 
 ```
+
 ## PostgreSQL List Database Administrator Accounts
+
 ```sql
 SELECT usename FROM pg_user WHERE usesuper IS TRUE
 ```
+
 ## PostgreSQL List Privileges
+
 Gather information from the [`pg_user`](https://www.postgresql.org/docs/current/view-pg-user.html) table:
 ```sql
 SELECT * FROM pg_user
@@ -155,6 +159,7 @@ Note, with the above queries, the output needs to be assembled in memory. For la
 ```
 
 ## PostgreSQL Time Based
+
 #### Identify time based
 
 ```sql

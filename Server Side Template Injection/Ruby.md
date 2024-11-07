@@ -8,7 +8,7 @@
     - [Ruby - Retrieve /etc/passwd](#ruby---retrieve-etcpasswd)
     - [Ruby - List files and directories](#ruby---list-files-and-directories)
     - [Ruby - Remote Command execution](#ruby---remote-Command-execution)
-- [References](#referenecs)
+- [References](#references)
 
 
 ## Templating Libraries

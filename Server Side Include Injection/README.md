@@ -22,4 +22,4 @@
 
 ## References
 
-* [Server-Side Includes (SSI) Injection - OWASP](https://owasp.org/www-community/attacks/Server-Side_Includes_(SSI)_Injection)
+* [Server-Side Includes (SSI) Injection - Weilin Zhong, Nsrav - December 4, 2019](https://owasp.org/www-community/attacks/Server-Side_Includes_(SSI)_Injection)

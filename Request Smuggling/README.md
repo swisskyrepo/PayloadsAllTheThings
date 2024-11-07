@@ -1,10 +1,11 @@
-# Request Smuggling
+!# Request Smuggling
 
 > HTTP Request smuggling occurs when multiple "things" process a request, but differ on how they determine where the request starts/ends. This disagreement can be used to interfere with another user's request/response or to bypass security controls. It normally occurs due to prioritising different HTTP headers (Content-Length vs Transfer-Encoding), differences in handling malformed headers (eg whether to ignore headers with unexpected whitespace), due to downgrading requests from a newer protocol, or due to differences in when a partial request has timed out and should be discarded.
 
 ## Summary
 
 * [Tools](#tools)
+* [Labs](#labs)
 * [CL.TE vulnerabilities](#cl.te-vulnerabilities)
 * [TE.CL vulnerabilities](#te.cl-vulnerabilities)
 * [TE.TE behavior: obfuscating the TE header](#te.te-behavior-obfuscating-the-te-header)
@@ -12,16 +13,25 @@
 
 ## Tools
 
-* [HTTP Request Smuggler / BApp Store](https://portswigger.net/bappstore/aaaa60ef945341e8a450217a54a11646)
-* [Smuggler](https://github.com/defparam/smuggler)
-* [Simple HTTP Smuggler Generator CL.TE TE.CL](https://github.com/dhmosfunk/simple-http-smuggler-generator) > this tool does not offer automated exploitation. You have to identify the injection point and exploit it manually!
+* [bappstore/HTTP Request Smuggler](https://portswigger.net/bappstore/aaaa60ef945341e8a450217a54a11646) - An extension for Burp Suite designed to help you launch HTTP Request Smuggling attacks
+* [defparam/Smuggler](https://github.com/defparam/smuggler) - An HTTP Request Smuggling / Desync testing tool written in Python 3
+* [dhmosfunk/simple-http-smuggler-generator](https://github.com/dhmosfunk/simple-http-smuggler-generator) - This tool is developed for burp suite practitioner certificate exam and HTTP Request Smuggling labs.
+
+
+## Labs
+
+* [PortSwigger - HTTP request smuggling, basic CL.TE vulnerability](https://portswigger.net/web-security/request-smuggling/lab-basic-cl-te)
+* [PortSwigger - HTTP request smuggling, basic TE.CL vulnerability](https://portswigger.net/web-security/request-smuggling/lab-basic-te-cl)
+* [PortSwigger - HTTP request smuggling, obfuscating the TE header](https://portswigger.net/web-security/request-smuggling/lab-ofuscating-te-header)
+* [PortSwigger - Response queue poisoning via H2.TE request smuggling](https://portswigger.net/web-security/request-smuggling/advanced/response-queue-poisoning/lab-request-smuggling-h2-response-queue-poisoning-via-te-request-smuggling)
+* [PortSwigger - Client-side desync](https://portswigger.net/web-security/request-smuggling/browser/client-side-desync/lab-client-side-desync)
 
 
 ## About CL.TE | TE.CL Vulnerabilities
-If you want to exploit HTTP Requests Smuggling manually you will face some problems especially in TE.CL vulnerability you have to calculate the chunk size for the second request(malicious request) as portswigger suggests `Manually fixing the length fields in request smuggling attacks can be tricky.`. For that reason you can use the [Simple HTTP Smuggler Generator CL.TE TE.CL](https://github.com/dhmosfunk/simple-http-smuggler-generator) and exploit the CL.TE TE.CL vulnerabilities manually and learn how this vulnerability works and how you can exploit it. This tool offers you only the second request with a valid chunk size(TE.CL) auto-generated but does not offer automated exploitation. You have to identify the injection point and exploit it manually!
 
+If you want to exploit HTTP Requests Smuggling manually you will face some problems especially in TE.CL vulnerability you have to calculate the chunk size for the second request(malicious request) as PortSwigger suggests `Manually fixing the length fields in request smuggling attacks can be tricky.`. 
 
-
+For that reason you can use the [Simple HTTP Smuggler Generator CL.TE TE.CL](https://github.com/dhmosfunk/simple-http-smuggler-generator) and exploit the CL.TE TE.CL vulnerabilities manually and learn how this vulnerability works and how you can exploit it. 
 
 
 ## CL.TE vulnerabilities
@@ -54,7 +64,6 @@ Transfer-Encoding: chunked
 G
 ```
 
-Challenge: https://portswigger.net/web-security/request-smuggling/lab-basic-cl-te
 
 ## TE.CL vulnerabilities
 
@@ -94,7 +103,6 @@ x=1
 
 :warning: To send this request using Burp Repeater, you will first need to go to the Repeater menu and ensure that the "Update Content-Length" option is unchecked.You need to include the trailing sequence \r\n\r\n following the final 0.
 
-Challenge: https://portswigger.net/web-security/request-smuggling/lab-basic-te-cl
 
 ## TE.TE behavior: obfuscating the TE header
 
@@ -112,7 +120,6 @@ Transfer-Encoding
 : chunked
 ```
 
-Challenge: https://portswigger.net/web-security/request-smuggling/lab-ofuscating-te-header
 
 ## HTTP/2 Request Smuggling
 
@@ -125,7 +132,6 @@ HTTP/2 request smuggling can occur if a machine converts your HTTP/2 request to 
 header ignored\r\n\r\nGET / HTTP/1.1\r\nHost: www.example.com
 ```
 
-Challenge: https://portswigger.net/web-security/request-smuggling/advanced/response-queue-poisoning/lab-request-smuggling-h2-response-queue-poisoning-via-te-request-smuggling
 
 ## Client-side desync
 
@@ -171,11 +177,11 @@ tells the victim browser to send a POST request to www.example.com/redirect. Tha
 www.example.com now incorrectly processes the HEAD request in the POST's body, instead of the browser's GET request, and returns 404 not found with a content-length, before replying to the next misinterpreted third (`GET /x?x=<script>...`) request and finally the browser's actual GET request.
 Since the browser only sent one request, it accepts the response to the HEAD request as the response to its GET request and interprets the third and fourth responses as the body of the response, and thus executes the attacker's script.
 
-Challenge: https://portswigger.net/web-security/request-smuggling/browser/client-side-desync/lab-client-side-desync
 
 ## References
 
-* [PortSwigger - Request Smuggling Tutorial](https://portswigger.net/web-security/request-smuggling) and [PortSwigger - Request Smuggling Reborn](https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn)
-* [A Pentester's Guide to HTTP Request Smuggling - Busra Demir - 2020, October 16](https://www.cobalt.io/blog/a-pentesters-guide-to-http-request-smuggling)
-* [Advanced Request Smuggling - PortSwigger](https://portswigger.net/web-security/request-smuggling/advanced#http-2-request-smuggling)
-* [Browser-Powered Desync Attacks: A New Frontier in HTTP Request Smuggling - James Kettle - 10 August 2022](https://portswigger.net/research/browser-powered-desync-attacks)
+- [A Pentester's Guide to HTTP Request Smuggling - Busra Demir - October 16, 2020](https://www.cobalt.io/blog/a-pentesters-guide-to-http-request-smuggling)
+- [Advanced Request Smuggling - PortSwigger - October 26, 2021](https://portswigger.net/web-security/request-smuggling/advanced#http-2-request-smuggling)
+- [Browser-Powered Desync Attacks: A New Frontier in HTTP Request Smuggling - James Kettle (@albinowax) - August 10, 2022](https://portswigger.net/research/browser-powered-desync-attacks)
+- [HTTP Desync Attacks: Request Smuggling Reborn - James Kettle (@albinowax) - August 7, 2019](https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn)
+- [Request Smuggling Tutorial - PortSwigger - September 28, 2019](https://portswigger.net/web-security/request-smuggling)

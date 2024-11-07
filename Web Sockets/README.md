@@ -6,8 +6,8 @@
 
 * [Tools](#tools)
 * [Exploit](#exploit)
-  * [Using wsrepl](#using-wsrepl)
-  * [Using ws-harness.py](#using-ws-harness-py)
+    * [Using wsrepl](#using-wsrepl)
+    * [Using ws-harness.py](#using-ws-harness-py)
 * [Cross-Site WebSocket Hijacking (CSWSH)](#cross-site-websocket-hijacking-cswsh)
 * [Labs](#labs)
 * [References](#references)
@@ -128,13 +128,15 @@ in order to add this header.
 
 ## Labs
 
-* [PortSwigger Labs for Web Sockets](https://portswigger.net/web-security/all-labs#http-request-smuggling)
+* [PortSwigger - Manipulating WebSocket messages to exploit vulnerabilities](https://portswigger.net/web-security/websockets/lab-manipulating-messages-to-exploit-vulnerabilities)
+* [PortSwigger - Cross-site WebSocket hijacking](https://portswigger.net/web-security/websockets/cross-site-websocket-hijacking/lab)
+* [PortSwigger - Manipulating the WebSocket handshake to exploit vulnerabilities](https://portswigger.net/web-security/websockets/lab-manipulating-handshake-to-exploit-vulnerabilities)
 
 
 ## References
 
-- [HACKING WEB SOCKETS: ALL WEB PENTEST TOOLS WELCOMED by Michael Fowl | Mar 5, 2019](https://web.archive.org/web/20190306170840/https://www.vdalabs.com/2019/03/05/hacking-web-sockets-all-web-pentest-tools-welcomed/)
-- [Hacking with WebSockets - Qualys - Mike Shema, Sergey Shekyan, Vaagn Toukharian](https://media.blackhat.com/bh-us-12/Briefings/Shekyan/BH_US_12_Shekyan_Toukharian_Hacking_Websocket_Slides.pdf)
-- [Mini WebSocket CTF - January 27, 2020 - Snowscan](https://snowscan.io/bbsctf-evilconneck/#)
-- [Hacktricks - CSWSH](https://book.hacktricks.xyz/pentesting-web/cross-site-websocket-hijacking-cswsh)
-- [Streamlining Websocket Pentesting with wsrepl - Andrez Konstantinov - 18 Jul 2023](https://blog.doyensec.com/2023/07/18/streamlining-websocket-pentesting-with-wsrepl.html)
+- [Hacking Web Sockets: All Web Pentest Tools Welcomed - Michael Fowl - March 5, 2019](https://web.archive.org/web/20190306170840/https://www.vdalabs.com/2019/03/05/hacking-web-sockets-all-web-pentest-tools-welcomed/)
+- [Hacking with WebSockets - Mike Shema, Sergey Shekyan, Vaagn Toukharian - September 20, 2012](https://media.blackhat.com/bh-us-12/Briefings/Shekyan/BH_US_12_Shekyan_Toukharian_Hacking_Websocket_Slides.pdf)
+- [Mini WebSocket CTF - Snowscan - January 27, 2020](https://snowscan.io/bbsctf-evilconneck/#)
+- [Streamlining Websocket Pentesting with wsrepl - Andrez Konstantinov - July 18, 2023](https://blog.doyensec.com/2023/07/18/streamlining-websocket-pentesting-with-wsrepl.html)
+- [WebSocket Attacks - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/websocket-attacks)

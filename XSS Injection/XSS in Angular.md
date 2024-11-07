@@ -1,10 +1,20 @@
 # XSS in Angular and AngularJS
 
+## Summary
+
+* [Client Side Template Injection](#client-side-template-injection)
+  * [Stored/Reflected XSS](#storedreflected-xss)
+  * [Advanced bypassing XSS](#advanced-bypassing-xss)
+  * [Blind XSS](#blind-xss)
+* [Automatic Sanitization](#automatic-sanitization)
+* [References](#references)
+
+
 ## Client Side Template Injection
 
 The following payloads are based on Client Side Template Injection.
 
-### Stored/Reflected XSS - Simple alert in AngularJS
+### Stored/Reflected XSS
 
 `ng-app` directive must be present in a root element to allow the client-side injection (cf. [AngularJS: API: ngApp](https://docs.angularjs.org/api/ng/directive/ngApp)).
 
@@ -302,7 +312,7 @@ However, it is possible to mark a value as trusted and prevent the automatic san
 
 Example of a component using the unsecure method `bypassSecurityTrustUrl`:
 
-```
+```js
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -326,10 +336,11 @@ export class App {
 
 When doing a code review, you want to make sure that no user input is being trusted since it will introduce a security vulnerability in the application.
 
+
 ## References
 
-- [XSS without HTML - CSTI with Angular JS - Portswigger](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)
-- [Blind XSS AngularJS Payloads](https://ardern.io/2018/12/07/angularjs-bxss)
-- [Angular Security](https://angular.io/guide/security)
-- [Bypass DomSanitizer](https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b)
-- [Bidding Like a Billionaire - Stealing NFTs With 4-Char CSTIs - Matan Berson - 2024-07-11](https://matanber.com/blog/4-char-csti)
+- [Angular Security - May 16, 2023](https://angular.io/guide/security)
+- [Bidding Like a Billionaire - Stealing NFTs With 4-Char CSTIs - Matan Berson (@MtnBer) - July 11, 2024](https://matanber.com/blog/4-char-csti)
+- [Blind XSS AngularJS Payloads - Lewis Ardern - December 7, 2018](http://web.archive.org/web/20181209041100/https://ardern.io/2018/12/07/angularjs-bxss/)
+- [Bypass DomSanitizer - Swarna (@swarnakishore) - August 11, 2017](https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b)
+- [XSS without HTML - CSTI with Angular JS - Gareth Heyes (@garethheyes) - January 27, 2016](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)

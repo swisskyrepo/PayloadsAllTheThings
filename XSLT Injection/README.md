@@ -4,10 +4,9 @@
 
 ## Summary
 
-- [XSLT Injection](#xslt-injection)
-  - [Summary](#summary)
-  - [Tools](#tools)
-  - [Exploit](#exploit)
+- [Summary](#summary)
+- [Tools](#tools)
+- [Exploit](#exploit)
     - [Determine the vendor and version](#determine-the-vendor-and-version)
     - [External Entity](#external-entity)
     - [Read files and SSRF using document](#read-files-and-ssrf-using-document)
@@ -15,7 +14,7 @@
     - [Remote Code Execution with PHP wrapper](#remote-code-execution-with-php-wrapper)
     - [Remote Code Execution with Java](#remote-code-execution-with-java)
     - [Remote Code Execution with Native .NET](#remote-code-execution-with-native-net)
-  - [References](#references)
+- [References](#references)
 
 ## Tools
 
@@ -241,8 +240,8 @@ return proc.StandardOutput.ReadToEnd();
 
 ## References
 
-* [From XSLT code execution to Meterpreter shells - @agarri - 02 July 2012](https://www.agarri.fr/blog/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html)
-* [XSLT Injection - Fortify](https://vulncat.fortify.com/en/detail?id=desc.dataflow.java.xslt_injection)
-* [XSLT Injection Basics - Saxon](https://blog.hunniccyber.com/ektron-cms-remote-code-execution-xslt-transform-injection-java/)
-* [Getting XXE in Web Browsers using ChatGPT - Igor Sak-Sakovskiy - May 22, 2024](https://swarm.ptsecurity.com/xxe-chrome-safari-chatgpt/)
-* [XSLT injection lead to file creation - PT SWARM - 30 may 2024](https://twitter.com/ptswarm/status/1796162911108255974/photo/1)
+- [From XSLT code execution to Meterpreter shells - Nicolas Grégoire (@agarri) - July 2, 2012](https://www.agarri.fr/blog/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html)
+- [XSLT Injection - Fortify - January 16, 2021](http://web.archive.org/web/20210116001237/https://vulncat.fortify.com/en/detail?id=desc.dataflow.java.xslt_injection)
+- [XSLT Injection Basics - Saxon - Hunnic Cyber Team - August 21, 2019](http://web.archive.org/web/20190821174700/https://blog.hunniccyber.com/ektron-cms-remote-code-execution-xslt-transform-injection-java/)
+- [Getting XXE in Web Browsers using ChatGPT - Igor Sak-Sakovskiy - May 22, 2024](https://swarm.ptsecurity.com/xxe-chrome-safari-chatgpt/)
+- [XSLT injection lead to file creation - PT SWARM (@ptswarm) - May 30, 2024](https://twitter.com/ptswarm/status/1796162911108255974/photo/1)

@@ -7,8 +7,8 @@
 
 * [Tools](#tools)
 * [Exploit](#exploit)
-    * [Methodology - Caching Sensitive Data](#methodology---caching-sensitive-data)
-    * [Methodology - Caching Custom JavaScript](#methodology---caching-custom-javascript)
+    * [Caching Sensitive Data](#caching-sensitive-data)
+    * [Caching Custom JavaScript](#caching-custom-javascript)
 * [CloudFlare Caching](#cloudflare-caching)
 * [Labs](#labs)
 * [References](#references)
@@ -16,8 +16,7 @@
 
 ## Tools
 
-* [PortSwigger/param-miner](https://github.com/PortSwigger/param-miner)
-    > This extension identifies hidden, unlinked parameters. It's particularly useful for finding web cache poisoning vulnerabilities.
+* [PortSwigger/param-miner](https://github.com/PortSwigger/param-miner) - Web Cache Poisoning Burp Extension
 
 
 ## Exploit
@@ -37,9 +36,10 @@ Imagine an attacker lures a logged-in victim into accessing `http://www.example.
 ![WCD Demonstration](Images/wcd.jpg)
 
 
-### Methodology - Caching Sensitive Data
+### Caching Sensitive Data
 
 **Example 1** - Web Cache Deception on PayPal Home Page
+
 1. Normal browsing, visit home : `https://www.example.com/myaccount/home/`
 2. Open the malicious link : `https://www.example.com/myaccount/home/malicious.css`
 3. The page is displayed as /home and the cache is saving the page
@@ -50,6 +50,7 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
 [![DEMO](https://i.vimeocdn.com/video/674856618-f9bac811a4c7bcf635c4eff51f68a50e3d5532ca5cade3db784c6d178b94d09a-d)](https://vimeo.com/249130093)
 
 **Example 2** - Web Cache Deception on OpenAI
+
 1. Attacker crafts a dedicated .css path of the `/api/auth/session` endpoint.
 2. Attacker distributes the link
 3. Victims visit the legitimate link.
@@ -57,7 +58,7 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
 5. Attacker harvests JWT Credentials.
 
 
-### Methodology - Caching Custom JavaScript
+### Caching Custom JavaScript
 
 1. Find an un-keyed input for a Cache Poisoning
     ```js
@@ -90,7 +91,6 @@ The following URL format are a good starting point to check for "cache" feature.
 * https://example.com/app/conversation/.js?test
 * https://example.com/app/conversation/;.js
 * https://example.com/home.php/non-existent.css
-
 
 
 ## CloudFlare Caching
@@ -132,14 +132,14 @@ Exceptions and bypasses:
 
 ## References
 
-* [Web Cache Deception Attack - Omer Gil](http://omergil.blogspot.fr/2017/02/web-cache-deception-attack.html)
-* [Practical Web Cache Poisoning - James Kettle @albinowax](https://portswigger.net/blog/practical-web-cache-poisoning)
-* [Web Cache Entanglement: Novel Pathways to Poisoning - James Kettle @albinowax](https://portswigger.net/research/web-cache-entanglement)
-* [Web Cache Deception Attack leads to user info disclosure - Kunal pandey - Feb 25](https://medium.com/@kunal94/web-cache-deception-attack-leads-to-user-info-disclosure-805318f7bb29)
-* [Web cache poisoning - Web Security Academy learning materials](https://portswigger.net/web-security/web-cache-poisoning)
-  - [Exploiting cache design flaws](https://portswigger.net/web-security/web-cache-poisoning/exploiting-design-flaws)
-  - [Exploiting cache implementation flaws](https://portswigger.net/web-security/web-cache-poisoning/exploiting-implementation-flaws)
-* [OpenAI Account Takeover - @naglinagli - Mar 24, 2023](https://twitter.com/naglinagli/status/1639343866313601024)
-* [Shockwave Identifies Web Cache Deception and Account Takeover Vulnerability affecting OpenAI's ChatGPT - Gal Nagli](https://www.shockwave.cloud/blog/shockwave-works-with-openai-to-fix-critical-chatgpt-vulnerability)
-* [Cache Deception Armor - Cloudflare](https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/)
-* [How I Test For Web Cache Vulnerabilities + Tips And Tricks - bombon - Jul 21, 2022](https://bxmbn.medium.com/how-i-test-for-web-cache-vulnerabilities-tips-and-tricks-9b138da08ff9)
+- [Cache Deception Armor - Cloudflare - May 20, 2023](https://developers.cloudflare.com/cache/cache-security/cache-deception-armor/)
+- [Exploiting cache design flaws - PortSwigger - May 4, 2020](https://portswigger.net/web-security/web-cache-poisoning/exploiting-design-flaws)
+- [Exploiting cache implementation flaws - PortSwigger - May 4, 2020](https://portswigger.net/web-security/web-cache-poisoning/exploiting-implementation-flaws)
+- [How I Test For Web Cache Vulnerabilities + Tips And Tricks - bombon (0xbxmbn) - July 21, 2022](https://bxmbn.medium.com/how-i-test-for-web-cache-vulnerabilities-tips-and-tricks-9b138da08ff9)
+- [OpenAI Account Takeover - Nagli (@naglinagli) - March 24, 2023](https://twitter.com/naglinagli/status/1639343866313601024)
+- [Practical Web Cache Poisoning - James Kettle (@albinowax) - August 9, 2018](https://portswigger.net/blog/practical-web-cache-poisoning)
+- [Shockwave Identifies Web Cache Deception and Account Takeover Vulnerability affecting OpenAI's ChatGPT - Nagli (@naglinagli) - July 15, 2024](https://www.shockwave.cloud/blog/shockwave-works-with-openai-to-fix-critical-chatgpt-vulnerability)
+- [Web Cache Deception Attack - Omer Gil - February 27, 2017](http://omergil.blogspot.fr/2017/02/web-cache-deception-attack.html)
+- [Web Cache Deception Attack leads to user info disclosure - Kunal Pandey (@kunal94) - February 25, 2019](https://medium.com/@kunal94/web-cache-deception-attack-leads-to-user-info-disclosure-805318f7bb29)
+- [Web Cache Entanglement: Novel Pathways to Poisoning - James Kettle (@albinowax) - August 5, 2020](https://portswigger.net/research/web-cache-entanglement)
+- [Web cache poisoning - PortSwigger - May 4, 2020](https://portswigger.net/web-security/web-cache-poisoning)

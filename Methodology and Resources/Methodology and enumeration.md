@@ -4,14 +4,14 @@
 
 ## Summary
 
-* [Passive Recon](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#passive-recon)
-  * Shodan
-  * Wayback Machine
-  * The Harvester
-  * Github OSINT
+- [Passive Recon](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#passive-recon)
+    - Shodan
+    - Wayback Machine
+    - The Harvester
+    - Github OSINT
 
-* [Active Recon](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#active-recon)
-  * [Network discovery](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#network-discovery)
-  * [Web discovery](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#web-discovery)
+- [Active Recon](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#active-recon)
+    - [Network discovery](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#network-discovery)
+    - [Web discovery](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#web-discovery)
 
-* [Web Vulnerabilities](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#looking-for-web-vulnerabilities)
+- [Web Vulnerabilities](https://swisskyrepo.github.io/InternalAllTheThings/methodology/bug-hunting-methodology/#looking-for-web-vulnerabilities)

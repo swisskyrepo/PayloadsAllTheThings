@@ -136,6 +136,6 @@ run
 
 ## References
 
-* [ATTACKING RMI BASED JMX SERVICES - HANS-MARTIN MÜNCH, 28 April 2019](https://mogwailabs.de/en/blog/2019/04/attacking-rmi-based-jmx-services/)
-* [JMX RMI – MULTIPLE APPLICATIONS RCE - Red Timmy Security, 26 March 2019](https://www.exploit-db.com/docs/english/46607-jmx-rmi-–-multiple-applications-remote-code-execution.pdf)
-* [remote-method-guesser - BHUSA 2021 Arsenal - Tobias Neitzel, 15 August 2021](https://www.slideshare.net/TobiasNeitzel/remotemethodguesser-bhusa2021-arsenal)
+- [Attacking RMI based JMX services - Hans-Martin Münch - April 28, 2019](https://mogwailabs.de/en/blog/2019/04/attacking-rmi-based-jmx-services/)
+- [JMX RMI - MULTIPLE APPLICATIONS RCE - Red Timmy Security - March 26, 2019](https://www.exploit-db.com/docs/english/46607-jmx-rmi-–-multiple-applications-remote-code-execution.pdf)
+- [remote-method-guesser - BHUSA 2021 Arsenal - Tobias Neitzel - August 15, 2021](https://www.slideshare.net/TobiasNeitzel/remotemethodguesser-bhusa2021-arsenal)

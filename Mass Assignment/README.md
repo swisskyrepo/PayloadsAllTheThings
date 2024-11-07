@@ -37,6 +37,6 @@ If the web application is not checking which parameters are allowed to be update
 
 ## References
 
-* [Hunting for Mass Assignment - Shivam Bathla - Aug 12, 2021](https://blog.pentesteracademy.com/hunting-for-mass-assignment-56ed73095eda)
-* [Mass Assignment Cheat Sheet - OWASP](https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html)
-* [What is Mass Assignment? Attacks and Security Tips - Yoan MONTOYA - JUNE 15, 2023](https://www.vaadata.com/blog/what-is-mass-assignment-attacks-and-security-tips/)
+- [Hunting for Mass Assignment - Shivam Bathla - August 12, 2021](https://blog.pentesteracademy.com/hunting-for-mass-assignment-56ed73095eda)
+- [Mass Assignment Cheat Sheet - OWASP - March 15, 2021](https://cheatsheetseries.owasp.org/cheatsheets/Mass_Assignment_Cheat_Sheet.html)
+- [What is Mass Assignment? Attacks and Security Tips - Yoan MONTOYA - June 15, 2023](https://www.vaadata.com/blog/what-is-mass-assignment-attacks-and-security-tips/)

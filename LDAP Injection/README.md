@@ -133,8 +133,6 @@ for i in world:
 print(fields)
 ```
 
-Ref. [5][5]
-
 ### Special blind LDAP injection (without "*")
 
 ```python
@@ -154,7 +152,6 @@ for i in range(50):
             break
 ```
 
-Ref. [5][5]
 
 ```ruby
 #!/usr/bin/env ruby
@@ -182,16 +179,10 @@ By [noraj](https://github.com/noraj)
 
 ## References
 
-* [OWASP LDAP Injection](https://www.owasp.org/index.php/LDAP_injection)
-* [LDAP Blind Explorer](http://code.google.com/p/ldap-blind-explorer/)
-* [ECW 2018 : Write Up - AdmYSsion (WEB - 50) - 0xUKN](https://0xukn.fr/posts/writeupecw2018admyssion/)
-* [Quals ECW 2018 - Maki](https://maki.bzh/courses/blog/writeups/qualecw2018/)
-* [How To Manage and Use LDAP Servers with OpenLDAP Utilities](https://www.digitalocean.com/community/tutorials/how-to-manage-and-use-ldap-servers-with-openldap-utilities)
-* [How To Configure OpenLDAP and Perform Administrative LDAP Tasks](https://www.digitalocean.com/community/tutorials/how-to-configure-openldap-and-perform-administrative-ldap-tasks)
-* SSH key authentication via LDAP
-    - [How to setup LDAP server for openssh-lpk](https://openssh-ldap-pubkey.readthedocs.io/en/latest/openldap.html)
-    - [openssh-lpk.ldif](https://github.com/Lullabot/openldap-schema/blob/master/openssh-lpk.ldif)
-    - [Setting up OpenLDAP server with OpenSSH-LPK on Ubuntu 14.04](https://blog.shichao.io/2015/04/17/setup_openldap_server_with_openssh_lpk_on_ubuntu.html)
-    - [SSH key authentication using LDAP](https://serverfault.com/questions/653792/ssh-key-authentication-using-ldap)
-    - [FR] [SSH et LDAP](https://wiki.lereset.org/ateliers:serveurmail:ldap-ssh)
-    - [SSH Public Keys in OpenLDAP](http://pig.made-it.com/ldap-openssh.html)
+- [[European Cyber Week] - AdmYSion - Alan Marrec (Maki)](https://www.maki.bzh/writeups/ecw2018admyssion/)
+- [ECW 2018 : Write Up - AdmYSsion (WEB - 50) - 0xUKN - October 31, 2018](https://0xukn.fr/posts/writeupecw2018admyssion/)
+- [How To Configure OpenLDAP and Perform Administrative LDAP Tasks - Justin Ellingwood - May 30, 2015](https://www.digitalocean.com/community/tutorials/how-to-configure-openldap-and-perform-administrative-ldap-tasks)
+- [How To Manage and Use LDAP Servers with OpenLDAP Utilities - Justin Ellingwood - May 29, 2015](https://www.digitalocean.com/community/tutorials/how-to-manage-and-use-ldap-servers-with-openldap-utilities)
+- [LDAP Blind Explorer - Alonso Parada - August 12, 2011](http://code.google.com/p/ldap-blind-explorer/)
+- [LDAP Injection & Blind LDAP Injection - Chema Alonso, José Parada Gimeno - October 10, 2008](https://www.blackhat.com/presentations/bh-europe-08/Alonso-Parada/Whitepaper/bh-eu-08-alonso-parada-WP.pdf)
+- [LDAP Injection Prevention Cheat Sheet - OWASP - July 16, 2019](https://www.owasp.org/index.php/LDAP_injection)

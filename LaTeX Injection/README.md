@@ -1,8 +1,17 @@
 # LaTex Injection
 
-You might need to adjust injection with wrappers as `\[` or `$`.
+## Summary
 
-## Read file
+* [Read File](#read-file)
+* [Write File](#write-file)
+* [Command Execution](#command-execution)
+* [Cross Site Scripting](#cross-site-scripting)
+* [References](#references)
+
+
+## Read File
+
+You might need to adjust injection with wrappers as `\[` or `$`.
 
 Read file and interpret the LaTeX code in it:
 
@@ -61,7 +70,7 @@ To bypass a blacklist try to replace one character with it's unicode hex value.
 \lstin^^70utlisting{/etc/passwd}
 ```
 
-## Write file
+## Write File
 
 Write single lined file:
 
@@ -74,7 +83,7 @@ Write single lined file:
 \closeout\outfile
 ```
 
-## Command execution
+## Command Execution
 
 The output of the command will be redirected to stdout, therefore you need to use a temp file to get it.
 
@@ -113,6 +122,6 @@ in [mathjax](https://docs.mathjax.org/en/latest/input/tex/extensions/unicode.htm
 
 ## References
 
-* [Hacking with LaTeX - Sebastian Neef - 0day.work](https://0day.work/hacking-with-latex/)
-* [Latex to RCE, Private Bug Bounty Program - Yasho](https://medium.com/bugbountywriteup/latex-to-rce-private-bug-bounty-program-6a0b5b33d26a)
-* [Pwning coworkers thanks to LaTeX](http://scumjr.github.io/2016/11/28/pwning-coworkers-thanks-to-latex/)
+- [Hacking with LaTeX - Sebastian Neef - March 10, 2016](https://0day.work/hacking-with-latex/)
+- [Latex to RCE, Private Bug Bounty Program - Yasho - July 6, 2018](https://medium.com/bugbountywriteup/latex-to-rce-private-bug-bounty-program-6a0b5b33d26a)
+- [Pwning coworkers thanks to LaTeX - scumjr - November 28, 2016](http://scumjr.github.io/2016/11/28/pwning-coworkers-thanks-to-latex/)

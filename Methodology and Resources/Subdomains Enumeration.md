@@ -2,25 +2,25 @@
 
 :warning: Content of this page has been moved to [InternalAllTheThings/cloud/azure](https://github.com/swisskyrepo/InternalAllTheThings/)
 
-* [Enumerate all subdomains](#enumerate-all-subdomains-only-if-the-scope-is-domainext)
-  * Subbrute
-  * KnockPy
-  * GoogleDorks
-  * EyeWitness
-  * Sublist3r
-  * Subfinder
-  * Findomain
-  * Aquatone (Ruby and Go versions)
-  * AltDNS
-  * MassDNS
-  * Nmap
-  * Dnsdumpster
-* Subdomain take over
-  * tko-subs
-  * HostileSubBruteForcer
-  * SubOver
+- [Enumerate all subdomains](#enumerate-all-subdomains-only-if-the-scope-is-domainext)
+    - Subbrute
+    - KnockPy
+    - GoogleDorks
+    - EyeWitness
+    - Sublist3r
+    - Subfinder
+    - Findomain
+    - Aquatone (Ruby and Go versions)
+    - AltDNS
+    - MassDNS
+    - Nmap
+    - Dnsdumpster
+- Subdomain take over
+    - tko-subs
+    - HostileSubBruteForcer
+    - SubOver
 
-## Enumerate all subdomains (only if the scope is *.domain.ext)
+## Enumerate all subdomains (only if the scope is -.domain.ext)
 
 ### Using Subbrute
 
@@ -54,12 +54,12 @@ You need to include subdomains ;)
 https://www.google.com/transparencyreport/https/ct/?hl=en-US#domain=[DOMAIN]g&incl_exp=true&incl_sub=true
 
 ```bash
-site:*.domain.com -www
+site:-.domain.com -www
 site:domain.com filetype:pdf
 site:domain.com inurl:'&'
 site:domain.com inurl:login,register,upload,logout,redirect,redir,goto,admin
 site:domain.com ext:php,asp,aspx,jsp,jspa,txt,swf
-site:*.*.domain.com
+site:-.-.domain.com
 ```
 
 ### Using Sublist3r
@@ -199,5 +199,5 @@ go get github.com/Ice3man543/SubOver
 
 ## References
 
-* [Subdomain Takeover: Proof Creation for Bug Bounties - Patrik Hudak](https://0xpatrik.com/takeover-proofs/)
-* [Subdomain Takeover: Basics - Patrik Hudak](https://0xpatrik.com/subdomain-takeover-basics/)
+- [Subdomain Takeover: Proof Creation for Bug Bounties - Patrik Hudak](https://0xpatrik.com/takeover-proofs/)
+- [Subdomain Takeover: Basics - Patrik Hudak](https://0xpatrik.com/subdomain-takeover-basics/)

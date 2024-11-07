@@ -4,7 +4,6 @@
 
 ## Summary 
 
-- [Summary](#summary)
 - [Tools](#tools)
 - [JWT Format](#jwt-format)
   - [Header](#header)
@@ -29,10 +28,11 @@
 
 ## Tools
 
-- [ticarpi/jwt_tool](https://github.com/ticarpi/jwt_tool)
-- [brendan-rius/c-jwt-cracker](https://github.com/brendan-rius/c-jwt-cracker)
-- [JOSEPH - JavaScript Object Signing and Encryption Pentesting Helper](https://portswigger.net/bappstore/82d6c60490b540369d6d5d01822bdf61)
-- [jwt.io - Encoder – Decoder](https://jwt.io/)
+- [ticarpi/jwt_tool](https://github.com/ticarpi/jwt_tool) -  🐍 A toolkit for testing, tweaking and cracking JSON Web Tokens
+- [brendan-rius/c-jwt-cracker](https://github.com/brendan-rius/c-jwt-cracker) - JWT brute force cracker written in C 
+- [PortSwigger/JOSEPH](https://portswigger.net/bappstore/82d6c60490b540369d6d5d01822bdf61) - JavaScript Object Signing and Encryption Pentesting Helper
+- [jwt.io](https://jwt.io/) - Encoder/Decoder
+
 
 ## JWT Format
 
@@ -47,6 +47,7 @@ eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9        # header
 eyJzdWIiOiIxMjM0[...]kbWluIjp0cnVlfQ        # payload
 UL9Pz5HbaMdZCV9cS9OcpccjrlkcmLovL2A2aiKiAOY # signature
 ```
+
 
 ### Header
 
@@ -502,29 +503,29 @@ You should create your own key pair for this attack and host it. It should look 
 
 ## Labs 
 
-* [JWT authentication bypass via unverified signature](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-unverified-signature)
-* [JWT authentication bypass via flawed signature verification](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-flawed-signature-verification)
-* [JWT authentication bypass via weak signing key](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-weak-signing-key)
-* [JWT authentication bypass via jwk header injection](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jwk-header-injection)
-* [JWT authentication bypass via jku header injection](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jku-header-injection)
-* [JWT authentication bypass via kid header path traversal](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-kid-header-path-traversal)
+* [PortSwigger - JWT authentication bypass via unverified signature](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-unverified-signature)
+* [PortSwigger - JWT authentication bypass via flawed signature verification](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-flawed-signature-verification)
+* [PortSwigger - JWT authentication bypass via weak signing key](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-weak-signing-key)
+* [PortSwigger - JWT authentication bypass via jwk header injection](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jwk-header-injection)
+* [PortSwigger - JWT authentication bypass via jku header injection](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jku-header-injection)
+* [PortSwigger - JWT authentication bypass via kid header path traversal](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-kid-header-path-traversal)
 
 ## References
 
-- [5 Easy Steps to Understanding JSON Web Token](https://medium.com/cyberverse/five-easy-steps-to-understand-json-web-tokens-jwt-7665d2ddf4d5)
-- [Attacking JWT authentication - Sep 28, 2016 - Sjoerd Langkemper](https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/)
-- [Club EH RM 05 - Intro to JSON Web Token Exploitation - Nishacid](https://www.youtube.com/watch?v=d7wmUz57Nlg)
-- [Critical vulnerabilities in JSON Web Token libraries - March 31, 2015 - Tim McLean](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries//)
-- [Hacking JSON Web Token (JWT) - Hate_401](https://medium.com/101-writeups/hacking-json-web-token-jwt-233fe6c862e6)
-- [Hacking JSON Web Tokens - From Zero To Hero Without Effort - Websecurify Blog](https://web.archive.org/web/20220305042224/https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
-- [Hacking JSON Web Tokens - medium.com Oct 2019](https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a)
-- [HITBGSEC CTF 2017 - Pasty (Web) - amon (j.heng)](https://nandynarwhals.org/hitbgsec2017-pasty/)
-- [How to Hack a Weak JWT Implementation with a Timing Attack - Jan 7, 2017 - Tamas Polgar](https://hackernoon.com/can-timing-attack-be-a-practical-security-threat-on-jwt-signature-ba3c8340dea9)
-- [JSON Web Token Validation Bypass in Auth0 Authentication API - Ben Knight Senior Security Consultant - April 16, 2020](https://insomniasec.com/blog/auth0-jwt-validation-bypass)
-- [JSON Web Token Vulnerabilities - 0xn3va](https://0xn3va.gitbook.io/cheat-sheets/web-application/json-web-token-vulnerabilities)
-- [JWT Hacking 101 - TrustFoundry - Tyler Rosonke - December 8th, 2017](https://trustfoundry.net/jwt-hacking-101/)
-- [Learn how to use JSON Web Tokens (JWT) for Authentication - @dwylhq](https://github.com/dwyl/learn-json-web-tokens)
-- [Privilege Escalation like a Boss - October 27, 2018 - janijay007](https://blog.securitybreached.org/2018/10/27/privilege-escalation-like-a-boss/)
-- [Simple JWT hacking - @b1ack_h00d](https://medium.com/@blackhood/simple-jwt-hacking-73870a976750)
-- [WebSec CTF - Authorization Token - JWT Challenge](https://ctf.rip/websec-ctf-authorization-token-jwt-challenge/)
-- [Write up – JRR Token – LeHack 2019 - 07/07/2019 - LAPHAZE](https://web.archive.org/web/20210512205928/https://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)
+- [5 Easy Steps to Understanding JSON Web Token - Shaurya Sharma - December 21, 2019](https://medium.com/cyberverse/five-easy-steps-to-understand-json-web-tokens-jwt-7665d2ddf4d5)
+- [Attacking JWT authentication - Sjoerd Langkemper - September 28, 2016](https://www.sjoerdlangkemper.nl/2016/09/28/attacking-jwt-authentication/)
+- [Club EH RM 05 - Intro to JSON Web Token Exploitation - Nishacid - February 23, 2023](https://www.youtube.com/watch?v=d7wmUz57Nlg)
+- [Critical vulnerabilities in JSON Web Token libraries - Tim McLean - March 31, 2015](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries//)
+- [Hacking JSON Web Token (JWT) - pwnzzzz - May 3, 2018](https://medium.com/101-writeups/hacking-json-web-token-jwt-233fe6c862e6)
+- [Hacking JSON Web Tokens - From Zero To Hero Without Effort - Websecurify - February 9, 2017](https://web.archive.org/web/20220305042224/https://blog.websecurify.com/2017/02/hacking-json-web-tokens.html)
+- [Hacking JSON Web Tokens - Vickie Li - October 27, 2019](https://medium.com/swlh/hacking-json-web-tokens-jwts-9122efe91e4a)
+- [HITBGSEC CTF 2017 - Pasty (Web) - amon (j.heng) - August 27, 2017](https://nandynarwhals.org/hitbgsec2017-pasty/)
+- [How to Hack a Weak JWT Implementation with a Timing Attack - Tamas Polgar - January 7, 2017](https://hackernoon.com/can-timing-attack-be-a-practical-security-threat-on-jwt-signature-ba3c8340dea9)
+- [JSON Web Token Validation Bypass in Auth0 Authentication API - Ben Knight - April 16, 2020](https://insomniasec.com/blog/auth0-jwt-validation-bypass)
+- [JSON Web Token Vulnerabilities - 0xn3va - March 27, 2022](https://0xn3va.gitbook.io/cheat-sheets/web-application/json-web-token-vulnerabilities)
+- [JWT Hacking 101 - TrustFoundry - Tyler Rosonke - December 8, 2017](https://trustfoundry.net/jwt-hacking-101/)
+- [Learn how to use JSON Web Tokens (JWT) for Authentication - @dwylhq - May 3, 2022](https://github.com/dwyl/learn-json-web-tokens)
+- [Privilege Escalation like a Boss - janijay007 - October 27, 2018](https://blog.securitybreached.org/2018/10/27/privilege-escalation-like-a-boss/)
+- [Simple JWT hacking - Hari Prasanth (@b1ack_h00d) - March 7, 2019](https://medium.com/@blackhood/simple-jwt-hacking-73870a976750)
+- [WebSec CTF - Authorization Token - JWT Challenge - Kris Hunt - August 7, 2016](https://ctf.rip/websec-ctf-authorization-token-jwt-challenge/)
+- [Write up – JRR Token – LeHack 2019 - Laphaze - July 7, 2019](https://web.archive.org/web/20210512205928/https://rootinthemiddle.org/write-up-jrr-token-lehack-2019/)

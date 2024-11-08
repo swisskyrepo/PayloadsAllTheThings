@@ -58,6 +58,7 @@ Real-World Scenarios:
 * CVE-2023-45316: CSPT2CSRF with a POST sink in Mattermost : `/<team>/channels/channelname?telem_action=under_control&forceRHSOpen&telem_run_id=../../../../../../api/v4/caches/invalidate`
 * CVE-2023-6458: CSPT2CSRF with a GET sink in Mattermost
 * [Client Side Path Manipulation - erasec.be](https://www.erasec.be/blog/client-side-path-manipulation/): CSPT2CSRF `https://example.com/signup/invite?email=foo%40bar.com&inviteCode=123456789/../../../cards/123e4567-e89b-42d3-a456-556642440000/cancel?a=`
+* [CVE-2023-5123 : CSPT2CSRF in Grafana’s JSON API Plugin](https://medium.com/@maxime.escourbiac/grafana-cve-2023-5123-write-up-74e1be7ef652) 
 
 
 ## References

@@ -4,7 +4,7 @@
 
 * [Client Side Template Injection](#client-side-template-injection)
   * [Stored/Reflected XSS](#storedreflected-xss)
-  * [Advanced bypassing XSS](#advanced-bypassing-xss)
+  * [Advanced Bypassing XSS](#advanced-bypassing-xss)
   * [Blind XSS](#blind-xss)
 * [Automatic Sanitization](#automatic-sanitization)
 * [References](#references)
@@ -161,7 +161,7 @@ AngularJS 1.0.1 - 1.1.5 and Vue JS
 {{constructor.constructor('alert(1)')()}}
 ```
 
-### Advanced bypassing XSS
+### Advanced Bypassing XSS
 
 AngularJS (without `'` single and `"` double quotes) by [@Viren](https://twitter.com/VirenPawar_)
 

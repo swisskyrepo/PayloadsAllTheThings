@@ -27,6 +27,7 @@
     - [EP004: Bug Hunters | HACKING GOOGLE](https://youtu.be/IoXiXlCNoXg)
     - [EP005: Project Zero | HACKING GOOGLE](https://youtu.be/My_13FXODdU)
 
+
 ## Conferences
 
 - [Hunting for Top Bounties - Nicolas Grégoire](https://www.youtube.com/watch?v=mQjTgDuLsp4)

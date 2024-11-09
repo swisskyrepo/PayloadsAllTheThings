@@ -1,26 +1,24 @@
 # Client Side Path Traversal
 
-Client-Side Path Traversal (CSPT), sometimes also referred to as "On-site Request Forgery," is a vulnerability that can be exploited as a tool for CSRF or XSS attacks.  
-It takes advantage of the client side's ability to make requests using fetch to a URL, where multiple "../" characters can be injected. After normalization, these characters redirect the request to a different URL, potentially leading to security breaches.  
-Since every request is initiated from within the frontend of the application, the browser automatically includes cookies and other authentication mechanisms, making them available for exploitation in these attacks.
+> Client-Side Path Traversal (CSPT), sometimes also referred to as "On-site Request Forgery," is a vulnerability that can be exploited as a tool for CSRF or XSS attacks.  
+
+> It takes advantage of the client side's ability to make requests using fetch to a URL, where multiple "../" characters can be injected. After normalization, these characters redirect the request to a different URL, potentially leading to security breaches.  
+
+> Since every request is initiated from within the frontend of the application, the browser automatically includes cookies and other authentication mechanisms, making them available for exploitation in these attacks.
+
 
 ## Summary
 
 * [Tools](#tools)
-* [Lab](#lab)
 * [CSPT to XSS](#cspt-to-xss)
 * [CSPT to CSRF](#cspt-to-xss)
+* [Labs](#labs)
 * [References](#references)
 
 
 ## Tools
 
 * [doyensec/CSPTBurpExtension](https://github.com/doyensec/CSPTBurpExtension) - CSPT is an open-source Burp Suite extension to find and exploit Client-Side Path Traversal.
-
-
-## Lab
-
-* [doyensec/CSPTPlayground](https://github.com/doyensec/CSPTPlayground) - CSPTPlayground is an open-source playground to find and exploit Client-Side Path Traversal (CSPT).
 
 
 ## CSPT to XSS
@@ -59,6 +57,11 @@ Real-World Scenarios:
 * CVE-2023-6458: CSPT2CSRF with a GET sink in Mattermost
 * [Client Side Path Manipulation - erasec.be](https://www.erasec.be/blog/client-side-path-manipulation/): CSPT2CSRF `https://example.com/signup/invite?email=foo%40bar.com&inviteCode=123456789/../../../cards/123e4567-e89b-42d3-a456-556642440000/cancel?a=`
 * [CVE-2023-5123 : CSPT2CSRF in Grafana’s JSON API Plugin](https://medium.com/@maxime.escourbiac/grafana-cve-2023-5123-write-up-74e1be7ef652) 
+
+
+## Labs
+
+* [doyensec/CSPTPlayground](https://github.com/doyensec/CSPTPlayground) - CSPTPlayground is an open-source playground to find and exploit Client-Side Path Traversal (CSPT).
 
 
 ## References

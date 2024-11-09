@@ -2,40 +2,41 @@
 
 > Command injection is a security vulnerability that allows an attacker to execute arbitrary commands inside a vulnerable application.
 
+
 ## Summary
 
 * [Tools](#tools)
 * [Exploits](#exploits)
-  * [Basic commands](#basic-commands)
-  * [Chaining commands](#chaining-commands)
-  * [Argument injection](#argument-injection)
-  * [Inside a command](#inside-a-command)
+    * [Basic commands](#basic-commands)
+    * [Chaining commands](#chaining-commands)
+    * [Argument injection](#argument-injection)
+    * [Inside a command](#inside-a-command)
 * [Filter Bypasses](#filter-bypasses)
-  * [Bypass without space](#bypass-without-space)
-  * [Bypass with a line return](#bypass-with-a-line-return)
-  * [Bypass with backslash newline](#bypass-with-backslash-newline)
-  * [Bypass characters filter via hex encoding](#bypass-characters-filter-via-hex-encoding)
-  * [Bypass with Tilde expansion](#bypass-with-tilde-expansion)
-  * [Bypass with Brace expansion](#bypass-with-brace-expansion)
-  * [Bypass characters filter](#bypass-characters-filter)
-  * [Bypass blacklisted words](#bypass-blacklisted-words)
-   * [Bypass with single quote](#bypass-with-single-quote)
-   * [Bypass with double quote](#bypass-with-double-quote)
-   * [Bypass with backticks](#bypass-with-backticks)
-   * [Bypass with backslash and slash](#bypass-with-backslash-and-slash)
-   * [Bypass with $@](#bypass-with-)
-   * [Bypass with $()](#bypass-with--1)
-   * [Bypass with variable expansion](#bypass-with-variable-expansion)
-   * [Bypass with wildcards](#bypass-with-wildcards)
+    * [Bypass without space](#bypass-without-space)
+    * [Bypass with a line return](#bypass-with-a-line-return)
+    * [Bypass with backslash newline](#bypass-with-backslash-newline)
+    * [Bypass characters filter via hex encoding](#bypass-characters-filter-via-hex-encoding)
+    * [Bypass with Tilde expansion](#bypass-with-tilde-expansion)
+    * [Bypass with Brace expansion](#bypass-with-brace-expansion)
+    * [Bypass characters filter](#bypass-characters-filter)
+    * [Bypass blacklisted words](#bypass-blacklisted-words)
+    * [Bypass with single quote](#bypass-with-single-quote)
+    * [Bypass with double quote](#bypass-with-double-quote)
+    * [Bypass with backticks](#bypass-with-backticks)
+    * [Bypass with backslash and slash](#bypass-with-backslash-and-slash)
+    * [Bypass with $@](#bypass-with-)
+    * [Bypass with $()](#bypass-with--1)
+    * [Bypass with variable expansion](#bypass-with-variable-expansion)
+    * [Bypass with wildcards](#bypass-with-wildcards)
 * [Data Exfiltration](#data-exfiltration)
-  * [Time based data exfiltration](#time-based-data-exfiltration)
-  * [DNS based data exfiltration](#dns-based-data-exfiltration)
+    * [Time based data exfiltration](#time-based-data-exfiltration)
+    * [DNS based data exfiltration](#dns-based-data-exfiltration)
 * [Polyglot Command Injection](#polyglot-command-injection)
 * [Tricks](#tricks)
-  * [Backgrounding long running commands](#backgrounding-long-running-commands)
-  * [Remove arguments after the injection](#remove-arguments-after-the-injection)
+    * [Backgrounding long running commands](#backgrounding-long-running-commands)
+    * [Remove arguments after the injection](#remove-arguments-after-the-injection)
 * [Labs](#labs)
-* [Challenge](#challenge)
+    * [Challenge](#challenge)
 * [References](#references)
 
 
@@ -417,20 +418,22 @@ In Unix-like command-line interfaces, the `--` symbol is used to signify the end
 
 ## Labs
 
-* [OS command injection, simple case](https://portswigger.net/web-security/os-command-injection/lab-simple)
-* [Blind OS command injection with time delays](https://portswigger.net/web-security/os-command-injection/lab-blind-time-delays)
-* [Blind OS command injection with output redirection](https://portswigger.net/web-security/os-command-injection/lab-blind-output-redirection)
-* [Blind OS command injection with out-of-band interaction](https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band)
-* [Blind OS command injection with out-of-band data exfiltration](https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band-data-exfiltration)
+* [PortSwigger - OS command injection, simple case](https://portswigger.net/web-security/os-command-injection/lab-simple)
+* [PortSwigger - Blind OS command injection with time delays](https://portswigger.net/web-security/os-command-injection/lab-blind-time-delays)
+* [PortSwigger - Blind OS command injection with output redirection](https://portswigger.net/web-security/os-command-injection/lab-blind-output-redirection)
+* [PortSwigger - Blind OS command injection with out-of-band interaction](https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band)
+* [PortSwigger - Blind OS command injection with out-of-band data exfiltration](https://portswigger.net/web-security/os-command-injection/lab-blind-out-of-band-data-exfiltration)
 
 
-## Challenge
+### Challenge
 
 Challenge based on the previous tricks, what does the following command do:
 
 ```powershell
 g="/e"\h"hh"/hm"t"c/\i"sh"hh/hmsu\e;tac$@<${g//hh??hm/}
 ```
+
+**NOTE**: The command is safe to run, but you should not trust me.
 
 
 ## References

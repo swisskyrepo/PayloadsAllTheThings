@@ -1,9 +1,6 @@
 # Clickjacking
 
-> Clickjacking is a type of web security vulnerability where a malicious website tricks a user into clicking on something different from what the user perceives,
-> potentially causing the user to perform unintended actions without their knowledge or consent. Users are tricked into performing all sorts of unintended actions
-> as such as typing in the password, clicking on ‘Delete my account’ button, liking a post, deleting a post, commenting on a blog. In other words all the actions
-> that a normal user can do on a legitimate website can be done using clickjacking.
+> Clickjacking is a type of web security vulnerability where a malicious website tricks a user into clicking on something different from what the user perceives, potentially causing the user to perform unintended actions without their knowledge or consent. Users are tricked into performing all sorts of unintended actions as such as typing in the password, clicking on ‘Delete my account’ button, liking a post, deleting a post, commenting on a blog. In other words all the actions that a normal user can do on a legitimate website can be done using clickjacking.
 
 ## Summary
 
@@ -22,8 +19,8 @@
     * [IE8 XSS filter](#ie8-xss-filter)
     * [Chrome 4.0 XSSAuditor filter](#chrome-40-xssauditor-filter)
 * [Challenge](#challenge)
-* [Practice Environments](#practice-environments)
-* [Reference](#references)
+* [Labs](#labs)
+* [References](#references)
 
 ## Tools
 
@@ -229,10 +226,10 @@ Inspect the following code:
 Determine the Clickjacking vulnerability within this code snippet. Identify how the hidden iframe is being used to exploit the user's actions when they click the button, leading them to a malicious website.
 
 
-## Practice Environments
+## Labs
 
 * [OWASP WebGoat](https://owasp.org/www-project-webgoat/)
-* [Client Side Clickjacking Test](https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/11-Client_Side_Testing/09-Testing_for_Clickjacking)
+* [OWASP Client Side Clickjacking Test](https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/11-Client_Side_Testing/09-Testing_for_Clickjacking)
 
 
 ## References

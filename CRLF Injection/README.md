@@ -112,7 +112,7 @@ Remainder:
 
 ## Labs
 
-* [Lab: HTTP/2 request splitting via CRLF injection - PortSwigger](https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection)
+* [PortSwigger - HTTP/2 request splitting via CRLF injection](https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection)
 
 
 ## References

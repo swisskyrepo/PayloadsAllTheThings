@@ -16,12 +16,6 @@
 * [References](#references)
 
 
-**Requirements**
-
-* `__VIEWSTATE`
-* `__VIEWSTATEGENERATOR`* 
-
-
 ## Viewstate Format
 
 ViewState in IIS is a technique used to retain the state of web controls between postbacks in ASP.NET applications. It stores data in a hidden field on the page, allowing the page to maintain user input and other state information.
@@ -134,6 +128,12 @@ List of interesting machine keys to use:
 ## Generate ViewState For RCE
 
 First you need to decode the Viewstate to know if the MAC and the encryption are enabled. 
+
+**Requirements**
+
+* `__VIEWSTATE`
+* `__VIEWSTATEGENERATOR`
+
 
 ### MAC Is Not Enabled
 

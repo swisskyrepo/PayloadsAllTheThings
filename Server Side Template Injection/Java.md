@@ -1,5 +1,8 @@
 # Server Side Template Injection - Java
 
+> Server-Side Template Injection (SSTI)  is a security vulnerability that occurs when user input is embedded into server-side templates in an unsafe manner, allowing attackers to inject and execute arbitrary code. In Java, SSTI can be particularly dangerous due to the power and flexibility of Java-based templating engines such as JSP (JavaServer Pages), Thymeleaf, and FreeMarker.
+
+
 ## Summary
 
 - [Templating Libraries](#templating-libraries)

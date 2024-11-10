@@ -1,11 +1,12 @@
 # SAML Injection
 
-> Security Assertion Markup Language (SAML) is an open standard that allows security credentials to be shared by multiple computers across a network. When using SAML-based Single Sign-On (SSO), three distinct parties are involved. There is a user (the so-called principal), an IDentity Provider (IDP), and a cloud application Service Provider (SP).  - centrify
+> SAML (Security Assertion Markup Language) is an open standard for exchanging authentication and authorization data between parties, in particular, between an identity provider and a service provider. While SAML is widely used to facilitate single sign-on (SSO) and other federated authentication scenarios, improper implementation or misconfiguration can expose systems to various vulnerabilities.
+
 
 ## Summary
 
 * [Tools](#tools)
-* [Authentication Bypass](#authentication-bypass)
+* [Methodology](#methodology)
     * [Invalid Signature](#invalid-signature)
     * [Signature Stripping](#signature-stripping)
     * [XML Signature Wrapping Attacks](#xml-signature-wrapping-attacks)
@@ -21,13 +22,15 @@
 - [ZAP Addon/SAML Support](https://www.zaproxy.org/docs/desktop/addons/saml-support/) - Allows to detect, show, edit, and fuzz SAML requests.
 
 
-## Authentication Bypass
+## Methodology
 
 A SAML Response should contain the `<samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"`.
+
 
 ### Invalid Signature
 
 Signatures which are not signed by a real CA are prone to cloning. Ensure the signature is signed by a real CA. If the certificate is self-signed, you may be able to clone the certificate or create your own self-signed certificate to replace it.
+
 
 ### Signature Stripping
 
@@ -65,6 +68,7 @@ Example of SAML assertion where `NameID=admin` without signature.
     </saml2:Assertion>
 </saml2p:Response>
 ```
+
 
 ### XML Signature Wrapping Attacks
 
@@ -126,6 +130,7 @@ Researchers have noticed that if an attacker inserts a comment inside the userna
 ```
 Where `user@user.com` is the first part of the username, and `.evil.com` is the second.
 
+
 ### XML External Entity
 
 An alternative exploitation would use `XML entities` to bypass the signature verification, since the content will not change, except during XML parsing.
@@ -186,6 +191,7 @@ Picture from [http://sso-attacks.org/XSLT_Attack](http://sso-attacks.org/XSLT_At
   ...
 </ds:Signature>
 ```
+
 
 ## References
 

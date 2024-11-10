@@ -2,22 +2,23 @@
 
 > Regular Expression Denial of Service (ReDoS) is a type of attack that exploits the fact that certain regular expressions can take an extremely long time to process, causing applications or services to become unresponsive or crash. 
 
+
 ## Summary
 
-* [Denial of Service - ReDoS](#denial-of-service---redos)
-    * [Evil Regex](#evil-regex)
-    * [Backtrack Limit](#backtrack-limit)
+* [Tools](#tools)
+* [Evil Regex](#evil-regex)
+* [Backtrack Limit](#backtrack-limit)
 * [References](#references)
 
 
-## Denial of Service - ReDoS
+## Tools
 
 * [tjenkinson/redos-detector](https://github.com/tjenkinson/redos-detector) - A CLI and library which tests with certainty if a regex pattern is safe from ReDoS attacks. Supported in the browser, Node and Deno.
 * [doyensec/regexploit](https://github.com/doyensec/regexploit) - Find regular expressions which are vulnerable to ReDoS (Regular Expression Denial of Service)
 * [devina.io/redos-checker](https://devina.io/redos-checker) - Examine regular expressions for potential Denial of Service vulnerabilities
 
 
-### Evil Regex
+## Evil Regex
 
 Evil Regex contains:
 
@@ -37,7 +38,7 @@ Evil Regex contains:
 These regular expressions can be exploited with `aaaaaaaaaaaaaaaaaaaaaaaa!`
 
 
-### Backtrack Limit
+## Backtrack Limit
 
 Backtracking in regular expressions occurs when the regex engine tries to match a pattern and encounters a mismatch. The engine then backtracks to the previous matching position and tries an alternative path to find a match. This process can be repeated many times, especially with complex patterns and large input strings.  
 

@@ -1,5 +1,8 @@
 # Server Side Template Injection - ASP.NET
 
+> Server-Side Template Injection (SSTI)  is a class of vulnerabilities where an attacker can inject malicious input into a server-side template, causing the template engine to execute arbitrary code on the server. In the context of ASP.NET, SSTI can occur if user input is directly embedded into a template (such as Razor, ASPX, or other templating engines) without proper sanitization. 
+
+
 ## Summary
 
 - [ASP.NET Razor](#aspnet-razor)

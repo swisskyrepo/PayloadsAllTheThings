@@ -1,5 +1,8 @@
 # Server Side Template Injection - JavaScript
 
+> Server-Side Template Injection (SSTI)  occurs when an attacker can inject malicious code into a server-side template, causing the server to execute arbitrary commands. In the context of JavaScript, SSTI vulnerabilities can arise when using server-side templating engines like Handlebars, EJS, or Pug, where user input is integrated into templates without adequate sanitization.
+
+
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
@@ -9,6 +12,7 @@
     - [Lodash - Basic Injection](#lodash---basic-injection)
     - [Lodash - Command Execution](#lodash---command-execution)
 - [References](#references)
+
 
 ## Templating Libraries
 

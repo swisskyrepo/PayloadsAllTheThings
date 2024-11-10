@@ -2,6 +2,7 @@
 
 > Server Side Request Forgery or SSRF is a vulnerability in which an attacker forces a server to perform requests on their behalf.
 
+
 ## Summary
 
 * [Tools](#tools)
@@ -56,6 +57,9 @@
     * [SSRF URL for Hetzner Cloud](#ssrf-url-for-hetzner-cloud)
     * [SSRF URL for Docker](#ssrf-url-for-docker)
     * [SSRF URL for Rancher](#ssrf-url-for-rancher)
+* [Labs](#labs) 
+* [References](#references)
+
 
 ## Tools
 
@@ -66,6 +70,7 @@
 - [assetnote/surf](https://github.com/assetnote/surf) - Returns a list of viable SSRF candidates
 - [dwisiswant0/ipfuscator](https://github.com/dwisiswant0/ipfuscator) - A blazing-fast, thread-safe, straightforward and zero memory allocations tool to swiftly generate alternative IP(v4) address representations in Go.
 - [Horlad/r3dir](https://github.com/Horlad/r3dir) - a redirection service designed to help bypass SSRF filters that do not validate the redirect location. Intergrated with Burp with help of Hackvertor tags
+
 
 ## Payloads with localhost
 
@@ -87,6 +92,7 @@
   http://0.0.0.0:443
   http://0.0.0.0:22
   ```
+
 
 ## Bypassing filters
 
@@ -892,6 +898,7 @@ curl http://rancher-metadata/<version>/<path>
 
 More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-service/
 
+
 ## Labs
 
 * [PortSwigger - Basic SSRF against the local server](https://portswigger.net/web-security/ssrf/lab-basic-ssrf-against-localhost)
@@ -899,6 +906,8 @@ More info: https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-se
 * [PortSwigger - SSRF with blacklist-based input filter](https://portswigger.net/web-security/ssrf/lab-ssrf-with-blacklist-filter)
 * [PortSwigger - SSRF with whitelist-based input filter](https://portswigger.net/web-security/ssrf/lab-ssrf-with-whitelist-filter)
 * [PortSwigger - SSRF with filter bypass via open redirection vulnerability](https://portswigger.net/web-security/ssrf/lab-ssrf-filter-bypass-via-open-redirection)
+* [Root Me - Server Side Request Forgery](https://www.root-me.org/en/Challenges/Web-Server/Server-Side-Request-Forgery)
+* [Root Me - Nginx - SSRF Misconfiguration](https://www.root-me.org/en/Challenges/Web-Server/Nginx-SSRF-Misconfiguration)
 
 
 ## References

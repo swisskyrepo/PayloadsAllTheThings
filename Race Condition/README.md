@@ -2,11 +2,11 @@
 
 > Race conditions may occur when a process is critically or unexpectedly dependent on the sequence or timings of other events. In a web application environment, where multiple requests can be processed at a given time, developers may leave concurrency to be handled by the framework, server, or programming language.
 
+
 ## Summary
 
 - [Tools](#tools)
-- [Labs](#labs)
-- [Exploit](#exploit)
+- [Methodology](#methodology)
   - [Limit-overrun](#limit-overrun)
   - [Rate-limit bypass](#rate-limit-bypass)
 - [Techniques](#techniques)
@@ -15,6 +15,7 @@
 - [Turbo Intruder](#turbo-intruder)
   - [Example 1](#example-1)
   - [Example 2](#example-2)
+- [Labs](#labs)
 - [References](#references)
 
 
@@ -25,17 +26,7 @@
 - [nxenon/h2spacex](https://github.com/nxenon/h2spacex) - HTTP/2 Single Packet Attack low Level Library / Tool based on Scapy‌ + Exploit Timing Attacks
 
 
-## Labs
-
-- [PortSwigger - Limit overrun race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-limit-overrun)
-- [PortSwigger - Multi-endpoint race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-multi-endpoint)
-- [PortSwigger - Bypassing rate limits via race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-bypassing-rate-limits)
-- [PortSwigger - Multi-endpoint race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-multi-endpoint)
-- [PortSwigger - Single-endpoint race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-single-endpoint)
-- [PortSwigger - Exploiting time-sensitive vulnerabilities](https://portswigger.net/web-security/race-conditions/lab-race-conditions-exploiting-time-sensitive-vulnerabilities)
-- [PortSwigger - Partial construction race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-partial-construction)
-
-## Exploit
+## Methodology
 
 ### Limit-overrun
 
@@ -47,6 +38,7 @@ Overdrawing limit, multiple voting, multiple spending of a giftcard.
 - [Race conditions can be used to bypass invitation limit - @franjkovic](https://hackerone.com/reports/115007)
 - [Register multiple users using one invitation - @franjkovic](https://hackerone.com/reports/148609)
 
+
 ### Rate-limit bypass
 
 Bypassing anti-bruteforce mechanism and 2FA.
@@ -54,6 +46,7 @@ Bypassing anti-bruteforce mechanism and 2FA.
 **Examples**:
 
 - [Instagram Password Reset Mechanism Race Condition - Laxman Muthiyah](https://youtu.be/4O9FjTMlHUM)
+
 
 ## Techniques
 
@@ -73,6 +66,7 @@ engine.openGate('race1')
 
 - [Cracking reCAPTCHA, Turbo Intruder style - James Kettle](https://portswigger.net/research/cracking-recaptcha-turbo-intruder-style)
 
+
 ### HTTP/2 Single-packet attack
 
 In HTTP/2 you can send multiple HTTP requests concurrently over a single connection. In the single-packet attack around ~20/30 requests will be sent and they will arrive at the same time on the server. Using a single request remove the network jitter.
@@ -87,6 +81,7 @@ In HTTP/2 you can send multiple HTTP requests concurrently over a single connect
 **Examples**:
 
 - [CVE-2022-4037 - Discovering a race condition vulnerability in Gitlab with the single-packet attack - James Kettle](https://youtu.be/Y0NVIVucQNE)
+
 
 ## Turbo Intruder
 
@@ -121,6 +116,7 @@ In HTTP/2 you can send multiple HTTP requests concurrently over a single connect
 3. Now set the external HTTP header x-request: %s - :warning: This is needed by the turbo intruder
 4. Click "Attack"
 
+
 ### Example 2
 
 This following template can use when use have to send race condition of request2 immediately after send a request1 when the window may only be a few milliseconds.
@@ -154,6 +150,18 @@ Cookie: session=<REDACTED>
 def handleResponse(req, interesting):
     table.add(req)
 ```
+
+
+## Labs
+
+- [PortSwigger - Limit overrun race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-limit-overrun)
+- [PortSwigger - Multi-endpoint race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-multi-endpoint)
+- [PortSwigger - Bypassing rate limits via race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-bypassing-rate-limits)
+- [PortSwigger - Multi-endpoint race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-multi-endpoint)
+- [PortSwigger - Single-endpoint race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-single-endpoint)
+- [PortSwigger - Exploiting time-sensitive vulnerabilities](https://portswigger.net/web-security/race-conditions/lab-race-conditions-exploiting-time-sensitive-vulnerabilities)
+- [PortSwigger - Partial construction race conditions](https://portswigger.net/web-security/race-conditions/lab-race-conditions-partial-construction)
+
 
 ## References
 

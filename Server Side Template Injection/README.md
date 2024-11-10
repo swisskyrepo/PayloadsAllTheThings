@@ -2,6 +2,7 @@
 
 > Template injection allows an attacker to include template code into an existing (or not) template. A template engine makes designing HTML pages easier by using static template files which at runtime replaces variables/placeholders with actual values in the HTML pages
 
+
 ## Summary
 
 - [Tools](#tools)
@@ -10,6 +11,7 @@
     - [Inject Template Syntax](#inject-template-syntax)
     - [Enumerate the Template Engine](#enumerate-the-template-engine)
     - [Escalate to Code Execution](#escalate-to-code-execution)
+- [Labs](#labs)
 - [References](#references)
 
 
@@ -83,6 +85,13 @@ Based on the successful response, the attacker determines which template engine 
 ### Escalate to Code Execution
 
 Once the template engine is identified, the attacker injects more complex expressions, aiming to execute server-side commands or arbitrary code. 
+
+
+## Labs
+
+* [Root Me - Java - Server-side Template Injection](https://www.root-me.org/en/Challenges/Web-Server/Java-Server-side-Template-Injection)
+* [Root Me - Python - Server-side Template Injection Introduction](https://www.root-me.org/en/Challenges/Web-Server/Python-Server-side-Template-Injection-Introduction)
+* [Root Me - Python - Blind SSTI Filters Bypass](https://www.root-me.org/en/Challenges/Web-Server/Python-Blind-SSTI-Filters-Bypass)
 
 
 ## References

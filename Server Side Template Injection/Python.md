@@ -1,5 +1,8 @@
 # Server Side Template Injection - Python
 
+> Server-Side Template Injection (SSTI)  is a vulnerability that arises when an attacker can inject malicious input into a server-side template, causing arbitrary code execution on the server. In Python, SSTI can occur when using templating engines such as Jinja2, Mako, or Django templates, where user input is included in templates without proper sanitization.
+
+
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
@@ -31,6 +34,7 @@
 - [Mako](#mako)
     - [Mako - Remote Command Execution](#mako---remote-command-execution)
 - [References](#references)
+
 
 ## Templating Libraries
 

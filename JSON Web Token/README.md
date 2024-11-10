@@ -2,7 +2,8 @@
 
 > JSON Web Token (JWT) is an open standard (RFC 7519) that defines a compact and self-contained way for securely transmitting information between parties as a JSON object. This information can be verified and trusted because it is digitally signed.
 
-## Summary 
+
+## Summary
 
 - [Tools](#tools)
 - [JWT Format](#jwt-format)
@@ -23,6 +24,7 @@
 - [JWT Claims](#jwt-claims)
     - [JWT kid Claim Misuse](#jwt-kid-claim-misuse)
     - [JWKS - jku header injection](#jwks---jku-header-injection)
+- [Labs](#labs)
 - [References](#references)
 
 
@@ -509,6 +511,14 @@ You should create your own key pair for this attack and host it. It should look 
 * [PortSwigger - JWT authentication bypass via jwk header injection](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jwk-header-injection)
 * [PortSwigger - JWT authentication bypass via jku header injection](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-jku-header-injection)
 * [PortSwigger - JWT authentication bypass via kid header path traversal](https://portswigger.net/web-security/jwt/lab-jwt-authentication-bypass-via-kid-header-path-traversal)
+* [Root Me - JWT - Introduction](https://www.root-me.org/fr/Challenges/Web-Serveur/JWT-Introduction)
+* [Root Me - JWT - Revoked token](https://www.root-me.org/en/Challenges/Web-Server/JWT-Revoked-token)
+* [Root Me - JWT - Weak secret](https://www.root-me.org/en/Challenges/Web-Server/JWT-Weak-secret)
+* [Root Me - JWT - Unsecure File Signature](https://www.root-me.org/en/Challenges/Web-Server/JWT-Unsecure-File-Signature)
+* [Root Me - JWT - Public key](https://www.root-me.org/en/Challenges/Web-Server/JWT-Public-key)
+* [Root Me - JWT - Header Injection](https://www.root-me.org/en/Challenges/Web-Server/JWT-Header-Injection)
+* [Root Me - JWT - Unsecure Key Handling](https://www.root-me.org/en/Challenges/Web-Server/JWT-Unsecure-Key-Handling)
+
 
 ## References
 

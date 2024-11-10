@@ -5,7 +5,6 @@ An ORM leak vulnerability occurs when sensitive information, such as database st
 
 ## Summary
 
-* [CVE](#cve)
 * [Django (Python)](#django-python)
     * [Query filter](#query-filter)
     * [Relational Filtering](#relational-filtering)
@@ -17,14 +16,8 @@ An ORM leak vulnerability occurs when sensitive information, such as database st
         * [One-to-One](#one-to-one-1)
         * [Many-to-Many](#many-to-many-1)
 * [Ransack (Ruby)](#ransack-ruby)
-* [Resources](#resources)
-
-
-## CVE
-
-* [CVE-2023-47117: Label Studio ORM Leak](https://github.com/HumanSignal/label-studio/security/advisories/GHSA-6hjj-gq77-j4qw)
-* [CVE-2023-31133: Ghost CMS ORM Leak](https://github.com/TryGhost/Ghost/security/advisories/GHSA-r97q-ghch-82j9)
-* [CVE-2023-30843: Payload CMS ORM Leak](https://github.com/payloadcms/payload/security/advisories/GHSA-35jj-vqcf-f2jf)
+* [CVE](#cve)
+* [References](#references)
 
 
 ## Django (Python)
@@ -233,7 +226,14 @@ Only in Ransack < `4.0.0`.
     ```
 
 
-## Resources
+## CVE
+
+* [CVE-2023-47117: Label Studio ORM Leak](https://github.com/HumanSignal/label-studio/security/advisories/GHSA-6hjj-gq77-j4qw)
+* [CVE-2023-31133: Ghost CMS ORM Leak](https://github.com/TryGhost/Ghost/security/advisories/GHSA-r97q-ghch-82j9)
+* [CVE-2023-30843: Payload CMS ORM Leak](https://github.com/payloadcms/payload/security/advisories/GHSA-35jj-vqcf-f2jf)
+
+
+## References
 
 - [ORM Injection - HackTricks - July 30, 2024](https://book.hacktricks.xyz/pentesting-web/orm-injection)
 - [ORM Leak Exploitation Against SQLite - Louis Nyffenegger - July 30, 2024](https://pentesterlab.com/blog/orm-leak-with-sqlite3)

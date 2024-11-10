@@ -2,10 +2,11 @@
 
 > NoSQL databases provide looser consistency restrictions than traditional SQL databases. By requiring fewer relational constraints and consistency checks, NoSQL databases often offer performance and scaling benefits. Yet these databases are still potentially vulnerable to injection attacks, even if they aren't using the traditional SQL syntax.
 
+
 ## Summary
 
 * [Tools](#tools)
-* [Exploit](#exploits)
+* [Methodology](#methodology)
     * [Authentication Bypass](#authentication-bypass)
     * [Extract length information](#extract-length-information)
     * [Extract data information](#extract-data-information)
@@ -14,7 +15,9 @@
     * [POST with urlencoded body](#post-with-urlencoded-body)
     * [GET](#get)
 * [MongoDB Payloads](#mongodb-payloads)
+* [Labs](#references)
 * [References](#references)
+
 
 ## Tools
 
@@ -23,7 +26,7 @@
 * [matrix/Burp-NoSQLiScanner](https://github.com/matrix/Burp-NoSQLiScanner) - This extension provides a way to discover NoSQL injection vulnerabilities. 
 
 
-## Exploit
+## Methodology
 
 ### Authentication Bypass
 
@@ -212,6 +215,12 @@ db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emi
 ";return(true);var xyz='a
 0;return true
 ```
+
+
+## Labs
+
+* [Root Me - NoSQL injection - Authentication](https://www.root-me.org/en/Challenges/Web-Server/NoSQL-injection-Authentication)
+* [Root Me - NoSQL injection - Blind](https://www.root-me.org/en/Challenges/Web-Server/NoSQL-injection-Blind)
 
 
 ## References

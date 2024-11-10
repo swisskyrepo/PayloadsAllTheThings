@@ -4,12 +4,12 @@
 
 ## Summary
 
-* [Exploit](#exploit)
+* [Methodology](#methodology)
 * [Labs](#labs)
 * [References](#references)
 
 
-## Exploit
+## Methodology
 
 Mass assignment vulnerabilities are most common in web applications that use Object-Relational Mapping (ORM) techniques or functions to map user input to object properties, where properties can be updated all at once instead of individually. Many popular web development frameworks such as Ruby on Rails, Django, and Laravel (PHP) offer this functionality.
 

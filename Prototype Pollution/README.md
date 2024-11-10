@@ -6,14 +6,14 @@
 ## Summary
 
 * [Tools](#tools)
-* [Labs](#labs)
-* [Exploit](#exploit)
+* [Methodology](#methodology)
     * [Examples](#examples)
     * [Manual Testing](#manual-testing)
     * [Prototype Pollution via JSON input](#prototype-pollution-via-json-input)
     * [Prototype Pollution in URL](#prototype-pollution-in-url)
     * [Prototype Pollution Payloads](#prototype-pollution-payloads)
     * [Prototype Pollution Gadgets](#prototype-pollution-gadgets)
+* [Labs](#labs)
 * [References](#references)
 
 
@@ -27,13 +27,7 @@
 * [msrkp/PPScan](https://github.com/msrkp/PPScan) - Client Side Prototype Pollution Scanner 
 
 
-## Labs
-
-* [YesWeHack Dojo - Prototype Pollution](https://dojo-yeswehack.com/XSS/Training/Prototype-Pollution)
-* [PortSwigger - Prototype Pollution](https://portswigger.net/web-security/all-labs#prototype-pollution)
-
-
-## Exploit
+## Methodology
 
 In JavaScript, prototypes are what allow objects to inherit features from other objects. If an attacker is able to add or modify properties of `Object.prototype`, they can essentially affect all objects that inherit from that prototype, potentially leading to various kinds of security risks.
 
@@ -172,6 +166,12 @@ __proto__.baaebfc = baaebfc
 A "gadget" in the context of vulnerabilities typically refers to a piece of code or functionality that can be exploited or leveraged during an attack. When we talk about a "prototype pollution gadget," we're referring to a specific code path, function, or feature of an application that is susceptible to or can be exploited through a prototype pollution attack.
 
 Either create your own gadget using part of the source with [yeswehack/pp-finder](https://github.com/yeswehack/pp-finder), or try to use already discovered gadgets [yuske/server-side-prototype-pollution](https://github.com/yuske/server-side-prototype-pollution) / [BlackFan/client-side-prototype-pollution](https://github.com/BlackFan/client-side-prototype-pollution).
+
+
+## Labs
+
+* [YesWeHack Dojo - Prototype Pollution](https://dojo-yeswehack.com/XSS/Training/Prototype-Pollution)
+* [PortSwigger - Prototype Pollution](https://portswigger.net/web-security/all-labs#prototype-pollution)
 
 
 ## References

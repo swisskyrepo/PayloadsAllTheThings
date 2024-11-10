@@ -2,24 +2,19 @@
 
 > Un-validated redirects and forwards are possible when a web application accepts untrusted input that could cause the web application to redirect the request to a URL contained within untrusted input. By modifying untrusted URL input to a malicious site, an attacker may successfully launch a phishing scam and steal user credentials. Because the server name in the modified link is identical to the original site, phishing attempts may have a more trustworthy appearance. Un-validated redirect and forward attacks can also be used to maliciously craft a URL that would pass the application’s access control check and then forward the attacker to privileged functions that they would normally not be able to access.
 
+
 ## Summary
 
-* [Labs](#labs)
-* [Exploitation](#exploitation)
+* [Methodology](#methodology)
     * [HTTP Redirection Status Code](#http-redirection-status-code)
     * [Fuzzing](#fuzzing)
     * [Filter Bypass](#filter-bypass)
     * [Common injection parameters](#common-injection-parameters)
+* [Labs](#labs)
 * [References](#references)
 
 
-## Labs
-
-* [Root Me - HTTP - Open redirect](https://www.root-me.org/fr/Challenges/Web-Serveur/HTTP-Open-redirect)
-* [PortSwigger - DOM-based open redirection](https://portswigger.net/web-security/dom-based/open-redirection/lab-dom-open-redirection)
-
-
-## Exploitation
+## Methodology
 
 An open redirect vulnerability occurs when a web application or server uses unvalidated, user-supplied input to redirect users to other sites. This can allow an attacker to craft a link to the vulnerable site which redirects to a malicious site of their choosing.
 
@@ -189,6 +184,12 @@ http://www.example.com/redirect.php?url=javascript:prompt(1)
 ?continue={payload}
 ?return_path={payload}
 ```
+
+
+## Labs
+
+* [Root Me - HTTP - Open redirect](https://www.root-me.org/fr/Challenges/Web-Serveur/HTTP-Open-redirect)
+* [PortSwigger - DOM-based open redirection](https://portswigger.net/web-security/dom-based/open-redirection/lab-dom-open-redirection)
 
 
 ## References

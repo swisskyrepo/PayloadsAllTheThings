@@ -2,10 +2,11 @@
 
 > Uploaded files may pose a significant risk if not handled correctly. A remote attacker could send a multipart/form-data POST request with a specially-crafted filename or mime type and execute arbitrary code.
 
+
 ## Summary
 
 * [Tools](#tools)
-* [Exploits](#exploits)
+* [Methodology](#methodology)
     * [Defaults extensions](#defaults-extensions)
     * [Upload tricks](#upload-tricks)
     * [Filename vulnerabilities](#filename-vulnerabilities)
@@ -14,6 +15,7 @@
     * [Configuration Files](#configuration-files)
     * [CVE - ImageMagick](#cve---imagemagick)
     * [CVE - FFMpeg HLS](#cve---ffmpeg-hls)
+* [Labs](#labs)
 * [References](#references)
 
 
@@ -24,7 +26,7 @@
 - [ZAP/FileUpload](https://www.zaproxy.org/blog/2021-08-20-zap-fileupload-addon/) -  OWASP ZAP add-on for finding vulnerabilities in File Upload functionality.
 
 
-## Exploits
+## Methodology
 
 ![file-upload-mindmap.png](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/Upload%20Insecure%20Files/Images/file-upload-mindmap.png?raw=true)
 
@@ -290,7 +292,12 @@ More payloads in the folder `CVE FFmpeg HLS/`.
 
 ## Labs 
 
-* [Portswigger Labs on File Uploads](https://portswigger.net/web-security/all-labs#file-upload-vulnerabilities)
+* [PortSwigger - Labs on File Uploads](https://portswigger.net/web-security/all-labs#file-upload-vulnerabilities)
+* [Root Me - File upload - Double extensions](https://www.root-me.org/en/Challenges/Web-Server/File-upload-Double-extensions)
+* [Root Me - File upload - MIME type](https://www.root-me.org/en/Challenges/Web-Server/File-upload-MIME-type)
+* [Root Me - File upload - Null byte](https://www.root-me.org/en/Challenges/Web-Server/File-upload-Null-byte)
+* [Root Me - File upload - ZIP](https://www.root-me.org/en/Challenges/Web-Server/File-upload-ZIP)
+* [Root Me - File upload - Polyglot](https://www.root-me.org/en/Challenges/Web-Server/File-upload-Polyglot)
 
 
 ## References

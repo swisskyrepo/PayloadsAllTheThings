@@ -2,6 +2,7 @@
 
 > Hibernate ORM (Hibernate in short) is an object-relational mapping tool for the Java programming language. It provides a framework for mapping an object-oriented domain model to a relational database. - Wikipedia
 
+
 ## Summary
 
 * [HQL Comments](#hql-comments)
@@ -15,7 +16,6 @@
 * [Methods by DBMS](#methods-by-dbms)
 * [References](#references)
 
-:warning: Your input will always be between the percentage symbols: `%INJECT_HERE%`
 
 ## HQL Comments
 

@@ -1,5 +1,8 @@
 # MySQL Injection
 
+> MySQL Injection  is a type of security vulnerability that occurs when an attacker is able to manipulate the SQL queries made to a MySQL database by injecting malicious input. This vulnerability is often the result of improperly handling user input, allowing attackers to execute arbitrary SQL code that can compromise the database's integrity and security.
+
+
 ## Summary
 
 * [MYSQL Default Databases](#mysql-default-databases)

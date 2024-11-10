@@ -2,6 +2,7 @@
 
 > PHP is a loosely typed language, which means it tries to predict the programmer's intent and automatically converts variables to different types whenever it seems necessary. For example, a string containing only numbers can be treated as an integer or a float. However, this automatic conversion (or type juggling) can lead to unexpected results, especially when comparing variables using the '==' operator, which only checks for value equality (loose comparison), not type and value equality (strict comparison).
 
+
 ## Summary
 
 * [Loose Comparison](#loose-comparison)
@@ -9,7 +10,8 @@
 	* [NULL statements](#null-statements)
 	* [Loose Comparison](#loose-comparison)
 * [Magic Hashes](#magic-hashes)
-* [Exploit](#exploit)
+* [Methodology](#methodology)
+* [Labs](#labs)
 * [References](#references)
 
 
@@ -89,7 +91,7 @@ var_dump(sha1('aaO8zKZF') == sha1('aa3OFF9m'));
 ?>
 ```
 
-## Exploit
+## Methodology
 
 The vulnerability in the following code lies in the use of a loose comparison (!=) to validate the $cookie['hmac'] against the calculated `$hash`.
 
@@ -138,6 +140,11 @@ The exploitation phase is the following:
 	];
 	```
 4. In this case we assumed the key was a null string : `$key = '';`
+
+
+## Labs
+
+* [Root Me - PHP - type juggling](https://www.root-me.org/en/Challenges/Web-Server/PHP-type-juggling)
 
 
 ## References

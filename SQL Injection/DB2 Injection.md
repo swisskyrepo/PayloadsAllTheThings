@@ -2,6 +2,7 @@
 
 > IBM DB2 is a family of relational database management systems (RDBMS) developed by IBM. Originally created in the 1980s for mainframes, DB2 has evolved to support various platforms and workloads, including distributed systems, cloud environments, and hybrid deployments. 
 
+
 ## Summary
 
 * [DB2 Cheatsheet](#db2-cheatsheet)

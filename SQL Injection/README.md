@@ -1,13 +1,7 @@
 # SQL Injection
 
-> A SQL injection attack consists of insertion or "injection" of a SQL query via the input data from the client to the application.
+> SQL Injection (SQLi)  is a type of security vulnerability that allows an attacker to interfere with the queries that an application makes to its database. SQL Injection is one of the most common and severe types of web application vulnerabilities, enabling attackers to execute arbitrary SQL code on the database. This can lead to unauthorized data access, data manipulation, and, in some cases, full compromise of the database server.
 
-Attempting to manipulate SQL queries may have goals including:
-
-- Information Leakage
-- Disclosure of stored data
-- Manipulation of stored data
-- Bypassing authorization controls
 
 ## Summary
 
@@ -21,7 +15,8 @@ Attempting to manipulate SQL queries may have goals including:
     * [HQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/HQL%20Injection.md)
     * [DB2 Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/DB2%20Injection.md)
     * [SQLmap](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/SQLmap%20Cheatsheet.md)
-* [Entry point detection](#entry-point-detection)
+* [Tools](#tools)
+* [Entry Point Detection](#entry-point-detection)
 * [DBMS Identification](#dbms-identification)
 * [Authentication bypass](#authentication-bypass)
     * [Authentication Bypass (Raw MD5 SHA1)](#authentication-bypass-raw-md5-sha1)
@@ -33,6 +28,8 @@ Attempting to manipulate SQL queries may have goals including:
     * [No Comma Allowed](#no-comma-allowed)
     * [No Equal Allowed](#no-equal-allowed)
     * [Case modification](#case-modification)
+* [Labs](#labs)
+* [References](#references)
 
 
 ## Tools
@@ -41,7 +38,7 @@ Attempting to manipulate SQL queries may have goals including:
 * [r0oth3x49/ghauri](https://github.com/r0oth3x49/ghauri) - An advanced cross-platform tool that automates the process of detecting and exploiting SQL injection security flaws
 
 
-## Entry point detection
+## Entry Point Detection
 
 Detecting the entry point in SQL injection (SQLi) involves identifying locations in an application where user input is not properly sanitized before it is included in SQL queries.
 
@@ -358,6 +355,19 @@ Bypass using LIKE/NOT IN/IN/BETWEEN
 * [PortSwigger - SQL injection vulnerability allowing login bypass](https://portswigger.net/web-security/sql-injection/lab-login-bypass)
 * [PortSwigger - SQL injection with filter bypass via XML encoding](https://portswigger.net/web-security/sql-injection/lab-sql-injection-with-filter-bypass-via-xml-encoding)
 * [PortSwigger - SQL Labs](https://portswigger.net/web-security/all-labs#sql-injection)
+* [Root Me - SQL injection - Authentication](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-authentication)
+* [Root Me - SQL injection - Authentication - GBK](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-authentication-GBK)
+* [Root Me - SQL injection - String](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-String)
+* [Root Me - SQL injection - Numeric](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-Numeric)
+* [Root Me - SQL injection - Routed](https://www.root-me.org/en/Challenges/Web-Server/SQL-Injection-Routed)
+* [Root Me - SQL injection - Error](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-Error)
+* [Root Me - SQL injection - Insert](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-Insert)
+* [Root Me - SQL injection - File reading](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-File-reading)
+* [Root Me - SQL injection - Time based](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-Time-based)
+* [Root Me - SQL injection - Blind](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-Blind)
+* [Root Me - SQL injection - Second Order](https://www.root-me.org/en/Challenges/Web-Server/SQL-Injection-Second-Order)
+* [Root Me - SQL injection - Filter bypass](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-Filter-bypass)
+* [Root Me - SQL Truncation](https://www.root-me.org/en/Challenges/Web-Server/SQL-Truncation)
 
 
 ## References

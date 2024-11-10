@@ -1,4 +1,6 @@
-# Google BigQuery SQL Injection 
+# Google BigQuery SQL Injection
+
+> Google BigQuery SQL Injection  is a type of security vulnerability where an attacker can execute arbitrary SQL queries on a Google BigQuery database by manipulating user inputs that are incorporated into SQL queries without proper sanitization. This can lead to unauthorized data access, data manipulation, or other malicious activities.
 
 ## Summary
 
@@ -9,6 +11,7 @@
 * [BigQuery Boolean Based](#bigquery-boolean-based)
 * [BigQuery Time Based](#bigquery-time-based)
 * [References](#references)
+
 
 ## Detection
 
@@ -61,6 +64,7 @@ dataset_name.column_name` union all select CAST(@@project_id AS INT64) ORDER BY 
 ## BigQuery Time Based
 
 * Time based functions does not exist in the BigQuery syntax.
+
 
 ## References
 

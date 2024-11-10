@@ -1,5 +1,8 @@
 # MSSQL Injection
 
+> MSSQL Injection  is a type of security vulnerability that can occur when an attacker can insert or "inject" malicious SQL code into a query executed by a Microsoft SQL Server (MSSQL) database. This typically happens when user inputs are directly included in SQL queries without proper sanitization or parameterization. SQL Injection can lead to serious consequences such as unauthorized data access, data manipulation, and even gaining control over the database server. 
+
+
 ## Summary
 
 * [MSSQL Default Databases](#mssql-default-databases)

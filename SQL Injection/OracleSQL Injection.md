@@ -1,5 +1,8 @@
 # Oracle SQL Injection
 
+> Oracle SQL Injection  is a type of security vulnerability that arises when attackers can insert or "inject" malicious SQL code into SQL queries executed by Oracle Database. This can occur when user inputs are not properly sanitized or parameterized, allowing attackers to manipulate the query logic. This can lead to unauthorized access, data manipulation, and other severe security implications.
+
+
 ## Summary
 
 * [Oracle SQL Default Databases](#oracle-sql-default-databases)

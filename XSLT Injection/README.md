@@ -2,11 +2,11 @@
 
 > Processing an un-validated XSL stylesheet can allow an attacker to change the structure and contents of the resultant XML, include arbitrary files from the file system, or execute arbitrary code
 
+
 ## Summary
 
-- [Summary](#summary)
 - [Tools](#tools)
-- [Exploit](#exploit)
+- [Methodology](#methodology)
     - [Determine the vendor and version](#determine-the-vendor-and-version)
     - [External Entity](#external-entity)
     - [Read files and SSRF using document](#read-files-and-ssrf-using-document)
@@ -14,11 +14,18 @@
     - [Remote Code Execution with PHP wrapper](#remote-code-execution-with-php-wrapper)
     - [Remote Code Execution with Java](#remote-code-execution-with-java)
     - [Remote Code Execution with Native .NET](#remote-code-execution-with-native-net)
+- [Labs](#labs)
 - [References](#references)
+
 
 ## Tools
 
-## Exploit
+No known tools currently exist to assist with XSLT exploitation.
+
+* [TODO](#)
+
+
+## Methodology
 
 ### Determine the vendor and version
 
@@ -236,6 +243,11 @@ return proc.StandardOutput.ReadToEnd();
   </xsl:template>
 </xsl:stylesheet>
 ```
+
+
+## Labs
+
+- [Root Me - XSLT - Code execution](https://www.root-me.org/en/Challenges/Web-Server/XSLT-Code-execution)
 
 
 ## References

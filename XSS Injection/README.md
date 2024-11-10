@@ -2,9 +2,10 @@
 
 > Cross-site scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS enables attackers to inject client-side scripts into web pages viewed by other users.
 
+
 ## Summary
 
-- [Vulnerability Details](#vulnerability-details)
+- [Methodology](#methodology)
 - [Proof of Concept](#proof-of-concept)
     - [Data Grabber](#data-grabber)
     - [CORS](#cors)
@@ -38,10 +39,11 @@
     - [Blind XSS endpoint](#blind-xss-endpoint)
     - [Tips](#tips)
 - [Mutated XSS](#mutated-xss)
+- [Labs](#labs)
 - [References](#references)
 
 
-## Vulnerability Details
+## Methodology
 
 Cross-Site Scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS allows attackers to inject malicious code into a website, which is then executed in the browser of anyone who visits the site. This can allow attackers to steal sensitive information, such as user login credentials, or to perform other malicious actions.
 
@@ -556,6 +558,18 @@ Mutated XSS from Masato Kinugawa, used against DOMPurify component on Google Sea
 ## Labs
 
 * [PortSwigger Labs for XSS](https://portswigger.net/web-security/all-labs#cross-site-scripting)
+* [Root Me - XSS - Reflected](https://www.root-me.org/en/Challenges/Web-Client/XSS-Reflected)
+* [Root Me - XSS - Server Side](https://www.root-me.org/en/Challenges/Web-Server/XSS-Server-Side)
+* [Root Me - XSS - Stored 1](https://www.root-me.org/en/Challenges/Web-Client/XSS-Stored-1)
+* [Root Me - XSS - Stored 2](https://www.root-me.org/en/Challenges/Web-Client/XSS-Stored-2)
+* [Root Me - XSS - Stored - Filter Bypass](https://www.root-me.org/en/Challenges/Web-Client/XSS-Stored-filter-bypass)
+* [Root Me - XSS DOM Based - Introduction](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-Introduction)
+* [Root Me - XSS DOM Based - AngularJS](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-AngularJS)
+* [Root Me - XSS DOM Based - Eval](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-Eval)
+* [Root Me - XSS DOM Based - Filters Bypass](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-Filters-Bypass)
+* [Root Me - XSS - DOM Based](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based)
+* [Root Me - Self XSS - DOM Secrets](https://www.root-me.org/en/Challenges/Web-Client/Self-XSS-DOM-Secrets)
+* [Root Me - Self XSS - Race Condition](https://www.root-me.org/en/Challenges/Web-Client/Self-XSS-Race-Condition)
 
 
 ## References

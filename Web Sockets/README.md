@@ -1,11 +1,12 @@
 # Web Sockets
 
-> The WebSocket protocol allows a bidirectional and full-duplex communication between a client and a server
+> WebSocket is a communication protocol that provides full-duplex communication channels over a single, long-lived connection. This enables real-time, bi-directional communication between clients (typically web browsers) and servers through a persistent connection. WebSockets are commonly used for web applications that require frequent, low-latency updates, such as live chat applications, online gaming, real-time notifications, and financial trading platforms.
+
 
 ## Summary
 
 * [Tools](#tools)
-* [Exploit](#exploit)
+* [Methodology](#methodology)
     * [Using wsrepl](#using-wsrepl)
     * [Using ws-harness.py](#using-ws-harness-py)
 * [Cross-Site WebSocket Hijacking (CSWSH)](#cross-site-websocket-hijacking-cswsh)
@@ -19,7 +20,7 @@
 * [mfowl/ws-harness.py](https://gist.githubusercontent.com/mfowl/ae5bc17f986d4fcc2023738127b06138/raw/e8e82467ade45998d46cef355fd9b57182c3e269/ws.harness.py)
 
 
-## Exploit
+## Methodology
 
 ### Using wsrepl
 
@@ -131,6 +132,7 @@ in order to add this header.
 * [PortSwigger - Manipulating WebSocket messages to exploit vulnerabilities](https://portswigger.net/web-security/websockets/lab-manipulating-messages-to-exploit-vulnerabilities)
 * [PortSwigger - Cross-site WebSocket hijacking](https://portswigger.net/web-security/websockets/cross-site-websocket-hijacking/lab)
 * [PortSwigger - Manipulating the WebSocket handshake to exploit vulnerabilities](https://portswigger.net/web-security/websockets/lab-manipulating-handshake-to-exploit-vulnerabilities)
+* [Root Me - Web Socket - 0 protection](https://www.root-me.org/en/Challenges/Web-Client/Web-Socket-0-protection)
 
 
 ## References

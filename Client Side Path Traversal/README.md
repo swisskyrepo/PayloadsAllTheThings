@@ -65,6 +65,7 @@ Real-World Scenarios:
 ## Labs
 
 * [doyensec/CSPTPlayground](https://github.com/doyensec/CSPTPlayground) - CSPTPlayground is an open-source playground to find and exploit Client-Side Path Traversal (CSPT).
+* [Root Me - CSPT - The Ruler](https://www.root-me.org/en/Challenges/Web-Client/CSPT-The-Ruler)
 
 
 ## References

@@ -2,11 +2,12 @@
 
 > The vulnerability is exploited using a specially crafted archive that holds directory traversal filenames (e.g. ../../shell.php). The Zip Slip vulnerability can affect numerous archive formats, including tar, jar, war, cpio, apk, rar and 7z. The attacker can then overwrite executable files and either invoke them remotely or wait for the system or user to call them, thus achieving remote command execution on the victim’s machine. 
 
+
 ## Summary
 
 * [Tools](#tools)
-* [Detection](#detection)
-* [Exploits](#exploits)
+* [Methodology](#methodology)
+    * [Detection](#detection)
     * [Basic Exploit](#basic-exploit)
 * [Additional Notes](#additional-notes)
 
@@ -17,12 +18,12 @@
 - [usdAG/slipit](https://github.com/usdAG/slipit) - Utility for creating ZipSlip archives 
 
 
-## Detection
+## Methodology
+
+### Detection
 
 Any ZIP upload page on the application.
 
-
-## Exploits
 
 ### Basic Exploit
 
@@ -38,6 +39,7 @@ Creating a ZIP archive containing a symbolic link:
 ln -s ../../../index.php symindex.txt
 zip --symlinks test.zip symindex.txt
 ```
+
 
 ### Additional Notes
 

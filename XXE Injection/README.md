@@ -2,10 +2,10 @@
 
 > An XML External Entity attack is a type of attack against an application that parses XML input and allows XML entities. XML entities can be used to tell the XML parser to fetch specific content on the server.
 
+
 ## Summary
 
 - [Tools](#tools)
-- [Labs](#labs)
 - [Detect the vulnerability](#detect-the-vulnerability)
 - [Exploiting XXE to retrieve files](#exploiting-xxe-to-retrieve-files)
     - [Classic XXE](#classic-xxe)
@@ -35,6 +35,9 @@
     - [XXE inside XLSX file](#xxe-inside-xlsx-file)
     - [XXE inside DTD file](#xxe-inside-dtd-file)
 - [Windows Local DTD and Side Channel Leak to disclose HTTP response/file contents](#windows-local-dtd-and-side-channel-leak-to-disclose-http-responsefile-contents)
+- [Labs](#labs)
+- [References](#references)
+
 
 ## Tools
 
@@ -87,20 +90,6 @@
   ```ps1
   python ./otori.py --clone --module "G-XXE-Basic" --singleuri "file:///etc/passwd" --module-options "TEMPLATEFILE" "TARGETURL" "BASE64ENCODE" "DOCTYPE" "XMLTAG" --outputbase "./output-generic-solr" --overwrite --noerrorfiles --noemptyfiles --nowhitespacefiles --noemptydirs
   ```
-
-## Labs
-
-* [PortSwigger Labs for XXE](https://portswigger.net/web-security/all-labs#xml-external-entity-xxe-injection)
-    * [Exploiting XXE using external entities to retrieve files](https://portswigger.net/web-security/xxe/lab-exploiting-xxe-to-retrieve-files)
-    * [Exploiting XXE to perform SSRF attacks](https://portswigger.net/web-security/xxe/lab-exploiting-xxe-to-perform-ssrf)
-    * [Blind XXE with out-of-band interaction](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-interaction)
-    * [Blind XXE with out-of-band interaction via XML parameter entities](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-interaction-using-parameter-entities)
-    * [Exploiting blind XXE to exfiltrate data using a malicious external DTD](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-exfiltration)
-    * [Exploiting blind XXE to retrieve data via error messages](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-data-retrieval-via-error-messages)
-    * [Exploiting XInclude to retrieve files](https://portswigger.net/web-security/xxe/lab-xinclude-attack)
-    * [Exploiting XXE via image file upload](https://portswigger.net/web-security/xxe/lab-xxe-via-file-upload)
-    * [Exploiting XXE to retrieve data by repurposing a local DTD](https://portswigger.net/web-security/xxe/blind/lab-xxe-trigger-error-message-by-repurposing-local-dtd)
-* [GoSecure workshop - Advanced XXE Exploitation](https://gosecure.github.io/xxe-workshop) 
 
 
 ## Detect the vulnerability
@@ -729,6 +718,22 @@ From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
     %local_dtd;
   ]><xxx>cacat</xxx>
 ```
+
+## Labs
+
+* [Root Me - XML External Entity](https://www.root-me.org/en/Challenges/Web-Server/XML-External-Entity)
+* [PortSwigger Labs for XXE](https://portswigger.net/web-security/all-labs#xml-external-entity-xxe-injection)
+    * [Exploiting XXE using external entities to retrieve files](https://portswigger.net/web-security/xxe/lab-exploiting-xxe-to-retrieve-files)
+    * [Exploiting XXE to perform SSRF attacks](https://portswigger.net/web-security/xxe/lab-exploiting-xxe-to-perform-ssrf)
+    * [Blind XXE with out-of-band interaction](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-interaction)
+    * [Blind XXE with out-of-band interaction via XML parameter entities](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-interaction-using-parameter-entities)
+    * [Exploiting blind XXE to exfiltrate data using a malicious external DTD](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-out-of-band-exfiltration)
+    * [Exploiting blind XXE to retrieve data via error messages](https://portswigger.net/web-security/xxe/blind/lab-xxe-with-data-retrieval-via-error-messages)
+    * [Exploiting XInclude to retrieve files](https://portswigger.net/web-security/xxe/lab-xinclude-attack)
+    * [Exploiting XXE via image file upload](https://portswigger.net/web-security/xxe/lab-xxe-via-file-upload)
+    * [Exploiting XXE to retrieve data by repurposing a local DTD](https://portswigger.net/web-security/xxe/blind/lab-xxe-trigger-error-message-by-repurposing-local-dtd)
+* [GoSecure workshop - Advanced XXE Exploitation](https://gosecure.github.io/xxe-workshop) 
+
 
 ## References
 

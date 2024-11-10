@@ -1,5 +1,8 @@
 # Common WAF Bypass
 
+> WAFs are designed to filter out malicious content by inspecting incoming and outgoing traffic for patterns indicative of attacks. Despite their sophistication, WAFs often struggle to keep up with the diverse methods attackers use to obfuscate and modify their payloads to circumvent detection. 
+
+
 ## Summary
 
 * [Cloudflare](#cloudflare)
@@ -8,6 +11,7 @@
 * [Akamai WAF](#akamai-waf)
 * [WordFence WAF](#wordfence-waf)
 * [Fortiweb WAF](#fortiweb-waf)
+
 
 ## Cloudflare
 

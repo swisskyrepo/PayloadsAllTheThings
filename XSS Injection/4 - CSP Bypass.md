@@ -14,6 +14,7 @@
 - [Bypass CSP script-src data](#bypass-csp-script-src-data)
 - [Bypass CSP nonce](#bypass-csp-nonce)
 - [Bypass CSP header sent by PHP](#bypass-csp-header-sent-by-php)
+- [Labs](#labs)
 - [References](#references)
 
 
@@ -172,6 +173,15 @@ GET /?xss=<script>alert(1)</script>&a&a&a&a&a&a&a&a...[REPEATED &a 1000 times]&a
 
 Source: [@pilvar222](https://twitter.com/pilvar222/status/1784618120902005070)
 
+
+## Labs
+
+* [Root Me - CSP Bypass - Inline Code](https://www.root-me.org/en/Challenges/Web-Client/CSP-Bypass-Inline-code)
+* [Root Me - CSP Bypass - Nonce](https://www.root-me.org/en/Challenges/Web-Client/CSP-Bypass-Nonce)
+* [Root Me - CSP Bypass - Nonce 2](https://www.root-me.org/en/Challenges/Web-Client/CSP-Bypass-Nonce-2)
+* [Root Me - CSP Bypass - Dangling Markup](https://www.root-me.org/en/Challenges/Web-Client/CSP-Bypass-Dangling-markup)
+* [Root Me - CSP Bypass - Dangling Markup 2](https://www.root-me.org/en/Challenges/Web-Client/CSP-Bypass-Dangling-markup-2)
+* [Root Me - CSP Bypass - JSONP](https://www.root-me.org/en/Challenges/Web-Client/CSP-Bypass-JSONP)
 
 
 ## References

@@ -5,7 +5,7 @@
 
 ## Summary
 
-* [Examples](#examples)
+* [Methodology](#methodology)
     * [Review Feature Testing](#review-feature-testing)
     * [Discount Code Feature Testing](#discount-code-feature-testing)
     * [Delivery Fee Manipulation](#delivery-fee-manipulation)
@@ -17,7 +17,7 @@
 * [References](#references)
 
 
-## Examples
+## Methodology
 
 Unlike other types of security vulnerabilities like SQL injection or cross-site scripting (XSS), business logic errors do not rely on problems in the code itself (like unfiltered user input). Instead, they take advantage of the normal, intended functionality of the application, but use it in ways that the developer did not anticipate and that have undesired consequences.
 

@@ -5,21 +5,22 @@
 ## Summary
 
 * [Tools](#tools)
-* [Exploit](#exploitation)
+* [Methodology](#methodology)
+    * [NPM Example](#npm-example)
 * [References](#references)
 
 
 ## Tools
 
-* [Confused](https://github.com/visma-prodsec/confused)
+* [visma-prodsec/confused](https://github.com/visma-prodsec/confused) - Tool to check for dependency confusion vulnerabilities in multiple package management systems 
 
 
-## Exploit
+## Methodology
 
 Look for `npm`, `pip`, `gem` packages, the methodology is the same : you register a public package with the same name of private one used by the company and then you wait for it to be used.
 
 
-### NPM example
+### NPM Example
 
 * List all the packages (ie: package.json, composer.json, ...)
 * Find the package missing from https://www.npmjs.com/

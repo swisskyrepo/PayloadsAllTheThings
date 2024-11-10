@@ -24,9 +24,10 @@
 
 ## Tools
 
-* [Burp Suite](https://portswigger.net/burp)
-* [OWASP ZAP](https://github.com/zaproxy/zaproxy)
-* [Clickjack](https://github.com/machine1337/clickjack)
+* [portswigger/burp](https://portswigger.net/burp)
+* [zaproxy/zaproxy](https://github.com/zaproxy/zaproxy)
+* [machine1337/clickjack](https://github.com/machine1337/clickjack)
+
 
 ## Methodology
 

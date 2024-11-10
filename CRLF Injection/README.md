@@ -7,15 +7,18 @@
 
 ## Summary
 
-- [Add a cookie](#add-a-cookie)
-- [Add a cookie - XSS Bypass](#add-a-cookie---xss-bypass)
-- [Write HTML](#write-html)
-- [Filter Bypass](#filter-bypass)
-- [Labs](#labs)
-- [References](#references)
+* [Methodology](#methodology)
+    * [Add a cookie](#add-a-cookie)
+    * [Add a cookie - XSS Bypass](#add-a-cookie---xss-bypass)
+    * [Write HTML](#write-html)
+* [Filter Bypass](#filter-bypass)
+* [Labs](#labs)
+* [References](#references)
 
 
-## Add a cookie
+## Methodology
+
+### Add a cookie
 
 Requested page
 
@@ -39,7 +42,7 @@ x-xss-protection: 1; mode=block
 ```
 
 
-## Add a cookie - XSS Bypass
+### Add a cookie - XSS Bypass
 
 Requested page
 
@@ -71,7 +74,7 @@ X-XSS-Protection:0
 ```
 
 
-## Write HTML
+### Write HTML
 
 Requested page
 

@@ -6,7 +6,7 @@
 ## Summary
 
 * [Tools](#tools)
-* [Exploits](#exploits)
+* [Methodology](#methodology)
     * [Basic commands](#basic-commands)
     * [Chaining commands](#chaining-commands)
     * [Argument injection](#argument-injection)
@@ -46,7 +46,7 @@
 * [projectdiscovery/interactsh](https://github.com/projectdiscovery/interactsh) - An OOB interaction gathering server and client library
 
 
-## Exploits
+## Methodology
 
 Command injection, also known as shell injection, is a type of attack in which the attacker can execute arbitrary commands on the host operating system via a vulnerable application. This vulnerability can exist when an application passes unsafe user-supplied data (forms, cookies, HTTP headers, etc.) to a system shell. In this context, the system shell is a command-line interface that processes commands to be executed, typically on a Unix or Linux system.
 

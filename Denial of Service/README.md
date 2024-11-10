@@ -5,14 +5,17 @@
 
 ## Summary
 
-* [Examples](#examples)
+* [Methodology](#methodology)
     * [Locking Customer Accounts](#locking-customer-accounts)
     * [File Limits on FileSystem](#file-limits-on-filesystem)
     * [Memory Exhaustion - Technology Related](#memory-exhaustion---technology-related)
 * [References](#references)
 
 
-## Examples
+## Methodology
+
+Here are some examples of Denial of Service (DoS) attacks. These examples should serve as a reference for understanding the concept, but any DoS testing should be conducted cautiously, as it can disrupt the target environment and potentially result in loss of access or exposure of sensitive data.
+
 
 ### Locking Customer Accounts
 

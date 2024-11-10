@@ -7,7 +7,7 @@
 
 * [Tools](#tools)
 * [Requirements](#requirements)
-* [Exploitation](#exploitation)
+* [Methodology](#methodology)
     * [Origin Reflection](#origin-reflection)
     * [Null Origin](#null-origin)
     * [XSS on Trusted Origin](#xss-on-trusted-origin)
@@ -33,7 +33,7 @@
 * VICTIM HEADER> `Access-Control-Allow-Origin: https://evil.com` OR `Access-Control-Allow-Origin: null`
 
 
-## Exploitation
+## Methodology
 
 Usually you want to target an API endpoint. Use the following payload to exploit a CORS misconfiguration on target `https://victim.example.com/endpoint`.
 

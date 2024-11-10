@@ -1,22 +1,15 @@
-# Dom Clobbering
+# DOM Clobbering
 
 > DOM Clobbering is a technique where global variables can be overwritten or "clobbered" by naming HTML elements with certain IDs or names. This can cause unexpected behavior in scripts and potentially lead to security vulnerabilities.
 
 ## Summary
 
+* [Methodology](#methodology)
 * [Lab](#lab)
-* [Exploit](#exploit)
 * [References](#references)
 
 
-## Lab
-
-* [Lab: Exploiting DOM clobbering to enable XSS](https://portswigger.net/web-security/dom-based/dom-clobbering/lab-dom-xss-exploiting-dom-clobbering)
-* [Lab: Clobbering DOM attributes to bypass HTML filters](https://portswigger.net/web-security/dom-based/dom-clobbering/lab-dom-clobbering-attributes-to-bypass-html-filters)
-* [Lab: DOM clobbering test case protected by CSP](https://portswigger-labs.net/dom-invader/testcases/augmented-dom-script-dom-clobbering-csp/)
-
-
-## Exploit
+## Methodology
 
 Exploitation requires any kind of `HTML injection` in the page.
 
@@ -122,6 +115,13 @@ Exploitation requires any kind of `HTML injection` in the page.
 ## Tricks
 
 * DomPurify allows the protocol `cid:`, which doesn't encode double quote (`"`): `<a id=defaultAvatar><a id=defaultAvatar name=avatar href="cid:&quot;onerror=alert(1)//">`
+
+
+## Lab
+
+* [PortSwigger - Exploiting DOM clobbering to enable XSS](https://portswigger.net/web-security/dom-based/dom-clobbering/lab-dom-xss-exploiting-dom-clobbering)
+* [PortSwigger - Clobbering DOM attributes to bypass HTML filters](https://portswigger.net/web-security/dom-based/dom-clobbering/lab-dom-clobbering-attributes-to-bypass-html-filters)
+* [PortSwigger - DOM clobbering test case protected by CSP](https://portswigger-labs.net/dom-invader/testcases/augmented-dom-script-dom-clobbering-csp/)
 
 
 ## References

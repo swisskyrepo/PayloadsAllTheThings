@@ -5,7 +5,7 @@
 ## Summary
 
 * [Tools](#tools)
-* [Basic exploitation](#basic-exploitation)
+* [Methodology](#methodology)
     * [16 bits Unicode encoding](#16-bits-unicode-encoding)
     * [UTF-8 Unicode encoding](#utf-8-unicode-encoding)
     * [Bypass "../" replaced by ""](#bypass--replaced-by-)
@@ -21,15 +21,16 @@
 * [Labs](#labs)
 * [References](#references)
 
+
 ## Tools
 
-- [dotdotpwn - https://github.com/wireghoul/dotdotpwn](https://github.com/wireghoul/dotdotpwn)
+- [wireghoul/dotdotpwn](https://github.com/wireghoul/dotdotpwn) - The Directory Traversal Fuzzer 
     ```powershell
-    git clone https://github.com/wireghoul/dotdotpwn
     perl dotdotpwn.pl -h 10.10.10.10 -m ftp -t 300 -f /etc/shadow -s -q -b
     ```
 
-## Basic exploitation
+
+## Methodology
 
 We can use the `..` characters to access the parent directory, the following strings are several encoding that can help you bypass a poorly implemented filter.
 
@@ -258,12 +259,12 @@ The following log files are controllable and can be included with an evil payloa
 
 ## Labs
 
-* [File path traversal, simple case](https://portswigger.net/web-security/file-path-traversal/lab-simple)
-* [File path traversal, traversal sequences blocked with absolute path bypass](https://portswigger.net/web-security/file-path-traversal/lab-absolute-path-bypass)
-* [File path traversal, traversal sequences stripped non-recursively](https://portswigger.net/web-security/file-path-traversal/lab-sequences-stripped-non-recursively)
-* [File path traversal, traversal sequences stripped with superfluous URL-decode](https://portswigger.net/web-security/file-path-traversal/lab-superfluous-url-decode)
-* [File path traversal, validation of start of path](https://portswigger.net/web-security/file-path-traversal/lab-validate-start-of-path)
-* [File path traversal, validation of file extension with null byte bypass](https://portswigger.net/web-security/file-path-traversal/lab-validate-file-extension-null-byte-bypass)
+* [PortSwigger - File path traversal, simple case](https://portswigger.net/web-security/file-path-traversal/lab-simple)
+* [PortSwigger - File path traversal, traversal sequences blocked with absolute path bypass](https://portswigger.net/web-security/file-path-traversal/lab-absolute-path-bypass)
+* [PortSwigger - File path traversal, traversal sequences stripped non-recursively](https://portswigger.net/web-security/file-path-traversal/lab-sequences-stripped-non-recursively)
+* [PortSwigger - File path traversal, traversal sequences stripped with superfluous URL-decode](https://portswigger.net/web-security/file-path-traversal/lab-superfluous-url-decode)
+* [PortSwigger - File path traversal, validation of start of path](https://portswigger.net/web-security/file-path-traversal/lab-validate-start-of-path)
+* [PortSwigger - File path traversal, validation of file extension with null byte bypass](https://portswigger.net/web-security/file-path-traversal/lab-validate-file-extension-null-byte-bypass)
 
 
 ## References

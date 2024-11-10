@@ -5,7 +5,7 @@
 ## Summary
 
 * [Tools](#tools)
-* [Exploitation](#exploitation)
+* [Methodology](#methodology)
 * [Protection Bypasses](#protection-bypasses)
     * [0.0.0.0](#0000)
     * [CNAME](#CNAME)
@@ -15,11 +15,11 @@
 
 ## Tools
 
-- [Singularity of Origin](https://github.com/nccgroup/singularity) - is a tool to perform DNS rebinding attacks.
-- [Singularity of Origin Web Client](http://rebind.it/) (manager interface, port scanner and autoattack)
+- [nccgroup/singularity](https://github.com/nccgroup/singularity) - A DNS rebinding attack framework. 
+- [rebind.it](http://rebind.it/) - Singularity of Origin Web Client.
 
 
-## Exploitation
+## Methodology
 
 First, we need to make sure that the targeted service is vulnerable to DNS rebinding.
 It can be done with a simple curl request:
@@ -74,6 +74,7 @@ $ dig www.example.com +noall +answer
 ;; global options: +cmd
 localhost.example.com.            381     IN      CNAME   localhost.
 ```
+
 
 ## References
 

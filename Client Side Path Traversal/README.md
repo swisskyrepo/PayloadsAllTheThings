@@ -10,8 +10,9 @@
 ## Summary
 
 * [Tools](#tools)
-* [CSPT to XSS](#cspt-to-xss)
-* [CSPT to CSRF](#cspt-to-xss)
+* [Methodology](#methodology)
+    * [CSPT to XSS](#cspt-to-xss)
+    * [CSPT to CSRF](#cspt-to-xss)
 * [Labs](#labs)
 * [References](#references)
 
@@ -21,7 +22,9 @@
 * [doyensec/CSPTBurpExtension](https://github.com/doyensec/CSPTBurpExtension) - CSPT is an open-source Burp Suite extension to find and exploit Client-Side Path Traversal.
 
 
-## CSPT to XSS
+## Methodology
+
+### CSPT to XSS
 
 ![](https://matanber.com/images/blog/cspt-query-param.png)
 
@@ -35,7 +38,7 @@ A post-serving page calls the fetch function, sending a request to a URL with at
 * Final payload is `https://example.com/static/cms/news.html?newsitemid=../pricing/default.js?cb=alert(document.domain)//`
 
 
-## CSPT to CSRF
+### CSPT to CSRF
 
 A CSPT is redirecting legitimate HTTP requests, allowing the front end to add necessary tokens for API calls, such as authentication or CSRF tokens. This capability can potentially be exploited to circumvent existing CSRF protection measures.
 

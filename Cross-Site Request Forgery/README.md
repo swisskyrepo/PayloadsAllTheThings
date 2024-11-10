@@ -9,7 +9,7 @@
 * [Methodology](#methodology)
 * [Payloads](#payloads)
     * [HTML GET - Requiring User Interaction](#html-get---requiring-user-interaction)
-    * [HTML GET - No User Interaction)](#html-get---no-user-interaction)
+    * [HTML GET - No User Interaction](#html-get---no-user-interaction)
     * [HTML POST - Requiring User Interaction](#html-post---requiring-user-interaction)
     * [HTML POST - AutoSubmit - No User Interaction](#html-post---autosubmit---no-user-interaction)
     * [HTML POST - multipart/form-data with file upload - Requiring User Interaction](#html-post---multipartform-data-with-file-upload---requiring-user-interaction)
@@ -22,7 +22,7 @@
 
 ## Tools
 
-* [XSRFProbe - The Prime Cross Site Request Forgery Audit and Exploitation Toolkit.](https://github.com/0xInfection/XSRFProbe)
+* [0xInfection/XSRFProbe](https://github.com/0xInfection/XSRFProbe) - The Prime Cross Site Request Forgery Audit and Exploitation Toolkit.
 
 
 ## Methodology

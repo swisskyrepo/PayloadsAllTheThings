@@ -1,5 +1,8 @@
 # Mercurial
 
+> Mercurial  (also known as hg  from the chemical symbol for mercury) is a distributed version control system (DVCS) designed for efficiency and scalability. Developed by Matt Mackall and first released in 2005, Mercurial is known for its speed, simplicity, and ability to handle large codebases.
+
+
 ## Summary
 
 * [Tools](#tools)

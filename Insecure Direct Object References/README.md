@@ -1,19 +1,19 @@
 # Insecure Direct Object References
 
-> Insecure Direct Object References occur when an application provides direct access to objects based on user-supplied input. As a result of this vulnerability attackers can bypass authorization and access resources in the system directly, for example database records or files. - OWASP
+> Insecure Direct Object References (IDOR) is a security vulnerability that occurs when an application allows users to directly access or modify objects (such as files, database records, or URLs) based on user-supplied input, without sufficient access controls. This means that if a user changes a parameter value (like an ID) in a URL or API request, they might be able to access or manipulate data that they aren’t authorized to see or modify.
 
 
 ## Summary
 
 * [Tools](#tools)
-* [Labs](#labs)
-* [Exploit](#exploit)
+* [Methodology](#methodology)
     * [Numeric Value Parameter](#numeric-value-parameter)
     * [Common Identifiers Parameter](#common-identifiers-parameter) 
     * [Weak Pseudo Random Number Generator](#weak-pseudo-random-number-generator) 
     * [Hashed Parameter](#hashed-parameter)
     * [Wildcard Parameter](#wildcard-parameter)
     * [IDOR Tips](#idor-tips)
+* [Labs](#labs)
 * [References](#references)
 
 
@@ -24,12 +24,7 @@
 - [PortSwigger/BApp Store > Autorize](https://portswigger.net/bappstore/f9bbac8c4acf4aefa4d7dc92a991af2f)
 
 
-## Labs
-
-- [PortSwigger - Insecure Direct Object References](https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references)
-
-
-## Exploit
+## Methodology
 
 IDOR stands for Insecure Direct Object Reference. It's a type of security vulnerability that arises when an application provides direct access to objects based on user-supplied input. As a result, attackers can bypass authorization and access resources in the system directly, potentially leading to unauthorized information disclosure, modification, or deletion.
 
@@ -128,6 +123,11 @@ Send a wildcard (`*`, `%`, `.`, `_`) instead of an ID, some backend might respon
 * Change the content type: `XML → JSON`
 * Transform numerical values to arrays: `{"id":19} → {"id":[19]}`
 * Use Parameter Pollution: `user_id=hacker_id&user_id=victim_id`
+
+
+## Labs
+
+- [PortSwigger - Insecure Direct Object References](https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references)
 
 
 ## References

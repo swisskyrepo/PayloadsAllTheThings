@@ -1,4 +1,7 @@
-# .NET Serialization
+# .NET Deserialization
+
+> .NET serialization is the process of converting an object’s state into a format that can be easily stored or transmitted, such as XML, JSON, or binary. This serialized data can then be saved to a file, sent over a network, or stored in a database. Later, it can be deserialized to reconstruct the original object with its data intact. Serialization is widely used in .NET for tasks like caching, data transfer between applications, and session state management.
+
 
 ## Summary
 

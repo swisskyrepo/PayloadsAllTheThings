@@ -1,5 +1,7 @@
 # Python Deserialization
 
+> Python deserialization is the process of reconstructing Python objects from serialized data, commonly done using formats like JSON, pickle, or YAML. The pickle module is a frequently used tool for this in Python, as it can serialize and deserialize complex Python objects, including custom classes.
+
 ## Summary
 
 * [Detection](#detection)

@@ -2,15 +2,17 @@
 
 > Java RMI (Remote Method Invocation) is a Java API that allows an object running in one JVM (Java Virtual Machine) to invoke methods on an object running in another JVM, even if they're on different physical machines. RMI provides a mechanism for Java-based distributed computing.
 
+
 ## Summary
 
 * [Tools](#tools)
 * [Detection](#detection)
-* [Exploitation](#exploitation)
+* [Methodology](#methodology)
   * [RCE using beanshooter](#rce-using-beanshooter)
   * [RCE using sjet/mjet](#rce-using-sjet-or-mjet)
   * [RCE using Metasploit](#rce-using-metasploit)
 * [References](#references)
+
 
 ## Tools
 
@@ -18,6 +20,7 @@
 - [mogwailabs/mjet](https://github.com/mogwailabs/mjet)
 - [qtc-de/remote-method-guesser](https://github.com/qtc-de/remote-method-guesser)
 - [qtc-de/beanshooter](https://github.com/qtc-de/beanshooter) - JMX enumeration and attacking tool.
+
 
 ## Detection
 
@@ -35,7 +38,7 @@
   |     javax.management.remote.rmi.RMIServerImpl_Stub
   ```
 
-* Using [remote-method-guesser](https://github.com/qtc-de/remote-method-guesser):
+* Using [qtc-de/remote-method-guesser](https://github.com/qtc-de/remote-method-guesser):
   ```bash
   $ rmg scan 172.17.0.2 --ports 0-65535
   [+] Scanning 6225 Ports on 172.17.0.2 for RMI services.
@@ -60,7 +63,7 @@
   [...]
   ```
 
-* Using Metasploit
+* Using [rapid7/metasploit-framework](https://github.com/rapid7/metasploit-framework)
   ```bash
   use auxiliary/scanner/misc/java_rmi_server
   set RHOSTS <IPs>
@@ -68,7 +71,7 @@
   run
   ```
 
-## Exploitation
+## Methodology
 
 If a Java Remote Method Invocation (RMI) service is poorly configured, it becomes vulnerable to various Remote Code Execution (RCE) methods. One method involves hosting an MLet file and directing the JMX service to load MBeans from a distant server, achievable using tools like mjet or sjet. The remote-method-guesser tool is newer and combines RMI service enumeration with an overview of recognized attack strategies.
 
@@ -133,6 +136,7 @@ set RPORT <PORT>
 # configure also the payload if needed
 run
 ```
+
 
 ## References
 

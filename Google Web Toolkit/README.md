@@ -6,17 +6,17 @@
 ## Summary
 
 * [Tools](#tools)
-* [Enumerate](#enumerate)
+* [Methodology](#methodology)
 * [References](#references)
 
 
 ## Tools
 
-* [FSecureLABS/GWTMap](https://github.com/FSecureLABS/GWTMap)
-* [GDSSecurity/GWT-Penetration-Testing-Toolset](https://github.com/GDSSecurity/GWT-Penetration-Testing-Toolset)
+* [FSecureLABS/GWTMap](https://github.com/FSecureLABS/GWTMap) - GWTMap is a tool to help map the attack surface of Google Web Toolkit (GWT) based applications. 
+* [GDSSecurity/GWT-Penetration-Testing-Toolset](https://github.com/GDSSecurity/GWT-Penetration-Testing-Toolset) - A set of tools made to assist in penetration testing GWT applications. 
 
 
-## Enumerate
+## Methodology
 
 * Enumerate the methods of a remote application via it's bootstrap file and create a local backup of the code (selects permutation at random):
     ```ps1

@@ -2,26 +2,26 @@
 
 ## Summary
 
-* [Example](#example)
+* [Methodology](#methodology)
     * [Recovering file contents from .git/logs/HEAD](#recovering-file-contents-from-gitlogshead)
     * [Recovering file contents from .git/index](#recovering-file-contents-from-gitindex)
 * [Tools](#tools)
-* [Automatic recovery](#automatic-recovery)
-    * [git-dumper.py](#git-dumperpy)
-    * [diggit.py](#diggitpy)
-    * [GoGitDumper](#gogitdumper)
-    * [rip-git](#rip-git)
-    * [GitHack](#githack)
-    * [GitTools](#gittools)
-* [Harvesting secrets](#harvesting-secrets)
-    * [trufflehog](#trufflehog)
-    * [Yar](#yar)
-    * [Gitrob](#gitrob)
-    * [Gitleaks](#gitleaks)
+    * [Automatic recovery](#automatic-recovery)
+        * [git-dumper.py](#git-dumperpy)
+        * [diggit.py](#diggitpy)
+        * [GoGitDumper](#gogitdumper)
+        * [rip-git](#rip-git)
+        * [GitHack](#githack)
+        * [GitTools](#gittools)
+    * [Harvesting secrets](#harvesting-secrets)
+        * [trufflehog](#trufflehog)
+        * [Yar](#yar)
+        * [Gitrob](#gitrob)
+        * [Gitleaks](#gitleaks)
 * [Refererences]
 
 
-## Example
+## Methodology
 
 The following examples will create either a copy of the .git or a copy of the current commit.
 
@@ -30,6 +30,7 @@ Check for the following files, if they exist you can extract the .git folder.
 - .git/config
 - .git/HEAD
 - .git/logs/HEAD
+
 
 ### Recovering file contents from .git/logs/HEAD
 
@@ -83,6 +84,7 @@ Check for the following files, if they exist you can extract the .git folder.
   git cat-file -p cb6139863967a752f3402b3975e97a84d152fd8f
   ```
 
+
 ### Recovering file contents from .git/index
 
 Use the git index file parser https://pypi.python.org/pypi/gin (python3).
@@ -102,6 +104,7 @@ sha1 = 862a3e58d138d6809405aa062249487bee074b98
 name = CRLF injection/README.md
 sha1 = d7ef4d77741c38b6d3806e0c6a57bf1090eec141
 ```
+
 
 ## Tools
 
@@ -165,6 +168,7 @@ git clone https://github.com/internetwache/GitTools
 ./gitdumper.sh http://target.tld/.git/ /tmp/destdir
 git checkout -- .
 ```
+
 
 ### Harvesting secrets
 

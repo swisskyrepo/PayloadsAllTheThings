@@ -1,20 +1,20 @@
 # PHP Deserialization
 
-PHP Object Injection is an application level vulnerability that could allow an attacker to perform different kinds of malicious attacks, such as Code Injection, SQL Injection, Path Traversal and Application Denial of Service, depending on the context. The vulnerability occurs when user-supplied input is not properly sanitized before being passed to the unserialize() PHP function. Since PHP allows object serialization, attackers could pass ad-hoc serialized strings to a vulnerable unserialize() call, resulting in an arbitrary PHP object(s) injection into the application scope.
+> PHP Object Injection is an application level vulnerability that could allow an attacker to perform different kinds of malicious attacks, such as Code Injection, SQL Injection, Path Traversal and Application Denial of Service, depending on the context. The vulnerability occurs when user-supplied input is not properly sanitized before being passed to the unserialize() PHP function. Since PHP allows object serialization, attackers could pass ad-hoc serialized strings to a vulnerable unserialize() call, resulting in an arbitrary PHP object(s) injection into the application scope.
 
 
 ## Summary
 
-* [General concept](#general-concept)
-* [Authentication bypass](#authentication-bypass)
+* [General Concept](#general-concept)
+* [Authentication Bypass](#authentication-bypass)
 * [Object Injection](#object-injection)
-* [Finding and using gadgets](#finding-and-using-gadgets)
+* [Finding and Using Gadgets](#finding-and-using-gadgets)
 * [Phar Deserialization](#phar-deserialization)
-* [Real world examples](#real-world-examples)
+* [Real World Examples](#real-world-examples)
 * [References](#references)
 
 
-## General concept
+## General Concept
 
 The following magic methods will help you for a PHP Object injection
 
@@ -62,9 +62,10 @@ a:2:{i:0;s:4:"XVWA";i:1;s:33:"Xtreme Vulnerable Web Application";}
 string(68) "O:18:"PHPObjectInjection":1:{s:6:"inject";s:17:"system('whoami');";}"
 ```
 
-## Authentication bypass
 
-### Type juggling
+## Authentication Bypass
+
+### Type Juggling
 
 Vulnerable code:
 
@@ -123,7 +124,7 @@ a:2:{s:10:"admin_hash";N;s:4:"hmac";R:2;}
 ```
 
 
-## Finding and using gadgets
+## Finding and Using Gadgets
 
 Also called `"PHP POP Chains"`, they can be used to gain RCE on the system.
 
@@ -236,7 +237,7 @@ A valid PHAR includes four elements:
     ```
 
 
-## Real world examples
+## Real World Examples
 
 * [Vanilla Forums ImportController index file_exists Unserialize Remote Code Execution Vulnerability - Steven Seeley](https://hackerone.com/reports/410237)
 * [Vanilla Forums Xenforo password splitHash Unserialize Remote Code Execution Vulnerability - Steven Seeley](https://hackerone.com/reports/410212)

@@ -2,12 +2,13 @@
 
 > Web applications often have hidden or undocumented parameters that are not exposed in the user interface. Fuzzing can help discover these parameters, which might be vulnerable to various attacks.
 
+
 ## Summary
 
 * [Tools](#tools)
-* [Exploit](#exploit)
-    * [Bruteforce parameters](#bruteforce-parameters)
-    * [Old parameters](#old-parameters)
+* [Methodology](#methodology)
+    * [Bruteforce Parameters](#bruteforce-parameters)
+    * [Old Parameters](#old-parameters)
 * [References](#references)
 
 
@@ -20,9 +21,9 @@
 * [devanshbatham/ParamSpider](https://github.com/devanshbatham/ParamSpider) - Mining URLs from dark corners of Web Archives for bug hunting/fuzzing/further probing
 
 
-## Exploit
+## Methodology
 
-### Bruteforce parameters
+### Bruteforce Parameters
 
 * Use wordlists of common parameters and send them, look for unexpected behavior from the backend. 
     ```ps1
@@ -39,7 +40,7 @@ Wordlist examples:
 - [samlists/sam-cc-parameters-mixedcase-all.txt](https://github.com/the-xentropy/samlists/blob/main/sam-cc-parameters-mixedcase-all.txt)
 
 
-### Old parameters
+### Old Parameters
 
 Explore all the URL from your targets to find old parameters.
 

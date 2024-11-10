@@ -1,8 +1,19 @@
 # Headless Browser
 
-A headless browser is a web browser without a graphical user interface. It works just like a regular browser, such as Chrome or Firefox, by interpreting HTML, CSS, and JavaScript, but it does so in the background, without displaying any visuals.
+> A headless browser is a web browser without a graphical user interface. It works just like a regular browser, such as Chrome or Firefox, by interpreting HTML, CSS, and JavaScript, but it does so in the background, without displaying any visuals.
 
-Headless browsers are primarily used for automated tasks, such as web scraping, testing, and running scripts. They are particularly useful in situations where a full-fledged browser is not needed, or where resources (like memory or CPU) are limited.
+> Headless browsers are primarily used for automated tasks, such as web scraping, testing, and running scripts. They are particularly useful in situations where a full-fledged browser is not needed, or where resources (like memory or CPU) are limited.
+
+
+## Summary
+
+* [Headless Commands](#headless-commands)
+* [Local File Read](#local-file-read)
+* [Debugging Port ](#debugging-port)
+* [Network](#network)
+    * [Port Scanning](#port-scanning)
+    * [DNS Rebinding](#dns-rebinding)
+* [References](#references)
 
 
 ## Headless Commands

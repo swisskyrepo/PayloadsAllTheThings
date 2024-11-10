@@ -1,14 +1,18 @@
 # YAML Deserialization
 
+> YAML deserialization is the process of converting YAML-formatted data back into objects in programming languages like Python, Ruby, or Java. YAML (YAML Ain't Markup Language) is popular for configuration files and data serialization because it is human-readable and supports complex data structures.
+
+
 ## Summary
 
 * [Tools](#tools)
-* [Exploit](#exploit)
+* [Methodology](#methodology)
     * [PyYAML](#pyyaml)
     * [ruamel.yaml](#ruamelyaml)
     * [Ruby](#ruby)
     * [SnakeYAML](#snakeyaml)
 * [References](#references)
+
 
 ## Tools
 
@@ -17,7 +21,7 @@
 * [mbechler/marshalsec](https://github.com/mbechler/marshalsec) - Java Unmarshaller Security - Turning your data into code execution
 
 
-## Exploit
+## Methodology
 
 ### PyYAML
 

@@ -13,7 +13,7 @@
   - [Enumerate Database Schema via Suggestions](#enumerate-database-schema-via-suggestions)
   - [Enumerate the types' definition](#enumerate-the-types-definition)
   - [List path to reach a type](#list-path-to-reach-a-type)
-- [Exploit](#exploit)
+- [Methodology](#methodology)
   - [Extract data](#extract-data)
   - [Extract data using edges/nodes](#extract-data-using-edgesnodes)
   - [Extract data using projections](#extract-data-using-projections)
@@ -24,6 +24,7 @@
 - [Injections](#injections)
   - [NOSQL injection](#nosql-injection)
   - [SQL injection](#sql-injection)
+- [Labs](#labs)
 - [References](#references)
 
 
@@ -243,7 +244,7 @@ Found 27 ways to reach the "Skill" node from the "Query" node:
 ```
 
 
-## Exploit
+## Methodology
 
 ### Extract data
 
@@ -382,6 +383,19 @@ Simple SQL injection inside a graphql field.
 ```powershell
 curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%3BSELECT%201%3BSELECT%20pg_sleep\(30\)%3B--%27
 ```
+
+
+## Labs
+
+* [PortSwigger - Accessing private GraphQL posts](https://portswigger.net/web-security/graphql/lab-graphql-reading-private-posts)
+* [PortSwigger - Accidental exposure of private GraphQL fields](https://portswigger.net/web-security/graphql/lab-graphql-accidental-field-exposure)
+* [PortSwigger - Finding a hidden GraphQL endpoint](https://portswigger.net/web-security/graphql/lab-graphql-find-the-endpoint)
+* [PortSwigger - Bypassing GraphQL brute force protections](https://portswigger.net/web-security/graphql/lab-graphql-brute-force-protection-bypass)
+* [PortSwigger - Performing CSRF exploits over GraphQL](https://portswigger.net/web-security/graphql/lab-graphql-csrf-via-graphql-api)
+* [Root Me - GraphQL - Introspection](https://www.root-me.org/fr/Challenges/Web-Serveur/GraphQL-Introspection)
+* [Root Me - GraphQL - Injection](https://www.root-me.org/fr/Challenges/Web-Serveur/GraphQL-Injection)
+* [Root Me - GraphQL - Backend injection](https://www.root-me.org/fr/Challenges/Web-Serveur/GraphQL-Backend-injection)
+* [Root Me - GraphQL - Mutation](https://www.root-me.org/fr/Challenges/Web-Serveur/GraphQL-Mutation)
 
 
 ## References

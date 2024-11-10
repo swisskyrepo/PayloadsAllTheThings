@@ -1,14 +1,17 @@
 # Node Deserialization
 
+> Node.js deserialization refers to the process of reconstructing JavaScript objects from a serialized format, such as JSON, BSON, or other formats that represent structured data. In Node.js applications, serialization and deserialization are commonly used for data storage, caching, and inter-process communication.
+
+
 ## Summary
 
-* [Exploit](#exploit)
+* [Methodology](#methodology)
     * [node-serialize](#node-serialize)
     * [funcster](#funcster)
 * [References](#references)
 
 
-## Exploit
+## Methodology
 
 * In Node source code, look for:
     * `node-serialize`
@@ -47,6 +50,6 @@
 
 ## References
 
-- [CVE-2017-5941 - NATIONAL VULNERABILITY DATABASE - February 9, 2017](https://nvd.nist.gov/vuln/detail/CVE-2017-5941)
+- [CVE-2017-5941 - National Vulnerability Database - February 9, 2017](https://nvd.nist.gov/vuln/detail/CVE-2017-5941)
 - [Exploiting Node.js deserialization bug for Remote Code Execution (CVE-2017-5941) - Ajin Abraham - October 31, 2018](https://www.exploit-db.com/docs/english/41289-exploiting-node.js-deserialization-bug-for-remote-code-execution.pdf)
 - [NodeJS Deserialization - gonczor - January 8, 2020](https://blacksheephacks.pl/nodejs-deserialization/)

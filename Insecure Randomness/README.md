@@ -1,14 +1,53 @@
 # Insecure Randomness
 
+> Insecure randomness refers to the weaknesses associated with random number generation in computing, particularly when such randomness is used for security-critical purposes. Vulnerabilities in random number generators (RNGs) can lead to predictable outputs that can be exploited by attackers, resulting in potential data breaches or unauthorized access. 
+
+
 ## Summary
 
+* [Methodology](#methodology)
+* [Time-Based Seeds](#time-based-seeds)
 * [GUID / UUID](#guid--uuid)
     * [GUID Versions](#guid-versions)
 * [Mongo ObjectId](#mongo-objectid)
 * [Uniqid](#uniqid)
 * [mt_rand](#mt_rand)
-* [Other](#other)
+* [Custom Algorithms](#custom-algorithms)
 * [References](#references)
+
+
+## Methodology
+
+Insecure randomness arises when the source of randomness or the method of generating random values is not sufficiently unpredictable. This can lead to predictable outputs, which can be exploited by attackers. Below, we examine common methods that are prone to insecure randomness, including time-based seeds, GUIDs, UUIDs, MongoDB ObjectIds, and the `uniqid()` function.
+
+
+## Time-Based Seeds
+
+Many random number generators (RNGs) use the current system time (e.g., milliseconds since epoch) as a seed. This approach can be insecure because the seed value can be easily predicted, especially in automated or scripted environments.
+
+```py
+import random
+import time
+
+seed = int(time.time())
+random.seed(seed)
+print(random.randint(1, 100))
+```
+
+The RNG is seeded with the current time, making it predictable for anyone who knows or can estimate the seed value.
+By knowing the exact time, an attacker can regenerate the correct random value, here is an example for the date `2024-11-10 13:37`.
+
+```python
+import random
+import time
+
+# Seed based on the provided timestamp
+seed = int(time.mktime(time.strptime('2024-11-10 13:37', '%Y-%m-%d %H:%M')))
+random.seed(seed)
+
+# Generate the random number
+print(random.randint(1, 100))
+```
 
 
 ## GUID / UUID
@@ -148,12 +187,16 @@ Breaking mt_rand() with two output values and no bruteforce.
 ```
 
 
-## Other
+## Custom Algorithms
 
-Other bad ideas that are sometimes shipped into production.
+Creating your own randomness algorithm is generally not recommended. Below are some examples found on GitHub or StackOverflow that are sometimes used in production, but may not be reliable or secure.
 
 * `$token = md5($emailId).rand(10,9999);`
 * `$token = md5(time()+123456789 % rand(4000, 55000000));`
+
+
+
+### Tools
 
 Generic identification and sandwitch attack: 
 

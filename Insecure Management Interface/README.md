@@ -1,5 +1,10 @@
 # Insecure Management Interface
 
+> Insecure Management Interface refers to vulnerabilities in administrative interfaces used for managing servers, applications, databases, or network devices. These interfaces often control sensitive settings and can have powerful access to system configurations, making them prime targets for attackers.
+
+> Insecure Management Interfaces may lack proper security measures, such as strong authentication, encryption, or IP restrictions, allowing unauthorized users to potentially gain control over critical systems. Common issues include using default credentials, unencrypted communications, or exposing the interface to the public internet.
+
+
 ## Summary
 
 * [Springboot-Actuator](#springboot-actuator)
@@ -27,11 +32,13 @@ Note: Sensitive endpoints will require a username/password when they are accesse
 
 Since Springboot 2.X only `/health` and `/info` are enabled by default.
 
+
 ### Remote Code Execution via `/env`
 
 Spring is able to load external configurations in the YAML format.
 The YAML config is parsed with the SnakeYAML library, which is susceptible to deserialization attacks.
 In other words, an attacker can gain remote code execution by loading a malicious config file.
+
 
 #### Steps
 

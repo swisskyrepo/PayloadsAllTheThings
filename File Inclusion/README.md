@@ -41,6 +41,7 @@
 - [LFI to RCE via PHP sessions](#lfi-to-rce-via-php-sessions)
 - [LFI to RCE via PHP PEARCMD](#lfi-to-rce-via-php-pearcmd)
 - [LFI to RCE via credentials files](#lfi-to-rce-via-credentials-files)
+- [Labs](#labs)
 - [References](#references)
 
 
@@ -659,6 +660,14 @@ Then crack the hashes inside in order to login via SSH on the machine.
 
 Another way to gain SSH access to a Linux machine through LFI is by reading the private key file, id_rsa.
 If SSH is active check which user is being used `/proc/self/status` and `/etc/passwd` and try to access `/<HOME>/.ssh/id_rsa`.
+
+
+## Labs
+
+* [Root Me - Local File Inclusion](https://www.root-me.org/en/Challenges/Web-Server/Local-File-Inclusion)
+* [Root Me - Local File Inclusion - Double encoding](https://www.root-me.org/en/Challenges/Web-Server/Local-File-Inclusion-Double-encoding)
+* [Root Me - Remote File Inclusion](https://www.root-me.org/en/Challenges/Web-Server/Remote-File-Inclusion)
+* [Root Me - PHP - Filters](https://www.root-me.org/en/Challenges/Web-Server/PHP-Filters)
 
 
 ## References

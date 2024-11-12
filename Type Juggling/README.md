@@ -144,7 +144,8 @@ The exploitation phase is the following:
 
 ## Labs
 
-* [Root Me - PHP - type juggling](https://www.root-me.org/en/Challenges/Web-Server/PHP-type-juggling)
+* [Root Me - PHP - Type Juggling](https://www.root-me.org/en/Challenges/Web-Server/PHP-type-juggling)
+* [Root Me - PHP - Loose Comparison](https://www.root-me.org/en/Challenges/Web-Server/PHP-Loose-Comparison)
 
 
 ## References

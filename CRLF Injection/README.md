@@ -11,7 +11,7 @@
     * [Add a cookie](#add-a-cookie)
     * [Add a cookie - XSS Bypass](#add-a-cookie---xss-bypass)
     * [Write HTML](#write-html)
-* [Filter Bypass](#filter-bypass)
+    * [Filter Bypass](#filter-bypass)
 * [Labs](#labs)
 * [References](#references)
 
@@ -97,7 +97,7 @@ Content-Length: 34
 ```
 
 
-## Filter Bypass
+### Filter Bypass
 
 Using UTF-8 encoding
 
@@ -116,6 +116,7 @@ Remainder:
 ## Labs
 
 * [PortSwigger - HTTP/2 request splitting via CRLF injection](https://portswigger.net/web-security/request-smuggling/advanced/lab-request-smuggling-h2-request-splitting-via-crlf-injection)
+* [Root Me - CRLF](https://www.root-me.org/en/Challenges/Web-Server/CRLF)
 
 
 ## References

@@ -22,8 +22,8 @@
     - [JSON list based batching](#json-list-based-batching)
     - [Query name based batching](#query-name-based-batching)
 - [Injections](#injections)
-  - [NOSQL injection](#nosql-injection)
-  - [SQL injection](#sql-injection)
+    - [NOSQL injection](#nosql-injection)
+    - [SQL injection](#sql-injection)
 - [Labs](#labs)
 - [References](#references)
 

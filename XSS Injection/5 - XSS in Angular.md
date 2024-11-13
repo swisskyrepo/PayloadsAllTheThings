@@ -3,9 +3,9 @@
 ## Summary
 
 * [Client Side Template Injection](#client-side-template-injection)
-  * [Stored/Reflected XSS](#storedreflected-xss)
-  * [Advanced Bypassing XSS](#advanced-bypassing-xss)
-  * [Blind XSS](#blind-xss)
+    * [Stored/Reflected XSS](#storedreflected-xss)
+    * [Advanced Bypassing XSS](#advanced-bypassing-xss)
+    * [Blind XSS](#blind-xss)
 * [Automatic Sanitization](#automatic-sanitization)
 * [References](#references)
 

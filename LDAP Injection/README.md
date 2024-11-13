@@ -11,8 +11,8 @@
 * [Defaults attributes](#defaults-attributes)
 * [Exploiting userPassword attribute](#exploiting-userpassword-attribute)
 * [Scripts](#scripts)
-  * [Discover valid LDAP fields](#discover-valid-ldap-fields)
-  * [Special blind LDAP injection](#special-blind-ldap-injection)
+    * [Discover valid LDAP fields](#discover-valid-ldap-fields)
+    * [Special blind LDAP injection](#special-blind-ldap-injection)
 * [Labs](#labs)
 * [References](#references)
 

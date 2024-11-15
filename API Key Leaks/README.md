@@ -5,7 +5,7 @@
 ## Summary
 
 - [Tools](#tools)
-- [Exploit](#exploit)
+- [Methodology](#exploit)
     - [Google Maps](#google-maps)
     - [Algolia](#algolia)
     - [Slack API Token](#slack-api-token)
@@ -51,7 +51,7 @@
 - [d0ge/sign-saboteur](https://github.com/d0ge/sign-saboteur) - SignSaboteur is a Burp Suite extension for editing, signing, verifying various signed web tokens
 
 
-## Exploit
+## Methodology
 
 The following commands can be used to takeover accounts or extract personal information from the API using the leaked token.
 

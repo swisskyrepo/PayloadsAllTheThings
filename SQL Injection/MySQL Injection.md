@@ -43,8 +43,8 @@
     * [UNC Path - NTLM Hash Stealing](#unc-path---ntlm-hash-stealing)
 * [MYSQL WAF Bypass](#mysql-waf-bypass)
     * [Alternative to Information Schema](#alternative-to-information-schema)
-    * [Alternative to Version](#alternative-to-version)
-    * [Alternative to group_concat](#alternative-to-group_concat)
+    * [Alternative to VERSION](#alternative-to-version)
+    * [Alternative to GROUP_CONCAT](#alternative-to-group_concat)
     * [Scientific Notation](#scientific-notation)
     * [Conditional Comments](#conditional-comments)
     * [Wide Byte Injection (GBK)](#wide-byte-injection-gbk)
@@ -645,7 +645,7 @@ mysql> SHOW TABLES IN dvwa;
 ```
 
 
-### Alternative to Version
+### Alternative to VERSION
 
 ```sql
 mysql> SELECT @@innodb_version;
@@ -671,7 +671,7 @@ mysql> mysql> SELECT version();
 ```
 
 
-### Alternative to group_concat
+### Alternative to GROUP_CONCAT
 
 Requirement: `MySQL >= 5.7.22`
 

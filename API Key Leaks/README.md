@@ -1,166 +1,89 @@
 # API Key and Token Leaks
 
-> The API key is a unique identifier that is used to authenticate requests associated with your project. Some developers might hardcode them or leave it on public shares.
+> API keys and tokens are forms of authentication commonly used to manage permissions and access to both public and private services. Leaking these sensitive pieces of data can lead to unauthorized access, compromised security, and potential data breaches.
 
 ## Summary
 
 - [Tools](#tools)
 - [Methodology](#exploit)
-    - [Google Maps](#google-maps)
-    - [Algolia](#algolia)
-    - [Slack API Token](#slack-api-token)
-    - [Facebook Access Token](#facebook-access-token)
-    - [Github client id and client secret](#github-client-id-and-client-secret)
-    - [Twilio Account_sid and Auth Token](#twilio-account_sid-and-auth-token)
-    - [Twitter API Secret](#twitter-api-secret)
-    - [Twitter Bearer Token](#twitter-bearer-token)
-    - [Gitlab Personal Access Token](#gitlab-personal-access-token)
-    - [HockeyApp API Token](#hockeyapp-api-token)
-    - [Mapbox API Token](#mapbox-api-token)
+    - [Common Causes of Leaks](#common-causes-of-leaks)
+    - [Validate The API Key](#validate-the-api-key)
+- [References](#references)
 
 
 ## Tools
 
+- [aquasecurity/trivy](https://github.com/aquasecurity/trivy) - General purpose vulnerability and misconfiguration scanner which also searches for API keys/secrets
+- [blacklanternsecurity/badsecrets](https://github.com/blacklanternsecurity/badsecrets) - A library for detecting known or weak secrets on across many platforms
+- [d0ge/sign-saboteur](https://github.com/d0ge/sign-saboteur) - SignSaboteur is a Burp Suite extension for editing, signing, verifying various signed web tokens
+- [mazen160/secrets-patterns-db](https://github.com/mazen160/secrets-patterns-db) - Secrets Patterns DB: The largest open-source Database for detecting secrets, API keys, passwords, tokens, and more.
 - [momenbasel/KeyFinder](https://github.com/momenbasel/KeyFinder) - is a tool that let you find keys while surfing the web
 - [streaak/keyhacks](https://github.com/streaak/keyhacks) - is a repository which shows quick ways in which API keys leaked by a bug bounty program can be checked to see if they're valid
 - [trufflesecurity/truffleHog](https://github.com/trufflesecurity/truffleHog) - Find credentials all over the place
+- [projectdiscovery/nuclei-templates](https://github.com/projectdiscovery/nuclei-templates) - Use these templates to test an API token against many API service endpoints
+    ```powershell
+    nuclei -t token-spray/ -var token=token_list.txt
+    ```
+
+
+## Methodology
+
+* **API Keys**: Unique identifiers used to authenticate requests associated with your project or application.
+* **Tokens**: Security tokens (like OAuth tokens) that grant access to protected resources.
+     
+### Common Causes of Leaks
+
+* **Hardcoding in Source Code**: Developers may unintentionally leave API keys or tokens directly in the source code.
+
+    ```py     
+    # Example of hardcoded API key
+    api_key = "1234567890abcdef"
+    ```
+
+* **Public Repositories**: Accidentally committing sensitive keys and tokens to publicly accessible version control systems like GitHub.
+
     ```ps1
     ## Scan a Github Organization
     docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --org=trufflesecurity
     
     ## Scan a GitHub Repository, its Issues and Pull Requests
     docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/trufflesecurity/test_keys --issue-comments --pr-comments
-   
-    ## Scan a Docker image for verified secrets
+    ```
+
+* **Hardcoding in Docker Images**: API keys and credentials might be hardcoded in Docker images hosted on DockerHub or private registries.
+
+    ```ps1
+    # Scan a Docker image for verified secrets
     docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest docker --image trufflesecurity/secrets
     ```
-- [aquasecurity/trivy](https://github.com/aquasecurity/trivy) - General purpose vulnerability and misconfiguration scanner which also searches for API keys/secrets
-- [projectdiscovery/nuclei-templates](https://github.com/projectdiscovery/nuclei-templates) - Use these templates to test an API token against many API service endpoints
-    ```powershell
-    nuclei -t token-spray/ -var token=token_list.txt
-    ```
-- [blacklanternsecurity/badsecrets](https://github.com/blacklanternsecurity/badsecrets) - A library for detecting known or weak secrets on across many platforms
+
+* **Logs and Debug Information**: Keys and tokens might be inadvertently logged or printed during debugging processes.
+
+* **Configuration Files**: Including keys and tokens in publicly accessible configuration files (e.g., .env files, config.json, settings.py, or .aws/credentials.).
+
+
+### Validate The API Key
+
+If assistance is needed in identifying the service that generated the token, [mazen160/secrets-patterns-db](https://github.com/mazen160/secrets-patterns-db) can be consulted. It is the largest open-source database for detecting secrets, API keys, passwords, tokens, and more. This database contains regex patterns for various secrets.
+
+```yaml
+patterns:
+  - pattern:
+      name: AWS API Gateway
+      regex: '[0-9a-z]+.execute-api.[0-9a-z._-]+.amazonaws.com'
+      confidence: low
+  - pattern:
+      name: AWS API Key
+      regex: AKIA[0-9A-Z]{16}
+      confidence: high
+```
+
+Use [streaak/keyhacks](https://github.com/streaak/keyhacks) or read the documentation of the service to find a quick way to verify the validity of an API key.
+
+* **Example**: Telegram Bot API Token
+
     ```ps1
-    python examples/cli.py --url http://example.com/contains_bad_secret.html
-    python examples/cli.py eyJhbGciOiJIUzI1NiJ9.eyJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkJhZFNlY3JldHMiLCJleHAiOjE1OTMxMzM0ODMsImlhdCI6MTQ2NjkwMzA4M30.ovqRikAo_0kKJ0GVrAwQlezymxrLGjcEiW_s3UJMMCo
-    python ./badsecrets/examples/blacklist3r.py --viewstate /wEPDwUJODExMDE5NzY5ZGQMKS6jehX5HkJgXxrPh09vumNTKQ== --generator EDD8C9AE
-    python ./badsecrets/examples/telerik_knownkey.py --url http://vulnerablesite/Telerik.Web.UI.DialogHandler.aspx
-    python ./badsecrets/examples/symfony_knownkey.py --url https://localhost/
-    ```
-- [mazen160/secrets-patterns-db](https://github.com/mazen160/secrets-patterns-db) - Secrets Patterns DB: The largest open-source Database for detecting secrets, API keys, passwords, tokens, and more.
-- [d0ge/sign-saboteur](https://github.com/d0ge/sign-saboteur) - SignSaboteur is a Burp Suite extension for editing, signing, verifying various signed web tokens
-
-
-## Methodology
-
-The following commands can be used to takeover accounts or extract personal information from the API using the leaked token.
-
-### Google Maps 
-
-* [ozguralp/gmapsapiscanner/](https://github.com/ozguralp/gmapsapiscanner/) - Google Maps API Scanner
-
-|  Name                 |  Endpoint |
-| --------------------- | --------- |
-|  Static Maps          | [/maps/api/staticmap?key=KEY](https://maps.googleapis.com/maps/api/staticmap?center=45%2C10&zoom=7&size=400x400&key=KEY) |
-|  Streetview           | [/maps/api/streetview?key=KEY](https://maps.googleapis.com/maps/api/streetview?size=400x400&location=40.720032,-73.988354&fov=90&heading=235&pitch=10&key=KEY) |
-|  Embed                | [/maps/embed/v1/place?key=KEY](https://www.google.com/maps/embed/v1/place?q=place_id:ChIJyX7muQw8tokR2Vf5WBBk1iQ&key=KEY) |
-|  Directions           | [/maps/api/directions/json?key=KEY](https://maps.googleapis.com/maps/api/directions/json?origin=Disneyland&destination=Universal+Studios+Hollywood4&key=KEY) |
-|  Geocoding            | [/maps/api/geocode/json?key=KEY](https://maps.googleapis.com/maps/api/geocode/json?latlng=40,30&key=KEY) |
-|  Distance Matrix      | [/maps/api/distancematrix/json?key=KEY](https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.6905615%2C-73.9976592%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626%7C40.659569%2C-73.933783%7C40.729029%2C-73.851524%7C40.6860072%2C-73.6334271%7C40.598566%2C-73.7527626&key=KEY) |
-|  Find Place from Text | [/maps/api/place/findplacefromtext/json?key=KEY](https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=KEY) |
-|  Autocomplete         | [/maps/api/place/autocomplete/json?key=KEY](https://maps.googleapis.com/maps/api/place/autocomplete/json?input=Bingh&types=%28cities%29&key=KEY) |
-|  Elevation            | [/maps/api/elevation/json?key=KEY](https://maps.googleapis.com/maps/api/elevation/json?locations=39.7391536,-104.9847034&key=KEY)   |
-|  Timezone             | [/maps/api/timezone/json?key=KEY](https://maps.googleapis.com/maps/api/timezone/json?location=39.6034810,-119.6822510&timestamp=1331161200&key=KEY) |
-|  Roads                | [roads.googleapis.com/v1/nearestRoads?key=KEY](https://roads.googleapis.com/v1/nearestRoads?points=60.170880,24.942795&key=KEY) |
-|  Geolocate            | [www.googleapis.com/geolocation/v1/geolocate?key=KEY](https://www.googleapis.com/geolocation/v1/geolocate?key=KEY) |
-
-
-**Impact**:
-
-* Consuming the company's monthly quota or can over-bill with unauthorized usage of this service and do financial damage to the company
-* Conduct a denial of service attack specific to the service if any limitation of maximum bill control settings exist in the Google account
-
-
-### Algolia 
-
-```powershell
-curl --request PUT \
-  --url https://<application-id>-1.algolianet.com/1/indexes/<example-index>/settings \
-  --header 'content-type: application/json' \
-  --header 'x-algolia-api-key: <example-key>' \
-  --header 'x-algolia-application-id: <example-application-id>' \
-  --data '{"highlightPreTag": "<script>alert(1);</script>"}'
-```
-
-
-### Slack API Token
-
-```powershell
-curl -sX POST "https://slack.com/api/auth.test?token=xoxp-TOKEN_HERE&pretty=1"
-```
-
-
-### Facebook Access Token
-
-```powershell
-curl https://developers.facebook.com/tools/debug/accesstoken/?access_token=ACCESS_TOKEN_HERE&version=v3.2
-```
-
-
-### Github client id and client secret
-
-```powershell
-curl 'https://api.github.com/users/whatever?client_id=xxxx&client_secret=yyyy'
-```
-
-
-### Twilio Account_sid and Auth token
-
-```powershell
-curl -X GET 'https://api.twilio.com/2010-04-01/Accounts.json' -u ACCOUNT_SID:AUTH_TOKEN
-```
-
-
-### Twitter API Secret
-
-```powershell
-curl -u 'API key:API secret key' --data 'grant_type=client_credentials' 'https://api.twitter.com/oauth2/token'
-```
-
-
-### Twitter Bearer Token
-
-```powershell
-curl --request GET --url https://api.twitter.com/1.1/account_activity/all/subscriptions/count.json --header 'authorization: Bearer TOKEN'
-```
-
-
-### Gitlab Personal Access Token
-
-```powershell
-curl "https://gitlab.example.com/api/v4/projects?private_token=<your_access_token>"
-```
-
-
-### HockeyApp API Token
-
-```powershell
-curl -H "X-HockeyAppToken: ad136912c642076b0d1f32ba161f1846b2c" https://rink.hockeyapp.net/api/2/apps/2021bdf2671ab09174c1de5ad147ea2ba4
-```
-
-
-### Mapbox API Token
-
-A Mapbox API Token is a JSON Web Token (JWT). If the header of the JWT is `sk`, jackpot. If it's `pk` or `tk`, it's not worth your time.
-
-* Check token validity: 
-    ```ps1
-    curl "https://api.mapbox.com/tokens/v2?access_token=YOUR_MAPBOX_ACCESS_TOKEN"
-    ```
-    
-* Get list of all tokens associated with an account (only works if the token is a Secret Token (sk), and has the appropriate scope)
-    ```ps1
-    curl "https://api.mapbox.com/tokens/v2/MAPBOX_USERNAME_HERE?access_token=YOUR_MAPBOX_ACCESS_TOKEN"
+    curl https://api.telegram.org/bot<TOKEN>/getMe
     ```
 
 

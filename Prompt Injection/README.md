@@ -28,7 +28,7 @@ List of "payloads" prompts
 - [Jailbreak Chat](https://www.jailbreakchat.com)
 - [Inject My PDF](https://kai-greshake.de/posts/inject-my-pdf)
 - [Chat GPT "DAN" (and other "Jailbreaks")](https://gist.github.com/coolaj86/6f4f7b30129b0251f61fa7baaa881516)
-- [leondz/garak](https://github.com/leondz/garak) - LLM vulnerability scanner
+- [NVIDIA/garak](https://github.com/NVIDIA/garak) - LLM vulnerability scanner
 
 
 Challenges

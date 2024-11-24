@@ -11,7 +11,7 @@
     * [Origin Reflection](#origin-reflection)
     * [Null Origin](#null-origin)
     * [XSS on Trusted Origin](#xss-on-trusted-origin)
-    * [Wildcard Origin `*` without Credentials](#wildcard-origin--without-credentials)
+    * [Wildcard Origin without Credentials](#wildcard-origin-without-credentials)
     * [Expanding the Origin](#expanding-the-origin)
 * [Labs](#labs)
 * [References](#references)
@@ -19,11 +19,11 @@
 
 ## Tools
 
-* [s0md3v/Corsy - CORS Misconfiguration Scanner](https://github.com/s0md3v/Corsy/)
-* [chenjj/CORScanner - Fast CORS misconfiguration vulnerabilities scanner](https://github.com/chenjj/CORScanner)
-* [PostMessage POC Builder - @honoki](https://tools.honoki.net/postmessage.html)
-* [trufflesecurity/of-cors - Exploit CORS misconfigurations on the internal networks](https://github.com/trufflesecurity/of-cors) 
-* [omranisecurity/CorsOne - Fast CORS Misconfiguration Discovery Tool](https://github.com/omranisecurity/CorsOne) 
+* [s0md3v/Corsy](https://github.com/s0md3v/Corsy/) - CORS Misconfiguration Scanner
+* [chenjj/CORScanner](https://github.com/chenjj/CORScanner) - Fast CORS misconfiguration vulnerabilities scanner
+* [@honoki/PostMessage](https://tools.honoki.net/postmessage.html) - POC Builder
+* [trufflesecurity/of-cors](https://github.com/trufflesecurity/of-cors) - Exploit CORS misconfigurations on the internal networks
+* [omranisecurity/CorsOne](https://github.com/omranisecurity/CorsOne) - Fast CORS Misconfiguration Discovery Tool
 
 
 ## Requirements
@@ -149,7 +149,7 @@ again.
 https://trusted-origin.example.com/?xss=<script>CORS-ATTACK-PAYLOAD</script>
 ```
 
-### Wildcard Origin `*` without Credentials
+### Wildcard Origin without Credentials
 
 If the server responds with a wildcard origin `*`, **the browser does never send
 the cookies**. However, if the server does not require authentication, it's still
@@ -275,7 +275,7 @@ function reqListener() {
 - [CORS misconfig | Account Takeover - Rohan (nahoragg) - October 20, 2018](https://hackerone.com/reports/426147)
 - [CORS Misconfiguration leading to Private Information Disclosure - sandh0t (sandh0t) - October 29, 2018](https://hackerone.com/reports/430249)
 - [CORS Misconfiguration on www.zomato.com - James Kettle (albinowax) - September 15, 2016](https://hackerone.com/reports/168574)
-- [CORS Misconfigurations Explained - Detectify Blog - Apr 26, 2018](https://blog.detectify.com/2018/04/26/cors-misconfigurations-explained/)
+- [CORS Misconfigurations Explained - Detectify Blog - April 26, 2018](https://blog.detectify.com/2018/04/26/cors-misconfigurations-explained/)
 - [Cross-origin resource sharing (CORS) - PortSwigger Web Security Academy - December 30, 2019](https://portswigger.net/web-security/cors)
 - [Cross-origin resource sharing misconfig | steal user information - bughunterboy (bughunterboy) - June 1, 2017](https://hackerone.com/reports/235200)
 - [Exploiting CORS misconfigurations for Bitcoins and bounties - James Kettle - 14 October 2016](https://portswigger.net/blog/exploiting-cors-misconfigurations-for-bitcoins-and-bounties)

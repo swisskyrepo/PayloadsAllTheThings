@@ -42,6 +42,7 @@ the attacker can trick the user into interacting with the hidden content, believ
     * Positioning and Layering: By setting the CSS properties such as `position: absolute; top: 0; left: 0;`, the transparent element is positioned to cover the entire viewport. Since it's transparent, the user doesn't see it.
     * Misleading User Interaction: The attacker places deceptive elements within the transparent container, such as fake buttons, links, or forms. These elements perform actions when clicked, but the user is unaware of their presence due to the overlaying transparent UI element.
     * User Interaction: When the user interacts with the visible interface, they are unknowingly interacting with the hidden elements due to the transparent overlay. This interaction can lead to unintended actions or unauthorized operations.
+
 ```html
 <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 100%; width: 100%;">
   <a href="malicious-link">Click me</a>
@@ -56,9 +57,11 @@ The content inside these invisible frames can be malicious, such as phishing for
 
 * **How Invisible Frames Work:**
     * Hidden IFrame Creation: The attacker includes an `<iframe>` element in a webpage, setting its dimensions to zero and removing its border, making it invisible to the user.
+
       ```html
       <iframe src="malicious-site" style="opacity: 0; height: 0; width: 0; border: none;"></iframe>
       ```
+
     * Loading Malicious Content: The src attribute of the iframe points to a malicious website or resource controlled by the attacker. This content is loaded silently without the user's knowledge because the iframe is invisible.
     * User Interaction: The attacker overlays enticing elements on top of the invisible iframe, making it seem like the user is interacting with the visible interface. For instance, the attacker might position a transparent button over the invisible iframe. When the user clicks the button, they are essentially clicking on the hidden content within the iframe.
     * Unintended Actions: Since the user is unaware of the invisible iframe, their interactions can lead to unintended actions, such as submitting forms, clicking on malicious links, or even performing financial transactions without their consent.
@@ -70,11 +73,13 @@ Button/Form Hijacking is a Clickjacking technique where attackers trick users in
 
 * **How Button/Form Hijacking Works:**
     * Visible Interface: The attacker presents a visible button or form to the user, encouraging them to click or interact with it.
+
     ```html
     <button onclick="submitForm()">Click me</button>
     ```
     
     * Invisible Overlay: The attacker overlays this visible button or form with an invisible or transparent element that contains a malicious action, such as submitting a hidden form.
+
     ```html
     <form action="malicious-site" method="POST" id="hidden-form" style="display: none;">
     <!-- Hidden form fields -->
@@ -82,6 +87,7 @@ Button/Form Hijacking is a Clickjacking technique where attackers trick users in
     ```
 
     * Deceptive Interaction: When the user clicks the visible button, they are unknowingly interacting with the hidden form due to the invisible overlay. The form is submitted, potentially causing unauthorized actions or data leakage.
+
     ```html
     <button onclick="submitForm()">Click me</button>
     <form action="legitimate-site" method="POST" id="hidden-form">
@@ -155,6 +161,7 @@ Example in HTML meta tag:
 * The `onBeforeUnload` event could be used to evade frame busting code. This event is called when the frame busting code wants to destroy the iframe by loading the URL in the whole web page and not only in the iframe. The handler function returns a string that is prompted to the user asking confirm if he wants to leave the page. When this string is displayed to the user is likely to cancel the navigation, defeating target's frame busting attempt.
 
 * The attacker can use this attack by registering an unload event on the top page using the following example code:
+
 ```html
 <h1>www.fictitious.site</h1>
 <script>

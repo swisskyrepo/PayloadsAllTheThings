@@ -19,6 +19,11 @@
 
 Look for `npm`, `pip`, `gem` packages, the methodology is the same : you register a public package with the same name of private one used by the company and then you wait for it to be used.
 
+* DockerHub: Dockerfile image
+* JavaScript (npm): package.json
+* MVN (maven): pom.xml
+* PHP (composer): composer.json
+* Python (pypi): requirements.txt
 
 ### NPM Example
 

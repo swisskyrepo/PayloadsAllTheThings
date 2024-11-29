@@ -20,8 +20,11 @@
 
 ## Detection
 
-* `AAEAAD` (Hex) = .NET deserialization BinaryFormatter
-* `FF01` (Hex) / `/w` (Base64) = .NET ViewState
+| Data           | Description         |
+| -------------- | ------------------- |
+| `AAEAAD` (Hex) | .NET BinaryFormatter |
+| `FF01` (Hex)   | .NET ViewState |
+| `/w` (Base64)   | .NET ViewState |
 
 Example: `AAEAAAD/////AQAAAAAAAAAMAgAAAF9TeXN0ZW0u[...]0KPC9PYmpzPgs=`
 
@@ -134,6 +137,7 @@ $ ./ysoserial.exe -f BinaryFormatter -g PSObject -o base64 -c "calc" -t
 ## POP Gadgets
 
 These gadgets must have the following properties:
+
 * Serializable
 * Public/settable variables
 * Magic "functions": Get/Set, OnSerialisation, Constructors/Destructors

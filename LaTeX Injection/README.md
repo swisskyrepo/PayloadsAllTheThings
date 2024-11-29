@@ -10,6 +10,7 @@
     * [Write File](#write-file)
 * [Command Execution](#command-execution)
 * [Cross Site Scripting](#cross-site-scripting)
+* [Labs](#labs)
 * [References](#references)
 
 
@@ -121,7 +122,7 @@ From [@EdOverflow](https://twitter.com/intigriti/status/1101509684614320130)
 \href{javascript:alert(1)}{placeholder}
 ```
 
-in [mathjax](https://docs.mathjax.org/en/latest/input/tex/extensions/unicode.html)
+In [mathjax](https://docs.mathjax.org/en/latest/input/tex/extensions/unicode.html)
 
 ```tex
 \unicode{<img src=1 onerror="<ARBITRARY_JS_CODE>">}
@@ -131,7 +132,7 @@ in [mathjax](https://docs.mathjax.org/en/latest/input/tex/extensions/unicode.htm
 ## Labs
 
 * [Root Me - LaTeX - Input](https://www.root-me.org/en/Challenges/App-Script/LaTeX-Input)
-* [Root Me - LaTeX - Command execution](https://www.root-me.org/en/Challenges/App-Script/LaTeX-Command-execution)
+* [Root Me - LaTeX - Command Execution](https://www.root-me.org/en/Challenges/App-Script/LaTeX-Command-execution)
 
 
 ## References

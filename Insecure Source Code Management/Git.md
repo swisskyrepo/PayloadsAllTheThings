@@ -27,9 +27,9 @@ The following examples will create either a copy of the .git or a copy of the cu
 
 Check for the following files, if they exist you can extract the .git folder.
 
-- .git/config
-- .git/HEAD
-- .git/logs/HEAD
+- `.git/config`
+- `.git/HEAD`
+- `.git/logs/HEAD`
 
 
 ### Recovering file contents from .git/logs/HEAD
@@ -112,25 +112,28 @@ sha1 = d7ef4d77741c38b6d3806e0c6a57bf1090eec141
 
 #### git-dumper.py
 
+* [arthaud/git-dumper](https://github.com/arthaud/git-dumper)
 ```powershell
-git clone https://github.com/arthaud/git-dumper
 pip install -r requirements.txt
 ./git-dumper.py http://web.site/.git ~/website
 ```
 
 #### diggit.py
 
+* [bl4de/security-tools/diggit](https://github.com/bl4de/security-tools/)
+
 ```powershell
-git clone https://github.com/bl4de/security-tools/ && cd security-tools/diggit
 ./diggit.py -u remote_git_repo -t temp_folder -o object_hash [-r=True]
 ./diggit.py -u http://web.site -t /path/to/temp/folder/ -o d60fbeed6db32865a1f01bb9e485755f085f51c1
-
--u is remote path, where .git folder exists
--t is path to local folder with dummy Git repository and where blob content (files) are saved with their real names (cd /path/to/temp/folder && git init)
--o is a hash of particular Git object to download
 ```
 
+`-u` is remote path, where .git folder exists  
+`-t` is path to local folder with dummy Git repository and where blob content (files) are saved with their real names (`cd /path/to/temp/folder && git init`)  
+`-o` is a hash of particular Git object to download
+
 #### GoGitDumper
+
+* [c-sto/gogitdumper](https://github.com/c-sto/gogitdumper)
 
 ```powershell
 go get github.com/c-sto/gogitdumper
@@ -141,8 +144,9 @@ git checkout
 
 #### rip-git
 
+* [kost/dvcs-ripper](https://github.com/kost/dvcs-ripper)
+
 ```powershell
-git clone https://github.com/kost/dvcs-ripper
 perl rip-git.pl -v -u "http://web.site/.git/"
 
 git cat-file -p 07603070376d63d911f608120eb4b5489b507692
@@ -156,15 +160,17 @@ git cat-file -p 5dae937a49acc7c2668f5bcde2a9fd07fc382fe2
 
 #### GitHack
 
+* [lijiejie/GitHack](https://github.com/lijiejie/GitHack)
+
 ```powershell
-git clone https://github.com/lijiejie/GitHack
 GitHack.py http://web.site/.git/
 ```
 
 #### GitTools
 
+* [internetwache/GitTools](https://github.com/internetwache/GitTools)
+
 ```powershell
-git clone https://github.com/internetwache/GitTools
 ./gitdumper.sh http://target.tld/.git/ /tmp/destdir
 git checkout -- .
 ```
@@ -204,20 +210,20 @@ gitrob [options] target [target2] ... [targetN]
 
 > Gitleaks provides a way for you to find unencrypted secrets and other unwanted data types in git source code repositories.
 
-```powershell
-# Run gitleaks against a public repository
-docker run --rm --name=gitleaks zricethezav/gitleaks -v -r https://github.com/zricethezav/gitleaks.git
+* Run gitleaks against a public repository
+    ```powershell
+    docker run --rm --name=gitleaks zricethezav/gitleaks -v -r https://github.com/zricethezav/gitleaks.git
+    ```
 
-# Run gitleaks against a local repository already cloned into /tmp/
-docker run --rm --name=gitleaks -v /tmp/:/code/  zricethezav/gitleaks -v --repo-path=/code/gitleaks
+* Run gitleaks against a local repository already cloned into /tmp/
+    ```powershell
+    docker run --rm --name=gitleaks -v /tmp/:/code/  zricethezav/gitleaks -v --repo-path=/code/gitleaks
+    ```
 
-# Run gitleaks against a specific Github Pull request
-docker run --rm --name=gitleaks -e GITHUB_TOKEN={your token} zricethezav/gitleaks --github-pr=https://github.com/owner/repo/pull/9000
-
-or
-
-go get -u github.com/zricethezav/gitleaks
-```
+* Run gitleaks against a specific Github Pull request
+    ```powershell
+    docker run --rm --name=gitleaks -e GITHUB_TOKEN={your token} zricethezav/gitleaks --github-pr=https://github.com/owner/repo/pull/9000
+    ```
 
 
 ## References

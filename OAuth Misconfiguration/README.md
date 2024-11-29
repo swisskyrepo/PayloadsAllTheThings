@@ -8,7 +8,7 @@
 - [Stealing OAuth Token via referer](#stealing-oauth-token-via-referer)
 - [Grabbing OAuth Token via redirect_uri](#grabbing-oauth-token-via-redirect---uri)
 - [Executing XSS via redirect_uri](#executing-xss-via-redirect---uri)
-- [OAuth private key disclosure](#oauth-private-key-disclosure)
+- [OAuth Private Key Disclosure](#oauth-private-key-disclosure)
 - [Authorization Code Rule Violation](#authorization-code-rule-violation)
 - [Cross-Site Request Forgery](#cross-site-request-forgery)
 - [Labs](#labs)
@@ -52,7 +52,7 @@ https://example.com/oauth/v1/authorize?[...]&redirect_uri=data%3Atext%2Fhtml%2Ca
 ```
 
 
-## OAuth private key disclosure
+## OAuth Private Key Disclosure
 
 Some Android/iOS app can be decompiled and the OAuth Private key can be accessed.
 

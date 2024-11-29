@@ -9,7 +9,7 @@
 
 * [Headless Commands](#headless-commands)
 * [Local File Read](#local-file-read)
-* [Debugging Port ](#debugging-port)
+* [Debugging Port](#debugging-port)
 * [Network](#network)
     * [Port Scanning](#port-scanning)
     * [DNS Rebinding](#dns-rebinding)
@@ -20,11 +20,20 @@
 
 Example of headless browsers commands:
 
-```ps1
-google-chrome --headless[=(new|old)] --print-to-pdf https://www.google.com
-firefox --screenshot https://www.google.com
-"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless --disable-gpu --window-size=1280,720 --screenshot="C:\tmp\screen.png" "https://google.com"
-```
+* Google Chrome
+    ```ps1
+    google-chrome --headless[=(new|old)] --print-to-pdf https://www.google.com
+    ```
+
+* Mozilla Firefox
+    ```ps1
+    firefox --screenshot https://www.google.com
+    ```
+
+* Microsoft Edge
+    ```ps1
+    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --headless --disable-gpu --window-size=1280,720 --screenshot="C:\tmp\screen.png" "https://google.com"
+    ```
 
 
 ## Local File Read
@@ -52,7 +61,7 @@ Target: `google-chrome-stable --headless[=(new|old)] --print-to-pdf https://site
     ```
 
 
-## Debugging Port 
+## Debugging Port
 
 **Target**: `google-chrome-stable --headless=new --remote-debugging-port=XXXX ./index.html`   
 

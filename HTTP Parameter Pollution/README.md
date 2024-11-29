@@ -5,50 +5,93 @@
 ## Summary
 
 * [Tools](#tools)
-* [How to test](#how-to-test)
-    * [Table of reference](#table-of-reference)
+* [Methodology](#methodology)
+    * [Parameter Pollution Table](#parameter-pollution-table)
+    * [Parameter Pollution Payloads](#parameter-pollution-payloads)
 * [References](#references)
 
 
 ## Tools
 
-No tools needed. Maybe Burp or OWASP ZAP.
+* **Burp Suite**: Manually modify requests to test duplicate parameters.
+* **OWASP ZAP**: Intercept and manipulate HTTP parameters.
 
-## How to test
 
-HPP allows an attacker to bypass pattern based/black list proxies or Web Application Firewall detection mechanisms. This can be done with or without the knowledge of the web technology behind the proxy, and can be achieved through simple trial and error. 
+## Methodology
 
+HTTP Parameter Pollution (HPP) is a web security vulnerability where an attacker injects multiple instances of the same HTTP parameter into a request. The server's behavior when processing duplicate parameters can vary, potentially leading to unexpected or exploitable behavior.
+
+HPP can target two levels:
+
+* Client-Side HPP: Exploits JavaScript code running on the client (browser).
+* Server-Side HPP: Exploits how the server processes multiple parameters with the same name.
+
+
+**Examples**:
+
+```ps1
+/app?debug=false&debug=true
+/transfer?amount=1&amount=5000
 ```
-Example scenario.
-WAF - Reads first param
-Origin Service - Reads second param. In this scenario, developer trusted WAF and did not implement sanity checks.
 
-Attacker -- http://example.com?search=Beth&search=' OR 1=1;## --> WAF (reads first 'search' param, looks innocent. passes on) --> Origin Service (reads second 'search' param, injection happens if no checks are done here.)
-```
 
-### Table of reference
+### Parameter Pollution Table
 
 When ?par1=a&par1=b
 
-| Technology                                      | Parsing Result          |outcome (par1=)|
-| ------------------                              |---------------          |:-------------:|
-| ASP.NET/IIS                                     |All occurrences          |a,b            |
-| ASP/IIS                                         |All occurrences          |a,b            |
-| PHP/Apache                                      |Last occurrence          |b              |
-| PHP/Zues                                        |Last occurrence          |b              |
-| JSP,Servlet/Tomcat                              |First occurrence         |a              |
-| Perl CGI/Apache                                 |First occurrence         |a              |
-| Python Flask                                    |First occurrence         |a              |
-| Python Django                                   |Last occurrence          |b              |
-| Nodejs                                          |All occurrences          |a,b            |
-| Golang net/http - `r.URL.Query().Get("param")`  |First occurrence         |a              |
-| Golang net/http - `r.URL.Query()["param"]`      |All occurrences in array |['a','b']      |
-| IBM Lotus Domino                                |First occurrence         |a              |
-| IBM HTTP Server                                 |First occurrence         |a              |
-| Perl CGI/Apache                                 |First occurrence         |a              |
-| mod_wsgi (Python)/Apache                        |First occurrence         |a              |
-| Python/Zope                                     |All occurrences in array |['a','b']      |
-| Ruby on Rails                                   |Last occurrence          |b              |
+| Technology                                      | Parsing Result           | outcome (par1=) |
+| ----------------------------------------------- | ------------------------ | --------------- |
+| ASP.NET/IIS                                     | All occurrences          | a,b             |
+| ASP/IIS                                         | All occurrences          | a,b             |
+| Golang net/http - `r.URL.Query().Get("param")`  | First occurrence         | a               |
+| Golang net/http - `r.URL.Query()["param"]`      | All occurrences in array | ['a','b']       |
+| IBM HTTP Server                                 | First occurrence         | a               |
+| IBM Lotus Domino                                | First occurrence         | a               |
+| JSP,Servlet/Tomcat                              | First occurrence         | a               |
+| mod_wsgi (Python)/Apache                        | First occurrence         | a               |
+| Nodejs                                          | All occurrences          | a,b             |
+| Perl CGI/Apache                                 | First occurrence         | a               |
+| Perl CGI/Apache                                 | First occurrence         | a               |
+| PHP/Apache                                      | Last occurrence          | b               |
+| PHP/Zues                                        | Last occurrence          | b               |
+| Python Django                                   | Last occurrence          | b               |
+| Python Flask                                    | First occurrence         | a               |
+| Python/Zope                                     | All occurrences in array | ['a','b']       |
+| Ruby on Rails                                   | Last occurrence          | b               |
+
+
+### Parameter Pollution Payloads
+
+* Duplicate Parameters:
+    ```ps1
+    param=value1&param=value2
+    ```
+
+* Array Injection:
+    ```ps1
+    param[]=value1
+    param[]=value1&param[]=value2
+    param[]=value1&param=value2
+    param=value1&param[]=value2
+    ```
+
+* Encoded Injection:
+    ```ps1
+    param=value1%26other=value2
+    ```
+
+* Nested Injection:
+    ```ps1
+    param[key1]=value1&param[key2]=value2
+    ```
+
+* JSON Injection:
+    ```ps1
+    {
+        "test": "user",
+        "test": "admin"
+    }
+    ```
 
 
 ## References

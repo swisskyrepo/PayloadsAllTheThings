@@ -1,6 +1,6 @@
 # ORM Leak
 
-An ORM leak vulnerability occurs when sensitive information, such as database structure or user data, is unintentionally exposed due to improper handling of ORM queries. This can happen if the application returns raw error messages, debug information, or allows attackers to manipulate queries in ways that reveal underlying data.
+> An ORM leak vulnerability occurs when sensitive information, such as database structure or user data, is unintentionally exposed due to improper handling of ORM queries. This can happen if the application returns raw error messages, debug information, or allows attackers to manipulate queries in ways that reveal underlying data.
 
 
 ## Summary

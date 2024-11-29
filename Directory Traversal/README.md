@@ -360,6 +360,7 @@ c:/windows/repair/system
 - [Directory traversal - Portswigger - March 30, 2019](https://portswigger.net/web-security/file-path-traversal)
 - [Directory traversal attack - Wikipedia - August 5,  2024](https://en.wikipedia.org/wiki/Directory_traversal_attack)
 - [EP 057 | Proc filesystem tricks & locatedb abuse with @_remsio_ & @_bluesheet - TheLaluka - November 30, 2023](https://youtu.be/YlZGJ28By8U)
+- [Exploiting Blind File Reads / Path Traversal Vulnerabilities on Microsoft Windows Operating Systems - @evisneffos - 19 June 2018](https://web.archive.org/web/20200919055801/http://www.soffensive.com/2018/06/exploiting-blind-file-reads-path.html)
 - [NGINX may be protecting your applications from traversal attacks without you even knowing - Rotem Bar - September 24, 2020](https://medium.com/appsflyer/nginx-may-be-protecting-your-applications-from-traversal-attacks-without-you-even-knowing-b08f882fd43d?source=friends_link&sk=e9ddbadd61576f941be97e111e953381)
 - [Path Traversal Cheat Sheet: Windows - @HollyGraceful - May 17, 2015](https://web.archive.org/web/20170123115404/https://gracefulsecurity.com/path-traversal-cheat-sheet-windows/)
 - [Understand How the ASP.NET Cookieless Feature Works - Microsoft Documentation - June 24, 2011](https://learn.microsoft.com/en-us/previous-versions/dotnet/articles/aa479315(v=msdn.10))

@@ -17,21 +17,41 @@
 
 - [nccgroup/singularity](https://github.com/nccgroup/singularity) - A DNS rebinding attack framework. 
 - [rebind.it](http://rebind.it/) - Singularity of Origin Web Client.
+- [taviso/rbndr](https://github.com/taviso/rbndr) - Simple DNS Rebinding Service
+- [taviso/rebinder](https://lock.cmpxchg8b.com/rebinder.html) - rbndr Tool Helper
 
 
 ## Methodology
 
-First, we need to make sure that the targeted service is vulnerable to DNS rebinding.
-It can be done with a simple curl request:
+**Setup Phase**:
 
-```bash
-curl --header 'Host: <arbitrary-hostname>' http://<vulnerable-service>:8080
-```
+* Register a malicious domain (e.g., `malicious.com`).
+* Configure a custom DNS server capable of resolving `malicious.com` to different IP addresses.
 
-If the server returns the expected result (e.g. the regular web page) then the service is vulnerable.
-If the server returns an error message (e.g. 404 or similar), the server has most likely protections implemented which prevent DNS rebinding attacks.
+**Initial Victim Interaction**:
 
-Then, if the service is vulnerable, we can abuse DNS rebinding by following these steps:
+* Create a webpage on `malicious.com` containing malicious JavaScript or another exploit mechanism.
+* Entice the victim to visit the malicious webpage (e.g., via phishing, social engineering, or advertisements).
+
+**Initial DNS Resolution**:
+
+* When the victim's browser accesses `malicious.com`, it queries the attacker's DNS server for the IP address.
+* The DNS server resolves `malicious.com` to an initial, legitimate-looking IP address (e.g., 203.0.113.1).
+
+**Rebinding to Internal IP**:
+
+* After the browser's initial request, the attacker's DNS server updates the resolution for `malicious.com` to a private or internal IP address (e.g., 192.168.1.1, corresponding to the victim’s router or other internal devices).
+
+This is often achieved by setting a very short TTL (time-to-live) for the initial DNS response, forcing the browser to re-resolve the domain.
+
+**Same-Origin Exploitation:**
+
+The browser treats subsequent responses as coming from the same origin (`malicious.com`).
+
+Malicious JavaScript running in the victim's browser can now make requests to internal IP addresses or local services (e.g., 192.168.1.1 or 127.0.0.1), bypassing same-origin policy restrictions.
+
+
+**Example:**
 
 1. Register a domain.
 2. [Setup Singularity of Origin](https://github.com/nccgroup/singularity/wiki/Setup-and-Installation).

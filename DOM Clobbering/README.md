@@ -13,8 +13,8 @@
 ## Tools
 
 - [SoheilKhodayari/DOMClobbering](https://domclob.xyz/domc_markups/list) - Comprehensive List of DOM Clobbering Payloads for Mobile and Desktop Web Browsers
-- [yeswehack/Dom-Explorer](https://github.com/yeswehack/Dom-Explorer) - a web-based tool designed for testing various HTML parsers and sanitizers.
-- [yeswehack/Dom-Explorer Live](https://yeswehack.github.io/Dom-Explorer/dom-explorer#eyJpbnB1dCI6IiIsInBpcGVsaW5lcyI6W3siaWQiOiJ0ZGpvZjYwNSIsIm5hbWUiOiJEb20gVHJlZSIsInBpcGVzIjpbeyJuYW1lIjoiRG9tUGFyc2VyIiwiaWQiOiJhYjU1anN2YyIsImhpZGUiOmZhbHNlLCJza2lwIjpmYWxzZSwib3B0cyI6eyJ0eXBlIjoidGV4dC9odG1sIiwic2VsZWN0b3IiOiJib2R5Iiwib3V0cHV0IjoiaW5uZXJIVE1MIiwiYWRkRG9jdHlwZSI6dHJ1ZX19XX1dfQ==) - reveal how browsers parse HTML and find mutated XSS vulnerabilities
+- [yeswehack/Dom-Explorer](https://github.com/yeswehack/Dom-Explorer) - A web-based tool designed for testing various HTML parsers and sanitizers.
+- [yeswehack/Dom-Explorer Live](https://yeswehack.github.io/Dom-Explorer/dom-explorer#eyJpbnB1dCI6IiIsInBpcGVsaW5lcyI6W3siaWQiOiJ0ZGpvZjYwNSIsIm5hbWUiOiJEb20gVHJlZSIsInBpcGVzIjpbeyJuYW1lIjoiRG9tUGFyc2VyIiwiaWQiOiJhYjU1anN2YyIsImhpZGUiOmZhbHNlLCJza2lwIjpmYWxzZSwib3B0cyI6eyJ0eXBlIjoidGV4dC9odG1sIiwic2VsZWN0b3IiOiJib2R5Iiwib3V0cHV0IjoiaW5uZXJIVE1MIiwiYWRkRG9jdHlwZSI6dHJ1ZX19XX1dfQ==) - Reveal how browsers parse HTML and find mutated XSS vulnerabilities
 
 
 ## Methodology

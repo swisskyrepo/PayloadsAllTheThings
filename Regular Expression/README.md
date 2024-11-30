@@ -6,8 +6,9 @@
 ## Summary
 
 * [Tools](#tools)
-* [Evil Regex](#evil-regex)
-* [Backtrack Limit](#backtrack-limit)
+* [Methodology](#methodology)
+    * [Evil Regex](#evil-regex)
+    * [Backtrack Limit](#backtrack-limit)
 * [References](#references)
 
 
@@ -18,7 +19,9 @@
 * [devina.io/redos-checker](https://devina.io/redos-checker) - Examine regular expressions for potential Denial of Service vulnerabilities
 
 
-## Evil Regex
+## Methodology
+
+### Evil Regex
 
 Evil Regex contains:
 
@@ -35,14 +38,20 @@ Evil Regex contains:
 * `(a|a?)+`
 * `(.*a){x}` for x \> 10
 
-These regular expressions can be exploited with `aaaaaaaaaaaaaaaaaaaaaaaa!`
+These regular expressions can be exploited with `aaaaaaaaaaaaaaaaaaaaaaaa!` (20 'a's followed by a '!').
+
+```ps1
+aaaaaaaaaaaaaaaaaaaa! 
+```
+
+For this input, the regex engine will try all possible ways to group the `a` characters before realizing that the match ultimately fails because of the `!`. This results in an explosion of backtracking attempts.
 
 
-## Backtrack Limit
+### Backtrack Limit
 
 Backtracking in regular expressions occurs when the regex engine tries to match a pattern and encounters a mismatch. The engine then backtracks to the previous matching position and tries an alternative path to find a match. This process can be repeated many times, especially with complex patterns and large input strings.  
 
-PHP PCRE configuration options
+**PHP PCRE configuration options**
 
 | Name                 | Default | Note |
 |----------------------|---------|---------|

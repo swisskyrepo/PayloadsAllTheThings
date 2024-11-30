@@ -9,7 +9,7 @@
 * [Methodology](#methodology)
     * [Examples](#examples)
     * [Manual Testing](#manual-testing)
-    * [Prototype Pollution via JSON input](#prototype-pollution-via-json-input)
+    * [Prototype Pollution via JSON Input](#prototype-pollution-via-json-input)
     * [Prototype Pollution in URL](#prototype-pollution-in-url)
     * [Prototype Pollution Payloads](#prototype-pollution-payloads)
     * [Prototype Pollution Gadgets](#prototype-pollution-gadgets)
@@ -33,10 +33,14 @@ In JavaScript, prototypes are what allow objects to inherit features from other 
 
 ```js
 var myDog = new Dog();
+```
 
+```js
 // Points to the function "Dog"
 myDog.constructor;
+```
 
+```js
 // Points to the class definition of "Dog"
 myDog.constructor.prototype;
 myDog.__proto__;
@@ -68,7 +72,7 @@ myDog["__proto__"];
 * Change the status code: `{ "__proto__":{"status":510}}`
 
 
-### Prototype Pollution via JSON input
+### Prototype Pollution via JSON Input
 
 You can access the prototype of any object via the magic property `__proto__`. 
 The `JSON.parse()` function in JavaScript is used to parse a JSON string and convert it into a JavaScript object. Typically it is a sink function where prototype pollution can happen.
@@ -141,7 +145,7 @@ Depending if the prototype pollution is executed client (CSPP) or server side (S
     ```
 * Reflected XSS: [Reflected XSS on www.hackerone.com via Wistia embed code - #986386](https://hackerone.com/reports/986386)
 * Client-side bypass: [Prototype pollution – and bypassing client-side HTML sanitizers](https://research.securitum.com/prototype-pollution-and-bypassing-client-side-html-sanitizers/)
-* Deny of Service
+* Denial of Service
 
 
 ### Prototype Pollution Payloads
@@ -181,7 +185,7 @@ Either create your own gadget using part of the source with [yeswehack/pp-finder
 - [Detecting Server-Side Prototype Pollution - Daniel Thatcher - February 15, 2023](https://www.intruder.io/research/server-side-prototype-pollution)
 - [Exploiting prototype pollution – RCE in Kibana (CVE-2019-7609) - Michał Bentkowski - October 30, 2019](https://research.securitum.com/prototype-pollution-rce-kibana-cve-2019-7609/)
 - [Keynote | Server Side Prototype Pollution: Blackbox Detection Without The DoS - Gareth Heyes - March 27, 2023](https://youtu.be/LD-KcuKM_0M)
-- [NodeJS - __proto__ & prototype Pollution - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution)
+- [NodeJS - \_\_proto\_\_ & prototype Pollution - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/deserialization/nodejs-proto-prototype-pollution)
 - [Prototype Pollution - PortSwigger - November 10, 2022](https://portswigger.net/web-security/prototype-pollution)
 - [Prototype pollution - Snyk - August 19, 2023](https://learn.snyk.io/lessons/prototype-pollution/javascript/)
 - [Prototype pollution and bypassing client-side HTML sanitizers - Michał Bentkowski - August 18, 2020](https://research.securitum.com/prototype-pollution-and-bypassing-client-side-html-sanitizers/)

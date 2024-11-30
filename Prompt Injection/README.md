@@ -9,7 +9,8 @@
 * [Applications](#applications)
     * [Story Generation](#story-generation)
     * [Potential Misuse](#potential-misuse)
-* [Prompt Examples](#prompt-examples)
+* [Methodology](#methodology)
+* [Indirect Prompt Injection](#indirect-prompt-injection)
 * [References](#references)
 
 
@@ -70,7 +71,7 @@ For instance, if you're using a language model to generate a story and you want 
 In the context of security, "prompt injection" could refer to a type of attack where an attacker manipulates the input to a system (the "prompt") in order to cause the system to behave in a way that benefits the attacker. This could involve, for example, injecting malicious code or commands into user input fields on a website.
 
 
-## Prompt Examples
+## Methodology
 
 Here are a list of basic prompts to test against NLP models.
 

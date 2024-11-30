@@ -7,14 +7,14 @@
 
 - [Tools](#tools)
 - [Methodology](#methodology)
-  - [Limit-overrun](#limit-overrun)
-  - [Rate-limit bypass](#rate-limit-bypass)
+    - [Limit-overrun](#limit-overrun)
+    - [Rate-limit Bypass](#rate-limit-bypass)
 - [Techniques](#techniques)
-  - [HTTP/1.1 last-byte synchronization](#http11-last-byte-synchronization)
-  - [HTTP/2 Single-packet attack](#http2-single-packet-attack)
+    - [HTTP/1.1 Last-byte Synchronization](#http11-last-byte-synchronization)
+    - [HTTP/2 Single-packet Attack](#http2-single-packet-attack)
 - [Turbo Intruder](#turbo-intruder)
-  - [Example 1](#example-1)
-  - [Example 2](#example-2)
+    - [Example 1](#example-1)
+    - [Example 2](#example-2)
 - [Labs](#labs)
 - [References](#references)
 
@@ -30,27 +30,27 @@
 
 ### Limit-overrun
 
-Overdrawing limit, multiple voting, multiple spending of a giftcard.
+Limit-overrun refers to a scenario where multiple threads or processes compete to update or access a shared resource, resulting in the resource exceeding its intended limits. 
 
-**Examples**:
+**Examples**: Overdrawing limit, multiple voting, multiple spending of a giftcard.
 
 - [Race Condition allows to redeem multiple times gift cards which leads to free "money" - @muon4](https://hackerone.com/reports/759247)
 - [Race conditions can be used to bypass invitation limit - @franjkovic](https://hackerone.com/reports/115007)
 - [Register multiple users using one invitation - @franjkovic](https://hackerone.com/reports/148609)
 
 
-### Rate-limit bypass
+### Rate-limit Bypass
 
-Bypassing anti-bruteforce mechanism and 2FA.
+Rate-limit bypass occurs when an attacker exploits the lack of proper synchronization in rate-limiting mechanisms to exceed intended request limits. Rate-limiting is designed to control the frequency of actions (e.g., API requests, login attempts), but race conditions can allow attackers to bypass these restrictions.
 
-**Examples**:
+**Examples**: Bypassing anti-bruteforce mechanism and 2FA.
 
 - [Instagram Password Reset Mechanism Race Condition - Laxman Muthiyah](https://youtu.be/4O9FjTMlHUM)
 
 
 ## Techniques
 
-### HTTP/1.1 last-byte synchronization
+### HTTP/1.1 Last-byte Synchronization
 
 Send every requests except the last byte, then "release" each request by sending the last byte.
 
@@ -67,16 +67,16 @@ engine.openGate('race1')
 - [Cracking reCAPTCHA, Turbo Intruder style - James Kettle](https://portswigger.net/research/cracking-recaptcha-turbo-intruder-style)
 
 
-### HTTP/2 Single-packet attack
+### HTTP/2 Single-packet Attack
 
 In HTTP/2 you can send multiple HTTP requests concurrently over a single connection. In the single-packet attack around ~20/30 requests will be sent and they will arrive at the same time on the server. Using a single request remove the network jitter.
 
-- [turbo-intruder/race-single-packet-attack.py](https://github.com/PortSwigger/turbo-intruder/blob/master/resources/examples/race-single-packet-attack.py)
+- [PortSwigger/turbo-intruder/race-single-packet-attack.py](https://github.com/PortSwigger/turbo-intruder/blob/master/resources/examples/race-single-packet-attack.py)
 - Burp Suite
-  - Send a request to Repeater
-  - Duplicate the request 20 times (CTRL+R)
-  - Create a new group and add all the requests
-  - Send group in parallel (single-packet attack)
+    - Send a request to Repeater
+    - Duplicate the request 20 times (CTRL+R)
+    - Create a new group and add all the requests
+    - Send group in parallel (single-packet attack)
 
 **Examples**:
 

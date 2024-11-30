@@ -25,9 +25,7 @@
 
 ## Methodology
 
-If you want to exploit HTTP Requests Smuggling manually you will face some problems especially in TE.CL vulnerability you have to calculate the chunk size for the second request(malicious request) as PortSwigger suggests `Manually fixing the length fields in request smuggling attacks can be tricky.`. 
-
-For that reason you can use the [Simple HTTP Smuggler Generator CL.TE TE.CL](https://github.com/dhmosfunk/simple-http-smuggler-generator) and exploit the CL.TE TE.CL vulnerabilities manually and learn how this vulnerability works and how you can exploit it. 
+If you want to exploit HTTP Requests Smuggling manually you will face some problems especially in TE.CL vulnerability you have to calculate the chunk size for the second request(malicious request) as PortSwigger suggests `Manually fixing the length fields in request smuggling attacks can be tricky.`.
 
 
 ### CL.TE Vulnerabilities
@@ -97,7 +95,7 @@ x=1
 
 ```
 
-:warning: To send this request using Burp Repeater, you will first need to go to the Repeater menu and ensure that the "Update Content-Length" option is unchecked.You need to include the trailing sequence \r\n\r\n following the final 0.
+:warning: To send this request using Burp Repeater, you will first need to go to the Repeater menu and ensure that the "Update Content-Length" option is unchecked.You need to include the trailing sequence `\r\n\r\n` following the final 0.
 
 
 ### TE.TE Vulnerabilities
@@ -156,7 +154,8 @@ This could be used to:
 * get the victim to send an exploit to a site (eg for internal sites the attacker cannot access, or to make it harder to attribute the attack)
 * to get the victim to run arbitrary JavaScript as if it were from the site
 
-Eg:
+**Example**:
+
 ```javascript
 fetch('https://www.example.com/redirect', {
     method: 'POST',
@@ -168,10 +167,10 @@ fetch('https://www.example.com/redirect', {
 })
 ```
 
-tells the victim browser to send a POST request to www.example.com/redirect. That returns a redirect which is blocked by CORS, and causes the browser to execute the catch block, by going to www.example.com. 
+This script tells the victim browser to send a `POST` request to `www.example.com/redirect`. That returns a redirect which is blocked by CORS, and causes the browser to execute the catch block, by going to `www.example.com`. 
 
-www.example.com now incorrectly processes the HEAD request in the POST's body, instead of the browser's GET request, and returns 404 not found with a content-length, before replying to the next misinterpreted third (`GET /x?x=<script>...`) request and finally the browser's actual GET request.
-Since the browser only sent one request, it accepts the response to the HEAD request as the response to its GET request and interprets the third and fourth responses as the body of the response, and thus executes the attacker's script.
+www.example.com now incorrectly processes the `HEAD` request in the `POST`'s body, instead of the browser's `GET` request, and returns 404 not found with a content-length, before replying to the next misinterpreted third (`GET /x?x=<script>...`) request and finally the browser's actual `GET` request.
+Since the browser only sent one request, it accepts the response to the `HEAD` request as the response to its `GET` request and interprets the third and fourth responses as the body of the response, and thus executes the attacker's script.
 
 
 ## Labs

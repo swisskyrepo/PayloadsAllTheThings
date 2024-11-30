@@ -7,10 +7,10 @@
 
 * [Tools](#tools)
 * [Methodology](#methodology)
-    * [Defaults extensions](#defaults-extensions)
-    * [Upload tricks](#upload-tricks)
-    * [Filename vulnerabilities](#filename-vulnerabilities)
-    * [Picture compression](#picture-compression)
+    * [Defaults Extensions](#defaults-extensions)
+    * [Upload Tricks](#upload-tricks)
+    * [Filename Vulnerabilities](#filename-vulnerabilities)
+    * [Picture Compression](#picture-compression)
     * [Picture Metadata](#picture-metadata)
     * [Configuration Files](#configuration-files)
     * [CVE - ImageMagick](#cve---imagemagick)
@@ -30,7 +30,7 @@
 
 ![file-upload-mindmap.png](https://github.com/swisskyrepo/PayloadsAllTheThings/raw/master/Upload%20Insecure%20Files/Images/file-upload-mindmap.png?raw=true)
 
-### Defaults extensions
+### Defaults Extensions
 
 * PHP Server
     ```powershell
@@ -64,7 +64,7 @@
 * Coldfusion: `.cfm, .cfml, .cfc, .dbm`
 * Node.js: `.js, .json, .node`
 
-### Upload tricks
+### Upload Tricks
 
 - Use double extensions : `.jpg.php, .png.php5`
 - Use reverse double extension (useful to exploit Apache misconfigurations where anything with extension .php, but not necessarily ending in .php will execute code): `.php.jpg`
@@ -99,7 +99,7 @@
     * Shell can also be added in the metadata
 - Using NTFS alternate data stream (ADS) in Windows. In this case, a colon character ":" will be inserted after a forbidden extension and before a permitted one. As a result, an empty file with the forbidden extension will be created on the server (e.g. "`file.asax:.jpg`"). This file might be edited later using other techniques such as using its short filename. The "::$data" pattern can also be used to create non-empty files. Therefore, adding a dot character after this pattern might also be useful to bypass further restrictions (.e.g. "`file.asp::$data.`")
 
-### Filename vulnerabilities
+### Filename Vulnerabilities
 
 Sometimes the vulnerability is not the upload but how the file is handled after. You might want to upload files with payloads in the filename.
 

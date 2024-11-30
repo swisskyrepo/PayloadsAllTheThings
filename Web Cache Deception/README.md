@@ -33,6 +33,7 @@ Imagine an attacker lures a logged-in victim into accessing `http://www.example.
 6. The cache server identifies that the file has a CSS extension. 
 7. Under the cache directory, the cache server creates a directory named home.php and caches the imposter "CSS" file (non-existent.css) inside it. 
 8. When the attacker requests `http://www.example.com/home.php/non-existent.css`, the request is sent to the cache server, and the cache server returns the cached file with the victim's sensitive `home.php` data.
+
 ![WCD Demonstration](Images/wcd.jpg)
 
 
@@ -88,9 +89,9 @@ Video of the attack by Omer Gil - Web Cache Deception Attack in PayPal Home Page
 
 The following URL format are a good starting point to check for "cache" feature.
 
-* https://example.com/app/conversation/.js?test
-* https://example.com/app/conversation/;.js
-* https://example.com/home.php/non-existent.css
+* `https://example.com/app/conversation/.js?test`
+* `https://example.com/app/conversation/;.js`
+* `https://example.com/home.php/non-existent.css`
 
 
 ## CloudFlare Caching

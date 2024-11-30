@@ -6,8 +6,8 @@
 ## Summary
 
 * [Loose Comparison](#loose-comparison)
-	* [True statements](#true-statements)
-	* [NULL statements](#null-statements)
+	* [True Statements](#true-statements)
+	* [NULL Statements](#null-statements)
 	* [Loose Comparison](#loose-comparison)
 * [Magic Hashes](#magic-hashes)
 * [Methodology](#methodology)
@@ -22,7 +22,7 @@
 - **Loose** comparison: using `== or !=` : both variables have "the same value".
 - **Strict** comparison: using `=== or !==` : both variables have "the same type and the same value".
 
-### True statements
+### True Statements
 
 | Statement                         | Output |
 | --------------------------------- |:---------------:|
@@ -44,7 +44,7 @@
 
 ![LooseTypeComparison](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Type%20Juggling/Images/table_representing_behavior_of_PHP_with_loose_type_comparisons.png?raw=true)
 
-Loose Type Comparisons occurs in many languages:
+Loose Type comparisons occurs in many languages:
 
 * [MariaDB](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Mariadb)
 * [MySQL](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/Mysql)
@@ -56,7 +56,7 @@ Loose Type Comparisons occurs in many languages:
 * [SQLite](https://github.com/Hakumarachi/Loose-Compare-Tables/tree/master/results/SQLite/2.6.0)
 
 
-### NULL statements
+### NULL Statements
 
 | Function | Statement                  | Output |
 | -------- | -------------------------- |:---------------:|

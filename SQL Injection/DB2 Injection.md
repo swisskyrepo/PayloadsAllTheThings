@@ -54,7 +54,6 @@
 
 ## DB2 Methodology
 
-
 | Description      | SQL Query |
 | ---------------- | ------------------------------------ |
 | List databases   | `SELECT distinct(table_catalog) FROM sysibm.tables` |

@@ -6,8 +6,8 @@
 ## Summary
 
 * [CQL Injection Limitations](#cql-injection-limitations)
-* [Cassandra comment](#cassandra-comment)
-* [Cassandra - Login Bypass](#cassandra---login-bypass)
+* [Cassandra Comment](#cassandra-comment)
+* [Cassandra Login Bypass](#cassandra-login-bypass)
     * [Example #1](#example-1)
     * [Example #2](#example-2)
 * [References](#references) 
@@ -26,14 +26,14 @@
 * CQL does not allow subqueries or other nested statements, so a query like `SELECT * FROM table WHERE column=(SELECT column FROM table LIMIT 1);` would be rejected. 
 
 
-## Cassandra comment
+## Cassandra Comment
 
 ```sql
 /* Cassandra Comment */
 ```
 
 
-## Cassandra - Login Bypass
+## Cassandra Login Bypass
 
 ### Example #1
 

@@ -631,7 +631,7 @@ And using FTP instead of HTTP allows to retrieve much larger files.
 
 Serve DTD and receive FTP payload using [staaldraad/xxeserv](https://github.com/staaldraad/xxeserv):
 
-```
+```ps1
 $ xxeserv -o files.log -p 2121 -w -wd public -wp 8000
 ```
 

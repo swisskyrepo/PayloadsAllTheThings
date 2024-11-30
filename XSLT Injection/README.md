@@ -7,11 +7,11 @@
 
 - [Tools](#tools)
 - [Methodology](#methodology)
-    - [Determine the vendor and version](#determine-the-vendor-and-version)
+    - [Determine the Vendor And Version](#determine-the-vendor-and-version)
     - [External Entity](#external-entity)
-    - [Read files and SSRF using document](#read-files-and-ssrf-using-document)
-    - [Write files with EXSLT extension](#write-files-with-exslt-extension)
-    - [Remote Code Execution with PHP wrapper](#remote-code-execution-with-php-wrapper)
+    - [Read Files and SSRF Using Document](#read-files-and-ssrf-using-document)
+    - [Write Files with EXSLT Extension](#write-files-with-exslt-extension)
+    - [Remote Code Execution with PHP Wrapper](#remote-code-execution-with-php-wrapper)
     - [Remote Code Execution with Java](#remote-code-execution-with-java)
     - [Remote Code Execution with Native .NET](#remote-code-execution-with-native-net)
 - [Labs](#labs)
@@ -22,12 +22,10 @@
 
 No known tools currently exist to assist with XSLT exploitation.
 
-* [TODO](#)
-
 
 ## Methodology
 
-### Determine the vendor and version
+### Determine the Vendor and Version
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -51,6 +49,8 @@ No known tools currently exist to assist with XSLT exploitation.
 
 ### External Entity
 
+Don't forget to test for XXE when you encounter XSLT files.
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE dtd_sample[<!ENTITY ext_file SYSTEM "C:\secretfruit.txt">]>
@@ -66,7 +66,7 @@ No known tools currently exist to assist with XSLT exploitation.
 </xsl:stylesheet>
 ```
 
-### Read files and SSRF using document
+### Read Files and SSRF Using Document
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -86,7 +86,7 @@ No known tools currently exist to assist with XSLT exploitation.
 ```
 
 
-### Write files with EXSLT extension
+### Write Files with EXSLT Extension
 
 EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions to the XSLT (Extensible Stylesheet Language Transformations) language. EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions to the XSLT (Extensible Stylesheet Language Transformations) language. 
 
@@ -106,7 +106,7 @@ EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions
 ```
 
 
-### Remote Code Execution with PHP wrapper
+### Remote Code Execution with PHP Wrapper
 
 Execute the function `readfile`.
 

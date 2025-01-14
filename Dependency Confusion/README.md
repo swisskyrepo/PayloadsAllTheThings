@@ -12,7 +12,8 @@
 
 ## Tools
 
-* [visma-prodsec/confused](https://github.com/visma-prodsec/confused) - Tool to check for dependency confusion vulnerabilities in multiple package management systems 
+* [visma-prodsec/confused](https://github.com/visma-prodsec/confused) - Tool to check for dependency confusion vulnerabilities in multiple package management systems
+* [synacktiv/DepFuzzer](https://github.com/synacktiv/DepFuzzer) - Tool used to find dependency confusion or project where owner's email can be takeover.
 
 
 ## Methodology

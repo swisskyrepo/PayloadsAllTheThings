@@ -696,6 +696,7 @@ mysql> SELECT @@GLOBAL.VERSION;
 Requirement: `MySQL >= 5.7.22`
 
 Use `json_arrayagg()` instead of `group_concat()` which allows less symbols to be displayed
+
 * `group_concat()` = 1024 symbols
 * `json_arrayagg()` > 16,000,000 symbols
 

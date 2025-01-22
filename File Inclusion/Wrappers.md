@@ -13,6 +13,8 @@ A wrapper in the context of file inclusion vulnerabilities refers to the protoco
     - [PHAR Archive Structure](#phar-archive-structure)
     - [PHAR Deserialization](#phar-deserialization)
 - [Wrapper convert.iconv:// and dechunk://](#wrapper-converticonv-and-dechunk)
+    - [Leak file content from error-based oracle](#leak-file-content-from-error-based-oracle)
+    - [Leak file content inside a custom format output](#leak-file-content-inside-a-custom-format-output)
 - [References](#references)
 
 
@@ -250,15 +252,26 @@ This can be used against vulnerable code like the following.
 ?>
 ```
 
+### Leak file content using blind file read primitive
+
+* [ambionics/lightyear](https://github.com/ambionics/lightyear)
+
+```ps1
+code remote.py # edit Remote.oracle
+./lightyear.py test # test that your implementation works
+./lightyear.py /etc/passwd # dump a file!
+```
+
 
 ## References
 
 * [Baby^H Master PHP 2017 - Orange Tsai (@orangetw) - Dec 5, 2021](https://github.com/orangetw/My-CTF-Web-Challenges#babyh-master-php-2017)
-* [Iconv, set the charset to RCE: exploiting the libc to hack the php engine (part 1) - Charles Fol - 27 May, 2024](https://www.ambionics.io/blog/iconv-cve-2024-2961-p1)
-* [Introducing wrapwrap: using PHP filters to wrap a file with a prefix and suffix - Charles Fol - 11 December, 2023](https://www.ambionics.io/blog/wrapwrap-php-filters-suffix)
-* [It's A PHP Unserialization Vulnerability Jim But Not As We Know It - Sam Thomas - Aug 10, 2018](https://github.com/s-n-t/presentations/blob/master/us-18-Thomas-It's-A-PHP-Unserialization-Vulnerability-Jim-But-Not-As-We-Know-It.pdf)
-* [New PHP Exploitation Technique - Dr. Johannes Dahse - 14 Aug 2018](https://web.archive.org/web/20180817103621/https://blog.ripstech.com/2018/new-php-exploitation-technique/)
-* [OffensiveCon24 - Charles Fol- Iconv, Set the Charset to RCE - 14 June 2024](https://youtu.be/dqKFHjcK9hM)
+* [Iconv, set the charset to RCE: exploiting the libc to hack the php engine (part 1) - Charles Fol - May 27, 2024](https://www.ambionics.io/blog/iconv-cve-2024-2961-p1)
+* [Introducing lightyear: a new way to dump PHP files - Charles Fol - November 4, 2024](https://www.ambionics.io/blog/lightyear-file-dump)
+* [Introducing wrapwrap: using PHP filters to wrap a file with a prefix and suffix - Charles Fol - December 11, 2023](https://www.ambionics.io/blog/wrapwrap-php-filters-suffix)
+* [It's A PHP Unserialization Vulnerability Jim But Not As We Know It - Sam Thomas - August 10, 2018](https://github.com/s-n-t/presentations/blob/master/us-18-Thomas-It's-A-PHP-Unserialization-Vulnerability-Jim-But-Not-As-We-Know-It.pdf)
+* [New PHP Exploitation Technique - Dr. Johannes Dahse - August 14, 2018](https://web.archive.org/web/20180817103621/https://blog.ripstech.com/2018/new-php-exploitation-technique/)
+* [OffensiveCon24 - Charles Fol- Iconv, Set the Charset to RCE - June 14, 2024](https://youtu.be/dqKFHjcK9hM)
 * [PHP FILTER CHAINS: FILE READ FROM ERROR-BASED ORACLE - Rémi Matasse - March 21, 2023](https://www.synacktiv.com/en/publications/php-filter-chains-file-read-from-error-based-oracle.html)
-* [PHP FILTERS CHAIN: WHAT IS IT AND HOW TO USE IT - Rémi Matasse - 18/10/2022](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)
-* [Solving "includer's revenge" from hxp ctf 2021 without controlling any files - @loknop - Dec 30, 2021](https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d)
+* [PHP FILTERS CHAIN: WHAT IS IT AND HOW TO USE IT - Rémi Matasse - October 18, 2022](https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)
+* [Solving "includer's revenge" from hxp ctf 2021 without controlling any files - @loknop - December 30, 2021](https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d)

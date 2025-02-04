@@ -77,3 +77,5 @@ Real-World Scenarios:
 - [On-site request forgery - Dafydd Stuttard - 03 May 2007](https://portswigger.net/blog/on-site-request-forgery)
 - [Bypassing WAFs to Exploit CSPT Using Encoding Levels - Matan Berson - 2024-05-10](https://matanber.com/blog/cspt-levels)
 - [Automating Client-Side Path Traversals Discovery - Vitor Falcao - October 3, 2024](https://vitorfalcao.com/posts/automating-cspt-discovery/)
+- [CSPT the Eval Villain Way! - Dennis Goodlett - December 3, 2024](https://blog.doyensec.com/2024/12/03/cspt-with-eval-villain.html)
+- [Bypassing File Upload Restrictions To Exploit Client-Side Path Traversal - Maxence Schmitt - January 9, 2025](https://blog.doyensec.com/2025/01/09/cspt-file-upload.html)

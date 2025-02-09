@@ -32,7 +32,6 @@
 - [The Hated one](https://www.youtube.com/channel/UCjr2bPAyPV7t35MvcgT3W8Q)
 - [xct hacks](https://www.youtube.com/@xct_de)
 
-
 ## Conferences
 
 - [BlackAlps CyberSecurityConference](https://www.youtube.com/@blackalpscybersecurityconf8699)
@@ -48,7 +47,6 @@
 - [Recon Conference](https://www.youtube.com/@reconmtl)
 - [Recon Village](https://www.youtube.com/@ReconVillage)
 - [x33fcon Conference](https://www.youtube.com/c/x33fcon)
-
 
 ## Curated Videos
 

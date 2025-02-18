@@ -596,7 +596,7 @@ Rebuild Excel file:
 
 ```
 $ cd XXE
-$ zip -u ../xxe.xlsx *
+$ zip -r -u ../xxe.xlsx *
 ```
 
 Warning: Use `zip -u` (https://infozip.sourceforge.net/Zip.html) and not `7z u` / `7za u` (https://p7zip.sourceforge.net/) or `7zz` (https://www.7-zip.org/) because they won't recompress it the same way and many Excel parsing libraries will fail to recognize it as a valid Excel file. A valid  magic byte signature with (`file XXE.xlsx`) will be shown as `Microsoft Excel 2007+` (with `zip -u`) and an invalid one will be shown as `Microsoft OOXML`.

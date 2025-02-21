@@ -22,14 +22,15 @@
 - [LiveOverflow - Explore weird machines...](https://www.youtube.com/channel/UClcE-kVhqyiHCcjYwcpfj9w)
 - [Murmus CTF - Weekly live streamings](https://www.youtube.com/channel/UCUB9vOGEUpw7IKJRoR4PK-A)
 - [Nahamsec](https://www.youtube.com/c/Nahamsec)
+- [NetworkChuck](https://www.youtube.com/@NetworkChuck)
 - [OJ Reeves](https://www.youtube.com/channel/UCz2aqRQWMhJ4wcJq3XneqRg)
 - [PwnFunction](https://www.youtube.com/channel/UCW6MNdOsqv2E9AjQkv9we7A)
+- [SloppyJoePirates CTF Writeups](https://www.youtube.com/@SloppyJoePirates)
 - [stacksmashing / Ghidra Ninja](https://www.youtube.com/channel/UC3S8vxwRfqLBdIhgRlDRVzw)
 - [STÖK](https://www.youtube.com/c/STOKfredrik)
 - [The Cyber Mentor](https://www.youtube.com/channel/UC0ArlFuFYMpEewyRBzdLHiw)
 - [The Hated one](https://www.youtube.com/channel/UCjr2bPAyPV7t35MvcgT3W8Q)
 - [xct hacks](https://www.youtube.com/@xct_de)
-
 
 ## Conferences
 
@@ -42,14 +43,15 @@
 - [LeHack / HZV](https://www.youtube.com/user/hzvprod)
 - [OffensiveCon](https://www.youtube.com/@OffensiveCon)
 - [OrangeCon](https://www.youtube.com/@OrangeCon)
+- [Peertube ESNHACK](https://peertube.esnhack.fr/)
 - [Recon Conference](https://www.youtube.com/@reconmtl)
 - [Recon Village](https://www.youtube.com/@ReconVillage)
 - [x33fcon Conference](https://www.youtube.com/c/x33fcon)
 
-
 ## Curated Videos
 
 - [BSidesSF 101 The Tales of a Bug Bounty Hunter - Arne Swinnen](https://www.youtube.com/watch?v=dsekKYNLBbc)
+- [How to become a hacker - Alisa Esage](https://www.youtube.com/watch?v=9ix3h7NQxFU&pp=ygUWaG93IHRvIGJlY29tZSBhIGhhY2tlcg%3D%3D)
 - [Hunting for Top Bounties - Nicolas Grégoire](https://www.youtube.com/watch?v=mQjTgDuLsp4)
 - [Security Fest 2016 The Secret life of a Bug Bounty Hunter - Frans Rosén](https://www.youtube.com/watch?v=KDo68Laayh8)
 - [The Conscience of a Hacker](https://www.youtube.com/watch?v=0tEnnvZbYek)

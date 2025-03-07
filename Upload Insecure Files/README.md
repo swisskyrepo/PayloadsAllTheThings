@@ -95,10 +95,25 @@ Here is a list of the default extensions for web shell pages in the selected lan
 
 MIME type, a MIME type (Multipurpose Internet Mail Extensions type) is a standardized identifier that tells browsers, servers, and applications what kind of file or data is being handled. It consists of a type and a subtype, separated by a slash. Change `Content-Type : application/x-php` or `Content-Type : application/octet-stream` to `Content-Type : image/gif` to disguise the content as an image.
 
-* `Content-Type : image/gif`
-* `Content-Type : image/png`
-* `Content-Type : image/jpeg`
-* Content-Type wordlist: [SecLists/content-type.txt](https://github.com/danielmiessler/SecLists/blob/master/Miscellaneous/Web/content-type.txt)
+* Common images content-types:
+
+    ```cs
+    Content-Type: image/gif
+    Content-Type: image/png
+    Content-Type: image/jpeg
+    ```
+
+* Content-Type wordlist: [SecLists/web-all-content-types.txt](https://github.com/danielmiessler/SecLists/blob/master/Discovery/Web-Content/web-all-content-types.txt)
+
+    ```cs
+    text/php
+    text/x-php
+    application/php
+    application/x-php
+    application/x-httpd-php
+    application/x-httpd-php-source
+    ```
+
 * Set the `Content-Type` twice, once for unallowed type and once for allowed.
 
 [Magic Bytes](https://en.wikipedia.org/wiki/List_of_file_signatures) - Sometimes applications identify file types based on their first signature bytes. Adding/replacing them in a file might trick the application.

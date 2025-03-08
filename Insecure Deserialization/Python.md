@@ -9,11 +9,16 @@
     * [Pickle](#pickle)
     * [PyYAML](#pyyaml)
 * [References](#references)
+* [Common Pitfalls](#common-pitfalls)
+* [Testing for Insecure Deserialization](#testing-for-insecure-deserialization)
 
 
 ## Tools
 
 * [j0lt-github/python-deserialization-attack-payload-generator](https://github.com/j0lt-github/python-deserialization-attack-payload-generator) - Serialized payload for deserialization RCE attack on python driven applications where pickle,PyYAML, ruamel.yaml or jsonpickle module is used for deserialization of serialized data.
+* [Bandit](https://github.com/PyCQA/bandit) - A tool designed to find common security issues in Python code, including insecure deserialization.
+* [PyYAML](https://pyyaml.org/wiki/PyYAMLDocumentation) - A YAML parser and emitter for Python.
+* [jsonpickle](https://jsonpickle.github.io/) - A library for serializing and deserializing complex Python objects to and from JSON.
 
 
 ## Methodology
@@ -71,6 +76,29 @@ evil_token = b64encode(cPickle.dumps(e))
 print("Your Evil Token : {}").format(evil_token)
 ```
 
+#### Secure Alternative
+
+To avoid using `pickle` for untrusted data, consider using `json` for serialization and deserialization, as it is safer and more secure.
+
+```python
+import json
+from base64 import b64encode, b64decode
+
+class User:
+    def __init__(self):
+        self.username = "anonymous"
+        self.password = "anonymous"
+        self.rank     = "guest"
+
+h = User()
+auth_token = b64encode(json.dumps(h.__dict__).encode())
+print("Your Auth Token : {}").format(auth_token)
+
+new_token = input("New Auth Token : ")
+token = json.loads(b64decode(new_token).decode())
+print("Welcome {}".format(token['username']))
+```
+
 
 ### PyYAML
 
@@ -107,6 +135,35 @@ The vulnerable sinks are now `yaml.unsafe_load` and `yaml.load(input, Loader=yam
 with open('exploit_unsafeloader.yml') as file:
         data = yaml.load(file,Loader=yaml.UnsafeLoader)
 ```
+
+#### Secure Alternative
+
+To avoid using `unsafe_load`, always use `safe_load` when working with untrusted YAML data.
+
+```py
+import yaml
+
+with open('safe_data.yml') as file:
+    data = yaml.safe_load(file)
+```
+
+
+## Common Pitfalls
+
+1. **Using `pickle` with untrusted data**: The `pickle` module is not secure against erroneous or maliciously constructed data. Never unpickle data received from an untrusted or unauthenticated source.
+2. **Using `yaml.load` without specifying a safe loader**: Always use `yaml.safe_load` when working with untrusted YAML data to avoid remote code execution vulnerabilities.
+3. **Ignoring security warnings**: Always pay attention to security warnings and best practices when working with serialization and deserialization in Python.
+
+
+## Testing for Insecure Deserialization
+
+1. **Manual Testing**:
+    - Review the codebase for the use of insecure deserialization functions such as `pickle.loads`, `yaml.load`, and `jsonpickle.decode`.
+    - Identify the sources of input data and ensure they are properly validated and sanitized before deserialization.
+
+2. **Automated Testing**:
+    - Use static analysis tools like [Bandit](https://github.com/PyCQA/bandit) to scan the codebase for insecure deserialization functions and patterns.
+    - Implement unit tests to verify that deserialization functions are not used with untrusted data and that proper input validation is in place.
 
 
 ## References

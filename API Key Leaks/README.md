@@ -5,11 +5,11 @@
 ## Summary
 
 - [Tools](#tools)
-- [Methodology](#exploit)
+- [Methodology](#methodology)
     - [Common Causes of Leaks](#common-causes-of-leaks)
     - [Validate The API Key](#validate-the-api-key)
+- [Reducing The Attack Surface](#reducing-the-attack-surface)
 - [References](#references)
-
 
 ## Tools
 
@@ -21,26 +21,26 @@
 - [streaak/keyhacks](https://github.com/streaak/keyhacks) - is a repository which shows quick ways in which API keys leaked by a bug bounty program can be checked to see if they're valid
 - [trufflesecurity/truffleHog](https://github.com/trufflesecurity/truffleHog) - Find credentials all over the place
 - [projectdiscovery/nuclei-templates](https://github.com/projectdiscovery/nuclei-templates) - Use these templates to test an API token against many API service endpoints
+
     ```powershell
     nuclei -t token-spray/ -var token=token_list.txt
     ```
 
-
 ## Methodology
 
-* **API Keys**: Unique identifiers used to authenticate requests associated with your project or application.
-* **Tokens**: Security tokens (like OAuth tokens) that grant access to protected resources.
-     
+- **API Keys**: Unique identifiers used to authenticate requests associated with your project or application.
+- **Tokens**: Security tokens (like OAuth tokens) that grant access to protected resources.
+
 ### Common Causes of Leaks
 
-* **Hardcoding in Source Code**: Developers may unintentionally leave API keys or tokens directly in the source code.
+- **Hardcoding in Source Code**: Developers may unintentionally leave API keys or tokens directly in the source code.
 
-    ```py     
+    ```py
     # Example of hardcoded API key
     api_key = "1234567890abcdef"
     ```
 
-* **Public Repositories**: Accidentally committing sensitive keys and tokens to publicly accessible version control systems like GitHub.
+- **Public Repositories**: Accidentally committing sensitive keys and tokens to publicly accessible version control systems like GitHub.
 
     ```ps1
     ## Scan a Github Organization
@@ -50,17 +50,16 @@
     docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest github --repo https://github.com/trufflesecurity/test_keys --issue-comments --pr-comments
     ```
 
-* **Hardcoding in Docker Images**: API keys and credentials might be hardcoded in Docker images hosted on DockerHub or private registries.
+- **Hardcoding in Docker Images**: API keys and credentials might be hardcoded in Docker images hosted on DockerHub or private registries.
 
     ```ps1
     # Scan a Docker image for verified secrets
     docker run --rm -it -v "$PWD:/pwd" trufflesecurity/trufflehog:latest docker --image trufflesecurity/secrets
     ```
 
-* **Logs and Debug Information**: Keys and tokens might be inadvertently logged or printed during debugging processes.
+- **Logs and Debug Information**: Keys and tokens might be inadvertently logged or printed during debugging processes.
 
-* **Configuration Files**: Including keys and tokens in publicly accessible configuration files (e.g., .env files, config.json, settings.py, or .aws/credentials.).
-
+- **Configuration Files**: Including keys and tokens in publicly accessible configuration files (e.g., .env files, config.json, settings.py, or .aws/credentials.).
 
 ### Validate The API Key
 
@@ -80,16 +79,29 @@ patterns:
 
 Use [streaak/keyhacks](https://github.com/streaak/keyhacks) or read the documentation of the service to find a quick way to verify the validity of an API key.
 
-* **Example**: Telegram Bot API Token
+- **Example**: Telegram Bot API Token
 
     ```ps1
     curl https://api.telegram.org/bot<TOKEN>/getMe
     ```
 
+## Reducing The Attack Surface
+
+Check the existence of a private key or AWS credentials before commiting your changes in a GitHub repository.
+
+Add these lines to your `.pre-commit-config.yaml` file.
+
+```yml
+-   repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+    -   id: detect-aws-credentials
+    -   id: detect-private-key
+```
 
 ## References
 
-* [Finding Hidden API Keys & How to Use Them - Sumit Jain - August 24, 2019](https://web.archive.org/web/20191012175520/https://medium.com/@sumitcfe/finding-hidden-api-keys-how-to-use-them-11b1e5d0f01d)
-* [Introducing SignSaboteur: Forge Signed Web Tokens with Ease - Zakhar Fedotkin - May 22, 2024](https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease)
-* [Private API Key Leakage Due to Lack of Access Control - yox - August 8, 2018](https://hackerone.com/reports/376060)
-* [Saying Goodbye to My Favorite 5 Minute P1 - Allyson O'Malley - January 6, 2020](https://www.allysonomalley.com/2020/01/06/saying-goodbye-to-my-favorite-5-minute-p1/)
+- [Finding Hidden API Keys & How to Use Them - Sumit Jain - August 24, 2019](https://web.archive.org/web/20191012175520/https://medium.com/@sumitcfe/finding-hidden-api-keys-how-to-use-them-11b1e5d0f01d)
+- [Introducing SignSaboteur: Forge Signed Web Tokens with Ease - Zakhar Fedotkin - May 22, 2024](https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease)
+- [Private API Key Leakage Due to Lack of Access Control - yox - August 8, 2018](https://hackerone.com/reports/376060)
+- [Saying Goodbye to My Favorite 5 Minute P1 - Allyson O'Malley - January 6, 2020](https://www.allysonomalley.com/2020/01/06/saying-goodbye-to-my-favorite-5-minute-p1/)

@@ -67,6 +67,17 @@ Here is a list of the default extensions for web shell pages in the selected lan
 * Coldfusion: `.cfm, .cfml, .cfc, .dbm`
 * Node.js: `.js, .json, .node`
 
+Other extensions that can be abused to trigger other vulnerabilities.
+
+* `.svg`: XXE, XSS, SSRF
+* `.gif`: XSS
+* `.csv`: CSV Injection
+* `.xml`: XXE
+* `.avi`: LFI, SSRF
+* `.js` : XSS, Open Redirect
+* `.zip`: RCE, DOS, LFI Gadget
+* `.html` : XSS, Open Redirect
+
 ### Upload Tricks
 
 **Extensions**:

@@ -141,4 +141,5 @@ in order to add this header.
 - [Hacking with WebSockets - Mike Shema, Sergey Shekyan, Vaagn Toukharian - September 20, 2012](https://media.blackhat.com/bh-us-12/Briefings/Shekyan/BH_US_12_Shekyan_Toukharian_Hacking_Websocket_Slides.pdf)
 - [Mini WebSocket CTF - Snowscan - January 27, 2020](https://snowscan.io/bbsctf-evilconneck/#)
 - [Streamlining Websocket Pentesting with wsrepl - Andrez Konstantinov - July 18, 2023](https://blog.doyensec.com/2023/07/18/streamlining-websocket-pentesting-with-wsrepl.html)
+- [Testing for WebSockets security vulnerabilities - PortSwigger - September 28, 2019](https://portswigger.net/web-security/websockets)
 - [WebSocket Attacks - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/websocket-attacks)

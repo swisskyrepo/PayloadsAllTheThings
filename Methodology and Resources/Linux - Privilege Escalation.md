@@ -43,7 +43,7 @@
     - [LXC/LXD](https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/#lxclxd)
 - [Hijack TMUX session](https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/#hijack-tmux-session)
 - [Kernel Exploits](https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/#kernel-exploits)
-    - [CVE-2022-0847 (DirtyPipe)](https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/#cve-2022-0847-dirtypipe)	
+    - [CVE-2022-0847 (DirtyPipe)](https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/#cve-2022-0847-dirtypipe)
     - [CVE-2016-5195 (DirtyCow)](https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/#cve-2016-5195-dirtycow)
     - [CVE-2010-3904 (RDS)](https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/#cve-2010-3904-rds)
     - [CVE-2010-4258 (Full Nelson)](https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/#cve-2010-4258-full-nelson)

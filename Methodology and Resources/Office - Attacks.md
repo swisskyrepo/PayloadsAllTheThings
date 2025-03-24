@@ -1,4 +1,4 @@
-# Office - Attacks 
+# Office - Attacks
 
 :warning: Content of this page has been moved to [InternalAllTheThings/redteam/access/office-attacks](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/office-attacks/)
 

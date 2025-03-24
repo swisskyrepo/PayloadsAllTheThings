@@ -2,7 +2,6 @@
 
 > Business logic errors, also known as business logic flaws, are a type of application vulnerability that stems from the application's business logic, which is the part of the program that deals with real-world business rules and processes. These rules could include things like pricing models, transaction limits, or the sequences of operations that need to be followed in a multi-step process.
 
-
 ## Summary
 
 * [Methodology](#methodology)
@@ -15,7 +14,6 @@
     * [Cart/Wishlist Exploitation](#cartwishlist-exploitation)
     * [Thread Comment Testing](#thread-comment-testing)
 * [References](#references)
-
 
 ## Methodology
 
@@ -32,7 +30,6 @@ Common examples of Business Logic Errors.
 * Investigate the possibility of posting reviews impersonating other users.
 * Attempt Cross-Site Request Forgery (CSRF) on this feature, as it's frequently unprotected by tokens.
 
-
 ### Discount Code Feature Testing
 
 * Try to apply the same discount code multiple times to assess if it's reusable.
@@ -41,17 +38,14 @@ Common examples of Business Logic Errors.
 * Test for vulnerabilities from missing input sanitization such as XSS, SQL Injection on this feature.
 * Attempt to apply discount codes to non-discounted items by manipulating the server-side request.
 
-
 ### Delivery Fee Manipulation
 
 * Experiment with negative values for delivery charges to see if it reduces the final amount.
 * Evaluate if free delivery can be activated by modifying parameters.
 
-
 ### Currency Arbitrage
 
 * Attempt to pay in one currency, for example, USD, and request a refund in another, like EUR. The difference in conversion rates could result in a profit.
-    
 
 ### Premium Feature Exploitation
 
@@ -60,20 +54,17 @@ Common examples of Business Logic Errors.
 * Look for true/false values in requests/responses that validate premium access. Use tools like Burp's Match & Replace to alter these values for unauthorized premium access.
 * Review cookies or local storage for variables validating premium access.
 
-
 ### Refund Feature Exploitation
 
 * Purchase a product, ask for a refund, and see if the product remains accessible.
 * Look for opportunities for currency arbitrage.
 * Submit multiple cancellation requests for a subscription to check the possibility of multiple refunds.
 
-
 ### Cart/Wishlist Exploitation
 
 * Test the system by adding products in negative quantities, along with other products, to balance the total.
 * Try to add more of a product than is available.
 * Check if a product in your wishlist or cart can be moved to another user's cart or removed from it.
-
 
 ### Thread Comment Testing
 
@@ -82,10 +73,9 @@ Common examples of Business Logic Errors.
 * If the system allows comments by verified or privileged users, try to mimic these parameters and see if you can comment as well.
 * Attempt to post comments impersonating other users.
 
-
 ## References
 
-- [Business Logic Vulnerabilities - PortSwigger - 2024](https://portswigger.net/web-security/logic-flaws)
-- [Business Logic Vulnerability - OWASP - 2024](https://owasp.org/www-community/vulnerabilities/Business_logic_vulnerability)
-- [CWE-840: Business Logic Errors - CWE - March 24, 2011](https://cwe.mitre.org/data/definitions/840.html)
-- [Examples of Business Logic Vulnerabilities - PortSwigger - 2024](https://portswigger.net/web-security/logic-flaws/examples)
+* [Business Logic Vulnerabilities - PortSwigger - 2024](https://portswigger.net/web-security/logic-flaws)
+* [Business Logic Vulnerability - OWASP - 2024](https://owasp.org/www-community/vulnerabilities/Business_logic_vulnerability)
+* [CWE-840: Business Logic Errors - CWE - March 24, 2011](https://cwe.mitre.org/data/definitions/840.html)
+* [Examples of Business Logic Vulnerabilities - PortSwigger - 2024](https://portswigger.net/web-security/logic-flaws/examples)

@@ -28,13 +28,12 @@
 * [zaproxy/zaproxy](https://github.com/zaproxy/zaproxy)
 * [machine1337/clickjack](https://github.com/machine1337/clickjack)
 
-
 ## Methodology
 
 ### UI Redressing
 
-UI Redressing is a Clickjacking technique where an attacker overlays a transparent UI element on top of a legitimate website or application. 
-The transparent UI element contains malicious content or actions that are visually hidden from the user. By manipulating the transparency and positioning of elements, 
+UI Redressing is a Clickjacking technique where an attacker overlays a transparent UI element on top of a legitimate website or application.
+The transparent UI element contains malicious content or actions that are visually hidden from the user. By manipulating the transparency and positioning of elements,
 the attacker can trick the user into interacting with the hidden content, believing they are interacting with the visible interface.
 
 * **How UI Redressing Works:**
@@ -51,8 +50,8 @@ the attacker can trick the user into interacting with the hidden content, believ
 
 ### Invisible Frames
 
-Invisible Frames is a Clickjacking technique where attackers use hidden iframes to trick users into interacting with content from another website unknowingly. 
-These iframes are made invisible by setting their dimensions to zero (height: 0; width: 0;) and removing their borders (border: none;). 
+Invisible Frames is a Clickjacking technique where attackers use hidden iframes to trick users into interacting with content from another website unknowingly.
+These iframes are made invisible by setting their dimensions to zero (height: 0; width: 0;) and removing their borders (border: none;).
 The content inside these invisible frames can be malicious, such as phishing forms, malware downloads, or any other harmful actions.
 
 * **How Invisible Frames Work:**
@@ -66,7 +65,6 @@ The content inside these invisible frames can be malicious, such as phishing for
     * User Interaction: The attacker overlays enticing elements on top of the invisible iframe, making it seem like the user is interacting with the visible interface. For instance, the attacker might position a transparent button over the invisible iframe. When the user clicks the button, they are essentially clicking on the hidden content within the iframe.
     * Unintended Actions: Since the user is unaware of the invisible iframe, their interactions can lead to unintended actions, such as submitting forms, clicking on malicious links, or even performing financial transactions without their consent.
 
-
 ### Button/Form Hijacking
 
 Button/Form Hijacking is a Clickjacking technique where attackers trick users into interacting with invisible or hidden buttons/forms, leading to unintended actions on a legitimate website. By overlaying deceptive elements on top of visible buttons or forms, attackers can manipulate user interactions to perform malicious actions without the user's knowledge.
@@ -77,7 +75,7 @@ Button/Form Hijacking is a Clickjacking technique where attackers trick users in
     ```html
     <button onclick="submitForm()">Click me</button>
     ```
-    
+
     * Invisible Overlay: The attacker overlays this visible button or form with an invisible or transparent element that contains a malicious action, such as submitting a hidden form.
 
     ```html
@@ -119,7 +117,6 @@ Button/Form Hijacking is a Clickjacking technique where attackers trick users in
   }
 ```
 
-
 ## Preventive Measures
 
 ### Implement X-Frame-Options Header
@@ -132,7 +129,7 @@ Header always append X-Frame-Options SAMEORIGIN
 
 ### Content Security Policy (CSP)
 
-Use CSP to control the sources from which content can be loaded on your website, including scripts, styles, and frames. 
+Use CSP to control the sources from which content can be loaded on your website, including scripts, styles, and frames.
 Define a strong CSP policy to prevent unauthorized framing and loading of external resources.
 Example in HTML meta tag:
 
@@ -175,7 +172,7 @@ Example in HTML meta tag:
 
 * The previous technique requires the user interaction but, the same result, can be achieved without prompting the user. To do this the attacker have to automatically cancel the incoming navigation request in an onBeforeUnload event handler by repeatedly submitting (for example every millisecond) a navigation request to a web page that responds with a _"HTTP/1.1 204 No Content"_ header.
 
-_204 page:_
+204 page:
 
 ```php
 <?php
@@ -183,7 +180,7 @@ _204 page:_
 ?>
 ```
 
-_Attacker's Page_
+Attacker's Page:
 
 ```js
 <script>
@@ -204,7 +201,8 @@ _Attacker's Page_
 
 ## XSS Filter
 
-### IE8 XSS filter 
+### IE8 XSS filter
+
 This filter has visibility into all parameters of each request and response flowing through the web browser and it compares them to a set of regular expressions in order to look for reflected XSS attempts. When the filter identifies a possible XSS attacks; it disables all inline scripts within the page, including frame busting scripts (the same thing could be done with external scripts). For this reason an attacker could induce a false positive by inserting the beginning of the frame busting script into a request's parameters.
 
 ```html
@@ -245,16 +243,14 @@ Inspect the following code:
 
 Determine the Clickjacking vulnerability within this code snippet. Identify how the hidden iframe is being used to exploit the user's actions when they click the button, leading them to a malicious website.
 
-
 ## Labs
 
 * [OWASP WebGoat](https://owasp.org/www-project-webgoat/)
 * [OWASP Client Side Clickjacking Test](https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/11-Client_Side_Testing/09-Testing_for_Clickjacking)
 
-
 ## References
 
-- [Clickjacker.io - Saurabh Banawar - May 10, 2020](https://clickjacker.io)
-- [Clickjacking - Gustav Rydstedt - April 28, 2020](https://owasp.org/www-community/attacks/Clickjacking)
-- [Synopsys Clickjacking - BlackDuck - November 29, 2019](https://www.synopsys.com/glossary/what-is-clickjacking.html#B)
-- [Web-Security Clickjacking - PortSwigger - October 12, 2019](https://portswigger.net/web-security/clickjacking)
+* [Clickjacker.io - Saurabh Banawar - May 10, 2020](https://clickjacker.io)
+* [Clickjacking - Gustav Rydstedt - April 28, 2020](https://owasp.org/www-community/attacks/Clickjacking)
+* [Synopsys Clickjacking - BlackDuck - November 29, 2019](https://www.synopsys.com/glossary/what-is-clickjacking.html#B)
+* [Web-Security Clickjacking - PortSwigger - October 12, 2019](https://portswigger.net/web-security/clickjacking)

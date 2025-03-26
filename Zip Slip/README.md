@@ -6,15 +6,12 @@
 
 * [Tools](#tools)
 * [Methodology](#methodology)
-    * [Additional Notes](#additional-notes)
 * [References](#references)
-
 
 ## Tools
 
 * [ptoomey3/evilarc](https://github.com/ptoomey3/evilarc) - Create tar/zip archives that can exploit directory traversal vulnerabilities
 * [usdAG/slipit](https://github.com/usdAG/slipit) - Utility for creating ZipSlip archives
-
 
 ## Methodology
 
@@ -22,7 +19,7 @@ The Zip Slip vulnerability is a critical security flaw that affects the handling
 
 **Example**: Suppose an attacker creates a ZIP file with the following structure:
 
-```
+```ps1
 malicious.zip
   ├── ../../../../etc/passwd
   ├── ../../../../usr/local/bin/malicious_script.sh
@@ -30,8 +27,8 @@ malicious.zip
 
 When a vulnerable application extracts `malicious.zip`, the files are written to `/etc/passwd` and /`usr/local/bin/malicious_script.sh` instead of being contained within the extraction directory. This can have severe consequences, such as corrupting system files or executing malicious scripts.
 
-
 * Using [ptoomey3/evilarc](https://github.com/ptoomey3/evilarc):
+
     ```python
     python evilarc.py shell.php -o unix -f shell.zip -p var/www/html/ -d 15
     ```
@@ -44,7 +41,6 @@ When a vulnerable application extracts `malicious.zip`, the files are written to
     ```
 
 For a list of affected libraries and projects, visit [snyk/zip-slip-vulnerability](https://github.com/snyk/zip-slip-vulnerability)
-
 
 ## References
 

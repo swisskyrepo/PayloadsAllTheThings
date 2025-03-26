@@ -9,7 +9,6 @@
 * [Automatic Sanitization](#automatic-sanitization)
 * [References](#references)
 
-
 ## Client Side Template Injection
 
 The following payloads are based on Client Side Template Injection.
@@ -205,7 +204,6 @@ AngularJS bypass Waf [Imperva]
 }}
 ```
 
-
 Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsys) and Gareth Heyes (PortSwigger)
 
 ```javascript
@@ -304,11 +302,11 @@ Shorter 1.0.1 - 1.1.5 && > 1.6.0 by Lewis Ardern (Synopsys) and Gareth Heyes (Po
 
 However, it is possible to mark a value as trusted and prevent the automatic sanitization with these methods:
 
-- bypassSecurityTrustHtml
-- bypassSecurityTrustScript
-- bypassSecurityTrustStyle
-- bypassSecurityTrustUrl
-- bypassSecurityTrustResourceUrl
+* bypassSecurityTrustHtml
+* bypassSecurityTrustScript
+* bypassSecurityTrustStyle
+* bypassSecurityTrustUrl
+* bypassSecurityTrustResourceUrl
 
 Example of a component using the unsecure method `bypassSecurityTrustUrl`:
 
@@ -336,11 +334,10 @@ export class App {
 
 When doing a code review, you want to make sure that no user input is being trusted since it will introduce a security vulnerability in the application.
 
-
 ## References
 
-- [Angular Security - May 16, 2023](https://angular.io/guide/security)
-- [Bidding Like a Billionaire - Stealing NFTs With 4-Char CSTIs - Matan Berson (@MtnBer) - July 11, 2024](https://matanber.com/blog/4-char-csti)
-- [Blind XSS AngularJS Payloads - Lewis Ardern - December 7, 2018](http://web.archive.org/web/20181209041100/https://ardern.io/2018/12/07/angularjs-bxss/)
-- [Bypass DomSanitizer - Swarna (@swarnakishore) - August 11, 2017](https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b)
-- [XSS without HTML - CSTI with Angular JS - Gareth Heyes (@garethheyes) - January 27, 2016](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)
+* [Angular Security - May 16, 2023](https://angular.io/guide/security)
+* [Bidding Like a Billionaire - Stealing NFTs With 4-Char CSTIs - Matan Berson (@MtnBer) - July 11, 2024](https://matanber.com/blog/4-char-csti)
+* [Blind XSS AngularJS Payloads - Lewis Ardern - December 7, 2018](http://web.archive.org/web/20181209041100/https://ardern.io/2018/12/07/angularjs-bxss/)
+* [Bypass DomSanitizer - Swarna (@swarnakishore) - August 11, 2017](https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b)
+* [XSS without HTML - CSTI with Angular JS - Gareth Heyes (@garethheyes) - January 27, 2016](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)

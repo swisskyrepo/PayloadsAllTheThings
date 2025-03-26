@@ -8,18 +8,16 @@
 * [Methodology](#methodology)
 * [Protection Bypasses](#protection-bypasses)
     * [0.0.0.0](#0000)
-    * [CNAME](#CNAME)
+    * [CNAME](#cname)
     * [localhost](#localhost)
 * [References](#references)
 
-
 ## Tools
 
-- [nccgroup/singularity](https://github.com/nccgroup/singularity) - A DNS rebinding attack framework. 
-- [rebind.it](http://rebind.it/) - Singularity of Origin Web Client.
-- [taviso/rbndr](https://github.com/taviso/rbndr) - Simple DNS Rebinding Service
-- [taviso/rebinder](https://lock.cmpxchg8b.com/rebinder.html) - rbndr Tool Helper
-
+* [nccgroup/singularity](https://github.com/nccgroup/singularity) - A DNS rebinding attack framework.
+* [rebind.it](http://rebind.it/) - Singularity of Origin Web Client.
+* [taviso/rbndr](https://github.com/taviso/rbndr) - Simple DNS Rebinding Service
+* [taviso/rebinder](https://lock.cmpxchg8b.com/rebinder.html) - rbndr Tool Helper
 
 ## Methodology
 
@@ -50,15 +48,13 @@ The browser treats subsequent responses as coming from the same origin (`malicio
 
 Malicious JavaScript running in the victim's browser can now make requests to internal IP addresses or local services (e.g., 192.168.1.1 or 127.0.0.1), bypassing same-origin policy restrictions.
 
-
 **Example:**
 
 1. Register a domain.
 2. [Setup Singularity of Origin](https://github.com/nccgroup/singularity/wiki/Setup-and-Installation).
 3. Edit the [autoattack HTML page](https://github.com/nccgroup/singularity/blob/master/html/autoattack.html) for your needs.
-4. Browse to "http://rebinder.your.domain:8080/autoattack.html".
+4. Browse to `http://rebinder.your.domain:8080/autoattack.html`.
 5. Wait for the attack to finish (it can take few seconds/minutes).
-
 
 ## Protection Bypasses
 
@@ -95,7 +91,6 @@ $ dig www.example.com +noall +answer
 localhost.example.com.            381     IN      CNAME   localhost.
 ```
 
-
 ## References
 
-- [How Do DNS Rebinding Attacks Work? - nccgroup - Apr 9, 2019](https://github.com/nccgroup/singularity/wiki/How-Do-DNS-Rebinding-Attacks-Work%3F)
+* [How Do DNS Rebinding Attacks Work? - nccgroup - Apr 9, 2019](https://github.com/nccgroup/singularity/wiki/How-Do-DNS-Rebinding-Attacks-Work%3F)

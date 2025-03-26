@@ -2,7 +2,6 @@
 
 > Grab a book and relax. Some of the best books in the industry.
 
-
 **Wiley**:
 
 - [Advanced Penetration Testing: Hacking the World's Most Secure Networks by Wil Allsopp (2017)](https://www.goodreads.com/book/show/32027337-advanced-penetration-testing)

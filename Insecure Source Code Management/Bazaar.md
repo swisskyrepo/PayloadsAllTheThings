@@ -2,7 +2,6 @@
 
 > Bazaar  (also known as bzr ) is a free, distributed version control system (DVCS) that helps you track project history over time and collaborate seamlessly with others. Developed by Canonical, Bazaar emphasizes ease of use, a flexible workflow, and rich features to cater to both individual developers and large teams.
 
-
 ## Summary
 
 * [Tools](#tools)
@@ -10,12 +9,12 @@
     * [bzr_dumper](#bzr_dumper)
 * [References](#references)
 
-
 ## Tools
 
 ### rip-bzr.pl
 
 * [kost/dvcs-ripper/rip-bzr.pl](https://raw.githubusercontent.com/kost/dvcs-ripper/master/rip-bzr.pl)
+
     ```powershell
     docker run --rm -it -v /path/to/host/work:/work:rw k0st/alpine-dvcs-ripper rip-bzr.pl -v -u
     ```
@@ -50,4 +49,4 @@ bzr revert
 
 ## References
 
-- [STEM CTF Cyber Challenge 2019 – My First Blog - m3ssap0 / zuzzur3ll0n1 - March 2, 2019](https://ctftime.org/writeup/13380)
+* [STEM CTF Cyber Challenge 2019 – My First Blog - m3ssap0 / zuzzur3ll0n1 - March 2, 2019](https://ctftime.org/writeup/13380)

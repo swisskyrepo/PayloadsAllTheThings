@@ -2,7 +2,6 @@
 
 > Server-Side Template Injection (SSTI)  is a vulnerability that occurs when an attacker can inject malicious input into a server-side template, causing the template engine to execute arbitrary commands on the server. In PHP, SSTI can arise when user input is embedded within templates rendered by templating engines like Smarty, Twig, or even within plain PHP templates, without proper sanitization or validation.
 
-
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
@@ -20,7 +19,6 @@
 - [Plates](#plates)
 - [References](#references)
 
-
 ## Templating Libraries
 
 | Template Name  | Payload Format |
@@ -31,7 +29,6 @@
 | Plates         | `<?= ?>`  |
 | Smarty         | `{ }`     |
 | Twig           | `{{ }}`   |
-
 
 ## Smarty
 
@@ -131,7 +128,6 @@ email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
 ```
 
 ---
-
 
 ## patTemplate
 
@@ -251,7 +247,6 @@ layout template:
 </html>
 ```
 
-
 ## References
 
-* [Server Side Template Injection (SSTI) via Twig escape handler - March 21, 2024](https://github.com/getgrav/grav/security/advisories/GHSA-2m7x-c7px-hp58)
+- [Server Side Template Injection (SSTI) via Twig escape handler - March 21, 2024](https://github.com/getgrav/grav/security/advisories/GHSA-2m7x-c7px-hp58)

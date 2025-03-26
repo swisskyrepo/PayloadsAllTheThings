@@ -2,7 +2,6 @@
 
 > Server-Side Template Injection (SSTI)  is a vulnerability that arises when an attacker can inject malicious code into a server-side template, causing the server to execute arbitrary commands. In Ruby, SSTI can occur when using templating engines like ERB (Embedded Ruby), Haml, liquid, or Slim, especially when user input is incorporated into templates without proper sanitization or validation.
 
-
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
@@ -10,9 +9,8 @@
     - [Ruby - Basic injections](#ruby---basic-injections)
     - [Ruby - Retrieve /etc/passwd](#ruby---retrieve-etcpasswd)
     - [Ruby - List files and directories](#ruby---list-files-and-directories)
-    - [Ruby - Remote Command execution](#ruby---remote-Command-execution)
+    - [Ruby - Remote Command execution](#ruby---remote-command-execution)
 - [References](#references)
-
 
 ## Templating Libraries
 
@@ -25,7 +23,6 @@
 | Liquid   | `{{ }}`    |
 | Mustache | `{{ }}`    |
 | Slim     | `#{ }`     |
-
 
 ## Ruby
 
@@ -74,7 +71,6 @@ Execute code using SSTI for **Slim** engine.
 #{ %x|env| }
 ```
 
-
 ## References
 
-* [Ruby ERB Template Injection - Scott White & Geoff Walton - September 13, 2017](https://web.archive.org/web/20181119170413/https://www.trustedsec.com/2017/09/rubyerb-template-injection/)
+- [Ruby ERB Template Injection - Scott White & Geoff Walton - September 13, 2017](https://web.archive.org/web/20181119170413/https://www.trustedsec.com/2017/09/rubyerb-template-injection/)

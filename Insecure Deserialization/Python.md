@@ -10,11 +10,9 @@
     * [PyYAML](#pyyaml)
 * [References](#references)
 
-
 ## Tools
 
 * [j0lt-github/python-deserialization-attack-payload-generator](https://github.com/j0lt-github/python-deserialization-attack-payload-generator) - Serialized payload for deserialization RCE attack on python driven applications where pickle,PyYAML, ruamel.yaml or jsonpickle module is used for deserialization of serialized data.
-
 
 ## Methodology
 
@@ -24,7 +22,6 @@ In Python source code, look for these sinks:
 * `pickle.loads`
 * `_pickle.loads`
 * `jsonpickle.decode`
-
 
 ### Pickle
 
@@ -46,7 +43,7 @@ auth_token = b64encode(cPickle.dumps(h))
 print("Your Auth Token : {}").format(auth_token)
 ```
 
-The vulnerability is introduced when a token is loaded from an user input. 
+The vulnerability is introduced when a token is loaded from an user input.
 
 ```python
 new_token = raw_input("New Auth Token : ")
@@ -70,7 +67,6 @@ e = Evil()
 evil_token = b64encode(cPickle.dumps(e))
 print("Your Evil Token : {}").format(evil_token)
 ```
-
 
 ### PyYAML
 
@@ -108,11 +104,10 @@ with open('exploit_unsafeloader.yml') as file:
         data = yaml.load(file,Loader=yaml.UnsafeLoader)
 ```
 
-
 ## References
 
-- [CVE-2019-20477 - 0Day YAML Deserialization Attack on PyYAML version <= 5.1.2 - Manmeet Singh (@_j0lt) - June 21, 2020](https://thej0lt.com/2020/06/21/cve-2019-20477-0day-yaml-deserialization-attack-on-pyyaml-version/)
-- [Exploiting misuse of Python's "pickle" - Nelson Elhage - March 20, 2011](https://blog.nelhage.com/2011/03/exploiting-pickle/)
-- [Python Yaml Deserialization - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/deserialization/python-yaml-deserialization)
-- [PyYAML Documentation - PyYAML - April 29, 2006](https://pyyaml.org/wiki/PyYAMLDocumentation)
-- [YAML Deserialization Attack in Python - Manmeet Singh & Ashish Kukret - November 13, 2021](https://www.exploit-db.com/docs/english/47655-yaml-deserialization-attack-in-python.pdf)
+* [CVE-2019-20477 - 0Day YAML Deserialization Attack on PyYAML version <= 5.1.2 - Manmeet Singh (@_j0lt) - June 21, 2020](https://thej0lt.com/2020/06/21/cve-2019-20477-0day-yaml-deserialization-attack-on-pyyaml-version/)
+* [Exploiting misuse of Python's "pickle" - Nelson Elhage - March 20, 2011](https://blog.nelhage.com/2011/03/exploiting-pickle/)
+* [Python Yaml Deserialization - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/deserialization/python-yaml-deserialization)
+* [PyYAML Documentation - PyYAML - April 29, 2006](https://pyyaml.org/wiki/PyYAMLDocumentation)
+* [YAML Deserialization Attack in Python - Manmeet Singh & Ashish Kukret - November 13, 2021](https://www.exploit-db.com/docs/english/47655-yaml-deserialization-attack-in-python.pdf)

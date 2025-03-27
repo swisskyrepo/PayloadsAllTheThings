@@ -176,7 +176,7 @@ Fixed by [HubSpot/jinjava PR #230](https://github.com/HubSpot/jinjava/pull/230)
 
 [Official website](https://pebbletemplates.io/)
 
-> Pebble is a Java templating engine inspired by [Twig](./PHP.md#twig) and similar to the Python [Jinja](./Python#jinja2) Template Engine syntax. It features templates inheritance and easy-to-read syntax, ships with built-in autoescaping for security, and includes integrated support for internationalization.
+> Pebble is a Java templating engine inspired by [Twig](./PHP.md#twig) and similar to the Python [Jinja](./Python.md#jinja2) Template Engine syntax. It features templates inheritance and easy-to-read syntax, ships with built-in autoescaping for security, and includes integrated support for internationalization.
 
 ### Pebble - Basic Injection
 

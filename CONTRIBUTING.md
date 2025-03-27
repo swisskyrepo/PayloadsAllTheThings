@@ -18,7 +18,7 @@ In order to provide the safest payloads for the community, the following rules m
     - Use `P@ssw0rd`, `Password123`, `password` as default passwords for your examples
     - Prefer commonly used name for machines such as `DC01`, `EXCHANGE01`, `WORKSTATION01`, etc
 - References must have an `author`, a `title`, a `link` and a `date`
-    - Use [Wayback Machine](wayback.archive.org) if the reference is not available anymore.
+    - Use [Wayback Machine](https://web.archive.org/) if the reference is not available anymore.
     - The date must be following the format `Month Number, Year`, e.g: `December 25, 2024`
     - References to Github repositories must follow this format: `[author/tool](https://github.com/URL) - Description`
 

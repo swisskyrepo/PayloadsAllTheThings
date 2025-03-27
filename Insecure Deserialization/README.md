@@ -16,8 +16,7 @@ Check the following sub-sections, located in other chapters :
 * [Java deserialization : ysoserial, ...](Java.md)
 * [PHP (Object injection) : phpggc, ...](PHP.md)
 * [Ruby : universal rce gadget, ...](Ruby.md)
-* [Python : pickle, ...](Python.md)
-* [YAML : PyYAML, ...](YAML.md)
+* [Python : pickle, PyYAML, ...](Python.md)
 * [.NET : ysoserial.net, ...](DotNET.md)
 
 | Object Type     | Header (Hex) | Header (Base64) |

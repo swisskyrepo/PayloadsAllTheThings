@@ -1,0 +1,6 @@
+%!PS
+userdict /setpagedevice undef
+legal
+{ null restore } stopped { pop } if
+legal
+mark /OutputFile (%pipe%id) currentdevice putdeviceprops

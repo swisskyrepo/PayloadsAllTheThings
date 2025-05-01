@@ -313,6 +313,8 @@ wh``oami
 ```powershell
 w\ho\am\i
 /\b\i\n/////s\h
+\id
+\``id`
 ```
 
 ### Bypass With $@

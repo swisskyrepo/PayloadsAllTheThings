@@ -2,8 +2,12 @@
 
 :warning: Content of this page has been moved to [InternalAllTheThings/cheatsheets/source-code-management-ci](https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/source-code-management-ci/)
 
-- [Tools](https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/source-code-management-ci/#tools)
-- [Enumerate repositories files and secrets](https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/source-code-management-ci/#enumerate-repositories-files-and-secrets)
-- [Personal Access Token](https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/source-code-management-ci/#personal-access-token)
-- [Gitlab CI/Github Actions](https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/source-code-management-ci/#gitlab-cigithub-actions)
-- [References](https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/source-code-management-ci/#references)
+- [CI/CD Attacks](https://swisskyrepo.github.io/InternalAllTheThings/devops/)
+    - [Azure DevOps](https://swisskyrepo.github.io/InternalAllTheThings/devops/cicd-azure-devops/)
+    - [BuildKite](https://swisskyrepo.github.io/InternalAllTheThings/devops/cicd-buildkite/)
+    - [CircleCI](https://swisskyrepo.github.io/InternalAllTheThings/devops/cicd-circle-ci/)
+    - [Drone CI](https://swisskyrepo.github.io/InternalAllTheThings/devops/cicd-drone-ci/)
+    - [GitHub Actions](https://swisskyrepo.github.io/InternalAllTheThings/devops/cicd-github-actions/)
+    - [Gitlab CI](https://swisskyrepo.github.io/InternalAllTheThings/devops/cicd-gitlab-ci/)
+- [Package Managers and Build Files](https://swisskyrepo.github.io/InternalAllTheThings/devops/package-managers/)
+- [Hardcoded Secrets Enumeration](https://swisskyrepo.github.io/InternalAllTheThings/devops/secrets-enumeration/)

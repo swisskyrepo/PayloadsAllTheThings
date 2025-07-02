@@ -6,6 +6,8 @@
 
 * [Tools](#tools)
 * [Methodology](#methodology)
+    * [Web Socket Protocol](#web-socket-protocol)
+    * [SocketIO](#socketio)
     * [Using wsrepl](#using-wsrepl)
     * [Using ws-harness.py](#using-ws-harnesspy)
 * [Cross-Site WebSocket Hijacking (CSWSH)](#cross-site-websocket-hijacking-cswsh)
@@ -20,6 +22,34 @@
 * [snyk/socketsleuth](https://github.com/snyk/socketsleuth) - Burp Extension to add additional functionality for pentesting websocket based applications
 
 ## Methodology
+
+### Web Socket Protocol
+
+WebSockets start as a normal `HTTP/1.1` request and then upgrade the connection to use the WebSocket protocol.
+
+The client sends a specially crafted HTTP request with headers indicating it wants to switch to the WebSocket protocol:
+
+```http
+GET /chat HTTP/1.1
+Host: example.com:80
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
+Sec-WebSocket-Version: 13
+```
+
+Server responds with an `HTTP 101 Switching Protocols` response. If the server accepts the request, it replies like this.
+
+```http
+HTTP/1.1 101 Switching Protocols
+Upgrade: websocket
+Connection: Upgrade
+Sec-WebSocket-Accept: s3pPLMBiTxaQ9kYGzzhZRbK+xOo=
+```
+
+### SocketIO
+
+Socket.IO is a JavaScript library (for both client and server) that provides a higher-level abstraction over WebSockets, designed to make real-time communication easier and more reliable across browsers and environments.
 
 ### Using wsrepl
 
@@ -132,6 +162,7 @@ in order to add this header.
 
 ## References
 
+* [Cross Site WebSocket Hijacking with socketio - Jimmy Li - August 17, 2020](https://blog.jimmyli.us/articles/2020-08/Cross-Site-WebSocket-Hijacking-With-SocketIO)
 * [Hacking Web Sockets: All Web Pentest Tools Welcomed - Michael Fowl - March 5, 2019](https://web.archive.org/web/20190306170840/https://www.vdalabs.com/2019/03/05/hacking-web-sockets-all-web-pentest-tools-welcomed/)
 * [Hacking with WebSockets - Mike Shema, Sergey Shekyan, Vaagn Toukharian - September 20, 2012](https://media.blackhat.com/bh-us-12/Briefings/Shekyan/BH_US_12_Shekyan_Toukharian_Hacking_Websocket_Slides.pdf)
 * [Mini WebSocket CTF - Snowscan - January 27, 2020](https://snowscan.io/bbsctf-evilconneck/#)

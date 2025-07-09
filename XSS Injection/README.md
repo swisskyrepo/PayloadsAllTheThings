@@ -103,6 +103,15 @@ document.body.innerHTML = "</br></br></br></br></br><h1>Please login to continue
 </script>
 ```
 
+The following research presents a use case demonstrating how various attacks can be executed by weaponizing an XSS vulnerability abusing legitimate domains to deliver phishing: [lauraops07 XSS at its finest. "Weaponizing XSS vulnerabilities for Red Team engagements."](https://github.com/dhmosfunk/lauraops07-xss-at-its-finest)
+- Phishing
+- Clickfix
+- HTML Smuggling
+
+
+
+
+
 ### Javascript Keylogger
 
 Another way to collect sensitive data is to set a javascript keylogger.

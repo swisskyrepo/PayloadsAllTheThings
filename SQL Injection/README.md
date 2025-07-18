@@ -419,6 +419,14 @@ Bypass using LIKE/NOT IN/IN/BETWEEN
 | `IN`      | `SUBSTRING(VERSION(),1,1)IN(4,3)`          |
 | `BETWEEN` | `SUBSTRING(VERSION(),1,1) BETWEEN 3 AND 4` |
 
+#### For MySQL
+
+Bypass equal via <=> (NULL Safe equality) (NOTE: Work in MySQL Only)
+
+| Bypass | SQL Example   | NOTES             |
+| ------ | ------------- | -------------------
+| `<=>`  | `OR 1 <=> 1`  | Bypass filtered `=`
+
 ### Case Modification
 
 Bypass using uppercase/lowercase.

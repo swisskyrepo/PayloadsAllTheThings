@@ -49,6 +49,6 @@ This project is proudly sponsored by these companies.
 
 | Logo | Description |
 | --- | --- |
-| [<img src="https://avatars.githubusercontent.com/u/34724717?s=40&v=4" alt="sponsor-serpapi">](https://serpapi.com) | **SerpApi** is a real time API to access Google search results. It solves the issues of having to rent proxies, solving captchas, and JSON parsing. | 
+| [<img src="https://avatars.githubusercontent.com/u/34724717?s=40&v=4" alt="sponsor-serpapi">](https://serpapi.com) | **SerpApi** is a real time API to access Google search results. It solves the issues of having to rent proxies, solving captchas, and JSON parsing. |
 | [<img src="https://avatars.githubusercontent.com/u/50994705?s=40&v=4" alt="sponsor-projectdiscovery">](https://projectdiscovery.io/) | **ProjectDiscovery** - Detect real, exploitable vulnerabilities. Harness the power of Nuclei for fast and accurate findings without false positives. |
 | [<img src="https://avatars.githubusercontent.com/u/48131541?s=40&v=4" alt="sponsor-vaadata">](https://www.vaadata.com/) | **VAADATA** - Ethical Hacking Services |

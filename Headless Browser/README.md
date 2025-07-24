@@ -129,8 +129,9 @@ The Remote Debugging Port in a headless browser (like Headless Chrome or Chromiu
     node --inspect=0.0.0.0:4444 app.js
     ```
 
-> [!NOTE]  
-> The flag `--user-data-dir=/path/to/data_dir` is used to specify the user's data directory, where Chromium stores all of its application data such as cookies and history. If you start Chromium without specifying this flag, you’ll notice that none of your bookmarks, favorites, or history will be loaded into the browser.
+Starting from Chrome 136, the switches `--remote-debugging-port` and `--remote-debugging-pipe` won't be respected if attempting to debug the default Chrome data directory. These switches must now be accompanied by the `--user-data-dir` switch to point to a non-standard directory.
+
+The flag `--user-data-dir=/path/to/data_dir` is used to specify the user's data directory, where Chromium stores all of its application data such as cookies and history. If you start Chromium without specifying this flag, you’ll notice that none of your bookmarks, favorites, or history will be loaded into the browser.
 
 ## Network
 
@@ -181,10 +182,11 @@ const browser = await puppeteer.launch({
 ## References
 
 * [Browser based Port Scanning with JavaScript - Nikolai Tschacher - January 10, 2021](https://incolumitas.com/2021/01/10/browser-based-port-scanning/)
+* [Changes to remote debugging switches to improve security - Will Harris - March 17, 2025](https://developer.chrome.com/blog/remote-debugging-port)
 * [Chrome DevTools Protocol - Documentation - July 3, 2017](https://chromedevtools.github.io/devtools-protocol/)
 * [Cookies with Chromium’s Remote Debugger Port - Justin Bui - December 17, 2020](https://posts.specterops.io/hands-in-the-cookie-jar-dumping-cookies-with-chromiums-remote-debugger-port-34c4f468844e)
 * [Debugging Cookie Dumping Failures with Chromium’s Remote Debugger - Justin Bui - July 16, 2023](https://slyd0g.medium.com/debugging-cookie-dumping-failures-with-chromiums-remote-debugger-8a4c4d19429f)
 * [Node inspector/CEF debug abuse - HackTricks - July 18, 2024](https://book.hacktricks.xyz/linux-hardening/privilege-escalation/electron-cef-chromium-debugger-abuse)
 * [Post-Exploitation: Abusing Chrome's debugging feature to observe and control browsing sessions remotely - wunderwuzzi - April 28, 2020](https://embracethered.com/blog/posts/2020/chrome-spy-remote-control/)
-* [Tricks for Reliable Split-Second DNS Rebinding in Chrome and Safari - Daniel Thatcher - December 6, 2023](https://www.intruder.io/research/split-second-dns-rebinding-in-chrome-and-safari)
 * [Too Lazy to get XSS? Then use n-days to get RCE in the Admin bot - Jopraveen - March 2, 2025](https://jopraveen.github.io/web-hackthebot/)
+* [Tricks for Reliable Split-Second DNS Rebinding in Chrome and Safari - Daniel Thatcher - December 6, 2023](https://www.intruder.io/research/split-second-dns-rebinding-in-chrome-and-safari)

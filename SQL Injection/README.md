@@ -459,7 +459,7 @@ Most databases interpret certain ASCII control characters and encoded spaces (su
 **ASCII Whitespace Support by Database**:
 
 | DBMS         | Supported Whitespace Characters (Hex)            |
-|--------------|----------------------------------------------___-|
+|--------------|--------------------------------------------------|
 | SQLite3      | 0A, 0D, 0C, 09, 20                               |
 | MySQL 5      | 09, 0A, 0B, 0C, 0D, A0, 20                       |
 | MySQL 3      | 01–1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0|

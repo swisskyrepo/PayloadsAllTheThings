@@ -13,7 +13,7 @@
     * [Leaking Password Reset Token](#leaking-password-reset-token)
     * [Password Reset via Username Collision](#password-reset-via-username-collision)
     * [Account Takeover Due To Unicode Normalization Issue](#account-takeover-due-to-unicode-normalization-issue)
-* [Account Takeover via Web Vulneralities](#account-takeover-via-web-vulneralities)
+* [Account Takeover via Web Vulnerabilities](#account-takeover-via-web-vulnerabilities)
     * [Account Takeover via Cross Site Scripting](#account-takeover-via-cross-site-scripting)
     * [Account Takeover via HTTP Request Smuggling](#account-takeover-via-http-request-smuggling)
     * [Account Takeover via CSRF](#account-takeover-via-csrf)
@@ -110,7 +110,7 @@ See: [CVE-2020-7245](https://nvd.nist.gov/vuln/detail/CVE-2020-7245)
 
 ### Account Takeover Due To Unicode Normalization Issue
 
-When processing user input involving unicode for case mapping or normalisation, unexcepted behavior can occur.  
+When processing user input involving unicode for case mapping or normalisation, unexpected behavior can occur.  
 
 * Victim account: `demo@gmail.com`
 * Attacker account: `demⓞ@gmail.com`
@@ -119,7 +119,7 @@ When processing user input involving unicode for case mapping or normalisation, 
 
 [Unicode pentester cheatsheet](https://gosecure.github.io/unicode-pentester-cheatsheet/) can be used to find list of suitable unicode characters based on platform.
 
-## Account Takeover via Web Vulneralities
+## Account Takeover via Web Vulnerabilities
 
 ### Account Takeover via Cross Site Scripting
 

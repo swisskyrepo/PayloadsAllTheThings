@@ -188,7 +188,7 @@ Creating your own randomness algorithm is generally not recommended. Below are s
 
 ### Tools
 
-Generic identification and sandwitch attack:
+Generic identification and sandwich attack:
 
 * [AethliosIK/reset-tolkien](https://github.com/AethliosIK/reset-tolkien) - Insecure time-based secret exploitation and Sandwich attack implementation Resources
 

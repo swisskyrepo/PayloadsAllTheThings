@@ -90,6 +90,19 @@ The following URL format are a good starting point to check for "cache" feature.
 * `https://example.com/app/conversation/;.js`
 * `https://example.com/home.php/non-existent.css`
 
+## Detecting Web Cache Deception
+
+1. Detecting delimiter discrepancies: `/path/<dynamic-resource>;<static-resource>`
+   * For example: `/settings/profile;script.js`
+   * If the origin server uses `;` as a delimiter but the cache isn't
+   * The cache interprets the path as: `/settings/profile;script.js`
+   * The origin server interprets the path as: `/settings/profile`
+   * For more delimiter characters: see [Web cache deception lab delimiter list](https://portswigger.net/web-security/web-cache-deception/wcd-lab-delimiter-list)
+2. Detecting normalization: `/wcd/..%2fprofile`
+   * If the origin server resolved the path traversal sequence but the cache isn't
+   * The cache interprets the path as: `/wcd/..%2fprofile`
+   * The origin server interprets the path as: `/profile`
+
 ## CloudFlare Caching
 
 CloudFlare caches the resource when the `Cache-Control` header is set to `public` and `max-age` is greater than 0.

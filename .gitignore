@@ -1,3 +1,4 @@
 BuildPDF/
 .vscode
 .todo
+node_modules/

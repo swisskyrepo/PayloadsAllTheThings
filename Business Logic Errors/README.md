@@ -13,6 +13,7 @@
     * [Refund Feature Exploitation](#refund-feature-exploitation)
     * [Cart/Wishlist Exploitation](#cartwishlist-exploitation)
     * [Thread Comment Testing](#thread-comment-testing)
+    * [Rounding Error](#rounding-error)
 * [References](#references)
 
 ## Methodology
@@ -72,6 +73,19 @@ Common examples of Business Logic Errors.
 * If a user can only comment once, use race conditions to see if multiple comments can be posted.
 * If the system allows comments by verified or privileged users, try to mimic these parameters and see if you can comment as well.
 * Attempt to post comments impersonating other users.
+
+### Rounding Error
+
+The report [hackerone #176461](https://web.archive.org/web/20170303191338/https://hackerone.com/reports/176461) describes a business logic flaw in a cryptocurrency platform (using XBT/Bitcoin), where an attacker exploits a rounding error in the internal transfer system to generate money out of nothing.
+
+The attacker initiate a transfer of 0.000000005 XBT (0.5 satoshi), this is below the system's minimum precision which is 1 satoshi minimum.
+
+* Sender's balance doesn't change. The algorithm might be rounded down to 0 satoshi.
+* Receiver's balance increases by 1 satoshi (0.00000001). The algorithm might be rounding up to 1 satoshi.
+
+The attacker generated 0.00000001 XBT from nothing, since there's no rate limit, OTP, or fraud detection, the attacker can automate this process and repeat it infinitely, effectively printing money.
+
+In this example, instead of rounding and rejecting or enforcing a minimum transfer, it ignores the deduction from the sender and credits the receiver.
 
 ## References
 

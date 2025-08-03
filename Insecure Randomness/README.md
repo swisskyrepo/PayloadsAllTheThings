@@ -199,10 +199,11 @@ Generic identification and sandwich attack:
 
 ## References
 
-* [In GUID We Trust - Daniel Thatcher - October 11, 2022](https://www.intruder.io/research/in-guid-we-trust)
+* [Breaking PHP's mt_rand() with 2 values and no bruteforce - Charles Fol - January 6, 2020](https://www.ambionics.io/blog/php-mt-rand-prediction)
+* [Cracking Time-Based Tokens: A Glimpse from a Workshop During leHACK 2025-Singularity - 4m1d0n - June 30, 2025](https://4m1d0n.github.io/retex-insecure-time-token-sandwich-attack/)
+* [Exploiting Weak Pseudo-Random Number Generation in PHP’s rand and srand Functions - Jacob Moore - October 18, 2023](https://medium.com/@moorejacob2017/exploiting-weak-pseudo-random-number-generation-in-phps-rand-and-srand-functions-445229b83e01)
 * [IDOR through MongoDB Object IDs Prediction - Amey Anekar - August 25, 2020](https://techkranti.com/idor-through-mongodb-object-ids-prediction/)
+* [In GUID We Trust - Daniel Thatcher - October 11, 2022](https://www.intruder.io/research/in-guid-we-trust)
+* [Multi-sandwich attack with MongoDB Object ID or the scenario for real-time monitoring of web application invitations: a new use case for the sandwich attack - Tom CHAMBARETAUD (@AethliosIK) - July 18, 2024](https://www.aeth.cc/public/Article-Reset-Tolkien/multi-sandwich-article-en.html)
 * [Secret basé sur le temps non sécurisé et attaque par sandwich - Analyse de mes recherches et publication de l’outil “Reset Tolkien” - Tom CHAMBARETAUD (@AethliosIK) - April 2, 2024](https://www.aeth.cc/public/Article-Reset-Tolkien/secret-time-based-article-fr.html) *(FR)*
 * [Unsecure time-based secret and Sandwich Attack - Analysis of my research and release of the “Reset Tolkien” tool - Tom CHAMBARETAUD (@AethliosIK) - April 2, 2024](https://www.aeth.cc/public/Article-Reset-Tolkien/secret-time-based-article-en.html) *(EN)*
-* [Multi-sandwich attack with MongoDB Object ID or the scenario for real-time monitoring of web application invitations: a new use case for the sandwich attack - Tom CHAMBARETAUD (@AethliosIK) - July 18, 2024](https://www.aeth.cc/public/Article-Reset-Tolkien/multi-sandwich-article-en.html)
-* [Exploiting Weak Pseudo-Random Number Generation in PHP’s rand and srand Functions - Jacob Moore - October 18, 2023](https://medium.com/@moorejacob2017/exploiting-weak-pseudo-random-number-generation-in-phps-rand-and-srand-functions-445229b83e01)
-* [Breaking PHP's mt_rand() with 2 values and no bruteforce - Charles Fol - January 6, 2020](https://www.ambionics.io/blog/php-mt-rand-prediction)

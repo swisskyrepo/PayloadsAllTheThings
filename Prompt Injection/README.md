@@ -22,6 +22,7 @@ They can also be used to generate interesting prompts.
 * [BingChat - Microsoft](https://www.bing.com/)
 * [Bard - Google](https://bard.google.com/)
 * [Le Chat - Mistral AI](https://chat.mistral.ai/chat)
+* [Claude - Anthropic](https://claude.ai/)
 
 List of "payloads" prompts
 
@@ -30,6 +31,8 @@ List of "payloads" prompts
 * [Chat GPT "DAN" (and other "Jailbreaks")](https://gist.github.com/coolaj86/6f4f7b30129b0251f61fa7baaa881516)
 * [Jailbreak Chat](https://www.jailbreakchat.com)
 * [Inject My PDF](https://kai-greshake.de/posts/inject-my-pdf)
+* [LLM Hacking Database](https://github.com/pdparchitect/llm-hacking-database)
+* [LLM Fuzzer](https://github.com/mnns/LLMFuzzer)
 
 Challenges
 

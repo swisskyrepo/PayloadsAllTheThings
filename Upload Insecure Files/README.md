@@ -57,7 +57,8 @@ Here is a list of the default extensions for web shell pages in the selected lan
     .asp
     .aspx
     .config
-    .cer and .asa # (IIS <= 7.5)
+    .cer # (IIS <= 7.5)
+    .asa # (IIS <= 7.5)
     shell.aspx;1.jpg # (IIS < 7.0)
     shell.soap
     ```
@@ -93,7 +94,7 @@ Other extensions that can be abused to trigger other vulnerabilities.
     * `.php%00.jpg`
     * `.php\x00.jpg`
 * Special characters
-    * Multiple dots : `file.php......` , in Windows when a file is created with dots at the end those will be removed.
+    * Multiple dots : `file.php......` , on Windows when a file is created with dots at the end those will be removed.
     * Whitespace and new line characters
         * `file.php%20`
         * `file.php%0d%0a.jpg`
@@ -101,6 +102,15 @@ Other extensions that can be abused to trigger other vulnerabilities.
     * Right to Left Override (RTLO): `name.%E2%80%AEphp.jpg` will became `name.gpj.php`.
     * Slash: `file.php/`, `file.php.\`, `file.j\sp`, `file.j/sp`
     * Multiple special characters: `file.jsp/././././.`
+
+* On Windows OS, `include`, `require` and `require_once` functions will convert "foo.php" followed by one or more of the chars `\x20` ( ), `\x22` ("), `\x2E` (.), `\x3C` (<), `\x3E` (>) back to "foo.php".
+* On Windows OS, `fopen` function will convert "foo.php" followed by one or more of the chars `\x2E` (.), `\x2F` (/), `\x5C` (\) back to "foo.php".
+* On Windows OS, `move_uploaded_file` function will convert "foo.php" followed by one or more of the chars `\x2E` (.), `\x2F` (/), `\x5C` (\) back to "foo.php".
+
+* On Windows OS, when running PHP on IIS some characters are automatically converted to other characters when it is going to save a file (e.g. `web<<` becomes `web**` and can replace `web.config`).
+    * `\x3E` (>) is converted to `\x3F` (?)
+    * `\x3C` (<) is converted to `\x2A` (*)
+    * `\x22` (") is converted to `\x2E` (.), to use this trick in a file upload request the "`Content-Disposition`" header should use single quotes (e.g. filename='web"config').
 
 **File Identification**:
 
@@ -363,6 +373,7 @@ More payloads in the folder `CVE FFmpeg HLS/`.
 * [Bulletproof Jpegs Generator - Damien Cauquil (@virtualabs) - April 9, 2012](https://virtualabs.fr/Nasty-bulletproof-Jpegs-l)
 * [Encoding Web Shells in PNG IDAT chunks - phil - 04-06-2012](https://www.idontplaydarts.com/2012/06/encoding-web-shells-in-png-idat-chunks/)
 * [File Upload - HackTricks - 20/7/2024](https://book.hacktricks.xyz/pentesting-web/file-upload)
+* [File Upload and PHP on IIS: >=? and <=* and "=. - Soroush Dalili (@irsdl) - July 23, 2014](https://soroush.me/blog/2014/07/file-upload-and-php-on-iis-wildcards/)
 * [File Upload restrictions bypass - Haboob Team - July 24, 2018](https://www.exploit-db.com/docs/english/45074-file-upload-restrictions-bypass.pdf)
 * [IIS - SOAP - Navigating The Shadows - 0xbad53c - 19/5/2024](https://red.0xbad53c.com/red-team-operations/initial-access/webshells/iis-soap)
 * [Injection points in popular image formats - Daniel Kalinowski‌‌ - Nov 8, 2019](https://blog.isec.pl/injection-points-in-popular-image-formats/)

@@ -6,7 +6,7 @@
 
 - [Tools](#tools)
 - [Methodology](#methodology)
-- [Lab](#lab)
+- [Labs](#labs)
 - [References](#references)
 
 ## Tools
@@ -130,7 +130,7 @@ Exploitation requires any kind of `HTML injection` in the page.
 
 - DomPurify allows the protocol `cid:`, which doesn't encode double quote (`"`): `<a id=defaultAvatar><a id=defaultAvatar name=avatar href="cid:&quot;onerror=alert(1)//">`
 
-## Lab
+## Labs
 
 - [PortSwigger - Exploiting DOM clobbering to enable XSS](https://portswigger.net/web-security/dom-based/dom-clobbering/lab-dom-xss-exploiting-dom-clobbering)
 - [PortSwigger - Clobbering DOM attributes to bypass HTML filters](https://portswigger.net/web-security/dom-based/dom-clobbering/lab-dom-clobbering-attributes-to-bypass-html-filters)

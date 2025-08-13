@@ -357,57 +357,28 @@ In short, the result of the first SQL query is used to build the second SQL quer
 ## Second Order SQL Injection
 
 Second Order SQL Injection is a subtype of SQL injection where the malicious SQL payload is primarily stored in the application's database and later executed by a different functionality of the same application.
-Unlike first-order SQLi, the injection doesn’t happen right away — it’s **triggered in a separate step**, often in a different part of the application.
-
-### ⚙️ How It Works
+Unlike first-order SQLi, the injection doesn’t happen right away. It is **triggered in a separate step**, often in a different part of the application.
 
 1. User submits input that is stored (e.g., during registration or profile update).
-2. That input is saved **without validation**.
+   
+   ```text
+   Username: attacker'--
+   Email: attacker@example.com
+   ```
+   
+2. That input is saved **without validation** but doesn't trigger a SQL injection.
+
+   ```sql
+   INSERT INTO users (username, email) VALUES ('attacker\'--', 'attacker@example.com');
+   ```
+ 
 3. Later, the application retrieves and uses the stored data in a SQL query.
+   
+   ```python
+   query = "SELECT * FROM logs WHERE username = '" + user_from_db + "'"
+   ```
+   
 4. If this query is built unsafely, the injection is triggered.
-
-###  Example Scenario
-
-#### **Step 1: Malicious User Registers**
-
-```text
-Username: attacker' --
-Email: attacker@example.com
-```
-
-Stored in DB as:
-
-```sql
-INSERT INTO users (username, email) VALUES ('attacker\' --', 'attacker@example.com');
-```
-
-✅ No error yet — payload is saved.
-
-#### Step 2: Admin Dashboard Later Uses Username
-
-```python
-# Backend code
-query = "SELECT * FROM logs WHERE username = '" + user_from_db + "'"
-```
-
-If `user_from_db = attacker' --`, this becomes:
-
-```sql
-SELECT * FROM logs WHERE username = 'attacker' --'
-```
-
-🔥 Query is broken → Injection succeeds.
-
-###  Where and How to Test Payloads 
-
-| 🔍 Application Area     | 🧪 Field to Inject       | 💣 Why It's Vulnerable                                    | ⏱️ When Injection Triggers                |
-|------------------------|--------------------------|-----------------------------------------------------------|-------------------------------------------|
-| User Registration      | `username`, `email`      | Values stored, reused in logs or admin views              | When admin views logs or user profile     |
-| Profile Update         | `display name`, `bio`    | Reused in dashboards or internal reporting tools          | When data is retrieved by another user    |
-| Feedback/Contact Forms | `subject`, `message`     | Stored in DB, emailed or inserted into analytics queries  | When viewed or processed by admin         |
-| Support Ticket System  | `ticket title`, `details`| May be reused in SQL joins, search features               | When admin searches or filters tickets    |
-| Comment Systems        | `username`, `comment`    | Appears in other queries like moderation tools            | When moderator queries by username        |
-
 
 ## Generic WAF Bypass
 ---

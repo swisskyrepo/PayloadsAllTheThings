@@ -358,13 +358,28 @@ In short, the result of the first SQL query is used to build the second SQL quer
 ## Second Order SQL Injection
 
 Second Order SQL Injection is a subtype of SQL injection where the malicious SQL payload is primarily stored in the application's database and later executed by a different functionality of the same application.
+Unlike first-order SQLi, the injection doesn’t happen right away. It is **triggered in a separate step**, often in a different part of the application.
 
-```py
-username="anything' UNION SELECT Username, Password FROM Users;--"
-password="P@ssw0rd"
-```
+1. User submits input that is stored (e.g., during registration or profile update).
+   
+   ```text
+   Username: attacker'--
+   Email: attacker@example.com
+   ```
+   
+2. That input is saved **without validation** but doesn't trigger a SQL injection.
 
-Since you are inserting your payload in the database for a later use, any other type of injections can be used UNION, ERROR, BLIND, STACKED, etc.
+   ```sql
+   INSERT INTO users (username, email) VALUES ('attacker\'--', 'attacker@example.com');
+   ```
+ 
+3. Later, the application retrieves and uses the stored data in a SQL query.
+   
+   ```python
+   query = "SELECT * FROM logs WHERE username = '" + user_from_db + "'"
+   ```
+   
+4. If this query is built unsafely, the injection is triggered.
 
 ## PDO Prepared Statements
 
@@ -438,6 +453,7 @@ PDO allows for binding of input parameters, which ensures that user data is prop
     ```
 
 ## Generic WAF Bypass
+---
 
 ### No Space Allowed
 

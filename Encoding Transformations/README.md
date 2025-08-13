@@ -106,4 +106,6 @@ admin
 
 * [Puny-Code, 0-Click Account Takeover - Voorivex - June 1, 2025](https://blog.voorivex.team/puny-code-0-click-account-takeover)
 * [Unicode normalization vulnerabilities - Lazar - September 30, 2021](https://lazarv.com/posts/unicode-normalization-vulnerabilities/)
+* [Unicode Normalization Vulnerabilities & the Special K Polyglot - AppCheck - September 2, 2019](https://appcheck-ng.com/unicode-normalization-vulnerabilities-the-special-k-polyglot/)
 * [WAF Bypassing with Unicode Compatibility - Jorge Lajara - February 19, 2020](https://jlajara.gitlab.io/Bypass_WAF_Unicode)
+* [When "Zoë" !== "Zoë". Or why you need to normalize Unicode strings - Alessandro Segala - March 11, 2019](https://withblue.ink/2019/03/11/why-you-need-to-normalize-unicode-strings.html)

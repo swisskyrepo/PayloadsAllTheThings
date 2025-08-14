@@ -178,7 +178,9 @@ http://127.0.1
     http://0o177.0.0.1/ = http://127.0.0.1
     http://q177.0.0.1/ = http://127.0.0.1
     ```
- * Hex IP
+
+* Hex IP
+
     ```powershell
     http://0x7f000001 = http://127.0.0.1
     http://0xc0a80101 = http://192.168.1.1
@@ -205,6 +207,7 @@ http://127.0.1
 ### Bypassing via ipv6 hostname
 
 * in Linux /etc/hosts contain this line `::1   localhost ip6-localhost ip6-loopback` but work only if http server running in ipv6
+
    ```powershell
    http://ip6-localhost = ::1
    http://ip6-loopback = ::1

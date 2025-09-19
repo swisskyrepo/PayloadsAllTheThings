@@ -1,7 +1,7 @@
 # Payloads All The Things
 
 A list of useful payloads and bypasses for Web Application Security.
-Feel free to improve with your payloads and techniques !
+Feel free to improve with your payloads and techniques!
 
 You can also contribute with a :beers: IRL, or using the sponsor button.
 
@@ -28,7 +28,7 @@ You might also like the other projects from the AllTheThings family :
 - [InternalAllTheThings](https://swisskyrepo.github.io/InternalAllTheThings/) - Active Directory and Internal Pentest Cheatsheets
 - [HardwareAllTheThings](https://swisskyrepo.github.io/HardwareAllTheThings/) - Hardware/IOT Pentesting Wiki
 
-You want more ? Check the [Books](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/_LEARNING_AND_SOCIALS/BOOKS.md) and [Youtube channel](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/_LEARNING_AND_SOCIALS/YOUTUBE.md) selections.
+You want more? Check the [Books](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/_LEARNING_AND_SOCIALS/BOOKS.md) and [YouTube channel](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/_LEARNING_AND_SOCIALS/YOUTUBE.md) selections.
 
 ## :technologist: Contributions
 

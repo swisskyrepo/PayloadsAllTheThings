@@ -3,7 +3,7 @@ site_description: 'Payloads All The Things, a list of useful payloads and bypass
 site_url: https://swisskyrepo.github.io/PayloadsAllTheThings
 
 repo_url: https://github.com/swisskyrepo/PayloadsAllTheThings/
-edit_uri: blob/master/
+edit_uri: edit/master/
 
 # copyright: © 2016 PATT
 # logo: 'images/site_logo.png'

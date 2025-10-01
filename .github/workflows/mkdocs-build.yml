@@ -8,12 +8,12 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
         with:
           submodules: recursive
 
       # Checks-out submodules
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v5
       - name: Checkout submodules
         shell: bash
         run: |
@@ -23,7 +23,7 @@ jobs:
           git submodule add https://github.com/swisskyrepo/PayloadsAllTheThings/ docs
           mv docs/.github/overrides .
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v6
         with:
           python-version: 3.x
       - run: pip install mkdocs-material

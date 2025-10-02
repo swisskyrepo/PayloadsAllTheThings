@@ -1,6 +1,6 @@
 # Subdomains Enumeration
 
-:warning: Content of this page has been moved to [InternalAllTheThings/redteam/access/web-attack-surface](https://github.com/swisskyrepo/InternalAllTheThings/redteam/access/web-attack-surface)
+:warning: Content of this page has been moved to [InternalAllTheThings/redteam/access/web-attack-surface](https://github.com/swisskyrepo/InternalAllTheThings/blob/main/docs/redteam/access/web-attack-surface.md)
 
 - [Enumerate Subdomains](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/web-attack-surface/#enumerate-subdomains)
     - [Subdomains Databases](https://swisskyrepo.github.io/InternalAllTheThings/redteam/access/web-attack-surface/#subdomains-databases)

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <svg x="10">
+    <rect x="10" y="10" height="100" width="100" style="fill: #002654"/>
+    <script type="text/javascript">alert('sub-svg 1');</script>
+  </svg>
+  <svg x="200">
+    <rect x="10" y="10" height="100" width="100" style="fill: #ED2939"/>
+    <script type="text/javascript">alert('sub-svg 2');</script>
+  </svg>
+</svg>

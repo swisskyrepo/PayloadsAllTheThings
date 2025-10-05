@@ -23,13 +23,14 @@
 
 In a web context, brute-forcing refers to the method of attempting to gain unauthorized access to web applications, particularly through login forms or other user input fields. Attackers systematically input numerous combinations of credentials or other values (e.g., iterating through numeric ranges) to exploit weak passwords or inadequate security measures.
 
-For instance, they might submit thousands of username and password combinations or guess security tokens by iterating through a range, such as 0 to 10,000. This method can lead to unauthorized access and data breaches if not mitigated effectively. 
+For instance, they might submit thousands of username and password combinations or guess security tokens by iterating through a range, such as 0 to 10,000. This method can lead to unauthorized access and data breaches if not mitigated effectively.
 
 Countermeasures like rate limiting, account lockout policies, CAPTCHA, and strong password requirements are essential to protect web applications from such brute-force attacks.
 
 ### Burp Suite Intruder
 
 * **Sniper attack**: target a single position (one variable) while cycling through one payload set.
+
     ```ps1
 
     Username: password
@@ -99,9 +100,9 @@ JA3 is a method for fingerprinting TLS clients (and JA3S for TLS servers) by has
 
 **Countermeasures:**
 
-- Use browser-driven automation (Puppeteer / Playwright)
-- Spoof TLS handshakes with [lwthiker/curl-impersonate](https://github.com/lwthiker/curl-impersonate)
-- JA3 randomization plugins for browsers/libraries
+* Use browser-driven automation (Puppeteer / Playwright)
+* Spoof TLS handshakes with [lwthiker/curl-impersonate](https://github.com/lwthiker/curl-impersonate)
+* JA3 randomization plugins for browsers/libraries
 
 ### Network IPv4
 
@@ -136,7 +137,6 @@ proxychains ffuf -w wordlist.txt -u https://target.tld/FUZZ
 ### Network IPv6
 
 Many cloud providers, such as Vultr, offer /64 IPv6 ranges, which provide a vast number of addresses (18 446 744 073 709 551 616). This allows for extensive IP rotation during brute-force attacks.
-
 
 ## References
 

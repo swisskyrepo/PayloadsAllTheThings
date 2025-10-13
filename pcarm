@@ -1,0 +1,705 @@
+"""
+Comprehensive Inventory Management System
+A full-featured inventory and warehouse management application
+Author: Inventory Systems Team
+Date: October 13, 2025
+Version: 2.0.0
+"""
+
+import json
+import os
+from datetime import datetime, timedelta
+from typing import List, Dict, Optional, Tuple
+import hashlib
+import uuid
+from collections import defaultdict
+from enum import Enum
+import re
+
+
+class UserRole(Enum):
+    """User role enumeration"""
+    ADMIN = "admin"
+    MANAGER = "manager"
+    STAFF = "staff"
+    VIEWER = "viewer"
+
+
+class TransactionType(Enum):
+    """Transaction type enumeration"""
+    PURCHASE = "purchase"
+    SALE = "sale"
+    RETURN = "return"
+    ADJUSTMENT = "adjustment"
+    TRANSFER = "transfer"
+
+
+class User:
+    """Represents a user in the inventory system"""
+    
+    def __init__(self, username: str, email: str, password: str, role: UserRole):
+        self.user_id = str(uuid.uuid4())
+        self.username = username
+        self.email = email
+        self.password_hash = self._hash_password(password)
+        self.role = role
+        self.created_at = datetime.now().isoformat()
+        self.last_login = None
+        self.is_active = True
+    
+    def _hash_password(self, password: str) -> str:
+        """Hash password using SHA-256"""
+        return hashlib.sha256(password.encode()).hexdigest()
+    
+    def verify_password(self, password: str) -> bool:
+        """Verify password"""
+        return self.password_hash == self._hash_password(password)
+    
+    def update_last_login(self):
+        """Update last login timestamp"""
+        self.last_login = datetime.now().isoformat()
+    
+    def to_dict(self) -> Dict:
+        """Convert to dictionary"""
+        return {
+            "user_id": self.user_id,
+            "username": self.username,
+            "email": self.email,
+            "password_hash": self.password_hash,
+            "role": self.role.value,
+            "created_at": self.created_at,
+            "last_login": self.last_login,
+            "is_active": self.is_active
+        }
+    
+    @staticmethod
+    def from_dict(data: Dict) -> 'User':
+        """Create from dictionary"""
+        user = User.__new__(User)
+        user.user_id = data["user_id"]
+        user.username = data["username"]
+        user.email = data["email"]
+        user.password_hash = data["password_hash"]
+        user.role = UserRole(data["role"])
+        user.created_at = data["created_at"]
+        user.last_login = data.get("last_login")
+        user.is_active = data.get("is_active", True)
+        return user
+
+
+class Product:
+    """Represents a product in inventory"""
+    
+    def __init__(self, name: str, sku: str, description: str, category: str,
+                 unit_price: float, reorder_level: int = 10):
+        self.product_id = str(uuid.uuid4())
+        self.name = name
+        self.sku = sku.upper()
+        self.description = description
+        self.category = category
+        self.unit_price = unit_price
+        self.reorder_level = reorder_level
+        self.created_at = datetime.now().isoformat()
+        self.updated_at = datetime.now().isoformat()
+        self.is_active = True
+        self.supplier_info = {}
+        self.attributes = {}
+    
+    def update_price(self, new_price: float):
+        """Update product price"""
+        self.unit_price = new_price
+        self.updated_at = datetime.now().isoformat()
+    
+    def update_reorder_level(self, new_level: int):
+        """Update reorder level"""
+        self.reorder_level = new_level
+        self.updated_at = datetime.now().isoformat()
+    
+    def add_supplier(self, supplier_name: str, supplier_contact: str):
+        """Add supplier information"""
+        self.supplier_info = {
+            "name": supplier_name,
+            "contact": supplier_contact
+        }
+        self.updated_at = datetime.now().isoformat()
+    
+    def add_attribute(self, key: str, value: str):
+        """Add custom attribute"""
+        self.attributes[key] = value
+        self.updated_at = datetime.now().isoformat()
+    
+    def to_dict(self) -> Dict:
+        """Convert to dictionary"""
+        return {
+            "product_id": self.product_id,
+            "name": self.name,
+            "sku": self.sku,
+            "description": self.description,
+            "category": self.category,
+            "unit_price": self.unit_price,
+            "reorder_level": self.reorder_level,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at,
+            "is_active": self.is_active,
+            "supplier_info": self.supplier_info,
+            "attributes": self.attributes
+        }
+    
+    @staticmethod
+    def from_dict(data: Dict) -> 'Product':
+        """Create from dictionary"""
+        product = Product.__new__(Product)
+        product.product_id = data["product_id"]
+        product.name = data["name"]
+        product.sku = data["sku"]
+        product.description = data["description"]
+        product.category = data["category"]
+        product.unit_price = data["unit_price"]
+        product.reorder_level = data.get("reorder_level", 10)
+        product.created_at = data["created_at"]
+        product.updated_at = data["updated_at"]
+        product.is_active = data.get("is_active", True)
+        product.supplier_info = data.get("supplier_info", {})
+        product.attributes = data.get("attributes", {})
+        return product
+
+
+class Warehouse:
+    """Represents a warehouse location"""
+    
+    def __init__(self, name: str, location: str, capacity: int):
+        self.warehouse_id = str(uuid.uuid4())
+        self.name = name
+        self.location = location
+        self.capacity = capacity
+        self.current_stock = {}  # product_id: quantity
+        self.created_at = datetime.now().isoformat()
+    
+    def add_stock(self, product_id: str, quantity: int) -> bool:
+        """Add stock to warehouse"""
+        current = self.current_stock.get(product_id, 0)
+        total = sum(self.current_stock.values()) + quantity
+        
+        if total > self.capacity:
+            return False
+        
+        self.current_stock[product_id] = current + quantity
+        return True
+    
+    def remove_stock(self, product_id: str, quantity: int) -> bool:
+        """Remove stock from warehouse"""
+        current = self.current_stock.get(product_id, 0)
+        
+        if current < quantity:
+            return False
+        
+        self.current_stock[product_id] = current - quantity
+        if self.current_stock[product_id] == 0:
+            del self.current_stock[product_id]
+        return True
+    
+    def get_stock(self, product_id: str) -> int:
+        """Get stock level for product"""
+        return self.current_stock.get(product_id, 0)
+    
+    def get_available_capacity(self) -> int:
+        """Get available capacity"""
+        used = sum(self.current_stock.values())
+        return self.capacity - used
+    
+    def to_dict(self) -> Dict:
+        """Convert to dictionary"""
+        return {
+            "warehouse_id": self.warehouse_id,
+            "name": self.name,
+            "location": self.location,
+            "capacity": self.capacity,
+            "current_stock": self.current_stock,
+            "created_at": self.created_at
+        }
+    
+    @staticmethod
+    def from_dict(data: Dict) -> 'Warehouse':
+        """Create from dictionary"""
+        warehouse = Warehouse.__new__(Warehouse)
+        warehouse.warehouse_id = data["warehouse_id"]
+        warehouse.name = data["name"]
+        warehouse.location = data["location"]
+        warehouse.capacity = data["capacity"]
+        warehouse.current_stock = data.get("current_stock", {})
+        warehouse.created_at = data["created_at"]
+        return warehouse
+
+
+class Transaction:
+    """Represents an inventory transaction"""
+    
+    def __init__(self, transaction_type: TransactionType, product_id: str,
+                 quantity: int, warehouse_id: str, user_id: str,
+                 unit_price: float = 0.0, notes: str = ""):
+        self.transaction_id = str(uuid.uuid4())
+        self.transaction_type = transaction_type
+        self.product_id = product_id
+        self.quantity = quantity
+        self.warehouse_id = warehouse_id
+        self.user_id = user_id
+        self.unit_price = unit_price
+        self.total_value = quantity * unit_price
+        self.notes = notes
+        self.timestamp = datetime.now().isoformat()
+    
+    def to_dict(self) -> Dict:
+        """Convert to dictionary"""
+        return {
+            "transaction_id": self.transaction_id,
+            "transaction_type": self.transaction_type.value,
+            "product_id": self.product_id,
+            "quantity": self.quantity,
+            "warehouse_id": self.warehouse_id,
+            "user_id": self.user_id,
+            "unit_price": self.unit_price,
+            "total_value": self.total_value,
+            "notes": self.notes,
+            "timestamp": self.timestamp
+        }
+    
+    @staticmethod
+    def from_dict(data: Dict) -> 'Transaction':
+        """Create from dictionary"""
+        transaction = Transaction.__new__(Transaction)
+        transaction.transaction_id = data["transaction_id"]
+        transaction.transaction_type = TransactionType(data["transaction_type"])
+        transaction.product_id = data["product_id"]
+        transaction.quantity = data["quantity"]
+        transaction.warehouse_id = data["warehouse_id"]
+        transaction.user_id = data["user_id"]
+        transaction.unit_price = data["unit_price"]
+        transaction.total_value = data["total_value"]
+        transaction.notes = data.get("notes", "")
+        transaction.timestamp = data["timestamp"]
+        return transaction
+
+
+class InventoryManagementSystem:
+    """Main inventory management system"""
+    
+    def __init__(self, data_file: str = "inventory_data.json"):
+        self.data_file = data_file
+        self.users: Dict[str, User] = {}
+        self.products: Dict[str, Product] = {}
+        self.warehouses: Dict[str, Warehouse] = {}
+        self.transactions: List[Transaction] = []
+        self.current_user: Optional[User] = None
+        self.load_data()
+    
+    def load_data(self):
+        """Load data from JSON file"""
+        if os.path.exists(self.data_file):
+            try:
+                with open(self.data_file, 'r') as f:
+                    data = json.load(f)
+                    self.users = {uid: User.from_dict(u) for uid, u in data.get("users", {}).items()}
+                    self.products = {pid: Product.from_dict(p) for pid, p in data.get("products", {}).items()}
+                    self.warehouses = {wid: Warehouse.from_dict(w) for wid, w in data.get("warehouses", {}).items()}
+                    self.transactions = [Transaction.from_dict(t) for t in data.get("transactions", [])]
+            except Exception as e:
+                print(f"Error loading data: {e}")
+    
+    def save_data(self):
+        """Save data to JSON file"""
+        try:
+            data = {
+                "users": {uid: u.to_dict() for uid, u in self.users.items()},
+                "products": {pid: p.to_dict() for pid, p in self.products.items()},
+                "warehouses": {wid: w.to_dict() for wid, w in self.warehouses.items()},
+                "transactions": [t.to_dict() for t in self.transactions]
+            }
+            with open(self.data_file, 'w') as f:
+                json.dump(data, f, indent=2)
+        except Exception as e:
+            print(f"Error saving data: {e}")
+    
+    # User Management
+    def register_user(self, username: str, email: str, password: str, role: str) -> bool:
+        """Register new user"""
+        if any(u.username == username for u in self.users.values()):
+            print("Username already exists!")
+            return False
+        
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            print("Invalid email format!")
+            return False
+        
+        try:
+            user_role = UserRole(role)
+        except ValueError:
+            print("Invalid role!")
+            return False
+        
+        user = User(username, email, password, user_role)
+        self.users[user.user_id] = user
+        self.save_data()
+        print(f"User {username} registered successfully!")
+        return True
+    
+    def login(self, username: str, password: str) -> bool:
+        """Login user"""
+        for user in self.users.values():
+            if user.username == username and user.verify_password(password) and user.is_active:
+                self.current_user = user
+                user.update_last_login()
+                self.save_data()
+                print(f"Welcome, {username}!")
+                return True
+        print("Invalid credentials or inactive account!")
+        return False
+    
+    def logout(self):
+        """Logout current user"""
+        if self.current_user:
+            print(f"Goodbye, {self.current_user.username}!")
+            self.current_user = None
+    
+    # Product Management
+    def add_product(self, name: str, sku: str, description: str, category: str,
+                   unit_price: float, reorder_level: int = 10) -> Optional[Product]:
+        """Add new product"""
+        if not self.current_user or self.current_user.role not in [UserRole.ADMIN, UserRole.MANAGER]:
+            print("Permission denied!")
+            return None
+        
+        if any(p.sku == sku.upper() for p in self.products.values()):
+            print("SKU already exists!")
+            return None
+        
+        product = Product(name, sku, description, category, unit_price, reorder_level)
+        self.products[product.product_id] = product
+        self.save_data()
+        print(f"Product {name} (SKU: {sku}) added successfully!")
+        return product
+    
+    def update_product_price(self, product_id: str, new_price: float) -> bool:
+        """Update product price"""
+        if not self.current_user or self.current_user.role not in [UserRole.ADMIN, UserRole.MANAGER]:
+            print("Permission denied!")
+            return False
+        
+        product = self.products.get(product_id)
+        if not product:
+            print("Product not found!")
+            return False
+        
+        product.update_price(new_price)
+        self.save_data()
+        print(f"Price updated to ${new_price:.2f}")
+        return True
+    
+    def search_products(self, keyword: str) -> List[Product]:
+        """Search products by keyword"""
+        keyword = keyword.lower()
+        return [p for p in self.products.values() 
+                if keyword in p.name.lower() or keyword in p.sku.lower() 
+                or keyword in p.category.lower()]
+    
+    # Warehouse Management
+    def add_warehouse(self, name: str, location: str, capacity: int) -> Optional[Warehouse]:
+        """Add new warehouse"""
+        if not self.current_user or self.current_user.role != UserRole.ADMIN:
+            print("Permission denied!")
+            return None
+        
+        warehouse = Warehouse(name, location, capacity)
+        self.warehouses[warehouse.warehouse_id] = warehouse
+        self.save_data()
+        print(f"Warehouse {name} added successfully!")
+        return warehouse
+    
+    # Transaction Management
+    def record_purchase(self, product_id: str, quantity: int, warehouse_id: str,
+                       unit_price: float, notes: str = "") -> bool:
+        """Record product purchase"""
+        if not self.current_user:
+            print("Please login first!")
+            return False
+        
+        product = self.products.get(product_id)
+        warehouse = self.warehouses.get(warehouse_id)
+        
+        if not product or not warehouse:
+            print("Product or warehouse not found!")
+            return False
+        
+        if not warehouse.add_stock(product_id, quantity):
+            print("Insufficient warehouse capacity!")
+            return False
+        
+        transaction = Transaction(
+            TransactionType.PURCHASE, product_id, quantity,
+            warehouse_id, self.current_user.user_id, unit_price, notes
+        )
+        self.transactions.append(transaction)
+        self.save_data()
+        print(f"Purchase recorded: {quantity} units of {product.name}")
+        return True
+    
+    def record_sale(self, product_id: str, quantity: int, warehouse_id: str,
+                   unit_price: float, notes: str = "") -> bool:
+        """Record product sale"""
+        if not self.current_user:
+            print("Please login first!")
+            return False
+        
+        product = self.products.get(product_id)
+        warehouse = self.warehouses.get(warehouse_id)
+        
+        if not product or not warehouse:
+            print("Product or warehouse not found!")
+            return False
+        
+        if not warehouse.remove_stock(product_id, quantity):
+            print("Insufficient stock!")
+            return False
+        
+        transaction = Transaction(
+            TransactionType.SALE, product_id, quantity,
+            warehouse_id, self.current_user.user_id, unit_price, notes
+        )
+        self.transactions.append(transaction)
+        self.save_data()
+        print(f"Sale recorded: {quantity} units of {product.name}")
+        return True
+    
+    def transfer_stock(self, product_id: str, quantity: int,
+                      from_warehouse_id: str, to_warehouse_id: str) -> bool:
+        """Transfer stock between warehouses"""
+        if not self.current_user:
+            print("Please login first!")
+            return False
+        
+        from_warehouse = self.warehouses.get(from_warehouse_id)
+        to_warehouse = self.warehouses.get(to_warehouse_id)
+        
+        if not from_warehouse or not to_warehouse:
+            print("Warehouse not found!")
+            return False
+        
+        if not from_warehouse.remove_stock(product_id, quantity):
+            print("Insufficient stock in source warehouse!")
+            return False
+        
+        if not to_warehouse.add_stock(product_id, quantity):
+            from_warehouse.add_stock(product_id, quantity)  # Rollback
+            print("Insufficient capacity in destination warehouse!")
+            return False
+        
+        self.save_data()
+        print(f"Stock transferred successfully!")
+        return True
+    
+    # Reporting and Analytics
+    def get_inventory_report(self) -> Dict:
+        """Generate inventory report"""
+        report = {
+            "total_products": len(self.products),
+            "total_warehouses": len(self.warehouses),
+            "products_by_category": defaultdict(int),
+            "stock_by_warehouse": {},
+            "low_stock_alerts": [],
+            "total_inventory_value": 0.0
+        }
+        
+        for product in self.products.values():
+            report["products_by_category"][product.category] += 1
+            
+            total_stock = sum(w.get_stock(product.product_id) for w in self.warehouses.values())
+            
+            if total_stock < product.reorder_level:
+                report["low_stock_alerts"].append({
+                    "product": product.name,
+                    "sku": product.sku,
+                    "current_stock": total_stock,
+                    "reorder_level": product.reorder_level
+                })
+            
+            report["total_inventory_value"] += total_stock * product.unit_price
+        
+        for warehouse in self.warehouses.values():
+            report["stock_by_warehouse"][warehouse.name] = {
+                "total_items": sum(warehouse.current_stock.values()),
+                "capacity": warehouse.capacity,
+                "utilization": f"{(sum(warehouse.current_stock.values()) / warehouse.capacity * 100):.1f}%"
+            }
+        
+        return report
+    
+    def get_sales_report(self, start_date: str = None, end_date: str = None) -> Dict:
+        """Generate sales report"""
+        sales_transactions = [t for t in self.transactions 
+                            if t.transaction_type == TransactionType.SALE]
+        
+        if start_date:
+            sales_transactions = [t for t in sales_transactions 
+                                if t.timestamp >= start_date]
+        if end_date:
+            sales_transactions = [t for t in sales_transactions 
+                                if t.timestamp <= end_date]
+        
+        report = {
+            "total_sales": len(sales_transactions),
+            "total_revenue": sum(t.total_value for t in sales_transactions),
+            "total_units_sold": sum(t.quantity for t in sales_transactions),
+            "sales_by_product": defaultdict(lambda: {"quantity": 0, "revenue": 0.0})
+        }
+        
+        for transaction in sales_transactions:
+            product = self.products.get(transaction.product_id)
+            if product:
+                report["sales_by_product"][product.name]["quantity"] += transaction.quantity
+                report["sales_by_product"][product.name]["revenue"] += transaction.total_value
+        
+        return report
+    
+    def print_inventory_summary(self):
+        """Print inventory summary"""
+        print("\n" + "="*70)
+        print("INVENTORY SUMMARY")
+        print("="*70)
+        
+        for warehouse in self.warehouses.values():
+            print(f"\nWarehouse: {warehouse.name} ({warehouse.location})")
+            print(f"Capacity: {warehouse.capacity} | Used: {sum(warehouse.current_stock.values())}")
+            print("-" * 70)
+            
+            for product_id, quantity in warehouse.current_stock.items():
+                product = self.products.get(product_id)
+                if product:
+                    value = quantity * product.unit_price
+                    status = "LOW STOCK" if quantity < product.reorder_level else "OK"
+                    print(f"  {product.name:<30} | SKU: {product.sku:<10} | Qty: {quantity:>5} | ${value:>8.2f} | {status}")
+        
+        print("="*70 + "\n")
+
+
+def main():
+    """Main function"""
+    ims = InventoryManagementSystem()
+    
+    print("="*70)
+    print("INVENTORY MANAGEMENT SYSTEM")
+    print("="*70)
+    
+    while True:
+        if not ims.current_user:
+            print("\n1. Register")
+            print("2. Login")
+            print("3. Exit")
+            choice = input("\nSelect option: ").strip()
+            
+            if choice == "1":
+                username = input("Username: ").strip()
+                email = input("Email: ").strip()
+                password = input("Password: ").strip()
+                role = input("Role (admin/manager/staff/viewer): ").strip()
+                ims.register_user(username, email, password, role)
+            
+            elif choice == "2":
+                username = input("Username: ").strip()
+                password = input("Password: ").strip()
+                ims.login(username, password)
+            
+            elif choice == "3":
+                print("Goodbye!")
+                break
+        
+        else:
+            print(f"\nLogged in as: {ims.current_user.username} ({ims.current_user.role.value})")
+            print("\n1. Add Product")
+            print("2. Search Products")
+            print("3. Add Warehouse")
+            print("4. Record Purchase")
+            print("5. Record Sale")
+            print("6. Transfer Stock")
+            print("7. Inventory Report")
+            print("8. Sales Report")
+            print("9. Inventory Summary")
+            print("10. Logout")
+            
+            choice = input("\nSelect option: ").strip()
+            
+            if choice == "1":
+                name = input("Product Name: ").strip()
+                sku = input("SKU: ").strip()
+                desc = input("Description: ").strip()
+                category = input("Category: ").strip()
+                price = float(input("Unit Price: "))
+                reorder = int(input("Reorder Level: ") or "10")
+                ims.add_product(name, sku, desc, category, price, reorder)
+            
+            elif choice == "2":
+                keyword = input("Search keyword: ").strip()
+                products = ims.search_products(keyword)
+                print(f"\nFound {len(products)} products:")
+                for p in products:
+                    print(f"  {p.name} - SKU: {p.sku} - ${p.unit_price:.2f}")
+            
+            elif choice == "3":
+                name = input("Warehouse Name: ").strip()
+                location = input("Location: ").strip()
+                capacity = int(input("Capacity: "))
+                ims.add_warehouse(name, location, capacity)
+            
+            elif choice == "4":
+                pid = input("Product ID: ").strip()
+                qty = int(input("Quantity: "))
+                wid = input("Warehouse ID: ").strip()
+                price = float(input("Unit Price: "))
+                notes = input("Notes: ").strip()
+                ims.record_purchase(pid, qty, wid, price, notes)
+            
+            elif choice == "5":
+                pid = input("Product ID: ").strip()
+                qty = int(input("Quantity: "))
+                wid = input("Warehouse ID: ").strip()
+                price = float(input("Unit Price: "))
+                notes = input("Notes: ").strip()
+                ims.record_sale(pid, qty, wid, price, notes)
+            
+            elif choice == "6":
+                pid = input("Product ID: ").strip()
+                qty = int(input("Quantity: "))
+                from_wid = input("From Warehouse ID: ").strip()
+                to_wid = input("To Warehouse ID: ").strip()
+                ims.transfer_stock(pid, qty, from_wid, to_wid)
+            
+            elif choice == "7":
+                report = ims.get_inventory_report()
+                print("\n" + "="*50)
+                print("INVENTORY REPORT")
+                print("="*50)
+                print(f"Total Products: {report['total_products']}")
+                print(f"Total Warehouses: {report['total_warehouses']}")
+                print(f"Total Inventory Value: ${report['total_inventory_value']:.2f}")
+                print(f"\nLow Stock Alerts: {len(report['low_stock_alerts'])}")
+                for alert in report['low_stock_alerts']:
+                    print(f"  - {alert['product']} ({alert['sku']}): {alert['current_stock']} units")
+                print("="*50)
+            
+            elif choice == "8":
+                report = ims.get_sales_report()
+                print("\n" + "="*50)
+                print("SALES REPORT")
+                print("="*50)
+                print(f"Total Sales: {report['total_sales']}")
+                print(f"Total Revenue: ${report['total_revenue']:.2f}")
+                print(f"Total Units Sold: {report['total_units_sold']}")
+                print("="*50)
+            
+            elif choice == "9":
+                ims.print_inventory_summary()
+            
+            elif choice == "10":
+                ims.logout()
+
+
+if __name__ == "__main__":
+    main()

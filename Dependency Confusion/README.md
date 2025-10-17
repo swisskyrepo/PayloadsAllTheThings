@@ -13,6 +13,7 @@
 
 * [visma-prodsec/confused](https://github.com/visma-prodsec/confused) - Tool to check for dependency confusion vulnerabilities in multiple package management systems
 * [synacktiv/DepFuzzer](https://github.com/synacktiv/DepFuzzer) - Tool used to find dependency confusion or project where owner's email can be takeover.
+* [Nodesecure/scanner](https://github.com/NodeSecure/scanner) - A package API to run a static analysis of a module's npm dependencies, including detection of dependency confusion vulnerabilities.
 
 ## Methodology
 

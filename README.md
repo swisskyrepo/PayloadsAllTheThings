@@ -1,6 +1,6 @@
 # Payloads All The Things
 
-A list of useful payloads and bypasses for Web Application Security.
+A list of useful payloads and bypasses for web application security.
 Feel free to improve with your payloads and techniques!
 
 You can also contribute with a :beers: IRL, or using the sponsor button.

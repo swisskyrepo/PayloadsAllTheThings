@@ -19,6 +19,7 @@
 - [Jack Rhysider - Darknet Diaries](https://www.youtube.com/@JackRhysider)
 - [John Hammond - Wargames and CTF writeups](https://www.youtube.com/channel/UCVeW9qkBjo3zosnqUbG7CFw)
 - [Laluka - OffenSkill - Sharing is Caring](https://www.youtube.com/@TheLaluka)
+- [LaurieWired - reverse engineering and research](https://www.youtube.com/@lauriewired)
 - [LiveOverflow - Explore weird machines...](https://www.youtube.com/channel/UClcE-kVhqyiHCcjYwcpfj9w)
 - [Murmus CTF - Weekly live streamings](https://www.youtube.com/channel/UCUB9vOGEUpw7IKJRoR4PK-A)
 - [Nahamsec](https://www.youtube.com/c/Nahamsec)
@@ -30,6 +31,7 @@
 - [STÖK](https://www.youtube.com/c/STOKfredrik)
 - [The Cyber Mentor](https://www.youtube.com/channel/UC0ArlFuFYMpEewyRBzdLHiw)
 - [The Hated one](https://www.youtube.com/channel/UCjr2bPAyPV7t35MvcgT3W8Q)
+- [Tib3rius - CTF walkthroughs, deep dives, web app hacking, and more!](https://www.youtube.com/@tib3rius)
 - [xct hacks](https://www.youtube.com/@xct_de)
 
 ## Conferences
@@ -62,3 +64,4 @@
     - [EP003: Red Team | HACKING GOOGLE](https://youtu.be/TusQWn2TQxQ)
     - [EP004: Bug Hunters | HACKING GOOGLE](https://youtu.be/IoXiXlCNoXg)
     - [EP005: Project Zero | HACKING GOOGLE](https://youtu.be/My_13FXODdU)
+

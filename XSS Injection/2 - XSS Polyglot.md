@@ -84,3 +84,14 @@ A polyglot XSS is a type of cross-site scripting (XSS) payload designed to work 
 
 * [Building XSS Polyglots - Brute - June 23, 2021](https://brutelogic.com.br/blog/building-xss-polyglots/)
 * [XSS Polyglot Challenge v2 - @filedescriptor - August 20, 2015](https://web.archive.org/web/20190617111911/https://polyglot.innerht.ml/)
+   
+
+ jaVasCript:/*-/*`/*\`/*'/*"/**/(/* */oNcliCk=alert(1) )//%0D%0A%0d%0a//</stYle/</titLe/</teXtarEa/</scRipt/--!>\x3csVg/<sVg/oNloAd=alert(1)//>\x3e                
+ 
+ # Advanced XSS Polyglot
+This payload is designed to execute across numerous HTML/JS contexts and evade standard filters by mixing comment styles, breaking out of tags, and leveraging lowercase event handlers. Use cases include testing various input sanitization weaknesses and filters.
+  # Crafting Tips
+- Mix encoding methods (URL, HTML entities, Unicode) to sneak past blacklists.
+- Use HTML breaking elements (`</textarea>`, `</script>`, etc.) to escape confined contexts.
+- Leverage less common event handlers (e.g., `onauxclick`, `ontoggle`) for advanced bypasses.
+

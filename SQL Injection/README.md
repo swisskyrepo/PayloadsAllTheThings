@@ -182,6 +182,30 @@ sql1 = "SELECT * FROM admin WHERE pass = '".md5("ffifdyop", true)."'";
 sql1 = "SELECT * FROM admin WHERE pass = ''or'6�]��!r,��b'";
 ```
 
+### Hashed Passwords
+
+By 2025, applications almost never store plaintext passwords. Authentication systems instead use a representation of the password (a hash derived by a key-derivation function, often with a salt). That evolution changes the mechanics of some classic SQL injection (SQLi) bypasses: an attacker who injects rows via `UNION` must now supply values that match the stored representation the application expects, not the user’s raw password.
+
+Many naïve authentication flows perform these high-level steps:
+
+* Query the database for the user record (e.g., `SELECT username, password_hash FROM users WHERE username = ?`).
+* Receive the stored `password_hash` from the DB.
+* Locally compute `hash(input_password)` using whatever algorithm is configured.
+* Compare `stored_password_hash == hash(input_password)`.
+
+If an attacker can inject an extra row into the result set (for example using `UNION`), they can make the application receive an attacker-controlled stored_password_hash. If that injected hash equals `hash(attacker_supplied_password)` as computed by the app, the comparison succeeds and the attacker is authenticated as the injected username.
+
+```sql
+admin' AND 1=0 UNION ALL SELECT 'admin', '161ebd7d45089b3446ee4e0d86dbcf92'--
+```
+
+* `AND 1=0`: to force the request to be false.
+* `SELECT 'admin', '161ebd7d45089b3446ee4e0d86dbcf92'`: select as many columns as necessary, here 161ebd7d45089b3446ee4e0d86dbcf92 corresponds to `MD5("P@ssw0rd")`.
+
+If the application computes `MD5("P@ssw0rd")` and that equals `161ebd7d45089b3446ee4e0d86dbcf92`, then supplying `"P@ssw0rd"` as the login password will pass the check.
+
+This method fails if the app stores `salt` and `KDF(salt, password)`. A single injected static hash cannot match a per-user salted result unless the attacker also knows or controls the salt and KDF parameters.
+
 ## UNION Based Injection
 
 In a standard SQL query, data is retrieved from one table. The `UNION` operator allows multiple `SELECT` statements to be combined. If an application is vulnerable to SQL injection, an attacker can inject a crafted SQL query that appends a `UNION` statement to the original query.

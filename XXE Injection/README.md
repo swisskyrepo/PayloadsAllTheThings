@@ -68,6 +68,13 @@ Basic entity test, when the XML parser parses the external entities the result s
 
 It might help to set the `Content-Type: application/xml` in the request when sending XML payload to the server.
 
+These are different types of entities in XML:
+
+| Type             | Prefix   | Where usable                |
+| ---------------- | -------- | --------------------------- |
+| General entity   | `&name;` | Inside XML document content |
+| Parameter entity | `%name;` | Only inside the DTD         |
+
 ## Exploiting XXE to Retrieve Files
 
 ### Classic XXE

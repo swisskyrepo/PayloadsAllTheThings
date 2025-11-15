@@ -64,4 +64,3 @@
     - [EP003: Red Team | HACKING GOOGLE](https://youtu.be/TusQWn2TQxQ)
     - [EP004: Bug Hunters | HACKING GOOGLE](https://youtu.be/IoXiXlCNoXg)
     - [EP005: Project Zero | HACKING GOOGLE](https://youtu.be/My_13FXODdU)
-

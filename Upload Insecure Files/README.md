@@ -102,6 +102,7 @@ Other extensions that can be abused to trigger other vulnerabilities.
     * Right to Left Override (RTLO): `name.%E2%80%AEphp.jpg` will became `name.gpj.php`.
     * Slash: `file.php/`, `file.php.\`, `file.j\sp`, `file.j/sp`
     * Multiple special characters: `file.jsp/././././.`
+    * UTF8 filename: `Content-Disposition: form-data; name="anyBodyParam"; filename*=UTF8''myfile%0a.txt`
 
 * On Windows OS, `include`, `require` and `require_once` functions will convert "foo.php" followed by one or more of the chars `\x20` ( ), `\x22` ("), `\x2E` (.), `\x3C` (<), `\x3E` (>) back to "foo.php".
 * On Windows OS, `fopen` function will convert "foo.php" followed by one or more of the chars `\x2E` (.), `\x2F` (/), `\x5C` (\) back to "foo.php".

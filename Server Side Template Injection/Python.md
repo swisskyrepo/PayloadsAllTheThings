@@ -434,5 +434,5 @@ Reference and explanation of payload can be found [here](https://www.yeswehack.c
 - [Exploring SSTI in Flask/Jinja2, Part II - Tim Tomes - March 11, 2016](https://web.archive.org/web/20170710015954/https://nvisium.com/blog/2016/03/11/exploring-ssti-in-flask-jinja2-part-ii/)
 - [Jinja2 template injection filter bypasses - Sebastian Neef - August 28, 2017](https://0day.work/jinja2-template-injection-filter-bypasses/)
 - [Python context free payloads in Mako templates - podalirius - August 26, 2021](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
-- [The minefield between syntaxes: exploiting syntax confusions in the wild - YesWeHack - October 17, 2025](https://www.yeswehack.com/learn-bug-bounty/syntax-confusion-ambiguous-parsing-exploits)
+- [The minefield between syntaxes: exploiting syntax confusions in the wild - YesWeHack, Brumens - October 17, 2025](https://www.yeswehack.com/learn-bug-bounty/syntax-confusion-ambiguous-parsing-exploits)
 - [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - YesWeHack, Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)

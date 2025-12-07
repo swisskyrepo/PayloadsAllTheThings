@@ -14,6 +14,7 @@
 
 ## Tools
 
+* [ZephrFish/OmniProx](https://github.com/ZephrFish/OmniProx) - IP Rotation from different providers - Like FireProx but for GCP, Azure, Alibaba and CloudFlare.
 * [ddd/gpb](https://github.com/ddd/gpb) - Bruteforcing the phone number of any Google user while rotating IPv6 addresses.
 * [ffuf/ffuf](https://github.com/ffuf/ffuf) - Fast web fuzzer written in Go.
 * [PortSwigger/Burp Suite](https://portswigger.net/burp) - The class-leading vulnerability scanning, penetration testing, and web app security platform.
@@ -143,3 +144,4 @@ Many cloud providers, such as Vultr, offer /64 IPv6 ranges, which provide a vast
 * [Bruteforcing the phone number of any Google user - brutecat - June 9, 2025](https://brutecat.com/articles/leaking-google-phones)
 * [Burp Intruder attack types - PortSwigger - August 19, 2025](https://portswigger.net/burp/documentation/desktop/tools/intruder/configure-attack/attack-types)
 * [Detecting and annoying Burp users - Julien Voisin -  May 3, 2021](https://dustri.org/b/detecting-and-annoying-burp-users.html)
+* [OmniProx: Multi-Cloud IP Rotation Made Simple - Andy Gill - September 28, 2025](https://blog.zsec.uk/omniprox/)

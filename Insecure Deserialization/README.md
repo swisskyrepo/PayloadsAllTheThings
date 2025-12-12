@@ -19,12 +19,14 @@ Check the following sub-sections, located in other chapters :
 * [Python : pickle, PyYAML, ...](Python.md)
 * [.NET : ysoserial.net, ...](DotNET.md)
 
-| Object Type     | Header (Hex) | Header (Base64) |
-|-----------------|--------------|-----------------|
-| Java Serialized | AC ED        | rO              |
-| .NET ViewState  | FF 01        | /w              |
-| Python Pickle   | 80 04 95     | gASV            |
-| PHP Serialized  | 4F 3A        | Tz              |
+| Object Type     | Header (Hex)   | Header (Base64) | Indicators       |
+|-----------------|----------------|-----------------|------------------|
+| .NET ViewState  | `FF 01`        | `/w`            | Commonly found inside hidden inputs around HTML forms |
+| BinaryFormatter | `0001 0000 00FF FFFF FF01` | `AAEAAAD` | Base64 decode and check for the long `FF FF FF FF` sequence. |
+| Java Serialized | `AC ED`        | `rO`            | Base64 decode and check first bytes. |
+| PHP Serialized  | `4F 3A`        | `Tz`            | Prefixes like `O:, a:, s:, i:, b:` and length indicators. |
+| Python Pickle   | `80 04 95`     | `gASV`          | Text: opcodes like `(lp0, S'Test'`. |
+| Ruby Marshal    | `04 08`        | `BAgK`          | Base64 decode and look for `\x04\x08` at the start. |
 
 ## POP Gadgets
 

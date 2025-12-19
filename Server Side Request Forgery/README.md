@@ -276,7 +276,7 @@ Parsing behavior by different libraries: `http://1.1.1.1 &@2.2.2.2# @3.3.3.3/`
 * `urllib2` treats `1.1.1.1` as the destination
 * `requests` and browsers redirect to `2.2.2.2`
 * `urllib` resolves to `3.3.3.3`
-* Some parsers replace http:127.0.0.1/ to http://127.0.0.1
+* Some parsers replace http:127.0.0.1/ to http://127.0.0.1/
 
 ### Bypass PHP filter_var() Function
 

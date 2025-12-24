@@ -13,6 +13,7 @@
 * [Filter Bypasses](#filter-bypasses)
     * [Bypass Without Space](#bypass-without-space)
     * [Bypass With A Line Return](#bypass-with-a-line-return)
+    * [Bypass With An Alias](#bypass-with-alias)
     * [Bypass With Backslash Newline](#bypass-with-backslash-newline)
     * [Bypass With Tilde Expansion](#bypass-with-tilde-expansion)
     * [Bypass With Brace Expansion](#bypass-with-brace-expansion)
@@ -202,6 +203,17 @@ Commands can also be run in sequence with newlines
 original_cmd_by_server
 ls
 ```
+
+### Bypass With An Alias
+In shells you have the ~/.bashrc and ~/.zshrc it contain aliases you can also find custom one by combining with other vulns or just use builtin one like in the examples
+
+```powershell
+~$ la /var/www
+~$ l /var/www
+~$ ll /var/www
+```
+
+
 
 ### Bypass With Backslash Newline
 

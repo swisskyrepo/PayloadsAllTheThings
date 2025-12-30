@@ -62,3 +62,4 @@ Surrogate-Control: content="ESI/1.0"
 * [Exploiting Server Side Include Injection - n00py - August 15, 2017](https://www.n00py.io/2017/08/exploiting-server-side-include-injection/)
 * [Server Side Inclusion/Edge Side Inclusion Injection - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/server-side-inclusion-edge-side-inclusion-injection)
 * [Server-Side Includes (SSI) Injection - Weilin Zhong, Nsrav - December 4, 2019](https://owasp.org/www-community/attacks/Server-Side_Includes_(SSI)_Injection)
+* [SSRF via ESI Injection - Orange Tsai](https://blackhat.com/docs/us-17/thursday/us-17-Tsai-A-New-Era-Of-SSRF-Exploiting-URL-Parser-In-Trending-Programming-Languages.pdf)

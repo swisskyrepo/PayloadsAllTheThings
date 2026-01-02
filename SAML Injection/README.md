@@ -17,6 +17,7 @@
 ## Tools
 
 * [CompassSecurity/SAMLRaider](https://github.com/SAMLRaider/SAMLRaider) - SAML2 Burp Extension.
+* [d0ge/XSW](https://github.com/d0ge/XSW) - XML Signature Wrapping Burp Suite Extensions.
 * [ZAP Addon/SAML Support](https://www.zaproxy.org/docs/desktop/addons/saml-support/) - Allows to detect, show, edit, and fuzz SAML requests.
 
 ## Methodology

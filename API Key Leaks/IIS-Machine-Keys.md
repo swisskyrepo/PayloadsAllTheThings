@@ -92,6 +92,16 @@ Try multiple machine keys from known products, Microsoft documentation, or other
     validationKey: C50B3C89CB21F4F1422FF158A5B42D0E8DB8CB5CDA1742572A487D9401E3400267682B202B746511891C1BAF47F8D25C07F6C39A104696DB51F17C529AD3CABE validationAlgo: SHA1
     ```
 
+* [irsdl/crapsecrets](https://github.com/irsdl/crapsecrets)
+
+    ```ps1
+    python3 ./crapsecrets/examples/cli.py -u http://update.microsoft.com/ -r
+    python3 ./crapsecrets/examples/cli.py -u http://update.microsoft.com/ -mrd 5
+    python3 ./crapsecrets/examples/cli.py -mrd 5 -avsk -fvsp -u http://update.microsoft.com/
+    python3 ./crapsecrets/examples/cli.py -mrd 5 -avsk -fvsp -mkf ./local/aspnet_machinekeys_local.txt -u http://192.168.6.22:8080/
+    python3 ./crapsecrets/examples/cli.py -mrd 5 -avsk -fvsp -mkf ./local/aspnet_machinekeys_local.txt -mkf ./crapsecrets/resources/aspnet_machinekeys.txt -u http://192.168.6.22:8080/a1/b/c1/
+    ```
+
 * [NotSoSecure/Blacklist3r](https://github.com/NotSoSecure/Blacklist3r)
 
     ```powershell

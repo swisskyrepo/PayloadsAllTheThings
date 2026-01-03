@@ -53,9 +53,9 @@
 
 Original research:
 
-* Rendered, Time-Based: [Server-Side Template Injection: RCE For The Modern Web App - James Kettle - August 05, 2015](https://portswigger.net/knowledgebase/papers/serversidetemplateinjection.pdf)
-* Polyglot-Based: [Improving the Detection and Identification of Template Engines for Large-Scale Template Injection Scanning - Maximilian Hildebrand - September 19, 2023](https://www.hackmanit.de/images/download/thesis/Improving-the-Detection-and-Identification-of-Template-Engines-for-Large-Scale-Template-Injection-Scanning-Maximilian-Hildebrand-Master-Thesis-Hackmanit.pdf)
-* Error-Based, Boolean-Based: [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)
+- Rendered, Time-Based: [Server-Side Template Injection: RCE For The Modern Web App - James Kettle - August 05, 2015](https://portswigger.net/knowledgebase/papers/serversidetemplateinjection.pdf)
+- Polyglot-Based: [Improving the Detection and Identification of Template Engines for Large-Scale Template Injection Scanning - Maximilian Hildebrand - September 19, 2023](https://www.hackmanit.de/images/download/thesis/Improving-the-Detection-and-Identification-of-Template-Engines-for-Large-Scale-Template-Injection-Scanning-Maximilian-Hildebrand-Master-Thesis-Hackmanit.pdf)
+- Error-Based, Boolean-Based: [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)
 
 #### Rendered
 

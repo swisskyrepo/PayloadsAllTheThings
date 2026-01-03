@@ -4,9 +4,20 @@
 
 ## Summary
 
+* [Tools](#tools)
 * [Methodology](#methodology)
 * [Edge Side Inclusion](#edge-side-inclusion)
 * [References](#references)
+
+## Tools
+
+- [vladko312/SSTImap](https://github.com/vladko312/SSTImap) - Automatic SSTI detection tool with interactive interface based on [epinna/tplmap](https://github.com/epinna/tplmap), supports SSI detection and exploitation with `--legacy` or `-e SSI`
+
+  ```bash
+  python3 ./sstimap.py -u 'https://example.com/page?name=John' --legacy -s
+  python3 ./sstimap.py -i -u 'https://example.com/page?name=Vulnerable*&message=My_message' -l 5 -e SSI
+  python3 ./sstimap.py -i --legacy -A -m POST -l 5 -H 'Authorization: Basic bG9naW46c2VjcmV0X3Bhc3N3b3Jk'
+  ```
 
 ## Methodology
 

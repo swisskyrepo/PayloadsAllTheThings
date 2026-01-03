@@ -54,7 +54,7 @@
 
 ### Java EL - Basic Injection
 
-> Java has multiple Expression Languages using similar syntax.
+Java has multiple Expression Languages using similar syntax.
 
 > Multiple variable expressions can be used, if `${...}` doesn't work try `#{...}`, `*{...}`, `@{...}` or `~{...}`.
 

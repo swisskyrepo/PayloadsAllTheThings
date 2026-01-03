@@ -11,7 +11,7 @@
 
 ## Tools
 
-- [vladko312/SSTImap](https://github.com/vladko312/SSTImap) - Automatic SSTI detection tool with interactive interface based on [epinna/tplmap](https://github.com/epinna/tplmap), supports SSI detection and exploitation with `--legacy` or `-e SSI`
+* [vladko312/SSTImap](https://github.com/vladko312/SSTImap) - Automatic SSTI detection tool with interactive interface based on [epinna/tplmap](https://github.com/epinna/tplmap), supports SSI detection and exploitation with `--legacy` or `-e SSI`
 
   ```bash
   python3 ./sstimap.py -u 'https://example.com/page?name=John' --legacy -s

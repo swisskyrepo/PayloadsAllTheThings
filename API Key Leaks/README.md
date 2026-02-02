@@ -88,7 +88,7 @@ Use [streaak/keyhacks](https://github.com/streaak/keyhacks) or read the document
 
 ## Reducing The Attack Surface
 
-Check the existence of a private key or AWS credentials before commiting your changes in a GitHub repository.
+Check the existence of a private key or AWS credentials before committing your changes in a GitHub repository.
 
 Add these lines to your `.pre-commit-config.yaml` file.
 

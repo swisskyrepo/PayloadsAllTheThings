@@ -370,7 +370,7 @@ ${ new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(val
 
 ### SpEL - Basic Injection
 
-> SpEL has built-in templating system using `#{ }`, but SpEL is also commonly used for interpolation using `${ }``.
+> SpEL has built-in templating system using `#{ }`, but SpEL is also commonly used for interpolation using `${ }`.
 
 ```java
 ${7*7}

@@ -1,4 +1,4 @@
-# Elixir Deserialization
+# Server Side Template Injection - Elixir
 
 > Server-Side Template Injection (SSTI)  is a vulnerability that arises when an attacker can inject malicious code into a server-side template, causing the server to execute arbitrary commands. In Elixir, SSTI can occur when using templating engines like EEx (Embedded Elixir), especially when user input is incorporated into templates without proper sanitization or validation.
 

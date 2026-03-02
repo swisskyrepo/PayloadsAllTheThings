@@ -370,7 +370,7 @@ ${ new groovy.lang.GroovyClassLoader().parseClass("@groovy.transform.ASTTest(val
 
 ### SpEL - Basic Injection
 
-> SpEL has built-in templating system using #{ }, but SpEL is also commonly used for interpolation using ${ }
+> SpEL has built-in templating system using `#{ }`, but SpEL is also commonly used for interpolation using `${ }``.
 
 ```java
 ${7*7}
@@ -472,7 +472,7 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
 
 ### OGNL - Basic Injection
 
-> OGNL can be used with different tags like ${ }
+> OGNL can be used with different tags like `${ }`
 
 ```java
 7*7

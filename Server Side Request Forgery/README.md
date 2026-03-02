@@ -271,12 +271,12 @@ http:127.0.0.1/
 
 ![https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/WeakParser.png?raw=true](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Server%20Side%20Request%20Forgery/Images/WeakParser.jpg?raw=true)
 
-Parsing behavior by different libraries: `http://1.1.1.1 &@2.2.2.2# @3.3.3.3/`
+Parsing behavior by different libraries: `http://1.1.1.1 &@2.2.2.2# @3.3.3.3/`.
 
 * `urllib2` treats `1.1.1.1` as the destination
 * `requests` and browsers redirect to `2.2.2.2`
 * `urllib` resolves to `3.3.3.3`
-* Some parsers replace http:127.0.0.1/ to http://127.0.0.1/
+* Some parsers replace `http:127.0.0.1/` to `http://127.0.0.1/`
 
 ### Bypass PHP filter_var() Function
 

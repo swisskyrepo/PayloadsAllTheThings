@@ -136,18 +136,21 @@ SELECT * FROM users WHERE username = 'user' AND password = 'pass';
 An attacker can attempt to inject malicious SQL code into the username or password fields. For instance, if the attacker types the following in the username field:
 
 ```sql
-' OR '1'='1
+' OR '1'='1'--
 ```
 
-And leaves the password field empty, the resulting SQL query executed might look like this:
+This payload is injecting an always true statement into the username field and comment the rest SQL query.
+The attacker can write anything in the password field because the resulting SQL query will not check it anymore.
 
 ```SQL
-SELECT * FROM users WHERE username = '' OR '1'='1' AND password = '';
+SELECT * FROM users WHERE username = '' OR '1'='1'--' AND password = '';
 ```
 
 Here, `'1'='1'` is always true, which means the query could return a valid user, effectively bypassing the authentication check.
 
-:warning: In this case, the database will return an array of results because it will match every users in the table. This will produce an error in the server side since it was expecting only one result. By adding a `LIMIT` clause, you can restrict the number of rows returned by the query. By submitting the following payload in the username field, you will log in as the first user in the database. Additionally, you can inject a payload in the password field while using the correct username to target a specific user.
+:warning: In this case, the database will return an array of results because it will match every users in the table. This will produce an error in the server side since it was expecting only one result. By adding a `LIMIT` clause, you can restrict the number of rows returned by the query. 
+
+By submitting the following payload in the username field, you will log in as the first user in the database. Additionally, you can inject a payload in the password field while using the correct username to target a specific user.
 
 ```sql
 ' or 1=1 limit 1 --

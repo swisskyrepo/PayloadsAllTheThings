@@ -185,3 +185,4 @@ JSON Web Token might be used to authenticate an user.
 * [Broken Cryptography & Account Takeovers - Harsh Bothra - September 20, 2020](https://speakerdeck.com/harshbothra/broken-cryptography-and-account-takeovers?slide=28)
 * [CTFd Account Takeover - NIST National Vulnerability Database - March 29, 2020](https://nvd.nist.gov/vuln/detail/CVE-2020-7245)
 * [Hacking Grindr Accounts with Copy and Paste - Troy Hunt - October 3, 2020](https://www.troyhunt.com/hacking-grindr-accounts-with-copy-and-paste/)
+

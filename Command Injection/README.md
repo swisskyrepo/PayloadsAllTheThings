@@ -464,13 +464,13 @@ g="/e"\h"hh"/hm"t"c/\i"sh"hh/hmsu\e;tac$@<${g//hh??hm/}
 
 ## References
 
-* [Argument Injection and Getting Past Shellwords.escape - Etienne Stalmans - November 24, 2019](https://staaldraad.github.io/post/2019-11-24-argument-injection/)
-* [Argument Injection Vectors - SonarSource - February 21, 2023](https://sonarsource.github.io/argument-injection-vectors/)
-* [Back to the Future: Unix Wildcards Gone Wild - Leon Juranic - June 25, 2014](https://www.exploit-db.com/papers/33930)
-* [Bash Obfuscation by String Manipulation - Malwrologist, @DissectMalware - August 4, 2018](https://twitter.com/DissectMalware/status/1025604382644232192)
+* [Argument Injection and Getting Past Shellwords.escape - Etienne Stalmans - November 24, 2019](https://web.archive.org/web/20250306133700/https://staaldraad.github.io/post/2019-11-24-argument-injection/)
+* [Argument Injection Vectors - SonarSource - February 21, 2023](https://web.archive.org/web/20251211212046/https://sonarsource.github.io/argument-injection-vectors/)
+* [Back to the Future: Unix Wildcards Gone Wild - Leon Juranic - June 25, 2014](https://web.archive.org/web/20140714140437/http://www.exploit-db.com/papers/33930)
+* [Bash Obfuscation by String Manipulation - Malwrologist, @DissectMalware - August 4, 2018](https://web.archive.org/web/20241202133053/https://twitter.com/DissectMalware/status/1025604382644232192)
 * [Bug Bounty Survey - Windows RCE Spaceless - Bug Bounties Survey - May 4, 2017](https://web.archive.org/web/20180808181450/https://twitter.com/bugbsurveys/status/860102244171227136)
-* [No PHP, No Spaces, No $, No {}, Bash Only - Sven Morgenroth - August 9, 2017](https://twitter.com/asdizzle_/status/895244943526170628)
-* [OS Command Injection - PortSwigger - 2024](https://portswigger.net/web-security/os-command-injection)
-* [SECURITY CAFÉ - Exploiting Timed-Based RCE - Pobereznicenco Dan - February 28, 2017](https://securitycafe.ro/2017/02/28/time-based-data-exfiltration/)
+* [No PHP, No Spaces, No $, No {}, Bash Only - Sven Morgenroth - August 9, 2017](https://web.archive.org/web/20220428000241/https://twitter.com/asdizzle_/status/895244943526170628)
+* [OS Command Injection - PortSwigger - 2024](https://web.archive.org/web/20190330193912/https://portswigger.net/web-security/os-command-injection)
+* [SECURITY CAFÉ - Exploiting Timed-Based RCE - Pobereznicenco Dan - February 28, 2017](https://web.archive.org/web/20250108174818/https://securitycafe.ro/2017/02/28/time-based-data-exfiltration/)
 * [TL;DR: How to Exploit/Bypass/Use PHP escapeshellarg/escapeshellcmd Functions - kacperszurek - April 25, 2018](https://github.com/kacperszurek/exploits/blob/master/GitList/exploit-bypass-php-escapeshellarg-escapeshellcmd.md)
-* [WorstFit: Unveiling Hidden Transformers in Windows ANSI! - Orange Tsai - January 10, 2025](https://blog.orange.tw/posts/2025-01-worstfit-unveiling-hidden-transformers-in-windows-ansi/)
+* [WorstFit: Unveiling Hidden Transformers in Windows ANSI! - Orange Tsai - January 10, 2025](https://web.archive.org/web/20250109163006/https://blog.orange.tw/posts/2025-01-worstfit-unveiling-hidden-transformers-in-windows-ansi/)

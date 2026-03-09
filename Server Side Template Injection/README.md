@@ -218,11 +218,11 @@ Once the template engine is identified, the attacker injects more complex expres
 
 ## References
 
-- [Server-Side Template Injection: RCE For The Modern Web App - James Kettle - August 05, 2015](https://portswigger.net/knowledgebase/papers/serversidetemplateinjection.pdf)
-- [Improving the Detection and Identification of Template Engines for Large-Scale Template Injection Scanning - Maximilian Hildebrand - September 19, 2023](https://www.hackmanit.de/images/download/thesis/Improving-the-Detection-and-Identification-of-Template-Engines-for-Large-Scale-Template-Injection-Scanning-Maximilian-Hildebrand-Master-Thesis-Hackmanit.pdf)
+- [Server-Side Template Injection: RCE For The Modern Web App - James Kettle - August 05, 2015](https://web.archive.org/web/20160311193057/https://portswigger.net/knowledgebase/papers/ServerSideTemplateInjection.pdf)
+- [Improving the Detection and Identification of Template Engines for Large-Scale Template Injection Scanning - Maximilian Hildebrand - September 19, 2023](https://web.archive.org/web/20231210014226/https://www.hackmanit.de/images/download/thesis/Improving-the-Detection-and-Identification-of-Template-Engines-for-Large-Scale-Template-Injection-Scanning-Maximilian-Hildebrand-Master-Thesis-Hackmanit.pdf)
 - [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)
-- [A Pentester's Guide to Server Side Template Injection (SSTI) - Busra Demir - December 24, 2020](https://www.cobalt.io/blog/a-pentesters-guide-to-server-side-template-injection-ssti)
-- [Gaining Shell using Server Side Template Injection (SSTI) - David Valles - August 22, 2018](https://medium.com/@david.valles/gaining-shell-using-server-side-template-injection-ssti-81e29bb8e0f9)
-- [Template Engines Injection 101 - Mahmoud M. Awali - November 1, 2024](https://medium.com/@0xAwali/template-engines-injection-101-4f2fe59e5756)
-- [Template Injection On Hardened Targets - Lucas 'BitK' Philippe - September 28, 2022](https://youtu.be/M0b_KA0OMFw)
-- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - YesWeHack, Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
+- [A Pentester's Guide to Server Side Template Injection (SSTI) - Busra Demir - December 24, 2020](https://web.archive.org/web/20260111213449/https://www.cobalt.io/blog/a-pentesters-guide-to-server-side-template-injection-ssti)
+- [Gaining Shell using Server Side Template Injection (SSTI) - David Valles - August 22, 2018](https://web.archive.org/web/20180928123607/https://medium.com/@david.valles/gaining-shell-using-server-side-template-injection-ssti-81e29bb8e0f9)
+- [Template Engines Injection 101 - Mahmoud M. Awali - November 1, 2024](https://web.archive.org/web/20251104003639/https://medium.com/@0xAwali/template-engines-injection-101-4f2fe59e5756)
+- [Template Injection On Hardened Targets - Lucas 'BitK' Philippe - September 28, 2022](https://web.archive.org/web/20230314135020/https://youtu.be/M0b_KA0OMFw)
+- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - YesWeHack, Brumens - March 24, 2025](https://web.archive.org/web/20240906203847/https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)

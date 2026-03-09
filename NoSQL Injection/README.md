@@ -238,10 +238,10 @@ end
 ## References
 
 * [Burp-NoSQLiScanner - matrix - January 30, 2021](https://github.com/matrix/Burp-NoSQLiScanner/blob/main/src/burp/BurpExtender.java)
-* [Getting rid of pre- and post-conditions in NoSQL injections - Reino Mostert - March 11, 2025](https://sensepost.com/blog/2025/getting-rid-of-pre-and-post-conditions-in-nosql-injections/)
-* [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat - February 22, 2015](https://www.dailysecurity.fr/nosql-injections-classique-blind/)
-* [MongoDB NoSQL Injection with Aggregation Pipelines - Soroush Dalili (@irsdl) - June 23, 2024](https://soroush.me/blog/2024/06/mongodb-nosql-injection-with-aggregation-pipelines/)
-* [NoSQL error-based injection - Reino Mostert - March 15, 2025](https://sensepost.com/blog/2025/nosql-error-based-injection/)
-* [NoSQL Injection in MongoDB - Zanon - July 17, 2016](https://zanon.io/posts/nosql-injection-in-mongodb)
+* [Getting rid of pre- and post-conditions in NoSQL injections - Reino Mostert - March 11, 2025](https://web.archive.org/web/20260208131430/https://sensepost.com/blog/2025/getting-rid-of-pre-and-post-conditions-in-nosql-injections/)
+* [Les NOSQL injections Classique et Blind: Never trust user input - Geluchat - February 22, 2015](https://web.archive.org/web/20160316144254/http://www.dailysecurity.fr/nosql-injections-classique-blind/)
+* [MongoDB NoSQL Injection with Aggregation Pipelines - Soroush Dalili (@irsdl) - June 23, 2024](https://web.archive.org/web/20240624015518/https://soroush.me/blog/2024/06/mongodb-nosql-injection-with-aggregation-pipelines/)
+* [NoSQL error-based injection - Reino Mostert - March 15, 2025](https://web.archive.org/web/20260208131314/https://sensepost.com/blog/2025/nosql-error-based-injection/)
+* [NoSQL Injection in MongoDB - Zanon - July 17, 2016](https://web.archive.org/web/20160916113057/http://zanon.io:80/posts/nosql-injection-in-mongodb)
 * [NoSQL injection wordlists - cr0hn - May 5, 2021](https://github.com/cr0hn/nosqlinjection_wordlists)
-* [Testing for NoSQL injection - OWASP - May 2, 2023](https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection)
+* [Testing for NoSQL injection - OWASP - May 2, 2023](https://web.archive.org/web/20200707120423/https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/07-Input_Validation_Testing/05.6-Testing_for_NoSQL_Injection)

@@ -55,6 +55,6 @@ POP gadgets characteristics:
 
 ## References
 
-* [ExploitDB Introduction - Abdelazim Mohammed(@intx0x80) - May 27, 2018](https://www.exploit-db.com/docs/english/44756-deserialization-vulnerability.pdf)
-* [Exploiting insecure deserialization vulnerabilities - PortSwigger - July 25, 2020](https://portswigger.net/web-security/deserialization/exploiting)
-* [Instagram's Million Dollar Bug - Wesley Wineberg - December 17, 2015](http://www.exfiltrated.com/research-Instagram-RCE.php)
+* [ExploitDB Introduction - Abdelazim Mohammed(@intx0x80) - May 27, 2018](https://web.archive.org/web/20180527082635/https://www.exploit-db.com/docs/english/44756-deserialization-vulnerability.pdf)
+* [Exploiting insecure deserialization vulnerabilities - PortSwigger - July 25, 2020](https://web.archive.org/web/20200725143552/https://portswigger.net/web-security/deserialization/exploiting)
+* [Instagram's Million Dollar Bug - Wesley Wineberg - December 17, 2015](https://web.archive.org/web/20151217194413/http://exfiltrated.com/research-Instagram-RCE.php)

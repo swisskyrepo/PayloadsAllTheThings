@@ -155,11 +155,11 @@ def handleResponse(req, interesting):
 
 ## References
 
-- [Beyond the Limit: Expanding single-packet race condition with a first sequence sync for breaking the 65,535 byte limit - @ryotkak - August 2, 2024](https://flatt.tech/research/posts/beyond-the-limit-expanding-single-packet-race-condition-with-first-sequence-sync/)
-- [DEF CON 31 - Smashing the State Machine the True Potential of Web Race Conditions - James Kettle (@albinowax) - September 15, 2023](https://youtu.be/tKJzsaB1ZvI)
-- [Exploiting Race Condition Vulnerabilities in Web Applications - Javan Rasokat - October 6, 2022](https://conference.hitb.org/hitbsecconf2022sin/materials/D2%20COMMSEC%20-%20Exploiting%20Race%20Condition%20Vulnerabilities%20in%20Web%20Applications%20-%20Javan%20Rasokat.pdf)
-- [New techniques and tools for web race conditions - Emma Stocks - August 10, 2023](https://portswigger.net/blog/new-techniques-and-tools-for-web-race-conditions)
-- [Race Condition Bug In Web App: A Use Case - Mandeep Jadon - April 24, 2018](https://medium.com/@ciph3r7r0ll/race-condition-bug-in-web-app-a-use-case-21fd4df71f0e)
-- [Race conditions on the web - Josip Franjkovic - July 12, 2016](https://www.josipfranjkovic.com/blog/race-conditions-on-web)
-- [Smashing the state machine: the true potential of web race conditions - James Kettle (@albinowax) - August 9, 2023](https://portswigger.net/research/smashing-the-state-machine)
-- [Turbo Intruder: Embracing the billion-request attack - James Kettle (@albinowax) - January 25, 2019](https://portswigger.net/research/turbo-intruder-embracing-the-billion-request-attack)
+- [Beyond the Limit: Expanding single-packet race condition with a first sequence sync for breaking the 65,535 byte limit - @ryotkak - August 2, 2024](https://web.archive.org/web/20251116040307/https://flatt.tech/research/posts/beyond-the-limit-expanding-single-packet-race-condition-with-first-sequence-sync/)
+- [DEF CON 31 - Smashing the State Machine the True Potential of Web Race Conditions - James Kettle (@albinowax) - September 15, 2023](https://web.archive.org/web/20231018114533/https://youtu.be/tKJzsaB1ZvI)
+- [Exploiting Race Condition Vulnerabilities in Web Applications - Javan Rasokat - October 6, 2022](https://web.archive.org/web/20221006190254/http://conference.hitb.org/hitbsecconf2022sin/materials/D2%20COMMSEC%20-%20Exploiting%20Race%20Condition%20Vulnerabilities%20in%20Web%20Applications%20-%20Javan%20Rasokat.pdf)
+- [New techniques and tools for web race conditions - Emma Stocks - August 10, 2023](https://web.archive.org/web/20230810160828/https://portswigger.net/blog/new-techniques-and-tools-for-web-race-conditions)
+- [Race Condition Bug In Web App: A Use Case - Mandeep Jadon - April 24, 2018](https://web.archive.org/web/20260302041740/https://medium.com/@ciph3r7r0ll/race-condition-bug-in-web-app-a-use-case-21fd4df71f0e)
+- [Race conditions on the web - Josip Franjkovic - July 12, 2016](https://web.archive.org/web/20160712132451/https://www.josipfranjkovic.com/blog/race-conditions-on-web)
+- [Smashing the state machine: the true potential of web race conditions - James Kettle (@albinowax) - August 9, 2023](https://web.archive.org/web/20230809185504/https://portswigger.net/research/smashing-the-state-machine)
+- [Turbo Intruder: Embracing the billion-request attack - James Kettle (@albinowax) - January 25, 2019](https://web.archive.org/web/20190929052757/https://portswigger.net/research/turbo-intruder-embracing-the-billion-request-attack)

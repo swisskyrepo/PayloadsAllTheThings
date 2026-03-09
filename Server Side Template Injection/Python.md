@@ -457,10 +457,10 @@ Reference and explanation of payload can be found [yeswehack/server-side-templat
 
 ## References
 
-- [Cheatsheet - Flask & Jinja2 SSTI - phosphore - September 3, 2018](https://pequalsnp-team.github.io/cheatsheet/flask-jinja2-ssti)
+- [Cheatsheet - Flask & Jinja2 SSTI - phosphore - September 3, 2018](https://web.archive.org/web/20191029021639/http://pequalsnp-team.github.io:80/cheatsheet/flask-jinja2-ssti)
 - [Exploring SSTI in Flask/Jinja2, Part II - Tim Tomes - March 11, 2016](https://web.archive.org/web/20170710015954/https://nvisium.com/blog/2016/03/11/exploring-ssti-in-flask-jinja2-part-ii/)
-- [Jinja2 template injection filter bypasses - Sebastian Neef - August 28, 2017](https://0day.work/jinja2-template-injection-filter-bypasses/)
-- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - Brumens - March 24, 2025](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
-- [Python context free payloads in Mako templates - podalirius - August 26, 2021](https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
-- [The minefield between syntaxes: exploiting syntax confusions in the wild - Brumens - October 17, 2025](https://www.yeswehack.com/learn-bug-bounty/syntax-confusion-ambiguous-parsing-exploits)
+- [Jinja2 template injection filter bypasses - Sebastian Neef - August 28, 2017](https://web.archive.org/web/20180901222505/https://0day.work/jinja2-template-injection-filter-bypasses/)
+- [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - Brumens - March 24, 2025](https://web.archive.org/web/20240906203847/https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
+- [Python context free payloads in Mako templates - podalirius - August 26, 2021](https://web.archive.org/web/20210826203322/https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
+- [The minefield between syntaxes: exploiting syntax confusions in the wild - Brumens - October 17, 2025](https://web.archive.org/web/20251006113218/https://www.yeswehack.com/learn-bug-bounty/syntax-confusion-ambiguous-parsing-exploits)
 - [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

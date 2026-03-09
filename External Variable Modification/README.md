@@ -90,9 +90,9 @@ extract($_GET, EXTR_SKIP);
 
 ## References
 
-* [CWE-473: PHP External Variable Modification - Common Weakness Enumeration - November 19, 2024](https://cwe.mitre.org/data/definitions/473.html)
-* [CWE-621: Variable Extraction Error - Common Weakness Enumeration - November 19, 2024](https://cwe.mitre.org/data/definitions/621.html)
-* [Function extract - PHP Documentation - March 21, 2001](https://www.php.net/manual/en/function.extract.php)
-* [$GLOBALS variables - PHP Documentation - April 30, 2008](https://www.php.net/manual/en/reserved.variables.globals.php)
+* [CWE-473: PHP External Variable Modification - Common Weakness Enumeration - November 19, 2024](https://web.archive.org/web/20260210044429/https://cwe.mitre.org/data/definitions/473.html)
+* [CWE-621: Variable Extraction Error - Common Weakness Enumeration - November 19, 2024](https://web.archive.org/web/20260223131419/https://cwe.mitre.org/data/definitions/621.html)
+* [Function extract - PHP Documentation - March 21, 2001](https://web.archive.org/web/20260210044429/https://www.php.net/manual/en/function.extract.php)
+* [$GLOBALS variables - PHP Documentation - April 30, 2008](https://web.archive.org/web/20260307071107/https://www.php.net/manual/en/reserved.variables.globals.php)
 * [The Ducks - HackThisSite - December 14, 2016](https://github.com/HackThisSite/CTF-Writeups/blob/master/2016/SCTF/Ducks/README.md)
-* [Extracttheflag! - Orel / WindTeam - February 28, 2024](https://ctftime.org/writeup/38076)
+* [Extracttheflag! - Orel / WindTeam - February 28, 2024](https://web.archive.org/web/20250709004721/https://ctftime.org/writeup/38076)

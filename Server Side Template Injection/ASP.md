@@ -31,4 +31,4 @@
 
 ## References
 
-- [Server-Side Template Injection (SSTI) in ASP.NET Razor - Clément Notin - April 15, 2020](https://clement.notin.org/blog/2020/04/15/Server-Side-Template-Injection-(SSTI)-in-ASP.NET-Razor/)
+- [Server-Side Template Injection (SSTI) in ASP.NET Razor - Clément Notin - April 15, 2020](https://web.archive.org/web/20240905143644/http://clement.notin.org/blog/2020/04/15/Server-Side-Template-Injection-(SSTI)-in-ASP.NET-Razor/)

@@ -200,8 +200,8 @@ $ AspDotNetWrapper.exe --decryptDataFilePath C:\DecryptedText.txt
 
 ## References
 
-* [Deep Dive into .NET ViewState Deserialization and Its Exploitation - Swapneil Kumar Dash - October 22, 2019](https://swapneildash.medium.com/deep-dive-into-net-viewstate-deserialization-and-its-exploitation-54bf5b788817)
-* [Exploiting Deserialisation in ASP.NET via ViewState - Soroush Dalili - April 23, 2019](https://soroush.me/blog/2019/04/exploiting-deserialisation-in-asp-net-via-viewstate/)
-* [Exploiting ViewState Deserialization using Blacklist3r and YSoSerial.Net - Claranet - June 13, 2019](https://www.claranet.com/us/blog/2019-06-13-exploiting-viewstate-deserialization-using-blacklist3r-and-ysoserialnet)
-* [Project Blacklist3r - @notsosecure - November 23, 2018](https://www.notsosecure.com/project-blacklist3r/)
-* [View State, The Unpatchable IIS Forever Day Being Actively Exploited - Zeroed - July 21, 2024](https://zeroed.tech/blog/viewstate-the-unpatchable-iis-forever-day-being-actively-exploited/)
+* [Deep Dive into .NET ViewState Deserialization and Its Exploitation - Swapneil Kumar Dash - October 22, 2019](https://web.archive.org/web/20250916225422/https://swapneildash.medium.com/deep-dive-into-net-viewstate-deserialization-and-its-exploitation-54bf5b788817)
+* [Exploiting Deserialisation in ASP.NET via ViewState - Soroush Dalili - April 23, 2019](https://web.archive.org/web/20250806010506/https://soroush.me/blog/2019/04/exploiting-deserialisation-in-asp-net-via-viewstate/)
+* [Exploiting ViewState Deserialization using Blacklist3r and YSoSerial.Net - Claranet - June 13, 2019](https://web.archive.org/web/20250810191756/https://www.claranet.com/us/blog/2019-06-13-exploiting-viewstate-deserialization-using-blacklist3r-and-ysoserialnet)
+* [Project Blacklist3r - @notsosecure - November 23, 2018](https://web.archive.org/web/20260116051627/https://notsosecure.com/project-blacklist3r)
+* [View State, The Unpatchable IIS Forever Day Being Actively Exploited - Zeroed - July 21, 2024](https://web.archive.org/web/20260107194152/https://zeroed.tech/blog/viewstate-the-unpatchable-iis-forever-day-being-actively-exploited/)

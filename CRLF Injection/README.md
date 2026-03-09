@@ -147,6 +147,6 @@ URL encoded version
 
 ## References
 
-* [CRLF Injection - CWE-93 - OWASP - May 20, 2022](https://www.owasp.org/index.php/CRLF_Injection)
+* [CRLF Injection - CWE-93 - OWASP - May 20, 2022](https://web.archive.org/web/20200113055606/https://www.owasp.org/index.php/CRLF_Injection)
 * [CRLF injection on Twitter or why blacklists fail - XSS Jigsaw - April 21, 2015](https://web.archive.org/web/20150425024348/https://blog.innerht.ml/twitter-crlf-injection/)
 * [Starbucks: [newscdn.starbucks.com] CRLF Injection, XSS - Bobrov - December 20, 2016](https://vulners.com/hackerone/H1:192749)

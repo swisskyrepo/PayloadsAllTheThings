@@ -174,8 +174,8 @@ Since the browser only sent one request, it accepts the response to the `HEAD` r
 
 ## References
 
-* [A Pentester's Guide to HTTP Request Smuggling - Busra Demir - October 16, 2020](https://www.cobalt.io/blog/a-pentesters-guide-to-http-request-smuggling)
-* [Advanced Request Smuggling - PortSwigger - October 26, 2021](https://portswigger.net/web-security/request-smuggling/advanced#http-2-request-smuggling)
-* [Browser-Powered Desync Attacks: A New Frontier in HTTP Request Smuggling - James Kettle (@albinowax) - August 10, 2022](https://portswigger.net/research/browser-powered-desync-attacks)
-* [HTTP Desync Attacks: Request Smuggling Reborn - James Kettle (@albinowax) - August 7, 2019](https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn)
-* [Request Smuggling Tutorial - PortSwigger - September 28, 2019](https://portswigger.net/web-security/request-smuggling)
+* [A Pentester's Guide to HTTP Request Smuggling - Busra Demir - October 16, 2020](https://web.archive.org/web/20260111201639/https://www.cobalt.io/blog/a-pentesters-guide-to-http-request-smuggling)
+* [Advanced Request Smuggling - PortSwigger - October 26, 2021](https://web.archive.org/web/20260228102047/https://portswigger.net/web-security/request-smuggling/advanced)
+* [Browser-Powered Desync Attacks: A New Frontier in HTTP Request Smuggling - James Kettle (@albinowax) - August 10, 2022](https://web.archive.org/web/20220810190719/https://portswigger.net/research/browser-powered-desync-attacks)
+* [HTTP Desync Attacks: Request Smuggling Reborn - James Kettle (@albinowax) - August 7, 2019](https://web.archive.org/web/20260228152820/https://portswigger.net/research/http-desync-attacks-request-smuggling-reborn)
+* [Request Smuggling Tutorial - PortSwigger - September 28, 2019](https://web.archive.org/web/20190821011451/https://portswigger.net/web-security/request-smuggling)

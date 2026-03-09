@@ -129,6 +129,6 @@ SELECT chr(65)||chr(68)||chr(82)||chr(73) FROM sysibm.sysdummy1
 
 ## References
 
-* [DB2 SQL injection cheat sheet - Adrián - May 20, 2012](https://securityetalii.es/2012/05/20/db2-sql-injection-cheat-sheet/)
-* [Pentestmonkey's DB2 SQL Injection Cheat Sheet - @pentestmonkey - September 17, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
-* [QSYS2.QCMDEXC() - IBM Support - April 22, 2023](https://www.ibm.com/support/pages/qsys2qcmdexc)
+* [DB2 SQL injection cheat sheet - Adrián - May 20, 2012](https://web.archive.org/web/20211026090110/https://securityetalii.es/2012/05/20/db2-sql-injection-cheat-sheet/)
+* [Pentestmonkey's DB2 SQL Injection Cheat Sheet - @pentestmonkey - September 17, 2011](https://web.archive.org/web/20260226035803/https://pentestmonkey.net/cheat-sheet/sql-injection/db2-sql-injection-cheat-sheet)
+* [QSYS2.QCMDEXC() - IBM Support - April 22, 2023](https://web.archive.org/web/20230305185053/https://www.ibm.com/support/pages/qsys2qcmdexc)

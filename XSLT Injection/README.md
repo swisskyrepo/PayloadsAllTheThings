@@ -245,8 +245,8 @@ return proc.StandardOutput.ReadToEnd();
 
 ## References
 
-- [From XSLT code execution to Meterpreter shells - Nicolas Grégoire (@agarri) - July 2, 2012](https://www.agarri.fr/blog/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html)
+- [From XSLT code execution to Meterpreter shells - Nicolas Grégoire (@agarri) - July 2, 2012](https://web.archive.org/web/20190820014239/https://www.agarri.fr/blog/archives/2012/07/02/from_xslt_code_execution_to_meterpreter_shells/index.html)
 - [XSLT Injection - Fortify - January 16, 2021](http://web.archive.org/web/20210116001237/https://vulncat.fortify.com/en/detail?id=desc.dataflow.java.xslt_injection)
 - [XSLT Injection Basics - Saxon - Hunnic Cyber Team - August 21, 2019](http://web.archive.org/web/20190821174700/https://blog.hunniccyber.com/ektron-cms-remote-code-execution-xslt-transform-injection-java/)
-- [Getting XXE in Web Browsers using ChatGPT - Igor Sak-Sakovskiy - May 22, 2024](https://swarm.ptsecurity.com/xxe-chrome-safari-chatgpt/)
-- [XSLT injection lead to file creation - PT SWARM (@ptswarm) - May 30, 2024](https://twitter.com/ptswarm/status/1796162911108255974/photo/1)
+- [Getting XXE in Web Browsers using ChatGPT - Igor Sak-Sakovskiy - May 22, 2024](https://web.archive.org/web/20260121165846/https://swarm.ptsecurity.com/xxe-chrome-safari-chatgpt/)
+- [XSLT injection lead to file creation - PT SWARM (@ptswarm) - May 30, 2024](https://web.archive.org/web/20241006180803/https://twitter.com/ptswarm/status/1796162911108255974/photo/1)

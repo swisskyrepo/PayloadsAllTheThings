@@ -177,9 +177,9 @@ window.location = redirectTo;
 
 ## References
 
-* [Host/Split Exploitable Antipatterns in Unicode Normalization - Jonathan Birch - August 3, 2019](https://i.blackhat.com/USA-19/Thursday/us-19-Birch-HostSplit-Exploitable-Antipatterns-In-Unicode-Normalization.pdf)
-* [Open Redirect Cheat Sheet - PentesterLand - November 2, 2018](https://pentester.land/cheatsheets/2018/11/02/open-redirect-cheatsheet.html)
-* [Open Redirect Vulnerability - s0cket7 - August 15, 2018](https://s0cket7.com/open-redirect-vulnerability/)
+* [Host/Split Exploitable Antipatterns in Unicode Normalization - Jonathan Birch - August 3, 2019](https://web.archive.org/web/20190819081715/https://i.blackhat.com/USA-19/Thursday/us-19-Birch-HostSplit-Exploitable-Antipatterns-In-Unicode-Normalization.pdf)
+* [Open Redirect Cheat Sheet - PentesterLand - November 2, 2018](https://web.archive.org/web/20190719012735/https://pentester.land/cheatsheets/2018/11/02/open-redirect-cheatsheet.html)
+* [Open Redirect Vulnerability - s0cket7 - August 15, 2018](https://web.archive.org/web/20180816184136/https://s0cket7.com/open-redirect-vulnerability/)
 * [Open-Redirect-Payloads - Predrag Cujanović - April 24, 2017](https://github.com/cujanovic/Open-Redirect-Payloads)
-* [Unvalidated Redirects and Forwards Cheat Sheet - OWASP - February 28, 2024](https://www.owasp.org/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet)
+* [Unvalidated Redirects and Forwards Cheat Sheet - OWASP - February 28, 2024](https://web.archive.org/web/20130423163025/https://www.owasp.org/index.php/Unvalidated_Redirects_and_Forwards_Cheat_Sheet)
 * [You do not need to run 80 reconnaissance tools to get access to user accounts - Stefano Vettorazzi (@stefanocoding) - May 16, 2019](https://gist.github.com/stefanocoding/8cdc8acf5253725992432dedb1c9c781)

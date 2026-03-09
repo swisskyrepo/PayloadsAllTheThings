@@ -250,7 +250,7 @@ Determine the Clickjacking vulnerability within this code snippet. Identify how 
 
 ## References
 
-* [Clickjacker.io - Saurabh Banawar - May 10, 2020](https://clickjacker.io)
-* [Clickjacking - Gustav Rydstedt - April 28, 2020](https://owasp.org/www-community/attacks/Clickjacking)
-* [Synopsys Clickjacking - BlackDuck - November 29, 2019](https://www.synopsys.com/glossary/what-is-clickjacking.html#B)
-* [Web-Security Clickjacking - PortSwigger - October 12, 2019](https://portswigger.net/web-security/clickjacking)
+* [Clickjacker.io - Saurabh Banawar - May 10, 2020](https://web.archive.org/web/20200510214313/https://clickjacker.io/)
+* [Clickjacking - Gustav Rydstedt - April 28, 2020](https://web.archive.org/web/20200428022051/https://owasp.org/www-community/attacks/Clickjacking)
+* [Synopsys Clickjacking - BlackDuck - November 29, 2019](https://web.archive.org/web/20240917212838/https://www.synopsys.com/glossary/what-is-clickjacking.html)
+* [Web-Security Clickjacking - PortSwigger - October 12, 2019](https://web.archive.org/web/20260215062230/https://portswigger.net/web-security/clickjacking)

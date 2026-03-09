@@ -61,12 +61,12 @@ Real-World Scenarios:
 
 ## References
 
-* [Exploiting Client-Side Path Traversal to Perform Cross-Site Request Forgery - Introducing CSPT2CSRF - Maxence Schmitt - 02 Jul 2024](https://blog.doyensec.com/2024/07/02/cspt2csrf.html)
-* [Exploiting Client-Side Path Traversal - CSRF is dead, long live CSRF - Whitepaper - Maxence Schmitt - 02 Jul 2024](https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_Whitepaper.pdf)
-* [Exploiting Client-Side Path Traversal - CSRF is Dead, Long Live CSRF - OWASP Global AppSec 2024 - Maxence Schmitt - June 24 2024](https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_OWASP_Appsec_Lisbon.pdf)
-* [Leaking Jupyter instance auth token chaining CVE-2023-39968, CVE-2024-22421 and a chromium bug - Davwwwx - 30-08-2023](https://blog.xss.am/2023/08/cve-2023-39968-jupyter-token-leak/)
-* [On-site request forgery - Dafydd Stuttard - 03 May 2007](https://portswigger.net/blog/on-site-request-forgery)
-* [Bypassing WAFs to Exploit CSPT Using Encoding Levels - Matan Berson - 2024-05-10](https://matanber.com/blog/cspt-levels)
-* [Automating Client-Side Path Traversals Discovery - Vitor Falcao - October 3, 2024](https://vitorfalcao.com/posts/automating-cspt-discovery/)
-* [CSPT the Eval Villain Way! - Dennis Goodlett - December 3, 2024](https://blog.doyensec.com/2024/12/03/cspt-with-eval-villain.html)
-* [Bypassing File Upload Restrictions To Exploit Client-Side Path Traversal - Maxence Schmitt - January 9, 2025](https://blog.doyensec.com/2025/01/09/cspt-file-upload.html)
+* [Exploiting Client-Side Path Traversal to Perform Cross-Site Request Forgery - Introducing CSPT2CSRF - Maxence Schmitt - 02 Jul 2024](https://web.archive.org/web/20260222183040/https://blog.doyensec.com/2024/07/02/cspt2csrf.html)
+* [Exploiting Client-Side Path Traversal - CSRF is dead, long live CSRF - Whitepaper - Maxence Schmitt - 02 Jul 2024](https://web.archive.org/web/20240702212818/https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_Whitepaper.pdf)
+* [Exploiting Client-Side Path Traversal - CSRF is Dead, Long Live CSRF - OWASP Global AppSec 2024 - Maxence Schmitt - June 24 2024](https://web.archive.org/web/20250521192653/https://www.doyensec.com/resources/Doyensec_CSPT2CSRF_OWASP_Appsec_Lisbon.pdf)
+* [Leaking Jupyter instance auth token chaining CVE-2023-39968, CVE-2024-22421 and a chromium bug - Davwwwx - 30-08-2023](https://web.archive.org/web/20240703155707/https://blog.xss.am/2023/08/cve-2023-39968-jupyter-token-leak/)
+* [On-site request forgery - Dafydd Stuttard - 03 May 2007](https://web.archive.org/web/20260212042947/https://portswigger.net/blog/on-site-request-forgery)
+* [Bypassing WAFs to Exploit CSPT Using Encoding Levels - Matan Berson - 2024-05-10](https://web.archive.org/web/20240512110749/https://matanber.com/blog/cspt-levels)
+* [Automating Client-Side Path Traversals Discovery - Vitor Falcao - October 3, 2024](https://web.archive.org/web/20241004042613/https://vitorfalcao.com/posts/automating-cspt-discovery/)
+* [CSPT the Eval Villain Way! - Dennis Goodlett - December 3, 2024](https://web.archive.org/web/20241203171704/https://blog.doyensec.com/2024/12/03/cspt-with-eval-villain.html)
+* [Bypassing File Upload Restrictions To Exploit Client-Side Path Traversal - Maxence Schmitt - January 9, 2025](https://web.archive.org/web/20250109093347/https://blog.doyensec.com/2025/01/09/cspt-file-upload.html)

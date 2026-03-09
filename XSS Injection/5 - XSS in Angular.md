@@ -337,7 +337,7 @@ When doing a code review, you want to make sure that no user input is being trus
 ## References
 
 * [Angular Security - May 16, 2023](https://angular.io/guide/security)
-* [Bidding Like a Billionaire - Stealing NFTs With 4-Char CSTIs - Matan Berson (@MtnBer) - July 11, 2024](https://matanber.com/blog/4-char-csti)
+* [Bidding Like a Billionaire - Stealing NFTs With 4-Char CSTIs - Matan Berson (@MtnBer) - July 11, 2024](https://web.archive.org/web/20250118075113/https://matanber.com/blog/4-char-csti)
 * [Blind XSS AngularJS Payloads - Lewis Ardern - December 7, 2018](http://web.archive.org/web/20181209041100/https://ardern.io/2018/12/07/angularjs-bxss/)
-* [Bypass DomSanitizer - Swarna (@swarnakishore) - August 11, 2017](https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b)
-* [XSS without HTML - CSTI with Angular JS - Gareth Heyes (@garethheyes) - January 27, 2016](https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)
+* [Bypass DomSanitizer - Swarna (@swarnakishore) - August 11, 2017](https://web.archive.org/web/20250908023652/https://medium.com/@swarnakishore/angular-safe-pipe-implementation-to-bypass-domsanitizer-stripping-out-content-c1bf0f1cc36b)
+* [XSS without HTML - CSTI with Angular JS - Gareth Heyes (@garethheyes) - January 27, 2016](https://web.archive.org/web/20190331015852/https://portswigger.net/blog/xss-without-html-client-side-template-injection-with-angularjs)

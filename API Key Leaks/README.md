@@ -103,6 +103,6 @@ Add these lines to your `.pre-commit-config.yaml` file.
 ## References
 
 - [Finding Hidden API Keys & How to Use Them - Sumit Jain - August 24, 2019](https://web.archive.org/web/20191012175520/https://medium.com/@sumitcfe/finding-hidden-api-keys-how-to-use-them-11b1e5d0f01d)
-- [Introducing SignSaboteur: Forge Signed Web Tokens with Ease - Zakhar Fedotkin - May 22, 2024](https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease)
-- [Private API Key Leakage Due to Lack of Access Control - yox - August 8, 2018](https://hackerone.com/reports/376060)
-- [Saying Goodbye to My Favorite 5 Minute P1 - Allyson O'Malley - January 6, 2020](https://www.allysonomalley.com/2020/01/06/saying-goodbye-to-my-favorite-5-minute-p1/)
+- [Introducing SignSaboteur: Forge Signed Web Tokens with Ease - Zakhar Fedotkin - May 22, 2024](https://web.archive.org/web/20240522172244/https://portswigger.net/research/introducing-signsaboteur-forge-signed-web-tokens-with-ease)
+- [Private API Key Leakage Due to Lack of Access Control - yox - August 8, 2018](https://web.archive.org/web/20211208043535/https://hackerone.com/reports/376060)
+- [Saying Goodbye to My Favorite 5 Minute P1 - Allyson O'Malley - January 6, 2020](https://web.archive.org/web/20250714230057/https://www.allysonomalley.com/2020/01/06/saying-goodbye-to-my-favorite-5-minute-p1/)

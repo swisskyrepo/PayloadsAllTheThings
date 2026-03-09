@@ -46,5 +46,5 @@ Explore all the URL from your targets to find old parameters.
 
 ## References
 
-* [Hacker tools: Arjun – The parameter discovery tool - Intigriti - May 17, 2021](https://blog.intigriti.com/2021/05/17/hacker-tools-arjun-the-parameter-discovery-tool/)
+* [Hacker tools: Arjun – The parameter discovery tool - Intigriti - May 17, 2021](https://web.archive.org/web/20230930093635/https://blog.intigriti.com/2021/05/17/hacker-tools-arjun-the-parameter-discovery-tool/)
 * [Parameter Discovery: A quick guide to start - YesWeHack - April 20, 2022](http://web.archive.org/web/20220420123306/https://blog.yeswehack.com/yeswerhackers/parameter-discovery-quick-guide-to-start)

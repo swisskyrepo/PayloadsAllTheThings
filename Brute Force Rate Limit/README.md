@@ -141,7 +141,7 @@ Many cloud providers, such as Vultr, offer /64 IPv6 ranges, which provide a vast
 
 ## References
 
-* [Bruteforcing the phone number of any Google user - brutecat - June 9, 2025](https://brutecat.com/articles/leaking-google-phones)
-* [Burp Intruder attack types - PortSwigger - August 19, 2025](https://portswigger.net/burp/documentation/desktop/tools/intruder/configure-attack/attack-types)
-* [Detecting and annoying Burp users - Julien Voisin -  May 3, 2021](https://dustri.org/b/detecting-and-annoying-burp-users.html)
-* [OmniProx: Multi-Cloud IP Rotation Made Simple - Andy Gill - September 28, 2025](https://blog.zsec.uk/omniprox/)
+* [Bruteforcing the phone number of any Google user - brutecat - June 9, 2025](https://web.archive.org/web/20250609141236/https://brutecat.com/articles/leaking-google-phones)
+* [Burp Intruder attack types - PortSwigger - August 19, 2025](https://web.archive.org/web/20260124024947/https://portswigger.net/burp/documentation/desktop/tools/intruder/configure-attack/attack-types)
+* [Detecting and annoying Burp users - Julien Voisin -  May 3, 2021](https://web.archive.org/web/20260102160139/https://dustri.org/b/detecting-and-annoying-burp-users.html)
+* [OmniProx: Multi-Cloud IP Rotation Made Simple - Andy Gill - September 28, 2025](https://web.archive.org/web/20260215082718/https://blog.zsec.uk/omniprox/)

@@ -132,6 +132,6 @@ In [mathjax](https://docs.mathjax.org/en/latest/input/tex/extensions/unicode.htm
 
 ## References
 
-* [Hacking with LaTeX - Sebastian Neef - March 10, 2016](https://0day.work/hacking-with-latex/)
-* [Latex to RCE, Private Bug Bounty Program - Yasho - July 6, 2018](https://medium.com/bugbountywriteup/latex-to-rce-private-bug-bounty-program-6a0b5b33d26a)
-* [Pwning coworkers thanks to LaTeX - scumjr - November 28, 2016](http://scumjr.github.io/2016/11/28/pwning-coworkers-thanks-to-latex/)
+* [Hacking with LaTeX - Sebastian Neef - March 10, 2016](https://web.archive.org/web/20260209043241/https://0day.work/hacking-with-latex/)
+* [Latex to RCE, Private Bug Bounty Program - Yasho - July 6, 2018](https://web.archive.org/web/20210117203905/https://medium.com/bugbountywriteup/latex-to-rce-private-bug-bounty-program-6a0b5b33d26a)
+* [Pwning coworkers thanks to LaTeX - scumjr - November 28, 2016](https://web.archive.org/web/20161130151956/https://scumjr.github.io/2016/11/28/pwning-coworkers-thanks-to-latex/)

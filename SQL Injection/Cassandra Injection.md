@@ -53,5 +53,5 @@ SELECT * FROM users WHERE user = 'admin'/*' AND pass = '*/and pass>'' ALLOW FILT
 
 ## References
 
-* [Cassandra injection vulnerability triggered - DATADOG - January 30, 2023](https://docs.datadoghq.com/fr/security/default_rules/appsec-cass-injection-vulnerability-trigger/)
-* [Investigating CQL injection in Apache Cassandra - Mehmet Leblebici - December 2, 2022](https://www.invicti.com/blog/web-security/investigating-cql-injection-apache-cassandra/)
+* [Cassandra injection vulnerability triggered - DATADOG - January 30, 2023](https://web.archive.org/web/20230130053010/https://docs.datadoghq.com/fr/security/default_rules/appsec-cass-injection-vulnerability-trigger/)
+* [Investigating CQL injection in Apache Cassandra - Mehmet Leblebici - December 2, 2022](https://web.archive.org/web/20251213065510/https://www.invicti.com/blog/web-security/investigating-cql-injection-apache-cassandra)

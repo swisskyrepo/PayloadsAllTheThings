@@ -166,9 +166,9 @@ end
 ## References
 
 * [[European Cyber Week] - AdmYSion - Alan Marrec (Maki)](https://www.maki.bzh/writeups/ecw2018admyssion/)
-* [ECW 2018 : Write Up - AdmYSsion (WEB - 50) - 0xUKN - October 31, 2018](https://0xukn.fr/posts/writeupecw2018admyssion/)
-* [How To Configure OpenLDAP and Perform Administrative LDAP Tasks - Justin Ellingwood - May 30, 2015](https://www.digitalocean.com/community/tutorials/how-to-configure-openldap-and-perform-administrative-ldap-tasks)
-* [How To Manage and Use LDAP Servers with OpenLDAP Utilities - Justin Ellingwood - May 29, 2015](https://www.digitalocean.com/community/tutorials/how-to-manage-and-use-ldap-servers-with-openldap-utilities)
-* [LDAP Blind Explorer - Alonso Parada - August 12, 2011](http://code.google.com/p/ldap-blind-explorer/)
-* [LDAP Injection & Blind LDAP Injection - Chema Alonso, José Parada Gimeno - October 10, 2008](https://www.blackhat.com/presentations/bh-europe-08/Alonso-Parada/Whitepaper/bh-eu-08-alonso-parada-WP.pdf)
-* [LDAP Injection Prevention Cheat Sheet - OWASP - July 16, 2019](https://www.owasp.org/index.php/LDAP_injection)
+* [ECW 2018 : Write Up - AdmYSsion (WEB - 50) - 0xUKN - October 31, 2018](https://web.archive.org/web/20200924103615/https://0xukn.fr/posts/writeupecw2018admyssion/)
+* [How To Configure OpenLDAP and Perform Administrative LDAP Tasks - Justin Ellingwood - May 30, 2015](https://web.archive.org/web/20260119175101/https://www.digitalocean.com/community/tutorials/how-to-configure-openldap-and-perform-administrative-ldap-tasks)
+* [How To Manage and Use LDAP Servers with OpenLDAP Utilities - Justin Ellingwood - May 29, 2015](https://web.archive.org/web/20160305121823/https://www.digitalocean.com/community/tutorials/how-to-manage-and-use-ldap-servers-with-openldap-utilities)
+* [LDAP Blind Explorer - Alonso Parada - August 12, 2011](https://web.archive.org/web/20160120073444/https://code.google.com/p/ldap-blind-explorer/)
+* [LDAP Injection & Blind LDAP Injection - Chema Alonso, José Parada Gimeno - October 10, 2008](https://web.archive.org/web/20081010181534/http://blackhat.com/presentations/bh-europe-08/Alonso-Parada/Whitepaper/bh-eu-08-alonso-parada-WP.pdf)
+* [LDAP Injection Prevention Cheat Sheet - OWASP - July 16, 2019](https://web.archive.org/web/20190719164052/https://www.owasp.org/index.php/LDAP_injection)

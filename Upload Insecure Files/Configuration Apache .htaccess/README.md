@@ -73,6 +73,6 @@ If the `exif_imagetype` function is used on the server side to determine the ima
 
 ## References
 
-* [Attacking Webservers Via .htaccess - Eldar Marcussen - May 17, 2011](http://www.justanotherhacker.com/2011/05/htaccess-based-attacks.html)
-* [Protection from Unrestricted File Upload Vulnerability - Narendra Shinde - October 22, 2015](https://blog.qualys.com/securitylabs/2015/10/22/unrestricted-file-upload-vulnerability)
-* [Insomnihack Teaser 2019 / l33t-hoster - Ian Bouchard (@Corb3nik) - January 20, 2019](http://corb3nik.github.io/blog/insomnihack-teaser-2019/l33t-hoster)
+* [Attacking Webservers Via .htaccess - Eldar Marcussen - May 17, 2011](https://web.archive.org/web/20200203171034/https://www.justanotherhacker.com:80/2011/05/htaccess-based-attacks.html)
+* [Protection from Unrestricted File Upload Vulnerability - Narendra Shinde - October 22, 2015](https://web.archive.org/web/20200812181326/https://blog.qualys.com/securitylabs/2015/10/22/unrestricted-file-upload-vulnerability)
+* [Insomnihack Teaser 2019 / l33t-hoster - Ian Bouchard (@Corb3nik) - January 20, 2019](https://web.archive.org/web/20190125123231/http://corb3nik.github.io:80/blog/insomnihack-teaser-2019/l33t-hoster)

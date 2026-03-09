@@ -246,4 +246,4 @@ gitrob [options] target [target2] ... [targetN]
 
 ## References
 
-* [Gitrob: Now in Go - Michael Henriksen - January 24, 2024](https://michenriksen.com/blog/gitrob-now-in-go/)
+* [Gitrob: Now in Go - Michael Henriksen - January 24, 2024](https://web.archive.org/web/20240930092732/https://michenriksen.com/blog/gitrob-now-in-go/)

@@ -345,5 +345,5 @@ sqlmap -d "mysql://user:pass@ip/database" --dump-all
 
 ## References
 
-* [#SQLmap protip - @zh4ck - March 10, 2018](https://twitter.com/zh4ck/status/972441560875970560)
-* [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper - Mehmet Ince - August 1, 2017](https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)
+* [#SQLmap protip - @zh4ck - March 10, 2018](https://web.archive.org/web/20240827145141/https://twitter.com/zh4ck/status/972441560875970560)
+* [Exploiting Second Order SQLi Flaws by using Burp & Custom Sqlmap Tamper - Mehmet Ince - August 1, 2017](https://web.archive.org/web/20170802071522/https://pentest.blog/exploiting-second-order-sqli-flaws-by-using-burp-custom-sqlmap-tamper/)

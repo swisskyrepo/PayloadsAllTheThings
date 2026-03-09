@@ -75,5 +75,5 @@ http://example.com/?title=Foundation&type=*&rent_days=* and doc('//10.10.10.10/S
 
 ## References
 
-* [Places of Interest in Stealing NetNTLM Hashes - Osanda Malith Jayathissa - March 24, 2017](https://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/)
-* [XPATH Injection - OWASP - January 21, 2015](https://www.owasp.org/index.php/Testing_for_XPath_Injection_(OTG-INPVAL-010))
+* [Places of Interest in Stealing NetNTLM Hashes - Osanda Malith Jayathissa - March 24, 2017](https://web.archive.org/web/20170325082934/http://osandamalith.com/2017/03/24/places-of-interest-in-stealing-netntlm-hashes/)
+* [XPATH Injection - OWASP - January 21, 2015](https://web.archive.org/web/20240217030110/http://www.owasp.org/index.php/Testing_for_XPath_Injection_(OTG-INPVAL-010))

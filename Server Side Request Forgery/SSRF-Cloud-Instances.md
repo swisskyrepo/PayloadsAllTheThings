@@ -330,4 +330,4 @@ More info: <https://rancher.com/docs/rancher/v1.6/en/rancher-services/metadata-s
 ## References
 
 * [Extracting AWS metadata via SSRF in Google Acquisition - tghawkins - December 13, 2017](https://web.archive.org/web/20180210093624/https://hawkinsecurity.com/2017/12/13/extracting-aws-metadata-via-ssrf-in-google-acquisition/)
-* [Exploiting SSRF in AWS Elastic Beanstalk - Sunil Yadav - February 1, 2019](https://notsosecure.com/exploiting-ssrf-aws-elastic-beanstalk)
+* [Exploiting SSRF in AWS Elastic Beanstalk - Sunil Yadav - February 1, 2019](https://web.archive.org/web/20251113080112/https://notsosecure.com/exploiting-ssrf-aws-elastic-beanstalk)

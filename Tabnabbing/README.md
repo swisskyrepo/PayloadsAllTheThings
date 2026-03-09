@@ -37,5 +37,5 @@ Search for the following link formats:
 
 ## References
 
-* [Reverse Tabnabbing - OWASP - October 20, 2020](https://owasp.org/www-community/attacks/Reverse_Tabnabbing)
-* [Tabnabbing - Wikipedia - May 25, 2010](https://en.wikipedia.org/wiki/Tabnabbing)
+* [Reverse Tabnabbing - OWASP - October 20, 2020](https://web.archive.org/web/20200428035205/https://owasp.org/www-community/attacks/Reverse_Tabnabbing)
+* [Tabnabbing - Wikipedia - May 25, 2010](https://web.archive.org/web/20251216150740/https://en.wikipedia.org/wiki/Tabnabbing)

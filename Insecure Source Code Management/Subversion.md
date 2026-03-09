@@ -36,4 +36,4 @@ curl http://blog.domain.com/.svn/text-base/wp-config.php.svn-base
 
 ## References
 
-* [SVN Extractor for Web Pentesters - Anant Shrivastava - March 26, 2013](http://blog.anantshri.info/svn-extractor-for-web-pentesters/)
+* [SVN Extractor for Web Pentesters - Anant Shrivastava - March 26, 2013](https://web.archive.org/web/20130329022536/http://blog.anantshri.info:80/svn-extractor-for-web-pentesters)

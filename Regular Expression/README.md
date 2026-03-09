@@ -70,8 +70,8 @@ if (preg_match($pattern, $subject)) {
 
 ## References
 
-* [Intigriti Challenge 1223 - Hackbook Of A Hacker - December 21, 2023](https://simones-organization-4.gitbook.io/hackbook-of-a-hacker/ctf-writeups/intigriti-challenges/1223)
-* [MyBB Admin Panel RCE CVE-2023-41362 - SorceryIE - September 11, 2023](https://blog.sorcery.ie/posts/mybb_acp_rce/)
-* [OWASP Validation Regex Repository - OWASP - March 14, 2018](https://wiki.owasp.org/index.php/OWASP_Validation_Regex_Repository)
-* [PCRE > Installing/Configuring - PHP Manual - May 3, 2008](https://www.php.net/manual/en/pcre.configuration.php#ini.pcre.recursion-limit)
-* [Regular expression Denial of Service - ReDoS - Adar Weidman - December 4, 2019](https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS)
+* [Intigriti Challenge 1223 - Hackbook Of A Hacker - December 21, 2023](https://web.archive.org/web/20260210185049/https://simones-organization-4.gitbook.io/hackbook-of-a-hacker/ctf-writeups/intigriti-challenges/1223)
+* [MyBB Admin Panel RCE CVE-2023-41362 - SorceryIE - September 11, 2023](https://web.archive.org/web/20251115110845/https://blog.sorcery.ie/posts/mybb_acp_rce/)
+* [OWASP Validation Regex Repository - OWASP - March 14, 2018](https://web.archive.org/web/20241005224013/https://wiki.owasp.org/index.php/OWASP_Validation_Regex_Repository)
+* [PCRE > Installing/Configuring - PHP Manual - May 3, 2008](https://web.archive.org/web/20260219065508/https://www.php.net/manual/en/pcre.configuration.php)
+* [Regular expression Denial of Service - ReDoS - Adar Weidman - December 4, 2019](https://web.archive.org/web/20200309080846/https://owasp.org/www-community/attacks/Regular_expression_Denial_of_Service_-_ReDoS)

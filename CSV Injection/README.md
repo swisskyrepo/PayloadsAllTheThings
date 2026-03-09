@@ -83,10 +83,10 @@ Note: an alert will warn the user a formula is trying to contact an external res
 
 ## References
 
-* [CSV Excel Macro Injection - Timo Goosen, Albinowax - Jun 21, 2022](https://owasp.org/www-community/attacks/CSV_Injection)
-* [CSV Excel formula injection - Google Bug Hunter University - May 22, 2022](https://bughunters.google.com/learn/invalid-reports/google-products/4965108570390528/csv-formula-injection)
-* [CSV Injection – A Guide To Protecting CSV Files - Akansha Kesharwani - 30/11/2017](https://payatu.com/csv-injection-basic-to-exploit/)
-* [From CSV to Meterpreter - Adam Chester - November 05, 2015](https://blog.xpnsec.com/from-csv-to-meterpreter/)
-* [The Absurdly Underestimated Dangers of CSV Injection - George Mauer - 7 October, 2017](http://georgemauer.net/2017/10/07/csv-injection.html)
-* [Three New DDE Obfuscation Methods - ReversingLabs - September 24, 2018](https://blog.reversinglabs.com/blog/cvs-dde-exploits-and-obfuscation)
-* [Your Excel Sheets Are Not Safe! Here's How to Beat CSV Injection - we45 - October 5, 2020](https://www.we45.com/post/your-excel-sheets-are-not-safe-heres-how-to-beat-csv-injection)
+* [CSV Excel Macro Injection - Timo Goosen, Albinowax - Jun 21, 2022](https://web.archive.org/web/20260211194330/https://owasp.org/www-community/attacks/CSV_Injection)
+* [CSV Excel formula injection - Google Bug Hunter University - May 22, 2022](https://web.archive.org/web/20251126193606/https://bughunters.google.com/learn/invalid-reports/google-products/4965108570390528/csv-formula-injection)
+* [CSV Injection – A Guide To Protecting CSV Files - Akansha Kesharwani - 30/11/2017](https://web.archive.org/web/20221205154959/https://payatu.com/csv-injection-basic-to-exploit/)
+* [From CSV to Meterpreter - Adam Chester - November 05, 2015](https://web.archive.org/web/20251020005639/https://blog.xpnsec.com/from-csv-to-meterpreter/)
+* [The Absurdly Underestimated Dangers of CSV Injection - George Mauer - 7 October, 2017](https://web.archive.org/web/20260216175809/https://georgemauer.net/2017/10/07/csv-injection.html)
+* [Three New DDE Obfuscation Methods - ReversingLabs - September 24, 2018](https://web.archive.org/web/20220928031043/https://blog.reversinglabs.com/blog/cvs-dde-exploits-and-obfuscation)
+* [Your Excel Sheets Are Not Safe! Here's How to Beat CSV Injection - we45 - October 5, 2020](https://web.archive.org/web/20260115180627/https://www.we45.com/post/your-excel-sheets-are-not-safe-heres-how-to-beat-csv-injection)

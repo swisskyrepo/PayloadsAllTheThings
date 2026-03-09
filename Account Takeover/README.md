@@ -26,7 +26,7 @@
 1. Request password reset to your email address
 2. Click on the password reset link
 3. Don't change password
-4. Click any 3rd party websites(eg: Facebook, twitter)
+4. Click any 3rd party websites(e.g., Facebook, twitter)
 5. Intercept the request in Burp Suite proxy
 6. Check if the referer header is leaking password reset token.
 
@@ -180,8 +180,8 @@ JSON Web Token might be used to authenticate an user.
 
 ## References
 
-* [$6,5k + $5k HTTP Request Smuggling mass account takeover - Slack + Zomato - Bug Bounty Reports Explained - August 30, 2020](https://www.youtube.com/watch?v=gzM4wWA7RFo)
-* [10 Password Reset Flaws - Anugrah SR - September 16, 2020](https://anugrahsr.github.io/posts/10-Password-reset-flaws/)
-* [Broken Cryptography & Account Takeovers - Harsh Bothra - September 20, 2020](https://speakerdeck.com/harshbothra/broken-cryptography-and-account-takeovers?slide=28)
-* [CTFd Account Takeover - NIST National Vulnerability Database - March 29, 2020](https://nvd.nist.gov/vuln/detail/CVE-2020-7245)
-* [Hacking Grindr Accounts with Copy and Paste - Troy Hunt - October 3, 2020](https://www.troyhunt.com/hacking-grindr-accounts-with-copy-and-paste/)
+* [$6,5k + $5k HTTP Request Smuggling mass account takeover - Slack + Zomato - Bug Bounty Reports Explained - August 30, 2020](https://web.archive.org/web/20250701123134/https://www.youtube.com/watch?v=gzM4wWA7RFo)
+* [10 Password Reset Flaws - Anugrah SR - September 16, 2020](https://web.archive.org/web/20250626114943/https://anugrahsr.github.io/posts/10-Password-reset-flaws/)
+* [Broken Cryptography & Account Takeovers - Harsh Bothra - September 20, 2020](https://web.archive.org/web/20250913121907/https://speakerdeck.com/harshbothra/broken-cryptography-and-account-takeovers?slide=28)
+* [CTFd Account Takeover - NIST National Vulnerability Database - March 29, 2020](https://web.archive.org/web/20200329075120/https://nvd.nist.gov/vuln/detail/CVE-2020-7245)
+* [Hacking Grindr Accounts with Copy and Paste - Troy Hunt - October 3, 2020](https://web.archive.org/web/20251219192449/https://www.troyhunt.com/hacking-grindr-accounts-with-copy-and-paste/)

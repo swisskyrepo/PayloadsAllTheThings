@@ -137,9 +137,9 @@ When `allow_url_include` and `allow_url_fopen` are set to `Off`. It is still pos
 
 ## References
 
-- [CVV #1: Local File Inclusion - SI9INT - Jun 20, 2018](https://medium.com/bugbountywriteup/cvv-1-local-file-inclusion-ebc48e0e479a)
-- [Exploiting Remote File Inclusion (RFI) in PHP application and bypassing remote URL inclusion restriction - Mannu Linux - 2019-05-12](http://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html)
-- [Is PHP vulnerable and under what conditions? - April 13, 2015 - Andreas Venieris](http://0x191unauthorized.blogspot.fr/2015/04/is-php-vulnerable-and-under-what.html)
-- [LFI Cheat Sheet - @Arr0way - 24 Apr 2016](https://highon.coffee/blog/lfi-cheat-sheet/)
-- [Testing for Local File Inclusion - OWASP - 25 June 2017](https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)
+- [CVV #1: Local File Inclusion - SI9INT - Jun 20, 2018](https://web.archive.org/web/20200724150218/https://medium.com/bugbountywriteup/cvv-1-local-file-inclusion-ebc48e0e479a)
+- [Exploiting Remote File Inclusion (RFI) in PHP application and bypassing remote URL inclusion restriction - Mannu Linux - 2019-05-12](https://web.archive.org/web/20260220172333/https://www.mannulinux.org/2019/05/exploiting-rfi-in-php-bypass-remote-url-inclusion-restriction.html)
+- [Is PHP vulnerable and under what conditions? - April 13, 2015 - Andreas Venieris](https://web.archive.org/web/20250209181954/http://0x191unauthorized.blogspot.fr/2015/04/is-php-vulnerable-and-under-what.html)
+- [LFI Cheat Sheet - @Arr0way - 24 Apr 2016](https://web.archive.org/web/20180121083456/https://highon.coffee/blog/lfi-cheat-sheet/)
+- [Testing for Local File Inclusion - OWASP - 25 June 2017](https://web.archive.org/web/20131021005706/https://www.owasp.org/index.php/Testing_for_Local_File_Inclusion)
 - [Turning LFI into RFI - Grayson Christopher - 2017-08-14](https://web.archive.org/web/20170815004721/https://l.avala.mp/?p=241)

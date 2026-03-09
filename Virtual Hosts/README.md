@@ -89,5 +89,5 @@ Common indicators that you're hitting a different VHOST:
 
 ## References
 
-* [Gobuster for directory, DNS and virtual hosts bruteforcing - erev0s - March 17, 2020](https://erev0s.com/blog/gobuster-directory-dns-and-virtual-hosts-bruteforcing/)
-* [Virtual Hosting – A Well Forgotten Enumeration Technique - Wyatt Dahlenburg - June 16, 2022](https://wya.pl/2022/06/16/virtual-hosting-a-well-forgotten-enumeration-technique/)
+* [Gobuster for directory, DNS and virtual hosts bruteforcing - erev0s - March 17, 2020](https://web.archive.org/web/20200925023215/https://erev0s.com/blog/gobuster-directory-dns-and-virtual-hosts-bruteforcing/)
+* [Virtual Hosting – A Well Forgotten Enumeration Technique - Wyatt Dahlenburg - June 16, 2022](https://web.archive.org/web/20220616183823/https://wya.pl/2022/06/16/virtual-hosting-a-well-forgotten-enumeration-technique/)

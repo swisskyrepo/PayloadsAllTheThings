@@ -49,4 +49,4 @@ bzr revert
 
 ## References
 
-* [STEM CTF Cyber Challenge 2019 – My First Blog - m3ssap0 / zuzzur3ll0n1 - March 2, 2019](https://ctftime.org/writeup/13380)
+* [STEM CTF Cyber Challenge 2019 – My First Blog - m3ssap0 / zuzzur3ll0n1 - March 2, 2019](https://web.archive.org/web/20200926122213/https://ctftime.org/writeup/13380)

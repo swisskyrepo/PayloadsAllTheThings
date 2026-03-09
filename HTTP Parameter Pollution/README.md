@@ -95,6 +95,6 @@ When ?par1=a&par1=b
 
 ## References
 
-* [How to Detect HTTP Parameter Pollution Attacks - Acunetix - January 9, 2024](https://www.acunetix.com/blog/whitepaper-http-parameter-pollution/)
-* [HTTP Parameter Pollution - Itamar Verta - December 20, 2023](https://www.imperva.com/learn/application-security/http-parameter-pollution/)
-* [HTTP Parameter Pollution in 11 minutes - PwnFunction - January 28, 2019](https://www.youtube.com/watch?v=QVZBl8yxVX0&ab_channel=PwnFunction)
+* [How to Detect HTTP Parameter Pollution Attacks - Acunetix - January 9, 2024](https://web.archive.org/web/20260112091623/https://www.acunetix.com/blog/whitepaper-http-parameter-pollution/)
+* [HTTP Parameter Pollution - Itamar Verta - December 20, 2023](https://web.archive.org/web/20190721110154/https://www.imperva.com/learn/application-security/http-parameter-pollution/)
+* [HTTP Parameter Pollution in 11 minutes - PwnFunction - January 28, 2019](https://web.archive.org/web/20190212095035/https://www.youtube.com/watch?v=QVZBl8yxVX0)

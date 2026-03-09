@@ -74,8 +74,8 @@ Applications that do not check for a valid CSRF token in the OAuth callback are 
 
 ## References
 
-- [All your Paypal OAuth tokens belong to me - asanso - November 28, 2016](http://blog.intothesymmetry.com/2016/11/all-your-paypal-tokens-belong-to-me.html)
-- [OAuth 2 - How I have hacked Facebook again (..and would have stolen a valid access token) - asanso - April 8, 2014](http://intothesymmetry.blogspot.ch/2014/04/oauth-2-how-i-have-hacked-facebook.html)
-- [How I hacked Github again - Egor Homakov - February 7, 2014](http://homakov.blogspot.ch/2014/02/how-i-hacked-github-again.html)
-- [How Microsoft is giving your data to Facebook… and everyone else - Andris Atteka - September 16, 2014](http://andrisatteka.blogspot.ch/2014/09/how-microsoft-is-giving-your-data-to.html)
-- [Bypassing Google Authentication on Periscope's Administration Panel - Jack Whitton - July 20, 2015](https://whitton.io/articles/bypassing-google-authentication-on-periscopes-admin-panel/)
+- [All your Paypal OAuth tokens belong to me - asanso - November 28, 2016](https://web.archive.org/web/20161130191804/http://blog.intothesymmetry.com:80/2016/11/all-your-paypal-tokens-belong-to-me.html)
+- [OAuth 2 - How I have hacked Facebook again (..and would have stolen a valid access token) - asanso - April 8, 2014](https://web.archive.org/web/20140411210456/http://intothesymmetry.blogspot.ch:80/2014/04/oauth-2-how-i-have-hacked-facebook.html)
+- [How I hacked Github again - Egor Homakov - February 7, 2014](https://web.archive.org/web/20140302195803/http://homakov.blogspot.ch:80/2014/02/how-i-hacked-github-again.html)
+- [How Microsoft is giving your data to Facebook… and everyone else - Andris Atteka - September 16, 2014](https://web.archive.org/web/20151221013410/http://andrisatteka.blogspot.ch:80/2014/09/how-microsoft-is-giving-your-data-to.html)
+- [Bypassing Google Authentication on Periscope's Administration Panel - Jack Whitton - July 20, 2015](https://web.archive.org/web/20250113205505/https://whitton.io/articles/bypassing-google-authentication-on-periscopes-admin-panel/)

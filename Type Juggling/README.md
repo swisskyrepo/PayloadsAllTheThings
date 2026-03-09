@@ -153,8 +153,8 @@ The exploitation phase is the following:
 
 ## References
 
-* [(Super) Magic Hashes - myst404 (@myst404_) - October 7, 2019](https://offsec.almond.consulting/super-magic-hash.html)
+* [(Super) Magic Hashes - myst404 (@myst404_) - October 7, 2019](https://web.archive.org/web/20191113170442/https://offsec.almond.consulting/super-magic-hash.html)
 * [Magic Hashes - Robert Hansen - May 11, 2015](http://web.archive.org/web/20160722013412/https://www.whitehatsec.com/blog/magic-hashes/)
 * [Magic hashes – PHP hash "collisions" - Michal Špaček (@spaze) - May 6, 2015](https://github.com/spaze/hashes)
 * [PHP Magic Tricks: Type Juggling - Chris Smith (@chrismsnz) - August 18, 2020](http://web.archive.org/web/20200818131633/https://owasp.org/www-pdf-archive/PHPMagicTricks-TypeJuggling.pdf)
-* [Writing Exploits For Exotic Bug Classes: PHP Type Juggling - Tyler Borland (TurboBorland) - August 17, 2013](http://turbochaos.blogspot.com/2013/08/exploiting-exotic-bugs-php-type-juggling.html)
+* [Writing Exploits For Exotic Bug Classes: PHP Type Juggling - Tyler Borland (TurboBorland) - August 17, 2013](https://web.archive.org/web/20131129232245/http://turbochaos.blogspot.com:80/2013/08/exploiting-exotic-bugs-php-type-juggling.html)

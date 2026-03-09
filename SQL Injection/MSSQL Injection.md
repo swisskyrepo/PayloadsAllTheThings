@@ -433,11 +433,11 @@ Use `SP_PASSWORD` in a query to hide from the logs like : `' AND 1=1--sp_passwor
 
 ## References
 
-* [AWS WAF Clients Left Vulnerable to SQL Injection Due to Unorthodox MSSQL Design Choice - Marc Olivier Bergeron - June 21, 2023](https://www.gosecure.net/blog/2023/06/21/aws-waf-clients-left-vulnerable-to-sql-injection-due-to-unorthodox-mssql-design-choice/)
+* [AWS WAF Clients Left Vulnerable to SQL Injection Due to Unorthodox MSSQL Design Choice - Marc Olivier Bergeron - June 21, 2023](https://web.archive.org/web/20240219205617/https://www.gosecure.net/blog/2023/06/21/aws-waf-clients-left-vulnerable-to-sql-injection-due-to-unorthodox-mssql-design-choice/)
 * [Error based SQL Injection in "Order By" clause - Manish Kishan Tanwar - March 26, 2018](https://github.com/incredibleindishell/exploit-code-by-me/blob/master/MSSQL%20Error-Based%20SQL%20Injection%20Order%20by%20clause/Error%20based%20SQL%20Injection%20in%20“Order%20By”%20clause%20(MSSQL).pdf)
-* [Full MSSQL Injection PWNage - ZeQ3uL && JabAv0C - January 28, 2009](https://www.exploit-db.com/papers/12975)
-* [IS_SRVROLEMEMBER (Transact-SQL) - Microsoft - April 9, 2024](https://docs.microsoft.com/en-us/sql/t-sql/functions/is-srvrolemember-transact-sql?view=sql-server-ver15)
-* [MSSQL Injection Cheat Sheet - @pentestmonkey - August 30, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
-* [MSSQL Trusted Links - HackTricks - September 15, 2024](https://book.hacktricks.xyz/windows/active-directory-methodology/mssql-trusted-links)
-* [SQL Server - Link… Link… Link… and Shell: How to Hack Database Links in SQL Server! - Antti Rantasaari - June 6, 2013](https://blog.netspi.com/how-to-hack-database-links-in-sql-server/)
-* [sys.fn_my_permissions (Transact-SQL) - Microsoft - January 25, 2024](https://docs.microsoft.com/en-us/sql/relational-databases/system-functions/sys-fn-my-permissions-transact-sql?view=sql-server-ver15)
+* [Full MSSQL Injection PWNage - ZeQ3uL && JabAv0C - January 28, 2009](https://web.archive.org/web/20260222213546/https://www.exploit-db.com/papers/12975)
+* [IS_SRVROLEMEMBER (Transact-SQL) - Microsoft - April 9, 2024](https://web.archive.org/web/20220906233249/https://docs.microsoft.com/en-us/SQL/t-sql/functions/is-srvrolemember-transact-sql?view=sql-server-ver15)
+* [MSSQL Injection Cheat Sheet - @pentestmonkey - August 30, 2011](https://web.archive.org/web/20260214013447/https://pentestmonkey.net/cheat-sheet/sql-injection/mssql-sql-injection-cheat-sheet)
+* [MSSQL Trusted Links - HackTricks - September 15, 2024](https://web.archive.org/web/20241126085555/https://book.hacktricks.xyz/windows/active-directory-methodology/mssql-trusted-links)
+* [SQL Server - Link… Link… Link… and Shell: How to Hack Database Links in SQL Server! - Antti Rantasaari - June 6, 2013](https://web.archive.org/web/20210227063841/https://blog.netspi.com/how-to-hack-database-links-in-sql-server/)
+* [sys.fn_my_permissions (Transact-SQL) - Microsoft - January 25, 2024](https://web.archive.org/web/20220907211545/https://docs.microsoft.com/en-us/SQL/relational-databases/system-functions/sys-fn-my-permissions-transact-sql?view=sql-server-ver15)

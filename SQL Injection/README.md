@@ -148,7 +148,7 @@ SELECT * FROM users WHERE username = '' OR '1'='1'--' AND password = '';
 
 Here, `'1'='1'` is always true, which means the query could return a valid user, effectively bypassing the authentication check.
 
-:warning: In this case, the database will return an array of results because it will match every users in the table. This will produce an error in the server side since it was expecting only one result. By adding a `LIMIT` clause, you can restrict the number of rows returned by the query. 
+:warning: In this case, the database will return an array of results because it will match every users in the table. This will produce an error in the server side since it was expecting only one result. By adding a `LIMIT` clause, you can restrict the number of rows returned by the query.
 
 By submitting the following payload in the username field, you will log in as the first user in the database. Additionally, you can inject a payload in the password field while using the correct username to target a specific user.
 
@@ -187,7 +187,7 @@ sql1 = "SELECT * FROM admin WHERE pass = ''or'6�]��!r,��b'";
 
 ### Hashed Passwords
 
-By 2025, applications almost never store plaintext passwords. Authentication systems instead use a representation of the password (a hash derived by a key-derivation function, often with a salt). That evolution changes the mechanics of some classic SQL injection (SQLi) bypasses: an attacker who injects rows via `UNION` must now supply values that match the stored representation the application expects, not the user’s raw password.
+By 2025, applications almost never store plaintext passwords. Authentication systems instead use a representation of the password (a hash derived by a key-derivation function, often with a salt). That evolution changes the mechanics of some classic SQL injection (SQLi) bypasses: an attacker who injects rows via `UNION` must now supply values that match the stored representation the application expects, not the user's raw password.
 
 Many naïve authentication flows perform these high-level steps:
 
@@ -385,7 +385,7 @@ In short, the result of the first SQL query is used to build the second SQL quer
 ## Second Order SQL Injection
 
 Second Order SQL Injection is a subtype of SQL injection where the malicious SQL payload is primarily stored in the application's database and later executed by a different functionality of the same application.
-Unlike first-order SQLi, the injection doesn’t happen right away. It is **triggered in a separate step**, often in a different part of the application.
+Unlike first-order SQLi, the injection doesn't happen right away. It is **triggered in a separate step**, often in a different part of the application.
 
 1. User submits input that is stored (e.g., during registration or profile update).
 
@@ -584,13 +584,13 @@ Bypass using keywords case insensitive or an equivalent operator.
 
 ## References
 
-* [A Novel Technique for SQL Injection in PDO’s Prepared Statements - Adam Kues - July 21, 2025](https://slcyber.io/assetnote-security-research-center/a-novel-technique-for-sql-injection-in-pdos-prepared-statements)
+* [A Novel Technique for SQL Injection in PDO's Prepared Statements - Adam Kues - July 21, 2025](https://web.archive.org/web/20251017002820/https://slcyber.io/assetnote-security-research-center/a-novel-technique-for-sql-injection-in-pdos-prepared-statements/)
 * [Analyzing CVE-2018-6376 – Joomla!, Second Order SQL Injection - Not So Secure - February 9, 2018](https://web.archive.org/web/20180209143119/https://www.notsosecure.com/analyzing-cve-2018-6376/)
-* [Implement a Blind Error-Based SQLMap payload for SQLite - soka - August 24, 2023](https://sokarepo.github.io/web/2023/08/24/implement-blind-sqlite-sqlmap.html)
-* [Manual SQL Injection Discovery Tips - Gerben Javado - August 26, 2017](https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
-* [NetSPI SQL Injection Wiki - NetSPI - December 21, 2017](https://sqlwiki.netspi.com/)
-* [PentestMonkey's mySQL injection cheat sheet - @pentestmonkey - August 15, 2011](http://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
-* [SQLi Cheatsheet - NetSparker - March 19, 2022](https://www.netsparker.com/blog/web-security/sql-injection-cheat-sheet/)
-* [SQLi in INSERT worse than SELECT - Mathias Karlsson - February 14, 2017](https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
+* [Implement a Blind Error-Based SQLMap payload for SQLite - soka - August 24, 2023](https://web.archive.org/web/20250513112724/https://sokarepo.github.io/web/2023/08/24/implement-blind-sqlite-sqlmap.html)
+* [Manual SQL Injection Discovery Tips - Gerben Javado - August 26, 2017](https://web.archive.org/web/20170826221724/https://gerbenjavado.com/manual-sql-injection-discovery-tips/)
+* [NetSPI SQL Injection Wiki - NetSPI - December 21, 2017](https://web.archive.org/web/20171221044609/https://sqlwiki.netspi.com/)
+* [PentestMonkey's mySQL injection cheat sheet - @pentestmonkey - August 15, 2011](https://web.archive.org/web/20260109024910/https://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
+* [SQLi Cheatsheet - NetSparker - March 19, 2022](https://web.archive.org/web/20220219223426/https://www.netsparker.com/blog/web-security/sql-injection-cheat-sheet/)
+* [SQLi in INSERT worse than SELECT - Mathias Karlsson - February 14, 2017](https://web.archive.org/web/20231004093323/https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
 * [SQLi Optimization and Obfuscation Techniques - Roberto Salgado - 2013](https://web.archive.org/web/20221005232819/https://paper.bobylive.com/Meeting_Papers/BlackHat/USA-2013/US-13-Salgado-SQLi-Optimization-and-Obfuscation-Techniques-Slides.pdf)
-* [The SQL Injection Knowledge base - Roberto Salgado - May 29, 2013](https://websec.ca/kb/sql_injection)
+* [The SQL Injection Knowledge base - Roberto Salgado - May 29, 2013](https://web.archive.org/web/20260302110304/https://www.websec.ca/kb/sql_injection)

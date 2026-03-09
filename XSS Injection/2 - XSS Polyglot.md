@@ -82,5 +82,5 @@ A polyglot XSS is a type of cross-site scripting (XSS) payload designed to work 
 
 ## References
 
-* [Building XSS Polyglots - Brute - June 23, 2021](https://brutelogic.com.br/blog/building-xss-polyglots/)
+* [Building XSS Polyglots - Brute - June 23, 2021](https://web.archive.org/web/20210623151016/https://brutelogic.com.br/blog/building-xss-polyglots/)
 * [XSS Polyglot Challenge v2 - @filedescriptor - August 20, 2015](https://web.archive.org/web/20190617111911/https://polyglot.innerht.ml/)

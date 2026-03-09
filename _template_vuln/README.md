@@ -36,4 +36,4 @@ Exploit
 
 ## References
 
-* [Blog title - Author (@handle) - Month XX, 202X](https://example.com)
+* [Blog title - Author (@handle) - Month XX, 202X](https://web.archive.org/web/20020120142510/http://example.com:80/)

@@ -225,10 +225,10 @@ Only in Ransack < `4.0.0`.
 
 ## References
 
-* [ORM Injection - HackTricks - July 30, 2024](https://book.hacktricks.xyz/pentesting-web/orm-injection)
-* [ORM Leak Exploitation Against SQLite - Louis Nyffenegger - July 30, 2024](https://pentesterlab.com/blog/orm-leak-with-sqlite3)
-* [ORM Leaking More Than You Joined For - Alex Brown - December 18, 2025](https://www.elttam.com/blog/leaking-more-than-you-joined-for/)
-* [plORMbing your Django ORM - Alex Brown - June 24, 2024](https://www.elttam.com/blog/plormbing-your-django-orm/)
-* [plORMbing your Prisma ORM with Time-based Attacks - Alex Brown - July 9, 2024](https://www.elttam.com/blog/plorming-your-primsa-orm/)
-* [QuerySet API reference - Django - August 8, 2024](https://docs.djangoproject.com/en/5.1/ref/models/querysets/)
-* [Ransacking your password reset tokens - Lukas Euler - January 26, 2023](https://positive.security/blog/ransack-data-exfiltration)
+* [ORM Injection - HackTricks - July 30, 2024](https://web.archive.org/web/20241230091620/https://book.hacktricks.xyz/pentesting-web/orm-injection)
+* [ORM Leak Exploitation Against SQLite - Louis Nyffenegger - July 30, 2024](https://web.archive.org/web/20260118225011/https://pentesterlab.com/blog/orm-leak-with-sqlite3)
+* [ORM Leaking More Than You Joined For - Alex Brown - December 18, 2025](https://web.archive.org/web/20251218130815/https://www.elttam.com/blog/leaking-more-than-you-joined-for/)
+* [plORMbing your Django ORM - Alex Brown - June 24, 2024](https://web.archive.org/web/20240624071414/https://www.elttam.com/blog/plormbing-your-django-orm/)
+* [plORMbing your Prisma ORM with Time-based Attacks - Alex Brown - July 9, 2024](https://web.archive.org/web/20240709043351/https://www.elttam.com/blog/plorming-your-primsa-orm/)
+* [QuerySet API reference - Django - August 8, 2024](https://web.archive.org/web/20240625055642/https://docs.djangoproject.com/en/5.1/ref/models/querysets/)
+* [Ransacking your password reset tokens - Lukas Euler - January 26, 2023](https://web.archive.org/web/20251211204930/https://positive.security/blog/ransack-data-exfiltration)

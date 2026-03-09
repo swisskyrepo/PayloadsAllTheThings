@@ -14,6 +14,8 @@
     * [JSON GET - Simple Request](#json-get---simple-request)
     * [JSON POST - Simple Request](#json-post---simple-request)
     * [JSON POST - Complex Request](#json-post---complex-request)
+
+* [CSRF Middleware Bypass](#CSRF-Middleware-Bypass)
 * [Labs](#labs)
 * [References](#references)
 
@@ -132,6 +134,18 @@ xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 xhr.send('{"role":admin}');
 </script>
 ```
+
+## CSRF Middleware Bypass
+- In CSRF, some frameworks automatically block CSRF via middleware by validating tokens on unsafe HTTP methods and return 403, Example:
+  
+| Technology      | Prevent it                  | You accept           |
+|:----------------|:----------------------------|:--------------------|
+| Go Fiber        | POST, PUT, DELETE           | PATCH               |
+| Django          | POST, PUT, PATCH, DELETE    | GET, HEAD, OPTIONS  |
+| Laravel         | POST, PUT, PATCH, DELETE    | GET, HEAD           |
+| Express.js (csurf) | POST, PUT, PATCH, DELETE | GET, HEAD, OPTIONS  |
+| Spring Boot     | POST, PUT, PATCH, DELETE    | GET, HEAD, OPTIONS  |
+| Ruby on Rails   | POST, PUT, PATCH, DELETE    | GET, HEAD, OPTIONS  | 
 
 ## Labs
 

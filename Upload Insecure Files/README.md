@@ -385,3 +385,4 @@ More payloads in the folder `CVE FFmpeg HLS/`.
 * [PHDays - Attacks on video converters:a year later - Emil Lerner, Pavel Cheremushkin - December 20, 2017](https://docs.google.com/presentation/d/1yqWy_aE3dQNXAhW8kxMxRqtP7qMHaIfMzUDpEqFneos/edit#slide=id.p)
 * [Protection from Unrestricted File Upload Vulnerability - Narendra Shinde - October 22, 2015](https://web.archive.org/web/20200812181326/https://blog.qualys.com/securitylabs/2015/10/22/unrestricted-file-upload-vulnerability)
 * [The .phpt File Structure - PHP Internals Book - October 18, 2017](https://web.archive.org/web/20260218185252/https://www.phpinternalsbook.com/tests/phpt_file_structure.html)
+* [Whitespace padding in filenames bypasses - file upload extension checks on Owasp CRS - January 28, 2026](https://github.com/coreruleset/coreruleset/security/advisories/GHSA-rw5f-9w43-gv2w)

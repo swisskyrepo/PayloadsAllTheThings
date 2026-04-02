@@ -30,6 +30,8 @@ You might also like the other projects from the AllTheThings family :
 
 You want more? Check the [Books](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/_LEARNING_AND_SOCIALS/BOOKS.md) and [YouTube channel](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/_LEARNING_AND_SOCIALS/YOUTUBE.md) selections.
 
+Looking for curated resources by vulnerability type? Check out [appsec.fyi](https://appsec.fyi) — 2,600+ application security resources across 22 topics including XSS, SQLi, SSRF, IDOR, and RCE.
+
 ## :technologist: Contributions
 
 Be sure to read [CONTRIBUTING.md](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/CONTRIBUTING.md)

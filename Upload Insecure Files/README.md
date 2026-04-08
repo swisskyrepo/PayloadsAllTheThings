@@ -393,7 +393,7 @@ More payloads in the folder `CVE FFmpeg HLS/`.
 ## References
 
 * [A New Vector For “Dirty” Arbitrary File Write to RCE - Doyensec - Maxence Schmitt and Lorenzo Stella - 28 Feb 2023](https://web.archive.org/web/20230228140105/https://blog.doyensec.com/2023/02/28/new-vector-for-dirty-arbitrary-file-write-2-rce.html)
-* [Analysis of Python's .pth files as a persistence mechanism - @malmoeb - January 14, 2025](https://dfir.ch/posts/publish_python_pth_extension/)
+* [Analysis of Python's .pth files as a persistence mechanism - @malmoeb - January 14, 2025](https://web.archive.org/web/20250218083206/https://dfir.ch/posts/publish_python_pth_extension/)
 * [Arbitrary File Upload Tricks In Java - pyn3rd - 2022-05-07](https://web.archive.org/web/20220601101409/https://pyn3rd.github.io/2022/05/07/Arbitrary-File-Upload-Tricks-In-Java/)
 * [Attacking Webservers Via .htaccess - Eldar Marcussen - May 17, 2011](https://web.archive.org/web/20200203171034/https://www.justanotherhacker.com:80/2011/05/htaccess-based-attacks.html)
 * [BookFresh Tricky File Upload Bypass to RCE - Ahmed Aboul-Ela - November 29, 2014](http://web.archive.org/web/20141231210005/https://secgeek.net/bookfresh-vulnerability/)

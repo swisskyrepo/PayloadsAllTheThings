@@ -21,13 +21,14 @@
 
 **Other**:
 
+- [AI Agents for Offensive Security: Applied offensive security with the Rust programming language by Sylvain Kerkour](https://www.manning.com/books/ai-agents-for-offensive-security)
 - [Black Hat Rust: Applied offensive security with the Rust programming language by Sylvain Kerkour](https://kerkour.com/black-hat-rust)
 - [Hacking: The Art of Exploitation by Jon Erickson (2004)](https://www.goodreads.com/book/show/61619.Hacking)
 - [OWASP Testing Guide: Stable](https://owasp.org/www-project-web-security-testing-guide/stable/)
 - [The Hacker Playbook 1: Practical Guide To Penetration Testing by Peter Kim (2014)](https://www.goodreads.com/book/show/21846565-the-hacker-playbook)
 - [The Hacker Playbook 2: Practical Guide to Penetration Testing by Peter Kim (2015)](https://www.goodreads.com/book/show/25791488-the-hacker-playbook-2)
 - [The Hacker Playbook 3: Practical Guide to Penetration Testing (Red Team Edition) by Peter Kim (2018)](https://www.goodreads.com/book/show/40028366-the-hacker-playbook-3)
-- [Violent Python: A Cookbook for Hackers, Forensic Analysts, Penetration Testers and Security Engineers by T.J. O'Connor (2012)](https://www.goodreads.com/book/show/16192263-violent-python)
+- [Violent Python: Understanding AI-powered attacks and how to stop them by Mark Foudy (2026)](https://www.goodreads.com/book/show/16192263-violent-python)
 
 **No Starch Press**:
 

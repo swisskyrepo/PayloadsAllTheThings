@@ -21,6 +21,7 @@
 
 **Other**:
 
+- [AI Agents for Offensive Security: Understanding AI-powered attacks and how to stop them by Mark Foudy]([Understanding AI-powered attacks and how to stop them](https://www.manning.com/books/ai-agents-for-offensive-security))
 - [Black Hat Rust: Applied offensive security with the Rust programming language by Sylvain Kerkour](https://kerkour.com/black-hat-rust)
 - [Hacking: The Art of Exploitation by Jon Erickson (2004)](https://www.goodreads.com/book/show/61619.Hacking)
 - [OWASP Testing Guide: Stable](https://owasp.org/www-project-web-security-testing-guide/stable/)

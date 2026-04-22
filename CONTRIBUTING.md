@@ -12,7 +12,7 @@ In order to provide the safest payloads for the community, the following rules m
 
 - Payloads must be sanitized
     - Use `id`, and `whoami`, for RCE Proof of Concepts
-    - Use `[REDACTED]` when the user has to replace a domain for a callback. E.g: XSSHunter, BurpCollaborator etc.
+    - Use `[ATTACKER.DOMAIN.TLD]` when the user has to replace a domain for a callback. E.g: XSSHunter, BurpCollaborator etc.
     - Use `10.10.10.10` and `10.10.10.11` when the payload require IP addresses
     - Use `Administrator` for privileged users and `User` for normal account
     - Use `P@ssw0rd`, `Password123`, `password` as default passwords for your examples

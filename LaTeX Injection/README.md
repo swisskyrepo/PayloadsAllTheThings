@@ -3,7 +3,7 @@
 > LaTeX Injection is a type of injection attack where malicious content is injected into LaTeX documents. LaTeX is widely used for document preparation and typesetting, particularly in academia, for producing high-quality scientific and mathematical documents. Due to its powerful scripting capabilities, LaTeX can be exploited by attackers to execute arbitrary commands if proper safeguards are not in place.
 
 ## Summary
-
+* [Verification](#verification)
 * [File Manipulation](#file-manipulation)
     * [Read File](#read-file)
     * [Write File](#write-file)
@@ -11,6 +11,14 @@
 * [Cross Site Scripting](#cross-site-scripting)
 * [Labs](#labs)
 * [References](#references)
+
+## Verification
+
+Evaluate the expression "7*7":
+
+```tex
+\the\numexpr 7*7\relax
+```
 
 ## File Manipulation
 

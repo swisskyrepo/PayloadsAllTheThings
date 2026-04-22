@@ -38,5 +38,5 @@ Insecure Management Interface vulnerabilities arise when administrative interfac
 ## References
 
 * [CAPEC-121: Exploit Non-Production Interfaces - CAPEC - July 30, 2020](https://web.archive.org/web/20260116113320/https://capec.mitre.org/data/definitions/121.html)
-* [Exploiting Spring Boot Actuators - Michael Stepankin - Feb 25, 2019](https://web.archive.org/web/20250116045001/https://www.veracode.com/blog/research/exploiting-spring-boot-actuators)
+* [Exploiting Spring Boot Actuators - Michael Stepankin - February 25, 2019](https://web.archive.org/web/20250116045001/https://www.veracode.com/blog/research/exploiting-spring-boot-actuators)
 * [Springboot - Official Documentation - May 9, 2024](https://web.archive.org/web/20140725032126/http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html)

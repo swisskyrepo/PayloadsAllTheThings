@@ -20,4 +20,4 @@
 
 ## References
 
-* [my-chemical-romance - siunam - Feb 13, 2023](https://web.archive.org/web/20250712102012/https://siunam321.github.io/ctf/LA-CTF-2023/Web/my-chemical-romance/)
+* [my-chemical-romance - siunam - February 13, 2023](https://web.archive.org/web/20250712102012/https://siunam321.github.io/ctf/LA-CTF-2023/Web/my-chemical-romance/)

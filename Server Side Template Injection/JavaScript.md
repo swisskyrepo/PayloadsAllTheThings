@@ -169,4 +169,4 @@ ${= _.VERSION}
 
 - [Exploiting Less.js to Achieve RCE - Jeremy Buis - July 1, 2021](https://web.archive.org/web/20210706135910/https://www.softwaresecured.com/exploiting-less-js/)
 - [Handlebars template injection and RCE in a Shopify app - Mahmoud Gamal - April 4, 2019](https://web.archive.org/web/20260207143828/https://mahmoudsec.blogspot.com/2019/04/handlebars-template-injection-and-rce.html)
-- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)
+- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 3, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

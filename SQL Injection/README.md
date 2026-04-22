@@ -592,5 +592,5 @@ Bypass using keywords case insensitive or an equivalent operator.
 * [PentestMonkey's mySQL injection cheat sheet - @pentestmonkey - August 15, 2011](https://web.archive.org/web/20260109024910/https://pentestmonkey.net/cheat-sheet/sql-injection/mysql-sql-injection-cheat-sheet)
 * [SQLi Cheatsheet - NetSparker - March 19, 2022](https://web.archive.org/web/20220219223426/https://www.netsparker.com/blog/web-security/sql-injection-cheat-sheet/)
 * [SQLi in INSERT worse than SELECT - Mathias Karlsson - February 14, 2017](https://web.archive.org/web/20231004093323/https://labs.detectify.com/2017/02/14/sqli-in-insert-worse-than-select/)
-* [SQLi Optimization and Obfuscation Techniques - Roberto Salgado - 2013](https://web.archive.org/web/20221005232819/https://paper.bobylive.com/Meeting_Papers/BlackHat/USA-2013/US-13-Salgado-SQLi-Optimization-and-Obfuscation-Techniques-Slides.pdf)
+* [SQLi Optimization and Obfuscation Techniques - Roberto Salgado - July 31, 2013](https://web.archive.org/web/20221005232819/https://paper.bobylive.com/Meeting_Papers/BlackHat/USA-2013/US-13-Salgado-SQLi-Optimization-and-Obfuscation-Techniques-Slides.pdf)
 * [The SQL Injection Knowledge base - Roberto Salgado - May 29, 2013](https://web.archive.org/web/20260302110304/https://www.websec.ca/kb/sql_injection)

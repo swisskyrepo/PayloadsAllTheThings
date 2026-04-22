@@ -192,7 +192,7 @@ Payload example using `fontleak` with a custom selector, parent element, and alp
 * [CSS based Attack: Abusing unicode-range of @font-face - Masato Kinugawa - October 23, 2015](https://web.archive.org/web/20260212042745/https://mksben.l0.cm/2015/10/css-based-attack-abusing-unicode-range.html)
 * [CSS Data Exfiltration to Steal OAuth Token - - September 13, 2025](https://web.archive.org/web/20250601232405/https://blog.voorivex.team/css-data-exfiltration-to-steal-oauth-token)
 * [CSS Injection - xsleaks.dev - May 9, 2025](https://web.archive.org/web/20260114161847/https://xsleaks.dev/docs/attacks/css-injection/)
-* [CSS Injection Attacks or how to leak content with <style> - Pepe Vila - 2019](https://web.archive.org/web/20250928084357/https://vwzq.net/slides/2019-s3_css_injection_attacks.pdf)
+* [CSS Injection Attacks or how to leak content with <style> - Pepe Vila - September 28, 2025](https://web.archive.org/web/20250928084357/https://vwzq.net/slides/2019-s3_css_injection_attacks.pdf)
 * [CSS Injection: Attacking with Just CSS (Part 2) - aszx87410 - September 24, 2023](https://web.archive.org/web/20231223213409/https://aszx87410.github.io/beyond-xss/en/ch3/css-injection-2/)
 * [Fontleak: exfiltrating text using CSS and Ligatures - Dragos Albastroiu - April 16, 2025](https://web.archive.org/web/20251130021102/https://adragos.ro/fontleak/)
 * [How you can steal private data through CSS injection - invicti - April 23, 2018](https://web.archive.org/web/20251107094938/https://www.invicti.com/blog/web-security/private-data-stolen-exploiting-css-injection)

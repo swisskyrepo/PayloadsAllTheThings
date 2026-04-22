@@ -295,9 +295,9 @@ If SSH is active, check which user is being used in the machine by including the
 
 ## References
 
-- [LFI WITH PHPINFO() ASSISTANCE - Brett Moore - September 2011](https://web.archive.org/web/20170406225317/https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf)
+- [LFI WITH PHPINFO() ASSISTANCE - Brett Moore - April 6, 2017](https://web.archive.org/web/20170406225317/https://www.insomniasec.com/downloads/publications/LFI%20With%20PHPInfo%20Assistance.pdf)
 - [LFI2RCE via PHP Filters - HackTricks - July 19, 2024](https://web.archive.org/web/20220819000915/https://book.hacktricks.xyz/pentesting-web/file-inclusion/lfi2rce-via-php-filters)
 - [Local file inclusion tricks - Johan Adriaans - August 4, 2007](https://web.archive.org/web/20250403080651/http://devels-playground.blogspot.fr/2007/08/local-file-inclusion-tricks.html)
 - [PHP LFI to arbitrary code execution via rfc1867 file upload temporary files (EN) - Gynvael Coldwind - March 18, 2011](https://web.archive.org/web/20110429042455/http://gynvael.coldwind.pl:80/?id=376)
-- [PHP LFI with Nginx Assistance - Bruno Bierbaumer - 26 Dec 2021](https://web.archive.org/web/20250604035904/https://bierbaumer.net/security/php-lfi-with-nginx-assistance/)
+- [PHP LFI with Nginx Assistance - Bruno Bierbaumer - December 26, 2021](https://web.archive.org/web/20250604035904/https://bierbaumer.net/security/php-lfi-with-nginx-assistance/)
 - [Upgrade from LFI to RCE via PHP Sessions - Reiners - September 14, 2017](https://web.archive.org/web/20170914211708/https://www.rcesecurity.com/2017/08/from-lfi-to-rce-via-php-sessions/)

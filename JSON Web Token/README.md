@@ -534,7 +534,7 @@ You should create your own key pair for this attack and host it. It should look 
 - [JSON Web Token Validation Bypass in Auth0 Authentication API - Ben Knight - April 16, 2020](https://web.archive.org/web/20230104231143/https://insomniasec.com/blog/auth0-jwt-validation-bypass)
 - [JSON Web Token Vulnerabilities - 0xn3va - March 27, 2022](https://web.archive.org/web/20260305090633/https://0xn3va.gitbook.io/cheat-sheets/web-application/json-web-token-vulnerabilities)
 - [JWT Hacking 101 - TrustFoundry - Tyler Rosonke - December 8, 2017](https://web.archive.org/web/20190405023824/https://trustfoundry.net/jwt-hacking-101/)
-- [Learn how to use JSON Web Tokens (JWT) for Authentication - @dwylhq - May 3, 2022](https://github.com/dwyl/learn-json-web-tokens)
+- [Learn how to use JSON Web Tokens (JWT) for Authentication - dwyl - May 3, 2022](https://github.com/dwyl/learn-json-web-tokens)
 - [Privilege Escalation like a Boss - janijay007 - October 27, 2018](https://web.archive.org/web/20190723093831/https://blog.securitybreached.org/2018/10/27/privilege-escalation-like-a-boss/)
 - [Simple JWT hacking - Hari Prasanth (@b1ack_h00d) - March 7, 2019](https://web.archive.org/web/20200724145838/https://medium.com/@blackhood/simple-jwt-hacking-73870a976750)
 - [WebSec CTF - Authorization Token - JWT Challenge - Kris Hunt - August 7, 2016](https://web.archive.org/web/20211025223311/https://ctf.rip/websec-ctf-authorization-token-jwt-challenge/)

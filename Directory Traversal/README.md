@@ -342,6 +342,80 @@ c:/windows/repair/system
 * [PortSwigger - File path traversal, validation of start of path](https://portswigger.net/web-security/file-path-traversal/lab-validate-start-of-path)
 * [PortSwigger - File path traversal, validation of file extension with null byte bypass](https://portswigger.net/web-security/file-path-traversal/lab-validate-file-extension-null-byte-bypass)
 
+## Application-Level Path Traversal
+
+Path traversal isn't limited to web requests. Many applications use user-controlled input (session IDs, usernames, filenames) in filesystem operations without proper validation.
+
+### Python - Unsafe Session/File Operations
+
+```python
+# VULNERABLE: Direct string concatenation with user input
+def delete_session(self, session_id: str) -> bool:
+    session_path = self.sessions_dir / session_id  # No validation!
+    shutil.rmtree(session_path)
+    return True
+
+# ATTACK: delete_session(session_id="../../package") deletes arbitrary directories
+```
+
+### Python - Safe Pattern with Validation
+
+```python
+import re
+from pathlib import Path
+
+SAFE_ID = re.compile(r"^[a-zA-Z0-9_-]+$")
+
+def get_session_path(self, session_id: str) -> Path:
+    # 1. Regex validation
+    if not SAFE_ID.match(session_id):
+        raise ValueError(f"Invalid ID format: {session_id}")
+    
+    # 2. Path resolution + containment check
+    sessions_dir = self.sessions_dir.resolve()
+    session_path = (sessions_dir / session_id).resolve()
+    
+    if not session_path.is_relative_to(sessions_dir):
+        raise ValueError("Path traversal detected")
+    
+    return session_path
+```
+
+### Node.js - Unsafe File Operations
+
+```javascript
+// VULNERABLE
+app.get('/download/:filename', (req, res) => {
+    const filePath = path.join(uploadsDir, req.params.filename);
+    res.sendFile(filePath);  // ../../../etc/passwd
+});
+
+// SAFE
+app.get('/download/:filename', (req, res) => {
+    const filePath = path.resolve(uploadsDir, req.params.filename);
+    if (!filePath.startsWith(path.resolve(uploadsDir))) {
+        return res.status(400).send('Invalid path');
+    }
+    res.sendFile(filePath);
+});
+```
+
+### Common Attack Vectors
+
+| Input Type | Attack | Impact |
+|-----------|--------|--------|
+| Session ID | `../../package` | Delete arbitrary dirs |
+| Username | `../../../etc/passwd` | Read sensitive files |
+| Filename | `..\..\windows\system32` | Windows path traversal |
+| UUID | `%2e%2e%2fconfig` | URL-encoded bypass |
+
+### Detection
+
+- Grep for `os.path.join(user_input` or `Path / user_input` 
+- Check if `resolve()` + `is_relative_to()` are used
+- Look for `shutil.rmtree`, `os.remove` with user-controlled paths
+- Scan for `sendFile`, `open()`, `readFile` with concatenation
+
 ## References
 
 * [Cookieless ASPNET - Soroush Dalili - March 27, 2023](https://web.archive.org/web/20241202163755/https://twitter.com/irsdl/status/1640390106312835072)

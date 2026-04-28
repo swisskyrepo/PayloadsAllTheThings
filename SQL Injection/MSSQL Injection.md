@@ -22,6 +22,7 @@
 * [MSSQL Command Execution](#mssql-command-execution)
     * [XP_CMDSHELL](#xp_cmdshell)
     * [Python Script](#python-script)
+    * [Ole Automation](#ole-automation)
 * [MSSQL Out of Band](#mssql-out-of-band)
     * [MSSQL DNS Exfiltration](#mssql-dns-exfiltration)
     * [MSSQL UNC Path](#mssql-unc-path)

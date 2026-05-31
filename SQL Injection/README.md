@@ -581,6 +581,9 @@ Bypass using keywords case insensitive or an equivalent operator.
 * [Root Me - SQL injection - Second Order](https://www.root-me.org/en/Challenges/Web-Server/SQL-Injection-Second-Order)
 * [Root Me - SQL injection - Filter bypass](https://www.root-me.org/en/Challenges/Web-Server/SQL-injection-Filter-bypass)
 * [Root Me - SQL Truncation](https://www.root-me.org/en/Challenges/Web-Server/SQL-Truncation)
+* [TryHackMe - SQL Injection](https://tryhackme.com/room/sqlinjectionlm) 
+* [TryHackMe - SQL Injection Lab](https://tryhackme.com/room/sqlilab) 
+* [HackTheBox Academy - SQL Injection Fundamentals](https://academy.hackthebox.com/module/details/33) 
 
 ## References
 

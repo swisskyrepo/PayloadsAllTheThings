@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <style>
+    @import url(http://example.com/style.css);
+  </style>
+  <circle cx="50" cy="50" r="45" fill="green"
+          id="foo"/>
+</svg>

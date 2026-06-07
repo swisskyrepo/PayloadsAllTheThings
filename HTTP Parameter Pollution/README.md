@@ -7,7 +7,9 @@
 * [Tools](#tools)
 * [Methodology](#methodology)
     * [Parameter Pollution Table](#parameter-pollution-table)
+    * [Server-Side Parameter Pollution](#server-side-parameter-pollution)
     * [Parameter Pollution Payloads](#parameter-pollution-payloads)
+* [Labs](#labs)
 * [References](#references)
 
 ## Tools
@@ -55,6 +57,19 @@ When ?par1=a&par1=b
 | Python/Zope                                     | All occurrences in array | ['a','b']       |
 | Ruby on Rails                                   | Last occurrence          | b               |
 
+### Server-Side Parameter Pollution
+
+Server-side parameter pollution can happen when an application forwards user-controlled input into a backend API query string. URL-encoded delimiters can be used to test whether the backend request is parsed differently after decoding.
+
+```ps1
+/api/search?query=test%26debug=true
+/api/search?query=test%23
+/reset?email=User@example.com%26email=Administrator@example.com
+/profile?user=User%26user=Administrator
+```
+
+Compare the responses with and without encoded delimiters. Check whether the injected delimiter creates a new backend parameter, overrides an existing one, or truncates parameters appended by the application.
+
 ### Parameter Pollution Payloads
 
 * Duplicate Parameters:
@@ -92,6 +107,10 @@ When ?par1=a&par1=b
         "test": "admin"
     }
     ```
+
+## Labs
+
+* [PortSwigger Web Security Academy - Exploiting server-side parameter pollution in a query string](https://portswigger.net/web-security/api-testing/server-side-parameter-pollution/lab-exploiting-server-side-parameter-pollution-in-query-string)
 
 ## References
 

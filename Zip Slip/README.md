@@ -44,5 +44,5 @@ For a list of affected libraries and projects, visit [snyk/zip-slip-vulnerabilit
 
 ## References
 
-* [Zip Slip - Snyk - June 5, 2018](https://github.com/snyk/zip-slip-vulnerability)
+* [Zip Slip - Snyk - June 5, 2018](https://web.archive.org/web/20260307012319/https://github.com/snyk/zip-slip-vulnerability)
 * [Zip Slip Vulnerability - Snyk - April 15, 2018](https://web.archive.org/web/20180605125813/https://snyk.io/research/zip-slip-vulnerability)

@@ -209,6 +209,6 @@ Examples of Indirect Prompt medium:
 * [Language Models are Few-Shot Learners - Tom B Brown - May 28, 2020](https://web.archive.org/web/20260306044348/https://arxiv.org/abs/2005.14165)
 * [Large Language Model Prompts (RTC0006) - HADESS/RedTeamRecipe - March 26, 2023](http://web.archive.org/web/20230529085349/https://redteamrecipe.com/Large-Language-Model-Prompts/)
 * [LLM Hacker's Handbook - Forces Unseen - March 7, 2023](https://doublespeak.chat/#/handbook)
-* [Prompt Injection Attacks for Dummies - Devansh Batham - Mar 2, 2025](https://web.archive.org/web/20250302143915/https://devanshbatham.hashnode.dev/prompt-injection-attacks-for-dummies)
+* [Prompt Injection Attacks for Dummies - Devansh Batham - March 2, 2025](https://web.archive.org/web/20250302143915/https://devanshbatham.hashnode.dev/prompt-injection-attacks-for-dummies)
 * [The AI Attack Surface Map v1.0 - Daniel Miessler - May 15, 2023](https://web.archive.org/web/20251212164354/https://danielmiessler.com/blog/the-ai-attack-surface-map-v1-0)
 * [You shall not pass: the spells behind Gandalf - Max Mathys and Václav Volhejn - June 2, 2023](https://web.archive.org/web/20230605141849/https://www.lakera.ai/insights/who-is-gandalf)

@@ -767,7 +767,7 @@ Therefore, by using the payload `?id=1%df' and 1=1 --+`, after PHP adds the back
 * [Alternative for Information_Schema.Tables in MySQL - Osanda Malith Jayathissa - February 3, 2017](https://web.archive.org/web/20260227032450/https://osandamalith.com/2017/02/03/alternative-for-information_schema-tables-in-mysql/)
 * [Ekoparty CTF 2016 (Web 100) - p4-team - October 26, 2016](https://github.com/p4-team/ctf/tree/master/2016-10-26-ekoparty/web_100)
 * [Error Based Injection | NetSPI SQL Injection Wiki - NetSPI - February 15, 2021](https://web.archive.org/web/20210215172533/https://sqlwiki.netspi.com/injectionTypes/errorBased/)
-* [How to Use SQL Calls to Secure Your Web Site - IPA ISEC - March 2010](https://web.archive.org/web/20240118024024/https://www.ipa.go.jp/security/vuln/ps6vr70000011hc4-att/000017321.pdf)
+* [How to Use SQL Calls to Secure Your Web Site - IPA ISEC - January 18, 2024](https://web.archive.org/web/20240118024024/https://www.ipa.go.jp/security/vuln/ps6vr70000011hc4-att/000017321.pdf)
 * [MySQL Out of Band Hacking - Osanda Malith Jayathissa - February 23, 2018](https://web.archive.org/web/20260303030701/https://www.exploit-db.com/docs/english/41273-mysql-out-of-band-hacking.pdf)
 * [SQL injection - The oldschool way - 02 - Ahmed Sultan - January 1, 2025](https://web.archive.org/web/20250807062504/https://www.youtube.com/watch?si=kFQkvCEn2NiWLDGY&v=u91EdO1cDak&feature=youtu.be)
 * [SQL Truncation Attack - Rohit Shaw - June 29, 2014](https://web.archive.org/web/20201001181524/https://resources.infosecinstitute.com/sql-truncation-attack/)

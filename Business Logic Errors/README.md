@@ -89,7 +89,7 @@ In this example, instead of rounding and rejecting or enforcing a minimum transf
 
 ## References
 
-* [Business Logic Vulnerabilities - PortSwigger - 2024](https://web.archive.org/web/20260305155804/https://portswigger.net/web-security/logic-flaws)
-* [Business Logic Vulnerability - OWASP - 2024](https://web.archive.org/web/20200422002600/https://owasp.org/www-community/vulnerabilities/Business_logic_vulnerability)
+* [Business Logic Vulnerabilities - PortSwigger - March 5, 2026](https://web.archive.org/web/20260305155804/https://portswigger.net/web-security/logic-flaws)
+* [Business Logic Vulnerability - OWASP - April 22, 2020](https://web.archive.org/web/20200422002600/https://owasp.org/www-community/vulnerabilities/Business_logic_vulnerability)
 * [CWE-840: Business Logic Errors - CWE - March 24, 2011](https://web.archive.org/web/20260304013031/https://cwe.mitre.org/data/definitions/840.html)
-* [Examples of Business Logic Vulnerabilities - PortSwigger - 2024](https://web.archive.org/web/20200922175829/https://portswigger.net/web-security/logic-flaws/examples)
+* [Examples of Business Logic Vulnerabilities - PortSwigger - September 22, 2020](https://web.archive.org/web/20200922175829/https://portswigger.net/web-security/logic-flaws/examples)

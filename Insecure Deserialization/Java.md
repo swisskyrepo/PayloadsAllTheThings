@@ -302,7 +302,7 @@ Common secrets from the [documentation](https://cwiki.apache.org/confluence/disp
 * [Hack The Box - Arkham - 0xRick - August 10, 2019](https://web.archive.org/web/20251125134359/https://0xrick.github.io/hack-the-box/arkham/)
 * [How I found a $1500 worth Deserialization vulnerability - Ashish Kunwar - August 28, 2018](https://web.archive.org/web/20250918030712/https://medium.com/@D0rkerDevil/how-i-found-a-1500-worth-deserialization-vulnerability-9ce753416e0a)
 * [Jackson CVE-2019-12384: anatomy of a vulnerability class - Andrea Brancaleoni - July 22, 2019](https://web.archive.org/web/20190724143322/https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
-* [Jackson gadgets - Anatomy of a vulnerability - Andrea Brancaleoni - 22 Jul 2019](https://web.archive.org/web/20190724143322/https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
+* [Jackson gadgets - Anatomy of a vulnerability - Andrea Brancaleoni - July 22, 2019](https://web.archive.org/web/20190724143322/https://blog.doyensec.com/2019/07/22/jackson-gadgets.html)
 * [Jackson Polymorphic Deserialization - FasterXML - July 23, 2020](https://github.com/FasterXML/jackson-docs/wiki/JacksonPolymorphicDeserialization)
 * [Java Deserialization Cheat Sheet - Aleksei Tiurin - May 23, 2023](https://github.com/GrrrDog/Java-Deserialization-Cheat-Sheet/blob/master/README.md)
 * [Java Deserialization in ViewState - Haboob Team - December 23, 2020](https://web.archive.org/web/20250909154616/https://www.exploit-db.com/docs/48126)

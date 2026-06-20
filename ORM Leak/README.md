@@ -50,7 +50,8 @@ Interesting filter to use:
 ### Relational Filtering
 
 Let's use this great example from [PLORMBING YOUR DJANGO ORM, by Alex Brown](https://www.elttam.com/blog/plormbing-your-django-orm/)
-![UML-example-app-simplified-highlight](https://www.elttam.com/assets/images/blog/2024-06-24-plormbing-your-django-orm/UML-example-app-simplified-highlight1.png)
+
+![UML-example-app-simplified-highlight](https://cdn.prod.website-files.com/6971f0e051b588235e8acf7b/69c28ab386b7948b108ecc8b_69b98986947782073459457e_UML-example-app-simplified-highlight1.avif)
 
 We can see 2 type of relationships:
 

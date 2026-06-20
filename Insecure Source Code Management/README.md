@@ -46,4 +46,4 @@ For example in Git, the exploitation technique doesn't require to list the conte
 
 ## References
 
-* [Hidden directories and files as a source of sensitive information about web application - Apr 30, 2017](https://github.com/bl4de/research/tree/master/hidden_directories_leaks)
+* [Hidden directories and files as a source of sensitive information about web application - bl4de - April 30, 2017](https://github.com/bl4de/research/tree/master/hidden_directories_leaks)

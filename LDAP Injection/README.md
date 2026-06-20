@@ -165,7 +165,7 @@ end
 
 ## References
 
-* [[European Cyber Week] - AdmYSion - Alan Marrec (Maki)](https://www.maki.bzh/writeups/ecw2018admyssion/)
+* [[European Cyber Week] - AdmYSion - Alan Marrec (Maki) - January 14, 2025](https://web.archive.org/web/20250114083154/https://www.maki.bzh/writeups/ecw2018admyssion/)
 * [ECW 2018 : Write Up - AdmYSsion (WEB - 50) - 0xUKN - October 31, 2018](https://web.archive.org/web/20200924103615/https://0xukn.fr/posts/writeupecw2018admyssion/)
 * [How To Configure OpenLDAP and Perform Administrative LDAP Tasks - Justin Ellingwood - May 30, 2015](https://web.archive.org/web/20260119175101/https://www.digitalocean.com/community/tutorials/how-to-configure-openldap-and-perform-administrative-ldap-tasks)
 * [How To Manage and Use LDAP Servers with OpenLDAP Utilities - Justin Ellingwood - May 29, 2015](https://web.archive.org/web/20160305121823/https://www.digitalocean.com/community/tutorials/how-to-manage-and-use-ldap-servers-with-openldap-utilities)

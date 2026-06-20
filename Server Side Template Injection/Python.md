@@ -463,4 +463,4 @@ Reference and explanation of payload can be found [yeswehack/server-side-templat
 - [Limitations are just an illusion – advanced server-side template exploitation with RCE everywhere - Brumens - March 24, 2025](https://web.archive.org/web/20240906203847/https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation)
 - [Python context free payloads in Mako templates - podalirius - August 26, 2021](https://web.archive.org/web/20210826203322/https://podalirius.net/en/articles/python-context-free-payloads-in-mako-templates/)
 - [The minefield between syntaxes: exploiting syntax confusions in the wild - Brumens - October 17, 2025](https://web.archive.org/web/20251006113218/https://www.yeswehack.com/learn-bug-bounty/syntax-confusion-ambiguous-parsing-exploits)
-- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)
+- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 3, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

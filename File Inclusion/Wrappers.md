@@ -263,7 +263,7 @@ code remote.py # edit Remote.oracle
 
 ## References
 
-- [Baby^H Master PHP 2017 - Orange Tsai (@orangetw) - Dec 5, 2021](https://github.com/orangetw/My-CTF-Web-Challenges#babyh-master-php-2017)
+- [Baby^H Master PHP 2017 - Orange Tsai (@orangetw) - December 5, 2021](https://github.com/orangetw/My-CTF-Web-Challenges#babyh-master-php-2017)
 - [Iconv, set the charset to RCE: exploiting the libc to hack the php engine (part 1) - Charles Fol - May 27, 2024](https://www.ambionics.io/blog/iconv-cve-2024-2961-p1)
 - [Introducing lightyear: a new way to dump PHP files - Charles Fol - November 4, 2024](https://web.archive.org/web/20250809094219/https://www.ambionics.io/blog/lightyear-file-dump)
 - [Introducing wrapwrap: using PHP filters to wrap a file with a prefix and suffix - Charles Fol - December 11, 2023](https://www.ambionics.io/blog/wrapwrap-php-filters-suffix)
@@ -272,4 +272,4 @@ code remote.py # edit Remote.oracle
 - [OffensiveCon24 - Charles Fol- Iconv, Set the Charset to RCE - June 14, 2024](https://youtu.be/dqKFHjcK9hM)
 - [PHP FILTER CHAINS: FILE READ FROM ERROR-BASED ORACLE - Rémi Matasse - March 21, 2023](https://web.archive.org/web/20260228090126/https://www.synacktiv.com/en/publications/php-filter-chains-file-read-from-error-based-oracle.html)
 - [PHP FILTERS CHAIN: WHAT IS IT AND HOW TO USE IT - Rémi Matasse - October 18, 2022](https://web.archive.org/web/20260212042712/https://www.synacktiv.com/publications/php-filters-chain-what-is-it-and-how-to-use-it.html)
-- [Solving "includer's revenge" from hxp ctf 2021 without controlling any files - @loknop - December 30, 2021](https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d)
+- [Solving "includer's revenge" from hxp CTF 2021 without controlling any files - @loknop - December 30, 2021](https://gist.github.com/loknop/b27422d355ea1fd0d90d6dbc1e278d4d)

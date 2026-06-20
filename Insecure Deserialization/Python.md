@@ -133,4 +133,4 @@ with open('exploit_unsafeloader.yml') as file:
 * [Python Yaml Deserialization - HackTricks - July 19, 2024](https://web.archive.org/web/20241216145404/https://book.hacktricks.xyz/pentesting-web/deserialization/python-yaml-deserialization)
 * [PyYAML Documentation - PyYAML - April 29, 2006](https://web.archive.org/web/20260219140302/https://pyyaml.org/wiki/PyYAMLDocumentation)
 * [YAML Deserialization Attack in Python - Manmeet Singh & Ashish Kukret - November 13, 2021](https://web.archive.org/web/20250604032318/https://www.exploit-db.com/docs/english/47655-yaml-deserialization-attack-in-python.pdf)
-* [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 03, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)
+* [Successful Errors: New Code Injection and SSTI Techniques - Vladislav Korchagin - January 3, 2026](https://github.com/vladko312/Research_Successful_Errors/blob/main/README.md)

@@ -93,4 +93,4 @@ localhost.example.com.            381     IN      CNAME   localhost.
 
 ## References
 
-* [How Do DNS Rebinding Attacks Work? - nccgroup - Apr 9, 2019](https://github.com/nccgroup/singularity/wiki/How-Do-DNS-Rebinding-Attacks-Work%3F)
+* [How Do DNS Rebinding Attacks Work? - NCC Group - April 9, 2019](https://github.com/nccgroup/singularity/wiki/How-Do-DNS-Rebinding-Attacks-Work%3F)

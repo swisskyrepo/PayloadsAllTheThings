@@ -38,6 +38,7 @@ Tools to identify and attack Large Language Models.
 * [praetorian-inc/julius](https://github.com/praetorian-inc/julius) - Simple LLM service identification - translate IP:Port to Ollama, vLLM, LiteLLM, or 15+ other AI services in seconds
 * [praetorian-inc/augustus](https://github.com/praetorian-inc/augustus) - LLM security testing framework for detecting prompt injection, jailbreaks, and adversarial attacks — 190+ probes, 28 providers, single Go binary
 * [promptfoo/promptfoo](https://github.com/promptfoo/promptfoo) - Test your prompts, agents, and RAGs. AI Red teaming, pentesting, and vulnerability scanning for LLMs.
+* [rudrasatani13/cot-redteam-agent](https://github.com/rudrasatani13/cot-redteam-agent) - CLI and Python API for red-teaming visible LLM reasoning and agent actions, with honest scoring and a simulated Proof-of-Action agent world
 
 Challenges
 

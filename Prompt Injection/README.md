@@ -206,6 +206,7 @@ Examples of Indirect Prompt medium:
 * [ChatGPT: Hacking Memories with Prompt Injection - wunderwuzzi - May 22, 2024](https://web.archive.org/web/20260301072619/https://embracethered.com/blog/posts/2024/chatgpt-hacking-memories/)
 * [Demystifying RCE Vulnerabilities in LLM-Integrated Apps - Tong Liu, Zizhuang Deng, Guozhu Meng, Yuekang Li, Kai Chen - October 8, 2023](https://web.archive.org/web/20231115191947/https://arxiv.org/pdf/2309.02926)
 * [From Theory to Reality: Explaining the Best Prompt Injection Proof of Concept - Joseph Thacker (rez0) - May 19, 2023](https://web.archive.org/web/20230702043745/https://rez0.blog/hacking/2023/05/19/prompt-injection-poc.html)
+* [hego.red: Practical AI/LLM Red Teaming Notes - hego - 2026](https://hego.red/)
 * [Language Models are Few-Shot Learners - Tom B Brown - May 28, 2020](https://web.archive.org/web/20260306044348/https://arxiv.org/abs/2005.14165)
 * [Large Language Model Prompts (RTC0006) - HADESS/RedTeamRecipe - March 26, 2023](http://web.archive.org/web/20230529085349/https://redteamrecipe.com/Large-Language-Model-Prompts/)
 * [LLM Hacker's Handbook - Forces Unseen - March 7, 2023](https://doublespeak.chat/#/handbook)

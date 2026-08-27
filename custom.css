@@ -1,0 +1,28 @@
+.md-header{
+    background-color: #1f7884;
+}
+
+@media screen and (min-width: 790px) {
+    .md-grid{
+        max-width: 100%;
+    }
+
+    .md-sidebar{
+        width: auto;
+    } 
+}
+
+/* Fix padding Chrome browsers */
+@supports selector(::-webkit-scrollbar) {
+    .md-sidebar__scrollwrap {
+        scrollbar-gutter: auto
+    }
+
+    [dir=ltr] .md-sidebar__inner {
+        padding-right: 0;
+    }
+
+    [dir=rtl] .md-sidebar__inner {
+        padding-left: calc(100% - 11.5rem)
+    }
+}

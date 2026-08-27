@@ -1,0 +1,72 @@
+site_name: Payloads All The Things
+site_description: 'Payloads All The Things, a list of useful payloads and bypasses for Web Application Security'
+site_url: https://swisskyrepo.github.io/PayloadsAllTheThings
+
+repo_url: https://github.com/swisskyrepo/PayloadsAllTheThings/
+edit_uri: edit/master/
+
+# copyright: © 2016 PATT
+# logo: 'images/site_logo.png'
+# favicon: 'images/favicon.png'
+
+theme:
+  name: material
+  custom_dir: overrides
+  color_mode: auto
+  user_color_mode_toggle: true
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+  features:
+    - content.code.copy
+    - content.action.edit
+    - content.action.view
+    - content.tooltips
+    - navigation.tracking
+    - navigation.top
+    - search.share
+    - search.suggest
+    # - toc.integrate
+    # - navigation.path
+
+extra_css:
+  - custom.css
+
+markdown_extensions:
+  - tables
+  - attr_list
+  - admonition
+  - def_list
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - pymdownx.inlinehilite
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  # - mdx_truly_sane_lists:
+  #     nested_indent: 2
+  #     truly_sane: True
+ 
+plugins:
+  - search
+  - git-revision-date-localized
+  - social

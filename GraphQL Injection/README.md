@@ -42,6 +42,7 @@
 - [dolevf/graphw00f](https://github.com/dolevf/graphw00f) - GraphQL Server Engine Fingerprinting utility
 - [IvanGoncharov/graphql-voyager](https://github.com/IvanGoncharov/graphql-voyager) - Represent any GraphQL API as an interactive graph
 - [Insomnia](https://insomnia.rest/) - Cross-platform HTTP and GraphQL Client
+- [Awarexone/Agentic-Bug-Bounty-Hunter](https://github.com/Awarexone/Agentic-Bug-Hunter) - AI-driven bug bounty toolkit (Claude Code plugin) with a dedicated GraphQL audit suite: introspection dump, clairvoyance field discovery, batching/alias-bomb DoS, IDOR-via-aliasing and graphw00f fingerprinting
 
 ## Enumeration
 

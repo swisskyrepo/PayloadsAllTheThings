@@ -239,7 +239,7 @@ echo ~-
 {,/?s?/?i?/c?t,/e??/p??s??,}
 ```
 
-# Bypass with Shell Structure Control
+# Bypass With Shell Structure Control
 
 ```powershell
 for i in test; do sh testing; done

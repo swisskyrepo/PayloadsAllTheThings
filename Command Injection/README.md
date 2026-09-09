@@ -27,7 +27,7 @@
     * [Bypass With Variable Expansion](#bypass-with-variable-expansion)
     * [Bypass With Wildcards](#bypass-with-wildcards)
     * [Bypass With Random Case](#bypass-with-random-case)
-    * [Bypass via Shell Structures](#bypass-via-control-shell-structures)
+    * [Bypass via Shell Structures Control](#bypass-via-control-shell-structures)
 * [Data Exfiltration](#data-exfiltration)
     * [Time Based Data Exfiltration](#time-based-data-exfiltration)
     * [Dns Based Data Exfiltration](#dns-based-data-exfiltration)

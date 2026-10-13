@@ -7,6 +7,33 @@ import unittest
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 IP_SCRIPT = os.path.join(SCRIPT_DIR, "ip.py")
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+import ip
+
+class TestIPHelpers(unittest.TestCase):
+    def test_hex_single(self):
+        self.assertEqual(ip.HEX_SINGLE(254, "yes"), "0xfe")
+        self.assertEqual(ip.HEX_SINGLE(254, "no"), "fe")
+        self.assertEqual(ip.HEX_SINGLE(169, "yes"), "0xa9")
+
+    def test_oct_single(self):
+        self.assertEqual(ip.OCT_SINGLE(254), "0376")
+        self.assertEqual(ip.OCT_SINGLE(169), "0251")
+
+    def test_decimal_single(self):
+        self.assertEqual(ip.DECIMAL_SINGLE("169", 3), 169 * (256**3))
+        self.assertEqual(ip.DECIMAL_SINGLE("254", 0), 254)
+
+    def test_dec_overflow_single(self):
+        self.assertEqual(ip.DEC_OVERFLOW_SINGLE("254"), "510")
+        self.assertEqual(ip.DEC_OVERFLOW_SINGLE("169"), "425")
+
+    def test_convert_ip_enclosed(self):
+        converted = ip.convertIP2EnclosedAlphanumericsValue("10.10.10.10")
+        self.assertIn("⑩", converted)
+        converted_127 = ip.convertIP2EnclosedAlphanumericsValue("127.0.0.1")
+        self.assertIn("⑫", converted_127)
 
 class TestSSRFIPEncoding(unittest.TestCase):
     def test_no_syntax_warnings(self):

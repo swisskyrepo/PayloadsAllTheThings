@@ -155,14 +155,12 @@ else:
 
 if EXPORTRESULTS == 'export':
 	FILENAME = "export-" + arg1 + "-" + str(datetime.datetime.now().strftime("%H-%M-%d-%m-%Y"))+'.txt'
-	pythonversion = (platform.python_version())
-	major, minor, patchlevel = pythonversion.split(".")
-	if major == "3":
-		f = open(FILENAME, 'w')
+	if sys.version_info[0] >= 3:
+		f = open(FILENAME, 'w', encoding='utf-8')
 	else:
 		f = open(FILENAME, 'wb')
 elif EXPORTRESULTS != '':
-	print("\nUsage: python "+sys.argv[0]+" IP WhiteListedDomain EXPORT(optional)\nUsage: python "+sys.argv[0]+" 169.254.169.254 80 www.google.com\nUsage: python "+sys.argv[0]+" 169.254.169.254 80 www.google.com export")
+	print("\nUsage: python "+sys.argv[0]+" IP PORT WhiteListedDomain EXPORT(optional)\nUsage: python "+sys.argv[0]+" 169.254.169.254 80 www.google.com\nUsage: python "+sys.argv[0]+" 169.254.169.254 80 www.google.com export")
 	exit(1)
 
 #Case 1 - Dotted hexadecimal

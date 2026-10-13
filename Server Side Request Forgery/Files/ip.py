@@ -2,11 +2,11 @@
 # coding=utf-8
 # https://raw.githubusercontent.com/cujanovic/SSRF-Testing/master/ip.py
 from __future__ import print_function
-from builtins import oct
-from builtins import str
-from builtins import hex
-from builtins import range
-from random import *
+try:
+	from builtins import oct, str, hex, range
+except ImportError:
+	pass
+from random import choice, randint
 from io import open
 import datetime
 import string

@@ -152,6 +152,53 @@ class TestSSRFIPEncoding(unittest.TestCase):
             self.assertEqual(res.returncode, 1, f"Expected returncode 1 for {invalid_ip}")
             self.assertIn("not a valid IPv4 address", res.stdout)
 
+    def test_all_15_cases_generated_and_exported(self):
+        """ip.py should successfully generate and export all 15 bypass categories for an IP."""
+        test_ip_addr = "127.0.0.1"
+        res = subprocess.run(
+            [sys.executable, IP_SCRIPT, test_ip_addr, "8080", "target.local", "export"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            cwd=SCRIPT_DIR,
+        )
+        self.assertEqual(res.returncode, 0, f"Execution failed:\n{res.stderr}")
+        expected_cases = [
+            "Dotted hexadecimal IP Address of:",
+            "Dotless hexadecimal IP Address of:",
+            "Dotless decimal IP Address of:",
+            "Dotted decimal with overflow(256) IP Address of:",
+            "Dotted octal IP Address of:",
+            "Dotted octal with padding IP Address of:",
+            "IPv6 compact version IP Address of:",
+            "IPv6 mapped version IP Address of:",
+            "Dotted hexadecimal + Dotted octal + Dotless decimal IP Address of:",
+            "Dotted hexadecimal + Dotless decimal IP Address of:",
+            "Dotted octal with padding + Dotless decimal IP Address of:",
+            "Dotted octal with padding + Dotted hexadecimal + Dotless decimal IP Address of:",
+            "Abusing IDNA Standard:",
+            "Abusing 。and ｡:",
+            "Abusing Enclosed Alphanumerics:",
+        ]
+        for case in expected_cases:
+            self.assertIn(case, res.stdout, f"Missing section in output: {case}")
+
+        # Verify export file contents
+        export_files = [f for f in os.listdir(SCRIPT_DIR) if f.startswith(f"export-{test_ip_addr}-") and f.endswith(".txt")]
+        self.assertTrue(len(export_files) > 0, "Expected export file to be created")
+        export_path = os.path.join(SCRIPT_DIR, export_files[0])
+        try:
+            with open(export_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            self.assertIn("http://127。0。0。1/", content)
+            self.assertIn("http://127｡0｡0｡1/", content)
+            self.assertIn("http://ß.localdomain.pw/", content)
+            self.assertTrue(len(content) > 5000, "Exported file content should be substantial")
+        finally:
+            if os.path.exists(export_path):
+                os.remove(export_path)
+
 if __name__ == "__main__":
     unittest.main()
 

@@ -102,23 +102,25 @@ def plain2EnclosedAlphanumericsChar(s0):
 		raise Exception('value not found')
 	return random.choice(EnclosedAlphanumericsData[s0])
 
-def convertIP2EnclosedAlphanumericsValue():
-	IPAddressParts4EnclosedAlphanumerics = arg1.split(".")
+def convertIP2EnclosedAlphanumericsValue(ip=None):
+	target = ip if ip is not None else arg1
+	IPAddressParts4EnclosedAlphanumerics = target.split(".")
 	returnEnclosedAlphanumericsIPAddress = ""
-	for x in range(0,4):
-		if len(IPAddressParts4EnclosedAlphanumerics[x]) == 3 and (int(IPAddressParts4EnclosedAlphanumerics[x][0]+IPAddressParts4EnclosedAlphanumerics[x][1])) <= 20 and (int(IPAddressParts4EnclosedAlphanumerics[x][0]+IPAddressParts4EnclosedAlphanumerics[x][1]+IPAddressParts4EnclosedAlphanumerics[x][2])) >= 10:
-			returnEnclosedAlphanumericsIPAddress = returnEnclosedAlphanumericsIPAddress + plain2EnclosedAlphanumericsChar(IPAddressParts4EnclosedAlphanumerics[x][0]+IPAddressParts4EnclosedAlphanumerics[x][1]);
-			returnEnclosedAlphanumericsIPAddress = returnEnclosedAlphanumericsIPAddress + plain2EnclosedAlphanumericsChar(IPAddressParts4EnclosedAlphanumerics[x][2]);
-			if x <= 2:
-				returnEnclosedAlphanumericsIPAddress = returnEnclosedAlphanumericsIPAddress + plain2EnclosedAlphanumericsChar('.');
+	for x in range(0, 4):
+		part = IPAddressParts4EnclosedAlphanumerics[x]
+		if len(part) == 3 and int(part[0] + part[1]) <= 20 and int(part) >= 100:
+			returnEnclosedAlphanumericsIPAddress += plain2EnclosedAlphanumericsChar(part[0] + part[1])
+			returnEnclosedAlphanumericsIPAddress += plain2EnclosedAlphanumericsChar(part[2])
+		elif len(part) == 2 and 10 <= int(part) <= 20:
+			returnEnclosedAlphanumericsIPAddress += plain2EnclosedAlphanumericsChar(part)
 		else:
-			returnEnclosedAlphanumericsIPAddress = returnEnclosedAlphanumericsIPAddress + plain2EnclosedAlphanumericsChar(IPAddressParts4EnclosedAlphanumerics[x][0]);
-			if len(IPAddressParts4EnclosedAlphanumerics[x]) >= 2:
-				returnEnclosedAlphanumericsIPAddress = returnEnclosedAlphanumericsIPAddress + plain2EnclosedAlphanumericsChar(IPAddressParts4EnclosedAlphanumerics[x][1]);
-			if len(IPAddressParts4EnclosedAlphanumerics[x]) == 3:
-				returnEnclosedAlphanumericsIPAddress = returnEnclosedAlphanumericsIPAddress + plain2EnclosedAlphanumericsChar(IPAddressParts4EnclosedAlphanumerics[x][2]);
-			if x <= 2:
-				returnEnclosedAlphanumericsIPAddress = returnEnclosedAlphanumericsIPAddress + plain2EnclosedAlphanumericsChar('.');
+			returnEnclosedAlphanumericsIPAddress += plain2EnclosedAlphanumericsChar(part[0])
+			if len(part) >= 2:
+				returnEnclosedAlphanumericsIPAddress += plain2EnclosedAlphanumericsChar(part[1])
+			if len(part) == 3:
+				returnEnclosedAlphanumericsIPAddress += plain2EnclosedAlphanumericsChar(part[2])
+		if x <= 2:
+			returnEnclosedAlphanumericsIPAddress += plain2EnclosedAlphanumericsChar('.')
 	return returnEnclosedAlphanumericsIPAddress
 
 def convert(s, recurse_chunks=True, error_on_miss=False):

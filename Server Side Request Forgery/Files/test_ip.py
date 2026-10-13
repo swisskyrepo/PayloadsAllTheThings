@@ -35,13 +35,31 @@ class TestSSRFIPEncoding(unittest.TestCase):
             [sys.executable, IP_SCRIPT, "169.254.169.254", "80", "www.google.com"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             env=env,
         )
         self.assertEqual(
             res.returncode,
             0,
-            f"Script crashed with exit code {res.returncode}:\nStdout:\n{res.stdout}\nStderr:\n{res.stderr}",
+            f"Script crashed with exit code {res.returncode}:\nStderr:\n{res.stderr}",
         )
+        self.assertNotIn("UnicodeEncodeError", res.stderr)
+        self.assertIn("Abusing", res.stdout)
+
+    def test_stdout_ascii_encoding_resilience(self):
+        """ip.py must not crash with UnicodeEncodeError when stdout uses pure ascii."""
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "ascii:strict"
+        res = subprocess.run(
+            [sys.executable, IP_SCRIPT, "169.254.169.254", "80", "www.google.com"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            env=env,
+        )
+        self.assertEqual(res.returncode, 0, f"Script crashed on ASCII stdout: {res.stderr}")
         self.assertNotIn("UnicodeEncodeError", res.stderr)
 
     def test_reproduce_unicode_encode_error_export(self):
@@ -53,6 +71,8 @@ class TestSSRFIPEncoding(unittest.TestCase):
             [sys.executable, IP_SCRIPT, "169.254.169.254", "80", "www.google.com", "export"],
             capture_output=True,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             cwd=SCRIPT_DIR,
             env=env,
         )

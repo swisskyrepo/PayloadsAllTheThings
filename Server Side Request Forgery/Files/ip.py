@@ -61,7 +61,7 @@ EnclosedAlphanumericsData = {
 def RANDOM_TEXT_SPEC():
 	min_char = 12
 	max_char = 16
-	chars = string.ascii_letters + string.digits + "!$%^&*()<>;:,.|\~`"
+	chars = string.ascii_letters + string.digits + "!$%^&*()<>;:,.|\\~`"
 	return "".join(choice(chars) for x in range(randint(min_char, max_char)))
 
 def RANDOM_TEXT():

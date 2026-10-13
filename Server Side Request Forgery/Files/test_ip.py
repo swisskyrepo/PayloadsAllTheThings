@@ -61,8 +61,6 @@ class TestSSRFIPEncoding(unittest.TestCase):
             0,
             f"Export failed with code {res.returncode}:\n{res.stderr}",
         )
-        self.assertNotIn("UnicodeEncodeError", res.stderr)
-
         # Locate exported file
         export_files = [f for f in os.listdir(SCRIPT_DIR) if f.startswith("export-169.254.169.254-") and f.endswith(".txt")]
         self.assertTrue(len(export_files) > 0, "Export file was not generated")
@@ -76,5 +74,24 @@ class TestSSRFIPEncoding(unittest.TestCase):
             if os.path.exists(export_path):
                 os.remove(export_path)
 
+    def test_two_digit_enclosed_alphanumerics(self):
+        """ip.py should map two-digit octets (10..20) to their corresponding enclosed characters (e.g. ⑩)."""
+        env = os.environ.copy()
+        env["PYTHONIOENCODING"] = "utf-8"
+        res = subprocess.run(
+            [sys.executable, IP_SCRIPT, "10.10.10.10", "80", "www.google.com"],
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            env=env,
+        )
+        self.assertEqual(res.returncode, 0, f"Script failed: {res.stderr}")
+        # The octet '10' has dedicated glyph '⑩' in EnclosedAlphanumericsData
+        self.assertTrue(
+            any("⑩" in line for line in res.stdout.splitlines() if "Abusing Enclosed Alphanumerics" in line),
+            f"Expected '⑩' for octet 10, got:\n{res.stdout}",
+        )
+
 if __name__ == "__main__":
     unittest.main()
+

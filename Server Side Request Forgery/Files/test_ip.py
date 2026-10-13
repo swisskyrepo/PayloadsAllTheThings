@@ -112,6 +112,19 @@ class TestSSRFIPEncoding(unittest.TestCase):
             f"Expected '⑩' for octet 10, got:\n{res.stdout}",
         )
 
+    def test_invalid_ip_handling(self):
+        """ip.py should exit with code 1 and error message on invalid IP addresses."""
+        for invalid_ip in ["not_an_ip", "999.1.1.1", "1.2.3", "1.2.3.4.5", "abc.def.ghi.jkl"]:
+            res = subprocess.run(
+                [sys.executable, IP_SCRIPT, invalid_ip, "80", "www.google.com"],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            self.assertEqual(res.returncode, 1, f"Expected returncode 1 for {invalid_ip}")
+            self.assertIn("not a valid IPv4 address", res.stdout)
+
 if __name__ == "__main__":
     unittest.main()
 

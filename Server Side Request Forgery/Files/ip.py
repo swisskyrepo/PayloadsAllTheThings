@@ -93,9 +93,8 @@ def validIP(address):
 		for item in parts:
 			if not 0 <= int(item) <= 255:
 				return False
-	except ValueError:
-		print("\nUsage: python "+sys.argv[0]+" IP EXPORT(optional)\nUsage: python "+sys.argv[0]+" 169.254.169.254\nUsage: python "+sys.argv[0]+" 169.254.169.254 export")
-		exit(1)
+	except (ValueError, TypeError):
+		return False
 	return True
 
 def plain2EnclosedAlphanumericsChar(s0):

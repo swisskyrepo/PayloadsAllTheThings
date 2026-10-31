@@ -22,10 +22,14 @@ In order to provide the safest payloads for the community, the following rules m
     - The date must be following the format `Month Number, Year`, e.g: `December 25, 2024`
     - References to Github repositories must follow this format: `[author/tool](https://github.com/URL) - Description`
 
-Every pull request will be checked with `markdownlint` to ensure consistent writing and Markdown best practices. You can validate your files locally using the following Docker command:
+Every pull request will be checked with `markdownlint` to ensure consistent writing and Markdown best practices. You can validate your files locally using the following either the Docker or Podman command:
 
 ```ps1
 docker run -v $PWD:/workdir davidanson/markdownlint-cli2:v0.15.0 "**/*.md" --config .github/.markdownlint.json --fix
+```
+
+```ps1
+podman run -v $PWD:/workdir docker.io/davidanson/markdownlint-cli2:v0.15.0 "**/*.md" --config .github/.markdownlink.json --fix
 ```
 
 ## Techniques Folder

@@ -232,6 +232,7 @@ $ python3 filters_chain_oracle_exploit.py --target http://127.0.0.1 --file '/tes
 ### Leak file content inside a custom format output
 
 - [ambionics/wrapwrap](https://github.com/ambionics/wrapwrap) - Generates a `php://filter` chain that adds a prefix and a suffix to the contents of a file.
+- [eilon-avi/php-closure](https://github.com/eilon-avi/php-closure) - Generates a `php://filter` chain that adds a prefix and a suffix to the contents of a file, with a chain size that does not depend on the file size.
 
 To obtain the contents of some file, we would like to have: `{"message":"<file contents>"}`.
 
@@ -264,6 +265,7 @@ code remote.py # edit Remote.oracle
 ## References
 
 - [Baby^H Master PHP 2017 - Orange Tsai (@orangetw) - December 5, 2021](https://github.com/orangetw/My-CTF-Web-Challenges#babyh-master-php-2017)
+- [Closure - Eilon Avizemer - July 15, 2026](https://eilon-avi.github.io/projects/closure/)
 - [Iconv, set the charset to RCE: exploiting the libc to hack the php engine (part 1) - Charles Fol - May 27, 2024](https://www.ambionics.io/blog/iconv-cve-2024-2961-p1)
 - [Introducing lightyear: a new way to dump PHP files - Charles Fol - November 4, 2024](https://web.archive.org/web/20250809094219/https://www.ambionics.io/blog/lightyear-file-dump)
 - [Introducing wrapwrap: using PHP filters to wrap a file with a prefix and suffix - Charles Fol - December 11, 2023](https://www.ambionics.io/blog/wrapwrap-php-filters-suffix)

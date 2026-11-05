@@ -261,6 +261,8 @@ function reqListener() {
 
 ## References
 
+* [CORS Misconfiguration: Complete Guide to Exploit, Bypass and Data Theft in APIs - Canio Campaniello (HackITA) - March 14, 2026](https://en.hackita.it/articoli/cors-misconfiguration/)
+
 * [[██████] Cross-origin resource sharing misconfiguration (CORS) - Vadim (jarvis7) - December 20, 2018](https://hackerone.com/reports/470298)
 * [Advanced CORS Exploitation Techniques - Corben Leo - June 16, 2018](https://web.archive.org/web/20190516052453/https://www.corben.io/advanced-cors-techniques/)
 * [CORS misconfig | Account Takeover - Rohan (nahoragg) - October 20, 2018](https://web.archive.org/web/20250426222841/https://hackerone.com/reports/426147)

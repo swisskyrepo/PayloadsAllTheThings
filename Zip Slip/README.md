@@ -12,6 +12,7 @@
 
 * [ptoomey3/evilarc](https://github.com/ptoomey3/evilarc) - Create tar/zip archives that can exploit directory traversal vulnerabilities
 * [usdAG/slipit](https://github.com/usdAG/slipit) - Utility for creating ZipSlip archives
+* [exploit/multi/fileformat/zip_slip](https://github.com/rapid7/metasploit-framework/blob/master/modules/exploits/multi/fileformat/zip_slip.rb) - Metasploit module for generic Zip Slip traversal explitation
 
 ## Methodology
 

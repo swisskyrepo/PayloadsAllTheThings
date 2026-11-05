@@ -28,6 +28,12 @@ Every pull request will be checked with `markdownlint` to ensure consistent writ
 docker run -v $PWD:/workdir davidanson/markdownlint-cli2:v0.15.0 "**/*.md" --config .github/.markdownlint.json --fix
 ```
 
+The same validation can be run with [Podman](https://podman.io/) instead of Docker. Note that the image must be fully qualified (`docker.io/...`) and that the `:Z` volume flag lets Podman relabel the mount on SELinux-enabled hosts (e.g. Fedora, RHEL):
+
+```ps1
+podman run -v $PWD:/workdir:Z docker.io/davidanson/markdownlint-cli2:v0.15.0 "**/*.md" --config .github/.markdownlint.json --fix
+```
+
 ## Techniques Folder
 
 Every section should contain the following files, you can use the `_template_vuln` folder to create a new technique folder:
@@ -44,4 +50,4 @@ Use the example folder [_template_vuln/](https://github.com/swisskyrepo/Payloads
 - **Tools**: Lists relevant tools with links to their repositories and brief descriptions.
 - **Methodology**: Provides a quick overview of the approach used, with code snippets to demonstrate exploitation steps.
 - **Labs**: References online platforms where similar vulnerabilities can be practiced, each with a link to the corresponding lab.
-- **References**: Lists external resources, such as blog posts or articles, providing additional context or case studies related to the vulnerability.
+- **References**: Lists external resources, such as blog posts or articles, providing additional context and case studies related to the vulnerability.

@@ -55,7 +55,7 @@ Since many XSS filters only recognize exact lowercase or uppercase patterns, thi
 
 ```javascript
 <script x>
-<script x>alert('XSS')<script y>
+<script x>alert('XSS')</script y>
 ```
 
 ## Bypass Word Blacklist with Code Evaluation

